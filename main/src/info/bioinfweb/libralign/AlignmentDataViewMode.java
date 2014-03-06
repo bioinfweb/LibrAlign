@@ -20,11 +20,28 @@ package info.bioinfweb.libralign;
 
 
 
-public enum AlignmentDataType {
-  NUCLEOTIDE,  // Allows both U and T in one sequence
-  DNA,
+/**
+ * Enumerates the possible view modes of aligned data.
+ * 
+ * @author Ben St&ouml;ver
+ * @since 1.0.0
+ */
+public enum AlignmentDataViewMode {
+  /** Allows both U and T in one sequence. */
+  NUCLEOTIDE,
+  
+  /** U would be translated to R. */
+  DNA, 
+  
+  /** T would be translated to U. */
   RNA,
-  AMINO_ACID,
+  
+  /** One sequence element contains three nucleotides. */
   CODON,
-  TEXT;
+  
+  /** A sequence of amino acids. */
+  AMINO_ACID,
+  
+  /** Simply an alignment of tokens represented by a string, which do not necessarily have a biological meaning. */
+  NONE;
 }
