@@ -19,45 +19,28 @@
 package info.bioinfweb.libralign.alignmentprovider;
 
 
-import info.bioinfweb.libralign.AlignmentDataType;
+import info.bioinfweb.libralign.AlignmentSourceDataType;
 
 
 
 /**
- * Implements basic functionality of {@link AlignmentProvider}.
+ * Implements storing the data type.
  * 
- * @author Ben St&ouml;ver
- * @since 1.0
+ * @author Ben St&uml;ver
+ * @since 1.0.0
  */
-public abstract class AbstractAlignmentProvider implements AlignmentProvider {
-	private AlignmentDataType dataType;
+public abstract class AbstractAlignmentDataProvider implements AlignmentDataProvider {
+	private AlignmentSourceDataType dataType;
 
 	
-	/**
-	 * Creates a new instance of this class.
-	 * 
-	 * @param initialDataType - the initial data type before any call of {@link #setDataType(AlignmentDataType)}
-	 */
-	public AbstractAlignmentProvider(AlignmentDataType initialDataType) {
+	public AbstractAlignmentDataProvider(AlignmentSourceDataType dataType) {
 		super();
-		dataType = initialDataType;
+		this.dataType = dataType;
 	}
+	
 
-
-	/* (non-Javadoc)
-	 * @see info.bioinfweb.libralign.alignmentprovider.AlignmentProvider#setDataType(info.bioinfweb.libralign.AlignmentDataType)
-	 */
 	@Override
-	public void setDataType(AlignmentDataType type) {
-		dataType = type;
-	}
-
-
-	/* (non-Javadoc)
-	 * @see info.bioinfweb.libralign.alignmentprovider.AlignmentProvider#getDataType()
-	 */
-	@Override
-	public AlignmentDataType getDataType() {
+	public AlignmentSourceDataType getDataType() {
 		return dataType;
 	}
 }
