@@ -10,3 +10,8 @@ demo/swt/src/info/bioinfweb/libralign/demo/swt/Main.java -text svneol=unset#text
 main/.classpath -text svneol=unset#text/plain
 main/.project -text svneol=unset#text/plain
 main/.settings/org.eclipse.jdt.core.prefs -text svneol=unset#text/plain
+main/lib/biojava3-core-3.0.7.jar -text
+main/src/info/bioinfweb/libralign/AlignmentArea.java -text svneol=unset#text/plain
+main/src/info/bioinfweb/libralign/AlignmentDataType.java -text svneol=unset#text/plain
+main/src/info/bioinfweb/libralign/alignmentprovider/AbstractAlignmentProvider.java -text svneol=unset#text/plain
+main/src/info/bioinfweb/libralign/alignmentprovider/AlignmentProvider.java -text svneol=unset#text/plain
