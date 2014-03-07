@@ -16,14 +16,39 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package info.bioinfweb.libralign;
+package info.bioinfweb.libralign.exception;
 
 
 import info.bioinfweb.libralign.alignmentprovider.AlignmentDataProvider;
 
 
 
-public class AlignmentArea {
-	private AlignmentDataProvider dataProvider;
-	private WorkingMode workingMode = WorkingMode.VIEW;
+/**
+ * Base class of all exceptions that can be thrown by an {@link AlignmentDataProvider}
+ * 
+ * @author Ben St&ouml;ver
+ * @since 1.0.0
+ */
+public class AlignmentDataProviderException extends RuntimeException {
+	private AlignmentDataProvider source;
+	
+	
+	public AlignmentDataProviderException(AlignmentDataProvider source) {
+		super();
+		this.source = source;
+	}
+
+	
+	public AlignmentDataProviderException(AlignmentDataProvider source, String message) {
+		super(message);
+		this.source = source;
+	}
+
+
+	/**
+	 * Returns the instance of {@link AlignmentDataProvider} that threw this exception.
+	 */
+	public AlignmentDataProvider getSource() {
+		return source;
+	}
 }

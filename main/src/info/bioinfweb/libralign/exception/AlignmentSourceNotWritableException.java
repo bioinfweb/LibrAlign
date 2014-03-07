@@ -16,14 +16,22 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package info.bioinfweb.libralign;
+package info.bioinfweb.libralign.exception;
 
 
 import info.bioinfweb.libralign.alignmentprovider.AlignmentDataProvider;
 
 
 
-public class AlignmentArea {
-	private AlignmentDataProvider dataProvider;
-	private WorkingMode workingMode = WorkingMode.VIEW;
+/**
+ * This exceptions is thrown if a modifying method of {@link AlignmentDataProvider} is called
+ * which has a data source that is not writable.
+ * 
+ * @author Ben St&ouml;ver
+ * @since 1.0.0
+ */
+public class AlignmentSourceNotWritableException extends AlignmentDataProviderException {
+	public AlignmentSourceNotWritableException(AlignmentDataProvider source) {
+		super(source, "The underlying data source is not writable.");
+	}
 }

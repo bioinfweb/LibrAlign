@@ -19,11 +19,14 @@
 package info.bioinfweb.libralign.alignmentprovider;
 
 
+import java.util.Iterator;
+
 import org.biojava3.core.sequence.compound.AminoAcidCompound;
 import org.biojava3.core.sequence.compound.CodonCompound;
 import org.biojava3.core.sequence.compound.NucleotideCompound;
 
 import info.bioinfweb.libralign.AlignmentSourceDataType;
+import info.bioinfweb.libralign.exception.AlignmentSourceNotWritableException;
 
 
 
@@ -65,7 +68,64 @@ public interface AlignmentDataProvider {
 	 * @return the token to be displayed in the GUI alignment view
 	 */
 	public Object getTokenAt(String sequenceName, int elementIndex);
+	
+	/**
+	 * Replaces the token at the specified position by the passed token.
+	 * 
+	 * @param sequenceName - the name of the row in the alignment
+	 * @param elementIndex - the index of the element to be replaced 
+	 * @param token - the new token for the specified position
+	 * 
+	 * @throws AlignmentSourceNotWritableException if the underlying data source is not writable 
+	 */
+	public void setTokenAt(String sequenceName, int elementIndex, Object token) throws AlignmentSourceNotWritableException;
 
+	/**
+	 * Inserts a token at the specified position.
+	 * 
+	 * @param sequenceName - the name of the row in the alignment
+	 * @param elementIndex - the new index the inserted element will have ({@code 0 <= elementIndex < sequenceLength}) 
+	 * @param token - the token to be inserted
+	 * 
+	 * @throws AlignmentSourceNotWritableException if the underlying data source is not writable 
+	 */
+	public void insertTokenAt(String sequenceName, int elementIndex, Object token) throws AlignmentSourceNotWritableException;
+
+	/**
+	 * Removes the token at the specified position from the underlying data source.
+	 * 
+	 * @param sequenceName - the name of the row in the alignment
+	 * @param elementIndex - the index of the element to be removed
+	 * 
+	 * @throws AlignmentSourceNotWritableException if the underlying data source is not writable 
+	 */
+	public void removeTokenAt(String sequenceName, int elementIndex) throws AlignmentSourceNotWritableException;
+	
+	/**
+	 * Returns the number of sequences in the underlying data source.
+	 */
+	public int getSequenceCount();
+	
+	/**
+	 * Returns an iterator over the names of all sequences contained in the underlying data source.
+	 */
+	public Iterator<String> sequenceNameIterator();
+	
+	/**
+	 * Returns the length of the specified sequence.
+	 * 
+	 * @param sequenceName - the name of the row in the alignment
+	 * @return the length of the sequence or {@code -1} if no sequence with the specified name exists
+	 */
+	public int getSequenceLength(String sequenceName);
+
+	/**
+	 * Allows to check whether the underlying data source can be modified.
+	 * 
+	 * @return {@code true} if the underlying data source is not writable, {@code false} otherwise.
+	 */
+	public boolean isReadOnly();
+	
   /**
    * Returns the data type of the underlying sequences.
    */

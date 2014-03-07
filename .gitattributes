@@ -15,6 +15,10 @@ main/lib/biojava3-core-3.0.7.jar -text
 main/src/info/bioinfweb/libralign/AlignmentArea.java -text svneol=unset#text/plain
 main/src/info/bioinfweb/libralign/AlignmentDataViewMode.java -text svneol=unset#text/plain
 main/src/info/bioinfweb/libralign/AlignmentSourceDataType.java -text svneol=unset#text/plain
+main/src/info/bioinfweb/libralign/WorkingMode.java -text svneol=unset#text/plain
 main/src/info/bioinfweb/libralign/alignmentprovider/AbstractAlignmentDataProvider.java -text svneol=unset#text/plain
 main/src/info/bioinfweb/libralign/alignmentprovider/AlignmentDataProvider.java -text svneol=unset#text/plain
 main/src/info/bioinfweb/libralign/alignmentprovider/BioJavaAlignmentDataProvider.java -text svneol=unset#text/plain
+main/src/info/bioinfweb/libralign/exception/AlignmentDataProviderException.java -text svneol=unset#text/plain
+main/src/info/bioinfweb/libralign/exception/AlignmentSourceNotWritableException.java -text svneol=unset#text/plain
+main/src/info/bioinfweb/libralign/exception/InvalidCompoundException.java -text svneol=unset#text/plain

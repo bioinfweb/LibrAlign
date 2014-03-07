@@ -30,6 +30,7 @@ import org.biojava3.core.sequence.template.Sequence;
 import info.bioinfweb.biojava3.alignment.SimpleAlignment;
 import info.bioinfweb.biojava3.alignment.template.Alignment;
 import info.bioinfweb.libralign.AlignmentSourceDataType;
+import info.bioinfweb.libralign.exception.AlignmentSourceNotWritableException;
 
 
 
@@ -100,5 +101,53 @@ public class BioJavaAlignmentDataProvider<C extends Compound>
 	@Override
 	public Object getTokenAt(String sequenceName, int elementIndex) {
 		return alignment.getSequence(sequenceName).getCompoundAt(elementIndex + 1);  // BioJava indices start with 1.
+	}
+
+
+	@Override
+	public void setTokenAt(String sequenceName, int elementIndex, Object token)
+			throws AlignmentSourceNotWritableException {
+		
+		throw new AlignmentSourceNotWritableException(this);
+	}
+
+
+	@Override
+	public void insertTokenAt(String sequenceName, int elementIndex, Object token)
+			throws AlignmentSourceNotWritableException {
+
+		throw new AlignmentSourceNotWritableException(this);
+	}
+
+
+	@Override
+	public void removeTokenAt(String sequenceName, int elementIndex)
+			throws AlignmentSourceNotWritableException {
+		
+		throw new AlignmentSourceNotWritableException(this);
+	}
+
+
+	@Override
+	public int getSequenceCount() {
+		return alignment.size();
+	}
+
+
+	@Override
+	public Iterator<String> sequenceNameIterator() {
+		return alignment.nameIterator();
+	}
+
+
+	@Override
+	public int getSequenceLength(String sequenceName) {
+		return alignment.getSequence(sequenceName).getLength();
+	}
+
+
+	@Override
+	public boolean isReadOnly() {
+		return true;
 	}
 }

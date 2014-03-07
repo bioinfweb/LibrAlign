@@ -19,11 +19,20 @@
 package info.bioinfweb.libralign;
 
 
-import info.bioinfweb.libralign.alignmentprovider.AlignmentDataProvider;
 
+/**
+ * Enumeration that lists the working modes of an {@link AlignmentArea}.
+ * 
+ * @author Ben St&ouml;ver
+ * @since 1.0.0
+ */
+public enum WorkingMode {
+	/** Read only view */
+  VIEW,
+  
+	/** Gaps can be inserted or deleted. */
+  ALIGN,
 
-
-public class AlignmentArea {
-	private AlignmentDataProvider dataProvider;
-	private WorkingMode workingMode = WorkingMode.VIEW;
+  /** All tokens can be deleted or inserted. */
+  EDIT;
 }

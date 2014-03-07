@@ -16,14 +16,28 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package info.bioinfweb.libralign;
+package info.bioinfweb.libralign.exception;
 
 
+import org.biojava3.core.sequence.template.Compound;
+
+import info.bioinfweb.libralign.AlignmentSourceDataType;
 import info.bioinfweb.libralign.alignmentprovider.AlignmentDataProvider;
 
 
 
-public class AlignmentArea {
-	private AlignmentDataProvider dataProvider;
-	private WorkingMode workingMode = WorkingMode.VIEW;
+/**
+ * This exceptions is thrown if a compound is used with {@link AlignmentDataProvider} which does not
+ * match the data type of the provide (e.g. trying to write an amino acid to a nucleotide data source). 
+ * 
+ * @author Ben St&ouml;ver
+ * @since 1.0.0
+ */
+public class InvalidCompoundException extends AlignmentDataProviderException {
+	public InvalidCompoundException(AlignmentDataProvider source, Compound compound, 
+			AlignmentSourceDataType dataType) {
+		
+		super(source, "The compound " + compound.getLongName() + " of type " + compound.getClass().getName() + 
+				" cannot does not match the data type " + dataType.toString() + ".");
+	}
 }
