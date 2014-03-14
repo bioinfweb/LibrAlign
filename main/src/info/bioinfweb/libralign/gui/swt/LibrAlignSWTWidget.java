@@ -22,8 +22,11 @@ package info.bioinfweb.libralign.gui.swt;
 
 import info.bioinfweb.libralign.PaintableArea;
 
+import org.eclipse.swt.events.PaintEvent;
+import org.eclipse.swt.events.PaintListener;
+import org.eclipse.swt.widgets.Canvas;
 import org.eclipse.swt.widgets.Composite;
-import org.holongate.j2d.J2DCanvas;
+import org.jfree.experimental.swt.SWTGraphics2D;
 
 
 
@@ -33,13 +36,28 @@ import org.holongate.j2d.J2DCanvas;
  * @author Ben St&ouml;ver
  * @since 1.0.0
  */
-public class LibrAlignSWTWidget extends J2DCanvas {
+public class LibrAlignSWTWidget extends Canvas implements PaintListener {
+	private PaintableArea paintableArea;
+
+	
 	public LibrAlignSWTWidget(Composite parent, int style, PaintableArea paintableArea) {
-		super(parent, style, new J2D4SWTPaintable(paintableArea));
+		super(parent, style);
 	}
 
 
 	public PaintableArea getPaintableArea() {
-		return ((J2D4SWTPaintable)getPaintable()).getPaintableArea();
+		return paintableArea;
+	}
+
+
+	@Override
+	public void paintControl(PaintEvent e) {
+		SWTGraphics2D g = new SWTGraphics2D(e.gc);
+		try {
+			paintableArea.paint(g);
+		}
+		finally {
+			g.dispose();
+		}
 	}
 }
