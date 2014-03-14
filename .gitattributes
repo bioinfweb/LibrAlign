@@ -12,13 +12,21 @@ main/.project -text svneol=unset#text/plain
 main/.settings/org.eclipse.jdt.core.prefs -text svneol=unset#text/plain
 main/lib/biojava3-alignment-3.0.7.jar -text
 main/lib/biojava3-core-3.0.7.jar -text
+main/lib/j2d4swt.jar -text
+main/lib/swt.jar -text
 main/src/info/bioinfweb/libralign/AlignmentArea.java -text svneol=unset#text/plain
 main/src/info/bioinfweb/libralign/AlignmentDataViewMode.java -text svneol=unset#text/plain
 main/src/info/bioinfweb/libralign/AlignmentSourceDataType.java -text svneol=unset#text/plain
+main/src/info/bioinfweb/libralign/PaintableArea.java -text svneol=unset#text/plain
 main/src/info/bioinfweb/libralign/WorkingMode.java -text svneol=unset#text/plain
 main/src/info/bioinfweb/libralign/alignmentprovider/AbstractAlignmentDataProvider.java -text svneol=unset#text/plain
 main/src/info/bioinfweb/libralign/alignmentprovider/AlignmentDataProvider.java -text svneol=unset#text/plain
 main/src/info/bioinfweb/libralign/alignmentprovider/BioJavaAlignmentDataProvider.java -text svneol=unset#text/plain
+main/src/info/bioinfweb/libralign/dataarea/DataArea.java -text svneol=unset#text/plain
+main/src/info/bioinfweb/libralign/dataarea/DataAreaManager.java -text svneol=unset#text/plain
 main/src/info/bioinfweb/libralign/exception/AlignmentDataProviderException.java -text svneol=unset#text/plain
 main/src/info/bioinfweb/libralign/exception/AlignmentSourceNotWritableException.java -text svneol=unset#text/plain
 main/src/info/bioinfweb/libralign/exception/InvalidCompoundException.java -text svneol=unset#text/plain
+main/src/info/bioinfweb/libralign/gui/swing/LibrAlignSwingComponent.java -text svneol=unset#text/plain
+main/src/info/bioinfweb/libralign/gui/swt/J2D4SWTPaintable.java -text svneol=unset#text/plain
+main/src/info/bioinfweb/libralign/gui/swt/LibrAlignSWTWidget.java -text svneol=unset#text/plain

@@ -16,37 +16,25 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package info.bioinfweb.libralign;
+package info.bioinfweb.libralign.dataarea;
+
+
+import info.bioinfweb.libralign.AlignmentArea;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
 
 
 
 /**
- * Enumerates the possible view modes of aligned data.
+ * Manages the data areas attached to an {@link AlignmentArea}.
  * 
  * @author Ben St&ouml;ver
- * @since 1.0.0
  */
-public enum AlignmentDataViewMode {
-  /** Allows both U and T in one sequence. */
-  NUCLEOTIDE,
-  
-  /** U would be translated to R. */
-  DNA, 
-  
-  /** T would be translated to U. */
-  RNA,
-  
-  /** One sequence element contains three nucleotides. */
-  CODON,
-  
-  /** Three column wide amino acids are displayed only where a protein coding region is marked. */
-  MIXED_AMINO_ACID,
-  
-  /** A sequence only of amino acids each displayed one column wide. */
-  ALL_AMINO_ACID,
-  
-  /** Simply an alignment of tokens represented by a string, which do not necessarily have a biological meaning. */
-  NONE;
-  
-  //TODO Different treatments of gaps in nucleotide data when translating them to amino acids might influence the types of necessary view modes.
+public class DataAreaManager {
+  private List<DataArea> topAreas = new ArrayList<DataArea>(8);	
+  private List<DataArea> bottomAreas = new ArrayList<DataArea>(8);	
+  private Map<String, List<DataArea>> sequenceAreas = new TreeMap<String, List<DataArea>>();	
 }

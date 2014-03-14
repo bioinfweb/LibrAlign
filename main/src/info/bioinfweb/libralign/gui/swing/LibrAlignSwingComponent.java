@@ -16,37 +16,41 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package info.bioinfweb.libralign;
+package info.bioinfweb.libralign.gui.swing;
+
+
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+
+import javax.swing.JComponent;
+
+import info.bioinfweb.libralign.PaintableArea;
 
 
 
 /**
- * Enumerates the possible view modes of aligned data.
+ * The Swing component displaying a {@link PaintableArea}.
  * 
  * @author Ben St&ouml;ver
  * @since 1.0.0
  */
-public enum AlignmentDataViewMode {
-  /** Allows both U and T in one sequence. */
-  NUCLEOTIDE,
-  
-  /** U would be translated to R. */
-  DNA, 
-  
-  /** T would be translated to U. */
-  RNA,
-  
-  /** One sequence element contains three nucleotides. */
-  CODON,
-  
-  /** Three column wide amino acids are displayed only where a protein coding region is marked. */
-  MIXED_AMINO_ACID,
-  
-  /** A sequence only of amino acids each displayed one column wide. */
-  ALL_AMINO_ACID,
-  
-  /** Simply an alignment of tokens represented by a string, which do not necessarily have a biological meaning. */
-  NONE;
-  
-  //TODO Different treatments of gaps in nucleotide data when translating them to amino acids might influence the types of necessary view modes.
+public class LibrAlignSwingComponent extends JComponent {  //TODO Does JPanel have to be used here?
+	private PaintableArea paintableArea;
+
+	
+	public LibrAlignSwingComponent(PaintableArea paintableArea) {
+		super();
+		this.paintableArea = paintableArea;
+	}
+
+
+	@Override
+	public void paint(Graphics graphics) {
+		paintableArea.paint((Graphics2D)graphics);
+	}
+
+
+	public PaintableArea getPaintableArea() {
+		return paintableArea;
+	}
 }

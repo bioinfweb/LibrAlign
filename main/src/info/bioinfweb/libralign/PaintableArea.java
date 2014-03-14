@@ -19,34 +19,23 @@
 package info.bioinfweb.libralign;
 
 
+import java.awt.Graphics2D;
+
+
 
 /**
- * Enumerates the possible view modes of aligned data.
+ * This interface should be implemented by all classes that represent a graphical area in LibrAlign.
  * 
  * @author Ben St&ouml;ver
- * @since 1.0.0
  */
-public enum AlignmentDataViewMode {
-  /** Allows both U and T in one sequence. */
-  NUCLEOTIDE,
-  
-  /** U would be translated to R. */
-  DNA, 
-  
-  /** T would be translated to U. */
-  RNA,
-  
-  /** One sequence element contains three nucleotides. */
-  CODON,
-  
-  /** Three column wide amino acids are displayed only where a protein coding region is marked. */
-  MIXED_AMINO_ACID,
-  
-  /** A sequence only of amino acids each displayed one column wide. */
-  ALL_AMINO_ACID,
-  
-  /** Simply an alignment of tokens represented by a string, which do not necessarily have a biological meaning. */
-  NONE;
-  
-  //TODO Different treatments of gaps in nucleotide data when translating them to amino acids might influence the types of necessary view modes.
+public interface PaintableArea {
+	/**
+	 * Painting operations of the implementing class should be performed here. The coordinates in the 
+	 * provided context are relative to this are. (0, 0) represents the top left corner of this area.
+	 * 
+	 * @param graphics - the graphics context used to perform the paint operations in Swing and SWT
+	 */
+	public void paint(Graphics2D graphics);
+	
+	//TODO Add scroll control methods?
 }

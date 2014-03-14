@@ -40,7 +40,7 @@ import info.bioinfweb.libralign.exception.AlignmentSourceNotWritableException;
  * @author Ben St&ouml;ver
  * @since 1.0.0
  *
- * @param <C> - the compound type used by the underlying sequence objects.
+ * @param <C> - the compound type used by the underlying sequence object
  */
 public class BioJavaAlignmentDataProvider<C extends Compound>
     extends AbstractAlignmentDataProvider implements AlignmentDataProvider {
@@ -76,7 +76,7 @@ public class BioJavaAlignmentDataProvider<C extends Compound>
 			String name;
 			if (profile.getAlignedSequence(i).getOriginalSequence() instanceof AbstractSequence) {
 				name = ((AbstractSequence)profile.getAlignedSequence(i).getOriginalSequence()).getOriginalHeader();
-				//TODO Is there a more genral way to obtain sequence names from BioJava?
+				//TODO Is there a more general way to obtain sequence names from BioJava?
 			}
 			else {
 				name = createNewSequenceName();

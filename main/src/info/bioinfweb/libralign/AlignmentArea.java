@@ -19,11 +19,59 @@
 package info.bioinfweb.libralign;
 
 
+import java.awt.Graphics2D;
+
 import info.bioinfweb.libralign.alignmentprovider.AlignmentDataProvider;
 
 
 
-public class AlignmentArea {
+/**
+ * GUI element of LibrAlign that displays an alignment including attached data views.
+ * 
+ * @author Ben St&ouml;ver
+ */
+public class AlignmentArea implements PaintableArea {
 	private AlignmentDataProvider dataProvider;
 	private WorkingMode workingMode = WorkingMode.VIEW;
+	private AlignmentDataViewMode viewMode = AlignmentDataViewMode.NUCLEOTIDE;  //TODO Initial value should be adjusted when the data type of the specified provider is known.
+	
+	
+	
+	public AlignmentDataProvider getDataProvider() {
+		return dataProvider;
+	}
+	
+	
+	public void setDataProvider(AlignmentDataProvider dataProvider) {
+		this.dataProvider = dataProvider;
+		//TODO repaint
+	}
+	
+	
+	public WorkingMode getWorkingMode() {
+		return workingMode;
+	}
+	
+	
+	public void setWorkingMode(WorkingMode workingMode) {
+		this.workingMode = workingMode;
+	}
+	
+	
+	public AlignmentDataViewMode getViewMode() {
+		return viewMode;
+	}
+	
+	
+	public void setViewMode(AlignmentDataViewMode viewMode) {
+		this.viewMode = viewMode;
+		//TODO repaint
+	}
+
+
+	@Override
+	public void paint(Graphics2D graphics) {
+		//TODO Paint sequences
+		//TODO Paint data views
+	}
 }

@@ -16,37 +16,30 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package info.bioinfweb.libralign;
+package info.bioinfweb.libralign.gui.swt;
+
+
+
+import info.bioinfweb.libralign.PaintableArea;
+
+import org.eclipse.swt.widgets.Composite;
+import org.holongate.j2d.J2DCanvas;
 
 
 
 /**
- * Enumerates the possible view modes of aligned data.
+ * The SWT widget displaying a {@link PaintableArea}.
  * 
  * @author Ben St&ouml;ver
  * @since 1.0.0
  */
-public enum AlignmentDataViewMode {
-  /** Allows both U and T in one sequence. */
-  NUCLEOTIDE,
-  
-  /** U would be translated to R. */
-  DNA, 
-  
-  /** T would be translated to U. */
-  RNA,
-  
-  /** One sequence element contains three nucleotides. */
-  CODON,
-  
-  /** Three column wide amino acids are displayed only where a protein coding region is marked. */
-  MIXED_AMINO_ACID,
-  
-  /** A sequence only of amino acids each displayed one column wide. */
-  ALL_AMINO_ACID,
-  
-  /** Simply an alignment of tokens represented by a string, which do not necessarily have a biological meaning. */
-  NONE;
-  
-  //TODO Different treatments of gaps in nucleotide data when translating them to amino acids might influence the types of necessary view modes.
+public class LibrAlignSWTWidget extends J2DCanvas {
+	public LibrAlignSWTWidget(Composite parent, int style, PaintableArea paintableArea) {
+		super(parent, style, new J2D4SWTPaintable(paintableArea));
+	}
+
+
+	public PaintableArea getPaintableArea() {
+		return ((J2D4SWTPaintable)getPaintable()).getPaintableArea();
+	}
 }
