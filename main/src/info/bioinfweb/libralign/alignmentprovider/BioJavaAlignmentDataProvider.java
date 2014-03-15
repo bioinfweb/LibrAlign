@@ -147,6 +147,12 @@ public class BioJavaAlignmentDataProvider<C extends Compound>
 
 
 	@Override
+	public int getMaxSequenceLength() {
+		return alignment.maxSequenceLength();
+	}
+
+
+	@Override
 	public boolean isReadOnly() {
 		return true;
 	}

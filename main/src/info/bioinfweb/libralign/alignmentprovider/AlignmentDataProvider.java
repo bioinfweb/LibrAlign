@@ -31,7 +31,7 @@ import info.bioinfweb.libralign.exception.AlignmentSourceNotWritableException;
 
 
 /**
- * Interface that allows LibrAlign GUI elements to access different types of alignment data.
+ * Interface that allows LibrAlign GUI elements to access different types of alignment data sources.
  * 
  * @author Ben St&ouml;ver
  * @since 1.0.0
@@ -64,7 +64,7 @@ public interface AlignmentDataProvider {
 	 * </table>
 	 * 
 	 * @param sequenceName - the name of the row in the alignment
-	 * @param elementIndex - the index of the element contained in the specified sequence 
+	 * @param elementIndex - the index of the element contained in the specified sequence (The first element has the index 0.)
 	 * @return the token to be displayed in the GUI alignment view
 	 */
 	public Object getTokenAt(String sequenceName, int elementIndex);
@@ -73,7 +73,7 @@ public interface AlignmentDataProvider {
 	 * Replaces the token at the specified position by the passed token.
 	 * 
 	 * @param sequenceName - the name of the row in the alignment
-	 * @param elementIndex - the index of the element to be replaced 
+	 * @param elementIndex - the index of the element to be replaced (The first element has the index 0.)
 	 * @param token - the new token for the specified position
 	 * 
 	 * @throws AlignmentSourceNotWritableException if the underlying data source is not writable 
@@ -95,7 +95,7 @@ public interface AlignmentDataProvider {
 	 * Removes the token at the specified position from the underlying data source.
 	 * 
 	 * @param sequenceName - the name of the row in the alignment
-	 * @param elementIndex - the index of the element to be removed
+	 * @param elementIndex - the index of the element to be removed (The first element has the index 0.)
 	 * 
 	 * @throws AlignmentSourceNotWritableException if the underlying data source is not writable 
 	 */
@@ -118,6 +118,18 @@ public interface AlignmentDataProvider {
 	 * @return the length of the sequence or {@code -1} if no sequence with the specified name exists
 	 */
 	public int getSequenceLength(String sequenceName);
+	
+	/**
+	 * Returns the length of the longest sequence in the alignment which is equivalent to the length of
+	 * the alignment. 
+	 * <p>
+	 * Note that this value represents the number of compounds of the specified data type. If e.g. a
+	 * DNA data source is viewed as amino acid data this method would still return the number of 
+	 * nucleotides in the longest sequence. 
+	 * 
+	 * @return the number of columns in the alignment
+	 */
+	public int getMaxSequenceLength();
 
 	/**
 	 * Allows to check whether the underlying data source can be modified.
