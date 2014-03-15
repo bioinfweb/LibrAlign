@@ -42,16 +42,16 @@ import info.bioinfweb.libralign.exception.AlignmentSourceNotWritableException;
  *
  * @param <C> - the compound type used by the underlying sequence object
  */
-public class BioJavaAlignmentDataProvider<C extends Compound>
+public class BioJavaAlignmentDataProvider<S extends Sequence<C>, C extends Compound>
     extends AbstractAlignmentDataProvider implements AlignmentDataProvider {
 	
 	public static final String DEFAULT_SEQUENCE_NAME_PREFIX = "Sequence";
 	
 	
-	private Alignment<Sequence<C>, C> alignment;
+	private Alignment<S, C> alignment;
 	
 	
-	public BioJavaAlignmentDataProvider(Alignment<Sequence<C>, C> alignment, AlignmentSourceDataType dataType) {
+	public BioJavaAlignmentDataProvider(Alignment<S, C> alignment, AlignmentSourceDataType dataType) {
 		super(dataType);
 		this.alignment = alignment;
 	}
@@ -68,10 +68,10 @@ public class BioJavaAlignmentDataProvider<C extends Compound>
 	}
 	
 
-	public BioJavaAlignmentDataProvider(Profile<Sequence<C>, C> profile, AlignmentSourceDataType dataType) {
+	public BioJavaAlignmentDataProvider(Profile<S, C> profile, AlignmentSourceDataType dataType) {
 		super(dataType);
 		
-		alignment = new SimpleAlignment<Sequence<C>, C>();
+		alignment = new SimpleAlignment<S, C>();
 		for (int i = 0; i < profile.getSize(); i++) {
 			String name;
 			if (profile.getAlignedSequence(i).getOriginalSequence() instanceof AbstractSequence) {
@@ -81,15 +81,15 @@ public class BioJavaAlignmentDataProvider<C extends Compound>
 			else {
 				name = createNewSequenceName();
 			}
-			alignment.add(name, profile.getAlignedSequence(i)); 
+			alignment.add(name, (S)profile.getAlignedSequence(i)); 
 		}
 	}
 
 
-	public BioJavaAlignmentDataProvider(Map<String, Sequence<C>> map, AlignmentSourceDataType dataType) {
+	public BioJavaAlignmentDataProvider(Map<String, S> map, AlignmentSourceDataType dataType) {
 		super(dataType);
 		
-		alignment = new SimpleAlignment<Sequence<C>, C>();
+		alignment = new SimpleAlignment<S, C>();
 		Iterator<String> iterator = map.keySet().iterator();
 		while (iterator.hasNext()) {
 			String name = iterator.next(); 
