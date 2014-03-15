@@ -101,6 +101,35 @@ public class SequenceOrder {
 		Collections.sort(nameList);
 	}
 
+	
+	/**
+	 * Moves a sequence to a new position. All other sequences are moved by one position accordingly.
+	 * <p>
+	 * If the {@code index + offset} is lower than 0 the sequence if moved to the beginning, if the 
+	 * result greater than the index of the last element in the list, the sequence is moved to the
+	 * end.
+	 * 
+	 * @param index - the index of the sequence to be moved (The first sequence has the index 0.)
+	 * @param offset - the number of positions to move the sequence (Can be positive or negative.)
+	 * @return the new index the specified sequence has after the move operation
+	 */
+	public int moveSequence(int index, int offset) {
+		int newIndex = Math.max(0, Math.min(nameList.size() - 1, index + offset));
+		String name = nameList.get(index);
+		if (newIndex < index) {
+			for (int i = index; i > newIndex; i--) {
+				nameList.set(i, nameList.get(i - 1));
+			}
+		}
+		else {
+			for (int i = index; i < newIndex; i++) {
+				nameList.set(i, nameList.get(i + 1));
+			}
+		}
+		nameList.set(newIndex, name);
+		return newIndex;
+	}
+	
 
 	/**
 	 * Returns the underlying name list which can be used to change the ordering of the sequences.
