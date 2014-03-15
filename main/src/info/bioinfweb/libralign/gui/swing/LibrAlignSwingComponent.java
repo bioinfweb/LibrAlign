@@ -24,7 +24,7 @@ import java.awt.Graphics2D;
 
 import javax.swing.JComponent;
 
-import info.bioinfweb.libralign.PaintableArea;
+import info.bioinfweb.libralign.gui.PaintableArea;
 
 
 

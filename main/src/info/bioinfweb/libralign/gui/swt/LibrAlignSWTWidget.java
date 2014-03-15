@@ -20,7 +20,7 @@ package info.bioinfweb.libralign.gui.swt;
 
 
 
-import info.bioinfweb.libralign.PaintableArea;
+import info.bioinfweb.libralign.gui.PaintableArea;
 
 import org.eclipse.swt.events.PaintEvent;
 import org.eclipse.swt.events.PaintListener;

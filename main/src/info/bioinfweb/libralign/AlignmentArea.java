@@ -35,6 +35,7 @@ import org.biojava3.core.sequence.compound.AminoAcidCompound;
 import org.biojava3.core.sequence.compound.NucleotideCompound;
 
 import info.bioinfweb.libralign.alignmentprovider.AlignmentDataProvider;
+import info.bioinfweb.libralign.gui.PaintableArea;
 import info.bioinfweb.libralign.selection.AlignmentCursor;
 import info.bioinfweb.libralign.selection.AlignmentSelectionModel;
 import info.webinsel.util.Math2;
@@ -212,16 +213,30 @@ public class AlignmentArea implements PaintableArea {
 	}
 
 
-  private void paintCompound(Graphics2D g, Object compound, float x, float y, boolean selected) {
-  	g.setColor(getColorSchema().getTokenBorderColor());
-  	g.draw(new Rectangle2D.Float(x, y, getCompoundWidth(), getCompoundHeight()));
+	private String getNucleotideBaseString(NucleotideCompound compound) {
+		String result = compound.getUpperedBase();
+		if (result.equals("U") && getViewMode().equals(AlignmentDataViewMode.DNA)) {
+			return "T";
+		}
+		else if (result.equals("T") && getViewMode().equals(AlignmentDataViewMode.RNA)) {
+			return "U";
+		}
+		else {
+			return result;
+		}
+	}
+	
+	
+  private void paintNucleotideCompound(Graphics2D g, NucleotideCompound compound, float x, float y, 
+  		boolean selected) {
   	
-  	Set<NucleotideCompound> consituents = compound.getConsituents();
+  	Set<NucleotideCompound> consituents = compound.getConstituents();
   	final float height = getCompoundHeight() / (float)consituents.size();
   	Iterator<NucleotideCompound> iterator = consituents.iterator();
   	float bgY = y;
   	while (iterator.hasNext()) {  // Fill the compound rectangle with differently colored zones, if ambiguity codes are used.
-  		g.setColor(getBGColor(iterator.next().getUpperedBase(), selected));
+  		g.setColor(getBGColor(
+  				getColorSchema().getNucleotideColorMap().get(getNucleotideBaseString(iterator.next())),	selected));
     	g.fill(new Rectangle2D.Float(x, bgY, getCompoundWidth(), height));
     	bgY += height;
   	}
@@ -230,5 +245,28 @@ public class AlignmentArea implements PaintableArea {
   	g.setFont(getCompoundFont());
 		FontMetrics fm = g.getFontMetrics();
   	g.drawString(compound.getBase(), x + 0.5f * (getCompoundWidth() - fm.charWidth(compound.getBase().charAt(0))), y + fm.getAscent());
+  }
+  
+  
+  private void paintCompound(Graphics2D g, Object compound, float x, float y, boolean selected) {
+  	g.setColor(getColorSchema().getTokenBorderColor());
+  	g.draw(new Rectangle2D.Float(x, y, getCompoundWidth(), getCompoundHeight()));
+  	
+  	switch (getViewMode()) {
+  		case NUCLEOTIDE:
+			case DNA:
+			case RNA:
+				paintNucleotideCompound(g, (NucleotideCompound)compound, x, y, selected);
+				//TODO Type cast funktioniert so nicht, wenn Quelldaten nicht diesen Datentyp haben! => Konvertierung mit GeneticCode hinzufügen.
+				break;
+			case CODON:
+				break;
+			case MIXED_AMINO_ACID:
+				break;
+			case ALL_AMINO_ACID:
+				break;
+			case NONE:
+				break;
+  	}
   }
 }

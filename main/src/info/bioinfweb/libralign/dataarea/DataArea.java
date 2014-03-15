@@ -19,7 +19,7 @@
 package info.bioinfweb.libralign.dataarea;
 
 
-import info.bioinfweb.libralign.PaintableArea;
+import info.bioinfweb.libralign.gui.PaintableArea;
 
 
 
