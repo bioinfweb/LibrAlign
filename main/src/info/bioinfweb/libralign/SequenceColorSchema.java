@@ -33,6 +33,10 @@ import java.util.TreeMap;
  * @since 1.0.0
  */
 public class SequenceColorSchema {
+	public static final Color DEFAULT_GAP_COLOR = Color.GRAY;
+	public static final Color DEFAULT_UNKNOWN_COLOR = Color.GRAY.brighter();
+	
+	
 	private Color tokenBorderColor = Color.WHITE;
 	private Color defaultBgColor = Color.LIGHT_GRAY.brighter();
 	private Color fontColor = Color.BLACK;
@@ -50,7 +54,8 @@ public class SequenceColorSchema {
 		result.put("U", colorTU);
 		result.put("C", new Color(90, 90, 230));
 		result.put("G", new Color(226, 230, 90));
-		result.put("-", Color.GRAY);
+		result.put("-", DEFAULT_GAP_COLOR);
+		result.put("?", DEFAULT_UNKNOWN_COLOR);
 		return result;
 	}
 	
@@ -77,7 +82,8 @@ public class SequenceColorSchema {
 		result.put("V", new Color(254, 255, 0));
 		result.put("W", new Color(255, 0, 29));
 		result.put("Y", new Color(235, 0, 173));
-		result.put("-", Color.GRAY);
+		result.put("-", DEFAULT_GAP_COLOR);
+		result.put("?", DEFAULT_UNKNOWN_COLOR);
 		return result;
 	}
 	
