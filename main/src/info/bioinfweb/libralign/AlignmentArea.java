@@ -20,9 +20,11 @@ package info.bioinfweb.libralign;
 
 
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.FontMetrics;
 import java.awt.Graphics2D;
+import java.awt.Rectangle;
 import java.awt.geom.Rectangle2D;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -35,9 +37,11 @@ import org.biojava3.core.sequence.compound.AminoAcidCompound;
 import org.biojava3.core.sequence.compound.NucleotideCompound;
 
 import info.bioinfweb.libralign.alignmentprovider.AlignmentDataProvider;
+import info.bioinfweb.libralign.dataarea.DataAreaModel;
+import info.bioinfweb.libralign.gui.LibrAlignPaintEvent;
 import info.bioinfweb.libralign.gui.PaintableArea;
 import info.bioinfweb.libralign.selection.AlignmentCursor;
-import info.bioinfweb.libralign.selection.AlignmentSelectionModel;
+import info.bioinfweb.libralign.selection.SelectionModel;
 import info.webinsel.util.Math2;
 import info.webinsel.util.graphics.GraphicsUtils;
 
@@ -62,7 +66,8 @@ public class AlignmentArea implements PaintableArea {
 	private WorkingMode workingMode = WorkingMode.VIEW;
 	private AlignmentDataViewMode viewMode = AlignmentDataViewMode.NUCLEOTIDE;  //TODO Initial value should be adjusted when the data type of the specified provider is known.
 	private AlignmentCursor cursor = new AlignmentCursor();
-	private AlignmentSelectionModel selection = new AlignmentSelectionModel(this);
+	private SelectionModel selection = new SelectionModel(this);
+	private DataAreaModel dataAreas = new DataAreaModel();
 	private float zoom = 1f;
 	private float compoundWidth = COMPOUND_WIDTH;
 	private float compoundHeight = COMPOUND_HEIGHT;	
@@ -122,18 +127,16 @@ public class AlignmentArea implements PaintableArea {
 	}
 
 
-	public AlignmentSelectionModel getSelection() {
+	public SelectionModel getSelection() {
 		return selection;
 	}
 
 
-	@Override
-	public void paint(Graphics2D graphics) {
-		//TODO Paint sequences
-		//TODO Paint data views
+	public DataAreaModel getDataAreas() {
+		return dataAreas;
 	}
-	
-	
+
+
 	public float getZoom() {
 		return zoom;
 	}
@@ -146,6 +149,13 @@ public class AlignmentArea implements PaintableArea {
 		font = new Font(FONT_NAME, FONT_STYLE, Math.round(zoom * FONT_SIZE_NO_ZOOM));
 		//assignPaintSize();
 		//fireZoomChanged();
+	}
+
+
+	@Override
+	public Dimension getSize() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 
@@ -181,14 +191,27 @@ public class AlignmentArea implements PaintableArea {
 	}
 
 
-	public int paintXBycolumn(int column) {
+	public int paintXByColumn(int column) {
 		return (int)((column - 1) * getCompoundWidth());
 	}
 
 	
-	private void paintSequence(Graphics2D g, int sequenceIndex, float x, float y) {
-		int firstIndex = Math.max(0, columnByPaintX((int)getVisibleRect().getMinX()));
-		int lastIndex = columnByPaintX((int)getVisibleRect().getMaxX());
+	@Override
+	public void paint(LibrAlignPaintEvent e) {
+		if (hasDataProvider()) {
+			
+			//TODO Paint sequences
+			//TODO Paint data views
+		}
+		else {
+			//TODO Default output for empty data? (or just paint background?)
+		}
+	}
+	
+	
+	private void paintSequence(Graphics2D g, int sequenceIndex, float x, float y, Rectangle visibleRect) {
+		int firstIndex = Math.max(0, columnByPaintX((int)visibleRect.getMinX()));
+		int lastIndex = columnByPaintX((int)visibleRect.getMaxX());
 		if (lastIndex == -1) {
 			lastIndex = getDataProvider().getMaxSequenceLength() - 1;
 		}

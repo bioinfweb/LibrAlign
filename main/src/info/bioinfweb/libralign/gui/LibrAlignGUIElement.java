@@ -16,29 +16,19 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package info.bioinfweb.libralign.selection;
-
-
-import info.bioinfweb.libralign.AlignmentArea;
-
-import java.util.EventObject;
+package info.bioinfweb.libralign.gui;
 
 
 
 /**
- * Event that happens if the selection in an {@link AlignmentArea} changes.
+ * Should be implemented by all GUI classes that display the contents of a {@link PaintableArea}.
  * 
  * @author Ben St&ouml;ver
  * @since 1.0.0
  */
-public class SelectionChangeEvent extends EventObject {
-	public SelectionChangeEvent(SelectionModel source) {
-		super(source);
-	}
-
-	
-	@Override
-	public SelectionModel getSource() {
-		return (SelectionModel)super.getSource();
-	}	
+public interface LibrAlignGUIElement {
+  /**
+   * Returns the {@link PaintableArea} that is displayed by this GUI element.
+   */
+  public PaintableArea getPaintableArea();
 }

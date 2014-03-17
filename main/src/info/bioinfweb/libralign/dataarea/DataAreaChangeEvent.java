@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package info.bioinfweb.libralign.selection;
+package info.bioinfweb.libralign.dataarea;
 
 
 import info.bioinfweb.libralign.AlignmentArea;
@@ -26,19 +26,44 @@ import java.util.EventObject;
 
 
 /**
- * Event that happens if the selection in an {@link AlignmentArea} changes.
+ * Event that is used to indicate a change of data areas displayed inside an {@link AlignmentArea}.
+ * <p>
+ * A change in this case means adding, removing or replacing data areas. This event does not indicate
+ * changes of the contents of a data area.
+ * </p>
  * 
  * @author Ben St&ouml;ver
  * @since 1.0.0
  */
-public class SelectionChangeEvent extends EventObject {
-	public SelectionChangeEvent(SelectionModel source) {
+public class DataAreaChangeEvent extends EventObject {
+	private DataAreaList list;
+	
+	
+	/**
+	 * Creates a new event object.
+	 * 
+	 * @param source - the object that manages the data area lists
+	 * @param list - the list that contains (or contained) the element the change occurred in
+	 */
+	public DataAreaChangeEvent(DataAreaModel source, DataAreaList list) {
 		super(source);
+		this.list = list;
 	}
 
-	
+
+	/**
+	 * Returns the model object that contains the list where the change occurred.
+	 */
 	@Override
-	public SelectionModel getSource() {
-		return (SelectionModel)super.getSource();
-	}	
+	public DataAreaModel getSource() {
+		return (DataAreaModel)super.getSource();
+	}
+
+
+	/**
+	 * Returns the list of data areas the change occurred in.
+	 */
+	public DataAreaList getList() {
+		return list;
+	}
 }

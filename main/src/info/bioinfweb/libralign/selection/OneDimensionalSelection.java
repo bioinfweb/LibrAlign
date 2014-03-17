@@ -33,35 +33,50 @@ public class OneDimensionalSelection {
 	public static final int NO_SELECTION = -1;
 	
 	
-	private AlignmentSelectionModel owner;
+	private SelectionModel owner;
 	private SelectionDimension dimension;
 	private int firstPos = NO_SELECTION;
 	private int lastPos = NO_SELECTION;
 	private int startPos = NO_SELECTION;
 
 	
-	public OneDimensionalSelection(AlignmentSelectionModel owner, SelectionDimension dimension) {
+	public OneDimensionalSelection(SelectionModel owner, SelectionDimension dimension) {
 		super();
 		this.owner = owner;
 		this.dimension = dimension;
 	}
 
 
-	public AlignmentSelectionModel getOwner() {
+	public SelectionModel getOwner() {
 		return owner;
 	}
 
 
+	/**
+	 * Determines of this selection represent columns or rows.
+	 * 
+	 * @return either {@link SelectionDimension#COLUMN} or {@link SelectionDimension#ROW}  
+	 */
 	public SelectionDimension getDimension() {
 		return dimension;
 	}
 
 
+	/**
+	 * Returns the first column (or row) that is contained in the selection.
+	 * 
+	 * @return the index of the first selected position or {@link #NO_SELECTION} if the selection is empty
+	 */
 	public int getFirstPos() {
 		return firstPos;
 	}
 	
 	
+	/**
+	 * Returns the last column (or row) that is contained in the selection.
+	 * 
+	 * @return the index of the last selected position or {@link #NO_SELECTION} if the selection is empty
+	 */
 	public int getLastPos() {
 		return lastPos;
 	}
@@ -80,6 +95,16 @@ public class OneDimensionalSelection {
   }
 	
   
+  /**
+   * Deletes the current selection and selects the column (or row) at the specified position.
+   * <p>
+   * If a value below 0 (except {@link OneDimensionalSelection#NO_SELECTION}) or greater than the 
+   * length (or height) of the alignment is specified, the first or last column (or row) is selected.
+   * </p>
+   * 
+   * @param pos - the index of the column (or row) to be selected
+   * @throws IllegalArgumentException - if {@link #NO_SELECTION} is specified (Use {@link #clear()} instead.)
+   */
   public void setNewSelection(int pos) {
   	pos = secureValidPos(pos);
 
@@ -95,6 +120,14 @@ public class OneDimensionalSelection {
   }
   
 	
+	/**
+	 * Sets the first column (or row) of the selection.
+	 * <p>
+	 * If the specified position is greater than {@link #getLastPos()}, both values are swapped.
+	 * </p>
+	 * 
+	 * @param firstPos - the index of the new selection start
+	 */
 	public void setFirstPos(int firstPos) {
   	firstPos = secureValidPos(firstPos);
 		
@@ -106,34 +139,60 @@ public class OneDimensionalSelection {
 	}
 	
 	
-	public void setLastPos(int lastColumn) {
-  	lastColumn = secureValidPos(lastColumn);
+	/**
+	 * Sets the last column (or row) of the selection.
+	 * <p>
+	 * If the specified position is lower than {@link #getFirstPos()}, both values are swapped.
+	 * If {@link #getFirstPos()} was not set, it is set to the specified value as well.
+	 * </p>
+	 * 
+	 * @param firstPos - the index of the new selection start
+	 */
+	public void setLastPos(int lastPos) {
+  	lastPos = secureValidPos(lastPos);
 		
-		if (lastColumn == NO_SELECTION) {
+		if (lastPos == NO_SELECTION) {
 			this.lastPos = getFirstPos();
 		}
 		else {
-			if (getFirstPos() > lastColumn) {
+			if (getFirstPos() > lastPos) {
 				this.lastPos = getFirstPos();
-				firstPos = lastColumn; 
+				firstPos = lastPos; 
 			}
 			else {
 				if (getFirstPos() == NO_SELECTION) {
-					firstPos = lastColumn;
+					firstPos = lastPos;
 				}
-				this.lastPos = lastColumn;
+				this.lastPos = lastPos;
 			}
 		}
 		getOwner().fireSelectionChanged();
 	}
 	
 	
+	/**
+	 * Checks if the specified column (or row) is included in this selection.
+	 * 
+	 * @param pos - the index of the column or row to be checked
+	 * @return {@code true} if the specified column or row is included, {@code false} otherwise
+	 */
 	public boolean isSelected(int pos) {
 		return Math2.isBetween(pos, getFirstPos(), getLastPos());
 	}
 	
 	
-	public void moveSelectionStart(int columnCount) {
+	/**
+	 * Moves the selection by the specified number of columns (or rows). The new selection
+	 * will only be one column (or row) wide, no matter how wide is was before.
+	 * <p>
+	 * This method may be useful move through the alignment with the keyboard if no cursor 
+	 * independent from the selection is used.
+	 * </p>
+	 * 
+	 * @param count - the number of columns (or rows) to move the selection (Can be
+	 *        positive or negative)
+	 */
+	public void moveSelection(int count) {
 		int pos = 1;
 		if (!isEmpty()) {
 			pos = getFirstPos();
@@ -142,23 +201,34 @@ public class OneDimensionalSelection {
 			}
 		}
 		startPos = pos;
-		pos += columnCount;
+		pos += count;
 		setNewSelection(pos);  // calls fireColumnSelectionChanged()
 	}
 		
 	
-	public void extendSelectionTo(int column) {
-		if (startPos < column) {
+	/**
+	 * Extends the selection in either direction so that the specified and column (or row) all 
+	 * previously selected columns (or rows) are included.
+	 * 
+	 * @param pos - the index of the column or row that shall additionally be included in this selection
+	 */
+	public void extendSelectionTo(int pos) {
+		if (startPos < pos) {
 			firstPos = startPos;  // Not using the setter to avoid firing two events
-			setLastPos(column);
+			setLastPos(pos);
 		}
 		else {
-			firstPos = column;  // Not using the setter to avoid firing two events
+			firstPos = pos;  // Not using the setter to avoid firing two events
 			setLastPos(startPos);
 		}
 	}
 	
 
+	/**
+	 * Extends the selection to the left (or to the bottom).
+	 * 
+	 * @param columnCount - the number of columns to be added to the selection.
+	 */
 	public void extendSelectionRelatively(int columnCount) {
 		if (isEmpty()) {
 			startPos = 1;
@@ -177,13 +247,35 @@ public class OneDimensionalSelection {
 			}
 		}
 	}
+	
+	
+	/**
+	 * Selects all columns or rows (depending on {@link #getDimension()}).
+	 */
+	public void selectAll() {
+		setFirstPos(0);
+		if (getDimension().equals(SelectionDimension.COLUMN)) {
+			setLastPos(getOwner().getOwner().getDataProvider().getMaxSequenceLength() - 1);
+		}
+		else {  // SelectionDimension.ROW
+			setLastPos(getOwner().getOwner().getDataProvider().getSequenceCount() - 1);
+		}
+	}
 		
 	
+	/**
+	 * Checks if any columns or row (depending on {@link #getDimension()}) is selected.
+	 * 
+	 * @return {@code true} if any column or row is selected, {@code false} otherwise.
+	 */
 	public boolean isEmpty() {
 		return getFirstPos() == NO_SELECTION;
 	}
 	
 	
+	/**
+	 * Clears this selection.
+	 */
 	public void clear() {
 		startPos = NO_SELECTION;
 		setFirstPos(NO_SELECTION);  // lastPos will be set automatically

@@ -21,20 +21,27 @@ package info.bioinfweb.libralign.dataarea;
 
 import info.bioinfweb.libralign.AlignmentArea;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.TreeMap;
-
 
 
 /**
- * Manages the data areas attached to an {@link AlignmentArea}.
+ * Provides basic functionality for an implementation of {@link DataArea}.
  * 
  * @author Ben St&ouml;ver
+ * @since 1.0.0
  */
-public class DataAreaManager {
-  private List<DataArea> topAreas = new ArrayList<DataArea>(8);	
-  private List<DataArea> bottomAreas = new ArrayList<DataArea>(8);	
-  private Map<String, List<DataArea>> sequenceAreas = new TreeMap<String, List<DataArea>>();	
+public abstract class AbstractDataArea implements DataArea {
+	private AlignmentArea owner;
+	private DataAreaList list;
+	
+	
+	@Override
+	public AlignmentArea getOwner() {
+		return owner;
+	}
+	
+	
+	@Override
+	public DataAreaList getList() {
+		return list;
+	}
 }

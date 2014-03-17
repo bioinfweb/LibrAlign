@@ -24,6 +24,8 @@ import java.awt.Graphics2D;
 
 import javax.swing.JComponent;
 
+import info.bioinfweb.libralign.gui.LibrAlignGUIElement;
+import info.bioinfweb.libralign.gui.LibrAlignPaintEvent;
 import info.bioinfweb.libralign.gui.PaintableArea;
 
 
@@ -34,7 +36,7 @@ import info.bioinfweb.libralign.gui.PaintableArea;
  * @author Ben St&ouml;ver
  * @since 1.0.0
  */
-public class LibrAlignSwingComponent extends JComponent {  //TODO Does JPanel have to be used here?
+public class LibrAlignSwingComponent extends JComponent implements LibrAlignGUIElement {  //TODO Does JPanel have to be used here?
 	private PaintableArea paintableArea;
 
 	
@@ -46,10 +48,11 @@ public class LibrAlignSwingComponent extends JComponent {  //TODO Does JPanel ha
 
 	@Override
 	public void paint(Graphics graphics) {
-		paintableArea.paint((Graphics2D)graphics);
+		paintableArea.paint(new LibrAlignPaintEvent(this, (Graphics2D)graphics, getVisibleRect()));
 	}
 
 
+	@Override
 	public PaintableArea getPaintableArea() {
 		return paintableArea;
 	}

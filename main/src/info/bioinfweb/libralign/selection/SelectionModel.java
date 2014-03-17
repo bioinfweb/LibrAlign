@@ -20,6 +20,7 @@ package info.bioinfweb.libralign.selection;
 
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 
@@ -32,8 +33,10 @@ import info.bioinfweb.libralign.AlignmentArea;
  * 
  * @author Ben St&ouml;ver
  * @since 1.0.0
+ * @see AlignmentArea
+ * @see OneDimensionalSelection
  */
-public class AlignmentSelectionModel {
+public class SelectionModel {
   private AlignmentArea owner;
   private SelectionType type = SelectionType.CELLS;
   private OneDimensionalSelection columnSelection = new OneDimensionalSelection(this, SelectionDimension.COLUMN);
@@ -41,37 +44,97 @@ public class AlignmentSelectionModel {
   private List<SelectionListener> selectionListeners = new ArrayList<SelectionListener>(16);
   
   
-	public AlignmentSelectionModel(AlignmentArea owner) {
+	/**
+	 * Creates a new instance of this class.
+	 * 
+	 * @param owner - the alignment area that will be using this selection object
+	 */
+	public SelectionModel(AlignmentArea owner) {
 		super();
 		this.owner = owner;
 	}
 
 
+	/**
+	 * Returns the alignment area that uses this selection object.
+	 */
 	public AlignmentArea getOwner() {
 		return owner;
 	}
 
 
+	/**
+	 * Returns the currently used selection pattern.
+	 */
 	public SelectionType getType() {
 		return type;
 	}
 
 
+	/**
+	 * Switches the selection type.
+	 * <p>
+	 * If a change from {@link SelectionType#CELLS} to {@link SelectionType#COLUMN_ONLY} is done,
+	 * all rows become automatically selected, if the column selection is not empty.   
+   * If a change from {@link SelectionType#CELLS} to {@link SelectionType#ROW_ONLY} is done,
+	 * all columns become automatically selected, if the row selection is not empty.
+	 * </p>
+	 * 
+	 * @param type -  the new selection type
+	 */
 	public void setType(SelectionType type) {
+		if (type.equals(SelectionType.CELLS)) {
+			switch (this.type) {
+				case COLUMN_ONLY:
+					if (getColumnSelection().isEmpty()) {
+						getRowSelection().clear();
+					}
+					else {
+						getRowSelection().selectAll();
+					}
+					break;
+				case ROW_ONLY:
+					if (getRowSelection().isEmpty()) {
+						getColumnSelection().clear();
+					}
+					else {
+						getColumnSelection().selectAll();
+					}
+					break;
+			}
+		}
 		this.type = type;
+		fireSelectionChanged();
 	}
 	
 	
+	/**
+	 * Returns the column selection.
+	 */
 	public OneDimensionalSelection getColumnSelection() {
 		return columnSelection;
 	}
 
 
+	/**
+	 * Returns the row selection.
+	 */
 	public OneDimensionalSelection getRowSelection() {
 		return rowSelection;
 	}
 
 	
+	/**
+	 * Checks if the specified cell is contained in this selection.
+	 * <p>
+	 * If the selection type is {@link SelectionType#COLUMN_ONLY} (or {@link SelectionType#ROW_ONLY})
+	 * and the selection is not empty all row (or columns) are considered as selected.
+	 * </p>
+	 * 
+	 * @param column - the column index of the cell to be checked
+	 * @param row - the row index of the cell to be checked
+	 * @return {@code true} if the specified cell is contained in the selection, {@code false} otherwise
+	 */
 	public boolean isSelected(int column, int row) {
 		boolean columnSelected = getColumnSelection().isSelected(column);
 		boolean rowSelected = getRowSelection().isSelected(row);
@@ -81,20 +144,36 @@ public class AlignmentSelectionModel {
 	}
 	
 	
+	/**
+	 * Adds a lister to this object that will be informed about future changes of the selection.
+	 * 
+	 * @param listener - the listener object to be notified in the future
+	 * @return {@code true} (as specified by {@link Collection#add(Object)}) 
+	 */
 	public boolean addSelectionListener(SelectionListener listener) {
 		return selectionListeners.add(listener);
 	}
 	
 
+	/**
+	 * Removes the specified listener from this objects list.
+	 * 
+	 * @param listener - the listener to be removed 
+	 * @return {@code true} if this list contained the specified element
+	 */
 	public boolean removeSelectionListener(SelectionListener listener) {
 		return selectionListeners.remove(listener);
 	}
 
 
+	/**
+	 * Informs all listeners that the selection changed.
+	 */
 	protected void fireSelectionChanged() {
 		Iterator<SelectionListener> iterator = selectionListeners.iterator();
+		SelectionChangeEvent e = new SelectionChangeEvent(this);
 		while (iterator.hasNext()) {
-			iterator.next().selectionChanged(new SelectionChangeEvent(this));
+			iterator.next().selectionChanged(e);
 		}
 
 		//TODO Check if the following has to be implemented here:

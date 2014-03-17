@@ -25,7 +25,7 @@ import java.util.EventListener;
 
 /**
  * This interface should be implemented by classes that want to track changes of the selection
- * represented by an {@link AlignmentSelectionModel} object.
+ * represented by an {@link SelectionModel} object.
  * 
  * @author Ben St&ouml;ver
  * @since 1.0.0

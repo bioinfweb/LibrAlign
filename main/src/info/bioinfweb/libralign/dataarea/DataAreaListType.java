@@ -16,29 +16,26 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package info.bioinfweb.libralign.selection;
+package info.bioinfweb.libralign.dataarea;
 
 
 import info.bioinfweb.libralign.AlignmentArea;
 
-import java.util.EventObject;
-
 
 
 /**
- * Event that happens if the selection in an {@link AlignmentArea} changes.
+ * Enumerates the types locations a {@link DataArea} can have inside a {@link AlignmentArea}. 
  * 
  * @author Ben St&ouml;ver
  * @since 1.0.0
  */
-public class SelectionChangeEvent extends EventObject {
-	public SelectionChangeEvent(SelectionModel source) {
-		super(source);
-	}
+public enum DataAreaListType {
+	/** Indicates that the associated data area is located above the alignment. */
+  TOP,
+  
+	/** Indicates that the associated data area is located underneath the alignment. */
+  BOTTOM,
 
-	
-	@Override
-	public SelectionModel getSource() {
-		return (SelectionModel)super.getSource();
-	}	
+  /** Indicates that the associated data area is associated with a sequence in the alignment. */
+  SEQUENCE;
 }

@@ -16,29 +16,22 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package info.bioinfweb.libralign.selection;
+package info.bioinfweb.libralign.dataarea;
 
 
 import info.bioinfweb.libralign.AlignmentArea;
 
-import java.util.EventObject;
+import java.util.EventListener;
 
 
 
 /**
- * Event that happens if the selection in an {@link AlignmentArea} changes.
+ * This interface should be implemented by classes that want to track changes of the data areas
+ * contained in a {@link AlignmentArea}.
  * 
  * @author Ben St&ouml;ver
  * @since 1.0.0
  */
-public class SelectionChangeEvent extends EventObject {
-	public SelectionChangeEvent(SelectionModel source) {
-		super(source);
-	}
-
-	
-	@Override
-	public SelectionModel getSource() {
-		return (SelectionModel)super.getSource();
-	}	
+public interface DataAreaModelListener extends EventListener {
+	public void dataAreaModelChanged(DataAreaChangeEvent e);
 }

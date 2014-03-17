@@ -19,10 +19,32 @@
 package info.bioinfweb.libralign.dataarea;
 
 
+import info.bioinfweb.libralign.AlignmentArea;
 import info.bioinfweb.libralign.gui.PaintableArea;
 
 
 
+/**
+ * All classes representing a data area in an {@link AlignmentArea} should implement this interface.
+ * 
+ * @author Ben St&ouml;ver
+ * @since 1.0.0
+ */
 public interface DataArea extends PaintableArea {
+	/**
+	 * Return the alignment area that displays this data area.
+	 */
+	public AlignmentArea getOwner();
 	
+	/**
+	 * Returns the list this data area is contained in. (It could either be located above or underneath 
+	 * the alignment or attached to one sequence.)
+	 */
+	public DataAreaList getList();	
+
+	/**
+	 * Updates the list this element is contained in.
+	 * @param list - the list that contains this element
+	 */
+	public void setList(DataAreaList list);	
 }

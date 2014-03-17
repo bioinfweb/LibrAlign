@@ -19,7 +19,7 @@
 package info.bioinfweb.libralign.gui;
 
 
-import java.awt.Graphics2D;
+import java.awt.Dimension;
 
 
 
@@ -35,7 +35,16 @@ public interface PaintableArea {
 	 * 
 	 * @param graphics - the graphics context used to perform the paint operations in Swing and SWT
 	 */
-	public void paint(Graphics2D graphics);
+	public void paint(LibrAlignPaintEvent event);
 	
-	//TODO Add scroll control methods?
+	/**
+	 * Returns the size this objects uses to be painted completely.
+	 * <p>
+	 * Note that the associated graphical component might be contained in a scroll container and the
+	 * actual area displayed in the screen can be smaller than the dimension returned here.
+	 * </p>  
+	 * 
+	 * @return the dimension in pixels
+	 */
+	public Dimension getSize();
 }

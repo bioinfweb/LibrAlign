@@ -20,6 +20,10 @@ package info.bioinfweb.libralign.gui.swt;
 
 
 
+import java.awt.Rectangle;
+
+import info.bioinfweb.libralign.gui.LibrAlignGUIElement;
+import info.bioinfweb.libralign.gui.LibrAlignPaintEvent;
 import info.bioinfweb.libralign.gui.PaintableArea;
 
 import org.eclipse.swt.events.PaintEvent;
@@ -36,7 +40,7 @@ import org.jfree.experimental.swt.SWTGraphics2D;
  * @author Ben St&ouml;ver
  * @since 1.0.0
  */
-public class LibrAlignSWTWidget extends Canvas implements PaintListener {
+public class LibrAlignSWTWidget extends Canvas implements PaintListener, LibrAlignGUIElement {
 	private PaintableArea paintableArea;
 
 	
@@ -45,6 +49,7 @@ public class LibrAlignSWTWidget extends Canvas implements PaintListener {
 	}
 
 
+	@Override
 	public PaintableArea getPaintableArea() {
 		return paintableArea;
 	}
@@ -54,7 +59,7 @@ public class LibrAlignSWTWidget extends Canvas implements PaintListener {
 	public void paintControl(PaintEvent e) {
 		SWTGraphics2D g = new SWTGraphics2D(e.gc);
 		try {
-			paintableArea.paint(g);
+			paintableArea.paint(new LibrAlignPaintEvent(this, g, new Rectangle(e.x, e.y, e.width, e.height)));
 		}
 		finally {
 			g.dispose();
