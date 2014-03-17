@@ -18,6 +18,7 @@
  */
 package info.bioinfweb.libralign.selection;
 
+
 import info.bioinfweb.libralign.AlignmentArea;
 
 
@@ -34,6 +35,9 @@ public class AlignmentCursor {
   private int height = 1;
   
   
+	/**
+	 * Returns the column index in front of which the cursor is located. (The initial value is 0.)
+	 */
 	public int getColumn() {
 		return column;
 	}
@@ -44,6 +48,9 @@ public class AlignmentCursor {
 	}
 	
 	
+	/**
+	 * Returns the row index in front of which the cursor is located. (The initial value is 0.)
+	 */
 	public int getRow() {
 		return row;
 	}
@@ -54,6 +61,9 @@ public class AlignmentCursor {
 	}
 	
 	
+	/**
+	 * Returns the height in rows if the cursor. (The initial value is 1.)
+	 */
 	public int getHeight() {
 		return height;
 	}
