@@ -47,7 +47,7 @@ public class DataAreaModel {
 	 * 
 	 * @return a modifiable list
 	 */
-	public List<DataArea> getTopAreas() {
+	public DataAreaList getTopAreas() {
 		return topAreas;
 	}
 	
@@ -57,7 +57,7 @@ public class DataAreaModel {
 	 * 
 	 * @return a modifiable list
 	 */
-	public List<DataArea> getBottomAreas() {
+	public DataAreaList getBottomAreas() {
 		return bottomAreas;
 	}
 	
@@ -113,6 +113,33 @@ public class DataAreaModel {
 		while (nameIterator.hasNext()) {
 			getSequenceAreas(nameIterator.next()).setAllVisible(visible);
 		}
+	}
+	
+	
+	/**
+	 * Calculates the sum of the heights of all visible data areas contained in this model, that are 
+	 * attached to any sequence. 
+	 * 
+	 * @return a double value greater of equal to zero
+	 */
+	public double getVisibleSequenceAreaHeight() {
+		double result = 0.0;
+		Iterator<String> iterator = sequenceAreaLists.keySet().iterator(); 
+		while (iterator.hasNext()) {
+			result += getSequenceAreas(iterator.next()).getVisibleHeight();
+		}
+		return result;
+	}
+	
+	
+	/**
+	 * Calculates the sum of the heights of all visible data areas contained in this model (above, 
+	 * underneath and attached to any sequence). 
+	 * 
+	 * @return a double value greater of equal to zero
+	 */
+	public double getVisibleAreaHeight() {
+		return getTopAreas().getVisibleHeight() + getVisibleSequenceAreaHeight() + getBottomAreas().getVisibleHeight();
 	}
 	
 	

@@ -125,6 +125,31 @@ public class DataAreaList extends ArrayList<DataArea> {
 		}
 	}
 	
+	
+	/**
+	 * Returns an iterator that only iterates over the visible data areas.
+	 * 
+	 * @return an instance of {@link DataAreaVisibleIterator}
+	 */
+	public Iterator<DataArea> visibleIterator() {
+		return new DataAreaVisibleIterator(iterator());
+	}
+	
+	
+	/**
+	 * Calculates the sum of the heights of all visible data areas contained in this list. 
+	 * 
+	 * @return a double value greater of equal to zero
+	 */
+	public double getVisibleHeight() {
+		double result = 0.0;
+		Iterator<DataArea> iterator = visibleIterator();
+		while (iterator.hasNext()) {
+			result += iterator.next().getSize().getHeight();
+		}
+		return result;
+	}
+	
 
 	/**
 	 * Appends the specified data area to the end of this list. This list is automatically set as

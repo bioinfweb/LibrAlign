@@ -25,6 +25,7 @@ import java.awt.Font;
 import java.awt.FontMetrics;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
+import java.awt.Shape;
 import java.awt.geom.Dimension2D;
 import java.awt.geom.Rectangle2D;
 import java.util.Iterator;
@@ -33,6 +34,8 @@ import java.util.Set;
 import org.biojava3.core.sequence.compound.NucleotideCompound;
 
 import info.bioinfweb.libralign.alignmentprovider.AlignmentDataProvider;
+import info.bioinfweb.libralign.dataarea.DataArea;
+import info.bioinfweb.libralign.dataarea.DataAreaList;
 import info.bioinfweb.libralign.dataarea.DataAreaModel;
 import info.bioinfweb.libralign.gui.LibrAlignPaintEvent;
 import info.bioinfweb.libralign.gui.PaintableArea;
@@ -128,11 +131,18 @@ public class AlignmentArea implements PaintableArea {
 	}
 
 
+	/**
+	 * Returns the selection model used by this object.
+	 */
 	public SelectionModel getSelection() {
 		return selection;
 	}
 
 
+	/**
+	 * Returns the data area model used by this object containing all data areas attached 
+	 * to this alignment. 
+	 */
 	public DataAreaModel getDataAreas() {
 		return dataAreas;
 	}
@@ -182,6 +192,11 @@ public class AlignmentArea implements PaintableArea {
 	}
 
 	
+	/**
+	 * Returns the current width of a compound depending on the current zoom factor.
+	 * 
+	 * @return a float value greater than zero
+	 */
 	public float getCompoundWidth() {
 		return compoundWidth;
 	}
@@ -197,6 +212,11 @@ public class AlignmentArea implements PaintableArea {
 	}
 
 
+	/**
+	 * Returns the current height of a compound depending on the current zoom factor.
+	 * 
+	 * @return a float value greater than zero
+	 */
 	public float getCompoundHeight() {
 		return compoundHeight;
 	}
@@ -212,11 +232,13 @@ public class AlignmentArea implements PaintableArea {
 	}
 
 
+	/**
+	 * Returns the size this component will use depending on the current zoom factor.
+	 */
 	@Override
 	public Dimension2D getSize() {
 		return new DoubleDimension(getDataProvider().getMaxSequenceLength() * getCompoundWidth(),
-				getDataProvider().getSequenceCount() * getCompoundHeight());
-		//TODO add data area heights
+				getDataProvider().getSequenceCount() * getCompoundHeight() + getDataAreas().getVisibleAreaHeight());
 		//TODO May data areas be wider than the alignment?
 	}
 
@@ -262,15 +284,67 @@ public class AlignmentArea implements PaintableArea {
 	}
 
 	
+	/**
+	 * Paints all the data ares contained in the specified list which are set visible.
+	 * It is  not checked if these areas are contained in the visible rectangle.
+	 * 
+	 * @param list - the list of elements to be painted
+	 * @param e - the the initial paint event
+	 * @param x - the x coordinate of the data areas
+	 * @param y - the y coordinate of the top most data area
+	 * @return the new value for y below all the painted areas
+	 */
+	private float paintDataAreaList(DataAreaList list, LibrAlignPaintEvent e, float x, float y) {
+		Iterator<DataArea> iterator = list.visibleIterator();
+		while (iterator.hasNext()) {
+			DataArea dataArea = iterator.next();
+			
+			// Create Graphics2D:
+			Dimension2D size = dataArea.getSize();
+			int intX = (int)x;
+			int intY = (int)y;
+			int rectWidth = (int)Math2.roundUp(Math.min(size.getWidth(), -x + e.getRectangle().width));
+			int rectHeight = (int)Math2.roundUp(Math.min(size.getHeight(), -y + e.getRectangle().height));
+			Graphics2D dataAreaGraphics = (Graphics2D)e.getGraphics().create(intX, intY, rectWidth, rectHeight); 
+			dataAreaGraphics.translate(x - intX, y - intY);  // Do the rest of the translation
+			
+			dataArea.paint(new LibrAlignPaintEvent(e.getSource(), dataAreaGraphics, 
+					new Rectangle(rectWidth, rectHeight)));
+			y += size.getHeight();
+		}
+		return y;
+	}
+	
+	
 	@Override
 	public void paint(LibrAlignPaintEvent e) {
 		if (hasDataProvider()) {
+			float x = 0f;
+			float y = 0f;
 			
-			//TODO Paint sequences
-			//TODO Paint data views
-		}
-		else {
-			//TODO Default output for empty data? (or just paint background?)
+			// Top areas:
+			if (e.getRectangle().getMinY() <= y + getDataAreas().getTopAreas().getVisibleHeight()) {
+				y = paintDataAreaList(getDataAreas().getTopAreas(), e, x, y);
+			}
+			
+			// Sequences and attached areas:
+			for (int i = 0; i < getDataProvider().getSequenceCount(); i++) {
+				if (y >= e.getRectangle().getMinY()) {
+					if (y > e.getRectangle().getMaxY()) {  // End output, if the end of the visible rectangle on y has been reached
+						break;
+					}
+					else {
+						paintSequence(e.getGraphics(), i, x, y, e.getRectangle());
+						y += getCompoundHeight();
+						y = paintDataAreaList(getDataAreas().getSequenceAreas(getSequenceOrder().nameByIndex(i)), e, x, y);
+					}
+				}
+			}
+			
+			// Bottom areas:
+			if (e.getRectangle().getMaxY() >= y) {
+				y = paintDataAreaList(getDataAreas().getBottomAreas(), e, x, y);
+			}
 		}
 	}
 	
