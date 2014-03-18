@@ -109,4 +109,25 @@ public class DataAreaListTest {
   	assertEquals(1, eventList.size());
   	eventList.clear();
   }
+  
+  
+  @Test
+  public void test_events_sublist() {
+  	// Produces assertions as long as DataArea.subList() does not have a special implementation.
+  	List<DataAreaChangeEvent> eventList = new ArrayList<DataAreaChangeEvent>();
+  	DataAreaList areaList = createList(eventList, DataAreaListType.TOP);
+  	
+  	Collection<DataArea> severalAreas = new ArrayList<DataArea>(4);
+  	for (int i = 0; i < 4; i++) {
+    	severalAreas.add(createDataArea());
+		}
+  	areaList.addAll(severalAreas);
+  	eventList.clear();
+  	
+  	List<DataArea> subList = areaList.subList(1, 3);
+  	subList.clear();
+  	assertEquals(2, areaList.size());
+  	assertEquals(1, eventList.size());
+  	eventList.clear();
+  }
 }
