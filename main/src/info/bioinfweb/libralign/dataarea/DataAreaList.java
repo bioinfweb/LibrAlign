@@ -205,7 +205,7 @@ public class DataAreaList extends ArrayList<DataArea> {
 
 	@Override
 	public DataArea remove(int index) {
-		DataArea result = super.remove(index); 
+		DataArea result = super.remove(index);
 		getOwner().fireChange(this);
 		return result;
 	}
@@ -213,7 +213,7 @@ public class DataAreaList extends ArrayList<DataArea> {
 
 	@Override
 	public boolean remove(Object o) {
-		boolean result = super.remove(o); 
+		boolean result = super.remove(o);
 		getOwner().fireChange(this);
 		return result;
 	}
@@ -221,7 +221,7 @@ public class DataAreaList extends ArrayList<DataArea> {
 
 	@Override
 	public boolean removeAll(Collection<?> c) {
-		boolean result = super.removeAll(c); 
+		boolean result = super.removeAll(c);
 		getOwner().fireChange(this);
 		return result;
 	}
@@ -229,7 +229,7 @@ public class DataAreaList extends ArrayList<DataArea> {
 
 	@Override
 	public boolean retainAll(Collection<?> c) {
-		boolean result = super.retainAll(c); 
+		boolean result = super.retainAll(c);
 		getOwner().fireChange(this);
 		return result;
 	}
@@ -243,5 +243,5 @@ public class DataAreaList extends ArrayList<DataArea> {
 	}
 
 	
-	//TODO Check if change events are produced by methods called on iterator(), listIterator(), listIterator(int index) and subList()
+	//TODO Overwrite subList() in a way, that change events are also send and the returned instance as a DataAreaList
 }
