@@ -22,7 +22,6 @@ package info.bioinfweb.libralign.dataarea;
 import static org.junit.Assert.* ;
 
 
-import info.bioinfweb.libralign.AlignmentArea;
 import info.bioinfweb.libralign.gui.LibrAlignPaintEvent;
 import info.webinsel.util.graphics.DoubleDimension;
 
@@ -97,11 +96,16 @@ public class DataAreaListTest {
   	eventList.clear();
   	
   	areaList.addAll(severalAreas);
+  	eventList.clear();  // remove addAll event
   	Iterator<DataArea> iterator = areaList.iterator();
   	iterator.next();
   	iterator.next();
   	iterator.remove();
   	assertEquals(3, areaList.size());
+  	assertEquals(1, eventList.size());
+  	eventList.clear();
+  	
+  	areaList.clear();
   	assertEquals(1, eventList.size());
   	eventList.clear();
   }
