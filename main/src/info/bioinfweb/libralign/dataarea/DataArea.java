@@ -46,5 +46,23 @@ public interface DataArea extends PaintableArea {
 	 * Updates the list this element is contained in.
 	 * @param list - the list that contains this element
 	 */
-	public void setList(DataAreaList list);	
+	public void setList(DataAreaList list);
+	
+	/**
+	 * Indicates whether this data area is currently faded in or out in the containing alignment area.
+	 * <p>
+	 * It does not state whether this data area is contained a area of the alignment area that is 
+	 * currently visible on the screen. 
+	 * </p>
+	 * 
+	 * @return {@code true} if this data area is faded in, {@code false} if it is faded out
+	 */
+	public boolean isVisible();
+	
+	/**
+	 * Fades this data area in or out and lets the containing alignment area repaint, if necessary.
+	 * 
+	 * @param visible
+	 */
+	public void setVisible(boolean visible);
 }

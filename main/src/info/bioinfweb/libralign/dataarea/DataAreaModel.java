@@ -36,12 +36,9 @@ import java.util.TreeMap;
  * @author Ben St&ouml;ver
  */
 public class DataAreaModel {
-	public static final int INITIAL_LIST_SIZE = 8;
-	
-	
-  private List<DataArea> topAreas = new ArrayList<DataArea>(INITIAL_LIST_SIZE);	
-  private List<DataArea> bottomAreas = new ArrayList<DataArea>(INITIAL_LIST_SIZE);	
-  private Map<String, List<DataArea>> sequenceAreaLists = new TreeMap<String, List<DataArea>>();
+  private DataAreaList topAreas = new DataAreaList(this, DataAreaListType.TOP);	
+  private DataAreaList bottomAreas = new DataAreaList(this, DataAreaListType.BOTTOM);	
+  private Map<String, DataAreaList> sequenceAreaLists = new TreeMap<String, DataAreaList>();
   private List<DataAreaModelListener> listeners = new ArrayList<DataAreaModelListener>(8);
   
   
@@ -71,10 +68,10 @@ public class DataAreaModel {
 	 * @param sequenceName - the name of the sequence carrying the data areas in the returned list 
 	 * @return a modifiable list
 	 */
-	public List<DataArea> getSequenceAreas(String sequenceName) {
-		List<DataArea> result = sequenceAreaLists.get(sequenceName);
+	public DataAreaList getSequenceAreas(String sequenceName) {
+		DataAreaList result = sequenceAreaLists.get(sequenceName);
 		if (result == null) {
-			result = new ArrayList<DataArea>(INITIAL_LIST_SIZE);
+			result = new DataAreaList(this, DataAreaListType.SEQUENCE);
 			sequenceAreaLists.put(sequenceName, result);
 		}
 		return result;
@@ -102,6 +99,20 @@ public class DataAreaModel {
 	public void renameSequence(String currentName, String newName) {
 		sequenceAreaLists.put(newName, getSequenceAreas(currentName));
 		removeSequence(currentName);
+	}
+	
+	
+	/**
+	 * Fades all data areas associated with any sequence in or out.
+	 * 
+	 * @param visible - Specify {@code true} here, if you want the elements to be displayed, {@code false} otherwise.
+	 * @see DataAreaList#setAllVisible(boolean)
+	 */
+	public void setSequenceDataAreasVisible(boolean visible) {
+		Iterator<String> nameIterator = sequenceAreaLists.keySet().iterator();
+		while (nameIterator.hasNext()) {
+			getSequenceAreas(nameIterator.next()).setAllVisible(visible);
+		}
 	}
 	
 	
@@ -135,7 +146,7 @@ public class DataAreaModel {
 		Iterator<DataAreaModelListener> iterator = listeners.iterator();
 		DataAreaChangeEvent e = new DataAreaChangeEvent(this, list);
 		while (iterator.hasNext()) {
-			iterator.next().dataAreaModelChanged(e);
+			iterator.next().dataAreaModelInsertedRemoved(e);
 		}
 	}
 }

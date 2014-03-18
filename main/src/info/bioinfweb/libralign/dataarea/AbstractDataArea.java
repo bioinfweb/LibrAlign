@@ -30,8 +30,9 @@ import info.bioinfweb.libralign.AlignmentArea;
  * @since 1.0.0
  */
 public abstract class AbstractDataArea implements DataArea {
-	private AlignmentArea owner;
-	private DataAreaList list;
+	private AlignmentArea owner = null;
+	private DataAreaList list = null;
+	private boolean visible = true;
 	
 	
 	@Override
@@ -43,5 +44,23 @@ public abstract class AbstractDataArea implements DataArea {
 	@Override
 	public DataAreaList getList() {
 		return list;
+	}
+
+
+	@Override
+	public void setList(DataAreaList list) {
+		this.list = list;
+	}
+
+
+	@Override
+	public boolean isVisible() {
+		return visible;
+	}
+
+
+	@Override
+	public void setVisible(boolean visible) {
+		this.visible = visible;
 	}
 }

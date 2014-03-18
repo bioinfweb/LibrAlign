@@ -26,14 +26,9 @@ import java.awt.FontMetrics;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
 import java.awt.geom.Rectangle2D;
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
-import org.biojava3.core.sequence.compound.AminoAcidCompound;
 import org.biojava3.core.sequence.compound.NucleotideCompound;
 
 import info.bioinfweb.libralign.alignmentprovider.AlignmentDataProvider;
@@ -51,24 +46,27 @@ import info.webinsel.util.graphics.GraphicsUtils;
  * GUI element of LibrAlign that displays an alignment including attached data views.
  * 
  * @author Ben St&ouml;ver
+ * @since 1.0.0
  */
 public class AlignmentArea implements PaintableArea {
 	public static final float COMPOUND_WIDTH = 10f;
 	public static final float COMPOUND_HEIGHT = 14f;
 	public static final String FONT_NAME = Font.SANS_SERIF;
 	public static final int FONT_STYLE = Font.PLAIN;
-	public static final float FONT_SIZE_NO_ZOOM = COMPOUND_HEIGHT * 0.7f;
+	public static final float FONT_SIZE_FACTOR = 0.7f;
+	public static final int MIN_FONT_SIZE = 4;
 
 	
 	private AlignmentDataProvider dataProvider = null;
 	private SequenceOrder sequenceOrder = new SequenceOrder(this);
 	private SequenceColorSchema colorSchema = new SequenceColorSchema();
-	private WorkingMode workingMode = WorkingMode.VIEW;
+	private WorkingMode workingMode = WorkingMode.VIEW;  //TODO Should this better be part of the controller (key and mouse listener)?
 	private AlignmentDataViewMode viewMode = AlignmentDataViewMode.NUCLEOTIDE;  //TODO Initial value should be adjusted when the data type of the specified provider is known.
 	private AlignmentCursor cursor = new AlignmentCursor();
 	private SelectionModel selection = new SelectionModel(this);
 	private DataAreaModel dataAreas = new DataAreaModel();
-	private float zoom = 1f;
+	private float zoomX = 1f;
+	private float zoomY = 1f;
 	private float compoundWidth = COMPOUND_WIDTH;
 	private float compoundHeight = COMPOUND_HEIGHT;	
 	private Font font = new Font(Font.SANS_SERIF, Font.PLAIN, Math.round(COMPOUND_HEIGHT * 0.7f));
@@ -88,6 +86,7 @@ public class AlignmentArea implements PaintableArea {
 		this.dataProvider = dataProvider;
 		getSequenceOrder().setSourceSequenceOrder();  // Update sequence names
 		//TODO repaint
+		//TODO Send message to all and/or remove some data areas? (Some might be data specific (e.g. pherograms), some not (e.g. consensus sequence).) 
 	}
 	
 	
@@ -137,30 +136,62 @@ public class AlignmentArea implements PaintableArea {
 	}
 
 
-	public float getZoom() {
-		return zoom;
+	public float getZoomX() {
+		return zoomX;
 	}
 
 
-	public void setZoom(float zoom) {
-		this.zoom = zoom;
-		compoundWidth = COMPOUND_WIDTH * zoom;
-		compoundHeight = COMPOUND_HEIGHT * zoom;
-		font = new Font(FONT_NAME, FONT_STYLE, Math.round(zoom * FONT_SIZE_NO_ZOOM));
+	public float getZoomY() {
+		return zoomY;
+	}
+
+
+	public void setZoomX(float zoomX) {
+		setZoom(zoomX, getZoomY());
+	}
+	
+	
+	public void setZoomY(float zoomY) {
+		setZoom(getZoomX(), zoomY);
+	}
+	
+	
+	public void setZoom(float zoomX, float zoomY) {
+		this.zoomX = zoomX;
+		this.zoomY = zoomY;
+		compoundWidth = COMPOUND_WIDTH * zoomX;
+		compoundHeight = COMPOUND_HEIGHT * zoomY;
+		calculateFont();
+		
 		//assignPaintSize();
 		//fireZoomChanged();
 	}
+	
+	
+	private void calculateFont() {
+		int fontSize = Math.round(Math.min(compoundHeight * (COMPOUND_WIDTH / COMPOUND_HEIGHT), compoundWidth) * 
+				FONT_SIZE_FACTOR);  //TODO Equation correct?
+		if (fontSize >= MIN_FONT_SIZE) {
+			font = new Font(FONT_NAME, FONT_STYLE, fontSize);
+		}
+		else {
+			font = null;
+		}
+	}
 
-
-	@Override
-	public Dimension getSize() {
-		// TODO Auto-generated method stub
-		return null;
+	
+	public float getCompoundWidth() {
+		return compoundWidth;
 	}
 
 
-	public float getCompoundWidth() {
-		return compoundWidth;
+	public void setCompoundWidth(float compoundWidth) {
+		this.compoundWidth = compoundWidth;
+		zoomX = compoundWidth / COMPOUND_WIDTH;
+		calculateFont();
+		
+		//assignPaintSize();
+		//fireZoomChanged();
 	}
 
 
@@ -169,6 +200,25 @@ public class AlignmentArea implements PaintableArea {
 	}
 	
 	
+	public void setCompoundHeight(float compoundHeight) {
+		this.compoundHeight = compoundHeight;
+		zoomY = compoundHeight / COMPOUND_HEIGHT;
+		calculateFont();
+		
+		//assignPaintSize();
+		//fireZoomChanged();
+	}
+
+
+	@Override
+	public Dimension getSize() {
+		return new Dimension(Math2.roundUp(getDataProvider().getMaxSequenceLength() * getCompoundWidth()),
+				Math2.roundUp(getDataProvider().getSequenceCount() * getCompoundHeight()));
+		//TODO add data area heights
+		//TODO May data areas be wider than the alignment?
+	}
+
+
 	public Font getCompoundFont() {
 		return font;
 	}

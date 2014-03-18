@@ -36,6 +36,9 @@ import java.util.Iterator;
  * @since 1.0.0
  */
 public class DataAreaList extends ArrayList<DataArea> {
+	public static final int INITIAL_LIST_SIZE = 8;
+	
+	
 	private DataAreaModel owner;
 	private DataAreaLocation location;
 	
@@ -51,7 +54,7 @@ public class DataAreaList extends ArrayList<DataArea> {
 	 * @throws IllegalArgumentException - if {@link DataAreaListType#SEQUENCE} is specified as {@code listType}
 	 */
 	public DataAreaList(DataAreaModel owner, DataAreaListType listType) {
-		super();
+		super(INITIAL_LIST_SIZE);
 		if (listType.equals(DataAreaListType.SEQUENCE)) {
 			throw new IllegalArgumentException("The type " + DataAreaListType.SEQUENCE + 
 					" cannot be used if the sequence name is omitted.");
@@ -99,10 +102,29 @@ public class DataAreaList extends ArrayList<DataArea> {
 	}
 	
 
+	/**
+	 * Returns the location the elements in this list have in the containing {@link AlignmentArea}.
+	 * 
+	 * @return the according location object
+	 */
 	public DataAreaLocation getLocation() {
 		return location;
 	}
 
+	
+	/**
+	 * Fades all elements in this list in or out.
+	 * 
+	 * @param visible - Specify {@code true} here, if you want the elements to be displayed, {@code false} otherwise.
+	 * @see DataAreaModel#setSequenceDataAreasVisible(boolean)
+	 */
+	public void setAllVisible(boolean visible) {
+		Iterator<DataArea> iterator = iterator();
+		while (iterator.hasNext()) {
+			iterator.next().setVisible(visible);
+		}
+	}
+	
 
 	/**
 	 * Appends the specified data area to the end of this list. This list is automatically set as
