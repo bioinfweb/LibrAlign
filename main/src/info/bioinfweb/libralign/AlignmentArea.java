@@ -25,6 +25,7 @@ import java.awt.Font;
 import java.awt.FontMetrics;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
+import java.awt.geom.Dimension2D;
 import java.awt.geom.Rectangle2D;
 import java.util.Iterator;
 import java.util.Set;
@@ -38,6 +39,7 @@ import info.bioinfweb.libralign.gui.PaintableArea;
 import info.bioinfweb.libralign.selection.AlignmentCursor;
 import info.bioinfweb.libralign.selection.SelectionModel;
 import info.webinsel.util.Math2;
+import info.webinsel.util.graphics.DoubleDimension;
 import info.webinsel.util.graphics.GraphicsUtils;
 
 
@@ -211,14 +213,28 @@ public class AlignmentArea implements PaintableArea {
 
 
 	@Override
-	public Dimension getSize() {
-		return new Dimension(Math2.roundUp(getDataProvider().getMaxSequenceLength() * getCompoundWidth()),
-				Math2.roundUp(getDataProvider().getSequenceCount() * getCompoundHeight()));
+	public Dimension2D getSize() {
+		return new DoubleDimension(getDataProvider().getMaxSequenceLength() * getCompoundWidth(),
+				getDataProvider().getSequenceCount() * getCompoundHeight());
 		//TODO add data area heights
 		//TODO May data areas be wider than the alignment?
 	}
 
 
+	/**
+	 * Indicates whether compounds should are printed as text.
+	 * <p>
+	 * If any zoom factor is to low, each compound is only painted as a rectangle without any text in it.
+	 * Text output will not be done, if the font size would be below {@link #MIN_FONT_SIZE}.
+	 * </p>
+	 * 
+	 * @return {@code true}, if any compound text will be painted, {@code false} otherwise
+	 */
+	public boolean isPaintCompoundText() {
+		return getCompoundFont() != null;
+	}
+	
+	
 	public Font getCompoundFont() {
 		return font;
 	}
@@ -314,10 +330,12 @@ public class AlignmentArea implements PaintableArea {
     	bgY += height;
   	}
   	
-  	g.setColor(getColorSchema().getFontColor());
-  	g.setFont(getCompoundFont());
-		FontMetrics fm = g.getFontMetrics();
-  	g.drawString(compound.getBase(), x + 0.5f * (getCompoundWidth() - fm.charWidth(compound.getBase().charAt(0))), y + fm.getAscent());
+  	if (isPaintCompoundText()) {  // Text output only if font size is not too low
+	  	g.setColor(getColorSchema().getFontColor());
+	  	g.setFont(getCompoundFont());
+			FontMetrics fm = g.getFontMetrics();
+	  	g.drawString(compound.getBase(), x + 0.5f * (getCompoundWidth() - fm.charWidth(compound.getBase().charAt(0))), y + fm.getAscent());
+  	}
   }
   
   

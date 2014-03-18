@@ -19,7 +19,7 @@
 package info.bioinfweb.libralign.gui;
 
 
-import java.awt.Dimension;
+import java.awt.geom.Dimension2D;
 
 
 
@@ -46,5 +46,5 @@ public interface PaintableArea {
 	 * 
 	 * @return the dimension in pixels
 	 */
-	public Dimension getSize();
+	public Dimension2D getSize();
 }
