@@ -33,17 +33,17 @@ import java.util.Set;
 
 import org.biojava3.core.sequence.compound.NucleotideCompound;
 
+import info.bioinfweb.commons.graphics.DoubleDimension;
+import info.bioinfweb.commons.graphics.GraphicsUtils;
+import info.bioinfweb.commons.tic.TICComponent;
+import info.bioinfweb.commons.tic.TICPaintEvent;
 import info.bioinfweb.libralign.alignmentprovider.AlignmentDataProvider;
 import info.bioinfweb.libralign.dataarea.DataArea;
 import info.bioinfweb.libralign.dataarea.DataAreaList;
 import info.bioinfweb.libralign.dataarea.DataAreaModel;
-import info.bioinfweb.libralign.gui.LibrAlignPaintEvent;
-import info.bioinfweb.libralign.gui.PaintableArea;
 import info.bioinfweb.libralign.selection.AlignmentCursor;
 import info.bioinfweb.libralign.selection.SelectionModel;
 import info.webinsel.util.Math2;
-import info.webinsel.util.graphics.DoubleDimension;
-import info.webinsel.util.graphics.GraphicsUtils;
 
 
 
@@ -53,7 +53,7 @@ import info.webinsel.util.graphics.GraphicsUtils;
  * @author Ben St&ouml;ver
  * @since 1.0.0
  */
-public class AlignmentArea implements PaintableArea {
+public class AlignmentArea extends TICComponent {
 	public static final float COMPOUND_WIDTH = 10f;
 	public static final float COMPOUND_HEIGHT = 14f;
 	public static final String FONT_NAME = Font.SANS_SERIF;
@@ -294,7 +294,7 @@ public class AlignmentArea implements PaintableArea {
 	 * @param y - the y coordinate of the top most data area
 	 * @return the new value for y below all the painted areas
 	 */
-	private float paintDataAreaList(DataAreaList list, LibrAlignPaintEvent e, float x, float y) {
+	private float paintDataAreaList(DataAreaList list, TICPaintEvent e, float x, float y) {
 		Iterator<DataArea> iterator = list.visibleIterator();
 		while (iterator.hasNext()) {
 			DataArea dataArea = iterator.next();
@@ -308,7 +308,7 @@ public class AlignmentArea implements PaintableArea {
 			Graphics2D dataAreaGraphics = (Graphics2D)e.getGraphics().create(intX, intY, rectWidth, rectHeight); 
 			dataAreaGraphics.translate(x - intX, y - intY);  // Do the rest of the translation
 			
-			dataArea.paint(new LibrAlignPaintEvent(e.getSource(), dataAreaGraphics, 
+			dataArea.paint(new TICPaintEvent(e.getSource(), dataAreaGraphics, 
 					new Rectangle(rectWidth, rectHeight)));
 			y += size.getHeight();
 		}
@@ -317,7 +317,7 @@ public class AlignmentArea implements PaintableArea {
 	
 	
 	@Override
-	public void paint(LibrAlignPaintEvent e) {
+	public void paint(TICPaintEvent e) {
 		if (hasDataProvider()) {
 			float x = 0f;
 			float y = 0f;
