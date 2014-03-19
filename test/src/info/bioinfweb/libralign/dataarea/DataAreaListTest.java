@@ -22,8 +22,8 @@ package info.bioinfweb.libralign.dataarea;
 import static org.junit.Assert.* ;
 
 
-import info.bioinfweb.libralign.gui.LibrAlignPaintEvent;
-import info.webinsel.util.graphics.DoubleDimension;
+import info.bioinfweb.commons.graphics.DoubleDimension;
+import info.bioinfweb.commons.tic.TICPaintEvent;
 
 import java.awt.geom.Dimension2D;
 import java.util.ArrayList;
@@ -54,9 +54,9 @@ public class DataAreaListTest {
   
   
   private DataArea createDataArea() {
-  	return new AbstractDataArea() {
+  	return new DataArea() {
 						@Override
-						public void paint(LibrAlignPaintEvent event) {}
+						public void paint(TICPaintEvent event) {}
 						
 						@Override
 						public Dimension2D getSize() {
