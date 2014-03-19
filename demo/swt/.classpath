@@ -14,5 +14,8 @@
 	<classpathentry kind="lib" path="D:/Programme/Programmieren/eclipse/plugins/org.eclipse.ui.workbench_3.103.0.v20120530-1824.jar" sourcepath="D:/Programme/Programmieren/eclipse/plugins/org.eclipse.ui.workbench_3.103.0.v20120530-1824.jar"/>
 	<classpathentry kind="lib" path="D:/Programme/Programmieren/eclipse/plugins/com.ibm.icu_4.4.2.v20110823.jar" sourcepath="D:/Programme/Programmieren/eclipse/plugins/com.ibm.icu_4.4.2.v20110823.jar"/>
 	<classpathentry kind="lib" path="D:/Programme/Programmieren/eclipse/plugins/org.eclipse.ui.forms_3.5.200.v20120521-2329.jar" sourcepath="D:/Programme/Programmieren/eclipse/plugins/org.eclipse.ui.forms_3.5.200.v20120521-2329.jar"/>
+	<classpathentry kind="lib" path="/_Lib/bin" sourcepath="/_Lib/src"/>
+	<classpathentry kind="lib" path="/JFreeChartSWT/bin"/>
+	<classpathentry kind="lib" path="/LibrAlign/bin" sourcepath="/LibrAlign/src"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
