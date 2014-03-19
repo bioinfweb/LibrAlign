@@ -19,9 +19,17 @@
 package info.bioinfweb.libralign.demo.swing;
 
 
+import info.bioinfweb.commons.tic.toolkit.AbstractSwingComponent;
+import info.bioinfweb.commons.tic.toolkit.DefaultSwingComponent;
+import info.bioinfweb.libralign.AlignmentArea;
+
 import java.awt.EventQueue;
 
 import javax.swing.JFrame;
+import java.awt.GridBagLayout;
+import javax.swing.JPanel;
+import java.awt.GridBagConstraints;
+import javax.swing.JScrollPane;
 
 
 
@@ -66,5 +74,21 @@ public class Main {
 		frame = new JFrame();
 		frame.setBounds(100, 100, 450, 300);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		GridBagLayout gridBagLayout = new GridBagLayout();
+		gridBagLayout.columnWidths = new int[]{0, 0};
+		gridBagLayout.rowHeights = new int[]{0, 0};
+		gridBagLayout.columnWeights = new double[]{1.0, Double.MIN_VALUE};
+		gridBagLayout.rowWeights = new double[]{1.0, Double.MIN_VALUE};
+		frame.getContentPane().setLayout(gridBagLayout);
+		
+		JScrollPane scrollPane = new JScrollPane();
+		GridBagConstraints gbc_scrollPane = new GridBagConstraints();
+		gbc_scrollPane.fill = GridBagConstraints.BOTH;
+		gbc_scrollPane.gridx = 0;
+		gbc_scrollPane.gridy = 0;
+		frame.getContentPane().add(scrollPane, gbc_scrollPane);
+		
+		AbstractSwingComponent upperAlignmentPanel = new AlignmentArea().createSwingComponent();
+		scrollPane.setViewportView(upperAlignmentPanel);
 	}
 }
