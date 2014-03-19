@@ -66,6 +66,20 @@ public class DataAreaListTest {
 		}
   
   
+  private void printEventList(List<DataAreaChangeEvent> list) {
+  	if (list.isEmpty()) {
+  		System.out.println("Event list is empty.");
+  	}
+  	else {
+  		Iterator<DataAreaChangeEvent> iterator = list.iterator();
+    	while (iterator.hasNext()) {
+    		DataAreaChangeEvent event = iterator.next();
+    		System.out.println(event.getType() + " " + event.getAffectedElements());
+    	}
+  	}
+  }
+  
+  
   @Test
   public void test_events() {
   	List<DataAreaChangeEvent> eventList = new ArrayList<DataAreaChangeEvent>();
@@ -84,6 +98,7 @@ public class DataAreaListTest {
   	eventList.clear();
   	
   	areaList.retainAll(severalAreas);
+  	//printEventList(eventList);
   	assertEquals(1, eventList.size());
   	eventList.clear();
   	
@@ -107,6 +122,7 @@ public class DataAreaListTest {
   	
   	areaList.clear();
   	assertEquals(1, eventList.size());
+  	assertEquals(3, eventList.get(0).getAffectedElements().size());  // Check if all elements are contained in the list of the event.
   	eventList.clear();
   }
   
