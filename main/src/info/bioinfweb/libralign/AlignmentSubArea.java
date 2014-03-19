@@ -16,39 +16,38 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package info.bioinfweb.libralign.exception;
+package info.bioinfweb.libralign;
 
 
-import info.bioinfweb.libralign.alignmentprovider.SequenceDataProvider;
+import info.bioinfweb.commons.tic.TICComponent;
 
 
 
 /**
- * Base class of all exceptions that can be thrown by an {@link SequenceDataProvider}
+ * All GUI components that are part of an {@link AlignmentArea} should inherit from this class.
  * 
  * @author Ben St&ouml;ver
  * @since 1.0.0
  */
-public class AlignmentDataProviderException extends RuntimeException {
-	private SequenceDataProvider source;
-	
-	
-	public AlignmentDataProviderException(SequenceDataProvider source) {
-		super();
-		this.source = source;
-	}
+public abstract class AlignmentSubArea extends TICComponent {
+	private AlignmentArea owner = null;
 
 	
-	public AlignmentDataProviderException(SequenceDataProvider source, String message) {
-		super(message);
-		this.source = source;
+	/**
+	 * Creates a new instance of this class.
+	 * 
+	 * @param owner - the alignment area that will contain this instance
+	 */
+	public AlignmentSubArea(AlignmentArea owner) {
+		super();
+		this.owner = owner;
 	}
 
 
 	/**
-	 * Returns the instance of {@link SequenceDataProvider} that threw this exception.
+	 * Returns the alignment area that displays this data area.
 	 */
-	public SequenceDataProvider getSource() {
-		return source;
+	public AlignmentArea getOwner() {
+		return owner;
 	}
 }

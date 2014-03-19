@@ -38,7 +38,7 @@ import java.util.TreeMap;
 public class DataAreaModel {
   private DataAreaList topAreas = new DataAreaList(this, DataAreaListType.TOP);	
   private DataAreaList bottomAreas = new DataAreaList(this, DataAreaListType.BOTTOM);	
-  private Map<String, DataAreaList> sequenceAreaLists = new TreeMap<String, DataAreaList>();
+  private Map<Integer, DataAreaList> sequenceAreaLists = new TreeMap<Integer, DataAreaList>();
   private List<DataAreaModelListener> listeners = new ArrayList<DataAreaModelListener>(8);
   
   
@@ -65,14 +65,15 @@ public class DataAreaModel {
 	/**
 	 * Returns a list of data areas to be displayed underneath the specified sequence.
 	 * 
-	 * @param sequenceName - the name of the sequence carrying the data areas in the returned list 
+	 * @param sequenceName - the unique identifier of the sequence carrying the data areas 
+	 *        in the returned list 
 	 * @return a modifiable list
 	 */
-	public DataAreaList getSequenceAreas(String sequenceName) {
-		DataAreaList result = sequenceAreaLists.get(sequenceName);
+	public DataAreaList getSequenceAreas(int sequenceID) {
+		DataAreaList result = sequenceAreaLists.get(sequenceID);
 		if (result == null) {
 			result = new DataAreaList(this, DataAreaListType.SEQUENCE);
-			sequenceAreaLists.put(sequenceName, result);
+			sequenceAreaLists.put(sequenceID, result);
 		}
 		return result;
 	}
@@ -89,29 +90,15 @@ public class DataAreaModel {
 	
 	
 	/**
-	 * Attaches all data area currently associated with one sequence name to another name.
-	 * This method could be used if a sequence with associated data areas was renamed or if a
-	 * whole list of data areas should be moved from sequence to another.
-	 * 
-	 * @param currentName - the name of the sequence the data areas are currently attached to
-	 * @param newName - the new name of the sequence the data areas shall be attached to
-	 */
-	public void renameSequence(String currentName, String newName) {
-		sequenceAreaLists.put(newName, getSequenceAreas(currentName));
-		removeSequence(currentName);
-	}
-	
-	
-	/**
 	 * Fades all data areas associated with any sequence in or out.
 	 * 
 	 * @param visible - Specify {@code true} here, if you want the elements to be displayed, {@code false} otherwise.
 	 * @see DataAreaList#setAllVisible(boolean)
 	 */
 	public void setSequenceDataAreasVisible(boolean visible) {
-		Iterator<String> nameIterator = sequenceAreaLists.keySet().iterator();
-		while (nameIterator.hasNext()) {
-			getSequenceAreas(nameIterator.next()).setAllVisible(visible);
+		Iterator<Integer> idIterator = sequenceAreaLists.keySet().iterator();
+		while (idIterator.hasNext()) {
+			getSequenceAreas(idIterator.next()).setAllVisible(visible);
 		}
 	}
 	
@@ -124,7 +111,7 @@ public class DataAreaModel {
 	 */
 	public double getVisibleSequenceAreaHeight() {
 		double result = 0.0;
-		Iterator<String> iterator = sequenceAreaLists.keySet().iterator(); 
+		Iterator<Integer> iterator = sequenceAreaLists.keySet().iterator(); 
 		while (iterator.hasNext()) {
 			result += getSequenceAreas(iterator.next()).getVisibleHeight();
 		}
@@ -172,7 +159,7 @@ public class DataAreaModel {
 	protected void fireChange(DataAreaChangeEvent e) {
 		Iterator<DataAreaModelListener> iterator = listeners.iterator();
 		while (iterator.hasNext()) {
-			iterator.next().dataAreaModelInsertedRemoved(e);
+			iterator.next().dataAreaInsertedRemoved(e);
 		}
 	}
 }

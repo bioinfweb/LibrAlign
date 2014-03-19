@@ -16,39 +16,52 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package info.bioinfweb.libralign.exception;
+package info.bioinfweb.libralign;
 
 
-import info.bioinfweb.libralign.alignmentprovider.SequenceDataProvider;
+import java.awt.geom.Dimension2D;
+
+import info.bioinfweb.commons.tic.TICPaintEvent;
 
 
 
 /**
- * Base class of all exceptions that can be thrown by an {@link SequenceDataProvider}
+ * The area inside an {@link AlignmentArea} that displays one sequence of the alignment.
  * 
  * @author Ben St&ouml;ver
  * @since 1.0.0
  */
-public class AlignmentDataProviderException extends RuntimeException {
-	private SequenceDataProvider source;
+public class SequenceArea extends AlignmentSubArea {
+	private int seqenceID;
 	
 	
-	public AlignmentDataProviderException(SequenceDataProvider source) {
-		super();
-		this.source = source;
-	}
-
-	
-	public AlignmentDataProviderException(SequenceDataProvider source, String message) {
-		super(message);
-		this.source = source;
-	}
-
-
 	/**
-	 * Returns the instance of {@link SequenceDataProvider} that threw this exception.
+	 * Creates a new instance of this class.
+	 * 
+	 * @param owner - the alignment area that will contain this instance
+	 * @param seqenceID - the unique identifier of the sequence that will be displayed in this area
 	 */
-	public SequenceDataProvider getSource() {
-		return source;
+	public SequenceArea(AlignmentArea owner, int seqenceID) {
+		super(owner);
+		this.seqenceID = seqenceID;
+	}
+
+
+	public int getSeqenceID() {
+		return seqenceID;
+	}
+
+
+	@Override
+	public void paint(TICPaintEvent event) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	
+	@Override
+	public Dimension2D getSize() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }

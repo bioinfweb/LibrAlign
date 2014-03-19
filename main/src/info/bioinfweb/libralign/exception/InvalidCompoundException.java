@@ -22,19 +22,19 @@ package info.bioinfweb.libralign.exception;
 import org.biojava3.core.sequence.template.Compound;
 
 import info.bioinfweb.libralign.AlignmentSourceDataType;
-import info.bioinfweb.libralign.alignmentprovider.AlignmentDataProvider;
+import info.bioinfweb.libralign.alignmentprovider.SequenceDataProvider;
 
 
 
 /**
- * This exceptions is thrown if a compound is used with {@link AlignmentDataProvider} which does not
+ * This exceptions is thrown if a compound is used with {@link SequenceDataProvider} which does not
  * match the data type of the provide (e.g. trying to write an amino acid to a nucleotide data source). 
  * 
  * @author Ben St&ouml;ver
  * @since 1.0.0
  */
 public class InvalidCompoundException extends AlignmentDataProviderException {
-	public InvalidCompoundException(AlignmentDataProvider source, Compound compound, 
+	public InvalidCompoundException(SequenceDataProvider source, Compound compound, 
 			AlignmentSourceDataType dataType) {
 		
 		super(source, "The compound " + compound.getLongName() + " of type " + compound.getClass().getName() + 

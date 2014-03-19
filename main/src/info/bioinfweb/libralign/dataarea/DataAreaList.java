@@ -19,6 +19,7 @@
 package info.bioinfweb.libralign.dataarea;
 
 
+import info.bioinfweb.commons.collections.ListChangeType;
 import info.bioinfweb.libralign.AlignmentArea;
 
 import java.util.ArrayList;
@@ -152,12 +153,12 @@ public class DataAreaList extends ArrayList<DataArea> {
 	}
 	
 	
-	private DataAreaChangeEvent createChangeEvent(DataAreaChangeEvent.Type type, Collection<? extends DataArea> affectedElements) {
+	private DataAreaChangeEvent createChangeEvent(ListChangeType type, Collection<? extends DataArea> affectedElements) {
 		return new DataAreaChangeEvent(getOwner(), this, type, affectedElements);
 	}
 	
 
-	private DataAreaChangeEvent createChangeEvent(DataAreaChangeEvent.Type type, DataArea affectedElement) {
+	private DataAreaChangeEvent createChangeEvent(ListChangeType type, DataArea affectedElement) {
 		return new DataAreaChangeEvent(getOwner(), this, type, affectedElement);
 	}
 	
@@ -173,7 +174,7 @@ public class DataAreaList extends ArrayList<DataArea> {
 		boolean result = super.add(element);
 		if (result) {
 			element.setList(this);
-			getOwner().fireChange(createChangeEvent(DataAreaChangeEvent.Type.INSERTION, element));
+			getOwner().fireChange(createChangeEvent(ListChangeType.INSERTION, element));
 		}
 		return result;
 	}
@@ -182,7 +183,7 @@ public class DataAreaList extends ArrayList<DataArea> {
 	@Override
 	public void add(int index, DataArea element) {
 		element.setList(this);
-		getOwner().fireChange(createChangeEvent(DataAreaChangeEvent.Type.INSERTION, element));
+		getOwner().fireChange(createChangeEvent(ListChangeType.INSERTION, element));
 		super.add(index, element);
 	}
 	
@@ -201,7 +202,7 @@ public class DataAreaList extends ArrayList<DataArea> {
 			while (iterator.hasNext()) {
 				iterator.next().setList(this);
 			}
-			getOwner().fireChange(createChangeEvent(DataAreaChangeEvent.Type.INSERTION, c));
+			getOwner().fireChange(createChangeEvent(ListChangeType.INSERTION, c));
 		}
 		return result;
 	}
@@ -212,14 +213,14 @@ public class DataAreaList extends ArrayList<DataArea> {
 		List<DataArea> copy = new ArrayList<DataArea>(size());  // Clone cannot be used here, because changes there also affect the original list.
 		copy.addAll(this);
 		super.clear();
-		getOwner().fireChange(createChangeEvent(DataAreaChangeEvent.Type.INSERTION, copy));
+		getOwner().fireChange(createChangeEvent(ListChangeType.INSERTION, copy));
 	}
 	
 
 	@Override
 	public DataArea remove(int index) {
 		DataArea result = super.remove(index);
-		getOwner().fireChange(createChangeEvent(DataAreaChangeEvent.Type.REMOVAL, result));
+		getOwner().fireChange(createChangeEvent(ListChangeType.DELETION, result));
 		return result;
 	}
 	
@@ -228,7 +229,7 @@ public class DataAreaList extends ArrayList<DataArea> {
 	public boolean remove(Object o) {
 		boolean result = super.remove(o);
 		if (result) {
-			getOwner().fireChange(createChangeEvent(DataAreaChangeEvent.Type.REMOVAL, (DataArea)o));
+			getOwner().fireChange(createChangeEvent(ListChangeType.DELETION, (DataArea)o));
 		}
 		return result;
 	}
@@ -238,7 +239,7 @@ public class DataAreaList extends ArrayList<DataArea> {
 	public boolean removeAll(Collection<?> c) {
 		boolean result = super.removeAll(c);
 		if (result) {
-			getOwner().fireChange(createChangeEvent(DataAreaChangeEvent.Type.REMOVAL, (Collection<DataArea>)c));
+			getOwner().fireChange(createChangeEvent(ListChangeType.DELETION, (Collection<DataArea>)c));
 		}
 		return result;
 	}
@@ -251,7 +252,7 @@ public class DataAreaList extends ArrayList<DataArea> {
 		boolean result = super.retainAll(c);
 		if (result) {
 			copy.removeAll(c);
-			getOwner().fireChange(createChangeEvent(DataAreaChangeEvent.Type.REMOVAL, (Collection<DataArea>)copy));
+			getOwner().fireChange(createChangeEvent(ListChangeType.DELETION, (Collection<DataArea>)copy));
 		}
 		return result;
 	}
@@ -260,7 +261,7 @@ public class DataAreaList extends ArrayList<DataArea> {
 	@Override
 	public DataArea set(int index, DataArea element) {
 		DataArea result = super.set(index, element);
-		getOwner().fireChange(createChangeEvent(DataAreaChangeEvent.Type.REPLACEMENT, result));
+		getOwner().fireChange(createChangeEvent(ListChangeType.REPLACEMENT, result));
 		return result;
 	}
 

@@ -16,31 +16,32 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package info.bioinfweb.libralign.alignmentprovider;
+package info.bioinfweb.libralign.alignmentprovider.events;
 
 
-import info.bioinfweb.libralign.AlignmentSourceDataType;
+import info.bioinfweb.commons.collections.ListChangeType;
+import info.bioinfweb.libralign.alignmentprovider.SequenceDataProvider;
 
 
 
 /**
- * Implements storing the data type.
+ * Event object that indicates that a sequence provided by an instance of {@link SequenceDataProvider}
+ * was renamed.
  * 
- * @author Ben St&uml;ver
+ * @author Ben St&ouml;ver
  * @since 1.0.0
  */
-public abstract class AbstractAlignmentDataProvider implements AlignmentDataProvider {
-	private AlignmentSourceDataType dataType;
+public class SequenceChangeEvent extends SequenceDataProviderChangeEvent {
+	private ListChangeType type;
 
 	
-	public AbstractAlignmentDataProvider(AlignmentSourceDataType dataType) {
-		super();
-		this.dataType = dataType;
+	public SequenceChangeEvent(SequenceDataProvider source, int sequenceID, ListChangeType type) {
+		super(source, sequenceID);
+		this.type = type;
 	}
-	
 
-	@Override
-	public AlignmentSourceDataType getDataType() {
-		return dataType;
+
+	public ListChangeType getType() {
+		return type;
 	}
 }

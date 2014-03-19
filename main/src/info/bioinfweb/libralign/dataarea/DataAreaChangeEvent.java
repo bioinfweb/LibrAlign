@@ -19,6 +19,7 @@
 package info.bioinfweb.libralign.dataarea;
 
 
+import info.bioinfweb.commons.collections.ListChangeType;
 import info.bioinfweb.libralign.AlignmentArea;
 
 import java.util.ArrayList;
@@ -39,15 +40,8 @@ import java.util.EventObject;
  * @since 1.0.0
  */
 public class DataAreaChangeEvent extends EventObject {
-	public static enum Type {
-		INSERTION,
-		REMOVAL,
-		REPLACEMENT;
-	}
-	
-	
 	private DataAreaList list;
-	private Type type;
+	private ListChangeType type;
 	private Collection<DataArea> affectedElements;
 	
 	
@@ -59,7 +53,7 @@ public class DataAreaChangeEvent extends EventObject {
 	 * @param type - the type of modification that happened
 	 * @param affectedElements - a list of elements that have been inserted, removed or replaced
 	 */
-	public DataAreaChangeEvent(Object source, DataAreaList list, Type type,	
+	public DataAreaChangeEvent(Object source, DataAreaList list, ListChangeType type,	
 			Collection<? extends DataArea> affectedElements) {
 		
 		super(source);
@@ -80,7 +74,7 @@ public class DataAreaChangeEvent extends EventObject {
 	 * @param type - the type of modification that happened
 	 * @param affectedElement - the element that has been inserted, removed or replaced
 	 */
-	public DataAreaChangeEvent(Object source, DataAreaList list, Type type,	DataArea affectedElement) {
+	public DataAreaChangeEvent(Object source, DataAreaList list, ListChangeType type,	DataArea affectedElement) {
 		super(source);
 		this.list = list;
 		this.type = type;
@@ -111,7 +105,7 @@ public class DataAreaChangeEvent extends EventObject {
 	}
 
 
-	public Type getType() {
+	public ListChangeType getType() {
 		return type;
 	}
 

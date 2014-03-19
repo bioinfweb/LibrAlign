@@ -34,7 +34,7 @@ import java.util.List;
  */
 public class SequenceOrder {
 	private AlignmentArea owner;
-	private List<String> nameList = new ArrayList<String>();
+	private List<Integer> idList = new ArrayList<Integer>();
 
 	
 	/**
@@ -64,7 +64,7 @@ public class SequenceOrder {
 	 * @return the index of the sequence (The first sequence has the index 0.)
 	 */
 	public int indexByName(String name) {
-		return nameList.indexOf(name);
+		return idList.indexOf(name);
 	}
 	
 	
@@ -74,8 +74,8 @@ public class SequenceOrder {
 	 * @param index - the index of the sequence (The first sequence has the index 0.)
 	 * @return the name of the sequence in the data source 
 	 */
-	public String nameByIndex(int index) {
-		return nameList.get(index);
+	public int idByIndex(int index) {
+		return idList.get(index);
 	}
 	
 	
@@ -85,11 +85,11 @@ public class SequenceOrder {
 	 * This method can also be used to refresh the sequence names if the data source changed.
 	 */
 	public void setSourceSequenceOrder() {
-		nameList.clear();
+		idList.clear();
 		if (getOwner().hasDataProvider()) {
-			Iterator<String> iterator = getOwner().getDataProvider().sequenceNameIterator();
+			Iterator<Integer> iterator = getOwner().getDataProvider().sequenceIDIterator();
 			while (iterator.hasNext()) {
-				nameList.add(iterator.next());
+				idList.add(iterator.next());
 			}
 		}
 	}
@@ -99,7 +99,7 @@ public class SequenceOrder {
 	 * Sorts the sequences by their name.
 	 */
 	public void setAlphabeticalSequenceOrder() {
-		Collections.sort(nameList);
+		Collections.sort(idList);
 	}
 
 	
@@ -115,19 +115,19 @@ public class SequenceOrder {
 	 * @return the new index the specified sequence has after the move operation
 	 */
 	public int moveSequence(int index, int offset) {
-		int newIndex = Math.max(0, Math.min(nameList.size() - 1, index + offset));
-		String name = nameList.get(index);
+		int newIndex = Math.max(0, Math.min(idList.size() - 1, index + offset));
+		int id = idList.get(index);
 		if (newIndex < index) {
 			for (int i = index; i > newIndex; i--) {
-				nameList.set(i, nameList.get(i - 1));
+				idList.set(i, idList.get(i - 1));
 			}
 		}
 		else {
 			for (int i = index; i < newIndex; i++) {
-				nameList.set(i, nameList.get(i + 1));
+				idList.set(i, idList.get(i + 1));
 			}
 		}
-		nameList.set(newIndex, name);
+		idList.set(newIndex, id);
 		return newIndex;
 	}
 	
@@ -135,12 +135,13 @@ public class SequenceOrder {
 	/**
 	 * Returns the underlying name list which can be used to change the ordering of the sequences.
 	 * <p>
-	 * You must not remove any names that are contained in the data source of {@link #getOwner()}.
-	 * This object will not be able to function correctly anymore if that would be done.
+	 * You must not remove any names from this list that are contained in the data source of 
+	 * {@link #getOwner()}. This object will not be able to function correctly anymore if that would 
+	 * be done.
 	 * 
 	 * @return a reference to the name list this object uses to determine the order of the sequences.
 	 */
-	public List<String> getNameList() {
-		return nameList;
+	public List<Integer> getIdList() {
+		return idList;
 	}
 }

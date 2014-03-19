@@ -43,7 +43,7 @@ import info.bioinfweb.libralign.exception.AlignmentSourceNotWritableException;
  * @param <C> - the compound type used by the underlying sequence object
  */
 public class BioJavaAlignmentDataProvider<S extends Sequence<C>, C extends Compound>
-    extends AbstractAlignmentDataProvider implements AlignmentDataProvider {
+    extends AbstractSequenceDataProvider implements SequenceDataProvider {
 	
 	public static final String DEFAULT_SEQUENCE_NAME_PREFIX = "Sequence";
 	
@@ -99,13 +99,13 @@ public class BioJavaAlignmentDataProvider<S extends Sequence<C>, C extends Compo
 
 
 	@Override
-	public Object getTokenAt(String sequenceName, int elementIndex) {
-		return alignment.getSequence(sequenceName).getCompoundAt(elementIndex + 1);  // BioJava indices start with 1.
+	public Object getTokenAt(int sequenceID, int elementIndex) {
+		return alignment.getSequence(sequenceNameByID(sequenceID)).getCompoundAt(elementIndex + 1);  // BioJava indices start with 1.
 	}
 
 
 	@Override
-	public void setTokenAt(String sequenceName, int elementIndex, Object token)
+	public void setTokenAt(int sequenceID, int elementIndex, Object token)
 			throws AlignmentSourceNotWritableException {
 		
 		throw new AlignmentSourceNotWritableException(this);
@@ -113,7 +113,7 @@ public class BioJavaAlignmentDataProvider<S extends Sequence<C>, C extends Compo
 
 
 	@Override
-	public void insertTokenAt(String sequenceName, int elementIndex, Object token)
+	public void insertTokenAt(int sequenceID, int elementIndex, Object token)
 			throws AlignmentSourceNotWritableException {
 
 		throw new AlignmentSourceNotWritableException(this);
@@ -121,7 +121,7 @@ public class BioJavaAlignmentDataProvider<S extends Sequence<C>, C extends Compo
 
 
 	@Override
-	public void removeTokenAt(String sequenceName, int elementIndex)
+	public void removeTokenAt(int sequenceID, int elementIndex)
 			throws AlignmentSourceNotWritableException {
 		
 		throw new AlignmentSourceNotWritableException(this);
@@ -135,14 +135,31 @@ public class BioJavaAlignmentDataProvider<S extends Sequence<C>, C extends Compo
 
 
 	@Override
-	public Iterator<String> sequenceNameIterator() {
-		return alignment.nameIterator();
+	public Iterator<Integer> sequenceIDIterator() {
+		final Iterator<String> nameIterator = alignment.nameIterator();
+		return new Iterator<Integer>() {
+			@Override
+			public boolean hasNext() {
+				return nameIterator.hasNext();
+			}
+
+			@Override
+			public Integer next() {
+				return sequenceIDByName(nameIterator.next());
+			}
+
+			@Override
+			public void remove() {
+				throw new UnsupportedOperationException();  // Currently done, because this class specified read only.
+				//TODO enable operation as soon as more specific read only properties are available, which allow to edit only sequences and not tokens
+			}
+		};				
 	}
 
 
 	@Override
-	public int getSequenceLength(String sequenceName) {
-		return alignment.getSequence(sequenceName).getLength();
+	public int getSequenceLength(int sequenceID) {
+		return alignment.getSequence(sequenceNameByID(sequenceID)).getLength();
 	}
 
 
@@ -153,7 +170,19 @@ public class BioJavaAlignmentDataProvider<S extends Sequence<C>, C extends Compo
 
 
 	@Override
-	public boolean isReadOnly() {
-		return true;
+	public SequenceDataProviderWriteType getWriteType() {
+		return SequenceDataProviderWriteType.NONE;
 	}
+
+
+	@Override
+	protected void doAddSequence(int sequenceID, String sequenceName) {}  //TODO Implement when a way of creating new sequences independent of their type is known.
+
+
+	@Override
+	protected void doRemoveSequence(int sequenceID) {}  //TODO Implement when a way of creating new sequences independent of their type is known.
+
+
+	@Override
+	protected void doRenameSequence(int sequenceID, String newSequenceName) {}  //TODO Implement when a way of creating new sequences independent of their type is known.
 }

@@ -21,6 +21,7 @@ package info.bioinfweb.libralign.dataarea;
 
 import info.bioinfweb.commons.tic.TICComponent;
 import info.bioinfweb.libralign.AlignmentArea;
+import info.bioinfweb.libralign.AlignmentSubArea;
 
 
 
@@ -30,20 +31,21 @@ import info.bioinfweb.libralign.AlignmentArea;
  * @author Ben St&ouml;ver
  * @since 1.0.0
  */
-public abstract class DataArea extends TICComponent {
-	private AlignmentArea owner = null;
+public abstract class DataArea extends AlignmentSubArea {
 	private DataAreaList list = null;
 	private boolean visible = true;
 	
 	
 	/**
-	 * Returns the alignment area that displays this data area.
+	 * Creates a new instance of this class.
+	 * 
+	 * @param owner - the alignment area that will contain this instance
 	 */
-	public AlignmentArea getOwner() {
-		return owner;
+	public DataArea(AlignmentArea owner) {
+		super(owner);
 	}
-	
-	
+
+
 	/**
 	 * Returns the list this data area is contained in. (It could either be located above or underneath 
 	 * the alignment or attached to one sequence.)

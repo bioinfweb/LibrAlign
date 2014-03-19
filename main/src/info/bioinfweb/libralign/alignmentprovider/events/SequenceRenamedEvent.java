@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package info.bioinfweb.libralign.exception;
+package info.bioinfweb.libralign.alignmentprovider.events;
 
 
 import info.bioinfweb.libralign.alignmentprovider.SequenceDataProvider;
@@ -24,31 +24,32 @@ import info.bioinfweb.libralign.alignmentprovider.SequenceDataProvider;
 
 
 /**
- * Base class of all exceptions that can be thrown by an {@link SequenceDataProvider}
+ * Event object that indicates that a sequence provided by an instance of {@link SequenceDataProvider}
+ * was renamed.
  * 
  * @author Ben St&ouml;ver
  * @since 1.0.0
  */
-public class AlignmentDataProviderException extends RuntimeException {
-	private SequenceDataProvider source;
+public class SequenceRenamedEvent extends SequenceDataProviderChangeEvent {
+	private String previousName;
+	private String newName;
 	
 	
-	public AlignmentDataProviderException(SequenceDataProvider source) {
-		super();
-		this.source = source;
+	public SequenceRenamedEvent(SequenceDataProvider source, int sequenceID,
+			String previousName, String newName) {
+		
+		super(source, sequenceID);
+		this.previousName = previousName;
+		this.newName = newName;
 	}
 
-	
-	public AlignmentDataProviderException(SequenceDataProvider source, String message) {
-		super(message);
-		this.source = source;
+
+	public String getPreviousName() {
+		return previousName;
 	}
 
 
-	/**
-	 * Returns the instance of {@link SequenceDataProvider} that threw this exception.
-	 */
-	public SequenceDataProvider getSource() {
-		return source;
+	public String getNewName() {
+		return newName;
 	}
 }

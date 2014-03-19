@@ -19,19 +19,19 @@
 package info.bioinfweb.libralign.exception;
 
 
-import info.bioinfweb.libralign.alignmentprovider.AlignmentDataProvider;
+import info.bioinfweb.libralign.alignmentprovider.SequenceDataProvider;
 
 
 
 /**
- * This exceptions is thrown if a modifying method of {@link AlignmentDataProvider} is called
+ * This exceptions is thrown if a modifying method of {@link SequenceDataProvider} is called
  * which has a data source that is not writable.
  * 
  * @author Ben St&ouml;ver
  * @since 1.0.0
  */
 public class AlignmentSourceNotWritableException extends AlignmentDataProviderException {
-	public AlignmentSourceNotWritableException(AlignmentDataProvider source) {
+	public AlignmentSourceNotWritableException(SequenceDataProvider source) {
 		super(source, "The underlying data source is not writable.");
 	}
 }

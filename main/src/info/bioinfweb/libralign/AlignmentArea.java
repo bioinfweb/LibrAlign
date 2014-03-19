@@ -37,7 +37,7 @@ import info.bioinfweb.commons.graphics.DoubleDimension;
 import info.bioinfweb.commons.graphics.GraphicsUtils;
 import info.bioinfweb.commons.tic.TICComponent;
 import info.bioinfweb.commons.tic.TICPaintEvent;
-import info.bioinfweb.libralign.alignmentprovider.AlignmentDataProvider;
+import info.bioinfweb.libralign.alignmentprovider.SequenceDataProvider;
 import info.bioinfweb.libralign.dataarea.DataArea;
 import info.bioinfweb.libralign.dataarea.DataAreaList;
 import info.bioinfweb.libralign.dataarea.DataAreaModel;
@@ -62,7 +62,7 @@ public class AlignmentArea extends TICComponent {
 	public static final int MIN_FONT_SIZE = 4;
 
 	
-	private AlignmentDataProvider dataProvider = null;
+	private SequenceDataProvider dataProvider = null;
 	private SequenceOrder sequenceOrder = new SequenceOrder(this);
 	private SequenceColorSchema colorSchema = new SequenceColorSchema();
 	private WorkingMode workingMode = WorkingMode.VIEW;  //TODO Should this better be part of the controller (key and mouse listener)?
@@ -82,12 +82,12 @@ public class AlignmentArea extends TICComponent {
 	}
 	
 	
-	public AlignmentDataProvider getDataProvider() {
+	public SequenceDataProvider getDataProvider() {
 		return dataProvider;
 	}
 	
 	
-	public void setDataProvider(AlignmentDataProvider dataProvider) {
+	public void setDataProvider(SequenceDataProvider dataProvider) {
 		this.dataProvider = dataProvider;
 		getSequenceOrder().setSourceSequenceOrder();  // Update sequence names
 		//TODO repaint
@@ -336,7 +336,7 @@ public class AlignmentArea extends TICComponent {
 					else {
 						paintSequence(e.getGraphics(), i, x, y, e.getRectangle());
 						y += getCompoundHeight();
-						y = paintDataAreaList(getDataAreas().getSequenceAreas(getSequenceOrder().nameByIndex(i)), e, x, y);
+						y = paintDataAreaList(getDataAreas().getSequenceAreas(getSequenceOrder().idByIndex(i)), e, x, y);
 					}
 				}
 			}
@@ -358,7 +358,7 @@ public class AlignmentArea extends TICComponent {
 		
   	x += firstIndex * getCompoundWidth();
 		for (int i = firstIndex; i <= lastIndex; i++) {			
-    	paintCompound(g, getDataProvider().getTokenAt(getSequenceOrder().nameByIndex(sequenceIndex), i), 
+    	paintCompound(g, getDataProvider().getTokenAt(getSequenceOrder().idByIndex(sequenceIndex), i), 
     			x, y,	getSelection().isSelected(i, sequenceIndex));
 	    x += getCompoundWidth();
     }
