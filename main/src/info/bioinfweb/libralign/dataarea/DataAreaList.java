@@ -24,6 +24,7 @@ import info.bioinfweb.libralign.AlignmentArea;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.List;
 
 
 
@@ -150,19 +151,29 @@ public class DataAreaList extends ArrayList<DataArea> {
 		return result;
 	}
 	
+	
+	private DataAreaChangeEvent createChangeEvent(DataAreaChangeEvent.Type type, Collection<? extends DataArea> affectedElements) {
+		return new DataAreaChangeEvent(getOwner(), this, type, affectedElements);
+	}
+	
+
+	private DataAreaChangeEvent createChangeEvent(DataAreaChangeEvent.Type type, DataArea affectedElement) {
+		return new DataAreaChangeEvent(getOwner(), this, type, affectedElement);
+	}
+	
 
 	/**
 	 * Appends the specified data area to the end of this list. This list is automatically set as
 	 * the owning list of {@code e}.
 	 * 
-	 * @param e - the element to be added to the list
+	 * @param element - the element to be added to the list
 	 */
 	@Override
-	public boolean add(DataArea e) {
-		boolean result = super.add(e);
+	public boolean add(DataArea element) {
+		boolean result = super.add(element);
 		if (result) {
-			e.setList(this);
-			getOwner().fireChange(this);
+			element.setList(this);
+			getOwner().fireChange(createChangeEvent(DataAreaChangeEvent.Type.INSERTION, element));
 		}
 		return result;
 	}
@@ -171,7 +182,7 @@ public class DataAreaList extends ArrayList<DataArea> {
 	@Override
 	public void add(int index, DataArea element) {
 		element.setList(this);
-		getOwner().fireChange(this);
+		getOwner().fireChange(createChangeEvent(DataAreaChangeEvent.Type.INSERTION, element));
 		super.add(index, element);
 	}
 	
@@ -190,7 +201,7 @@ public class DataAreaList extends ArrayList<DataArea> {
 			while (iterator.hasNext()) {
 				iterator.next().setList(this);
 			}
-			getOwner().fireChange(this);
+			getOwner().fireChange(createChangeEvent(DataAreaChangeEvent.Type.INSERTION, c));
 		}
 		return result;
 	}
@@ -198,15 +209,17 @@ public class DataAreaList extends ArrayList<DataArea> {
 	
 	@Override
 	public void clear() {
-		getOwner().fireChange(this);
+		List<DataArea> copy = new ArrayList<DataArea>(size());  // Clone cannot be used here, because changes there also affect the original list.
+		copy.addAll(this);
 		super.clear();
+		getOwner().fireChange(createChangeEvent(DataAreaChangeEvent.Type.INSERTION, copy));
 	}
 	
 
 	@Override
 	public DataArea remove(int index) {
 		DataArea result = super.remove(index);
-		getOwner().fireChange(this);
+		getOwner().fireChange(createChangeEvent(DataAreaChangeEvent.Type.REMOVAL, result));
 		return result;
 	}
 	
@@ -214,7 +227,9 @@ public class DataAreaList extends ArrayList<DataArea> {
 	@Override
 	public boolean remove(Object o) {
 		boolean result = super.remove(o);
-		getOwner().fireChange(this);
+		if (result) {
+			getOwner().fireChange(createChangeEvent(DataAreaChangeEvent.Type.REMOVAL, (DataArea)o));
+		}
 		return result;
 	}
 	
@@ -222,15 +237,22 @@ public class DataAreaList extends ArrayList<DataArea> {
 	@Override
 	public boolean removeAll(Collection<?> c) {
 		boolean result = super.removeAll(c);
-		getOwner().fireChange(this);
+		if (result) {
+			getOwner().fireChange(createChangeEvent(DataAreaChangeEvent.Type.REMOVAL, (Collection<DataArea>)c));
+		}
 		return result;
 	}
 	
 
 	@Override
 	public boolean retainAll(Collection<?> c) {
+		List<DataArea> copy = new ArrayList<DataArea>(size());  // Clone cannot be used here, because changes there also affect the original list.
+		copy.addAll(this);
 		boolean result = super.retainAll(c);
-		getOwner().fireChange(this);
+		if (result) {
+			copy.removeAll(c);
+			getOwner().fireChange(createChangeEvent(DataAreaChangeEvent.Type.REMOVAL, (Collection<DataArea>)copy));
+		}
 		return result;
 	}
 
@@ -238,7 +260,7 @@ public class DataAreaList extends ArrayList<DataArea> {
 	@Override
 	public DataArea set(int index, DataArea element) {
 		DataArea result = super.set(index, element);
-		getOwner().fireChange(this);
+		getOwner().fireChange(createChangeEvent(DataAreaChangeEvent.Type.REPLACEMENT, result));
 		return result;
 	}
 

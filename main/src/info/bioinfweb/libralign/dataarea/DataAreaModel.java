@@ -169,9 +169,8 @@ public class DataAreaModel {
 	/**
 	 * Informs all listeners that a data area has been added or removed.
 	 */
-	protected void fireChange(DataAreaList list) {
+	protected void fireChange(DataAreaChangeEvent e) {
 		Iterator<DataAreaModelListener> iterator = listeners.iterator();
-		DataAreaChangeEvent e = new DataAreaChangeEvent(this, list);
 		while (iterator.hasNext()) {
 			iterator.next().dataAreaModelInsertedRemoved(e);
 		}
