@@ -19,12 +19,11 @@
 package info.bioinfweb.libralign.demo.swing;
 
 
-import info.bioinfweb.commons.tic.toolkit.AbstractSwingComponent;
-import info.bioinfweb.commons.tic.toolkit.DefaultSwingComponent;
 import info.bioinfweb.libralign.AlignmentArea;
 
 import java.awt.EventQueue;
 
+import javax.swing.JComponent;
 import javax.swing.JFrame;
 import java.awt.GridBagLayout;
 import javax.swing.JPanel;
@@ -88,7 +87,7 @@ public class Main {
 		gbc_scrollPane.gridy = 0;
 		frame.getContentPane().add(scrollPane, gbc_scrollPane);
 		
-		AbstractSwingComponent upperAlignmentPanel = new AlignmentArea().createSwingComponent();
+		JComponent upperAlignmentPanel = new AlignmentArea().createSwingComponent();
 		scrollPane.setViewportView(upperAlignmentPanel);
 	}
 }
