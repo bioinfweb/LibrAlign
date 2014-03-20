@@ -19,10 +19,9 @@
 package info.bioinfweb.libralign.demo.swt;
 
 
-import info.bioinfweb.commons.tic.toolkit.AbstractSWTWidget;
-import info.bioinfweb.commons.tic.toolkit.DefaultSWTWidget;
 import info.bioinfweb.libralign.AlignmentArea;
 
+import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.custom.ScrolledComposite;
@@ -85,7 +84,7 @@ public class Main {
 		scrolledComposite.setExpandHorizontal(true);
 		scrolledComposite.setExpandVertical(true);
 		
-		AbstractSWTWidget alignmentWidget = new AlignmentArea().createSWTWidget(scrolledComposite, SWT.NONE);
+		Composite alignmentWidget = new AlignmentArea().createSWTWidget(scrolledComposite, SWT.NONE);
 		scrolledComposite.setContent(alignmentWidget);
 		scrolledComposite.setMinSize(alignmentWidget.computeSize(SWT.DEFAULT, SWT.DEFAULT));
 	}
