@@ -24,6 +24,7 @@ import static org.junit.Assert.* ;
 
 import info.bioinfweb.commons.graphics.DoubleDimension;
 import info.bioinfweb.commons.tic.TICPaintEvent;
+import info.bioinfweb.libralign.AlignmentArea;
 
 import java.awt.geom.Dimension2D;
 import java.util.ArrayList;
@@ -45,7 +46,7 @@ public class DataAreaListTest {
 					}
 		
 					@Override
-					public void dataAreaModelInsertedRemoved(DataAreaChangeEvent e) {
+					public void dataAreaInsertedRemoved(DataAreaChangeEvent e) {
 						eventList.add(e);
 					}
 				});
@@ -53,8 +54,8 @@ public class DataAreaListTest {
   }
   
   
-  private DataArea createDataArea() {
-  	return new DataArea() {
+  private DataArea createDataArea(AlignmentArea alignmentArea) {
+  	return new DataArea(alignmentArea) {
 						@Override
 						public void paint(TICPaintEvent event) {}
 						
@@ -84,14 +85,15 @@ public class DataAreaListTest {
   public void test_events() {
   	List<DataAreaChangeEvent> eventList = new ArrayList<DataAreaChangeEvent>();
   	DataAreaList areaList = createList(eventList, DataAreaListType.TOP);
+  	AlignmentArea alignmentArea = new AlignmentArea();
   	
-  	areaList.add(createDataArea());
+  	areaList.add(createDataArea(alignmentArea));
   	assertEquals(1, eventList.size());
   	eventList.clear();
   	
   	Collection<DataArea> severalAreas = new ArrayList<DataArea>(4);
   	for (int i = 0; i < 4; i++) {
-    	severalAreas.add(createDataArea());
+    	severalAreas.add(createDataArea(alignmentArea));
 		}
   	areaList.addAll(severalAreas);
   	assertEquals(1, eventList.size());  // Checks if several events have been produced.
@@ -132,10 +134,11 @@ public class DataAreaListTest {
   	// Produces assertions as long as DataArea.subList() does not have a special implementation.
   	List<DataAreaChangeEvent> eventList = new ArrayList<DataAreaChangeEvent>();
   	DataAreaList areaList = createList(eventList, DataAreaListType.TOP);
+  	AlignmentArea alignmentArea = new AlignmentArea();
   	
   	Collection<DataArea> severalAreas = new ArrayList<DataArea>(4);
   	for (int i = 0; i < 4; i++) {
-    	severalAreas.add(createDataArea());
+    	severalAreas.add(createDataArea(alignmentArea));
 		}
   	areaList.addAll(severalAreas);
   	eventList.clear();
