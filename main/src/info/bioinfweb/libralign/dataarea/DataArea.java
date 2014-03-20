@@ -82,8 +82,14 @@ public abstract class DataArea extends AlignmentSubArea {
 	 * Fades this data area in or out and lets the containing alignment area repaint, if necessary.
 	 * 
 	 * @param visible
+	 * @return {@code true} if the state of this element was changed, {@code false} otherwise
 	 */
-	public void setVisible(boolean visible) {
-		this.visible = visible;
+	public boolean setVisible(boolean visible) {
+		boolean result = this.visible != visible; 
+		if (result) {
+			this.visible = visible;
+			getList().getOwner().fireVisibilityChanged(true, this);  // Will only have an effect is updateInProgress was not set before.
+		}
+		return result;
 	}
 }

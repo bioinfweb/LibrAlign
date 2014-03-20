@@ -19,6 +19,7 @@
 package info.bioinfweb.libralign.dataarea;
 
 
+import info.bioinfweb.commons.collections.ListChangeType;
 import info.bioinfweb.libralign.AlignmentArea;
 
 import java.util.ArrayList;
@@ -40,6 +41,7 @@ public class DataAreaModel {
   private DataAreaList bottomAreas = new DataAreaList(this, DataAreaListType.BOTTOM);	
   private Map<Integer, DataAreaList> sequenceAreaLists = new TreeMap<Integer, DataAreaList>();
   private List<DataAreaModelListener> listeners = new ArrayList<DataAreaModelListener>(8);
+  private boolean visibilityUpdateInProgress = false;
   
   
 	/**
@@ -96,9 +98,19 @@ public class DataAreaModel {
 	 * @see DataAreaList#setAllVisible(boolean)
 	 */
 	public void setSequenceDataAreasVisible(boolean visible) {
+		boolean informListeners = !isVisibilityUpdateInProgress(); 
+		if (informListeners) {
+			startVisibilityUpdate();
+		}
+		
+		List<DataArea> affectedAreas = new ArrayList<DataArea>();
 		Iterator<Integer> idIterator = sequenceAreaLists.keySet().iterator();
 		while (idIterator.hasNext()) {
-			getSequenceAreas(idIterator.next()).setAllVisible(visible);
+			affectedAreas.addAll(getSequenceAreas(idIterator.next()).setAllVisible(visible));
+		}
+		
+		if (informListeners) {
+			finishVisibilityUpdate(false, affectedAreas);
 		}
 	}
 	
@@ -156,10 +168,96 @@ public class DataAreaModel {
 	/**
 	 * Informs all listeners that a data area has been added or removed.
 	 */
-	protected void fireChange(DataAreaChangeEvent e) {
+	protected void fireInsertedRemoved(ListChangeType type, Collection<? extends DataArea> affectedElements) {
+		DataAreaChangeEvent e = new DataAreaChangeEvent(this, true, type, affectedElements);
 		Iterator<DataAreaModelListener> iterator = listeners.iterator();
 		while (iterator.hasNext()) {
 			iterator.next().dataAreaInsertedRemoved(e);
 		}
+	}
+
+	
+	/**
+	 * Informs all listeners that a data area has been added or removed.
+	 */
+	protected void fireInsertedRemoved(ListChangeType type, DataArea affectedElements) {
+		DataAreaChangeEvent e = new DataAreaChangeEvent(this, true, type, affectedElements);
+		Iterator<DataAreaModelListener> iterator = listeners.iterator();
+		while (iterator.hasNext()) {
+			iterator.next().dataAreaInsertedRemoved(e);
+		}
+	}
+
+	
+	/**
+	 * After calling this method {@link #fireVisibilityChanged(DataAreaList, Collection)} will have no effect
+	 * until {@link #finishVisibilityUpdate(DataAreaList, Collection)} is called. 
+	 * <p>
+	 * This method can be called before changing the visibility of many data areas in one step.
+	 * {@link #finishVisibilityUpdate(DataAreaList, Collection)} can than be used to inform the listeners
+	 * about the changed with one single event.
+	 */
+	protected void startVisibilityUpdate() {
+		visibilityUpdateInProgress = true;
+	}
+	
+	
+	/**
+	 * Returns {@code true} if informing listeners about visibility changes of data areas currently
+	 * disabled.  
+	 * 
+	 * @return {@code true} if {@link #fireVisibilityChanged(DataAreaList, Collection)} would currently have
+	 *          no effect, {@code false} otherwise
+	 */
+	protected boolean isVisibilityUpdateInProgress() {
+		return visibilityUpdateInProgress;
+	}
+
+
+	/**
+	 * Enables {@link #fireVisibilityChanged(DataAreaList, Collection)} again and makes a call of
+	 * this method to inform the listeners about previous changes.
+	 * 
+	 * @param e - the event describing the changes since the previous call of 
+	 *            {@link #startVisibilityUpdate()} that will be send to all listeners
+	 */
+	protected void finishVisibilityUpdate(boolean eventsFromSingleList, Collection<? extends DataArea> affectedElements) {
+		visibilityUpdateInProgress = false;
+		fireVisibilityChanged(eventsFromSingleList, affectedElements);
+	}
+	
+
+	/**
+	 * Informs all listeners that the visibility of a set of data areas has changed.
+	 * <p>
+	 * This method will have no effect if {@link #isVisibilityUpdateInProgress()} return {@code true}.
+	 * 
+	 * @param eventsFromSingleList - Specify {@code true} here if all elements in {@code affectedElements}
+	 *        are contained in the same {@link DataAreaList}.
+	 * @param affectedElements - a list of elements that have been changed
+	 */
+	protected void fireVisibilityChanged(boolean eventsFromSingleList, Collection<? extends DataArea> affectedElements) {
+		DataAreaChangeEvent e = new DataAreaChangeEvent(this, eventsFromSingleList, null, affectedElements);
+		Iterator<DataAreaModelListener> iterator = listeners.iterator();
+		while (iterator.hasNext()) {
+			iterator.next().dataAreaVisibilityChanged(e);
+		}
+	}
+	
+
+	/**
+	 * Informs all listeners that the visibility of a data area has changed. (Convenience method that
+	 * calls {@link #fireVisibilityChanged(DataAreaList, Collection)} internally.)
+	 * <p>
+	 * This method will have no effect if {@link #isVisibilityUpdateInProgress()} return {@code true}.
+	 * 
+	 * @param eventsFromSingleList - Specify {@code true} here if all elements in {@code affectedElements}
+	 *        are contained in the same {@link DataAreaList}.
+	 * @param affectedElements - a list of elements that have been changed
+	 */
+	protected void fireVisibilityChanged(boolean eventsFromSingleList, DataArea affectedElement) {
+		Collection<DataArea> affectedElements = new ArrayList<DataArea>(1);
+		affectedElements.add(affectedElement);
+		fireVisibilityChanged(eventsFromSingleList, affectedElements);
 	}
 }

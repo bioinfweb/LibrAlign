@@ -24,6 +24,7 @@ import info.bioinfweb.libralign.AlignmentArea;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
@@ -118,13 +119,29 @@ public class DataAreaList extends ArrayList<DataArea> {
 	 * Fades all elements in this list in or out.
 	 * 
 	 * @param visible - Specify {@code true} here, if you want the elements to be displayed, {@code false} otherwise.
+	 * @return a collection containing all affected elements
 	 * @see DataAreaModel#setSequenceDataAreasVisible(boolean)
 	 */
-	public void setAllVisible(boolean visible) {
+	public Collection<DataArea> setAllVisible(boolean visible) {
+		boolean informListeners = !getOwner().isVisibilityUpdateInProgress(); 
+		if (informListeners) {
+			getOwner().startVisibilityUpdate();
+		}
+		
+		List<DataArea> affectedAreas = new ArrayList<DataArea>(size());  // The whole size is specified as the array size, since the number of data areas attached to one sequence will ususally be small.
 		Iterator<DataArea> iterator = iterator();
 		while (iterator.hasNext()) {
-			iterator.next().setVisible(visible);
+			DataArea area = iterator.next();
+			if (area.setVisible(visible)) {  // state changed
+				affectedAreas.add(area);
+			}
 		}
+		
+		affectedAreas = Collections.unmodifiableList(affectedAreas);
+		if (informListeners) {
+			getOwner().finishVisibilityUpdate(true, affectedAreas);
+		}
+		return affectedAreas;
 	}
 	
 	
@@ -153,16 +170,6 @@ public class DataAreaList extends ArrayList<DataArea> {
 	}
 	
 	
-	private DataAreaChangeEvent createChangeEvent(ListChangeType type, Collection<? extends DataArea> affectedElements) {
-		return new DataAreaChangeEvent(getOwner(), this, type, affectedElements);
-	}
-	
-
-	private DataAreaChangeEvent createChangeEvent(ListChangeType type, DataArea affectedElement) {
-		return new DataAreaChangeEvent(getOwner(), this, type, affectedElement);
-	}
-	
-
 	/**
 	 * Appends the specified data area to the end of this list. This list is automatically set as
 	 * the owning list of {@code e}.
@@ -174,7 +181,7 @@ public class DataAreaList extends ArrayList<DataArea> {
 		boolean result = super.add(element);
 		if (result) {
 			element.setList(this);
-			getOwner().fireChange(createChangeEvent(ListChangeType.INSERTION, element));
+			getOwner().fireInsertedRemoved(ListChangeType.INSERTION, element);
 		}
 		return result;
 	}
@@ -183,7 +190,7 @@ public class DataAreaList extends ArrayList<DataArea> {
 	@Override
 	public void add(int index, DataArea element) {
 		element.setList(this);
-		getOwner().fireChange(createChangeEvent(ListChangeType.INSERTION, element));
+		getOwner().fireInsertedRemoved(ListChangeType.INSERTION, element);
 		super.add(index, element);
 	}
 	
@@ -202,7 +209,7 @@ public class DataAreaList extends ArrayList<DataArea> {
 			while (iterator.hasNext()) {
 				iterator.next().setList(this);
 			}
-			getOwner().fireChange(createChangeEvent(ListChangeType.INSERTION, c));
+			getOwner().fireInsertedRemoved(ListChangeType.INSERTION, c);
 		}
 		return result;
 	}
@@ -213,14 +220,14 @@ public class DataAreaList extends ArrayList<DataArea> {
 		List<DataArea> copy = new ArrayList<DataArea>(size());  // Clone cannot be used here, because changes there also affect the original list.
 		copy.addAll(this);
 		super.clear();
-		getOwner().fireChange(createChangeEvent(ListChangeType.INSERTION, copy));
+		getOwner().fireInsertedRemoved(ListChangeType.INSERTION, copy);
 	}
 	
 
 	@Override
 	public DataArea remove(int index) {
 		DataArea result = super.remove(index);
-		getOwner().fireChange(createChangeEvent(ListChangeType.DELETION, result));
+		getOwner().fireInsertedRemoved(ListChangeType.DELETION, result);
 		return result;
 	}
 	
@@ -229,7 +236,7 @@ public class DataAreaList extends ArrayList<DataArea> {
 	public boolean remove(Object o) {
 		boolean result = super.remove(o);
 		if (result) {
-			getOwner().fireChange(createChangeEvent(ListChangeType.DELETION, (DataArea)o));
+			getOwner().fireInsertedRemoved(ListChangeType.DELETION, (DataArea)o);
 		}
 		return result;
 	}
@@ -239,7 +246,7 @@ public class DataAreaList extends ArrayList<DataArea> {
 	public boolean removeAll(Collection<?> c) {
 		boolean result = super.removeAll(c);
 		if (result) {
-			getOwner().fireChange(createChangeEvent(ListChangeType.DELETION, (Collection<DataArea>)c));
+			getOwner().fireInsertedRemoved(ListChangeType.DELETION, (Collection<DataArea>)c);
 		}
 		return result;
 	}
@@ -252,7 +259,7 @@ public class DataAreaList extends ArrayList<DataArea> {
 		boolean result = super.retainAll(c);
 		if (result) {
 			copy.removeAll(c);
-			getOwner().fireChange(createChangeEvent(ListChangeType.DELETION, (Collection<DataArea>)copy));
+			getOwner().fireInsertedRemoved(ListChangeType.DELETION, (Collection<DataArea>)copy);
 		}
 		return result;
 	}
@@ -261,7 +268,7 @@ public class DataAreaList extends ArrayList<DataArea> {
 	@Override
 	public DataArea set(int index, DataArea element) {
 		DataArea result = super.set(index, element);
-		getOwner().fireChange(createChangeEvent(ListChangeType.REPLACEMENT, result));
+		getOwner().fireInsertedRemoved(ListChangeType.REPLACEMENT, result);
 		return result;
 	}
 

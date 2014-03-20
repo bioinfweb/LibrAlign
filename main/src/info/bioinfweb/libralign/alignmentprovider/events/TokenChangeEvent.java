@@ -21,6 +21,7 @@ package info.bioinfweb.libralign.alignmentprovider.events;
 
 import info.bioinfweb.commons.collections.ListChangeType;
 import info.bioinfweb.libralign.alignmentprovider.SequenceDataProvider;
+import info.bioinfweb.libralign.dataarea.DataArea;
 
 import java.util.Collection;
 
@@ -64,5 +65,20 @@ public class TokenChangeEvent extends SequenceChangeEvent {
 	 */
 	public Collection<Object> getAffectedTokens() {
 		return affectedTokens;
+	}
+	
+	
+	/**
+	 * Returns the first affected token. Convenience method if only one element is affected.
+	 * 
+	 * @return the fist affected element or {@code null} if {@link #getAffectedElements()} return an empty list
+	 */
+	public Object getAffectedToken() {
+		if (!getAffectedTokens().isEmpty()) {
+			return getAffectedTokens().iterator().next();
+		}
+		else {
+			return null;
+		}
 	}
 }

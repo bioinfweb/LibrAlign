@@ -34,13 +34,12 @@ import java.util.EventObject;
  * <p>
  * A change in this case means adding, removing or replacing data areas. This event does not indicate
  * changes of the contents of a data area.
- * </p>
  * 
  * @author Ben St&ouml;ver
  * @since 1.0.0
  */
 public class DataAreaChangeEvent extends EventObject {
-	private DataAreaList list;
+	private boolean eventsFromSingleList;
 	private ListChangeType type;
 	private Collection<DataArea> affectedElements;
 	
@@ -49,18 +48,20 @@ public class DataAreaChangeEvent extends EventObject {
 	 * Creates a new event object.
 	 * 
 	 * @param source - the object that manages the data area lists
-	 * @param list - the list that contains (or contained) the element the change occurred in
+	 * @param eventsFromSingleList - Specify {@code true} here if all elements in {@code affectedElements}
+	 *        are contained in the same {@link DataAreaList}.
 	 * @param type - the type of modification that happened
-	 * @param affectedElements - a list of elements that have been inserted, removed or replaced
+	 * @param affectedElements - a list of elements that have been affected (inserted, removed or replaced
+	 *        or visibility change)
 	 */
-	public DataAreaChangeEvent(Object source, DataAreaList list, ListChangeType type,	
+	public DataAreaChangeEvent(Object source, boolean eventsFromSingleList, ListChangeType type,	
 			Collection<? extends DataArea> affectedElements) {
 		
 		super(source);
 		if (affectedElements.isEmpty()) {
 			throw new IllegalArgumentException("At least one affected element has to be specified.");
 		}
-		this.list = list;
+		this.eventsFromSingleList = eventsFromSingleList;
 		this.type = type;
 		this.affectedElements = Collections.unmodifiableCollection(affectedElements);
 	}
@@ -70,13 +71,17 @@ public class DataAreaChangeEvent extends EventObject {
 	 * Creates a new event object. Use this constructor if only one element is affected.
 	 * 
 	 * @param source - the object that manages the data area lists
-	 * @param list - the list that contains (or contained) the element the change occurred in
+	 * @param eventsFromSingleList - Specify {@code true} here if all elements in {@code affectedElements}
+	 *        are contained in the same {@link DataAreaList}.
 	 * @param type - the type of modification that happened
-	 * @param affectedElement - the element that has been inserted, removed or replaced
+	 * @param affectedElements - a list of elements that have been affected (inserted, removed or replaced
+	 *        or visibility change)
 	 */
-	public DataAreaChangeEvent(Object source, DataAreaList list, ListChangeType type,	DataArea affectedElement) {
+	public DataAreaChangeEvent(Object source,  boolean eventsFromSingleList, ListChangeType type,	
+			DataArea affectedElement) {
+		
 		super(source);
-		this.list = list;
+		this.eventsFromSingleList = eventsFromSingleList;
 		this.type = type;
 
 		if (affectedElement == null) {
@@ -98,13 +103,21 @@ public class DataAreaChangeEvent extends EventObject {
 
 
 	/**
-	 * Returns the list of data areas the change occurred in.
+	 * Returns if all elements in {@link #getAffectedElements()} are contained in the same {@link DataAreaList}.
+	 * 	 
+	 * @return {@code true} if all elements are from the same list, {@code false} otherwise
 	 */
-	public DataAreaList getList() {
-		return list;
+	public boolean isEventsFromSingleList() {
+		return eventsFromSingleList;
 	}
 
 
+	/**
+	 * Returns the type of change that happened.
+	 * 
+	 * @return a value enumerated by {@link ListChangeType} if an element was inserted, removed or 
+	 *         replaced or {@code null} if the visibility of a data area was changed instead
+	 */
 	public ListChangeType getType() {
 		return type;
 	}
