@@ -19,9 +19,20 @@
 package info.bioinfweb.libralign;
 
 
+import java.awt.Color;
+import java.awt.FontMetrics;
+import java.awt.Graphics2D;
 import java.awt.geom.Dimension2D;
+import java.awt.geom.Rectangle2D;
+import java.util.Iterator;
+import java.util.Set;
 
+import org.biojava3.core.sequence.compound.NucleotideCompound;
+
+import info.bioinfweb.commons.graphics.DoubleDimension;
+import info.bioinfweb.commons.graphics.GraphicsUtils;
 import info.bioinfweb.commons.tic.TICPaintEvent;
+import info.bioinfweb.libralign.alignmentprovider.SequenceDataProvider;
 
 
 
@@ -47,21 +58,110 @@ public class SequenceArea extends AlignmentSubArea {
 	}
 
 
+	/**
+	 * Returns the unique identifier of the the sequence displayed by this area.
+	 * 
+	 * @return an ID of a sequence stored in the according {@link SequenceDataProvider}
+	 */
 	public int getSeqenceID() {
 		return seqenceID;
 	}
 
 
-	@Override
+	private Color getBGColor(Color color, boolean selected) {
+		if (color == null) {
+			color = getOwner().getColorSchema().getDefaultBgColor();
+		}
+		if (selected) {
+			color = GraphicsUtils.blend(color, getOwner().getColorSchema().getSelectionColor());
+		}
+		return color;
+	}
+
+
+	private String getNucleotideBaseString(NucleotideCompound compound) {
+		String result = compound.getUpperedBase();
+		if (result.equals("U") && getOwner().getViewMode().equals(AlignmentDataViewMode.DNA)) {
+			return "T";
+		}
+		else if (result.equals("T") && getOwner().getViewMode().equals(AlignmentDataViewMode.RNA)) {
+			return "U";
+		}
+		else {
+			return result;
+		}
+	}
+	
+	
+  private void paintNucleotideCompound(Graphics2D g, NucleotideCompound compound, float x, float y, 
+  		boolean selected) {
+  	
+  	Set<NucleotideCompound> consituents = compound.getConstituents();
+  	final float height = getOwner().getCompoundHeight() / (float)consituents.size();
+  	Iterator<NucleotideCompound> iterator = consituents.iterator();
+  	float bgY = y;
+  	while (iterator.hasNext()) {  // Fill the compound rectangle with differently colored zones, if ambiguity codes are used.
+  		g.setColor(getBGColor(getOwner().getColorSchema().getNucleotideColorMap().get(
+  				getNucleotideBaseString(iterator.next())),	selected));
+    	g.fill(new Rectangle2D.Float(x, bgY, getOwner().getCompoundWidth(), height));
+    	bgY += height;
+  	}
+  	
+  	if (getOwner().isPaintCompoundText()) {  // Text output only if font size is not too low
+	  	g.setColor(getOwner().getColorSchema().getFontColor());
+	  	g.setFont(getOwner().getCompoundFont());
+			FontMetrics fm = g.getFontMetrics();
+	  	g.drawString(compound.getBase(), x + 0.5f * 
+	  			(getOwner().getCompoundWidth() - fm.charWidth(compound.getBase().charAt(0))), y + fm.getAscent());
+  	}
+  }
+  
+  
+  private void paintCompound(Graphics2D g, Object compound, float x, float y, boolean selected) {
+  	g.setColor(getOwner().getColorSchema().getTokenBorderColor());
+  	g.draw(new Rectangle2D.Float(x, y, getOwner().getCompoundWidth(), getOwner().getCompoundHeight()));
+  	
+  	switch (getOwner().getViewMode()) {
+  		case NUCLEOTIDE:
+			case DNA:
+			case RNA:
+				paintNucleotideCompound(g, (NucleotideCompound)compound, x, y, selected);
+				//TODO Type cast funktioniert so nicht, wenn Quelldaten nicht diesen Datentyp haben! => Konvertierung mit GeneticCode hinzufügen.
+				break;
+			case CODON:
+				break;
+			case MIXED_AMINO_ACID:
+				break;
+			case ALL_AMINO_ACID:
+				break;
+			case NONE:
+				break;
+  	}
+  }
+
+  
+  @Override
 	public void paint(TICPaintEvent event) {
-		// TODO Auto-generated method stub
+		int firstIndex = Math.max(0, getOwner().columnByPaintX((int)event.getRectangle().getMinX()));
+		int lastIndex = getOwner().columnByPaintX((int)event.getRectangle().getMaxX());
+		if (lastIndex == -1) {
+			lastIndex = getOwner().getDataProvider().getMaxSequenceLength() - 1;
+		}
 		
+  	float x = firstIndex * getOwner().getCompoundWidth();
+		for (int i = firstIndex; i <= lastIndex; i++) {			
+    	paintCompound(event.getGraphics(), 
+    			getOwner().getDataProvider().getTokenAt(getSeqenceID(), i), x, 0f,	
+    			getOwner().getSelection().isSelected(i, getOwner().getSequenceOrder().indexByID(getSeqenceID())));
+	    x += getOwner().getCompoundWidth();
+    }
 	}
 
 	
 	@Override
 	public Dimension2D getSize() {
-		// TODO Auto-generated method stub
-		return null;
+		return new DoubleDimension(
+				getOwner().getCompoundWidth() * getOwner().getDataProvider().getSequenceLength(getSeqenceID()), 
+				getOwner().getCompoundHeight());
 	}
 }

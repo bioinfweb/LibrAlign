@@ -58,21 +58,21 @@ public class SequenceOrder {
 
 
 	/**
-	 * Returns the display index of the sequence with the specified name.
+	 * Returns the display index of the sequence with the specified ID.
 	 * 
-	 * @param name - the name of the sequence
+	 * @param id - the unique identifier of the sequence
 	 * @return the index of the sequence (The first sequence has the index 0.)
 	 */
-	public int indexByName(String name) {
-		return idList.indexOf(name);
+	public int indexByID(int id) {
+		return idList.indexOf(id);
 	}
 	
 	
 	/**
-	 * Returns the name of the sequence displayed at the specified index
+	 * Returns the unique identifier of the sequence displayed at the specified index
 	 * 
 	 * @param index - the index of the sequence (The first sequence has the index 0.)
-	 * @return the name of the sequence in the data source 
+	 * @return the ID of the sequence in the data source 
 	 */
 	public int idByIndex(int index) {
 		return idList.get(index);
