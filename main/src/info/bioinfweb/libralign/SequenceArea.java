@@ -145,13 +145,13 @@ public class SequenceArea extends AlignmentSubArea {
 		int firstIndex = Math.max(0, getOwner().columnByPaintX((int)event.getRectangle().getMinX()));
 		int lastIndex = getOwner().columnByPaintX((int)event.getRectangle().getMaxX());
 		if (lastIndex == -1) {
-			lastIndex = getOwner().getDataProvider().getMaxSequenceLength() - 1;
+			lastIndex = getOwner().getSequenceProvider().getMaxSequenceLength() - 1;
 		}
 		
   	float x = firstIndex * getOwner().getCompoundWidth();
 		for (int i = firstIndex; i <= lastIndex; i++) {			
     	paintCompound(event.getGraphics(), 
-    			getOwner().getDataProvider().getTokenAt(getSeqenceID(), i), x, 0f,	
+    			getOwner().getSequenceProvider().getTokenAt(getSeqenceID(), i), x, 0f,	
     			getOwner().getSelection().isSelected(i, getOwner().getSequenceOrder().indexByID(getSeqenceID())));
 	    x += getOwner().getCompoundWidth();
     }
@@ -161,7 +161,7 @@ public class SequenceArea extends AlignmentSubArea {
 	@Override
 	public Dimension2D getSize() {
 		return new DoubleDimension(
-				getOwner().getCompoundWidth() * getOwner().getDataProvider().getSequenceLength(getSeqenceID()), 
+				getOwner().getCompoundWidth() * getOwner().getSequenceProvider().getSequenceLength(getSeqenceID()), 
 				getOwner().getCompoundHeight());
 	}
 }

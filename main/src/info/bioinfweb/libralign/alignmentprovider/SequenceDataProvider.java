@@ -273,19 +273,14 @@ public interface SequenceDataProvider {
 	 */
 	public int getSequenceCount();
 
-	/**
-	 * Adds a lister to this object that will be informed about future changes of the selection.
-	 * 
-	 * @param listener - the listener object to be notified in the future
-	 * @return {@code true} (as specified by {@link Collection#add(Object)}) 
-	 */
-  public boolean addChangeListener(SequenceDataChangeListener listener);
-
-	/**
-	 * Removes the specified listener from this objects list.
-	 * 
-	 * @param listener - the listener to be removed 
-	 * @return {@code true} if this list contained the specified element
-	 */
-  public boolean removeChangeListener(SequenceDataChangeListener listener);
+  /**
+   * Returns all change listeners currently attached to this object. This collection is writable
+   * and should also be used to add or remove listeners.
+   * <p>
+   * This method returns the same object in every call. Therefore changes made to different references
+   * always affect all references.
+   * 
+   * @return a collection object containing the listeners
+   */
+  public Collection<SequenceDataChangeListener> getChangeListeners();
 }

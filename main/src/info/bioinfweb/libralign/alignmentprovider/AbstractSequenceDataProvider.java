@@ -60,6 +60,16 @@ public abstract class AbstractSequenceDataProvider implements SequenceDataProvid
 	}
 	
 
+	protected Map<String, Integer> getIdByNameMap() {
+		return idByNameMap;
+	}
+
+
+	protected Map<Integer, String> getNameByIDMap() {
+		return nameByIDMap;
+	}
+
+
 	/* (non-Javadoc)
 	 * @see info.bioinfweb.libralign.alignmentprovider.SequenceDataProvider#getDataType()
 	 */
@@ -307,21 +317,9 @@ public abstract class AbstractSequenceDataProvider implements SequenceDataProvid
 	}
 
 
-	/* (non-Javadoc)
-	 * @see info.bioinfweb.libralign.alignmentprovider.SequenceDataProvider#addChangeListener(info.bioinfweb.libralign.alignmentprovider.SequenceDataChangeListener)
-	 */
 	@Override
-	public boolean addChangeListener(SequenceDataChangeListener listener) {
-		return changeListeners.add(listener);
-	}
-
-
-	/* (non-Javadoc)
-	 * @see info.bioinfweb.libralign.alignmentprovider.SequenceDataProvider#removeChangeListener(info.bioinfweb.libralign.alignmentprovider.SequenceDataChangeListener)
-	 */
-	@Override
-	public boolean removeChangeListener(SequenceDataChangeListener listener) {
-		return changeListeners.remove(listener);
+	public Collection<SequenceDataChangeListener> getChangeListeners() {
+		return changeListeners;
 	}
 
 

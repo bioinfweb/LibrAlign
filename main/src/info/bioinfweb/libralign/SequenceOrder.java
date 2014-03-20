@@ -21,6 +21,7 @@ package info.bioinfweb.libralign;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
 
@@ -33,6 +34,24 @@ import java.util.List;
  * @since 1.0.0
  */
 public class SequenceOrder {
+	private final Comparator<Integer> ASCENDING_ALPHABETICAL_COMPARATOR = new Comparator<Integer>() {
+		@Override
+		public int compare(Integer o1, Integer o2) {
+			return getOwner().getSequenceProvider().sequenceNameByID(o1).compareTo(
+					getOwner().getSequenceProvider().sequenceNameByID(o2));
+		}
+	};
+
+
+	private final Comparator<Integer> DESCENDING_ALPHABETICAL_COMPARATOR = new Comparator<Integer>() {
+		@Override
+		public int compare(Integer o1, Integer o2) {
+			return getOwner().getSequenceProvider().sequenceNameByID(o2).compareTo(
+					getOwner().getSequenceProvider().sequenceNameByID(o1));
+		}
+	};
+
+
 	private AlignmentArea owner;
 	private List<Integer> idList = new ArrayList<Integer>();
 
@@ -87,7 +106,7 @@ public class SequenceOrder {
 	public void setSourceSequenceOrder() {
 		idList.clear();
 		if (getOwner().hasDataProvider()) {
-			Iterator<Integer> iterator = getOwner().getDataProvider().sequenceIDIterator();
+			Iterator<Integer> iterator = getOwner().getSequenceProvider().sequenceIDIterator();
 			while (iterator.hasNext()) {
 				idList.add(iterator.next());
 			}
@@ -97,9 +116,25 @@ public class SequenceOrder {
 	
 	/**
 	 * Sorts the sequences by their name.
+	 * 
+	 * @param ascending - Specify {@code true} here, if you want the sequences to have an ascending
+	 *        alphabetical order and {@code false} for a descending order. 
 	 */
-	public void setAlphabeticalSequenceOrder() {
-		Collections.sort(idList);
+	public void setAlphabeticalSequenceOrder(boolean ascending) {
+		if (ascending) {
+			Collections.sort(idList, ASCENDING_ALPHABETICAL_COMPARATOR);
+		}
+		else {
+			Collections.sort(idList, DESCENDING_ALPHABETICAL_COMPARATOR);
+		}
+	}
+
+	
+	/**
+	 * Sorts the sequences by their name in ascending order.
+	 */
+	public void setAscendingAlphabeticalSequenceOrder() {
+		Collections.sort(idList, ASCENDING_ALPHABETICAL_COMPARATOR);
 	}
 
 	

@@ -19,28 +19,32 @@
 package info.bioinfweb.libralign;
 
 
-import java.awt.Color;
-import java.awt.Dimension;
 import java.awt.Font;
-import java.awt.FontMetrics;
-import java.awt.Graphics2D;
-import java.awt.Rectangle;
-import java.awt.Shape;
 import java.awt.geom.Dimension2D;
-import java.awt.geom.Rectangle2D;
 import java.util.Iterator;
-import java.util.Set;
 
-import org.biojava3.core.sequence.compound.NucleotideCompound;
+import javax.swing.BoxLayout;
+import javax.swing.JComponent;
+import javax.swing.JPanel;
+
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.graphics.Point;
+import org.eclipse.swt.layout.FillLayout;
+import org.eclipse.swt.widgets.Composite;
 
 import info.bioinfweb.commons.graphics.DoubleDimension;
-import info.bioinfweb.commons.graphics.GraphicsUtils;
 import info.bioinfweb.commons.tic.TICComponent;
 import info.bioinfweb.commons.tic.TICPaintEvent;
+import info.bioinfweb.commons.tic.toolkit.AbstractSWTWidget;
+import info.bioinfweb.commons.tic.toolkit.AbstractSwingComponent;
+import info.bioinfweb.libralign.alignmentprovider.SequenceDataChangeListener;
 import info.bioinfweb.libralign.alignmentprovider.SequenceDataProvider;
-import info.bioinfweb.libralign.dataarea.DataArea;
-import info.bioinfweb.libralign.dataarea.DataAreaList;
+import info.bioinfweb.libralign.alignmentprovider.events.SequenceChangeEvent;
+import info.bioinfweb.libralign.alignmentprovider.events.SequenceRenamedEvent;
+import info.bioinfweb.libralign.alignmentprovider.events.TokenChangeEvent;
+import info.bioinfweb.libralign.dataarea.DataAreaChangeEvent;
 import info.bioinfweb.libralign.dataarea.DataAreaModel;
+import info.bioinfweb.libralign.dataarea.DataAreaModelListener;
 import info.bioinfweb.libralign.selection.AlignmentCursor;
 import info.bioinfweb.libralign.selection.SelectionModel;
 import info.webinsel.util.Math2;
@@ -53,7 +57,7 @@ import info.webinsel.util.Math2;
  * @author Ben St&ouml;ver
  * @since 1.0.0
  */
-public class AlignmentArea extends TICComponent {
+public class AlignmentArea extends TICComponent implements SequenceDataChangeListener {
 	public static final float COMPOUND_WIDTH = 10f;
 	public static final float COMPOUND_HEIGHT = 14f;
 	public static final String FONT_NAME = Font.SANS_SERIF;
@@ -62,7 +66,7 @@ public class AlignmentArea extends TICComponent {
 	public static final int MIN_FONT_SIZE = 4;
 
 	
-	private SequenceDataProvider dataProvider = null;
+	private SequenceDataProvider sequenceProvider = null;
 	private SequenceOrder sequenceOrder = new SequenceOrder(this);
 	private SequenceColorSchema colorSchema = new SequenceColorSchema();
 	private WorkingMode workingMode = WorkingMode.VIEW;  //TODO Should this better be part of the controller (key and mouse listener)?
@@ -77,21 +81,77 @@ public class AlignmentArea extends TICComponent {
 	private Font font = new Font(Font.SANS_SERIF, Font.PLAIN, Math.round(COMPOUND_HEIGHT * 0.7f));
 	
 	
+	public AlignmentArea() {
+		super();
+		dataAreas.addListener(new DataAreaModelListener() {
+					@Override
+					public void dataAreaVisibilityChanged(DataAreaChangeEvent e) {
+						// TODO Auto-generated method stub
+						
+					}
+					
+					@Override
+					public void dataAreaInsertedRemoved(DataAreaChangeEvent e) {
+						// TODO Auto-generated method stub
+						
+					}
+				});
+	}
+
+
 	public boolean hasDataProvider() {
-		return getDataProvider() != null;
+		return getSequenceProvider() != null;
 	}
 	
 	
-	public SequenceDataProvider getDataProvider() {
-		return dataProvider;
+	public SequenceDataProvider getSequenceProvider() {
+		return sequenceProvider;
 	}
 	
 	
-	public void setDataProvider(SequenceDataProvider dataProvider) {
-		this.dataProvider = dataProvider;
-		getSequenceOrder().setSourceSequenceOrder();  // Update sequence names
-		//TODO repaint
-		//TODO Send message to all and/or remove some data areas? (Some might be data specific (e.g. pherograms), some not (e.g. consensus sequence).) 
+	/**
+	 * Changes the sequence provider used by this instance.
+	 * 
+	 * @param sequenceProvider - the new data provider to use from now on
+	 * @param moveListeners - Specify {@code true} here, if you want the {@link SequenceDataChangeListener}s
+	 *        attached to the current sequence provider to be moved to the specified {@code sequenceProvider},
+	 *        {@code false} if the listeners shall remain attached to the old sequence provider. (This instance
+	 *        is also registered as a listener and is always moved to the new object, no matter which value is
+	 *        specified here.)
+	 * @return the previous sequence provider that has been replaced or {@code null} if there was no provider 
+	 *         before
+	 */
+	public SequenceDataProvider setDataProvider(SequenceDataProvider sequenceProvider, boolean moveListeners) {
+		SequenceDataProvider result = this.sequenceProvider;
+		if (!sequenceProvider.equals(this.sequenceProvider)) {
+			if (this.sequenceProvider != null) {
+				if (moveListeners) {  // Move all listeners
+					sequenceProvider.getChangeListeners().addAll(this.sequenceProvider.getChangeListeners());
+					this.sequenceProvider.getChangeListeners().clear();
+				}
+				else {  // Move this instance as the listener anyway:
+					this.sequenceProvider.getChangeListeners().remove(this);
+					sequenceProvider.getChangeListeners().add(this);
+				}
+			}
+			
+			this.sequenceProvider = sequenceProvider;
+			getSequenceOrder().setSourceSequenceOrder();  // Update sequence names
+			
+      // Fire events for listener move after the process finished
+			if (this.sequenceProvider != null) {
+				if (moveListeners) {
+					Iterator<SequenceDataChangeListener> iterator = this.sequenceProvider.getChangeListeners().iterator();
+					while (iterator.hasNext()) {
+						iterator.next().afterProviderChanged(result, this.sequenceProvider);
+					}
+				}
+				else {
+					afterProviderChanged(result, this.sequenceProvider);
+				}
+			}
+		}
+		return result;
 	}
 	
 	
@@ -233,17 +293,6 @@ public class AlignmentArea extends TICComponent {
 
 
 	/**
-	 * Returns the size this component will use depending on the current zoom factor.
-	 */
-	@Override
-	public Dimension2D getSize() {
-		return new DoubleDimension(getDataProvider().getMaxSequenceLength() * getCompoundWidth(),
-				getDataProvider().getSequenceCount() * getCompoundHeight() + getDataAreas().getVisibleAreaHeight());
-		//TODO May data areas be wider than the alignment?
-	}
-
-
-	/**
 	 * Indicates whether compounds should are printed as text.
 	 * <p>
 	 * If any zoom factor is to low, each compound is only painted as a rectangle without any text in it.
@@ -270,7 +319,7 @@ public class AlignmentArea extends TICComponent {
 	 */
 	public int columnByPaintX(int x) {
 		int result = (int)(x / getCompoundWidth());
-		if (Math2.isBetween(result, 0, getDataProvider().getMaxSequenceLength() - 1)) {
+		if (Math2.isBetween(result, 0, getSequenceProvider().getMaxSequenceLength() - 1)) {
 			return result;
 		}
 		else {
@@ -283,155 +332,74 @@ public class AlignmentArea extends TICComponent {
 		return (int)((column - 1) * getCompoundWidth());
 	}
 
-	
+
+	@Override
+	public JComponent createSwingComponent() {
+		JPanel result = new JPanel();
+		result.setLayout(new BoxLayout(result, BoxLayout.Y_AXIS));
+		//TODO Add current subcomponents
+		return result;
+	}
+
+
+
+	@Override
+	public Composite createSWTWidget(Composite parent, int style) {
+		Composite result = new Composite(parent, style);  //TODO Should style really be passed through?
+		result.setLayout(new FillLayout(SWT.VERTICAL));
+		//TODO Add current subcomponents
+		return result;
+	}
+
+
+	@Override
+	public void paint(TICPaintEvent event) {}  // Empty because toolkit specific components are provided
+
+
 	/**
-	 * Paints all the data ares contained in the specified list which are set visible.
-	 * It is  not checked if these areas are contained in the visible rectangle.
+	 * Returns the size of the underlying toolkit specific component. If no component has been created yet,
+	 * (0, 0) is returned.
 	 * 
-	 * @param list - the list of elements to be painted
-	 * @param e - the the initial paint event
-	 * @param x - the x coordinate of the data areas
-	 * @param y - the y coordinate of the top most data area
-	 * @return the new value for y below all the painted areas
+	 * @see info.bioinfweb.commons.tic.TICComponent#getSize()
 	 */
-	private float paintDataAreaList(DataAreaList list, TICPaintEvent e, float x, float y) {
-		Iterator<DataArea> iterator = list.visibleIterator();
-		while (iterator.hasNext()) {
-			DataArea dataArea = iterator.next();
-			
-			// Create Graphics2D:
-			Dimension2D size = dataArea.getSize();
-			int intX = (int)x;
-			int intY = (int)y;
-			int rectWidth = (int)Math2.roundUp(Math.min(size.getWidth(), -x + e.getRectangle().width));
-			int rectHeight = (int)Math2.roundUp(Math.min(size.getHeight(), -y + e.getRectangle().height));
-			Graphics2D dataAreaGraphics = (Graphics2D)e.getGraphics().create(intX, intY, rectWidth, rectHeight); 
-			dataAreaGraphics.translate(x - intX, y - intY);  // Do the rest of the translation
-			
-			dataArea.paint(new TICPaintEvent(e.getSource(), dataAreaGraphics, 
-					new Rectangle(rectWidth, rectHeight)));
-			y += size.getHeight();
+	@Override
+	public Dimension2D getSize() {
+		switch (getCurrentToolkit()) {
+			case SWING:
+				return ((JComponent)getToolkitComponent()).getPreferredSize();  //TODO correct size?
+			case SWT:
+				Point point = ((Composite)getToolkitComponent()).getSize();
+				return new DoubleDimension(point.x, point.y);
+			default:
+			  return new DoubleDimension(0, 0);
 		}
-		return y;
 	}
 	
 	
 	@Override
-	public void paint(TICPaintEvent e) {
-		if (hasDataProvider()) {
-			float x = 0f;
-			float y = 0f;
-			
-			// Top areas:
-			if (e.getRectangle().getMinY() <= y + getDataAreas().getTopAreas().getVisibleHeight()) {
-				y = paintDataAreaList(getDataAreas().getTopAreas(), e, x, y);
-			}
-			
-			// Sequences and attached areas:
-			for (int i = 0; i < getDataProvider().getSequenceCount(); i++) {
-				if (y >= e.getRectangle().getMinY()) {
-					if (y > e.getRectangle().getMaxY()) {  // End output, if the end of the visible rectangle on y has been reached
-						break;
-					}
-					else {
-						paintSequence(e.getGraphics(), i, x, y, e.getRectangle());
-						y += getCompoundHeight();
-						y = paintDataAreaList(getDataAreas().getSequenceAreas(getSequenceOrder().idByIndex(i)), e, x, y);
-					}
-				}
-			}
-			
-			// Bottom areas:
-			if (e.getRectangle().getMaxY() >= y) {
-				y = paintDataAreaList(getDataAreas().getBottomAreas(), e, x, y);
-			}
-		}
-	}
-	
-	
-	private void paintSequence(Graphics2D g, int sequenceIndex, float x, float y, Rectangle visibleRect) {
-		int firstIndex = Math.max(0, columnByPaintX((int)visibleRect.getMinX()));
-		int lastIndex = columnByPaintX((int)visibleRect.getMaxX());
-		if (lastIndex == -1) {
-			lastIndex = getDataProvider().getMaxSequenceLength() - 1;
-		}
+	public void afterSequenceChange(SequenceChangeEvent e) {
+		// TODO Auto-generated method stub
 		
-  	x += firstIndex * getCompoundWidth();
-		for (int i = firstIndex; i <= lastIndex; i++) {			
-    	paintCompound(g, getDataProvider().getTokenAt(getSequenceOrder().idByIndex(sequenceIndex), i), 
-    			x, y,	getSelection().isSelected(i, sequenceIndex));
-	    x += getCompoundWidth();
-    }
-	}
-	
-	
-	private Color getBGColor(Color color, boolean selected) {
-		if (color == null) {
-			color = getColorSchema().getDefaultBgColor();
-		}
-		if (selected) {
-			color = GraphicsUtils.blend(color, getColorSchema().getSelectionColor());
-		}
-		return color;
 	}
 
 
-	private String getNucleotideBaseString(NucleotideCompound compound) {
-		String result = compound.getUpperedBase();
-		if (result.equals("U") && getViewMode().equals(AlignmentDataViewMode.DNA)) {
-			return "T";
-		}
-		else if (result.equals("T") && getViewMode().equals(AlignmentDataViewMode.RNA)) {
-			return "U";
-		}
-		else {
-			return result;
-		}
+	@Override
+	public void afterSequenceRenamed(SequenceRenamedEvent e) {
+		// TODO Auto-generated method stub
+		
 	}
-	
-	
-  private void paintNucleotideCompound(Graphics2D g, NucleotideCompound compound, float x, float y, 
-  		boolean selected) {
-  	
-  	Set<NucleotideCompound> consituents = compound.getConstituents();
-  	final float height = getCompoundHeight() / (float)consituents.size();
-  	Iterator<NucleotideCompound> iterator = consituents.iterator();
-  	float bgY = y;
-  	while (iterator.hasNext()) {  // Fill the compound rectangle with differently colored zones, if ambiguity codes are used.
-  		g.setColor(getBGColor(
-  				getColorSchema().getNucleotideColorMap().get(getNucleotideBaseString(iterator.next())),	selected));
-    	g.fill(new Rectangle2D.Float(x, bgY, getCompoundWidth(), height));
-    	bgY += height;
-  	}
-  	
-  	if (isPaintCompoundText()) {  // Text output only if font size is not too low
-	  	g.setColor(getColorSchema().getFontColor());
-	  	g.setFont(getCompoundFont());
-			FontMetrics fm = g.getFontMetrics();
-	  	g.drawString(compound.getBase(), x + 0.5f * (getCompoundWidth() - fm.charWidth(compound.getBase().charAt(0))), y + fm.getAscent());
-  	}
-  }
-  
-  
-  private void paintCompound(Graphics2D g, Object compound, float x, float y, boolean selected) {
-  	g.setColor(getColorSchema().getTokenBorderColor());
-  	g.draw(new Rectangle2D.Float(x, y, getCompoundWidth(), getCompoundHeight()));
-  	
-  	switch (getViewMode()) {
-  		case NUCLEOTIDE:
-			case DNA:
-			case RNA:
-				paintNucleotideCompound(g, (NucleotideCompound)compound, x, y, selected);
-				//TODO Type cast funktioniert so nicht, wenn Quelldaten nicht diesen Datentyp haben! => Konvertierung mit GeneticCode hinzufügen.
-				break;
-			case CODON:
-				break;
-			case MIXED_AMINO_ACID:
-				break;
-			case ALL_AMINO_ACID:
-				break;
-			case NONE:
-				break;
-  	}
-  }
+
+
+	@Override
+	public void afterTokenChange(TokenChangeEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+
+	@Override
+	public void afterProviderChanged(SequenceDataProvider previous, SequenceDataProvider current) {
+		//TODO repaint
+		//TODO Send message to all and/or remove some data areas? (Some might be data specific (e.g. pherograms), some not (e.g. consensus sequence).)
+	}
 }

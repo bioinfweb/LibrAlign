@@ -85,10 +85,10 @@ public class OneDimensionalSelection {
   private int secureValidPos(int pos) {
   	if (pos != NO_SELECTION) {
   		if (getDimension().equals(SelectionDimension.COLUMN)) {
-  			pos = Math.max(0, Math.min(getOwner().getOwner().getDataProvider().getMaxSequenceLength() - 1, pos));  //TODO Problematic if getMaxSequenceLength() would always be calculated over all sequences, since this method is called often.
+  			pos = Math.max(0, Math.min(getOwner().getOwner().getSequenceProvider().getMaxSequenceLength() - 1, pos));  //TODO Problematic if getMaxSequenceLength() would always be calculated over all sequences, since this method is called often.
   		}
   		else {  // SelectionDimension.ROW
-  			pos = Math.max(0, Math.min(getOwner().getOwner().getDataProvider().getSequenceCount() - 1, pos));
+  			pos = Math.max(0, Math.min(getOwner().getOwner().getSequenceProvider().getSequenceCount() - 1, pos));
   		}
   	}
   	return pos;
@@ -255,10 +255,10 @@ public class OneDimensionalSelection {
 	public void selectAll() {
 		setFirstPos(0);
 		if (getDimension().equals(SelectionDimension.COLUMN)) {
-			setLastPos(getOwner().getOwner().getDataProvider().getMaxSequenceLength() - 1);
+			setLastPos(getOwner().getOwner().getSequenceProvider().getMaxSequenceLength() - 1);
 		}
 		else {  // SelectionDimension.ROW
-			setLastPos(getOwner().getOwner().getDataProvider().getSequenceCount() - 1);
+			setLastPos(getOwner().getOwner().getSequenceProvider().getSequenceCount() - 1);
 		}
 	}
 		

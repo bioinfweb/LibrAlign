@@ -51,9 +51,21 @@ public class BioJavaAlignmentDataProvider<S extends Sequence<C>, C extends Compo
 	private Alignment<S, C> alignment;
 	
 	
+	private void setMapEntries() {
+		Iterator<String> iterator = alignment.nameIterator();
+		while (iterator.hasNext()) {
+			String sequenceName = iterator.next();
+			int sequenceID = createNewID();
+			getIdByNameMap().put(sequenceName, sequenceID);
+			getNameByIDMap().put(sequenceID, sequenceName);
+		}
+	}
+	
+	
 	public BioJavaAlignmentDataProvider(Alignment<S, C> alignment, AlignmentSourceDataType dataType) {
 		super(dataType);
 		this.alignment = alignment;
+		setMapEntries();
 	}
 
 	
@@ -83,6 +95,7 @@ public class BioJavaAlignmentDataProvider<S extends Sequence<C>, C extends Compo
 			}
 			alignment.add(name, (S)profile.getAlignedSequence(i)); 
 		}
+		setMapEntries();
 	}
 
 
@@ -95,6 +108,7 @@ public class BioJavaAlignmentDataProvider<S extends Sequence<C>, C extends Compo
 			String name = iterator.next(); 
 			alignment.add(name, map.get(name));
 		}
+		setMapEntries();
 	}
 
 

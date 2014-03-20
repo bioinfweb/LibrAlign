@@ -19,7 +19,6 @@
 package info.bioinfweb.libralign.dataarea;
 
 
-import info.bioinfweb.commons.tic.TICComponent;
 import info.bioinfweb.libralign.AlignmentArea;
 import info.bioinfweb.libralign.AlignmentSubArea;
 

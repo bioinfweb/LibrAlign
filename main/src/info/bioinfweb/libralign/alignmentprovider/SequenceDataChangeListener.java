@@ -19,6 +19,7 @@
 package info.bioinfweb.libralign.alignmentprovider;
 
 
+import info.bioinfweb.libralign.AlignmentArea;
 import info.bioinfweb.libralign.alignmentprovider.events.SequenceRenamedEvent;
 import info.bioinfweb.libralign.alignmentprovider.events.SequenceChangeEvent;
 import info.bioinfweb.libralign.alignmentprovider.events.TokenChangeEvent;
@@ -47,7 +48,20 @@ public interface SequenceDataChangeListener {
 	 */
 	public void afterSequenceRenamed(SequenceRenamedEvent e);
 
+	/**
+	 * Called after a single token or a set of tokens has been inserted, removed or replaced.
+	 * 
+	 * @param e - the event object containing information on the change
+	 */
 	public void afterTokenChange(TokenChangeEvent e);
 
-
+	/**
+	 * Called if this listener was moved to another instance of {@link SequenceDataProvider}.
+	 * <p>
+	 * This might e.g. happen, if the data provider of an {@link AlignmentArea} was changed.
+	 * 
+	 * @param previous - the data provider this listener was attached to before the event happened
+	 * @param current - the new data provider this listener is attached to now
+	 */
+	public void afterProviderChanged(SequenceDataProvider previous, SequenceDataProvider current);
 }
