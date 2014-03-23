@@ -19,8 +19,8 @@
 package info.bioinfweb.libralign;
 
 
+import java.awt.Dimension;
 import java.awt.Font;
-import java.awt.geom.Dimension2D;
 import java.util.Iterator;
 
 import javax.swing.JComponent;
@@ -28,7 +28,6 @@ import javax.swing.JComponent;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.Composite;
 
-import info.bioinfweb.commons.graphics.DoubleDimension;
 import info.bioinfweb.commons.tic.TICComponent;
 import info.bioinfweb.commons.tic.TICPaintEvent;
 import info.bioinfweb.libralign.alignmentareacomponents.SWTAlignmentArea;
@@ -55,8 +54,8 @@ import info.webinsel.util.Math2;
  * @since 1.0.0
  */
 public class AlignmentArea extends TICComponent implements SequenceDataChangeListener {
-	public static final float COMPOUND_WIDTH = 10f;
-	public static final float COMPOUND_HEIGHT = 14f;
+	public static final int COMPOUND_WIDTH = 10;
+	public static final int COMPOUND_HEIGHT = 14;
 	public static final String FONT_NAME = Font.SANS_SERIF;
 	public static final int FONT_STYLE = Font.PLAIN;
 	public static final float FONT_SIZE_FACTOR = 0.7f;
@@ -73,8 +72,8 @@ public class AlignmentArea extends TICComponent implements SequenceDataChangeLis
 	private DataAreaModel dataAreas = new DataAreaModel();
 	private float zoomX = 1f;
 	private float zoomY = 1f;
-	private float compoundWidth = COMPOUND_WIDTH;
-	private float compoundHeight = COMPOUND_HEIGHT;	
+	private int compoundWidth = COMPOUND_WIDTH;
+	private int compoundHeight = COMPOUND_HEIGHT;	
 	private Font font = new Font(Font.SANS_SERIF, Font.PLAIN, Math.round(COMPOUND_HEIGHT * 0.7f));
 	
 	
@@ -231,8 +230,8 @@ public class AlignmentArea extends TICComponent implements SequenceDataChangeLis
 	public void setZoom(float zoomX, float zoomY) {
 		this.zoomX = zoomX;
 		this.zoomY = zoomY;
-		compoundWidth = COMPOUND_WIDTH * zoomX;
-		compoundHeight = COMPOUND_HEIGHT * zoomY;
+		compoundWidth = Math.round(COMPOUND_WIDTH * zoomX);
+		compoundHeight = Math.round(COMPOUND_HEIGHT * zoomY);
 		calculateFont();
 		
 		//assignPaintSize();
@@ -257,12 +256,12 @@ public class AlignmentArea extends TICComponent implements SequenceDataChangeLis
 	 * 
 	 * @return a float value greater than zero
 	 */
-	public float getCompoundWidth() {
+	public int getCompoundWidth() {
 		return compoundWidth;
 	}
 
 
-	public void setCompoundWidth(float compoundWidth) {
+	public void setCompoundWidth(int compoundWidth) {
 		this.compoundWidth = compoundWidth;
 		zoomX = compoundWidth / COMPOUND_WIDTH;
 		calculateFont();
@@ -277,12 +276,12 @@ public class AlignmentArea extends TICComponent implements SequenceDataChangeLis
 	 * 
 	 * @return a float value greater than zero
 	 */
-	public float getCompoundHeight() {
+	public int getCompoundHeight() {
 		return compoundHeight;
 	}
 	
 	
-	public void setCompoundHeight(float compoundHeight) {
+	public void setCompoundHeight(int compoundHeight) {
 		this.compoundHeight = compoundHeight;
 		zoomY = compoundHeight / COMPOUND_HEIGHT;
 		calculateFont();
@@ -362,15 +361,15 @@ public class AlignmentArea extends TICComponent implements SequenceDataChangeLis
 	 * @see info.bioinfweb.commons.tic.TICComponent#getSize()
 	 */
 	@Override
-	public Dimension2D getSize() {
+	public Dimension getSize() {
 		switch (getCurrentToolkit()) {
 			case SWING:
 				return ((JComponent)getToolkitComponent()).getPreferredSize();  //TODO correct size?
 			case SWT:
 				Point point = ((Composite)getToolkitComponent()).getSize();
-				return new DoubleDimension(point.x, point.y);
+				return new Dimension(point.x, point.y);
 			default:
-			  return new DoubleDimension(0, 0);
+			  return new Dimension(0, 0);
 		}
 	}
 	

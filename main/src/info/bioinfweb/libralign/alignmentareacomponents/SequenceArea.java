@@ -20,16 +20,15 @@ package info.bioinfweb.libralign.alignmentareacomponents;
 
 
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.FontMetrics;
 import java.awt.Graphics2D;
-import java.awt.geom.Dimension2D;
 import java.awt.geom.Rectangle2D;
 import java.util.Iterator;
 import java.util.Set;
 
 import org.biojava3.core.sequence.compound.NucleotideCompound;
 
-import info.bioinfweb.commons.graphics.DoubleDimension;
 import info.bioinfweb.commons.graphics.GraphicsUtils;
 import info.bioinfweb.commons.tic.TICPaintEvent;
 import info.bioinfweb.libralign.AlignmentArea;
@@ -163,8 +162,8 @@ public class SequenceArea extends AlignmentSubArea {
 
 	
 	@Override
-	public Dimension2D getSize() {
-		return new DoubleDimension(
+	public Dimension getSize() {
+		return new Dimension(
 				getOwner().getCompoundWidth() * getOwner().getSequenceProvider().getSequenceLength(getSeqenceID()),  //TODO Elongate to the length of the longest sequence and paint empty/special tokens on the right end? 
 				getOwner().getCompoundHeight());
 	}
