@@ -23,8 +23,8 @@ import static org.junit.Assert.* ;
 
 import info.bioinfweb.biojava3.alignment.SimpleAlignment;
 import info.bioinfweb.biojava3.alignment.template.Alignment;
-import info.bioinfweb.libralign.alignmentprovider.BioJavaAlignmentDataProvider;
-import info.bioinfweb.libralign.alignmentprovider.SequenceDataProvider;
+import info.bioinfweb.libralign.sequenceprovider.BioJavaSequenceDataProvider;
+import info.bioinfweb.libralign.sequenceprovider.SequenceDataProvider;
 
 
 import org.biojava3.core.sequence.DNASequence;
@@ -47,7 +47,7 @@ public class SequenceOrderTest {
 		alignment.add("Sequence B", new DNASequence("ATG--CT"));
 		
 		AlignmentArea alignmentArea = new AlignmentArea();
-		alignmentArea.setDataProvider(new BioJavaAlignmentDataProvider<DNASequence, NucleotideCompound>(
+		alignmentArea.setSequenceProvider(new BioJavaSequenceDataProvider<DNASequence, NucleotideCompound>(
 				alignment, AlignmentSourceDataType.NUCLEOTIDE), false);
 		return new SequenceOrder(alignmentArea);
 	}
