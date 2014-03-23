@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package info.bioinfweb.libralign;
+package info.bioinfweb.libralign.alignmentareacomponents;
 
 
 import java.awt.Color;
@@ -32,7 +32,10 @@ import org.biojava3.core.sequence.compound.NucleotideCompound;
 import info.bioinfweb.commons.graphics.DoubleDimension;
 import info.bioinfweb.commons.graphics.GraphicsUtils;
 import info.bioinfweb.commons.tic.TICPaintEvent;
-import info.bioinfweb.libralign.alignmentprovider.SequenceDataProvider;
+import info.bioinfweb.libralign.AlignmentArea;
+import info.bioinfweb.libralign.AlignmentDataViewMode;
+import info.bioinfweb.libralign.AlignmentSubArea;
+import info.bioinfweb.libralign.sequenceprovider.SequenceDataProvider;
 
 
 
@@ -144,8 +147,9 @@ public class SequenceArea extends AlignmentSubArea {
 	public void paint(TICPaintEvent event) {
 		int firstIndex = Math.max(0, getOwner().columnByPaintX((int)event.getRectangle().getMinX()));
 		int lastIndex = getOwner().columnByPaintX((int)event.getRectangle().getMaxX());
-		if (lastIndex == -1) {
-			lastIndex = getOwner().getSequenceProvider().getMaxSequenceLength() - 1;
+		int lastColumn = getOwner().getSequenceProvider().getSequenceLength(getSeqenceID()) - 1;
+		if ((lastIndex == -1) || (lastIndex > lastColumn)) {  //TODO Elongate to the length of the longest sequence and paint empty/special tokens on the right end?
+			lastIndex = lastColumn;
 		}
 		
   	float x = firstIndex * getOwner().getCompoundWidth();
@@ -161,7 +165,7 @@ public class SequenceArea extends AlignmentSubArea {
 	@Override
 	public Dimension2D getSize() {
 		return new DoubleDimension(
-				getOwner().getCompoundWidth() * getOwner().getSequenceProvider().getSequenceLength(getSeqenceID()), 
+				getOwner().getCompoundWidth() * getOwner().getSequenceProvider().getSequenceLength(getSeqenceID()),  //TODO Elongate to the length of the longest sequence and paint empty/special tokens on the right end? 
 				getOwner().getCompoundHeight());
 	}
 }

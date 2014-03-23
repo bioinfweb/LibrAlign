@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package info.bioinfweb.libralign.alignmentprovider;
+package info.bioinfweb.libralign.sequenceprovider;
 
 
 import java.util.ArrayList;
@@ -28,10 +28,10 @@ import java.util.TreeMap;
 
 import info.bioinfweb.commons.collections.ListChangeType;
 import info.bioinfweb.libralign.AlignmentSourceDataType;
-import info.bioinfweb.libralign.alignmentprovider.events.SequenceChangeEvent;
-import info.bioinfweb.libralign.alignmentprovider.events.SequenceRenamedEvent;
-import info.bioinfweb.libralign.alignmentprovider.events.TokenChangeEvent;
 import info.bioinfweb.libralign.exception.AlignmentSourceNotWritableException;
+import info.bioinfweb.libralign.sequenceprovider.events.SequenceChangeEvent;
+import info.bioinfweb.libralign.sequenceprovider.events.SequenceRenamedEvent;
+import info.bioinfweb.libralign.sequenceprovider.events.TokenChangeEvent;
 
 
 
@@ -123,7 +123,7 @@ public abstract class AbstractSequenceDataProvider implements SequenceDataProvid
 	/**
 	 * Returns a new sequence identifier that has not been returned before.
 	 * 
-	 * @return a value gerater or equal to zero
+	 * @return a value greater or equal to zero
 	 */
 	protected int createNewID() {
 		nextID++;

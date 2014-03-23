@@ -19,7 +19,7 @@
 package info.bioinfweb.libralign.exception;
 
 
-import info.bioinfweb.libralign.alignmentprovider.SequenceDataProvider;
+import info.bioinfweb.libralign.sequenceprovider.SequenceDataProvider;
 
 
 

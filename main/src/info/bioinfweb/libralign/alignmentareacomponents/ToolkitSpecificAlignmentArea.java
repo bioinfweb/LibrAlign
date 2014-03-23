@@ -16,20 +16,13 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package info.bioinfweb.libralign.alignmentprovider;
+package info.bioinfweb.libralign.alignmentareacomponents;
+
+
+import info.bioinfweb.commons.tic.toolkit.ToolkitComponent;
 
 
 
-/**
- * Specifies if whole sequences or single tokens can be edited in the underlying data source of the
- * implementation of an {@link SequenceDataProvider}.
- * 
- * @author Ben St&ouml;ver
- * @since 1.0.0
- */
-public enum SequenceDataProviderWriteType {
-	NONE,
-	SEQUENCES_ONLY,
-	TOKENS_ONLY,
-	BOTH;
+public interface ToolkitSpecificAlignmentArea extends ToolkitComponent {
+  public void reinsertSubelements();	
 }

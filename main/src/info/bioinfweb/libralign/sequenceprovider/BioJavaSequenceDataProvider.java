@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package info.bioinfweb.libralign.alignmentprovider;
+package info.bioinfweb.libralign.sequenceprovider;
 
 
 import java.util.Iterator;
@@ -42,7 +42,7 @@ import info.bioinfweb.libralign.exception.AlignmentSourceNotWritableException;
  *
  * @param <C> - the compound type used by the underlying sequence object
  */
-public class BioJavaAlignmentDataProvider<S extends Sequence<C>, C extends Compound>
+public class BioJavaSequenceDataProvider<S extends Sequence<C>, C extends Compound>
     extends AbstractSequenceDataProvider implements SequenceDataProvider {
 	
 	public static final String DEFAULT_SEQUENCE_NAME_PREFIX = "Sequence";
@@ -62,7 +62,7 @@ public class BioJavaAlignmentDataProvider<S extends Sequence<C>, C extends Compo
 	}
 	
 	
-	public BioJavaAlignmentDataProvider(Alignment<S, C> alignment, AlignmentSourceDataType dataType) {
+	public BioJavaSequenceDataProvider(Alignment<S, C> alignment, AlignmentSourceDataType dataType) {
 		super(dataType);
 		this.alignment = alignment;
 		setMapEntries();
@@ -80,7 +80,7 @@ public class BioJavaAlignmentDataProvider<S extends Sequence<C>, C extends Compo
 	}
 	
 
-	public BioJavaAlignmentDataProvider(Profile<S, C> profile, AlignmentSourceDataType dataType) {
+	public BioJavaSequenceDataProvider(Profile<S, C> profile, AlignmentSourceDataType dataType) {
 		super(dataType);
 		
 		alignment = new SimpleAlignment<S, C>();
@@ -99,7 +99,7 @@ public class BioJavaAlignmentDataProvider<S extends Sequence<C>, C extends Compo
 	}
 
 
-	public BioJavaAlignmentDataProvider(Map<String, S> map, AlignmentSourceDataType dataType) {
+	public BioJavaSequenceDataProvider(Map<String, S> map, AlignmentSourceDataType dataType) {
 		super(dataType);
 		
 		alignment = new SimpleAlignment<S, C>();

@@ -22,7 +22,7 @@ package info.bioinfweb.libralign.exception;
 import org.biojava3.core.sequence.template.Compound;
 
 import info.bioinfweb.libralign.AlignmentSourceDataType;
-import info.bioinfweb.libralign.alignmentprovider.SequenceDataProvider;
+import info.bioinfweb.libralign.sequenceprovider.SequenceDataProvider;
 
 
 

@@ -16,10 +16,10 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package info.bioinfweb.libralign.alignmentprovider.events;
+package info.bioinfweb.libralign.sequenceprovider.events;
 
 
-import info.bioinfweb.libralign.alignmentprovider.SequenceDataProvider;
+import info.bioinfweb.libralign.sequenceprovider.SequenceDataProvider;
 
 import java.util.EventObject;
 

@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package info.bioinfweb.libralign.alignmentprovider;
+package info.bioinfweb.libralign.sequenceprovider;
 
 
 import java.util.Collection;
@@ -28,10 +28,10 @@ import org.biojava3.core.sequence.compound.NucleotideCompound;
 
 import info.bioinfweb.libralign.AlignmentArea;
 import info.bioinfweb.libralign.AlignmentSourceDataType;
-import info.bioinfweb.libralign.alignmentprovider.events.SequenceDataProviderChangeEvent;
 import info.bioinfweb.libralign.exception.AlignmentSourceNotWritableException;
 import info.bioinfweb.libralign.selection.SelectionChangeEvent;
 import info.bioinfweb.libralign.selection.SelectionListener;
+import info.bioinfweb.libralign.sequenceprovider.events.SequenceDataProviderChangeEvent;
 
 
 

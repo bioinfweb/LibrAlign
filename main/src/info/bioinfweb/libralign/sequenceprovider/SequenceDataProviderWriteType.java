@@ -16,22 +16,20 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package info.bioinfweb.libralign.exception;
-
-
-import info.bioinfweb.libralign.sequenceprovider.SequenceDataProvider;
+package info.bioinfweb.libralign.sequenceprovider;
 
 
 
 /**
- * This exceptions is thrown if a modifying method of {@link SequenceDataProvider} is called
- * which has a data source that is not writable.
+ * Specifies if whole sequences or single tokens can be edited in the underlying data source of the
+ * implementation of an {@link SequenceDataProvider}.
  * 
  * @author Ben St&ouml;ver
  * @since 1.0.0
  */
-public class AlignmentSourceNotWritableException extends AlignmentDataProviderException {
-	public AlignmentSourceNotWritableException(SequenceDataProvider source) {
-		super(source, "The underlying data source is not writable.");
-	}
+public enum SequenceDataProviderWriteType {
+	NONE,
+	SEQUENCES_ONLY,
+	TOKENS_ONLY,
+	BOTH;
 }

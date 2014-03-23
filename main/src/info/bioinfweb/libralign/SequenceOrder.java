@@ -105,7 +105,7 @@ public class SequenceOrder {
 	 */
 	public void setSourceSequenceOrder() {
 		idList.clear();
-		if (getOwner().hasDataProvider()) {
+		if (getOwner().hasSequenceProvider()) {
 			Iterator<Integer> iterator = getOwner().getSequenceProvider().sequenceIDIterator();
 			while (iterator.hasNext()) {
 				idList.add(iterator.next());

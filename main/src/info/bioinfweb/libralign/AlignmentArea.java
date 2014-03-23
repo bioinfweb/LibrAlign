@@ -23,30 +23,27 @@ import java.awt.Font;
 import java.awt.geom.Dimension2D;
 import java.util.Iterator;
 
-import javax.swing.BoxLayout;
 import javax.swing.JComponent;
-import javax.swing.JPanel;
 
-import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Point;
-import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Composite;
 
 import info.bioinfweb.commons.graphics.DoubleDimension;
 import info.bioinfweb.commons.tic.TICComponent;
 import info.bioinfweb.commons.tic.TICPaintEvent;
-import info.bioinfweb.commons.tic.toolkit.AbstractSWTWidget;
-import info.bioinfweb.commons.tic.toolkit.AbstractSwingComponent;
-import info.bioinfweb.libralign.alignmentprovider.SequenceDataChangeListener;
-import info.bioinfweb.libralign.alignmentprovider.SequenceDataProvider;
-import info.bioinfweb.libralign.alignmentprovider.events.SequenceChangeEvent;
-import info.bioinfweb.libralign.alignmentprovider.events.SequenceRenamedEvent;
-import info.bioinfweb.libralign.alignmentprovider.events.TokenChangeEvent;
+import info.bioinfweb.libralign.alignmentareacomponents.SWTAlignmentArea;
+import info.bioinfweb.libralign.alignmentareacomponents.SwingAlignmentArea;
+import info.bioinfweb.libralign.alignmentareacomponents.ToolkitSpecificAlignmentArea;
 import info.bioinfweb.libralign.dataarea.DataAreaChangeEvent;
 import info.bioinfweb.libralign.dataarea.DataAreaModel;
 import info.bioinfweb.libralign.dataarea.DataAreaModelListener;
 import info.bioinfweb.libralign.selection.AlignmentCursor;
 import info.bioinfweb.libralign.selection.SelectionModel;
+import info.bioinfweb.libralign.sequenceprovider.SequenceDataChangeListener;
+import info.bioinfweb.libralign.sequenceprovider.SequenceDataProvider;
+import info.bioinfweb.libralign.sequenceprovider.events.SequenceChangeEvent;
+import info.bioinfweb.libralign.sequenceprovider.events.SequenceRenamedEvent;
+import info.bioinfweb.libralign.sequenceprovider.events.TokenChangeEvent;
 import info.webinsel.util.Math2;
 
 
@@ -99,7 +96,7 @@ public class AlignmentArea extends TICComponent implements SequenceDataChangeLis
 	}
 
 
-	public boolean hasDataProvider() {
+	public boolean hasSequenceProvider() {
 		return getSequenceProvider() != null;
 	}
 	
@@ -121,7 +118,7 @@ public class AlignmentArea extends TICComponent implements SequenceDataChangeLis
 	 * @return the previous sequence provider that has been replaced or {@code null} if there was no provider 
 	 *         before
 	 */
-	public SequenceDataProvider setDataProvider(SequenceDataProvider sequenceProvider, boolean moveListeners) {
+	public SequenceDataProvider setSequenceProvider(SequenceDataProvider sequenceProvider, boolean moveListeners) {
 		SequenceDataProvider result = this.sequenceProvider;
 		if (!sequenceProvider.equals(this.sequenceProvider)) {
 			if (this.sequenceProvider != null) {
@@ -137,6 +134,9 @@ public class AlignmentArea extends TICComponent implements SequenceDataChangeLis
 			
 			this.sequenceProvider = sequenceProvider;
 			getSequenceOrder().setSourceSequenceOrder();  // Update sequence names
+			if (hasToolkitComponent()) {
+				getToolkitComponent().reinsertSubelements();
+			}
 			
       // Fire events for listener move after the process finished
 			if (this.sequenceProvider != null) {
@@ -334,26 +334,25 @@ public class AlignmentArea extends TICComponent implements SequenceDataChangeLis
 
 
 	@Override
-	public JComponent createSwingComponent() {
-		JPanel result = new JPanel();
-		result.setLayout(new BoxLayout(result, BoxLayout.Y_AXIS));
-		//TODO Add current subcomponents
-		return result;
-	}
-
-
-
-	@Override
-	public Composite createSWTWidget(Composite parent, int style) {
-		Composite result = new Composite(parent, style);  //TODO Should style really be passed through?
-		result.setLayout(new FillLayout(SWT.VERTICAL));
-		//TODO Add current subcomponents
-		return result;
+	protected JComponent doCreateSwingComponent() {
+		return new SwingAlignmentArea(this);
 	}
 
 
 	@Override
-	public void paint(TICPaintEvent event) {}  // Empty because toolkit specific components are provided
+	protected Composite doCreateSWTWidget(Composite parent, int style) {
+		return new SWTAlignmentArea(parent, style, this);
+	}
+
+
+	@Override
+	public ToolkitSpecificAlignmentArea getToolkitComponent() {
+		return (ToolkitSpecificAlignmentArea)super.getToolkitComponent();
+	}
+
+
+	@Override
+	public void paint(TICPaintEvent event) {}  // Remains empty because toolkit specific components are provided.
 
 
 	/**

@@ -16,10 +16,11 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package info.bioinfweb.libralign.alignmentprovider.events;
+package info.bioinfweb.libralign.sequenceprovider.events;
 
 
-import info.bioinfweb.libralign.alignmentprovider.SequenceDataProvider;
+import info.bioinfweb.commons.collections.ListChangeType;
+import info.bioinfweb.libralign.sequenceprovider.SequenceDataProvider;
 
 
 
@@ -30,26 +31,17 @@ import info.bioinfweb.libralign.alignmentprovider.SequenceDataProvider;
  * @author Ben St&ouml;ver
  * @since 1.0.0
  */
-public class SequenceRenamedEvent extends SequenceDataProviderChangeEvent {
-	private String previousName;
-	private String newName;
+public class SequenceChangeEvent extends SequenceDataProviderChangeEvent {
+	private ListChangeType type;
+
 	
-	
-	public SequenceRenamedEvent(SequenceDataProvider source, int sequenceID,
-			String previousName, String newName) {
-		
+	public SequenceChangeEvent(SequenceDataProvider source, int sequenceID, ListChangeType type) {
 		super(source, sequenceID);
-		this.previousName = previousName;
-		this.newName = newName;
+		this.type = type;
 	}
 
 
-	public String getPreviousName() {
-		return previousName;
-	}
-
-
-	public String getNewName() {
-		return newName;
+	public ListChangeType getType() {
+		return type;
 	}
 }

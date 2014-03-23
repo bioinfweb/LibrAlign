@@ -74,7 +74,7 @@ public class DataAreaModel {
 	public DataAreaList getSequenceAreas(int sequenceID) {
 		DataAreaList result = sequenceAreaLists.get(sequenceID);
 		if (result == null) {
-			result = new DataAreaList(this, DataAreaListType.SEQUENCE);
+			result = new DataAreaList(this, sequenceID);
 			sequenceAreaLists.put(sequenceID, result);
 		}
 		return result;

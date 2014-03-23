@@ -77,12 +77,12 @@ public class DataAreaList extends ArrayList<DataArea> {
 	 * </p>
 	 * 
 	 * @param owner - the parent element that will contain this list 
-	 * @param sequenceName - the name of the sequence the contained data areas will be attached to
+	 * @param sequenceID - the unique identifier of the sequence the contained data areas will be attached to
 	 */
-	public DataAreaList(DataAreaModel owner, String sequenceName) {
+	public DataAreaList(DataAreaModel owner, int sequenceID) {
 		super();
 		this.owner = owner;
-		location = new DataAreaLocation(sequenceName);
+		location = new DataAreaLocation(sequenceID);
 	}
 
 
