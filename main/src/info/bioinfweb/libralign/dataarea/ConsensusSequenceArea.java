@@ -46,7 +46,7 @@ import info.bioinfweb.libralign.sequenceprovider.events.TokenChangeEvent;
  * A data area that displays the consensus sequence of an alignment.
  * 
  * @author Ben St&ouml;ver
- * @since 1.0.0
+ * @since 0.0.0
  */
 public class ConsensusSequenceArea extends DataArea {
 	public static final float DEFAULT_HEIGHT_FACTOR = 3f;

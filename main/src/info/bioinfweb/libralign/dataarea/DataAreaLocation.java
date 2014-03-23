@@ -25,7 +25,7 @@ package info.bioinfweb.libralign.dataarea;
  * or attached to a certain sequence.   
  * 
  * @author Ben St&ouml;ver
- * @since 1.0.0
+ * @since 0.0.0
  */
 public class DataAreaLocation {
   private DataAreaListType listType;

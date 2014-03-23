@@ -28,7 +28,7 @@ import info.bioinfweb.libralign.AlignmentSubArea;
  * All classes representing a data area in an {@link AlignmentArea} must be inherited from this class.
  * 
  * @author Ben St&ouml;ver
- * @since 1.0.0
+ * @since 0.0.0
  */
 public abstract class DataArea extends AlignmentSubArea {
 	private DataAreaList list = null;

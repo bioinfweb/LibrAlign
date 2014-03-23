@@ -31,7 +31,7 @@ import info.bioinfweb.libralign.sequenceprovider.events.TokenChangeEvent;
  * of an implementation of {@link SequenceDataProvider}.
  * 
  * @author Ben St&ouml;ver
- * @since 1.0.0
+ * @since 0.0.0
  */
 public interface SequenceDataChangeListener {
 	/**

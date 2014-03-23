@@ -27,7 +27,7 @@ import info.bioinfweb.commons.tic.TICComponent;
  * All GUI components that are part of an {@link AlignmentArea} should inherit from this class.
  * 
  * @author Ben St&ouml;ver
- * @since 1.0.0
+ * @since 0.0.0
  */
 public abstract class AlignmentSubArea extends TICComponent {
 	private AlignmentArea owner = null;

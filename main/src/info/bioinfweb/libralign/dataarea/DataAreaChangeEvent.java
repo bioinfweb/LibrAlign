@@ -36,7 +36,7 @@ import java.util.EventObject;
  * changes of the contents of a data area.
  * 
  * @author Ben St&ouml;ver
- * @since 1.0.0
+ * @since 0.0.0
  */
 public class DataAreaChangeEvent extends EventObject {
 	private boolean eventsFromSingleList;

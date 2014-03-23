@@ -28,7 +28,7 @@ import java.util.EventListener;
  * represented by an {@link SelectionModel} object.
  * 
  * @author Ben St&ouml;ver
- * @since 1.0.0
+ * @since 0.0.0
  */
 public interface SelectionListener extends EventListener {
 	public void selectionChanged(SelectionChangeEvent e);

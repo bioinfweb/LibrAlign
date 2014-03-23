@@ -24,7 +24,7 @@ package info.bioinfweb.libralign.selection;
  * Used by {@link OneDimensionalSelection} to determine if the selection of rows or columns is represented.
  * 
  * @author Ben St&ouml;ver
- * @since 1.0.0
+ * @since 0.0.0
  */
 public enum SelectionDimension {
   COLUMN,

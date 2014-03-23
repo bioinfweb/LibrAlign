@@ -36,7 +36,7 @@ import java.util.List;
  * top most.
  * 
  * @author Ben St&ouml;ver
- * @since 1.0.0
+ * @since 0.0.0
  */
 public class DataAreaList extends ArrayList<DataArea> {
 	public static final int INITIAL_LIST_SIZE = 8;

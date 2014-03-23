@@ -28,7 +28,7 @@ import info.bioinfweb.libralign.sequenceprovider.SequenceDataProvider;
  * which has a data source that is not writable.
  * 
  * @author Ben St&ouml;ver
- * @since 1.0.0
+ * @since 0.0.0
  */
 public class AlignmentSourceNotWritableException extends AlignmentDataProviderException {
 	public AlignmentSourceNotWritableException(SequenceDataProvider source) {

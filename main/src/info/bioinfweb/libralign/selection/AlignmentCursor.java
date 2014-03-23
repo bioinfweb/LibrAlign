@@ -27,7 +27,7 @@ import info.bioinfweb.libralign.AlignmentArea;
  * Represents the position and height of the cursor in an {@link AlignmentArea}.
  * 
  * @author Ben St&ouml;ver
- * @since 1.0.0
+ * @since 0.0.0
  */
 public class AlignmentCursor {
   private int column = 0;

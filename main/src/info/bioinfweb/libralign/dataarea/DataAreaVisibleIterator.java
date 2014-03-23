@@ -27,7 +27,7 @@ import java.util.Iterator;
  * Iterator that only returns visible data areas and skips all the others.
  * 
  * @author Ben St&ouml;ver
- * @since 1.0.0
+ * @since 0.0.0
  */
 public class DataAreaVisibleIterator implements Iterator<DataArea> {
 	private Iterator<DataArea> completeIterator;

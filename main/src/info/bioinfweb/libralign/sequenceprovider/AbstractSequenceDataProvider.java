@@ -39,7 +39,7 @@ import info.bioinfweb.libralign.sequenceprovider.events.TokenChangeEvent;
  * Implements general functionality for sequence data providers.
  * 
  * @author Ben St&uml;ver
- * @since 1.0.0
+ * @since 0.0.0
  */
 public abstract class AbstractSequenceDataProvider implements SequenceDataProvider {
 	private AlignmentSourceDataType dataType;

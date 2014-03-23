@@ -31,7 +31,7 @@ import info.bioinfweb.libralign.sequenceprovider.SequenceDataProvider;
  * match the data type of the provide (e.g. trying to write an amino acid to a nucleotide data source). 
  * 
  * @author Ben St&ouml;ver
- * @since 1.0.0
+ * @since 0.0.0
  */
 public class InvalidCompoundException extends AlignmentDataProviderException {
 	public InvalidCompoundException(SequenceDataProvider source, Compound compound, 

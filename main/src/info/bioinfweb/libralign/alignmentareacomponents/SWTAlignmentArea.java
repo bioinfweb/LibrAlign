@@ -39,7 +39,7 @@ import info.bioinfweb.libralign.dataarea.DataAreaList;
  * The SWT component rendering an {@link AlignmentArea}.
  * 
  * @author Ben St&ouml;ver
- * @since 1.0.0
+ * @since 0.0.0
  */
 public class SWTAlignmentArea extends Composite implements ToolkitSpecificAlignmentArea {
 	private AlignmentArea independentComponent;

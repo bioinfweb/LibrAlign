@@ -38,7 +38,7 @@ import info.bioinfweb.libralign.exception.AlignmentSourceNotWritableException;
  * Provides alignment source data from BioJava {@link Sequence} objects.
  * 
  * @author Ben St&ouml;ver
- * @since 1.0.0
+ * @since 0.0.0
  *
  * @param <C> - the compound type used by the underlying sequence object
  */

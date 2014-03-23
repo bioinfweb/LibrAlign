@@ -30,7 +30,7 @@ import java.util.EventListener;
  * contained in a {@link AlignmentArea}.
  * 
  * @author Ben St&ouml;ver
- * @since 1.0.0
+ * @since 0.0.0
  */
 public interface DataAreaModelListener extends EventListener {
 	public void dataAreaInsertedRemoved(DataAreaChangeEvent e);

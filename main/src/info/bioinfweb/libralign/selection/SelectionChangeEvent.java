@@ -29,7 +29,7 @@ import java.util.EventObject;
  * Event that happens if the selection in an {@link AlignmentArea} changes.
  * 
  * @author Ben St&ouml;ver
- * @since 1.0.0
+ * @since 0.0.0
  */
 public class SelectionChangeEvent extends EventObject {
 	public SelectionChangeEvent(SelectionModel source) {

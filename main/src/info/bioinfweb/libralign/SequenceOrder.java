@@ -31,7 +31,7 @@ import java.util.List;
  * Manages the ordering of the sequences displayed by {@link AlignmentArea}.
  * 
  * @author Ben St&ouml;ver
- * @since 1.0.0
+ * @since 0.0.0
  */
 public class SequenceOrder {
 	private final Comparator<Integer> ASCENDING_ALPHABETICAL_COMPARATOR = new Comparator<Integer>() {

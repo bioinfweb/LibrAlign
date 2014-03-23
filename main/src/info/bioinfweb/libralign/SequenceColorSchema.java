@@ -30,7 +30,7 @@ import java.util.TreeMap;
  * Class that provides color information for the output of an alignment.
  * 
  * @author Ben St&ouml;ver
- * @since 1.0.0
+ * @since 0.0.0
  */
 public class SequenceColorSchema {
 	public static final Color DEFAULT_GAP_COLOR = Color.GRAY;

@@ -32,7 +32,7 @@ import java.util.Collection;
  * {@link SequenceDataProvider} were inserted, removed or replaced.
  * 
  * @author Ben St&ouml;ver
- * @since 1.0.0
+ * @since 0.0.0
  */
 public class TokenChangeEvent extends SequenceChangeEvent {
 	private int startIndex;

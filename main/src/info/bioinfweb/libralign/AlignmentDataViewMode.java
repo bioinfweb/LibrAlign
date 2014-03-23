@@ -24,7 +24,7 @@ package info.bioinfweb.libralign;
  * Enumerates the possible view modes of aligned data.
  * 
  * @author Ben St&ouml;ver
- * @since 1.0.0
+ * @since 0.0.0
  */
 public enum AlignmentDataViewMode {
   /** Allows both U and T in one sequence. */

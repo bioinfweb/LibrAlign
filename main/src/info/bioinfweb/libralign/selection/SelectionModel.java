@@ -32,7 +32,7 @@ import info.bioinfweb.libralign.AlignmentArea;
  * The selection model of {@link AlignmentArea}.
  * 
  * @author Ben St&ouml;ver
- * @since 1.0.0
+ * @since 0.0.0
  * @see AlignmentArea
  * @see OneDimensionalSelection
  */

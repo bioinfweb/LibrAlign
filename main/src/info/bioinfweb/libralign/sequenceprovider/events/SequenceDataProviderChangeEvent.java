@@ -30,7 +30,7 @@ import java.util.EventObject;
  * {@link SequenceDataProvider}.
  * 
  * @author Ben St&ouml;ver
- * @since 1.0.0
+ * @since 0.0.0
  */
 public class SequenceDataProviderChangeEvent extends EventObject {
 	private int sequenceID;

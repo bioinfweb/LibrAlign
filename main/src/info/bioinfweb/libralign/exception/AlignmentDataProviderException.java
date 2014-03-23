@@ -27,7 +27,7 @@ import info.bioinfweb.libralign.sequenceprovider.SequenceDataProvider;
  * Base class of all exceptions that can be thrown by an {@link SequenceDataProvider}
  * 
  * @author Ben St&ouml;ver
- * @since 1.0.0
+ * @since 0.0.0
  */
 public class AlignmentDataProviderException extends RuntimeException {
 	private SequenceDataProvider source;

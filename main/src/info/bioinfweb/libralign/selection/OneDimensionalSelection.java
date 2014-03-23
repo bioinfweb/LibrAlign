@@ -27,7 +27,7 @@ import info.webinsel.util.Math2;
  * Manages the selection of columns or rows.
  * 
  * @author Ben St&ouml;ver
- * @since 1.0.0
+ * @since 0.0.0
  */
 public class OneDimensionalSelection {
 	public static final int NO_SELECTION = -1;

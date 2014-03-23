@@ -43,7 +43,7 @@ import info.bioinfweb.libralign.sequenceprovider.SequenceDataProvider;
  * The area inside an {@link AlignmentArea} that displays one sequence of the alignment.
  * 
  * @author Ben St&ouml;ver
- * @since 1.0.0
+ * @since 0.0.0
  */
 public class SequenceArea extends AlignmentSubArea {
 	private int seqenceID;

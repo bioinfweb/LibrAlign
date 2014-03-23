@@ -52,7 +52,7 @@ import info.bioinfweb.libralign.sequenceprovider.events.SequenceDataProviderChan
  * defined by the data provider but by the instance returned by {@link AlignmentArea#getSequenceOrder()}.
  * 
  * @author Ben St&ouml;ver
- * @since 1.0.0
+ * @since 0.0.0
  */
 public interface SequenceDataProvider {
 	/**

@@ -42,7 +42,7 @@ import javax.swing.Scrollable;
  * The Swing component rendering an {@link AlignmentArea}.
  * 
  * @author Ben St&ouml;ver
- * @since 1.0.0
+ * @since 0.0.0
  */
 public class SwingAlignmentArea extends JPanel 
     implements ToolkitSpecificAlignmentArea, DataAreaModelListener, Scrollable {

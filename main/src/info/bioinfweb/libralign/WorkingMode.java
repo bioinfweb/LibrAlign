@@ -24,7 +24,7 @@ package info.bioinfweb.libralign;
  * Enumeration that lists the working modes of an {@link AlignmentArea}.
  * 
  * @author Ben St&ouml;ver
- * @since 1.0.0
+ * @since 0.0.0
  */
 public enum WorkingMode {
 	/** Read only view */

@@ -51,7 +51,7 @@ import info.webinsel.util.Math2;
  * GUI element of LibrAlign that displays an alignment including attached data views.
  * 
  * @author Ben St&ouml;ver
- * @since 1.0.0
+ * @since 0.0.0
  */
 public class AlignmentArea extends TICComponent implements SequenceDataChangeListener {
 	public static final int COMPOUND_WIDTH = 10;

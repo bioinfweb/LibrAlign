@@ -27,7 +27,7 @@ import info.bioinfweb.libralign.AlignmentArea;
  * Enumerates the types locations a {@link DataArea} can have inside a {@link AlignmentArea}. 
  * 
  * @author Ben St&ouml;ver
- * @since 1.0.0
+ * @since 0.0.0
  */
 public enum DataAreaListType {
 	/** Indicates that the associated data area is located above the alignment. */
