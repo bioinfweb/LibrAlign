@@ -19,16 +19,23 @@
 package info.bioinfweb.libralign.demo.swing;
 
 
+import info.bioinfweb.biojava3.alignment.SimpleAlignment;
+import info.bioinfweb.biojava3.alignment.io.fasta.FastaReader;
+import info.bioinfweb.biojava3.alignment.template.Alignment;
 import info.bioinfweb.libralign.AlignmentArea;
+import info.bioinfweb.libralign.AlignmentSourceDataType;
+import info.bioinfweb.libralign.sequenceprovider.BioJavaSequenceDataProvider;
 
 import java.awt.EventQueue;
 
 import javax.swing.JComponent;
 import javax.swing.JFrame;
 import java.awt.GridBagLayout;
-import javax.swing.JPanel;
 import java.awt.GridBagConstraints;
 import javax.swing.JScrollPane;
+
+import org.biojava3.core.sequence.DNASequence;
+import org.biojava3.core.sequence.compound.NucleotideCompound;
 
 
 
@@ -66,6 +73,23 @@ public class Main {
 	}
 	
 	
+	private AlignmentArea createAlignmentArea() {
+		Alignment<DNASequence, NucleotideCompound> alignment = 
+				new SimpleAlignment<DNASequence, NucleotideCompound>();
+		alignment.add("Sequence 1", new DNASequence("ATCGTAGATCGTAGATCGTAGATCGTAGATCGTAGATCGTAGATCGTAG"));
+		alignment.add("Sequence 2", new DNASequence("AT-GTTG"));
+		alignment.add("Sequence 3", new DNASequence("AT-GTAG"));
+		
+		BioJavaSequenceDataProvider<DNASequence, NucleotideCompound> sequenceProvider = 
+				new BioJavaSequenceDataProvider<DNASequence, NucleotideCompound>(
+						alignment, AlignmentSourceDataType.NUCLEOTIDE);
+		
+		AlignmentArea result = new AlignmentArea();
+		result.setSequenceProvider(sequenceProvider, false);
+		return result;
+	}
+	
+	
 	/**
 	 * Initialize the contents of the frame.
 	 */
@@ -87,7 +111,8 @@ public class Main {
 		gbc_scrollPane.gridy = 0;
 		frame.getContentPane().add(scrollPane, gbc_scrollPane);
 		
-		JComponent upperAlignmentPanel = new AlignmentArea().createSwingComponent();
+		AlignmentArea alignmentArea = createAlignmentArea();
+		JComponent upperAlignmentPanel = alignmentArea.createSwingComponent();
 		scrollPane.setViewportView(upperAlignmentPanel);
 	}
 }
