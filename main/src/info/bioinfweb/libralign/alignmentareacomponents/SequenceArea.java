@@ -34,6 +34,7 @@ import info.bioinfweb.commons.tic.TICPaintEvent;
 import info.bioinfweb.libralign.AlignmentArea;
 import info.bioinfweb.libralign.AlignmentDataViewMode;
 import info.bioinfweb.libralign.AlignmentSubArea;
+import info.bioinfweb.libralign.SequenceColorSchema;
 import info.bioinfweb.libralign.sequenceprovider.SequenceDataProvider;
 
 
@@ -70,23 +71,23 @@ public class SequenceArea extends AlignmentSubArea {
 	}
 
 
-	private Color getBGColor(Color color, boolean selected) {
+	private static Color getBGColor(SequenceColorSchema colorSchema, Color color, boolean selected) {
 		if (color == null) {
-			color = getOwner().getColorSchema().getDefaultBgColor();
+			color = colorSchema.getDefaultBgColor();
 		}
 		if (selected) {
-			color = GraphicsUtils.blend(color, getOwner().getColorSchema().getSelectionColor());
+			color = GraphicsUtils.blend(color, colorSchema.getSelectionColor());
 		}
 		return color;
 	}
 
 
-	private String getNucleotideBaseString(NucleotideCompound compound) {
+	private static String getNucleotideBaseString(AlignmentDataViewMode viewMode, NucleotideCompound compound) {
 		String result = compound.getUpperedBase();
-		if (result.equals("U") && getOwner().getViewMode().equals(AlignmentDataViewMode.DNA)) {
+		if (result.equals("U") && viewMode.equals(AlignmentDataViewMode.DNA)) {
 			return "T";
 		}
-		else if (result.equals("T") && getOwner().getViewMode().equals(AlignmentDataViewMode.RNA)) {
+		else if (result.equals("T") && viewMode.equals(AlignmentDataViewMode.RNA)) {
 			return "U";
 		}
 		else {
@@ -95,39 +96,39 @@ public class SequenceArea extends AlignmentSubArea {
 	}
 	
 	
-  private void paintNucleotideCompound(Graphics2D g, NucleotideCompound compound, float x, float y, 
-  		boolean selected) {
+  private static void paintNucleotideCompound(AlignmentArea area, Graphics2D g, NucleotideCompound compound, 
+  		float x, float y, boolean selected) {
   	
   	Set<NucleotideCompound> consituents = compound.getConstituents();
-  	final float height = getOwner().getCompoundHeight() / (float)consituents.size();
+  	final float height = area.getCompoundHeight() / (float)consituents.size();
   	Iterator<NucleotideCompound> iterator = consituents.iterator();
   	float bgY = y;
   	while (iterator.hasNext()) {  // Fill the compound rectangle with differently colored zones, if ambiguity codes are used.
-  		g.setColor(getBGColor(getOwner().getColorSchema().getNucleotideColorMap().get(
-  				getNucleotideBaseString(iterator.next())),	selected));
-    	g.fill(new Rectangle2D.Float(x, bgY, getOwner().getCompoundWidth(), height));
+  		g.setColor(getBGColor(area.getColorSchema(), area.getColorSchema().getNucleotideColorMap().get(
+  				getNucleotideBaseString(area.getViewMode(), iterator.next())),	selected));
+    	g.fill(new Rectangle2D.Float(x, bgY, area.getCompoundWidth(), height));
     	bgY += height;
   	}
   	
-  	if (getOwner().isPaintCompoundText()) {  // Text output only if font size is not too low
-	  	g.setColor(getOwner().getColorSchema().getFontColor());
-	  	g.setFont(getOwner().getCompoundFont());
+  	if (area.isPaintCompoundText()) {  // Text output only if font size is not too low
+	  	g.setColor(area.getColorSchema().getFontColor());
+	  	g.setFont(area.getCompoundFont());
 			FontMetrics fm = g.getFontMetrics();
 	  	g.drawString(compound.getBase(), x + 0.5f * 
-	  			(getOwner().getCompoundWidth() - fm.charWidth(compound.getBase().charAt(0))), y + fm.getAscent());
+	  			(area.getCompoundWidth() - fm.charWidth(compound.getBase().charAt(0))), y + fm.getAscent());
   	}
   }
   
   
-  private void paintCompound(Graphics2D g, Object compound, float x, float y, boolean selected) {
-  	g.setColor(getOwner().getColorSchema().getTokenBorderColor());
-  	g.draw(new Rectangle2D.Float(x, y, getOwner().getCompoundWidth(), getOwner().getCompoundHeight()));
+  public static void paintCompound(AlignmentArea area, Graphics2D g, Object compound, float x, float y, boolean selected) {
+  	g.setColor(area.getColorSchema().getTokenBorderColor());
+  	g.draw(new Rectangle2D.Float(x, y, area.getCompoundWidth(), area.getCompoundHeight()));
   	
-  	switch (getOwner().getViewMode()) {
+  	switch (area.getViewMode()) {
   		case NUCLEOTIDE:
 			case DNA:
 			case RNA:
-				paintNucleotideCompound(g, (NucleotideCompound)compound, x, y, selected);
+				paintNucleotideCompound(area, g, (NucleotideCompound)compound, x, y, selected);
 				//TODO Type cast funktioniert so nicht, wenn Quelldaten nicht diesen Datentyp haben! => Konvertierung mit GeneticCode hinzufügen.
 				break;
 			case CODON:
@@ -142,6 +143,24 @@ public class SequenceArea extends AlignmentSubArea {
   }
 
   
+  public static void paintSequence(AlignmentArea area, int sequenceID, TICPaintEvent event, float x, float y) {
+		int firstIndex = Math.max(0, area.columnByPaintX((int)event.getRectangle().getMinX()));
+		int lastIndex = area.columnByPaintX((int)event.getRectangle().getMaxX());
+		int lastColumn = area.getSequenceProvider().getSequenceLength(sequenceID) - 1;
+		if ((lastIndex == -1) || (lastIndex > lastColumn)) {  //TODO Elongate to the length of the longest sequence and paint empty/special tokens on the right end?
+			lastIndex = lastColumn;
+		}
+		
+  	x += firstIndex * area.getCompoundWidth();
+		for (int i = firstIndex; i <= lastIndex; i++) {			
+    	paintCompound(area, event.getGraphics(), 
+    			area.getSequenceProvider().getTokenAt(sequenceID, i), x, y,	
+    			area.getSelection().isSelected(i, area.getSequenceOrder().indexByID(sequenceID)));
+	    x += area.getCompoundWidth();
+    }
+  }
+  
+  
   @Override
 	public void paint(TICPaintEvent event) {
 		int firstIndex = Math.max(0, getOwner().columnByPaintX((int)event.getRectangle().getMinX()));
@@ -153,7 +172,7 @@ public class SequenceArea extends AlignmentSubArea {
 		
   	float x = firstIndex * getOwner().getCompoundWidth();
 		for (int i = firstIndex; i <= lastIndex; i++) {			
-    	paintCompound(event.getGraphics(), 
+    	paintCompound(getOwner(), event.getGraphics(), 
     			getOwner().getSequenceProvider().getTokenAt(getSeqenceID(), i), x, 0f,	
     			getOwner().getSelection().isSelected(i, getOwner().getSequenceOrder().indexByID(getSeqenceID())));
 	    x += getOwner().getCompoundWidth();

@@ -26,6 +26,7 @@ main/src/info/bioinfweb/libralign/alignmentareacomponents/SequenceArea.java -tex
 main/src/info/bioinfweb/libralign/alignmentareacomponents/SequenceAreaMap.java -text svneol=unset#text/plain
 main/src/info/bioinfweb/libralign/alignmentareacomponents/SwingAlignmentArea.java -text svneol=unset#text/plain
 main/src/info/bioinfweb/libralign/alignmentareacomponents/ToolkitSpecificAlignmentArea.java -text svneol=unset#text/plain
+main/src/info/bioinfweb/libralign/dataarea/ConsensusSequenceArea.java -text svneol=unset#text/plain
 main/src/info/bioinfweb/libralign/dataarea/DataArea.java -text svneol=unset#text/plain
 main/src/info/bioinfweb/libralign/dataarea/DataAreaChangeEvent.java -text svneol=unset#text/plain
 main/src/info/bioinfweb/libralign/dataarea/DataAreaList.java -text svneol=unset#text/plain
