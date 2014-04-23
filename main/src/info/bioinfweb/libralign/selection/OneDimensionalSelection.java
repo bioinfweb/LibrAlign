@@ -19,7 +19,7 @@
 package info.bioinfweb.libralign.selection;
 
 
-import info.webinsel.util.Math2;
+import info.bioinfweb.commons.Math2;
 
 
 

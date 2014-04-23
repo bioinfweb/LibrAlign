@@ -28,6 +28,7 @@ import javax.swing.JComponent;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.Composite;
 
+import info.bioinfweb.commons.Math2;
 import info.bioinfweb.commons.tic.TICComponent;
 import info.bioinfweb.commons.tic.TICPaintEvent;
 import info.bioinfweb.libralign.alignmentareacomponents.SWTAlignmentArea;
@@ -43,7 +44,6 @@ import info.bioinfweb.libralign.sequenceprovider.SequenceDataProvider;
 import info.bioinfweb.libralign.sequenceprovider.events.SequenceChangeEvent;
 import info.bioinfweb.libralign.sequenceprovider.events.SequenceRenamedEvent;
 import info.bioinfweb.libralign.sequenceprovider.events.TokenChangeEvent;
-import info.webinsel.util.Math2;
 
 
 

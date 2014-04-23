@@ -29,7 +29,7 @@ import java.util.TreeMap;
 
 import org.biojava3.core.sequence.compound.NucleotideCompound;
 
-import info.bioinfweb.biojava3.core.sequence.compound.AlignmentAmbiguityNucleotideCompoundSet;
+import info.bioinfweb.commons.bio.biojava3.core.sequence.compound.AlignmentAmbiguityNucleotideCompoundSet;
 import info.bioinfweb.commons.bio.AmbiguityBaseScore;
 import info.bioinfweb.commons.tic.TICPaintEvent;
 import info.bioinfweb.libralign.AlignmentArea;

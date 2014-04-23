@@ -27,8 +27,8 @@ import org.biojava3.core.sequence.template.AbstractSequence;
 import org.biojava3.core.sequence.template.Compound;
 import org.biojava3.core.sequence.template.Sequence;
 
-import info.bioinfweb.biojava3.alignment.SimpleAlignment;
-import info.bioinfweb.biojava3.alignment.template.Alignment;
+import info.bioinfweb.commons.bio.biojava3.alignment.SimpleAlignment;
+import info.bioinfweb.commons.bio.biojava3.alignment.template.Alignment;
 import info.bioinfweb.libralign.AlignmentSourceDataType;
 import info.bioinfweb.libralign.exception.AlignmentSourceNotWritableException;
 
