@@ -19,11 +19,11 @@
 package info.bioinfweb.libralign.demo.swing;
 
 
-import info.bioinfweb.biojava3.alignment.SimpleAlignment;
-import info.bioinfweb.biojava3.alignment.io.fasta.FastaReader;
-import info.bioinfweb.biojava3.alignment.template.Alignment;
+import info.bioinfweb.commons.bio.biojava3.alignment.SimpleAlignment;
+import info.bioinfweb.commons.bio.biojava3.alignment.template.Alignment;
 import info.bioinfweb.libralign.AlignmentArea;
 import info.bioinfweb.libralign.AlignmentSourceDataType;
+import info.bioinfweb.libralign.dataarea.ConsensusSequenceArea;
 import info.bioinfweb.libralign.sequenceprovider.BioJavaSequenceDataProvider;
 
 import java.awt.EventQueue;
@@ -86,6 +86,7 @@ public class Main {
 		
 		AlignmentArea result = new AlignmentArea();
 		result.setSequenceProvider(sequenceProvider, false);
+		result.getDataAreas().getBottomAreas().add(new ConsensusSequenceArea(result));
 		return result;
 	}
 	
