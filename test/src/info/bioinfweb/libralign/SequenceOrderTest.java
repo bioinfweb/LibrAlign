@@ -21,8 +21,8 @@ package info.bioinfweb.libralign;
 
 import static org.junit.Assert.* ;
 
-import info.bioinfweb.biojava3.alignment.SimpleAlignment;
-import info.bioinfweb.biojava3.alignment.template.Alignment;
+import info.bioinfweb.commons.bio.biojava3.alignment.SimpleAlignment;
+import info.bioinfweb.commons.bio.biojava3.alignment.template.Alignment;
 import info.bioinfweb.libralign.sequenceprovider.BioJavaSequenceDataProvider;
 import info.bioinfweb.libralign.sequenceprovider.SequenceDataProvider;
 
