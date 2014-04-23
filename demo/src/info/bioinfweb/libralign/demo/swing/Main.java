@@ -19,12 +19,8 @@
 package info.bioinfweb.libralign.demo.swing;
 
 
-import info.bioinfweb.commons.bio.biojava3.alignment.SimpleAlignment;
-import info.bioinfweb.commons.bio.biojava3.alignment.template.Alignment;
 import info.bioinfweb.libralign.AlignmentArea;
-import info.bioinfweb.libralign.AlignmentSourceDataType;
-import info.bioinfweb.libralign.dataarea.ConsensusSequenceArea;
-import info.bioinfweb.libralign.sequenceprovider.BioJavaSequenceDataProvider;
+import info.bioinfweb.libralign.demo.AbstractTestApplication;
 
 import java.awt.EventQueue;
 
@@ -34,9 +30,6 @@ import java.awt.GridBagLayout;
 import java.awt.GridBagConstraints;
 import javax.swing.JScrollPane;
 
-import org.biojava3.core.sequence.DNASequence;
-import org.biojava3.core.sequence.compound.NucleotideCompound;
-
 
 
 /**
@@ -44,7 +37,7 @@ import org.biojava3.core.sequence.compound.NucleotideCompound;
  * 
  * @author Ben St&ouml;ver
  */
-public class Main {
+public class Main extends AbstractTestApplication {
 	private JFrame frame;
 	
 	
@@ -70,24 +63,6 @@ public class Main {
 	 */
 	public Main() {
 		initialize();
-	}
-	
-	
-	private AlignmentArea createAlignmentArea() {
-		Alignment<DNASequence, NucleotideCompound> alignment = 
-				new SimpleAlignment<DNASequence, NucleotideCompound>();
-		alignment.add("Sequence 1", new DNASequence("ATCGTAGATCGTAGATCGTAGATCGTAGATCGTAGATCGTAGATCGTAG"));
-		alignment.add("Sequence 2", new DNASequence("AT-GTTG"));
-		alignment.add("Sequence 3", new DNASequence("AT-GTAG"));
-		
-		BioJavaSequenceDataProvider<DNASequence, NucleotideCompound> sequenceProvider = 
-				new BioJavaSequenceDataProvider<DNASequence, NucleotideCompound>(
-						alignment, AlignmentSourceDataType.NUCLEOTIDE);
-		
-		AlignmentArea result = new AlignmentArea();
-		result.setSequenceProvider(sequenceProvider, false);
-		result.getDataAreas().getBottomAreas().add(new ConsensusSequenceArea(result));
-		return result;
 	}
 	
 	

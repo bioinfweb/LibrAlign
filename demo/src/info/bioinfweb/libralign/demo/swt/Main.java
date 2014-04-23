@@ -19,14 +19,8 @@
 package info.bioinfweb.libralign.demo.swt;
 
 
-import info.bioinfweb.commons.bio.biojava3.alignment.SimpleAlignment;
-import info.bioinfweb.commons.bio.biojava3.alignment.template.Alignment;
-import info.bioinfweb.libralign.AlignmentArea;
-import info.bioinfweb.libralign.AlignmentSourceDataType;
-import info.bioinfweb.libralign.sequenceprovider.BioJavaSequenceDataProvider;
+import info.bioinfweb.libralign.demo.AbstractTestApplication;
 
-import org.biojava3.core.sequence.DNASequence;
-import org.biojava3.core.sequence.compound.NucleotideCompound;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
@@ -41,7 +35,7 @@ import org.eclipse.swt.layout.FillLayout;
  * 
  * @author Ben St&ouml;ver
  */
-public class Main {
+public class Main extends AbstractTestApplication {
 	protected Shell shell;
 	
 	
@@ -74,23 +68,6 @@ public class Main {
 				display.sleep();
 			}
 		}
-	}
-	
-	
-	private AlignmentArea createAlignmentArea() {
-		Alignment<DNASequence, NucleotideCompound> alignment = 
-				new SimpleAlignment<DNASequence, NucleotideCompound>();
-		alignment.add("Sequence 1", new DNASequence("ATCGTAGATCGTAGATCGTAGATCGTAGATCGTAGATCGTAGATCGTAGATCGTAGATCGTAG"));
-		alignment.add("Sequence 2", new DNASequence("AT-GTTG"));
-		alignment.add("Sequence 3", new DNASequence("AT-GTAG"));
-		
-		BioJavaSequenceDataProvider<DNASequence, NucleotideCompound> sequenceProvider = 
-				new BioJavaSequenceDataProvider<DNASequence, NucleotideCompound>(
-						alignment, AlignmentSourceDataType.NUCLEOTIDE);
-		
-		AlignmentArea result = new AlignmentArea();
-		result.setSequenceProvider(sequenceProvider, false);
-		return result;
 	}
 	
 	
