@@ -25,14 +25,9 @@ import javax.swing.JFrame;
 import javax.swing.JScrollPane;
 import java.awt.BorderLayout;
 import javax.swing.JPanel;
-import java.awt.GridLayout;
-import java.awt.FlowLayout;
-import java.awt.CardLayout;
 import javax.swing.BoxLayout;
-import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
-import java.awt.event.MouseMotionAdapter;
 import java.awt.event.MouseMotionListener;
 
 
