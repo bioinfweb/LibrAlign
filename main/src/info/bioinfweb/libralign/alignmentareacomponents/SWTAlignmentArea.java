@@ -65,7 +65,7 @@ public class SWTAlignmentArea extends Composite implements ToolkitSpecificAlignm
 		rowLayout.marginRight = 0;
 		rowLayout.marginBottom = 0;
 		rowLayout.spacing = 0;
-		setLayout(rowLayout);
+		super.setLayout(rowLayout);
 		reinsertSubelements();
 	}
 
@@ -116,6 +116,8 @@ public class SWTAlignmentArea extends Composite implements ToolkitSpecificAlignm
 		}
 
 		addDataAreaList(getIndependentComponent().getDataAreas().getBottomAreas());
+		
+		//layout(true);  //TODO Necessary?
 	}
 
 
