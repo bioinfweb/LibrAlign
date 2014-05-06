@@ -29,9 +29,6 @@ import org.biojava3.core.sequence.compound.NucleotideCompound;
 import info.bioinfweb.libralign.AlignmentArea;
 import info.bioinfweb.libralign.AlignmentSourceDataType;
 import info.bioinfweb.libralign.exception.AlignmentSourceNotWritableException;
-import info.bioinfweb.libralign.selection.SelectionChangeEvent;
-import info.bioinfweb.libralign.selection.SelectionListener;
-import info.bioinfweb.libralign.sequenceprovider.events.SequenceDataProviderChangeEvent;
 
 
 

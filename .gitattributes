@@ -10,6 +10,8 @@ main/.project -text svneol=unset#text/plain
 main/.settings/org.eclipse.jdt.core.prefs -text svneol=unset#text/plain
 main/lib/biojava3-alignment-3.0.7.jar -text
 main/lib/biojava3-core-3.0.7.jar -text
+main/lib/core-1.8.5.jar -text
+main/lib/sequencing-1.8.5.jar -text
 main/lib/swt.jar -text
 main/src/info/bioinfweb/libralign/AlignmentArea.java -text svneol=unset#text/plain
 main/src/info/bioinfweb/libralign/AlignmentDataViewMode.java -text svneol=unset#text/plain
@@ -33,6 +35,10 @@ main/src/info/bioinfweb/libralign/dataarea/DataAreaLocation.java -text svneol=un
 main/src/info/bioinfweb/libralign/dataarea/DataAreaModel.java -text svneol=unset#text/plain
 main/src/info/bioinfweb/libralign/dataarea/DataAreaModelListener.java -text svneol=unset#text/plain
 main/src/info/bioinfweb/libralign/dataarea/DataAreaVisibleIterator.java -text svneol=unset#text/plain
+main/src/info/bioinfweb/libralign/dataarea/pherogram/BioJavaPherogramProvider.java -text svneol=unset#text/plain
+main/src/info/bioinfweb/libralign/dataarea/pherogram/PherogramArea.java -text svneol=unset#text/plain
+main/src/info/bioinfweb/libralign/dataarea/pherogram/PherogramProvider.java -text svneol=unset#text/plain
+main/src/info/bioinfweb/libralign/dataarea/pherogram/TraceCurve.java -text svneol=unset#text/plain
 main/src/info/bioinfweb/libralign/exception/AlignmentDataProviderException.java -text svneol=unset#text/plain
 main/src/info/bioinfweb/libralign/exception/AlignmentSourceNotWritableException.java -text svneol=unset#text/plain
 main/src/info/bioinfweb/libralign/exception/InvalidCompoundException.java -text svneol=unset#text/plain
@@ -45,6 +51,7 @@ main/src/info/bioinfweb/libralign/selection/SelectionModel.java -text svneol=uns
 main/src/info/bioinfweb/libralign/selection/SelectionType.java -text svneol=unset#text/plain
 main/src/info/bioinfweb/libralign/sequenceprovider/AbstractSequenceDataProvider.java -text svneol=unset#text/plain
 main/src/info/bioinfweb/libralign/sequenceprovider/BioJavaSequenceDataProvider.java -text svneol=unset#text/plain
+main/src/info/bioinfweb/libralign/sequenceprovider/DataProvider.java -text svneol=unset#text/plain
 main/src/info/bioinfweb/libralign/sequenceprovider/SequenceDataChangeListener.java -text svneol=unset#text/plain
 main/src/info/bioinfweb/libralign/sequenceprovider/SequenceDataProvider.java -text svneol=unset#text/plain
 main/src/info/bioinfweb/libralign/sequenceprovider/SequenceDataProviderWriteType.java -text svneol=unset#text/plain
