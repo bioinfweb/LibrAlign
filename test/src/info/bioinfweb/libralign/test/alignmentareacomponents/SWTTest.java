@@ -43,7 +43,8 @@ public class SWTTest {
 		try {
 			SWTTest window = new SWTTest();
 			window.open();
-		} catch (Exception e) {
+		} 
+		catch (Exception e) {
 			e.printStackTrace();
 		}
 	}

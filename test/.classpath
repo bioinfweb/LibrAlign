@@ -11,5 +11,7 @@
 	<classpathentry kind="lib" path="/JFreeChartSWT/bin"/>
 	<classpathentry kind="lib" path="lib/hamcrest-core-1.3.jar"/>
 	<classpathentry kind="lib" path="/LibrAlign Demo/bin"/>
+	<classpathentry kind="lib" path="/LibrAlign/lib/core-1.8.5.jar"/>
+	<classpathentry kind="lib" path="/LibrAlign/lib/sequencing-1.8.5.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

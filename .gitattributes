@@ -62,10 +62,14 @@ main/src/info/bioinfweb/libralign/sequenceprovider/events/TokenChangeEvent.java 
 test/.classpath -text svneol=unset#text/plain
 test/.project -text svneol=unset#text/plain
 test/.settings/org.eclipse.jdt.core.prefs -text svneol=unset#text/plain
+test/data/pherograms/Test_pel1PCR_Pel2Wdhg_PCR-7-A_1.ab1 -text
+test/data/pherograms/Test_pel1PCR_Pel2Wdhg_PCR-7-A_1.scf -text
+test/data/pherograms/Test_pel1PCR_Pel2Wdhg_PCR-7-A_1.scf.gz -text
 test/lib/hamcrest-core-1.3.jar -text
 test/lib/junit-4.11.jar -text
 test/src/info/bioinfweb/libralign/SequenceOrderTest.java -text svneol=unset#text/plain
 test/src/info/bioinfweb/libralign/dataarea/DataAreaListTest.java -text svneol=unset#text/plain
+test/src/info/bioinfweb/libralign/test/BioJavaPherogramTest.java -text svneol=unset#text/plain
 test/src/info/bioinfweb/libralign/test/SequenceAreaSWTTest.java -text svneol=unset#text/plain
 test/src/info/bioinfweb/libralign/test/alignmentareacomponents/SWTTest.java -text svneol=unset#text/plain
 test/src/info/bioinfweb/libralign/test/alignmentareacomponents/SwingTest.java -text svneol=unset#text/plain
