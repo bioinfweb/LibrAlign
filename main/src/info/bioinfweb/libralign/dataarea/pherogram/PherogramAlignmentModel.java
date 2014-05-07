@@ -108,7 +108,9 @@ public interface PherogramAlignmentModel {
    * visible part of the pherogram (that is displayed in the alignment by the associated 
    * {@link PherogramArea}), {@link #OUT_OF_RANGE} is returned. 
    * 
-   * @param baseCallIndex - the index in the base call sequence of the pherogram
+   * @param baseCallIndex - the absolute index in the base call sequence of the pherogram (Note that the 
+   *        first position of the bas calls associated with the aligned sequence might be greater zero.
+   *        Specifying invisible positions here would return {@link #OUT_OF_RANGE}.) 
    * @return an integer value {@code >= 0} or {@link #GAP} or {@link #OUT_OF_RANGE}
    */
   public int sequenceByBaseCallIndex(int baseCallIndex);
@@ -120,8 +122,9 @@ public interface PherogramAlignmentModel {
    * {@link #GAP} is returned. If the specified position is located outside the interval that is aligned
    * with this pherogram, {@link #OUT_OF_RANGE} is returned.
    * 
-   * @param sequenceIndex - the position in the sequence of the {@link AlignmentArea} this pherogram
-   *        is attached to
+   * @param sequenceIndex - the absolute position in the sequence of the {@link AlignmentArea} this pherogram
+   *        is attached to (Note that the first position associated with the pherogram might be greater zero.
+   *        Specifying invisible positions here would return {@link #OUT_OF_RANGE}.)
    * @return an integer value {@code >= 0} or {@link #GAP} or {@link #OUT_OF_RANGE}
    */
   public int baseCallBySequenceIndex(int sequenceIndex);

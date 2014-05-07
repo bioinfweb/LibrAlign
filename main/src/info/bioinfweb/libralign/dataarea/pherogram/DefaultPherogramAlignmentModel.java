@@ -19,7 +19,10 @@
 package info.bioinfweb.libralign.dataarea.pherogram;
 
 
-import info.bioinfweb.commons.collections.NonOverlappingIntervalList;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+
 import info.bioinfweb.libralign.AlignmentArea;
 
 
@@ -30,11 +33,34 @@ import info.bioinfweb.libralign.AlignmentArea;
  * @author Ben St&ouml;ver
  */
 public class DefaultPherogramAlignmentModel implements PherogramAlignmentModel {
+	protected static enum ListEntryType {
+		/** Both sequences are aligned onto each other. */
+		OVERLAP,
+		
+		/** An insertion in the aligned sequence (not the base call sequence). */
+		INSERTION,
+
+		/** An deletion in the aligned sequence (not the base call sequence). */
+    DELETION;
+	}
+	
+	
+	protected static class ListEntry {
+		public ListEntryType type;
+		public int length;
+
+		public ListEntry(ListEntryType type, int length) {
+			super();
+			this.type = type;
+			this.length = length;
+		}
+	}
+	
+	
 	private int firstVisibleBaseCallIndex = 0;
 	private int visibleBaseCallLength = 0;
 	private int sequenceStartIndex = 0;
-	private NonOverlappingIntervalList sequenceGaps = new NonOverlappingIntervalList();
-	private NonOverlappingIntervalList baseCallGaps = new NonOverlappingIntervalList();
+	private List<ListEntry> alignmentList = new ArrayList<ListEntry>();
 	
 	
 	@Override
@@ -75,8 +101,27 @@ public class DefaultPherogramAlignmentModel implements PherogramAlignmentModel {
 	
 	@Override
 	public int sequenceByBaseCallIndex(int baseCallIndex) {
-		// TODO Auto-generated method stub
-		return 0;
+		if ((baseCallIndex < getFirstVisibleBaseCallIndex()) || 
+				(baseCallIndex >= getFirstVisibleBaseCallIndex() + getVisibleBaseCallLength())) {
+			
+			return OUT_OF_RANGE;
+		}
+		else {
+			int result = getSequenceStartIndex();
+//			int 
+//      Iterator<ListEntry> iterator = getAlignmentList().iterator();
+//      while (iterator.hasNext()) {
+//      	ListEntry entry = iterator.next();
+//      	switch (entry.type) {
+//      		case OVERLAP:
+//      			result += entry.length;
+//      			break;
+//      		case INSERTION:
+//      		case DELETION:
+//      	}
+//      }
+			return result;
+		}
 	}
 
 	
@@ -87,27 +132,7 @@ public class DefaultPherogramAlignmentModel implements PherogramAlignmentModel {
 	}
 
 
-	/**
-	 * Returns the list of gaps inserted in the alignment sequence (this pherogram is attached to inside the
-	 * according {@link AlignmentArea}) in order to align it to the base call sequence of this pherogram.
-	 * <p>
-	 * Note that these gaps are different from the gaps already contained in the alignment sequence which 
-	 * align it to other sequences in its {@link AlignmentArea}.
-	 * 
-	 * @return an editable list of gaps
-	 */
-	public NonOverlappingIntervalList getSequenceGaps() {
-		return sequenceGaps;
-	}
-
-	
-	/**
-	 * Returns the list of gaps inserted in base call sequence in order to align it to the alignment sequence 
-	 * (this pherogram is attached to inside the according {@link AlignmentArea}).
-	 * 
-	 * @return an editable list of gaps
-	 */
-	public NonOverlappingIntervalList getBaseCallGaps() {
-		return baseCallGaps;
+	protected List<ListEntry> getAlignmentList() {
+		return alignmentList;
 	}
 }
