@@ -28,8 +28,10 @@ import info.bioinfweb.libralign.AlignmentArea;
 import java.awt.Dimension;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.EnumSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 
 import org.junit.* ;
 
@@ -61,6 +63,11 @@ public class DataAreaListTest {
 						@Override
 						public Dimension getSize() {
 							return new Dimension(1, 1);
+						}
+
+						@Override
+						public Set<DataAreaListType> validLocations() {
+							return EnumSet.of(DataAreaListType.TOP, DataAreaListType.BOTTOM, DataAreaListType.SEQUENCE);
 						}
 					};
 		}
