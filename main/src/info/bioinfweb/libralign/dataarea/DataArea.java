@@ -19,6 +19,9 @@
 package info.bioinfweb.libralign.dataarea;
 
 
+import java.util.EnumSet;
+import java.util.Set;
+
 import info.bioinfweb.libralign.AlignmentArea;
 import info.bioinfweb.libralign.AlignmentSubArea;
 
@@ -91,4 +94,15 @@ public abstract class DataArea extends AlignmentSubArea {
 		}
 		return result;
 	}
+	
+	
+	/**
+	 * The result should enumerate all valid locations where the implementing data area is allowed to be located.
+	 * <p>
+	 * An implementation for a data area could be located everywhere could look like this:
+	 * <pre>return EnumSet.of(DataAreaListType.TOP, DataAreaListType.BOTTOM, DataAreaListType.SEQUENCE);</pre>
+	 * 
+	 * @return a non-empty set of locations
+	 */
+	public abstract Set<DataAreaListType> validLocations();
 }

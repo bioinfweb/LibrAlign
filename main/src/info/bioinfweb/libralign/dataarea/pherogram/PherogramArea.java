@@ -22,10 +22,11 @@ package info.bioinfweb.libralign.dataarea.pherogram;
 import info.bioinfweb.commons.tic.TICPaintEvent;
 import info.bioinfweb.libralign.AlignmentArea;
 import info.bioinfweb.libralign.dataarea.DataArea;
+import info.bioinfweb.libralign.dataarea.DataAreaListType;
 
 import java.awt.Dimension;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.EnumSet;
+import java.util.Set;
 
 
 
@@ -47,6 +48,12 @@ public class PherogramArea extends DataArea {
 
 	@Override
 	public void paint(TICPaintEvent event) {
+	}
+
+
+	@Override
+	public Set<DataAreaListType> validLocations() {
+		return EnumSet.of(DataAreaListType.SEQUENCE);
 	}
 
 

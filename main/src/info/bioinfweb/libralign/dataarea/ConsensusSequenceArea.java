@@ -23,8 +23,10 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics2D;
 import java.awt.geom.Rectangle2D;
+import java.util.EnumSet;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.Set;
 import java.util.TreeMap;
 
 import org.biojava3.core.sequence.compound.NucleotideCompound;
@@ -175,6 +177,12 @@ public class ConsensusSequenceArea extends DataArea {
 	}
 
 	
+	@Override
+	public Set<DataAreaListType> validLocations() {
+		return EnumSet.of(DataAreaListType.TOP, DataAreaListType.BOTTOM);
+	}
+
+
 	@Override
 	public Dimension getSize() {
 		return new Dimension(
