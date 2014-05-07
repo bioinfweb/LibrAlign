@@ -61,7 +61,8 @@ public interface PherogramProvider extends DataProvider {
   /**
    * Returns a base from the DNA sequence associated with the stored trace. 
    * 
-   * @param baseIndex - the index of the base in the sequence
+   * @param baseIndex - the index of the base in the pherogram sequence (This might differ from the 
+   *        index of the base in the associated sequence in the alignment.)
    * @return a DNA base or an ambiguity code
    */
   public NucleotideCompound getBaseCall(int baseIndex);
@@ -69,7 +70,8 @@ public interface PherogramProvider extends DataProvider {
   /**
    * Returns the position in the trace where the base at the specified index was observed.
    * 
-   * @param baseIndex - the index of the observed base in the sequence
+   * @param baseIndex - the index of the base in the pherogram sequence (This might differ from the 
+   *        index of the base in the associated sequence in the alignment.)
    * @return an integer value between 0 and {@link #getTraceLength()}{@code - 1}
    */
   public int getBaseCallPosition(int baseIndex);
@@ -80,4 +82,12 @@ public interface PherogramProvider extends DataProvider {
    * @return an integer value >= 0
    */
   public int getSequenceLength();
+  
+  /**
+   * Returns a model instance defining the alignment of this pherogram onto the associated sequence
+   * in the alignment.
+   * 
+   * @return the model instance currently used
+   */
+  public PherogramAlignmentModel getAlignmentModel();
 }

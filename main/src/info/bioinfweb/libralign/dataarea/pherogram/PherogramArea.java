@@ -30,33 +30,18 @@ import java.util.List;
 
 
 /**
- * A data area displaying a trace file from Sanger sequencing.
+ * A data area displaying a trace file resulting from Sanger sequencing.
  * 
  * @author Ben St&ouml;ver
  * @since 0.0.0
  */
 public class PherogramArea extends DataArea {
-	private static class Gap {
-		public int startIndex = 0;
-		public int length = 1;
-	}
-	
-	
 	private PherogramProvider pherogram; 
-	private int startIndex;
-	private List<Gap> gaps;
 	
 	
-	public PherogramArea(AlignmentArea owner, PherogramProvider pherogram, int startIndex) {
+	public PherogramArea(AlignmentArea owner, PherogramProvider pherogram) {
 		super(owner);
 		this.pherogram = pherogram;
-		this.startIndex = startIndex;
-		gaps = new ArrayList<Gap>();
-	}
-
-
-	public int getStartIndex() {
-		return startIndex;
 	}
 
 

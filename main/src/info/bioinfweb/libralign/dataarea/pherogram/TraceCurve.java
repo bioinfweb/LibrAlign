@@ -19,6 +19,7 @@
 package info.bioinfweb.libralign.dataarea.pherogram;
 
 
+
 /**
  * Enumerates the types of trace curves available in a pherogram.
  * 

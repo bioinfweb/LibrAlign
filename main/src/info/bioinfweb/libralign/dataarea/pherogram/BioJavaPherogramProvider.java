@@ -46,6 +46,7 @@ public class BioJavaPherogramProvider implements PherogramProvider {
 	private Chromatogram chromatogram;
 	private Map<TraceCurve, AtomicSymbol> traceCurveMap = createTraceCurveMap();
 	private double maxTraceValue = 0;  // Must be double in order to avoid a integer division in normalizeTraceValue().
+	private DefaultPherogramAlignmentModel alignmentModel = new DefaultPherogramAlignmentModel();
 
 	
 	/**
@@ -133,5 +134,11 @@ public class BioJavaPherogramProvider implements PherogramProvider {
 	@Override
 	public int getSequenceLength() {
 		return chromatogram.getSequenceLength();
+	}
+
+
+	@Override
+	public PherogramAlignmentModel getAlignmentModel() {
+		return alignmentModel;
 	}
 }
