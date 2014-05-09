@@ -52,7 +52,6 @@ main/src/info/bioinfweb/libralign/selection/SelectionListener.java -text svneol=
 main/src/info/bioinfweb/libralign/selection/SelectionModel.java -text svneol=unset#text/plain
 main/src/info/bioinfweb/libralign/selection/SelectionType.java -text svneol=unset#text/plain
 main/src/info/bioinfweb/libralign/sequenceprovider/AbstractSequenceDataProvider.java -text svneol=unset#text/plain
-main/src/info/bioinfweb/libralign/sequenceprovider/BioJavaSequenceDataProvider.java -text svneol=unset#text/plain
 main/src/info/bioinfweb/libralign/sequenceprovider/DataProvider.java -text svneol=unset#text/plain
 main/src/info/bioinfweb/libralign/sequenceprovider/SequenceDataChangeListener.java -text svneol=unset#text/plain
 main/src/info/bioinfweb/libralign/sequenceprovider/SequenceDataProvider.java -text svneol=unset#text/plain
@@ -61,6 +60,7 @@ main/src/info/bioinfweb/libralign/sequenceprovider/events/SequenceChangeEvent.ja
 main/src/info/bioinfweb/libralign/sequenceprovider/events/SequenceDataProviderChangeEvent.java -text svneol=unset#text/plain
 main/src/info/bioinfweb/libralign/sequenceprovider/events/SequenceRenamedEvent.java -text svneol=unset#text/plain
 main/src/info/bioinfweb/libralign/sequenceprovider/events/TokenChangeEvent.java -text svneol=unset#text/plain
+main/src/info/bioinfweb/libralign/sequenceprovider/implementations/BioJavaSequenceDataProvider.java -text svneol=unset#text/plain
 test/.classpath -text svneol=unset#text/plain
 test/.project -text svneol=unset#text/plain
 test/.settings/org.eclipse.jdt.core.prefs -text svneol=unset#text/plain

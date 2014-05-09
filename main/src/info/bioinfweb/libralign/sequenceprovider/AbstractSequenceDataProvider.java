@@ -268,56 +268,6 @@ public abstract class AbstractSequenceDataProvider implements SequenceDataProvid
 
 
 	@Override
-	public void setTokenAt(int sequenceID, int index, Object token)
-			throws AlignmentSourceNotWritableException {
-		// TODO Auto-generated method stub
-		
-	}
-
-
-	@Override
-	public void setTokensAt(int sequenceID, int beginIndex,
-			Collection<? extends Object> tokens)
-			throws AlignmentSourceNotWritableException {
-		// TODO Auto-generated method stub
-		
-	}
-
-
-	@Override
-	public void insertTokenAt(int sequenceID, int index, Object token)
-			throws AlignmentSourceNotWritableException {
-		// TODO Auto-generated method stub
-		
-	}
-
-
-	@Override
-	public void insertTokensAt(int sequenceID, int beginIndex,
-			Collection<? extends Object> tokens)
-			throws AlignmentSourceNotWritableException {
-		// TODO Auto-generated method stub
-		
-	}
-
-
-	@Override
-	public void removeTokenAt(int sequenceID, int index)
-			throws AlignmentSourceNotWritableException {
-		// TODO Auto-generated method stub
-		
-	}
-
-
-	@Override
-	public void removeTokensAt(int sequenceID, int beginIndex, int endIndex)
-			throws AlignmentSourceNotWritableException {
-		// TODO Auto-generated method stub
-		
-	}
-
-
-	@Override
 	public Collection<SequenceDataChangeListener> getChangeListeners() {
 		return changeListeners;
 	}

@@ -16,9 +16,10 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package info.bioinfweb.libralign.sequenceprovider;
+package info.bioinfweb.libralign.sequenceprovider.implementations;
 
 
+import java.util.Collection;
 import java.util.Iterator;
 import java.util.Map;
 
@@ -31,6 +32,9 @@ import info.bioinfweb.commons.bio.biojava3.alignment.SimpleAlignment;
 import info.bioinfweb.commons.bio.biojava3.alignment.template.Alignment;
 import info.bioinfweb.libralign.AlignmentSourceDataType;
 import info.bioinfweb.libralign.exception.AlignmentSourceNotWritableException;
+import info.bioinfweb.libralign.sequenceprovider.AbstractSequenceDataProvider;
+import info.bioinfweb.libralign.sequenceprovider.SequenceDataProvider;
+import info.bioinfweb.libralign.sequenceprovider.SequenceDataProviderWriteType;
 
 
 
@@ -138,6 +142,30 @@ public class BioJavaSequenceDataProvider<S extends Sequence<C>, C extends Compou
 	public void removeTokenAt(int sequenceID, int elementIndex)
 			throws AlignmentSourceNotWritableException {
 		
+		throw new AlignmentSourceNotWritableException(this);
+	}
+
+
+	@Override
+	public void setTokensAt(int sequenceID, int beginIndex,	
+			Collection<? extends Object> tokens) throws AlignmentSourceNotWritableException {
+		
+		throw new AlignmentSourceNotWritableException(this);
+	}
+
+
+	@Override
+	public void insertTokensAt(int sequenceID, int beginIndex,
+			Collection<? extends Object> tokens) throws AlignmentSourceNotWritableException {
+
+		throw new AlignmentSourceNotWritableException(this);
+	}
+
+
+	@Override
+	public void removeTokensAt(int sequenceID, int beginIndex, int endIndex)
+			throws AlignmentSourceNotWritableException {
+
 		throw new AlignmentSourceNotWritableException(this);
 	}
 
