@@ -46,14 +46,14 @@ public class SwingConcreteAddSequenceEdit extends SwingSequenceEdit implements S
 
 	@Override
 	public void redo() throws CannotRedoException {
-		sequenceID = getProvider().addSequence(name);
+		sequenceID = getProvider().getUnderlyingProvider().addSequence(name);
 		super.redo();
 	}
 
 
 	@Override
 	public void undo() throws CannotUndoException {
-		getProvider().removeSequence(getProvider().sequenceIDByName(name));
+		getProvider().getUnderlyingProvider().removeSequence(getProvider().sequenceIDByName(name));
 		super.undo();
 	} 
 

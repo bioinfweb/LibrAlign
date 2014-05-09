@@ -75,11 +75,11 @@ public abstract class SwingInsertRemoveTokensEdit extends SwingTokenEdit {
 	
 	
 	protected void insert() {
-		getProvider().insertTokensAt(sequenceID, beginIndex, tokens);
+		getProvider().getUnderlyingProvider().insertTokensAt(sequenceID, beginIndex, tokens);
 	}
 	
 	
 	protected void remove() {
-		getProvider().removeTokensAt(sequenceID, beginIndex, beginIndex + tokens.size());
+		getProvider().getUnderlyingProvider().removeTokensAt(sequenceID, beginIndex, beginIndex + tokens.size());
 	}
 }

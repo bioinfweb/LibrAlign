@@ -18,6 +18,7 @@
  */
 package info.bioinfweb.libralign.sequenceprovider.implementations.swingundo.edits.token;
 
+
 import info.bioinfweb.libralign.sequenceprovider.SequenceDataProvider;
 import info.bioinfweb.libralign.sequenceprovider.implementations.swingundo.SwingUndoSequenceDataProvider;
 

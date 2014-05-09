@@ -66,7 +66,7 @@ public class SwingSetTokensEdit extends SwingTokenEdit {
 
 	@Override
 	public void redo() throws CannotRedoException {
-		getProvider().setTokensAt(sequenceID, beginIndex, tokens);
+		getProvider().getUnderlyingProvider().setTokensAt(sequenceID, beginIndex, tokens);
 		super.redo();
 	}
 
@@ -74,7 +74,7 @@ public class SwingSetTokensEdit extends SwingTokenEdit {
 	@Override
 	public void undo() throws CannotUndoException {
 		for (int i = 0; i < oldTokens.length; i++) {
-			getProvider().setTokenAt(sequenceID, beginIndex + i, oldTokens[i]);
+			getProvider().getUnderlyingProvider().setTokenAt(sequenceID, beginIndex + i, oldTokens[i]);
 		}
 		super.undo();
 	}

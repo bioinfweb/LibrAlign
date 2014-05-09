@@ -125,6 +125,16 @@ public class SwingUndoSequenceDataProvider implements SequenceDataProvider {
 
 
 	/**
+	 * Returns the underlying sequence data provider used to perform the actual manipulation of the data.
+	 * 
+	 * @return an instance of a class implementing {@link SequenceDataProvider}
+	 */
+	public SequenceDataProvider getUnderlyingProvider() {
+		return provider;
+	}
+
+
+	/**
 	 * Returns the undo manager used by this instance.
 	 * 
 	 * @return an instance of {@link UndoManager} or an inherited class

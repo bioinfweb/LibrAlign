@@ -54,15 +54,15 @@ public class SwingRemoveSequenceEdit extends SwingSequenceEdit {
 
 	@Override
 	public void redo() throws CannotRedoException {
-		getProvider().removeSequence(sequenceID);
+		getProvider().getUnderlyingProvider().removeSequence(sequenceID);
 		super.redo();
 	}
 
 
 	@Override
 	public void undo() throws CannotUndoException {
-		getProvider().addSequence(name);
-		getProvider().insertTokensAt(sequenceID, 0, Arrays.asList(tokens));		
+		getProvider().getUnderlyingProvider().addSequence(name);
+		getProvider().getUnderlyingProvider().insertTokensAt(sequenceID, 0, Arrays.asList(tokens));		
 		super.undo();
 	}
 
