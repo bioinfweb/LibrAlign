@@ -23,8 +23,8 @@ import static org.junit.Assert.* ;
 
 import info.bioinfweb.commons.bio.biojava3.alignment.SimpleAlignment;
 import info.bioinfweb.commons.bio.biojava3.alignment.template.Alignment;
-import info.bioinfweb.libralign.sequenceprovider.BioJavaSequenceDataProvider;
 import info.bioinfweb.libralign.sequenceprovider.SequenceDataProvider;
+import info.bioinfweb.libralign.sequenceprovider.implementations.BioJavaSequenceDataProvider;
 
 
 import org.biojava3.core.sequence.DNASequence;
