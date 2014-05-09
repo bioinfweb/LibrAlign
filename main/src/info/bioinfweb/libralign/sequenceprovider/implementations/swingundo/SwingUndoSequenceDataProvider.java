@@ -62,6 +62,10 @@ import info.bioinfweb.libralign.sequenceprovider.implementations.swingundo.edits
  * By default this class generated default edit objects included in LibrAlign. If you want it to generate
  * custom edit objects (e.g. wrappers around the LibrAlign edit objects matching the needs of your 
  * application) you would have to provide an {@link SwingEditFactory} which creates custom objects.  
+ * <p>
+ * Since {@link javax.swing.undo.UndoableEdit} and {@link javax.swing.undo.UndoManager} have not really
+ * any Swing specific prerequisites, these classes could also be used to track the undo history in an
+ * SWT application.
  * 
  * @author Ben St&ouml;ver
  * @since 0.0.1
