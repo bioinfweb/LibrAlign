@@ -1,0 +1,189 @@
+/*
+ * LibrAlign - A GUI library for displaying and editing multiple sequence alignments and attached data
+ * Copyright (C) 2014  Ben Stöver
+ * <http://bioinfweb.info/LibrAlign>
+ * 
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ */
+package info.bioinfweb.libralign.sequenceprovider.implementations;
+
+
+import info.bioinfweb.commons.collections.ListChangeType;
+import info.bioinfweb.libralign.AlignmentArea;
+import info.bioinfweb.libralign.AlignmentSourceDataType;
+import info.bioinfweb.libralign.SequenceOrder;
+import info.bioinfweb.libralign.sequenceprovider.events.SequenceChangeEvent;
+
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
+
+import org.biojava.bio.seq.Sequence;
+
+
+
+/**
+ * Implements all methods dealing with the organization of the sequence set using some implementation
+ * of {@link Map} to identify the sequence object belonging to a sequence ID. The ordering of the
+ * sequences is implemented using an additional list storing the IDs. Inherited classes have the option to
+ * provide a custom map implementation instead of {@link TreeMap} which is the default.
+ * <p>
+ * Sequences are sorted by the order they are added to the model. This ordering in independent to the
+ * {@link SequenceOrder} object used in an associated {@link AlignmentArea}.  
+ * 
+ * @author Ben St&ouml;ver
+ * @see SequenceOrder
+ *
+ * @param <S> - the type of the sequence objects (e.g. {@link Sequence} or {@link List})
+ */
+public abstract class AbstractMapBasedSequenceDataProvider<S> extends AbstractSequenceDataProvider {
+  private Map<Integer, S> sequenceMap;
+  private List<Integer> sequenceOrder;
+
+  
+	/**
+	 * Creates a new instance of this class with a custom map and list implementation.
+	 * 
+	 * @param dataType - the token type the sequences of this alignment consist of
+	 * @param sequenceMap - the map instance used to assign sequences to their IDs
+	 * @param sequenceOrder - the list object defining the order of the sequences
+	 */
+	public AbstractMapBasedSequenceDataProvider(AlignmentSourceDataType dataType,
+			Map<Integer, S> sequenceMap, List<Integer> sequenceOrder) {
+		
+		super(dataType);
+		this.sequenceMap = sequenceMap;
+		this.sequenceOrder = sequenceOrder;
+	}
+
+
+	/**
+	 * Creates a new instance of this class with a custom map implementation.
+	 * 
+	 * @param dataType - the token type the sequences of this alignment consist of
+	 * @param sequenceMap - the map instance used to assign sequences to their IDs
+	 */
+	public AbstractMapBasedSequenceDataProvider(AlignmentSourceDataType dataType,	Map<Integer, S> sequenceMap) {
+		this(dataType, sequenceMap, new ArrayList<Integer>());
+	}
+
+
+	/**
+	 * Creates a new instance of this class relying on a {@link TreeMap}.
+	 * 
+	 * @param dataType - the token type the sequences of this alignment consist of
+	 */
+	public AbstractMapBasedSequenceDataProvider(AlignmentSourceDataType dataType) {
+		this(dataType, new TreeMap<Integer, S>());
+	}
+
+
+	/**
+	 * Returns the underlying map object used to assign sequences to their IDs. Note that you must fire the 
+	 * according events if your implementation modifies this map.
+	 * 
+	 * @return the instance of a map implementation provided in the constructor
+	 */
+	protected Map<Integer, S> getSequenceMap() {
+		return sequenceMap;
+	}
+
+
+	/**
+	 * Returns the list object used to determine the order of the sequences. Note that you must fire the 
+	 * according events if your implementation modifies this list.
+	 * 
+	 * @return an instance of {@link ArrayList} in the current implementation (Note that the implementing class
+	 *         might change in future releases of LibrAlign.)
+	 */
+	protected List<Integer> getSequenceOrder() {
+		return sequenceOrder;
+	}
+
+
+	/**
+	 * Returns an iterator returned the IDs of the stored sequences in the order they were added 
+	 * to this model. 
+	 *  
+	 * @see info.bioinfweb.libralign.sequenceprovider.SequenceDataProvider#sequenceIDIterator()
+	 */
+	@Override
+	public Iterator<Integer> sequenceIDIterator() {
+		final Iterator<Integer> iterator = getSequenceOrder().iterator();
+		final AbstractMapBasedSequenceDataProvider<S> thisProvider = this;
+		return new Iterator<Integer>() {
+			private int currentID = -1;
+			
+			@Override
+			public boolean hasNext() {
+				return iterator.hasNext();
+			}
+
+			@Override
+			public Integer next() {
+				currentID = iterator.next();
+  			return currentID;
+			}
+
+			@Override
+			public void remove() {
+				if (isSequencesReadOnly()) {
+  				throw new UnsupportedOperationException(
+  						"The underlying data source does not allow the removal of sequences.");
+				}
+				else {
+					iterator.remove();  // Throws an exception if this method is called before the first call of next().
+					removeSequenceNameMapping(currentID);
+					getSequenceMap().remove(currentID);
+					fireAfterSequenceChange(new SequenceChangeEvent(thisProvider, currentID, ListChangeType.DELETION));
+				}
+			}
+		};
+	}
+
+
+	@Override
+	public int getSequenceCount() {
+		return getSequenceMap().size();
+	}
+
+	
+	/**
+	 * Implementing classes must offer a way to create their custom instances of sequence objects 
+	 * overwriting this method. This method is called in {@link #doAddSequence(int, String)} before
+	 * adding the new sequences to map and the oder list.
+	 * 
+	 * @param sequenceID - the ID the new sequence must have
+	 * @param sequenceName - the name the new sequence will have
+	 * @return the new sequence object
+	 */
+	protected abstract S createNewSequence(int sequenceID, String sequenceName);
+	
+
+	@Override
+	protected void doAddSequence(int sequenceID, String sequenceName) {
+		S sequence = createNewSequence(sequenceID, sequenceName);
+		getSequenceMap().put(sequenceID, sequence);
+		getSequenceOrder().add(sequenceID);
+	}
+
+
+	@Override
+	protected void doRemoveSequence(int sequenceID) {
+		getSequenceMap().remove(sequenceID);
+		getSequenceOrder().remove(getSequenceOrder().indexOf(sequenceID));
+	}
+}

@@ -46,7 +46,9 @@ main/src/info/bioinfweb/libralign/dataarea/pherogram/TraceCurve.java -text svneo
 main/src/info/bioinfweb/libralign/dataarea/pherogram/package-info.java -text svneol=unset#text/plain
 main/src/info/bioinfweb/libralign/exception/AlignmentDataProviderException.java -text svneol=unset#text/plain
 main/src/info/bioinfweb/libralign/exception/AlignmentSourceNotWritableException.java -text svneol=unset#text/plain
+main/src/info/bioinfweb/libralign/exception/DuplicateSequenceNameException.java -text svneol=unset#text/plain
 main/src/info/bioinfweb/libralign/exception/InvalidCompoundException.java -text svneol=unset#text/plain
+main/src/info/bioinfweb/libralign/exception/SequenceNotFoundException.java -text svneol=unset#text/plain
 main/src/info/bioinfweb/libralign/exception/package-info.java -text svneol=unset#text/plain
 main/src/info/bioinfweb/libralign/package-info.java -text svneol=unset#text/plain
 main/src/info/bioinfweb/libralign/selection/AlignmentCursor.java -text svneol=unset#text/plain
@@ -57,7 +59,6 @@ main/src/info/bioinfweb/libralign/selection/SelectionListener.java -text svneol=
 main/src/info/bioinfweb/libralign/selection/SelectionModel.java -text svneol=unset#text/plain
 main/src/info/bioinfweb/libralign/selection/SelectionType.java -text svneol=unset#text/plain
 main/src/info/bioinfweb/libralign/selection/package-info.java -text svneol=unset#text/plain
-main/src/info/bioinfweb/libralign/sequenceprovider/AbstractSequenceDataProvider.java -text svneol=unset#text/plain
 main/src/info/bioinfweb/libralign/sequenceprovider/DataProvider.java -text svneol=unset#text/plain
 main/src/info/bioinfweb/libralign/sequenceprovider/SequenceDataChangeListener.java -text svneol=unset#text/plain
 main/src/info/bioinfweb/libralign/sequenceprovider/SequenceDataProvider.java -text svneol=unset#text/plain
@@ -67,6 +68,8 @@ main/src/info/bioinfweb/libralign/sequenceprovider/events/SequenceDataProviderCh
 main/src/info/bioinfweb/libralign/sequenceprovider/events/SequenceRenamedEvent.java -text svneol=unset#text/plain
 main/src/info/bioinfweb/libralign/sequenceprovider/events/TokenChangeEvent.java -text svneol=unset#text/plain
 main/src/info/bioinfweb/libralign/sequenceprovider/events/package-info.java -text svneol=unset#text/plain
+main/src/info/bioinfweb/libralign/sequenceprovider/implementations/AbstractMapBasedSequenceDataProvider.java -text svneol=unset#text/plain
+main/src/info/bioinfweb/libralign/sequenceprovider/implementations/AbstractSequenceDataProvider.java -text svneol=unset#text/plain
 main/src/info/bioinfweb/libralign/sequenceprovider/implementations/BioJavaSequenceDataProvider.java -text svneol=unset#text/plain
 main/src/info/bioinfweb/libralign/sequenceprovider/implementations/package-info.java -text svneol=unset#text/plain
 main/src/info/bioinfweb/libralign/sequenceprovider/implementations/swingundo/SwingEditFactory.java -text svneol=unset#text/plain

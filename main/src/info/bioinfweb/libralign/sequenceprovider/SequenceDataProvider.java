@@ -29,6 +29,8 @@ import org.biojava3.core.sequence.compound.NucleotideCompound;
 import info.bioinfweb.libralign.AlignmentArea;
 import info.bioinfweb.libralign.AlignmentSourceDataType;
 import info.bioinfweb.libralign.exception.AlignmentSourceNotWritableException;
+import info.bioinfweb.libralign.exception.DuplicateSequenceNameException;
+import info.bioinfweb.libralign.exception.SequenceNotFoundException;
 
 
 
@@ -91,7 +93,7 @@ public interface SequenceDataProvider {
 	 * @param index - the index of the element to be replaced (The first element has the index 0.)
 	 * @param token - the new token for the specified position
 	 * 
-	 * @throws AlignmentSourceNotWritableException if the underlying data source is not writable 
+	 * @throws AlignmentSourceNotWritableException if the underlying data source is not writable for tokens 
 	 */
 	public void setTokenAt(int sequenceID, int index, Object token) throws AlignmentSourceNotWritableException;
 
@@ -105,7 +107,7 @@ public interface SequenceDataProvider {
 	 *        (The first element in the sequence has the index 0.)
 	 * @param tokens - the new tokens for the specified position
 	 * 
-	 * @throws AlignmentSourceNotWritableException if the underlying data source is not writable 
+	 * @throws AlignmentSourceNotWritableException if the underlying data source is not writable for tokens
 	 */
 	public void setTokensAt(int sequenceID, int beginIndex, Collection<? extends Object> tokens) throws AlignmentSourceNotWritableException;
 
@@ -118,7 +120,7 @@ public interface SequenceDataProvider {
 	 *        ({@code 0 <= elementIndex < sequenceLength}) 
 	 * @param token - the token to be inserted
 	 * 
-	 * @throws AlignmentSourceNotWritableException if the underlying data source is not writable 
+	 * @throws AlignmentSourceNotWritableException if the underlying data source is not writable for tokens
 	 */
 	public void insertTokenAt(int sequenceID, int index, Object token) throws AlignmentSourceNotWritableException;
 
@@ -131,7 +133,7 @@ public interface SequenceDataProvider {
 	 *        (The first element in the sequence has the index 0.)
 	 * @param tokens - the new tokens for the specified position
 	 * 
-	 * @throws AlignmentSourceNotWritableException if the underlying data source is not writable 
+	 * @throws AlignmentSourceNotWritableException if the underlying data source is not writable for tokens
 	 */
 	public void insertTokensAt(int sequenceID, int beginIndex, Collection<? extends Object> tokens) throws AlignmentSourceNotWritableException;
 
@@ -141,7 +143,7 @@ public interface SequenceDataProvider {
 	 * @param sequenceID - the identifier the sequence in the alignment
 	 * @param index - the index of the element to be removed (The first element has the index 0.)
 	 * 
-	 * @throws AlignmentSourceNotWritableException if the underlying data source is not writable 
+	 * @throws AlignmentSourceNotWritableException if the underlying data source is not writable for tokens
 	 */
 	public void removeTokenAt(int sequenceID, int index) throws AlignmentSourceNotWritableException;
 	
@@ -154,7 +156,7 @@ public interface SequenceDataProvider {
 	 * @param beginIndex - the beginning index, inclusive
 	 * @param endIndex - the ending index, exclusive
 	 * 
-	 * @throws AlignmentSourceNotWritableException if the underlying data source is not writable 
+	 * @throws AlignmentSourceNotWritableException if the underlying data source is not writable for tokens
 	 */
 	public void removeTokensAt(int sequenceID, int beginIndex, int endIndex) throws AlignmentSourceNotWritableException;
 	
@@ -231,31 +233,41 @@ public interface SequenceDataProvider {
   public String sequenceNameByID(int sequenceID);
 
   /**
-   * Adds a new empty sequence to the model.
+   * Adds a new empty sequence to the underlying data source.
    * 
    * @param sequenceName - the name of the new sequence
    * @return the unique ID of the new sequence
+	 * 
+	 * @throws AlignmentSourceNotWritableException if the underlying data source is not writable for sequences
    */
-  public int addSequence(String sequenceName);
+  public int addSequence(String sequenceName) throws AlignmentSourceNotWritableException;
   
   /**
-   * Removes the specified sequence from the model.
+   * Removes the specified sequence from the underlying data source.
    * 
    * @param sequenceID - the unique ID of the sequence to be removed
    * @return {@code true} if an sequence with the specified ID was removed, {@code false} 
    *         if no sequence with the specified ID was contained in this model
+	 * 
+	 * @throws AlignmentSourceNotWritableException if the underlying data source is not writable for sequences
    */
-  public boolean removeSequence(int sequenceID);
+  public boolean removeSequence(int sequenceID) throws AlignmentSourceNotWritableException;
   
   /**
-   * Renames a sequence in this model.
+   * Renames a sequence in the underlying data source.
    * 
    * @param sequenceID - the ID of the sequence to be renamed
    * @param newSequenceName - the new name the sequence shall have
-   * @return the name the sequence had until now or {@code null} if no sequence with the specified 
-   *         ID is contained in this model
+   * @return the name the sequence had until now
+	 * 
+	 * @throws AlignmentSourceNotWritableException if the underlying data source is not writable for sequences
+	 * @throws DuplicateSequenceNameException if a sequence with the specified new name is already present in 
+	 *         the underlying data source 
+	 * @throws SequenceNotFoundException if a sequence with the specified ID is not present the underlying
+	 *         data source
    */
-  public String renameSequence(int sequenceID, String newSequenceName);
+  public String renameSequence(int sequenceID, String newSequenceName) 
+  		throws AlignmentSourceNotWritableException, DuplicateSequenceNameException, SequenceNotFoundException;
   
 	/**
 	 * Returns an iterator over unique IDs of all sequences contained in the underlying data source

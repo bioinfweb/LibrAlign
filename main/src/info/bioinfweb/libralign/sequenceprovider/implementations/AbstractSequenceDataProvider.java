@@ -16,11 +16,12 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package info.bioinfweb.libralign.sequenceprovider;
+package info.bioinfweb.libralign.sequenceprovider.implementations;
 
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.ConcurrentModificationException;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -29,6 +30,11 @@ import java.util.TreeMap;
 import info.bioinfweb.commons.collections.ListChangeType;
 import info.bioinfweb.libralign.AlignmentSourceDataType;
 import info.bioinfweb.libralign.exception.AlignmentSourceNotWritableException;
+import info.bioinfweb.libralign.exception.DuplicateSequenceNameException;
+import info.bioinfweb.libralign.exception.SequenceNotFoundException;
+import info.bioinfweb.libralign.sequenceprovider.SequenceDataChangeListener;
+import info.bioinfweb.libralign.sequenceprovider.SequenceDataProvider;
+import info.bioinfweb.libralign.sequenceprovider.SequenceDataProviderWriteType;
 import info.bioinfweb.libralign.sequenceprovider.events.SequenceChangeEvent;
 import info.bioinfweb.libralign.sequenceprovider.events.SequenceRenamedEvent;
 import info.bioinfweb.libralign.sequenceprovider.events.TokenChangeEvent;
@@ -60,7 +66,7 @@ public abstract class AbstractSequenceDataProvider implements SequenceDataProvid
 	}
 	
 
-	protected Map<String, Integer> getIdByNameMap() {
+	protected Map<String, Integer> getIDByNameMap() {
 		return idByNameMap;
 	}
 
@@ -174,10 +180,18 @@ public abstract class AbstractSequenceDataProvider implements SequenceDataProvid
 	protected abstract void doRemoveSequence(int sequenceID);
 	
 	
-	private void performRemove(int sequenceID) {
+	/**
+	 * Removes a sequence from the map instances returned by {@link #getNameByIDMap()} and 
+	 * {@link AbstractSequenceDataProvider#getIDByNameMap()}. No events are fired and
+	 * {@link #doRemoveSequence(int)} is not called by this method. It is a tool method for
+	 * inherited classes that offer additional removal operations (e.g. in returned iterators)
+	 * which have to avoid a {@link ConcurrentModificationException}.
+	 * 
+	 * @param sequenceID - the ID associated with the sequence mapping that shall be removed 
+	 */
+	protected void removeSequenceNameMapping(int sequenceID) {
+		nameByIDMap.remove(sequenceID);
 		idByNameMap.remove(sequenceNameByID(sequenceID));
-		doRemoveSequence(sequenceID);
-		fireAfterSequenceChange(new SequenceChangeEvent(this, sequenceID, ListChangeType.DELETION));
 	}
 	
 	
@@ -192,8 +206,9 @@ public abstract class AbstractSequenceDataProvider implements SequenceDataProvid
 		else {
 			boolean result = containsSequence(sequenceID);
 			if (result) {
-				nameByIDMap.remove(sequenceID);
-				performRemove(sequenceID);
+				removeSequenceNameMapping(sequenceID);
+				doRemoveSequence(sequenceID);
+				fireAfterSequenceChange(new SequenceChangeEvent(this, sequenceID, ListChangeType.DELETION));
 			}
 			return result;
 		}
@@ -203,14 +218,19 @@ public abstract class AbstractSequenceDataProvider implements SequenceDataProvid
 	/**
 	 * This method is called by {@link #renameSequence(int, String)} if {@link #isReadOnly()} returns 
 	 * {@code false} and the specified sequence is contained in this model. Implementing classes should 
-	 * rename the specified sequence in their underlying data source in this method. The according 
-	 * events or exceptions are already created by this class if necessary, therefore this does not need 
-	 * to be done in the implementation of this method.
+	 * overwrite this method and rename the specified sequence in their underlying data source if necessary.
+	 * <p>
+	 * The renaming in the maps associating names and IDs used by this class have benn updated before the call 
+	 * of this method. The according events or exceptions are created by this class if necessary, therefore 
+	 * all of this does not need to be done in the implementation of this method. (A change event is fired
+	 * after this method has been executed.)
+	 * <p>
+	 * This default implementation is empty.
 	 * 
 	 * @param sequenceID - the unique identifier of the sequence to be removed
    * @param newSequenceName - the new name the sequence shall have
 	 */
-	protected abstract void doRenameSequence(int sequenceID, String newSequenceName);
+	protected void doRenameSequence(int sequenceID, String newSequenceName) {}
 	
 	
 	/* (non-Javadoc)
@@ -221,9 +241,18 @@ public abstract class AbstractSequenceDataProvider implements SequenceDataProvid
 		if (isSequencesReadOnly()) {
 			throw new AlignmentSourceNotWritableException(this);
 		}
+		else if (containsSequence(sequenceIDByName(newSequenceName))) {
+			throw new DuplicateSequenceNameException(this, newSequenceName);
+		}
 		else {
 		  String sequenceName = sequenceNameByID(sequenceID);
-		  if (sequenceName != null) {
+		  if (sequenceName == null) {
+		  	throw new SequenceNotFoundException(this);
+		  }
+		  else {
+		  	idByNameMap.remove(sequenceName);
+		  	idByNameMap.put(newSequenceName, sequenceID);
+		  	nameByIDMap.put(sequenceID, newSequenceName);
 		  	doRenameSequence(sequenceID, newSequenceName);
 				fireAfterSequenceChange(new SequenceChangeEvent(this, sequenceID, ListChangeType.DELETION));
 		  }
@@ -232,41 +261,6 @@ public abstract class AbstractSequenceDataProvider implements SequenceDataProvid
 	}
 
 	
-//TODO This method is commented out because it would not return the IDs in the order they are stored in the data source.
-//	/* (non-Javadoc)
-//	 * @see info.bioinfweb.libralign.alignmentprovider.SequenceDataProvider#sequenceIDIterator()
-//	 */
-//	@Override
-//	public Iterator<Integer> sequenceIDIterator() {
-//		final Iterator<Integer> iterator = nameByIDMap.keySet().iterator();
-//		return new Iterator<Integer>() {
-//			private int currentID = -1;
-//			
-//			@Override
-//			public boolean hasNext() {
-//				return iterator.hasNext();
-//			}
-//
-//			@Override
-//			public Integer next() {
-//				currentID = iterator.next();
-//				return currentID;
-//			}
-//
-//			@Override
-//			public void remove() {
-//				if (isSequencesReadOnly()) {
-//					throw new UnsupportedOperationException("The underlying data source does not allow the removal of sequences.");
-//				}
-//				else {
-//					performRemove(currentID);
-//					iterator.remove();
-//				}
-//			}
-//		};				
-//	}
-
-
 	@Override
 	public Collection<SequenceDataChangeListener> getChangeListeners() {
 		return changeListeners;

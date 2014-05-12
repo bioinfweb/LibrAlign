@@ -32,7 +32,6 @@ import info.bioinfweb.commons.bio.biojava3.alignment.SimpleAlignment;
 import info.bioinfweb.commons.bio.biojava3.alignment.template.Alignment;
 import info.bioinfweb.libralign.AlignmentSourceDataType;
 import info.bioinfweb.libralign.exception.AlignmentSourceNotWritableException;
-import info.bioinfweb.libralign.sequenceprovider.AbstractSequenceDataProvider;
 import info.bioinfweb.libralign.sequenceprovider.SequenceDataProvider;
 import info.bioinfweb.libralign.sequenceprovider.SequenceDataProviderWriteType;
 
