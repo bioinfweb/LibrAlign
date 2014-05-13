@@ -29,11 +29,11 @@ import info.bioinfweb.libralign.sequenceprovider.implementations.swingundo.Swing
  * implements basic functionality.
  * 
  * @author Ben St&ouml;ver
- * @since 0.0.1
+ * @since 0.1.0
  * @see SwingUndoSequenceDataProvider
  */
-public abstract class LibrAlignSwingAlignmentEdit extends AbstractDocumentEdit {
-  private SwingUndoSequenceDataProvider provider;
+public abstract class LibrAlignSwingAlignmentEdit<T> extends AbstractDocumentEdit {
+  private SwingUndoSequenceDataProvider<T> provider;
 
   
 	/**
@@ -41,7 +41,7 @@ public abstract class LibrAlignSwingAlignmentEdit extends AbstractDocumentEdit {
 	 * 
 	 * @param provider - the data provider creating this instance 
 	 */
-	public LibrAlignSwingAlignmentEdit(SwingUndoSequenceDataProvider provider) {
+	public LibrAlignSwingAlignmentEdit(SwingUndoSequenceDataProvider<T> provider) {
 		super();
 		this.provider = provider;
 	}
@@ -52,7 +52,7 @@ public abstract class LibrAlignSwingAlignmentEdit extends AbstractDocumentEdit {
 	 * 
 	 * @return an instance of {@link SwingUndoSequenceDataProvider}
 	 */
-	public SwingUndoSequenceDataProvider getProvider() {
+	public SwingUndoSequenceDataProvider<T> getProvider() {
 		return provider;
 	}
 

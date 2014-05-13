@@ -31,11 +31,11 @@ import javax.swing.undo.CannotUndoException;
  * {@link SequenceDataProvider}.
  * 
  * @author Ben St&oml;ver
- * @since 0.0.1
+ * @since 0.1.0
  * @see SwingUndoSequenceDataProvider
  */
-public class SwingRemoveTokensEdit extends SwingInsertRemoveTokensEdit {
-	public SwingRemoveTokensEdit(SwingUndoSequenceDataProvider provider, int sequenceID, int beginIndex, 
+public class SwingRemoveTokensEdit<T> extends SwingInsertRemoveTokensEdit<T> {
+	public SwingRemoveTokensEdit(SwingUndoSequenceDataProvider<T> provider, int sequenceID, int beginIndex, 
 			int endIndex) {
 	
 		super(provider, sequenceID, beginIndex, endIndex);

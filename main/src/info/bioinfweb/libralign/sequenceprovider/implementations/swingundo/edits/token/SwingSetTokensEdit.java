@@ -19,6 +19,7 @@
 package info.bioinfweb.libralign.sequenceprovider.implementations.swingundo.edits.token;
 
 
+import java.lang.reflect.Array;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
@@ -36,11 +37,11 @@ import info.bioinfweb.libralign.sequenceprovider.implementations.swingundo.Swing
  * {@link SequenceDataProvider}.
  * 
  * @author Ben St&oml;ver
- * @since 0.0.1
+ * @since 0.1.0
  * @see SwingUndoSequenceDataProvider
  */
-public class SwingSetTokensEdit extends SwingTokenEdit {
-	private Object[] oldTokens;
+public class SwingSetTokensEdit<T> extends SwingTokenEdit<T> {
+	private T[] oldTokens;
 	
 	
 	/**
@@ -52,15 +53,33 @@ public class SwingSetTokensEdit extends SwingTokenEdit {
 	 *        (The first element in the sequence has the index 0.)
 	 * @param tokens - the new tokens for the specified position
 	 */
-	public SwingSetTokensEdit(SwingUndoSequenceDataProvider provider, int sequenceID,
-			int beginIndex, Collection<? extends Object> tokens) {
+	public SwingSetTokensEdit(SwingUndoSequenceDataProvider<T> provider, int sequenceID,
+			int beginIndex, Collection<? extends T> tokens) {
 		
 		super(provider, sequenceID, beginIndex, tokens);
 
-		oldTokens = new Object[tokens.size()];
+		
+		oldTokens = (T[])Array.newInstance(tokens.getClass().getComponentType(), tokens.size());  // Returned array should be a subclass of T[].
+		//TODO Check if this works
 		for (int i = 0; i < oldTokens.length; i++) {
 			oldTokens[i] = getProvider().getTokenAt(sequenceID, beginIndex + i);
 		}
+	}
+	
+	
+	/**
+	 * Creates a new instance of this class.
+	 * 
+	 * @param provider - the data provider creating this instance 
+	 * @param sequenceID - the identifier the sequence where the token is contained
+	 * @param index - the index of the element to be replaced 
+	 *        (The first element in the sequence has the index 0.)
+	 * @param token - the new token for the specified position
+	 */
+	public SwingSetTokensEdit(SwingUndoSequenceDataProvider<T> provider, int sequenceID,
+			int index, T token) {
+		
+		this(provider, sequenceID, index, Collections.nCopies(1, token));
 	}
 
 
@@ -85,7 +104,7 @@ public class SwingSetTokensEdit extends SwingTokenEdit {
 	 * 
 	 * @return an unmodifiable collection of tokens
 	 */
-	public Collection<Object> getOldTokens() {
+	public Collection<T> getOldTokens() {
 		return Collections.unmodifiableCollection(Arrays.asList(oldTokens));
 	}
 

@@ -31,17 +31,17 @@ import java.util.Collections;
  * Offers basic functionality used by edits that manipulate sequence elements (tokens). 
  * 
  * @author Ben St&ouml;ver
- * @since 0.0.1
+ * @since 0.1.0
  * @see SwingUndoSequenceDataProvider
  */
-public abstract class SwingTokenEdit extends LibrAlignSwingAlignmentEdit {
+public abstract class SwingTokenEdit<T> extends LibrAlignSwingAlignmentEdit<T> {
 	protected int sequenceID;
 	protected int beginIndex;
-	protected Collection<? extends Object> tokens;
+	protected Collection<? extends T> tokens;
 	
 	
-	public SwingTokenEdit(SwingUndoSequenceDataProvider provider, int sequenceID,	int beginIndex, 
-			Collection<? extends Object> tokens) {
+	public SwingTokenEdit(SwingUndoSequenceDataProvider<T> provider, int sequenceID, int beginIndex, 
+			Collection<? extends T> tokens) {
 		
 		super(provider);
 		this.sequenceID = sequenceID;
@@ -76,7 +76,7 @@ public abstract class SwingTokenEdit extends LibrAlignSwingAlignmentEdit {
 	 * 
 	 * @return an unmodifiable collection of tokens
 	 */
-	public Collection<? extends Object> getTokens() {
+	public Collection<? extends T> getTokens() {
 		return Collections.unmodifiableCollection(tokens);
 	}
 

@@ -33,15 +33,15 @@ import info.bioinfweb.libralign.sequenceprovider.implementations.swingundo.Swing
  * Edit object that removes a sequence from an instance of {@link SequenceDataProvider}.
  * 
  * @author Ben St&oml;ver
- * @since 0.0.1
+ * @since 0.1.0
  * @see SwingUndoSequenceDataProvider
  */
-public class SwingRemoveSequenceEdit extends SwingSequenceEdit {
+public class SwingRemoveSequenceEdit<T> extends SwingSequenceEdit<T> {
 	private String name;
-	private Object[] tokens;
+	private T[] tokens;
 	
 
-	public SwingRemoveSequenceEdit(SwingUndoSequenceDataProvider provider, int sequenceID) {
+	public SwingRemoveSequenceEdit(SwingUndoSequenceDataProvider<T> provider, int sequenceID) {
 		super(provider, sequenceID);
 		
 		name = getProvider().sequenceNameByID(sequenceID);

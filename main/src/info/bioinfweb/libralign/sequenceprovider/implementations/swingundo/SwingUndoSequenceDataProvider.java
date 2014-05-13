@@ -68,14 +68,14 @@ import info.bioinfweb.libralign.sequenceprovider.implementations.swingundo.edits
  * SWT application.
  * 
  * @author Ben St&ouml;ver
- * @since 0.0.1
+ * @since 0.1.0
  * 
  * @param <T> - the type of sequence elements (tokens) the implementing provider object works with
  */
 public class SwingUndoSequenceDataProvider<T> implements SequenceDataProvider<T> {
 	protected SequenceDataProvider<T> provider;
 	private UndoManager undoManager;
-	private SwingEditFactory editFactory;
+	private SwingEditFactory<T> editFactory;
 	
 	
 	/**
@@ -92,7 +92,7 @@ public class SwingUndoSequenceDataProvider<T> implements SequenceDataProvider<T>
 	 * @throws NullPointerException if {@code null} is specified for {@code undoManager}
 	 */
 	public SwingUndoSequenceDataProvider(SequenceDataProvider<T> provider, UndoManager undoManager, 
-			SwingEditFactory editFactory) {
+			SwingEditFactory<T> editFactory) {
 		
 		super();
 		if (provider.isSequencesReadOnly() && provider.isTokensReadOnly()) {
@@ -152,7 +152,7 @@ public class SwingUndoSequenceDataProvider<T> implements SequenceDataProvider<T>
 	 * 
 	 * @return the used edit factory or {@code null} if default LibrAlign edit objects are created
 	 */
-	public SwingEditFactory getEditFactory() {
+	public SwingEditFactory<T> getEditFactory() {
 		return editFactory;
 	}
 
@@ -178,7 +178,7 @@ public class SwingUndoSequenceDataProvider<T> implements SequenceDataProvider<T>
 	public void registerDocumentChange() {}
 	
 	
-	private void addEdit(LibrAlignSwingAlignmentEdit edit) {
+	private void addEdit(LibrAlignSwingAlignmentEdit<T> edit) {
 		UndoableEdit processedEdit = edit;
 		if (hasEditFactory()) {
 			processedEdit = editFactory.createEdit(edit);
@@ -208,7 +208,7 @@ public class SwingUndoSequenceDataProvider<T> implements SequenceDataProvider<T>
 			throw new AlignmentSourceNotWritableException(this);
 		}
 		else {
-			addEdit(new SwingSetTokensEdit(this, sequenceID, beginIndex, tokens));
+			addEdit(new SwingSetTokensEdit<T>(this, sequenceID, beginIndex, tokens));
 		}
 	}
 
@@ -229,7 +229,7 @@ public class SwingUndoSequenceDataProvider<T> implements SequenceDataProvider<T>
 			throw new AlignmentSourceNotWritableException(this);
 		}
 		else {
-			addEdit(new SwingInsertTokensEdit(this, sequenceID, beginIndex, tokens));
+			addEdit(new SwingInsertTokensEdit<T>(this, sequenceID, beginIndex, tokens));
 		}
 	}
 
@@ -250,7 +250,7 @@ public class SwingUndoSequenceDataProvider<T> implements SequenceDataProvider<T>
 			throw new AlignmentSourceNotWritableException(this);
 		}
 		else {
-			addEdit(new SwingRemoveTokensEdit(this, sequenceID, beginIndex, endIndex));
+			addEdit(new SwingRemoveTokensEdit<T>(this, sequenceID, beginIndex, endIndex));
 		}
 	}
 
@@ -315,9 +315,9 @@ public class SwingUndoSequenceDataProvider<T> implements SequenceDataProvider<T>
 			throw new AlignmentSourceNotWritableException(this);
 		}
 		else {
-			SwingAddSequenceEdit edit = new SwingConcreteAddSequenceEdit(this, sequenceName);
+			SwingAddSequenceEdit edit = new SwingConcreteAddSequenceEdit<T>(this, sequenceName);
 			if (hasEditFactory()) {
-				edit = editFactory.createAddSequenceEdit((SwingConcreteAddSequenceEdit)edit);
+				edit = editFactory.createAddSequenceEdit((SwingConcreteAddSequenceEdit<T>)edit);
 			}
 			undoManager.addEdit(edit);
 			edit.redo();
@@ -329,7 +329,7 @@ public class SwingUndoSequenceDataProvider<T> implements SequenceDataProvider<T>
 	@Override
 	public boolean removeSequence(int sequenceID) {
 		if (containsSequence(sequenceID)) {
-			addEdit(new SwingRemoveSequenceEdit(this, sequenceID));
+			addEdit(new SwingRemoveSequenceEdit<T>(this, sequenceID));
 			return true;
 		}
 		else {
@@ -345,7 +345,7 @@ public class SwingUndoSequenceDataProvider<T> implements SequenceDataProvider<T>
 		}
 		else {
 			String oldName = sequenceNameByID(sequenceID);  // Needs to be saved before the edit is executed
-			addEdit(new SwingRenameSequenceEdit(this, sequenceID, newSequenceName));
+			addEdit(new SwingRenameSequenceEdit<T>(this, sequenceID, newSequenceName));
 			return oldName;
 		}
 	}

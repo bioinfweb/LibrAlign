@@ -30,12 +30,12 @@ import info.bioinfweb.libralign.sequenceprovider.SequenceDataProvider;
  * @author Ben St&ouml;ver
  * @since 0.0.0
  */
-public class SequenceRenamedEvent extends SequenceDataProviderChangeEvent {
+public class SequenceRenamedEvent<T> extends SequenceDataProviderChangeEvent<T> {
 	private String previousName;
 	private String newName;
 	
 	
-	public SequenceRenamedEvent(SequenceDataProvider source, int sequenceID,
+	public SequenceRenamedEvent(SequenceDataProvider<T> source, int sequenceID,
 			String previousName, String newName) {
 		
 		super(source, sequenceID);

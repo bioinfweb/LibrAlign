@@ -8,6 +8,6 @@
  * SWT application.
  * 
  * @author Ben St&ouml;ver
- * @since 0.0.1
+ * @since 0.1.0
  */
 package info.bioinfweb.libralign.sequenceprovider.implementations.swingundo;

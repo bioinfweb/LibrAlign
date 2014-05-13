@@ -41,17 +41,17 @@ import javax.swing.undo.UndoableEdit;
  * classes should not execute not add the the edits they return to the undo manager by themselves.
  * 
  * @author Ben St&ouml;ver
- * @since 0.0.1
+ * @since 0.1.0
  * @see SwingUndoSequenceDataProvider
  */
-public interface SwingEditFactory {
+public interface SwingEditFactory<T> {
   /**
    * This method is called to create new edit objects (except if a new sequence shall be added).
    * 
    * @param edit - the default LibrAlign edit that would perform the requested operation.
    * @return the edit object that shall be used by the calling instance of {@link SwingUndoSequenceDataProvider}
    */
-  public UndoableEdit createEdit(LibrAlignSwingAlignmentEdit edit);	
+  public UndoableEdit createEdit(LibrAlignSwingAlignmentEdit<T> edit);	
 
   /**
    * This method is called if an edit object that inserts a new sequence shall be created.
@@ -59,5 +59,5 @@ public interface SwingEditFactory {
    * @param edit - the default LibrAlign edit that would perform the requested operation.
    * @return the edit object that shall be used by the calling instance of {@link SwingUndoSequenceDataProvider}
    */
-  public SwingAddSequenceEdit createAddSequenceEdit(SwingConcreteAddSequenceEdit edit);	
+  public SwingAddSequenceEdit createAddSequenceEdit(SwingConcreteAddSequenceEdit<T> edit);	
 }

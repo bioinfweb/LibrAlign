@@ -24,6 +24,7 @@ import info.bioinfweb.libralign.sequenceprovider.implementations.swingundo.Swing
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 
 
 
@@ -31,10 +32,10 @@ import java.util.Collection;
  * Implements the insertion and removal of sequence elements in an instance of {@link SequenceDataProvider}. 
  * 
  * @author Ben St&ouml;ver
- * @since 0.0.1
+ * @since 0.1.0
  * @see SwingUndoSequenceDataProvider
  */
-public abstract class SwingInsertRemoveTokensEdit extends SwingTokenEdit {
+public abstract class SwingInsertRemoveTokensEdit<T> extends SwingTokenEdit<T> {
 	/**
 	 * Creates a new instance of this class used to insert a new set of tokens into a sequence.
 	 * 
@@ -44,10 +45,26 @@ public abstract class SwingInsertRemoveTokensEdit extends SwingTokenEdit {
 	 *        (The first element in the sequence has the index 0.)
 	 * @param tokens - the new tokens for the specified position
 	 */
-	public SwingInsertRemoveTokensEdit(SwingUndoSequenceDataProvider provider, int sequenceID, int beginIndex, 
-			Collection<? extends Object> tokens) {
+	public SwingInsertRemoveTokensEdit(SwingUndoSequenceDataProvider<T> provider, int sequenceID, int beginIndex, 
+			Collection<? extends T> tokens) {
 
 		super(provider, sequenceID, beginIndex, tokens);
+	}
+	
+	
+	/**
+	 * Creates a new instance of this class used to insert a new single token into a sequence.
+	 * 
+	 * @param provider - the data provider creating this instance 
+	 * @param sequenceID - the identifier the sequence where the token is contained
+	 * @param index - the index where the new token shall be inserted 
+	 *        (The first element in the sequence has the index 0.)
+	 * @param token - the new token for the specified position
+	 */
+	public SwingInsertRemoveTokensEdit(SwingUndoSequenceDataProvider<T> provider, int sequenceID, int index, 
+			 T token) {
+
+		this(provider, sequenceID, index, Collections.nCopies(1, token));
 	}
 	
 	
@@ -59,26 +76,48 @@ public abstract class SwingInsertRemoveTokensEdit extends SwingTokenEdit {
 	 * @param sequenceID - the identifier the sequence where the token is contained
 	 * @param beginIndex - the index of the first element to be removed 
 	 *        (The first element in the sequence has the index 0.)
-	 * @param tokens - the new tokens for the specified position
+	 * @param endIndex - the index after the last element to be removed
 	 */
-	public SwingInsertRemoveTokensEdit(SwingUndoSequenceDataProvider provider, int sequenceID, int beginIndex, 
+	public SwingInsertRemoveTokensEdit(SwingUndoSequenceDataProvider<T> provider, int sequenceID, int beginIndex, 
 			int endIndex) {
 
 		super(provider, sequenceID, beginIndex, null);
 		
 		int length = beginIndex - endIndex;
-		tokens = new ArrayList<Object>(length);
+		tokens = new ArrayList<T>(length);
 		for (int i = 0; i < length; i++) {
-			((ArrayList<Object>)tokens).add(getProvider().getTokenAt(sequenceID, beginIndex + i));
+			((ArrayList<T>)tokens).add(getProvider().getTokenAt(sequenceID, beginIndex + i));
 		}
 	}
 	
 	
+	/**
+	 * Creates a new instance of this class used to remove a single token from a sequence. This token
+	 * will be stored as the only element in the inherited field {@link #tokens} during the execution 
+	 * of this constructor.
+	 * 
+	 * @param provider - the data provider creating this instance 
+	 * @param sequenceID - the identifier the sequence where the token is contained
+	 * @param index - the index of the element to be removed 
+	 *        (The first element in the sequence has the index 0.)
+	 */
+	public SwingInsertRemoveTokensEdit(SwingUndoSequenceDataProvider<T> provider, int sequenceID, int index) {
+		this(provider, sequenceID, index, index + 1);
+	}
+	
+	
+	/**
+	 * Performs the insert operation (either of the new token(s) for insertions or the previously removed
+	 * token(s) for deletions).
+	 */
 	protected void insert() {
 		getProvider().getUnderlyingProvider().insertTokensAt(sequenceID, beginIndex, tokens);
 	}
 	
 	
+	/**
+	 * Performs the remove operation.
+	 */
 	protected void remove() {
 		getProvider().getUnderlyingProvider().removeTokensAt(sequenceID, beginIndex, beginIndex + tokens.size());
 	}

@@ -20,7 +20,6 @@ package info.bioinfweb.libralign.sequenceprovider.events;
 
 
 import info.bioinfweb.commons.collections.ListChangeType;
-import info.bioinfweb.libralign.dataarea.DataArea;
 import info.bioinfweb.libralign.sequenceprovider.SequenceDataProvider;
 
 import java.util.Collection;
@@ -33,13 +32,15 @@ import java.util.Collection;
  * 
  * @author Ben St&ouml;ver
  * @since 0.0.0
+ * 
+ * @param <T> - the type of sequence elements (tokens) the implementing provider object works with
  */
-public class TokenChangeEvent extends SequenceChangeEvent {
+public class TokenChangeEvent<T> extends SequenceChangeEvent<T> {
 	private int startIndex;
 	private Collection<Object> affectedTokens;
 	
 	
-	public TokenChangeEvent(SequenceDataProvider source, int sequenceID, ListChangeType type,
+	public TokenChangeEvent(SequenceDataProvider<T> source, int sequenceID, ListChangeType type,
 			int startIndex, Collection<Object> affectedTokens) {
 		
 		super(source, sequenceID, type);

@@ -28,14 +28,14 @@ import info.bioinfweb.libralign.sequenceprovider.implementations.swingundo.edits
  * Offers basic functionality used by edits that manipulate sequences. 
  * 
  * @author Ben St&ouml;ver
- * @since 0.0.1
+ * @since 0.1.0
  * @see SwingUndoSequenceDataProvider
  */
-public abstract class SwingSequenceEdit extends LibrAlignSwingAlignmentEdit {
+public abstract class SwingSequenceEdit<T> extends LibrAlignSwingAlignmentEdit<T> {
 	protected int sequenceID;
 
 	
-	public SwingSequenceEdit(SwingUndoSequenceDataProvider provider, int sequenceID) {
+	public SwingSequenceEdit(SwingUndoSequenceDataProvider<T> provider, int sequenceID) {
 		super(provider);
 		this.sequenceID = sequenceID;
 	}

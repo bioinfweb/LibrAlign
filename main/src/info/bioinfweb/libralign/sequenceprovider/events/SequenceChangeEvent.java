@@ -30,12 +30,14 @@ import info.bioinfweb.libralign.sequenceprovider.SequenceDataProvider;
  * 
  * @author Ben St&ouml;ver
  * @since 0.0.0
+ * 
+ * @param <T> - the type of sequence elements (tokens) the implementing provider object works with
  */
-public class SequenceChangeEvent extends SequenceDataProviderChangeEvent {
+public class SequenceChangeEvent<T> extends SequenceDataProviderChangeEvent<T> {
 	private ListChangeType type;
 
 	
-	public SequenceChangeEvent(SequenceDataProvider source, int sequenceID, ListChangeType type) {
+	public SequenceChangeEvent(SequenceDataProvider<T> source, int sequenceID, ListChangeType type) {
 		super(source, sequenceID);
 		this.type = type;
 	}

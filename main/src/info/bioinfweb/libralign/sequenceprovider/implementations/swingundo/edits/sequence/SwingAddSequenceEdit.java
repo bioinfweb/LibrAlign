@@ -31,7 +31,7 @@ import javax.swing.undo.UndoableEdit;
  * {@link SequenceDataProvider}.
  * 
  * @author Ben St&oml;ver
- * @since 0.0.1
+ * @since 0.1.0
  * @see SwingUndoSequenceDataProvider
  */
 public interface SwingAddSequenceEdit extends UndoableEdit {

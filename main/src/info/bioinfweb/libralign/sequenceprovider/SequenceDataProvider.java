@@ -111,7 +111,8 @@ public interface SequenceDataProvider<T> {
 	 * 
 	 * @throws AlignmentSourceNotWritableException if the underlying data source is not writable for tokens
 	 */
-	public void setTokensAt(int sequenceID, int beginIndex, Collection<? extends T> tokens) throws AlignmentSourceNotWritableException;
+	public void setTokensAt(int sequenceID, int beginIndex, Collection<? extends T> tokens) 
+			throws AlignmentSourceNotWritableException;
 
 	/**
 	 * Inserts a token at the specified position. All tokens located behind the specified index are moved 

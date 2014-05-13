@@ -62,7 +62,7 @@ public class AlignmentArea extends TICComponent implements SequenceDataChangeLis
 	public static final int MIN_FONT_SIZE = 4;
 
 	
-	private SequenceDataProvider sequenceProvider = null;
+	private SequenceDataProvider<?> sequenceProvider = null;
 	private SequenceOrder sequenceOrder = new SequenceOrder(this);
 	private SequenceColorSchema colorSchema = new SequenceColorSchema();
 	private WorkingMode workingMode = WorkingMode.VIEW;  //TODO Should this better be part of the controller (key and mouse listener)?
@@ -100,7 +100,7 @@ public class AlignmentArea extends TICComponent implements SequenceDataChangeLis
 	}
 	
 	
-	public SequenceDataProvider getSequenceProvider() {
+	public SequenceDataProvider<?> getSequenceProvider() {
 		return sequenceProvider;
 	}
 	
@@ -117,8 +117,10 @@ public class AlignmentArea extends TICComponent implements SequenceDataChangeLis
 	 * @return the previous sequence provider that has been replaced or {@code null} if there was no provider 
 	 *         before
 	 */
-	public SequenceDataProvider setSequenceProvider(SequenceDataProvider sequenceProvider, boolean moveListeners) {
-		SequenceDataProvider result = this.sequenceProvider;
+	public SequenceDataProvider<?> setSequenceProvider(SequenceDataProvider<?> sequenceProvider, 
+			boolean moveListeners) {
+		
+		SequenceDataProvider<?> result = this.sequenceProvider;
 		if (!sequenceProvider.equals(this.sequenceProvider)) {
 			if (this.sequenceProvider != null) {
 				if (moveListeners) {  // Move all listeners
@@ -375,28 +377,28 @@ public class AlignmentArea extends TICComponent implements SequenceDataChangeLis
 	
 	
 	@Override
-	public void afterSequenceChange(SequenceChangeEvent e) {
+	public <T> void afterSequenceChange(SequenceChangeEvent<T> e) {
 		// TODO Auto-generated method stub
 		
 	}
 
 
 	@Override
-	public void afterSequenceRenamed(SequenceRenamedEvent e) {
+	public <T> void afterSequenceRenamed(SequenceRenamedEvent<T> e) {
 		// TODO Auto-generated method stub
 		
 	}
 
 
 	@Override
-	public void afterTokenChange(TokenChangeEvent e) {
+	public <T> void afterTokenChange(TokenChangeEvent<T> e) {
 		// TODO Auto-generated method stub
 		
 	}
 
 
 	@Override
-	public void afterProviderChanged(SequenceDataProvider previous, SequenceDataProvider current) {
+	public <T, U> void afterProviderChanged(SequenceDataProvider<T> previous,	SequenceDataProvider<U> current) {
 		//TODO repaint
 		//TODO Send message to all and/or remove some data areas? (Some might be data specific (e.g. pherograms), some not (e.g. consensus sequence).)
 	}

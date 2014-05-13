@@ -31,14 +31,14 @@ import info.bioinfweb.libralign.sequenceprovider.implementations.swingundo.Swing
  * Edit object that inserts a new empty sequence into an instance of {@link SequenceDataProvider}.
  * 
  * @author Ben St&oml;ver
- * @since 0.0.1
+ * @since 0.1.0
  * @see SwingUndoSequenceDataProvider
  */
-public class SwingConcreteAddSequenceEdit extends SwingSequenceEdit implements SwingAddSequenceEdit {
+public class SwingConcreteAddSequenceEdit<T> extends SwingSequenceEdit<T> implements SwingAddSequenceEdit {
 	private String name;
 
 	
-	public SwingConcreteAddSequenceEdit(SwingUndoSequenceDataProvider provider, String name) {
+	public SwingConcreteAddSequenceEdit(SwingUndoSequenceDataProvider<T> provider, String name) {
 		super(provider, -1);
 		this.name = name;
 	}

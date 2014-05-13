@@ -31,15 +31,15 @@ import info.bioinfweb.libralign.sequenceprovider.implementations.swingundo.Swing
  * Edit object that renames a sequence managed by an instance of {@link SequenceDataProvider}.
  * 
  * @author Ben St&oml;ver
- * @since 0.0.1
+ * @since 0.1.0
  * @see SwingUndoSequenceDataProvider
  */
-public class SwingRenameSequenceEdit extends SwingSequenceEdit {
+public class SwingRenameSequenceEdit<T> extends SwingSequenceEdit<T> {
   private String newName;
 	private String oldName;
   
   
-  public SwingRenameSequenceEdit(SwingUndoSequenceDataProvider provider, int sequenceID, String newName) {
+  public SwingRenameSequenceEdit(SwingUndoSequenceDataProvider<T> provider, int sequenceID, String newName) {
 		super(provider, sequenceID);
 		this.newName = newName;
 	}

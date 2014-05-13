@@ -31,8 +31,10 @@ import java.util.EventObject;
  * 
  * @author Ben St&ouml;ver
  * @since 0.0.0
+ * 
+ * @param <T> - the type of sequence elements (tokens) the implementing provider object works with
  */
-public class SequenceDataProviderChangeEvent extends EventObject {
+public class SequenceDataProviderChangeEvent<T> extends EventObject {
 	private int sequenceID;
 
 	
@@ -42,7 +44,7 @@ public class SequenceDataProviderChangeEvent extends EventObject {
 	 * @param source - the data provider where the change took place
 	 * @param sequenceID - the unique ID of the affected sequence
 	 */
-	public SequenceDataProviderChangeEvent(SequenceDataProvider source, int sequenceID) {
+	public SequenceDataProviderChangeEvent(SequenceDataProvider<T> source, int sequenceID) {
 		super(source);
 		this.sequenceID = sequenceID;
 	}
@@ -54,8 +56,8 @@ public class SequenceDataProviderChangeEvent extends EventObject {
 	 * @return an instance of an implementation of {@link SequenceDataProvider}
 	 */
 	@Override
-	public SequenceDataProvider getSource() {
-		return (SequenceDataProvider)super.getSource();
+	public SequenceDataProvider<T> getSource() {
+		return (SequenceDataProvider<T>)super.getSource();
 	}
 
 

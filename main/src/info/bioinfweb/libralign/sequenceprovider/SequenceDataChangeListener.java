@@ -29,6 +29,10 @@ import info.bioinfweb.libralign.sequenceprovider.events.TokenChangeEvent;
 /**
  * This interface should be implemented by classes that want to track changes in the stored data 
  * of an implementation of {@link SequenceDataProvider}.
+ * <p>
+ * This class does not specify a global generic token type parameter since the {@link SequenceDataProvider}
+ * is listens to may change during runtime if the provider that is attached to the {@link AlignmentArea}
+ * is substituted.
  * 
  * @author Ben St&ouml;ver
  * @since 0.0.0
@@ -39,21 +43,21 @@ public interface SequenceDataChangeListener {
 	 * 
 	 * @param e - the event object containing information on the change
 	 */
-	public void afterSequenceChange(SequenceChangeEvent e);
+	public <T> void afterSequenceChange(SequenceChangeEvent<T> e);
 
 	/**
 	 * Called after a sequence was renamed.
 	 * 
 	 * @param e - the event object containing information on the change
 	 */
-	public void afterSequenceRenamed(SequenceRenamedEvent e);
+	public <T> void afterSequenceRenamed(SequenceRenamedEvent<T> e);
 
 	/**
 	 * Called after a single token or a set of tokens has been inserted, removed or replaced.
 	 * 
 	 * @param e - the event object containing information on the change
 	 */
-	public void afterTokenChange(TokenChangeEvent e);
+	public <T> void afterTokenChange(TokenChangeEvent<T> e);
 
 	/**
 	 * Called if this listener was moved to another instance of {@link SequenceDataProvider}.
@@ -63,5 +67,6 @@ public interface SequenceDataChangeListener {
 	 * @param previous - the data provider this listener was attached to before the event happened
 	 * @param current - the new data provider this listener is attached to now
 	 */
-	public void afterProviderChanged(SequenceDataProvider previous, SequenceDataProvider current);
+	public <T, U> void afterProviderChanged(SequenceDataProvider<T> previous, 
+			SequenceDataProvider<U> current);
 }

@@ -31,7 +31,7 @@ import info.bioinfweb.libralign.sequenceprovider.SequenceDataProvider;
  * the same thing also by their return value. 
  * 
  * @author Ben St&ouml;ver
- * @since 0.0.1
+ * @since 0.1.0
  */
 public class SequenceNotFoundException extends AlignmentDataProviderException {
 	/**

@@ -38,7 +38,7 @@ import java.util.Iterator;
  * can be obtained by {@link #getCurrentID()}.
  * 
  * @author Ben St&ouml;ver
- * @since 0.0.1
+ * @since 0.1.0
  *
  * @param <P> - the implementing class of {@link SequenceDataProvider} which will return the iterator
  *        inherited from this class 
