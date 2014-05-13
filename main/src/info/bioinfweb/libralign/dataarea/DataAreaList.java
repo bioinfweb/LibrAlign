@@ -244,9 +244,12 @@ public class DataAreaList extends ArrayList<DataArea> {
 
 	@Override
 	public boolean removeAll(Collection<?> c) {
+		List<DataArea> removedElements = new ArrayList<DataArea>(size());  // c cannot be used here, because it may contain elements which are not contained in this instance.
+		removedElements.addAll(this);
 		boolean result = super.removeAll(c);
 		if (result) {
-			getOwner().fireInsertedRemoved(ListChangeType.DELETION, (Collection<DataArea>)c);
+			removedElements.retainAll(c);
+			getOwner().fireInsertedRemoved(ListChangeType.DELETION, removedElements);
 		}
 		return result;
 	}
@@ -254,12 +257,12 @@ public class DataAreaList extends ArrayList<DataArea> {
 
 	@Override
 	public boolean retainAll(Collection<?> c) {
-		List<DataArea> copy = new ArrayList<DataArea>(size());  // Clone cannot be used here, because changes there also affect the original list.
-		copy.addAll(this);
+		List<DataArea> removedElements = new ArrayList<DataArea>(size());  // Clone cannot be used here, because changes there also affect the original list.
+		removedElements.addAll(this);
 		boolean result = super.retainAll(c);
 		if (result) {
-			copy.removeAll(c);
-			getOwner().fireInsertedRemoved(ListChangeType.DELETION, (Collection<DataArea>)copy);
+			removedElements.removeAll(c);
+			getOwner().fireInsertedRemoved(ListChangeType.DELETION, removedElements);
 		}
 		return result;
 	}
@@ -272,6 +275,6 @@ public class DataAreaList extends ArrayList<DataArea> {
 		return result;
 	}
 
-	
+
 	//TODO Overwrite subList() in a way, that change events are also send and the returned instance as a DataAreaList
 }
