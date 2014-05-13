@@ -22,7 +22,9 @@ package info.bioinfweb.libralign.sequenceprovider.events;
 import info.bioinfweb.commons.collections.ListChangeType;
 import info.bioinfweb.libralign.sequenceprovider.SequenceDataProvider;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 
 
 
@@ -37,15 +39,120 @@ import java.util.Collection;
  */
 public class TokenChangeEvent<T> extends SequenceChangeEvent<T> {
 	private int startIndex;
-	private Collection<Object> affectedTokens;
+	private Collection<? extends T> affectedTokens;
 	
 	
-	public TokenChangeEvent(SequenceDataProvider<T> source, int sequenceID, ListChangeType type,
-			int startIndex, Collection<Object> affectedTokens) {
+	/**
+	 * Creates a new instance of this class.
+	 * 
+	 * @param source - the sequence data provider that fires this event
+	 * @param sequenceID - the ID of the affected sequence
+	 * @param type - the type of change that happened
+	 * @param startIndex - the index of the first affected token in the sequence
+	 * @param affectedTokens - a list of the affected tokens
+	 */
+	protected TokenChangeEvent(SequenceDataProvider<T> source, int sequenceID, ListChangeType type,
+			int startIndex, Collection<? extends T> affectedTokens) {
 		
 		super(source, sequenceID, type);
 		this.startIndex = startIndex;
 		this.affectedTokens = affectedTokens;
+	}
+	
+	
+	/**
+	 * Creates a new instance of this class that represents an insertion of a list of tokens.
+	 * 
+	 * @param source - the sequence data provider that fires this event
+	 * @param sequenceID - the ID of the affected sequence
+	 * @param startIndex - the index where the first token was inserted into the sequence
+	 * @param newTokens - the list of the tokens to be inserted 
+	 * @return a new instance with the same token type as {@code source}
+	 */
+	public static <T> TokenChangeEvent<T> newInsertInstance(SequenceDataProvider<T> source, int sequenceID,
+			int startIndex, Collection<? extends T> newTokens) {
+		
+		return new TokenChangeEvent<T>(source, sequenceID, ListChangeType.INSERTION, startIndex, newTokens);
+	}
+
+
+	/**
+	 * Creates a new instance of this class that represents an insertion of a single token.
+	 * 
+	 * @param source - the sequence data provider that fires this event
+	 * @param sequenceID - the ID of the affected sequence
+	 * @param index - the index where the new token was inserted
+	 * @param newToken - the token to be inserted 
+	 * @return a new instance with the same token type as {@code source}
+	 */
+	public static <T> TokenChangeEvent<T> newInsertInstance(SequenceDataProvider<T> source, int sequenceID,
+			int index, T newToken) {
+		
+		return newInsertInstance(source, sequenceID, index, Collections.nCopies(1, newToken));
+	}
+
+
+	/**
+	 * Creates a new instance of this class that represents a deletion of a list of tokens.
+	 * 
+	 * @param source - the sequence data provider that fires this event
+	 * @param sequenceID - the ID of the affected sequence
+	 * @param startIndex - the index where the first token has been deleted from the sequence
+	 * @param removedTokens - the tokens that have been deleted
+	 * @return a new instance with the same token type as {@code source}
+	 */
+	public static <T> TokenChangeEvent<T> newRemoveInstance(SequenceDataProvider<T> source, int sequenceID,
+			int startIndex, Collection<? extends T> removedTokens) {
+		
+		return new TokenChangeEvent<T>(source, sequenceID, ListChangeType.DELETION, startIndex, removedTokens);
+	}
+
+	
+	/**
+	 * Creates a new instance of this class that represents a deletion of a single token.
+	 * 
+	 * @param source - the sequence data provider that fires this event
+	 * @param sequenceID - the ID of the affected sequence
+	 * @param index - the index where the token has been deleted from the sequence
+	 * @param removedToken - the token that has been deleted
+	 * @return a new instance with the same token type as {@code source}
+	 */
+	public static <T> TokenChangeEvent<T> newRemoveInstance(SequenceDataProvider<T> source, int sequenceID,
+			int index, T removedToken) {
+		
+		return newRemoveInstance(source, sequenceID, index, Collections.nCopies(1, removedToken));
+	}
+
+	
+	/**
+	 * Creates a new instance of this class that represents a replacement of a list of tokens.
+	 * 
+	 * @param source - the sequence data provider that fires this event
+	 * @param sequenceID - the ID of the affected sequence
+	 * @param startIndex - the index where the first token was replaced in the sequence
+	 * @param replacedTokens - the list of tokens that have been replaced 
+	 * @return a new instance with the same token type as {@code source}
+	 */
+	public static <T> TokenChangeEvent<T> newReplaceInstance(SequenceDataProvider<T> source, int sequenceID,
+			int startIndex, Collection<? extends T> replacedTokens) {
+		
+		return new TokenChangeEvent<T>(source, sequenceID, ListChangeType.REPLACEMENT, startIndex, replacedTokens);
+	}
+
+
+	/**
+	 * Creates a new instance of this class that represents a replacement of a single token.
+	 * 
+	 * @param source - the sequence data provider that fires this event
+	 * @param sequenceID - the ID of the affected sequence
+	 * @param index - the index where the token shall be inserted into the sequence
+	 * @param replacedToken - the list of tokens that have been replaced 
+	 * @return a new instance with the same token type as {@code source}
+	 */
+	public static <T> TokenChangeEvent<T> newReplaceInstance(SequenceDataProvider<T> source, int sequenceID,
+			int index, T replacedToken) {
+		
+		return newReplaceInstance(source, sequenceID, index, Collections.nCopies(1, replacedToken));
 	}
 
 
@@ -60,11 +167,12 @@ public class TokenChangeEvent<T> extends SequenceChangeEvent<T> {
 
 
 	/**
-	 * Returns a collection of tokens that have been affected by this operation.
+	 * Returns a collection of tokens that have been affected by this operation. For insertions this would
+	 * be the new tokens and for replacements and deletions this would be the removed tokens.
 	 * 
-	 * @return a non empty collection
+	 * @return a collection of sequence elements
 	 */
-	public Collection<Object> getAffectedTokens() {
+	public Collection<? extends T> getAffectedTokens() {
 		return affectedTokens;
 	}
 	

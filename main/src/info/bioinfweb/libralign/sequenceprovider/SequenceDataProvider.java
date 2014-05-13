@@ -179,7 +179,8 @@ public interface SequenceDataProvider<T> {
 	 * DNA data source is viewed as amino acid data this method would still return the number of 
 	 * nucleotides in the longest sequence. 
 	 * 
-	 * @return the number of columns in the alignment
+	 * @return the number of columns in the alignment or {@code 0} if there are not sequences contained
+	 *         in the underlying data source
 	 */
 	public int getMaxSequenceLength();
 
