@@ -46,7 +46,7 @@ import info.bioinfweb.libralign.sequenceprovider.SequenceDataProviderWriteType;
  * @param <C> - the compound type used by the underlying sequence object
  */
 public class BioJavaSequenceDataProvider<S extends Sequence<C>, C extends Compound>
-    extends AbstractSequenceDataProvider implements SequenceDataProvider {
+    extends AbstractSequenceDataProvider<C> implements SequenceDataProvider<C> {
 	
 	public static final String DEFAULT_SEQUENCE_NAME_PREFIX = "Sequence";
 	
@@ -59,7 +59,7 @@ public class BioJavaSequenceDataProvider<S extends Sequence<C>, C extends Compou
 		while (iterator.hasNext()) {
 			String sequenceName = iterator.next();
 			int sequenceID = createNewID();
-			getIdByNameMap().put(sequenceName, sequenceID);
+			getIDByNameMap().put(sequenceName, sequenceID);
 			getNameByIDMap().put(sequenceID, sequenceName);
 		}
 	}
@@ -116,13 +116,13 @@ public class BioJavaSequenceDataProvider<S extends Sequence<C>, C extends Compou
 
 
 	@Override
-	public Object getTokenAt(int sequenceID, int elementIndex) {
+	public C getTokenAt(int sequenceID, int elementIndex) {
 		return alignment.getSequence(sequenceNameByID(sequenceID)).getCompoundAt(elementIndex + 1);  // BioJava indices start with 1.
 	}
 
 
 	@Override
-	public void setTokenAt(int sequenceID, int elementIndex, Object token)
+	public void setTokenAt(int sequenceID, int elementIndex, C token)
 			throws AlignmentSourceNotWritableException {
 		
 		throw new AlignmentSourceNotWritableException(this);
@@ -130,7 +130,7 @@ public class BioJavaSequenceDataProvider<S extends Sequence<C>, C extends Compou
 
 
 	@Override
-	public void insertTokenAt(int sequenceID, int elementIndex, Object token)
+	public void insertTokenAt(int sequenceID, int elementIndex, C token)
 			throws AlignmentSourceNotWritableException {
 
 		throw new AlignmentSourceNotWritableException(this);
@@ -147,7 +147,7 @@ public class BioJavaSequenceDataProvider<S extends Sequence<C>, C extends Compou
 
 	@Override
 	public void setTokensAt(int sequenceID, int beginIndex,	
-			Collection<? extends Object> tokens) throws AlignmentSourceNotWritableException {
+			Collection<? extends C> tokens) throws AlignmentSourceNotWritableException {
 		
 		throw new AlignmentSourceNotWritableException(this);
 	}
@@ -155,7 +155,7 @@ public class BioJavaSequenceDataProvider<S extends Sequence<C>, C extends Compou
 
 	@Override
 	public void insertTokensAt(int sequenceID, int beginIndex,
-			Collection<? extends Object> tokens) throws AlignmentSourceNotWritableException {
+			Collection<? extends C> tokens) throws AlignmentSourceNotWritableException {
 
 		throw new AlignmentSourceNotWritableException(this);
 	}

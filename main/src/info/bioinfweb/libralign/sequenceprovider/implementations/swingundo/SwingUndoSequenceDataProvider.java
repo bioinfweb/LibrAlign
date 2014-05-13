@@ -69,9 +69,11 @@ import info.bioinfweb.libralign.sequenceprovider.implementations.swingundo.edits
  * 
  * @author Ben St&ouml;ver
  * @since 0.0.1
+ * 
+ * @param <T> - the type of sequence elements (tokens) the implementing provider object works with
  */
-public class SwingUndoSequenceDataProvider implements SequenceDataProvider {
-	protected SequenceDataProvider provider;
+public class SwingUndoSequenceDataProvider<T> implements SequenceDataProvider<T> {
+	protected SequenceDataProvider<T> provider;
 	private UndoManager undoManager;
 	private SwingEditFactory editFactory;
 	
@@ -89,7 +91,7 @@ public class SwingUndoSequenceDataProvider implements SequenceDataProvider {
 	 *         (If only one of both is forbidden no exception will be thrown.)
 	 * @throws NullPointerException if {@code null} is specified for {@code undoManager}
 	 */
-	public SwingUndoSequenceDataProvider(SequenceDataProvider provider, UndoManager undoManager, 
+	public SwingUndoSequenceDataProvider(SequenceDataProvider<T> provider, UndoManager undoManager, 
 			SwingEditFactory editFactory) {
 		
 		super();
@@ -119,7 +121,7 @@ public class SwingUndoSequenceDataProvider implements SequenceDataProvider {
 	 *         (If only one of both is forbidden no exception will be thrown.)
 	 * @throws NullPointerException if {@code null} is specified for {@code undoManager}
 	 */
-	public SwingUndoSequenceDataProvider(SequenceDataProvider provider, UndoManager undoManager) {
+	public SwingUndoSequenceDataProvider(SequenceDataProvider<T> provider, UndoManager undoManager) {
 		this(provider, undoManager, null);
 	}
 
@@ -129,7 +131,7 @@ public class SwingUndoSequenceDataProvider implements SequenceDataProvider {
 	 * 
 	 * @return an instance of a class implementing {@link SequenceDataProvider}
 	 */
-	public SequenceDataProvider getUnderlyingProvider() {
+	public SequenceDataProvider<T> getUnderlyingProvider() {
 		return provider;
 	}
 
@@ -186,17 +188,20 @@ public class SwingUndoSequenceDataProvider implements SequenceDataProvider {
 	}
 	
 	
-	public Object getTokenAt(int sequenceID, int index) {
+	@Override
+	public T getTokenAt(int sequenceID, int index) {
 		return provider.getTokenAt(sequenceID, index);
 	}
 
 
-	public void setTokenAt(int sequenceID, int index, Object token)	throws AlignmentSourceNotWritableException {
+	@Override
+	public void setTokenAt(int sequenceID, int index, T token)	throws AlignmentSourceNotWritableException {
     setTokensAt(sequenceID, index, Collections.nCopies(1, token));
 	}
 
 
-	public void setTokensAt(int sequenceID, int beginIndex,	Collection<? extends Object> tokens)
+	@Override
+	public void setTokensAt(int sequenceID, int beginIndex,	Collection<? extends T> tokens)
 			throws AlignmentSourceNotWritableException {
 		
 		if (provider.isTokensReadOnly()) {
@@ -208,14 +213,16 @@ public class SwingUndoSequenceDataProvider implements SequenceDataProvider {
 	}
 
 
-	public void insertTokenAt(int sequenceID, int index, Object token)
+	@Override
+	public void insertTokenAt(int sequenceID, int index, T token)
 			throws AlignmentSourceNotWritableException {
 		
     insertTokensAt(sequenceID, index, Collections.nCopies(1, token));
 	}
 
 
-	public void insertTokensAt(int sequenceID, int beginIndex, Collection<? extends Object> tokens)
+	@Override
+	public void insertTokensAt(int sequenceID, int beginIndex, Collection<? extends T> tokens)
 			throws AlignmentSourceNotWritableException {
 		
 		if (provider.isTokensReadOnly()) {
@@ -227,6 +234,7 @@ public class SwingUndoSequenceDataProvider implements SequenceDataProvider {
 	}
 
 
+	@Override
 	public void removeTokenAt(int sequenceID, int index)
 			throws AlignmentSourceNotWritableException {
 
@@ -234,6 +242,7 @@ public class SwingUndoSequenceDataProvider implements SequenceDataProvider {
 	}
 
 
+	@Override
 	public void removeTokensAt(int sequenceID, int beginIndex, int endIndex)
 			throws AlignmentSourceNotWritableException {
 		
@@ -246,51 +255,61 @@ public class SwingUndoSequenceDataProvider implements SequenceDataProvider {
 	}
 
 
+	@Override
 	public int getSequenceLength(int sequenceID) {
 		return provider.getSequenceLength(sequenceID);
 	}
 
 
+	@Override
 	public int getMaxSequenceLength() {
 		return provider.getMaxSequenceLength();
 	}
 
 
+	@Override
 	public SequenceDataProviderWriteType getWriteType() {
 		return provider.getWriteType();
 	}
 
 
+	@Override
 	public boolean isTokensReadOnly() {
 		return provider.isTokensReadOnly();
 	}
 
 
+	@Override
 	public boolean isSequencesReadOnly() {
 		return provider.isSequencesReadOnly();
 	}
 
 
+	@Override
 	public AlignmentSourceDataType getDataType() {
 		return provider.getDataType();
 	}
 
 
+	@Override
 	public boolean containsSequence(int sequenceID) {
 		return provider.containsSequence(sequenceID);
 	}
 
 
+	@Override
 	public int sequenceIDByName(String sequenceName) {
 		return provider.sequenceIDByName(sequenceName);
 	}
 
 
+	@Override
 	public String sequenceNameByID(int sequenceID) {
 		return provider.sequenceNameByID(sequenceID);
 	}
 
 
+	@Override
 	public int addSequence(String sequenceName) {
 		if (isSequencesReadOnly()) {
 			throw new AlignmentSourceNotWritableException(this);
@@ -307,6 +326,7 @@ public class SwingUndoSequenceDataProvider implements SequenceDataProvider {
 	}
 
 
+	@Override
 	public boolean removeSequence(int sequenceID) {
 		if (containsSequence(sequenceID)) {
 			addEdit(new SwingRemoveSequenceEdit(this, sequenceID));
@@ -318,6 +338,7 @@ public class SwingUndoSequenceDataProvider implements SequenceDataProvider {
 	}
 
 
+	@Override
 	public String renameSequence(int sequenceID, String newSequenceName) {
 		if (isSequencesReadOnly()) {
 			throw new AlignmentSourceNotWritableException(this);
@@ -330,16 +351,19 @@ public class SwingUndoSequenceDataProvider implements SequenceDataProvider {
 	}
 
 
+	@Override
 	public Iterator<Integer> sequenceIDIterator() {
 		return provider.sequenceIDIterator();
 	}
 
 
+	@Override
 	public int getSequenceCount() {
 		return provider.getSequenceCount();
 	}
 
 
+	@Override
 	public Collection<SequenceDataChangeListener> getChangeListeners() {
 		return provider.getChangeListeners();
 	}

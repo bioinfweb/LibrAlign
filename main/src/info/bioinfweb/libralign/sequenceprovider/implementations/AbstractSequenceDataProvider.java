@@ -46,8 +46,10 @@ import info.bioinfweb.libralign.sequenceprovider.events.TokenChangeEvent;
  * 
  * @author Ben St&uml;ver
  * @since 0.0.0
+ * 
+ * @param <T> - the type of sequence elements (tokens) the implementing provider object works with
  */
-public abstract class AbstractSequenceDataProvider implements SequenceDataProvider {
+public abstract class AbstractSequenceDataProvider<T> implements SequenceDataProvider<T> {
 	private AlignmentSourceDataType dataType;
 	private Map<String, Integer> idByNameMap = new TreeMap<String, Integer>();
 	private Map<Integer, String> nameByIDMap = new TreeMap<Integer, String>();

@@ -52,8 +52,10 @@ import info.bioinfweb.libralign.exception.SequenceNotFoundException;
  * 
  * @author Ben St&ouml;ver
  * @since 0.0.0
+ *
+ * @param <T> - the type of sequence elements (tokens) the implementing provider object works with
  */
-public interface SequenceDataProvider {
+public interface SequenceDataProvider<T> {
 	/**
 	 * Returns the token to be displayed at the specified position. Depending on the return value of
 	 * {@link #getDataType()} the returned object should be an instance of the following classes:
@@ -84,7 +86,7 @@ public interface SequenceDataProvider {
 	 * @param index - the index of the element contained in the specified sequence (The first element has the index 0.)
 	 * @return the token to be displayed in the GUI alignment view
 	 */
-	public Object getTokenAt(int sequenceID, int index);
+	public T getTokenAt(int sequenceID, int index);
 	
 	/**
 	 * Replaces the token at the specified position by the passed token.
@@ -95,7 +97,7 @@ public interface SequenceDataProvider {
 	 * 
 	 * @throws AlignmentSourceNotWritableException if the underlying data source is not writable for tokens 
 	 */
-	public void setTokenAt(int sequenceID, int index, Object token) throws AlignmentSourceNotWritableException;
+	public void setTokenAt(int sequenceID, int index, T token) throws AlignmentSourceNotWritableException;
 
 	/**
 	 * Replaces a sequence of tokens starting at the specified position. If the specified collection
@@ -109,7 +111,7 @@ public interface SequenceDataProvider {
 	 * 
 	 * @throws AlignmentSourceNotWritableException if the underlying data source is not writable for tokens
 	 */
-	public void setTokensAt(int sequenceID, int beginIndex, Collection<? extends Object> tokens) throws AlignmentSourceNotWritableException;
+	public void setTokensAt(int sequenceID, int beginIndex, Collection<? extends T> tokens) throws AlignmentSourceNotWritableException;
 
 	/**
 	 * Inserts a token at the specified position. All tokens located behind the specified index are moved 
@@ -122,7 +124,7 @@ public interface SequenceDataProvider {
 	 * 
 	 * @throws AlignmentSourceNotWritableException if the underlying data source is not writable for tokens
 	 */
-	public void insertTokenAt(int sequenceID, int index, Object token) throws AlignmentSourceNotWritableException;
+	public void insertTokenAt(int sequenceID, int index, T token) throws AlignmentSourceNotWritableException;
 
 	/**
 	 * Inserts a sequence of tokens starting at the specified position. All tokens located behind the 
@@ -135,7 +137,7 @@ public interface SequenceDataProvider {
 	 * 
 	 * @throws AlignmentSourceNotWritableException if the underlying data source is not writable for tokens
 	 */
-	public void insertTokensAt(int sequenceID, int beginIndex, Collection<? extends Object> tokens) throws AlignmentSourceNotWritableException;
+	public void insertTokensAt(int sequenceID, int beginIndex, Collection<? extends T> tokens) throws AlignmentSourceNotWritableException;
 
 	/**
 	 * Removes the token at the specified position from the underlying data source.

@@ -48,8 +48,9 @@ import org.biojava.bio.seq.Sequence;
  * @see SequenceOrder
  *
  * @param <S> - the type of the sequence objects (e.g. {@link Sequence} or {@link List})
+ * @param <T> - the type of sequence elements (tokens) the implementing provider object works with
  */
-public abstract class AbstractMapBasedSequenceDataProvider<S> extends AbstractSequenceDataProvider {
+public abstract class AbstractMapBasedSequenceDataProvider<S, T> extends AbstractSequenceDataProvider<T> {
   private Map<Integer, S> sequenceMap;
   private List<Integer> sequenceOrder;
 
@@ -122,36 +123,17 @@ public abstract class AbstractMapBasedSequenceDataProvider<S> extends AbstractSe
 	 */
 	@Override
 	public Iterator<Integer> sequenceIDIterator() {
-		final Iterator<Integer> iterator = getSequenceOrder().iterator();
-		final AbstractMapBasedSequenceDataProvider<S> thisProvider = this;
-		return new Iterator<Integer>() {
-			private int currentID = -1;
+		return new AbstractSequenceIDIterator<AbstractMapBasedSequenceDataProvider<S, T>>(
+				this,	getSequenceOrder().iterator()) {
 			
-			@Override
-			public boolean hasNext() {
-				return iterator.hasNext();
-			}
-
-			@Override
-			public Integer next() {
-				currentID = iterator.next();
-  			return currentID;
-			}
-
-			@Override
-			public void remove() {
-				if (isSequencesReadOnly()) {
-  				throw new UnsupportedOperationException(
-  						"The underlying data source does not allow the removal of sequences.");
-				}
-				else {
-					iterator.remove();  // Throws an exception if this method is called before the first call of next().
-					removeSequenceNameMapping(currentID);
-					getSequenceMap().remove(currentID);
-					fireAfterSequenceChange(new SequenceChangeEvent(thisProvider, currentID, ListChangeType.DELETION));
-				}
-			}
-		};
+					@Override
+					protected void doRemove() {
+						removeSequenceNameMapping(getCurrentID());
+						getSequenceMap().remove(getCurrentID());
+						fireAfterSequenceChange(new SequenceChangeEvent(getProvider(), getCurrentID(), 
+								ListChangeType.DELETION));
+					}
+				};
 	}
 
 

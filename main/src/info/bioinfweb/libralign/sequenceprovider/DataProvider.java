@@ -18,6 +18,8 @@
  */
 package info.bioinfweb.libralign.sequenceprovider;
 
+
+
 public interface DataProvider {
 	
 }
