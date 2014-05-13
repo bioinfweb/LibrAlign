@@ -19,7 +19,6 @@
 package info.bioinfweb.libralign.dataarea;
 
 
-import info.bioinfweb.commons.collections.ListChangeType;
 import info.bioinfweb.libralign.AlignmentArea;
 
 import java.util.ArrayList;
@@ -38,7 +37,7 @@ import java.util.List;
  * @author Ben St&ouml;ver
  * @since 0.0.0
  */
-public class DataAreaList extends ArrayList<DataArea> {
+public class DataAreaList extends DataAreaChangeEventList {
 	public static final int INITIAL_LIST_SIZE = 8;
 	
 	
@@ -57,7 +56,7 @@ public class DataAreaList extends ArrayList<DataArea> {
 	 * @throws IllegalArgumentException - if {@link DataAreaListType#SEQUENCE} is specified as {@code listType}
 	 */
 	public DataAreaList(DataAreaModel owner, DataAreaListType listType) {
-		super(INITIAL_LIST_SIZE);
+		super(new ArrayList<DataArea>(INITIAL_LIST_SIZE));
 		if (listType.equals(DataAreaListType.SEQUENCE)) {
 			throw new IllegalArgumentException("The type " + DataAreaListType.SEQUENCE + 
 					" cannot be used if the sequence name is omitted.");
@@ -80,7 +79,7 @@ public class DataAreaList extends ArrayList<DataArea> {
 	 * @param sequenceID - the unique identifier of the sequence the contained data areas will be attached to
 	 */
 	public DataAreaList(DataAreaModel owner, int sequenceID) {
-		super();
+		super(new ArrayList<DataArea>(INITIAL_LIST_SIZE));
 		this.owner = owner;
 		location = new DataAreaLocation(sequenceID);
 	}
@@ -94,7 +93,7 @@ public class DataAreaList extends ArrayList<DataArea> {
 	 * @param location - the location this list will have in the alignment area
 	 */
 	public DataAreaList(DataAreaModel owner, DataAreaLocation location) {
-		super();
+		super(new ArrayList<DataArea>(INITIAL_LIST_SIZE));
 		this.owner = owner;
 		this.location = location;
 	}
@@ -168,113 +167,4 @@ public class DataAreaList extends ArrayList<DataArea> {
 		}
 		return result;
 	}
-	
-	
-	/**
-	 * Appends the specified data area to the end of this list. This list is automatically set as
-	 * the owning list of {@code e}.
-	 * 
-	 * @param element - the element to be added to the list
-	 */
-	@Override
-	public boolean add(DataArea element) {
-		boolean result = super.add(element);
-		if (result) {
-			element.setList(this);
-			getOwner().fireInsertedRemoved(ListChangeType.INSERTION, element);
-		}
-		return result;
-	}
-	
-
-	@Override
-	public void add(int index, DataArea element) {
-		element.setList(this);
-		getOwner().fireInsertedRemoved(ListChangeType.INSERTION, element);
-		super.add(index, element);
-	}
-	
-
-	@Override
-	public boolean addAll(Collection<? extends DataArea> c) {
-		return addAll(size(), c);
-	}
-	
-
-	@Override
-	public boolean addAll(int index, Collection<? extends DataArea> c) {
-		boolean result = super.addAll(index, c);
-		if (result) {
-			Iterator<? extends DataArea> iterator = c.iterator();
-			while (iterator.hasNext()) {
-				iterator.next().setList(this);
-			}
-			getOwner().fireInsertedRemoved(ListChangeType.INSERTION, c);
-		}
-		return result;
-	}
-
-	
-	@Override
-	public void clear() {
-		List<DataArea> copy = new ArrayList<DataArea>(size());  // Clone cannot be used here, because changes there also affect the original list.
-		copy.addAll(this);
-		super.clear();
-		getOwner().fireInsertedRemoved(ListChangeType.INSERTION, copy);
-	}
-	
-
-	@Override
-	public DataArea remove(int index) {
-		DataArea result = super.remove(index);
-		getOwner().fireInsertedRemoved(ListChangeType.DELETION, result);
-		return result;
-	}
-	
-
-	@Override
-	public boolean remove(Object o) {
-		boolean result = super.remove(o);
-		if (result) {
-			getOwner().fireInsertedRemoved(ListChangeType.DELETION, (DataArea)o);
-		}
-		return result;
-	}
-	
-
-	@Override
-	public boolean removeAll(Collection<?> c) {
-		List<DataArea> removedElements = new ArrayList<DataArea>(size());  // c cannot be used here, because it may contain elements which are not contained in this instance.
-		removedElements.addAll(this);
-		boolean result = super.removeAll(c);
-		if (result) {
-			removedElements.retainAll(c);
-			getOwner().fireInsertedRemoved(ListChangeType.DELETION, removedElements);
-		}
-		return result;
-	}
-	
-
-	@Override
-	public boolean retainAll(Collection<?> c) {
-		List<DataArea> removedElements = new ArrayList<DataArea>(size());  // Clone cannot be used here, because changes there also affect the original list.
-		removedElements.addAll(this);
-		boolean result = super.retainAll(c);
-		if (result) {
-			removedElements.removeAll(c);
-			getOwner().fireInsertedRemoved(ListChangeType.DELETION, removedElements);
-		}
-		return result;
-	}
-
-	
-	@Override
-	public DataArea set(int index, DataArea element) {
-		DataArea result = super.set(index, element);
-		getOwner().fireInsertedRemoved(ListChangeType.REPLACEMENT, result);
-		return result;
-	}
-
-
-	//TODO Overwrite subList() in a way, that change events are also send and the returned instance as a DataAreaList
 }

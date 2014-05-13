@@ -30,6 +30,7 @@ main/src/info/bioinfweb/libralign/alignmentareacomponents/package-info.java -tex
 main/src/info/bioinfweb/libralign/dataarea/ConsensusSequenceArea.java -text svneol=unset#text/plain
 main/src/info/bioinfweb/libralign/dataarea/DataArea.java -text svneol=unset#text/plain
 main/src/info/bioinfweb/libralign/dataarea/DataAreaChangeEvent.java -text svneol=unset#text/plain
+main/src/info/bioinfweb/libralign/dataarea/DataAreaChangeEventList.java -text svneol=unset#text/plain
 main/src/info/bioinfweb/libralign/dataarea/DataAreaList.java -text svneol=unset#text/plain
 main/src/info/bioinfweb/libralign/dataarea/DataAreaListType.java -text svneol=unset#text/plain
 main/src/info/bioinfweb/libralign/dataarea/DataAreaLocation.java -text svneol=unset#text/plain
