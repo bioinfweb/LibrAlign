@@ -27,15 +27,16 @@ package info.bioinfweb.libralign.sequenceprovider;
  * An example would be the translation from nucleotide sequences to amino acid sequences.
  * 
  * @author Ben St&ouml;ver
+ * @since 0.1.0
  *
- * @param <T> - the type of sequence elements (tokens) the implementing and underlying provider objects 
- *        work with
+ * @param <T> - the type of sequence elements (tokens) the implementing view works with
+ * @param <U> - the type of sequence elements (tokens) the underlying provider works with
  */
-public interface SequenceDataProviderView<T> extends SequenceDataProvider<T> {
+public interface SequenceDataView<T, U> extends SequenceDataProvider<T> {
 	/**
 	 * Returns underlying provider instance that returns the unmodified data.
 	 * 
 	 * @return another sequence data provider object
 	 */
-	public SequenceDataProvider<T> getUnderlyingProvider();
+	public SequenceDataProvider<U> getUnderlyingProvider();
 }

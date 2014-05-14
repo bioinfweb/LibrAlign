@@ -26,7 +26,7 @@ import info.bioinfweb.libralign.sequenceprovider.SequenceDataProvider;
 
 /**
  * Event object that indicates that a sequence provided by an instance of {@link SequenceDataProvider}
- * was renamed.
+ * was added or removed.
  * 
  * @author Ben St&ouml;ver
  * @since 0.0.0

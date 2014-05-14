@@ -165,7 +165,7 @@ public abstract class AbstractSequenceDataProvider<T> implements SequenceDataPro
 			idByNameMap.put(sequenceName, sequenceID);
 			nameByIDMap.put(sequenceID, sequenceName);
 			doAddSequence(sequenceID, sequenceName);
-			fireAfterSequenceChange(new SequenceChangeEvent(this, sequenceID, ListChangeType.INSERTION));
+			fireAfterSequenceChange(new SequenceChangeEvent<T>(this, sequenceID, ListChangeType.INSERTION));
 			return sequenceID;
 		}
 	}
@@ -210,7 +210,7 @@ public abstract class AbstractSequenceDataProvider<T> implements SequenceDataPro
 			if (result) {
 				removeSequenceNameMapping(sequenceID);
 				doRemoveSequence(sequenceID);
-				fireAfterSequenceChange(new SequenceChangeEvent(this, sequenceID, ListChangeType.DELETION));
+				fireAfterSequenceChange(new SequenceChangeEvent<T>(this, sequenceID, ListChangeType.DELETION));
 			}
 			return result;
 		}
@@ -256,7 +256,7 @@ public abstract class AbstractSequenceDataProvider<T> implements SequenceDataPro
 		  	idByNameMap.put(newSequenceName, sequenceID);
 		  	nameByIDMap.put(sequenceID, newSequenceName);
 		  	doRenameSequence(sequenceID, newSequenceName);
-				fireAfterSequenceChange(new SequenceChangeEvent(this, sequenceID, ListChangeType.DELETION));
+				fireAfterSequenceChange(new SequenceChangeEvent<T>(this, sequenceID, ListChangeType.DELETION));
 		  }
 			return sequenceName;
 		}
@@ -272,7 +272,7 @@ public abstract class AbstractSequenceDataProvider<T> implements SequenceDataPro
 	/**
 	 * Informs all listeners that a sequence has been inserted, removed or replaced.
 	 */
-	protected void fireAfterSequenceChange(SequenceChangeEvent e) {
+	protected void fireAfterSequenceChange(SequenceChangeEvent<T> e) {
 		Iterator<SequenceDataChangeListener> iterator = changeListeners.iterator();
 		while (iterator.hasNext()) {
 			iterator.next().afterSequenceChange(e);
@@ -283,7 +283,7 @@ public abstract class AbstractSequenceDataProvider<T> implements SequenceDataPro
 	/**
 	 * Informs all listeners that a sequence has been renamed.
 	 */
-	protected void fireAfterSequenceRenamed(SequenceRenamedEvent e) {
+	protected void fireAfterSequenceRenamed(SequenceRenamedEvent<T> e) {
 		Iterator<SequenceDataChangeListener> iterator = changeListeners.iterator();
 		while (iterator.hasNext()) {
 			iterator.next().afterSequenceRenamed(e);
@@ -294,7 +294,7 @@ public abstract class AbstractSequenceDataProvider<T> implements SequenceDataPro
 	/**
 	 * Informs all listeners that a sequence has been inserted, removed or replaced.
 	 */
-	protected void fireAfterTokenChange(TokenChangeEvent e) {
+	protected void fireAfterTokenChange(TokenChangeEvent<T> e) {
 		Iterator<SequenceDataChangeListener> iterator = changeListeners.iterator();
 		while (iterator.hasNext()) {
 			iterator.next().afterTokenChange(e);
