@@ -63,6 +63,7 @@ main/src/info/bioinfweb/libralign/selection/package-info.java -text svneol=unset
 main/src/info/bioinfweb/libralign/sequenceprovider/DataProvider.java -text svneol=unset#text/plain
 main/src/info/bioinfweb/libralign/sequenceprovider/SequenceDataChangeListener.java -text svneol=unset#text/plain
 main/src/info/bioinfweb/libralign/sequenceprovider/SequenceDataProvider.java -text svneol=unset#text/plain
+main/src/info/bioinfweb/libralign/sequenceprovider/SequenceDataProviderView.java -text svneol=unset#text/plain
 main/src/info/bioinfweb/libralign/sequenceprovider/SequenceDataProviderWriteType.java -text svneol=unset#text/plain
 main/src/info/bioinfweb/libralign/sequenceprovider/events/SequenceChangeEvent.java -text svneol=unset#text/plain
 main/src/info/bioinfweb/libralign/sequenceprovider/events/SequenceDataProviderChangeEvent.java -text svneol=unset#text/plain

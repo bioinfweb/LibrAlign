@@ -31,6 +31,7 @@ import info.bioinfweb.libralign.AlignmentSourceDataType;
 import info.bioinfweb.libralign.exception.AlignmentSourceNotWritableException;
 import info.bioinfweb.libralign.sequenceprovider.SequenceDataChangeListener;
 import info.bioinfweb.libralign.sequenceprovider.SequenceDataProvider;
+import info.bioinfweb.libralign.sequenceprovider.SequenceDataProviderView;
 import info.bioinfweb.libralign.sequenceprovider.SequenceDataProviderWriteType;
 import info.bioinfweb.libralign.sequenceprovider.implementations.swingundo.edits.LibrAlignSwingAlignmentEdit;
 import info.bioinfweb.libralign.sequenceprovider.implementations.swingundo.edits.sequence.SwingAddSequenceEdit;
@@ -72,7 +73,7 @@ import info.bioinfweb.libralign.sequenceprovider.implementations.swingundo.edits
  * 
  * @param <T> - the type of sequence elements (tokens) the implementing provider object works with
  */
-public class SwingUndoSequenceDataProvider<T> implements SequenceDataProvider<T> {
+public class SwingUndoSequenceDataProvider<T> implements SequenceDataProvider<T>, SequenceDataProviderView<T> {
 	protected SequenceDataProvider<T> provider;
 	private UndoManager undoManager;
 	private SwingEditFactory<T> editFactory;
