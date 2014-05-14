@@ -75,6 +75,7 @@ main/src/info/bioinfweb/libralign/sequenceprovider/implementations/AbstractSeque
 main/src/info/bioinfweb/libralign/sequenceprovider/implementations/AbstractSequenceIDIterator.java -text svneol=unset#text/plain
 main/src/info/bioinfweb/libralign/sequenceprovider/implementations/ArrayListSequenceDataProvider.java -text svneol=unset#text/plain
 main/src/info/bioinfweb/libralign/sequenceprovider/implementations/BioJavaSequenceDataProvider.java -text svneol=unset#text/plain
+main/src/info/bioinfweb/libralign/sequenceprovider/implementations/BitSequenceDataProvider.java -text svneol=unset#text/plain
 main/src/info/bioinfweb/libralign/sequenceprovider/implementations/package-info.java -text svneol=unset#text/plain
 main/src/info/bioinfweb/libralign/sequenceprovider/implementations/swingundo/SwingEditFactory.java -text svneol=unset#text/plain
 main/src/info/bioinfweb/libralign/sequenceprovider/implementations/swingundo/SwingUndoSequenceDataProvider.java -text svneol=unset#text/plain
@@ -94,6 +95,9 @@ main/src/info/bioinfweb/libralign/sequenceprovider/implementations/swingundo/edi
 main/src/info/bioinfweb/libralign/sequenceprovider/implementations/swingundo/edits/token/package-info.java -text svneol=unset#text/plain
 main/src/info/bioinfweb/libralign/sequenceprovider/implementations/swingundo/package-info.java -text svneol=unset#text/plain
 main/src/info/bioinfweb/libralign/sequenceprovider/package-info.java -text svneol=unset#text/plain
+main/src/info/bioinfweb/libralign/sequenceprovider/tokenset/BioJavaNucleotideTokenSet.java -text svneol=unset#text/plain
+main/src/info/bioinfweb/libralign/sequenceprovider/tokenset/BioJavaTokenSet.java -text svneol=unset#text/plain
+main/src/info/bioinfweb/libralign/sequenceprovider/tokenset/TokenSet.java -text svneol=unset#text/plain
 test/.classpath -text svneol=unset#text/plain
 test/.project -text svneol=unset#text/plain
 test/.settings/org.eclipse.jdt.core.prefs -text svneol=unset#text/plain
