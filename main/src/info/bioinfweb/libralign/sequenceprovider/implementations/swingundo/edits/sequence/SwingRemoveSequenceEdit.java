@@ -19,7 +19,10 @@
 package info.bioinfweb.libralign.sequenceprovider.implementations.swingundo.edits.sequence;
 
 
+import java.lang.reflect.Array;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 
 import javax.swing.undo.CannotRedoException;
 import javax.swing.undo.CannotUndoException;
@@ -38,16 +41,17 @@ import info.bioinfweb.libralign.sequenceprovider.implementations.swingundo.Swing
  */
 public class SwingRemoveSequenceEdit<T> extends SwingSequenceEdit<T> {
 	private String name;
-	private T[] tokens;
+	private Collection tokens;  // Raw type is necessary here, because the generic element type of the provider can't be determined during runtime and the class of the first token might be a subtype of the actual type.
 	
 
 	public SwingRemoveSequenceEdit(SwingUndoSequenceDataProvider<T> provider, int sequenceID) {
 		super(provider, sequenceID);
 		
 		name = getProvider().sequenceNameByID(sequenceID);
-		tokens = new Object[getProvider().getSequenceLength(sequenceID)];
-		for (int i = 0; i < tokens.length; i++) {
-			tokens[i] = getProvider().getTokenAt(sequenceID, i);
+		int length = getProvider().getSequenceLength(sequenceID);
+		tokens = new ArrayList<Object>(length);
+		for (int i = 0; i < length; i++) {
+			tokens.add(getProvider().getTokenAt(sequenceID, i));
 		}
 	}
 
@@ -62,7 +66,7 @@ public class SwingRemoveSequenceEdit<T> extends SwingSequenceEdit<T> {
 	@Override
 	public void undo() throws CannotUndoException {
 		getProvider().getUnderlyingProvider().addSequence(name);
-		getProvider().getUnderlyingProvider().insertTokensAt(sequenceID, 0, Arrays.asList(tokens));		
+		getProvider().getUnderlyingProvider().insertTokensAt(sequenceID, 0, tokens);		
 		super.undo();
 	}
 

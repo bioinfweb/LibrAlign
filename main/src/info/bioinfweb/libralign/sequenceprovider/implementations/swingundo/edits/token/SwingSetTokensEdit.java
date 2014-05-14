@@ -19,8 +19,7 @@
 package info.bioinfweb.libralign.sequenceprovider.implementations.swingundo.edits.token;
 
 
-import java.lang.reflect.Array;
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 
@@ -41,7 +40,7 @@ import info.bioinfweb.libralign.sequenceprovider.implementations.swingundo.Swing
  * @see SwingUndoSequenceDataProvider
  */
 public class SwingSetTokensEdit<T> extends SwingTokenEdit<T> {
-	private T[] oldTokens;
+	private Collection oldTokens;  // Raw type is necessary here, because the generic element type of the provider can't be determined during runtime and the class of the first token might be a subtype of the actual type.
 	
 	
 	/**
@@ -57,12 +56,15 @@ public class SwingSetTokensEdit<T> extends SwingTokenEdit<T> {
 			int beginIndex, Collection<? extends T> tokens) {
 		
 		super(provider, sequenceID, beginIndex, tokens);
-
 		
-		oldTokens = (T[])Array.newInstance(tokens.getClass().getComponentType(), tokens.size());  // Returned array should be a subclass of T[].
-		//TODO Check if this works
-		for (int i = 0; i < oldTokens.length; i++) {
-			oldTokens[i] = getProvider().getTokenAt(sequenceID, beginIndex + i);
+		if (tokens.isEmpty()) {
+			throw new IllegalArgumentException("The list of new tokens must not be empty.");
+		}
+		else {
+			oldTokens = new ArrayList<Object>(tokens.size());
+			for (int i = 0; i < tokens.size(); i++) {
+				oldTokens.add(getProvider().getTokenAt(sequenceID, beginIndex + i));
+			}
 		}
 	}
 	
@@ -92,9 +94,7 @@ public class SwingSetTokensEdit<T> extends SwingTokenEdit<T> {
 
 	@Override
 	public void undo() throws CannotUndoException {
-		for (int i = 0; i < oldTokens.length; i++) {
-			getProvider().getUnderlyingProvider().setTokenAt(sequenceID, beginIndex + i, oldTokens[i]);
-		}
+		getProvider().getUnderlyingProvider().setTokensAt(sequenceID, beginIndex, oldTokens);
 		super.undo();
 	}
 
@@ -105,7 +105,7 @@ public class SwingSetTokensEdit<T> extends SwingTokenEdit<T> {
 	 * @return an unmodifiable collection of tokens
 	 */
 	public Collection<T> getOldTokens() {
-		return Collections.unmodifiableCollection(Arrays.asList(oldTokens));
+		return Collections.unmodifiableCollection(oldTokens);
 	}
 
 
