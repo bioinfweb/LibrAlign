@@ -19,8 +19,8 @@
 package info.bioinfweb.libralign.sequenceprovider.implementations;
 
 
-import info.bioinfweb.libralign.AlignmentSourceDataType;
 import info.bioinfweb.libralign.sequenceprovider.SequenceDataProvider;
+import info.bioinfweb.libralign.sequenceprovider.tokenset.TokenSet;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -50,25 +50,25 @@ public class ArrayListSequenceDataProvider<T> extends AbstractListSequenceDataPr
 	 * which is only used if it is lower than {@link #getMaxSequenceLength()} to create new sequence array 
 	 * lists.
 	 * 
-	 * @param dataType - the token type the implementing class will be using
+	 * @param tokenSet - the token set which is supported by the implementation
 	 */
-	public ArrayListSequenceDataProvider(AlignmentSourceDataType dataType) {
-		this(dataType, DEFAULT_INITIAL_CAPACITY, true);
+	public ArrayListSequenceDataProvider(TokenSet<T> tokenSet) {
+		this(tokenSet, DEFAULT_INITIAL_CAPACITY, true);
 	}
 
 
 	/**
 	 * Creates a new instance of this class.
 	 * 
-	 * @param dataType - the token type the implementing class will be using
+	 * @param tokenSet - the token set which is supported by the implementation
 	 * @param initialCapacity - the initial capacity newly generated array lists will have
 	 * @param useMaxLength - Specify {@code true} here if {@code initialCapacity} shall only be used if it 
 	 *        is lower than {@link #getMaxSequenceLength()} to create new sequence array lists.
 	 */
-	public ArrayListSequenceDataProvider(AlignmentSourceDataType dataType, int initialCapacity, 
+	public ArrayListSequenceDataProvider(TokenSet<T> tokenSet, int initialCapacity, 
 			boolean useMaxLength) {
 		
-		super(dataType);
+		super(tokenSet);
 		this.initialCapacity = initialCapacity;
 		this.useMaxLength = useMaxLength;
 	}
