@@ -19,10 +19,16 @@
 package info.bioinfweb.libralign.sequenceprovider.adapters;
 
 
+import java.util.Iterator;
+
+import info.bioinfweb.libralign.AlignmentArea;
+import info.bioinfweb.libralign.SequenceOrder;
 import info.bioinfweb.libralign.sequenceprovider.SequenceDataProvider;
 
+import org.biojava3.core.sequence.MultipleSequenceAlignment;
 import org.biojava3.core.sequence.template.Compound;
 import org.biojava3.core.sequence.template.CompoundSet;
+import org.biojava3.core.sequence.template.LightweightProfile;
 import org.biojava3.core.sequence.template.Sequence;
 
 
@@ -89,6 +95,41 @@ public class BioJavaSequenceAdapter<T, C extends Compound> extends AbstractSeque
 	public SingleBioJavaSequenceAdapter<T, C> toSequence(int sequenceID, int offset, int length) {
 		return new SingleBioJavaSequenceAdapter<>(getUnderlyingProvider(), sequenceID, offset, length, 
 				getCompoundSet());
+	}
+	
+	
+	/**
+	 * Returns a BioJava alignment that contains the views of all sequences contained in the underlying data
+	 * source in the order they are stored there.
+	 * 
+	 * @return an instance of {@link MultipleSequenceAlignment} (Note that the implementation type of 
+	 *         {@link LightweightProfile} might change in future releases of LibrAlign.)
+	 */
+	public LightweightProfile<Sequence<C>, C> toLightweightProfile() {
+		MultipleSequenceAlignment<Sequence<C>, C> result = new MultipleSequenceAlignment<Sequence<C>, C>();
+		Iterator<Integer> iterator = getUnderlyingProvider().sequenceIDIterator();
+		while (iterator.hasNext()) {
+			result.addAlignedSequence(toSequence(iterator.next()));
+		}
+		return result;
+	}
+
+	
+	/**
+	 * Returns a BioJava alignment that contains the views of all sequences contained in the underlying data
+	 * source in the order specified in the {@code order} object. This method can be used to obtain an BioJava
+	 * alignment with the same order as an {@link AlignmentArea} area displaying these sequences.
+	 * 
+	 * @param order - the object specifying the order of the sequences in the returned alignment
+	 * @return an instance of {@link MultipleSequenceAlignment} (Note that the implementation type of 
+	 *         {@link LightweightProfile} might change in future releases of LibrAlign.)
+	 */
+	public LightweightProfile<Sequence<C>, C> toLightweightProfile(SequenceOrder order) {
+		MultipleSequenceAlignment<Sequence<C>, C> result = new MultipleSequenceAlignment<Sequence<C>, C>();
+		for (int i = 0; i < getUnderlyingProvider().getSequenceCount(); i++) {
+			result.addAlignedSequence(toSequence(order.idByIndex(i)));
+		}
+		return result;
 	}
 
 	
