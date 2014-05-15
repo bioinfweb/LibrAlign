@@ -32,12 +32,21 @@ import info.bioinfweb.libralign.sequenceprovider.SequenceDataProvider;
  *
  * @param <T> - the token type used by the underlying provider
  */
-public class CharSequenceAdapter<T> extends AbstractSequenceDataProviderAdapter<T> {
-	public CharSequenceAdapter(SequenceDataProvider<T> underlyingProvider) {
+public class CharSequenceAdapter<T> extends AbstractSequenceDataAdapter<T> {
+	private boolean cutLongRepresentations;
+	
+	
+	public CharSequenceAdapter(SequenceDataProvider<T> underlyingProvider, boolean cutLongRepresentations) {
 		super(underlyingProvider);
+		this.cutLongRepresentations = cutLongRepresentations;
 	}
 	
 	
+	public boolean isCutLongRepresentations() {
+		return cutLongRepresentations;
+	}
+
+
 	/**
 	 * Returns an implementation of {@link CharSequence} that acts as a view to the sequence with the
 	 * specified ID.
@@ -49,7 +58,7 @@ public class CharSequenceAdapter<T> extends AbstractSequenceDataProviderAdapter<
 	 * @return a sequence as a {@link CharSequence}
 	 */
 	public SingleCharSequenceAdapter<T> asCharSequence(int sequenceID) {
-		return new SingleCharSequenceAdapter<T>(getUnderlyingProvider(), sequenceID);
+		return new SingleCharSequenceAdapter<T>(getUnderlyingProvider(), sequenceID, isCutLongRepresentations());
 	}
 
 
@@ -60,6 +69,10 @@ public class CharSequenceAdapter<T> extends AbstractSequenceDataProviderAdapter<
 	 * 
 	 * @param sequenceID - the ID of the sequence to be viewed
 	 * @return a copy of the specified sequence as a string
+	 * 
+	 * @throws InvalidStringRepresentationException if one token in the underlying data source has a string 
+	 *         representation that is not exactly one character long and {@link #isCutLongRepresentations()} 
+	 *         was set to {@code false}
 	 */
 	public String toString(int sequenceID) {
 		return asCharSequence(sequenceID).toString();

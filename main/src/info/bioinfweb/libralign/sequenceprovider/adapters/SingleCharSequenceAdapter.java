@@ -21,7 +21,6 @@ package info.bioinfweb.libralign.sequenceprovider.adapters;
 
 import info.bioinfweb.commons.Math2;
 import info.bioinfweb.libralign.sequenceprovider.SequenceDataProvider;
-import info.bioinfweb.libralign.sequenceprovider.SequenceDataProviderAdapter;
 
 
 
@@ -37,11 +36,9 @@ import info.bioinfweb.libralign.sequenceprovider.SequenceDataProviderAdapter;
  *
  * @param <T> - the token type that is used by the underlying sequence data provider
  */
-public class SingleCharSequenceAdapter<T> implements CharSequence, SequenceDataProviderAdapter<T> {
-	private SequenceDataProvider<T> provider;
-	private int sequenceID;
-	private int offset;
-	private int length;
+public class SingleCharSequenceAdapter<T> extends AbstractSingleSequenceDataAdapter<T> 
+    implements CharSequence, SingleSequenceDataAdapter<T> {
+	
 	private boolean cutLongRepresentations;
 	
 
@@ -59,11 +56,7 @@ public class SingleCharSequenceAdapter<T> implements CharSequence, SequenceDataP
 	public SingleCharSequenceAdapter(SequenceDataProvider<T> provider, int sequenceID, int offset, int length,
 			boolean cutLongRepresentations) {
 		
-		super();
-		this.provider = provider;
-		this.sequenceID = sequenceID;
-		this.offset = offset;
-		this.length = length;
+		super(provider, sequenceID, offset, length);
 		this.cutLongRepresentations = cutLongRepresentations;
 	}
 
@@ -80,42 +73,7 @@ public class SingleCharSequenceAdapter<T> implements CharSequence, SequenceDataP
 	public SingleCharSequenceAdapter(SequenceDataProvider<T> provider, int sequenceID, 
 			boolean cutLongRepresentations) {
 		
-		super();
-		this.sequenceID = sequenceID;
-		this.provider = provider;
-		this.offset = 0;
-		this.length = Integer.MAX_VALUE;  // The real length will always be returned by length() since it will be smaller.
-		this.cutLongRepresentations = cutLongRepresentations;
-	}
-
-
-	/* (non-Javadoc)
-	 * @see info.bioinfweb.libralign.sequenceprovider.SequenceDataProviderAdapter#getUnderlyingProvider()
-	 */
-	@Override
-	public SequenceDataProvider<T> getUnderlyingProvider() {
-		return provider;
-	}
-
-
-	/**
-	 * The ID of the viewed sequence in the underlying sequence data provider.
-	 * 
-	 * @return the sequence ID
-	 */
-	public int getSequenceID() {
-		return sequenceID;
-	}
-
-
-	/**
-	 * Returns the index the first character in this sequence corresponds to in the original sequence in
-	 * the underlying sequence data provider.
-	 * 
-	 * @return a value >= 0
-	 */
-	public int getOffset() {
-		return offset;
+		this(provider, sequenceID, 0, Integer.MAX_VALUE, cutLongRepresentations);  // The real length will always be returned by length() since it will be smaller.
 	}
 
 
@@ -141,10 +99,10 @@ public class SingleCharSequenceAdapter<T> implements CharSequence, SequenceDataP
 	 * @throws IndexOutOfBoundsException if {@code index} was {@code < 0} or {@code >= }{@link #length()} 
 	 */
 	@Override
-	public char charAt(int index) {
+	public char charAt(int index) throws InvalidStringRepresentationException, IndexOutOfBoundsException {
 		if (Math2.isBetween(index, 0, length() - 1)) {
-			T token = provider.getTokenAt(sequenceID, offset + index); 
-			String representation = provider.getTokenSet().representationByToken(token);
+			T token = getUnderlyingProvider().getTokenAt(getSequenceID(), getOffset() + index); 
+			String representation = getUnderlyingProvider().getTokenSet().representationByToken(token);
 			if ((representation.length() == 1) || ((representation.length() > 0) && isCutLongRepresentations())) {
 				return representation.charAt(0);
 			}
@@ -158,16 +116,23 @@ public class SingleCharSequenceAdapter<T> implements CharSequence, SequenceDataP
 	}
 
 	
+	/**
+	 * Returns the length of this character sequence. Note that the return value might change if the length
+	 * of the viewed sequence changes.
+	 *
+	 * @return the number of characters in this sequence
+	 */
 	@Override
 	public int length() {
-		return Math.min(length, Math.max(0, provider.getSequenceLength(sequenceID) - offset));
+		return Math.min(super.length(), 
+				Math.max(0, getUnderlyingProvider().getSequenceLength(getSequenceID()) - getOffset()));
 	}
 
 	
 	@Override
 	public CharSequence subSequence(int start, int end) {
 		if (Math2.isBetween(start, 0, end) && Math2.isBetween(end, start, length())) {
-			return new SingleCharSequenceAdapter<T>(provider, sequenceID, start, end - start, 
+			return new SingleCharSequenceAdapter<T>(getUnderlyingProvider(), getSequenceID(), start, end - start, 
 					isCutLongRepresentations());
 		}
 		else {
@@ -176,6 +141,15 @@ public class SingleCharSequenceAdapter<T> implements CharSequence, SequenceDataP
 	}
 
 
+	/**
+	 * Returns a copy of this character sequence as a string.
+	 * 
+	 * @return the string representation of this object
+	 * 
+	 * @throws InvalidStringRepresentationException if one token in the underlying data source has a string 
+	 *         representation that is not exactly one character long and {@link #isCutLongRepresentations()} 
+	 *         was set to {@code false}
+	 */
 	@Override
 	public String toString() {
 		return new StringBuffer(this).toString();  //TODO Check if the constructor of StringBuffer does not use the method recursively.

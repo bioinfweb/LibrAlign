@@ -19,12 +19,12 @@
 package info.bioinfweb.libralign.sequenceprovider.adapters;
 
 import info.bioinfweb.libralign.sequenceprovider.SequenceDataProvider;
-import info.bioinfweb.libralign.sequenceprovider.SequenceDataProviderAdapter;
+import info.bioinfweb.libralign.sequenceprovider.SequenceDataAdapter;
 
 
 
 /**
- * All classes implementing {@link SequenceDataProviderAdapter}s can inherit from this class,
+ * All classes implementing {@link SequenceDataAdapter}s can inherit from this class,
  * which implements the access to the underlying data source. Although this class is not abstract
  * it does not make sense creating instances of it directly since it implements no functionality.
  * 
@@ -33,11 +33,11 @@ import info.bioinfweb.libralign.sequenceprovider.SequenceDataProviderAdapter;
  *
  * @param <T> - the token type used by the underlying provider
  */
-public class AbstractSequenceDataProviderAdapter<T> implements SequenceDataProviderAdapter<T> {
+public class AbstractSequenceDataAdapter<T> implements SequenceDataAdapter<T> {
 	private SequenceDataProvider<T> underlyingProvider;
 
 	
-	public AbstractSequenceDataProviderAdapter(SequenceDataProvider<T> underlyingProvider) {
+	public AbstractSequenceDataAdapter(SequenceDataProvider<T> underlyingProvider) {
 		super();
 		this.underlyingProvider = underlyingProvider;
 	}

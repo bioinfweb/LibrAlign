@@ -32,4 +32,4 @@ package info.bioinfweb.libralign.sequenceprovider;
  * @param <T> - the type of sequence elements (tokens) the implementing view works with
  * @param <U> - the type of sequence elements (tokens) the underlying provider works with
  */
-public interface SequenceDataView<T, U> extends SequenceDataProvider<T>, SequenceDataProviderAdapter<U> {}
+public interface SequenceDataView<T, U> extends SequenceDataProvider<T>, SequenceDataAdapter<U> {}

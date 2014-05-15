@@ -1,6 +1,6 @@
 /**
  * Contains adapter classes that allow to access the data provided by 
- * {@link info.bioinfweb.libralign.sequenceprovider.SequenceDataProviderAdapter} in other ways
+ * {@link info.bioinfweb.libralign.sequenceprovider.SequenceDataAdapter} in other ways
  * (e.g. as {@link java.lang.String}s or BioJava {@link org.biojava3.core.sequence.template.Sequence})s).
  * 
  * @author BenStoever

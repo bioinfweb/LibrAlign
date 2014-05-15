@@ -34,7 +34,7 @@ import org.biojava3.core.sequence.template.Sequence;
  *
  * @param <T> - the token type used by the underlying provider
  */
-public interface SequenceDataProviderAdapter<T> {
+public interface SequenceDataAdapter<T> {
 	/**
 	 * Returns the underlying sequence data provider that provides the data accessed with this object.
 	 * 
