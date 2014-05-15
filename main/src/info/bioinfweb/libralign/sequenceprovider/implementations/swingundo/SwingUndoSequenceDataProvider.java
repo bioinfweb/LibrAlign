@@ -27,7 +27,6 @@ import javax.swing.undo.UndoManager;
 import javax.swing.undo.UndoableEdit;
 
 import info.bioinfweb.commons.swing.AbstractDocumentEdit;
-import info.bioinfweb.libralign.AlignmentSourceDataType;
 import info.bioinfweb.libralign.sequenceprovider.SequenceDataChangeListener;
 import info.bioinfweb.libralign.sequenceprovider.SequenceDataProvider;
 import info.bioinfweb.libralign.sequenceprovider.SequenceDataView;
