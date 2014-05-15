@@ -21,10 +21,11 @@ package info.bioinfweb.libralign.demo;
 
 import info.bioinfweb.commons.bio.biojava3.alignment.SimpleAlignment;
 import info.bioinfweb.commons.bio.biojava3.alignment.template.Alignment;
+import info.bioinfweb.commons.bio.biojava3.core.sequence.compound.AlignmentAmbiguityNucleotideCompoundSet;
 import info.bioinfweb.libralign.AlignmentArea;
-import info.bioinfweb.libralign.AlignmentSourceDataType;
 import info.bioinfweb.libralign.dataarea.ConsensusSequenceArea;
 import info.bioinfweb.libralign.sequenceprovider.implementations.BioJavaSequenceDataProvider;
+import info.bioinfweb.libralign.sequenceprovider.tokenset.BioJavaTokenSet;
 
 import org.biojava3.core.sequence.DNASequence;
 import org.biojava3.core.sequence.compound.NucleotideCompound;
@@ -46,7 +47,9 @@ public class AbstractTestApplication {
 		
 		BioJavaSequenceDataProvider<DNASequence, NucleotideCompound> sequenceProvider = 
 				new BioJavaSequenceDataProvider<DNASequence, NucleotideCompound>(
-						alignment, AlignmentSourceDataType.NUCLEOTIDE);
+						new BioJavaTokenSet<NucleotideCompound>(
+								AlignmentAmbiguityNucleotideCompoundSet.getAlignmentAmbiguityNucleotideCompoundSet()),
+						alignment);
 		
 		AlignmentArea result = new AlignmentArea();
 		result.setSequenceProvider(sequenceProvider, false);
