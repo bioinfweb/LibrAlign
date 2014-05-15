@@ -21,6 +21,8 @@ package info.bioinfweb.libralign.sequenceprovider.tokenset;
 
 import info.bioinfweb.libralign.AlignmentArea;
 import info.bioinfweb.libralign.sequenceprovider.SequenceDataProvider;
+import info.bioinfweb.libralign.sequenceprovider.adapters.CharSequenceAdapter;
+import info.bioinfweb.libralign.sequenceprovider.adapters.StringAdapter;
 
 import java.util.Set;
 
@@ -41,19 +43,59 @@ import java.util.Set;
  */
 public interface TokenSet<T> extends Set<T>, Cloneable {
 	/**
-	 * Returns the character on the keyboard that can be pressed to insert the specified token into an
-	 * {@link AlignmentArea}. 
+	 * Returns the token from this set that is associated with the specified key character. This key can be 
+	 * pressed to insert the specified token into an {@link AlignmentArea}. 
 	 * <p>
-	 * Note that special
+	 * Note that the key character is only used by {@link AlignmentArea} if it does not collide with a default
+	 * keyboard action. (Usually the key character can be any lower or upper case letter or digit.)
 	 * 
-	 * @param token - the token to be inserted
-	 * @return a character
+	 * @param key - the character the user can press to insert the returned token into an {@link AlignmentArea}
+	 * @return the associated token (sequence element)
 	 */
-	public char keyCharByToken(T token);
+	public T tokenByKeyChar(char key);
 	
+	/**
+	 * Returns the representation string of the specified token that shall be displayed in an 
+	 * {@link AlignmentArea}.
+	 * <p>
+	 * Note that some {@link CharSequenceAdapter} and {@link StringAdapter} only use the first character
+	 * of the returned string to represent a token.
+	 * 
+	 * @param token - the token associated with the representation
+	 * @return a string which is at least one character long
+	 */
 	public String representationByToken(T token);
 	
+	/**
+	 * Calculates the maximal length of a representation returned by {@link #representationByToken(Object)}
+	 * of all tokens contained in this set.
+	 * 
+	 * @return Since all representations must be at least one character long the returned string should have
+	 *         a length >= 1.
+	 */
+	public int maxRepresentationLength();
+	
+	/**
+	 * Checks if all representation strings returned by {@link #representationByToken(Object)}
+	 * have the same length.
+	 * 
+	 * @return {@code true} if all lengths are equal, {@code false} otherwise
+	 */
+  public boolean representationLengthEqual();
+
+		/**
+	 * An description of the specified token (e.g. the full name of the compound like "Adenine"). 
+	 * 
+	 * @param token - the token that shall be described
+	 * @return a string containing no line breaks
+	 */
 	public String descriptionByToken(T token);
 	
+	/**
+	 * Returns a deep copy of this instance. Implementing this method is important when creating custom
+	 * implementations of this interface, because other classes in LibrAlign use this method internally. 
+	 * 
+	 * @return an identical token set
+	 */
 	public TokenSet<T> clone();
 }

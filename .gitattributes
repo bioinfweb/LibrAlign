@@ -113,9 +113,10 @@ main/src/info/bioinfweb/libralign/sequenceprovider/implementations/translation/R
 main/src/info/bioinfweb/libralign/sequenceprovider/implementations/translation/SameTokenTypeSequenceDataView.java -text svneol=unset#text/plain
 main/src/info/bioinfweb/libralign/sequenceprovider/implementations/translation/package-info.java -text svneol=unset#text/plain
 main/src/info/bioinfweb/libralign/sequenceprovider/package-info.java -text svneol=unset#text/plain
-main/src/info/bioinfweb/libralign/sequenceprovider/tokenset/BioJavaNucleotideTokenSet.java -text svneol=unset#text/plain
+main/src/info/bioinfweb/libralign/sequenceprovider/tokenset/AbstractTokenSet.java -text svneol=unset#text/plain
 main/src/info/bioinfweb/libralign/sequenceprovider/tokenset/BioJavaTokenSet.java -text svneol=unset#text/plain
 main/src/info/bioinfweb/libralign/sequenceprovider/tokenset/TokenSet.java -text svneol=unset#text/plain
+main/src/info/bioinfweb/libralign/sequenceprovider/tokenset/TokenSetTools.java -text svneol=unset#text/plain
 test/.classpath -text svneol=unset#text/plain
 test/.project -text svneol=unset#text/plain
 test/.settings/org.eclipse.jdt.core.prefs -text svneol=unset#text/plain

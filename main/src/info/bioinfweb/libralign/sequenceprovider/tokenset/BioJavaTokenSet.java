@@ -19,7 +19,79 @@
 package info.bioinfweb.libralign.sequenceprovider.tokenset;
 
 
+import java.util.Iterator;
 
-public class BioJavaTokenSet {
+import org.biojava3.core.sequence.template.Compound;
+import org.biojava3.core.sequence.template.CompoundSet;
+
+
+
+/**
+ * Implementation of {@link TokenSet} that adopts the contents of a BioJava {@link CompoundSet} object.
+ * 
+ * @author Ben St&ouml;ver
+ * @since 0.1.0
+ *
+ * @param <C> - the compound type of the compounds contained in this set
+ */
+public class BioJavaTokenSet<C extends Compound> extends AbstractTokenSet<C> implements TokenSet<C> {
+	/**
+	 * A constructor used to clone instances of this class.
+	 * 
+	 * @param tokenSet - the instance to be cloned
+	 */
+	public BioJavaTokenSet(BioJavaTokenSet<C> tokenSet) {
+		super();
+		addAll(tokenSet);
+		getKeyMap().putAll(tokenSet.getKeyMap());
+	}
 	
+	
+	public BioJavaTokenSet(CompoundSet<C> compoundSet) {
+		super();
+		
+		addAll(compoundSet.getAllCompounds());
+		if ((compoundSet.getMaxSingleCompoundStringLength() == 1) && compoundSet.isCompoundStringLengthEqual()) {
+			Iterator<C> iterator = iterator();
+			while (iterator.hasNext()) {
+				C compound = iterator.next();
+				getKeyMap().put(representationByToken(compound).charAt(0), compound);
+			}
+		}
+	}
+
+
+	@Override
+	public String representationByToken(C token) {
+		return token.getShortName();  //TODO Does this return the same as AbstractSequence.getBase()? Does this also return codons? 
+	}
+
+	
+	@Override
+	public int maxRepresentationLength() {
+		return TokenSetTools.maxRepresentationLength(this);
+	}
+
+
+	@Override
+	public boolean representationLengthEqual() {
+		return TokenSetTools.representationLengthEqual(this);
+	}
+
+
+	@Override
+	public String descriptionByToken(C token) {
+		return token.getDescription();
+	}
+
+
+	/**
+	 * Clones this instance.
+	 * 
+	 * @return a deep copy of this object.
+	 */
+	@Override
+	public BioJavaTokenSet<C> clone() {
+		return new BioJavaTokenSet<C>(this);
+	}
 }
