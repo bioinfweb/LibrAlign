@@ -19,11 +19,11 @@
 package info.bioinfweb.libralign.sequenceprovider.implementations;
 
 
-import info.bioinfweb.libralign.AlignmentSourceDataType;
 import info.bioinfweb.libralign.exception.AlignmentSourceNotWritableException;
 import info.bioinfweb.libralign.sequenceprovider.SequenceDataProvider;
 import info.bioinfweb.libralign.sequenceprovider.SequenceDataProviderWriteType;
 import info.bioinfweb.libralign.sequenceprovider.events.TokenChangeEvent;
+import info.bioinfweb.libralign.sequenceprovider.tokenset.TokenSet;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -47,10 +47,10 @@ public abstract class AbstractListSequenceDataProvider<T>
 	/**
 	 * Creates a new instance of this class.
 	 * 
-	 * @param dataType - the token type the implementing class will be using
+	 * @param tokenSet - the token set which is supported by the implementation
 	 */
-	public AbstractListSequenceDataProvider(AlignmentSourceDataType dataType) {
-		super(dataType);
+	public AbstractListSequenceDataProvider(TokenSet<T> tokenSet) {
+		super(tokenSet);
 	}
 
 	

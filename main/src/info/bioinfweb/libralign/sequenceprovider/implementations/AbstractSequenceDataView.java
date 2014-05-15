@@ -19,17 +19,12 @@
 package info.bioinfweb.libralign.sequenceprovider.implementations;
 
 
-import java.util.Collection;
 import java.util.Iterator;
 
-import info.bioinfweb.libralign.AlignmentSourceDataType;
 import info.bioinfweb.libralign.exception.AlignmentSourceNotWritableException;
-import info.bioinfweb.libralign.exception.DuplicateSequenceNameException;
-import info.bioinfweb.libralign.exception.SequenceNotFoundException;
-import info.bioinfweb.libralign.sequenceprovider.SequenceDataChangeListener;
 import info.bioinfweb.libralign.sequenceprovider.SequenceDataProvider;
-import info.bioinfweb.libralign.sequenceprovider.SequenceDataProviderWriteType;
 import info.bioinfweb.libralign.sequenceprovider.SequenceDataView;
+import info.bioinfweb.libralign.sequenceprovider.tokenset.TokenSet;
 
 
 
@@ -45,6 +40,7 @@ import info.bioinfweb.libralign.sequenceprovider.SequenceDataView;
  */
 public abstract class AbstractSequenceDataView<T, U> implements SequenceDataView<T, U>{
   private SequenceDataProvider<U> underlyingProvider;
+  private TokenSet<T> tokenSet;
 
   
 	/**
@@ -52,8 +48,9 @@ public abstract class AbstractSequenceDataView<T, U> implements SequenceDataView
 	 * 
 	 * @param underlyingProvider - the underlying provider to be viewed
 	 */
-	public AbstractSequenceDataView(SequenceDataProvider<U> underlyingProvider) {
+	public AbstractSequenceDataView(TokenSet<T> tokenSet, SequenceDataProvider<U> underlyingProvider) {
 		super();
+		this.tokenSet = tokenSet;
 		this.underlyingProvider = underlyingProvider;
 	}
 
@@ -61,6 +58,18 @@ public abstract class AbstractSequenceDataView<T, U> implements SequenceDataView
 	@Override
 	public SequenceDataProvider<U> getUnderlyingProvider() {
 		return underlyingProvider;
+	}
+
+
+	@Override
+	public TokenSet<T> getTokenSet() {
+		return tokenSet;
+	}
+
+
+	@Override
+	public void setTokenSet(TokenSet<T> tokenSet) {
+		this.tokenSet = tokenSet;
 	}
 
 

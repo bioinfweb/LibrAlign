@@ -39,7 +39,7 @@ import java.util.Set;
  *
  * @param <T> - the type of sequence elements (tokens) used in the sequences of an {@link AlignmentArea}
  */
-public interface TokenSet<T> extends Set<T> {
+public interface TokenSet<T> extends Set<T>, Cloneable {
 	/**
 	 * Returns the character on the keyboard that can be pressed to insert the specified token into an
 	 * {@link AlignmentArea}. 
@@ -51,7 +51,11 @@ public interface TokenSet<T> extends Set<T> {
 	 */
 	public char keyCharByToken(T token);
 	
+	public char charRepresentationByToken(T token);
+	
 	public String representationByToken(T token);
 	
 	public String descriptionByToken(T token);
+	
+	public TokenSet<T> clone();
 }

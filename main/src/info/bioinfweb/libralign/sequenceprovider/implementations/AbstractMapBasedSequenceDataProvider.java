@@ -21,9 +21,9 @@ package info.bioinfweb.libralign.sequenceprovider.implementations;
 
 import info.bioinfweb.commons.collections.ListChangeType;
 import info.bioinfweb.libralign.AlignmentArea;
-import info.bioinfweb.libralign.AlignmentSourceDataType;
 import info.bioinfweb.libralign.SequenceOrder;
 import info.bioinfweb.libralign.sequenceprovider.events.SequenceChangeEvent;
+import info.bioinfweb.libralign.sequenceprovider.tokenset.TokenSet;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -58,14 +58,14 @@ public abstract class AbstractMapBasedSequenceDataProvider<S, T> extends Abstrac
 	/**
 	 * Creates a new instance of this class with a custom map and list implementation.
 	 * 
-	 * @param dataType - the token type the sequences of this alignment consist of
+	 * @param tokenSet - the token set which is supported by the implementation
 	 * @param sequenceMap - the map instance used to assign sequences to their IDs
 	 * @param sequenceOrder - the list object defining the order of the sequences
 	 */
-	public AbstractMapBasedSequenceDataProvider(AlignmentSourceDataType dataType,
-			Map<Integer, S> sequenceMap, List<Integer> sequenceOrder) {
+	public AbstractMapBasedSequenceDataProvider(TokenSet<T> tokenSet, Map<Integer, S> sequenceMap, 
+			List<Integer> sequenceOrder) {
 		
-		super(dataType);
+		super(tokenSet);
 		this.sequenceMap = sequenceMap;
 		this.sequenceOrder = sequenceOrder;
 	}
@@ -77,8 +77,8 @@ public abstract class AbstractMapBasedSequenceDataProvider<S, T> extends Abstrac
 	 * @param dataType - the token type the sequences of this alignment consist of
 	 * @param sequenceMap - the map instance used to assign sequences to their IDs
 	 */
-	public AbstractMapBasedSequenceDataProvider(AlignmentSourceDataType dataType,	Map<Integer, S> sequenceMap) {
-		this(dataType, sequenceMap, new ArrayList<Integer>());
+	public AbstractMapBasedSequenceDataProvider(TokenSet<T> tokenSet,	Map<Integer, S> sequenceMap) {
+		this(tokenSet, sequenceMap, new ArrayList<Integer>());
 	}
 
 
@@ -87,8 +87,8 @@ public abstract class AbstractMapBasedSequenceDataProvider<S, T> extends Abstrac
 	 * 
 	 * @param dataType - the token type the sequences of this alignment consist of
 	 */
-	public AbstractMapBasedSequenceDataProvider(AlignmentSourceDataType dataType) {
-		this(dataType, new TreeMap<Integer, S>());
+	public AbstractMapBasedSequenceDataProvider(TokenSet<T> tokenSet) {
+		this(tokenSet, new TreeMap<Integer, S>());
 	}
 
 

@@ -45,6 +45,7 @@ public class DNASequenceDataView extends SameTokenTypeSequenceDataView<Nucleotid
 	 */
 	public DNASequenceDataView(SequenceDataProvider<NucleotideCompound> underlyingProvider) {
 		super(underlyingProvider);
+		getTokenSet().add(THYMINE);  // Just to be sure.
 	}
 
 	

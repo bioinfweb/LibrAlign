@@ -31,6 +31,7 @@ import info.bioinfweb.libralign.AlignmentSourceDataType;
 import info.bioinfweb.libralign.exception.AlignmentSourceNotWritableException;
 import info.bioinfweb.libralign.exception.DuplicateSequenceNameException;
 import info.bioinfweb.libralign.exception.SequenceNotFoundException;
+import info.bioinfweb.libralign.sequenceprovider.tokenset.TokenSet;
 
 
 
@@ -56,6 +57,149 @@ import info.bioinfweb.libralign.exception.SequenceNotFoundException;
  * @param <T> - the type of sequence elements (tokens) the implementing provider object works with
  */
 public interface SequenceDataProvider<T> {
+	/**
+	 * Returns the token set which is supported by the implementation.
+	 * 
+	 * @return a token set containing all valid tokens
+	 */
+	public TokenSet<T> getTokenSet();
+	
+	/**
+	 * Replaces the current token set with the specified one.
+	 * 
+	 * @param set - the new token set to be used
+	 */
+	public void setTokenSet(TokenSet<T> set);
+	
+	/**
+	 * Returns the length of the specified sequence.
+	 * 
+	 * @param sequenceID - the identifier the sequence in the alignment
+	 * @return the length of the sequence or {@code -1} if no sequence with the specified name exists
+	 */
+	public int getSequenceLength(int sequenceID);
+	
+	/**
+	 * Returns the length of the longest sequence in the alignment which is equivalent to the length of
+	 * the alignment. 
+	 * <p>
+	 * Note that this value represents the number of compounds of the specified data type. If e.g. a
+	 * DNA data source is viewed as amino acid data this method would still return the number of 
+	 * nucleotides in the longest sequence. 
+	 * 
+	 * @return the number of columns in the alignment or {@code 0} if there are not sequences contained
+	 *         in the underlying data source
+	 */
+	public int getMaxSequenceLength();
+
+	/**
+	 * Returns a value that specifies if whole sequences or single tokens can be edited in the underlying 
+	 * data source.
+	 * 
+	 * @return the write type of this data source 
+	 */
+	public SequenceDataProviderWriteType getWriteType();
+	
+	/**
+	 * Checks of tokens can be changed in the underlying data source
+	 * 
+	 * @return {@code true} if token can be written or removed, {@code false} otherwise
+	 */
+	public boolean isTokensReadOnly();
+	
+	/**
+	 * Checks of whole sequences can be changed in the underlying data source
+	 * 
+	 * @return {@code true} if sequences can be written, renamed or removed, {@code false} otherwise
+	 */
+	public boolean isSequencesReadOnly();
+	
+  /**
+   * Checks if a sequence associated with the specified unique identifier is contained in this model.
+   * 
+   * @param sequenceID - the ID of the sequence to checked on
+   * @return {@code true} if an according sequence was found, {@code false} otherwise 
+   */
+  public boolean containsSequence(int sequenceID);
+  
+  /**
+   * Returns the unique sequence ID associated with the specified name.
+   * 
+   * @param sequenceName - the name of the sequence that would be visible to the application user
+   * @return the sequence ID or {@code -1} if no sequence with the specified name is contained in this model
+   */
+  public int sequenceIDByName(String sequenceName);
+
+  /**
+   * Returns the sequence name (that would be visible to the application user) associated with the 
+   * specified unique ID.
+   * 
+   * @param sequenceID - the unique unmodifiable ID the sequence is identified by
+   * @return the sequence name or {@code null} if no sequence with this ID is contained in this model
+   */
+  public String sequenceNameByID(int sequenceID);
+
+  /**
+   * Adds a new empty sequence to the underlying data source.
+   * 
+   * @param sequenceName - the name of the new sequence
+   * @return the unique ID of the new sequence
+	 * 
+	 * @throws AlignmentSourceNotWritableException if the underlying data source is not writable for sequences
+   */
+  public int addSequence(String sequenceName) throws AlignmentSourceNotWritableException;
+  
+  /**
+   * Removes the specified sequence from the underlying data source.
+   * 
+   * @param sequenceID - the unique ID of the sequence to be removed
+   * @return {@code true} if an sequence with the specified ID was removed, {@code false} 
+   *         if no sequence with the specified ID was contained in this model
+	 * 
+	 * @throws AlignmentSourceNotWritableException if the underlying data source is not writable for sequences
+   */
+  public boolean removeSequence(int sequenceID) throws AlignmentSourceNotWritableException;
+  
+  /**
+   * Renames a sequence in the underlying data source.
+   * 
+   * @param sequenceID - the ID of the sequence to be renamed
+   * @param newSequenceName - the new name the sequence shall have
+   * @return the name the sequence had until now
+	 * 
+	 * @throws AlignmentSourceNotWritableException if the underlying data source is not writable for sequences
+	 * @throws DuplicateSequenceNameException if a sequence with the specified new name is already present in 
+	 *         the underlying data source 
+	 * @throws SequenceNotFoundException if a sequence with the specified ID is not present the underlying
+	 *         data source
+   */
+  public String renameSequence(int sequenceID, String newSequenceName) 
+  		throws AlignmentSourceNotWritableException, DuplicateSequenceNameException, SequenceNotFoundException;
+  
+	/**
+	 * Returns an iterator over unique IDs of all sequences contained in the underlying data source
+	 * in the order they are stored in this model.
+	 * 
+	 * @return
+	 */
+	public Iterator<Integer> sequenceIDIterator();
+  
+	/**
+	 * Returns the number of sequences in the underlying data source.
+	 */
+	public int getSequenceCount();
+
+  /**
+   * Returns all change listeners currently attached to this object. This collection is writable
+   * and should also be used to add or remove listeners.
+   * <p>
+   * This method returns the same object in every call. Therefore changes made to different references
+   * always affect all references.
+   * 
+   * @return a collection object containing the listeners
+   */
+  public Collection<SequenceDataChangeListener> getChangeListeners();
+
 	/**
 	 * Returns the token to be displayed at the specified position. Depending on the return value of
 	 * {@link #getDataType()} the returned object should be an instance of the following classes:
@@ -162,138 +306,4 @@ public interface SequenceDataProvider<T> {
 	 * @throws AlignmentSourceNotWritableException if the underlying data source is not writable for tokens
 	 */
 	public void removeTokensAt(int sequenceID, int beginIndex, int endIndex) throws AlignmentSourceNotWritableException;
-	
-	/**
-	 * Returns the length of the specified sequence.
-	 * 
-	 * @param sequenceID - the identifier the sequence in the alignment
-	 * @return the length of the sequence or {@code -1} if no sequence with the specified name exists
-	 */
-	public int getSequenceLength(int sequenceID);
-	
-	/**
-	 * Returns the length of the longest sequence in the alignment which is equivalent to the length of
-	 * the alignment. 
-	 * <p>
-	 * Note that this value represents the number of compounds of the specified data type. If e.g. a
-	 * DNA data source is viewed as amino acid data this method would still return the number of 
-	 * nucleotides in the longest sequence. 
-	 * 
-	 * @return the number of columns in the alignment or {@code 0} if there are not sequences contained
-	 *         in the underlying data source
-	 */
-	public int getMaxSequenceLength();
-
-	/**
-	 * Returns a value that specifies if whole sequences or single tokens can be edited in the underlying 
-	 * data source.
-	 * 
-	 * @return the write type of this data source 
-	 */
-	public SequenceDataProviderWriteType getWriteType();
-	
-	/**
-	 * Checks of tokens can be changed in the underlying data source
-	 * 
-	 * @return {@code true} if token can be written or removed, {@code false} otherwise
-	 */
-	public boolean isTokensReadOnly();
-	
-	/**
-	 * Checks of whole sequences can be changed in the underlying data source
-	 * 
-	 * @return {@code true} if sequences can be written, renamed or removed, {@code false} otherwise
-	 */
-	public boolean isSequencesReadOnly();
-	
-  /**
-   * Returns the data type of the underlying sequences.
-   */
-  public AlignmentSourceDataType getDataType();
-  
-  /**
-   * Checks if a sequence associated with the specified unique identifier is contained in this model.
-   * 
-   * @param sequenceID - the ID of the sequence to checked on
-   * @return {@code true} if an according sequence was found, {@code false} otherwise 
-   */
-  public boolean containsSequence(int sequenceID);
-  
-  /**
-   * Returns the unique sequence ID associated with the specified name.
-   * 
-   * @param sequenceName - the name of the sequence that would be visible to the application user
-   * @return the sequence ID or {@code -1} if no sequence with the specified name is contained in this model
-   */
-  public int sequenceIDByName(String sequenceName);
-
-  /**
-   * Returns the sequence name (that would be visible to the application user) associated with the 
-   * specified unique ID.
-   * 
-   * @param sequenceID - the unique unmodifiable ID the sequence is identified by
-   * @return the sequence name or {@code null} if no sequence with this ID is contained in this model
-   */
-  public String sequenceNameByID(int sequenceID);
-
-  /**
-   * Adds a new empty sequence to the underlying data source.
-   * 
-   * @param sequenceName - the name of the new sequence
-   * @return the unique ID of the new sequence
-	 * 
-	 * @throws AlignmentSourceNotWritableException if the underlying data source is not writable for sequences
-   */
-  public int addSequence(String sequenceName) throws AlignmentSourceNotWritableException;
-  
-  /**
-   * Removes the specified sequence from the underlying data source.
-   * 
-   * @param sequenceID - the unique ID of the sequence to be removed
-   * @return {@code true} if an sequence with the specified ID was removed, {@code false} 
-   *         if no sequence with the specified ID was contained in this model
-	 * 
-	 * @throws AlignmentSourceNotWritableException if the underlying data source is not writable for sequences
-   */
-  public boolean removeSequence(int sequenceID) throws AlignmentSourceNotWritableException;
-  
-  /**
-   * Renames a sequence in the underlying data source.
-   * 
-   * @param sequenceID - the ID of the sequence to be renamed
-   * @param newSequenceName - the new name the sequence shall have
-   * @return the name the sequence had until now
-	 * 
-	 * @throws AlignmentSourceNotWritableException if the underlying data source is not writable for sequences
-	 * @throws DuplicateSequenceNameException if a sequence with the specified new name is already present in 
-	 *         the underlying data source 
-	 * @throws SequenceNotFoundException if a sequence with the specified ID is not present the underlying
-	 *         data source
-   */
-  public String renameSequence(int sequenceID, String newSequenceName) 
-  		throws AlignmentSourceNotWritableException, DuplicateSequenceNameException, SequenceNotFoundException;
-  
-	/**
-	 * Returns an iterator over unique IDs of all sequences contained in the underlying data source
-	 * in the order they are stored in this model.
-	 * 
-	 * @return
-	 */
-	public Iterator<Integer> sequenceIDIterator();
-  
-	/**
-	 * Returns the number of sequences in the underlying data source.
-	 */
-	public int getSequenceCount();
-
-  /**
-   * Returns all change listeners currently attached to this object. This collection is writable
-   * and should also be used to add or remove listeners.
-   * <p>
-   * This method returns the same object in every call. Therefore changes made to different references
-   * always affect all references.
-   * 
-   * @return a collection object containing the listeners
-   */
-  public Collection<SequenceDataChangeListener> getChangeListeners();
 }

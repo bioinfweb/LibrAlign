@@ -41,6 +41,7 @@ import info.bioinfweb.libralign.sequenceprovider.implementations.swingundo.edits
 import info.bioinfweb.libralign.sequenceprovider.implementations.swingundo.edits.token.SwingInsertTokensEdit;
 import info.bioinfweb.libralign.sequenceprovider.implementations.swingundo.edits.token.SwingRemoveTokensEdit;
 import info.bioinfweb.libralign.sequenceprovider.implementations.swingundo.edits.token.SwingSetTokensEdit;
+import info.bioinfweb.libralign.sequenceprovider.tokenset.TokenSet;
 
 
 
@@ -192,6 +193,18 @@ public class SwingUndoSequenceDataProvider<T> implements SequenceDataProvider<T>
 	
 	
 	@Override
+	public TokenSet<T> getTokenSet() {
+		return provider.getTokenSet();
+	}
+
+
+	@Override
+	public void setTokenSet(TokenSet<T> set) {
+		provider.setTokenSet(set);
+	}
+
+
+	@Override
 	public T getTokenAt(int sequenceID, int index) {
 		return provider.getTokenAt(sequenceID, index);
 	}
@@ -285,12 +298,6 @@ public class SwingUndoSequenceDataProvider<T> implements SequenceDataProvider<T>
 	@Override
 	public boolean isSequencesReadOnly() {
 		return provider.isSequencesReadOnly();
-	}
-
-
-	@Override
-	public AlignmentSourceDataType getDataType() {
-		return provider.getDataType();
 	}
 
 

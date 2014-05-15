@@ -46,6 +46,7 @@ public class RNASequenceDataView extends SameTokenTypeSequenceDataView<Nucleotid
 	 */
 	public RNASequenceDataView(SequenceDataProvider<NucleotideCompound> underlyingProvider) {
 		super(underlyingProvider);
+		getTokenSet().add(URACIL);  // Just to be sure.
 	}
 
 	

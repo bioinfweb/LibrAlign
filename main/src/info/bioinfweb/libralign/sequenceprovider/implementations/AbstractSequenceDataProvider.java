@@ -38,6 +38,7 @@ import info.bioinfweb.libralign.sequenceprovider.SequenceDataProviderWriteType;
 import info.bioinfweb.libralign.sequenceprovider.events.SequenceChangeEvent;
 import info.bioinfweb.libralign.sequenceprovider.events.SequenceRenamedEvent;
 import info.bioinfweb.libralign.sequenceprovider.events.TokenChangeEvent;
+import info.bioinfweb.libralign.sequenceprovider.tokenset.TokenSet;
 
 
 
@@ -50,10 +51,10 @@ import info.bioinfweb.libralign.sequenceprovider.events.TokenChangeEvent;
  * @param <T> - the type of sequence elements (tokens) the implementing provider object works with
  */
 public abstract class AbstractSequenceDataProvider<T> implements SequenceDataProvider<T> {
-	private AlignmentSourceDataType dataType;
 	private Map<String, Integer> idByNameMap = new TreeMap<String, Integer>();
 	private Map<Integer, String> nameByIDMap = new TreeMap<Integer, String>();
 	private int nextID = 0;
+	private TokenSet<T> tokenSet;
 	private List<SequenceDataChangeListener> changeListeners = new ArrayList<SequenceDataChangeListener>();
 
 	
@@ -62,11 +63,23 @@ public abstract class AbstractSequenceDataProvider<T> implements SequenceDataPro
 	 * 
 	 * @param dataType - the token type the implementing class will be using
 	 */
-	public AbstractSequenceDataProvider(AlignmentSourceDataType dataType) {
+	public AbstractSequenceDataProvider(TokenSet<T> tokenSet) {
 		super();
-		this.dataType = dataType;
+		this.tokenSet =  tokenSet;
 	}
 	
+
+	@Override
+	public TokenSet<T> getTokenSet() {
+		return tokenSet;
+	}
+
+
+	@Override
+	public void setTokenSet(TokenSet<T> set) {
+		tokenSet = set;
+	}
+
 
 	protected Map<String, Integer> getIDByNameMap() {
 		return idByNameMap;
@@ -78,15 +91,6 @@ public abstract class AbstractSequenceDataProvider<T> implements SequenceDataPro
 	}
 
 
-	/* (non-Javadoc)
-	 * @see info.bioinfweb.libralign.alignmentprovider.SequenceDataProvider#getDataType()
-	 */
-	@Override
-	public AlignmentSourceDataType getDataType() {
-		return dataType;
-	}
-	
-	
 	@Override
 	public boolean isTokensReadOnly() {
 		return getWriteType().equals(SequenceDataProviderWriteType.SEQUENCES_ONLY) ||

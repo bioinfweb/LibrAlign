@@ -19,7 +19,6 @@
 package info.bioinfweb.libralign.sequenceprovider.implementations.translation;
 
 
-import info.bioinfweb.libralign.AlignmentSourceDataType;
 import info.bioinfweb.libralign.exception.AlignmentSourceNotWritableException;
 import info.bioinfweb.libralign.exception.DuplicateSequenceNameException;
 import info.bioinfweb.libralign.exception.SequenceNotFoundException;
@@ -57,7 +56,7 @@ public abstract class SameTokenTypeSequenceDataView<T> extends AbstractSequenceD
 	 * @param underlyingProvider - the underlying provider to be viewed
 	 */
 	public SameTokenTypeSequenceDataView(SequenceDataProvider<T> underlyingProvider) {
-		super(underlyingProvider);
+		super(underlyingProvider.getTokenSet().clone(), underlyingProvider);
 	}
 
 
@@ -145,12 +144,6 @@ public abstract class SameTokenTypeSequenceDataView<T> extends AbstractSequenceD
 	@Override
 	public boolean isTokensReadOnly() {
 		return getUnderlyingProvider().isTokensReadOnly();
-	}
-
-
-	@Override
-	public AlignmentSourceDataType getDataType() {
-		return getUnderlyingProvider().getDataType();
 	}
 
 

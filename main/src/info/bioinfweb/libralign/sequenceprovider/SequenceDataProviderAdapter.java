@@ -19,17 +19,26 @@
 package info.bioinfweb.libralign.sequenceprovider;
 
 
+import org.biojava3.core.sequence.template.Sequence;
+
+
+
 
 /**
- * This interface should be implemented by all classes which return the contents of another implementation
- * of {@link SequenceDataProvider} in a modified way.
- * <p>
- * An example would be the translation from nucleotide sequences to amino acid sequences.
+ * Classes implementing this interface provide access to the data provided by an implementation of
+ * {@link SequenceDataProvider} in a different way (e.g. as a set of {@link CharSequence}s or
+ * BioJava {@link Sequence}s).
  * 
  * @author Ben St&ouml;ver
  * @since 0.1.0
  *
- * @param <T> - the type of sequence elements (tokens) the implementing view works with
- * @param <U> - the type of sequence elements (tokens) the underlying provider works with
+ * @param <T> - the token type used by the underlying provider
  */
-public interface SequenceDataView<T, U> extends SequenceDataProvider<T>, SequenceDataProviderAdapter<U> {}
+public interface SequenceDataProviderAdapter<T> {
+	/**
+	 * Returns the underlying sequence data provider that provides the data accessed with this object.
+	 * 
+	 * @return the underlying sequence data provider implementation
+	 */
+	public SequenceDataProvider<T> getUnderlyingProvider();
+}

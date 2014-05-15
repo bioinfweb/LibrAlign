@@ -34,6 +34,7 @@ import info.bioinfweb.libralign.AlignmentSourceDataType;
 import info.bioinfweb.libralign.exception.AlignmentSourceNotWritableException;
 import info.bioinfweb.libralign.sequenceprovider.SequenceDataProvider;
 import info.bioinfweb.libralign.sequenceprovider.SequenceDataProviderWriteType;
+import info.bioinfweb.libralign.sequenceprovider.tokenset.TokenSet;
 
 
 
@@ -65,8 +66,8 @@ public class BioJavaSequenceDataProvider<S extends Sequence<C>, C extends Compou
 	}
 	
 	
-	public BioJavaSequenceDataProvider(Alignment<S, C> alignment, AlignmentSourceDataType dataType) {
-		super(dataType);
+	public BioJavaSequenceDataProvider(TokenSet<C> tokenSet, Alignment<S, C> alignment) {
+		super(tokenSet);
 		this.alignment = alignment;
 		setMapEntries();
 	}
@@ -83,8 +84,8 @@ public class BioJavaSequenceDataProvider<S extends Sequence<C>, C extends Compou
 	}
 	
 
-	public BioJavaSequenceDataProvider(Profile<S, C> profile, AlignmentSourceDataType dataType) {
-		super(dataType);
+	public BioJavaSequenceDataProvider(TokenSet<C> tokenSet, Profile<S, C> profile) {
+		super(tokenSet);
 		
 		alignment = new SimpleAlignment<S, C>();
 		for (int i = 0; i < profile.getSize(); i++) {
@@ -102,8 +103,8 @@ public class BioJavaSequenceDataProvider<S extends Sequence<C>, C extends Compou
 	}
 
 
-	public BioJavaSequenceDataProvider(Map<String, S> map, AlignmentSourceDataType dataType) {
-		super(dataType);
+	public BioJavaSequenceDataProvider(TokenSet<C> tokenSet, Map<String, S> map) {
+		super(tokenSet);
 		
 		alignment = new SimpleAlignment<S, C>();
 		Iterator<String> iterator = map.keySet().iterator();
