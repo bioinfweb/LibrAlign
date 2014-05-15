@@ -29,15 +29,15 @@ import java.util.TreeMap;
 
 import info.bioinfweb.commons.collections.ListChangeType;
 import info.bioinfweb.libralign.AlignmentSourceDataType;
-import info.bioinfweb.libralign.exception.AlignmentSourceNotWritableException;
-import info.bioinfweb.libralign.exception.DuplicateSequenceNameException;
-import info.bioinfweb.libralign.exception.SequenceNotFoundException;
 import info.bioinfweb.libralign.sequenceprovider.SequenceDataChangeListener;
 import info.bioinfweb.libralign.sequenceprovider.SequenceDataProvider;
 import info.bioinfweb.libralign.sequenceprovider.SequenceDataProviderWriteType;
 import info.bioinfweb.libralign.sequenceprovider.events.SequenceChangeEvent;
 import info.bioinfweb.libralign.sequenceprovider.events.SequenceRenamedEvent;
 import info.bioinfweb.libralign.sequenceprovider.events.TokenChangeEvent;
+import info.bioinfweb.libralign.sequenceprovider.exception.AlignmentSourceNotWritableException;
+import info.bioinfweb.libralign.sequenceprovider.exception.DuplicateSequenceNameException;
+import info.bioinfweb.libralign.sequenceprovider.exception.SequenceNotFoundException;
 import info.bioinfweb.libralign.sequenceprovider.tokenset.TokenSet;
 
 

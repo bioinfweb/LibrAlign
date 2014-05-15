@@ -51,8 +51,6 @@ public interface TokenSet<T> extends Set<T>, Cloneable {
 	 */
 	public char keyCharByToken(T token);
 	
-	public char charRepresentationByToken(T token);
-	
 	public String representationByToken(T token);
 	
 	public String descriptionByToken(T token);

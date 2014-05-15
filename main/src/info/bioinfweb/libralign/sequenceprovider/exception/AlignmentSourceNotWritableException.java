@@ -16,30 +16,22 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package info.bioinfweb.libralign.exception;
+package info.bioinfweb.libralign.sequenceprovider.exception;
 
- 
+
 import info.bioinfweb.libralign.sequenceprovider.SequenceDataProvider;
 
 
 
 /**
- * This exceptions is thrown if a requested sequence provided by an implementation of 
- * {@link SequenceDataProvider} was not found in the underlying data source.
- * <p>
- * Note that not all methods of {@link SequenceDataProvider} throw this exception. Some indicate
- * the same thing also by their return value. 
+ * This exceptions is thrown if a modifying method of {@link SequenceDataProvider} is called
+ * which has a data source that is not writable.
  * 
  * @author Ben St&ouml;ver
- * @since 0.1.0
+ * @since 0.0.0
  */
-public class SequenceNotFoundException extends AlignmentDataProviderException {
-	/**
-	 * Create a new instance of this class.
-	 * 
-	 * @param source - the sequence provider where this exception happened
-	 */
-	public SequenceNotFoundException(SequenceDataProvider source) {
-		super(source, "The requested sequence was not found in the underlying data source.");
+public class AlignmentSourceNotWritableException extends AlignmentDataProviderException {
+	public AlignmentSourceNotWritableException(SequenceDataProvider<?> source) {
+		super(source, "The underlying data source is not writable.");
 	}
 }

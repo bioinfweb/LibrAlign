@@ -28,9 +28,9 @@ import org.biojava3.core.sequence.compound.NucleotideCompound;
 
 import info.bioinfweb.libralign.AlignmentArea;
 import info.bioinfweb.libralign.AlignmentSourceDataType;
-import info.bioinfweb.libralign.exception.AlignmentSourceNotWritableException;
-import info.bioinfweb.libralign.exception.DuplicateSequenceNameException;
-import info.bioinfweb.libralign.exception.SequenceNotFoundException;
+import info.bioinfweb.libralign.sequenceprovider.exception.AlignmentSourceNotWritableException;
+import info.bioinfweb.libralign.sequenceprovider.exception.DuplicateSequenceNameException;
+import info.bioinfweb.libralign.sequenceprovider.exception.SequenceNotFoundException;
 import info.bioinfweb.libralign.sequenceprovider.tokenset.TokenSet;
 
 

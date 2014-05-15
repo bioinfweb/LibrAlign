@@ -21,9 +21,9 @@ package info.bioinfweb.libralign.sequenceprovider.implementations;
 
 import java.util.Iterator;
 
-import info.bioinfweb.libralign.exception.AlignmentSourceNotWritableException;
 import info.bioinfweb.libralign.sequenceprovider.SequenceDataProvider;
 import info.bioinfweb.libralign.sequenceprovider.SequenceDataView;
+import info.bioinfweb.libralign.sequenceprovider.exception.AlignmentSourceNotWritableException;
 import info.bioinfweb.libralign.sequenceprovider.tokenset.TokenSet;
 
 

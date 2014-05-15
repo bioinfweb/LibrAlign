@@ -28,11 +28,11 @@ import javax.swing.undo.UndoableEdit;
 
 import info.bioinfweb.commons.swing.AbstractDocumentEdit;
 import info.bioinfweb.libralign.AlignmentSourceDataType;
-import info.bioinfweb.libralign.exception.AlignmentSourceNotWritableException;
 import info.bioinfweb.libralign.sequenceprovider.SequenceDataChangeListener;
 import info.bioinfweb.libralign.sequenceprovider.SequenceDataProvider;
 import info.bioinfweb.libralign.sequenceprovider.SequenceDataView;
 import info.bioinfweb.libralign.sequenceprovider.SequenceDataProviderWriteType;
+import info.bioinfweb.libralign.sequenceprovider.exception.AlignmentSourceNotWritableException;
 import info.bioinfweb.libralign.sequenceprovider.implementations.swingundo.edits.LibrAlignSwingAlignmentEdit;
 import info.bioinfweb.libralign.sequenceprovider.implementations.swingundo.edits.sequence.SwingAddSequenceEdit;
 import info.bioinfweb.libralign.sequenceprovider.implementations.swingundo.edits.sequence.SwingConcreteAddSequenceEdit;

@@ -16,28 +16,41 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package info.bioinfweb.libralign.exception;
+package info.bioinfweb.libralign.sequenceprovider.exception;
 
 
-import org.biojava3.core.sequence.template.Compound;
-
-import info.bioinfweb.libralign.AlignmentSourceDataType;
 import info.bioinfweb.libralign.sequenceprovider.SequenceDataProvider;
 
 
 
 /**
- * This exceptions is thrown if a compound is used with {@link SequenceDataProvider} which does not
- * match the data type of the provide (e.g. trying to write an amino acid to a nucleotide data source). 
+ * This exceptions is thrown if a sequence provided by an implementation of {@link SequenceDataProvider} 
+ * shall be renamed and the a sequence with the new name is already present in the underlying data source.
  * 
  * @author Ben St&ouml;ver
- * @since 0.0.0
+ * @since 0.1.0
  */
-public class InvalidCompoundException extends AlignmentDataProviderException {
-	public InvalidCompoundException(SequenceDataProvider source, Compound compound, 
-			AlignmentSourceDataType dataType) {
-		
-		super(source, "The compound " + compound.getLongName() + " of type " + compound.getClass().getName() + 
-				" cannot does not match the data type " + dataType.toString() + ".");
+public class DuplicateSequenceNameException extends AlignmentDataProviderException {
+	private String name;
+	
+	
+	/**
+	 * Create a new instance of this class.
+	 * 
+	 * @param source - the sequence provider where this exception happened
+	 * @param name - the duplicate sequence name
+	 */
+	public DuplicateSequenceNameException(SequenceDataProvider<?> source, String name) {
+		super(source, "A sequence with the name \"" + name + 
+				"\" is already contained in the underlying data source.");
+		this.name = name;
+	}
+
+
+	/**
+	 * Returns the duplicate name.
+	 */
+	public String getDuplicateName() {
+		return name;
 	}
 }

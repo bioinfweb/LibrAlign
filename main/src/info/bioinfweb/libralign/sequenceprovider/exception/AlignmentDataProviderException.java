@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package info.bioinfweb.libralign.exception;
+package info.bioinfweb.libralign.sequenceprovider.exception;
 
 
 import info.bioinfweb.libralign.sequenceprovider.SequenceDataProvider;
@@ -24,14 +24,31 @@ import info.bioinfweb.libralign.sequenceprovider.SequenceDataProvider;
 
 
 /**
- * This exceptions is thrown if a modifying method of {@link SequenceDataProvider} is called
- * which has a data source that is not writable.
+ * Base class of all exceptions that can be thrown by an {@link SequenceDataProvider}.
  * 
  * @author Ben St&ouml;ver
  * @since 0.0.0
  */
-public class AlignmentSourceNotWritableException extends AlignmentDataProviderException {
-	public AlignmentSourceNotWritableException(SequenceDataProvider source) {
-		super(source, "The underlying data source is not writable.");
+public class AlignmentDataProviderException extends RuntimeException {
+	private SequenceDataProvider<?> source;
+	
+	
+	public AlignmentDataProviderException(SequenceDataProvider<?> source) {
+		super();
+		this.source = source;
+	}
+
+	
+	public AlignmentDataProviderException(SequenceDataProvider<?> source, String message) {
+		super(message);
+		this.source = source;
+	}
+
+
+	/**
+	 * Returns the instance of {@link SequenceDataProvider} that threw this exception.
+	 */
+	public SequenceDataProvider<?> getSource() {
+		return source;
 	}
 }

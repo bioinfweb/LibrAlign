@@ -16,39 +16,30 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package info.bioinfweb.libralign.exception;
+package info.bioinfweb.libralign.sequenceprovider.exception;
 
-
+ 
 import info.bioinfweb.libralign.sequenceprovider.SequenceDataProvider;
 
 
 
 /**
- * Base class of all exceptions that can be thrown by an {@link SequenceDataProvider}
+ * This exceptions is thrown if a requested sequence provided by an implementation of 
+ * {@link SequenceDataProvider} was not found in the underlying data source.
+ * <p>
+ * Note that not all methods of {@link SequenceDataProvider} throw this exception. Some indicate
+ * the same thing also by their return value. 
  * 
  * @author Ben St&ouml;ver
- * @since 0.0.0
+ * @since 0.1.0
  */
-public class AlignmentDataProviderException extends RuntimeException {
-	private SequenceDataProvider source;
-	
-	
-	public AlignmentDataProviderException(SequenceDataProvider source) {
-		super();
-		this.source = source;
-	}
-
-	
-	public AlignmentDataProviderException(SequenceDataProvider source, String message) {
-		super(message);
-		this.source = source;
-	}
-
-
+public class SequenceNotFoundException extends AlignmentDataProviderException {
 	/**
-	 * Returns the instance of {@link SequenceDataProvider} that threw this exception.
+	 * Create a new instance of this class.
+	 * 
+	 * @param source - the sequence provider where this exception happened
 	 */
-	public SequenceDataProvider getSource() {
-		return source;
+	public SequenceNotFoundException(SequenceDataProvider<?> source) {
+		super(source, "The requested sequence was not found in the underlying data source.");
 	}
 }
