@@ -20,16 +20,27 @@ package info.bioinfweb.libralign.sequenceprovider.adapters;
 
 
 
+
+
 /**
- * Exception that indicates that {@link SingleCharSequenceAdapter} tried to convert a token to a character
- * which has a string representation that is not exactly one character long and 
+ * Exception that indicates that a token that could not be translated by a {@link SingleSequenceDataAdapter}
+ * was found.
+ * <p>
+ * In case of a {@link SingleCharSequenceAdapter} this happens if a token which has a string representation 
+ * that is not exactly one character long was tried to convert and 
  * {@link SingleCharSequenceAdapter#isCutLongRepresentations()} was set to {@code false}.
+ * <p>
+ * In case of {@link SingleBioJavaSequenceAdapter} this happens if no compound could be found in the specified 
+ * compound set which was associated with the string representation of the token in question and
+ * {@link SingleBioJavaSequenceAdapter#isAllowUnkownCompounds()} was {@code false}.
+ * <p>
+ * Other implementations in- and outside LibrAlign might also throw this exception for similar reasons. 
  * 
  * @author Ben St&ouml;ver
  * @since 0.1.0
  */
-public class InvalidStringRepresentationException extends RuntimeException {
-	private SingleCharSequenceAdapter<?> adapter;
+public class InvalidUnderlyingTokenException extends RuntimeException {
+	private SingleSequenceDataAdapter<?> adapter;
 	private Object token;
 	private String representation;
 	
@@ -41,7 +52,7 @@ public class InvalidStringRepresentationException extends RuntimeException {
 	 * @param token - the token that could not be converted
 	 * @param representation - the invalid representation of that token
 	 */
-	public InvalidStringRepresentationException(SingleCharSequenceAdapter<?> adapter, Object token, 
+	public InvalidUnderlyingTokenException(SingleSequenceDataAdapter<?> adapter, Object token, 
 			String representation) {
 		
 		super("The string representation \"" + representation + 
@@ -52,7 +63,7 @@ public class InvalidStringRepresentationException extends RuntimeException {
 	}
 
 
-	public SingleCharSequenceAdapter<?> getAdapter() {
+	public SingleSequenceDataAdapter<?> getAdapter() {
 		return adapter;
 	}
 

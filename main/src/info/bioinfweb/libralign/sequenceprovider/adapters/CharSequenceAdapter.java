@@ -32,49 +32,75 @@ import info.bioinfweb.libralign.sequenceprovider.SequenceDataProvider;
  *
  * @param <T> - the token type used by the underlying provider
  */
-public class CharSequenceAdapter<T> extends AbstractSequenceDataAdapter<T> {
+public class CharSequenceAdapter<T> extends AbstractSequenceDataAdapter<T> 
+    implements SequenceDataAdapter<CharSequence, T> {
+	
 	private boolean cutLongRepresentations;
 	
 	
+	/**
+	 * Creates a new instance of this class.
+	 * 
+	 * @param provider - the sequence data provider that contains the sequences to be viewed
+	 * @param cutLongRepresentations - Specify {@code true} here if the first character of string 
+	 *        representations (of tokens in the underlying sequence data provider) that are longer than 
+	 *        one character shall be used for translations or {@code false} if an 
+	 *        {@link InvalidUnderlyingTokenException} shall be thrown if such a token occurs.
+   */
 	public CharSequenceAdapter(SequenceDataProvider<T> underlyingProvider, boolean cutLongRepresentations) {
 		super(underlyingProvider);
 		this.cutLongRepresentations = cutLongRepresentations;
 	}
 	
 	
+	/**
+	 * Returns {@code true} if the first character of string representations (of tokens in the underlying 
+	 * sequence data provider) that are longer than one character shall be used for translations or 
+	 * {@code false} if an {@link InvalidUnderlyingTokenException} shall be thrown if such a token occurs.
+	 * 
+	 * @return the value that was specified for {@code cutLongRepresentations} in the constructor
+	 */
 	public boolean isCutLongRepresentations() {
 		return cutLongRepresentations;
 	}
 
 
 	/**
-	 * Returns an implementation of {@link CharSequence} that acts as a view to the sequence with the
-	 * specified ID.
-	 * <p>
-	 * This method should be favored over {@link #toString(int)} of no copy of the sequence is needed to
-	 * save resources.  
+	 * Returns an implementation of {@code SingleCharSequenceAdapter<T>} that acts as a view to the sequence 
+	 * with the specified ID.
 	 * 
 	 * @param sequenceID - the ID of the sequence to be viewed
 	 * @return a sequence as a {@link CharSequence}
 	 */
-	public SingleCharSequenceAdapter<T> asCharSequence(int sequenceID) {
+	@Override
+	public CharSequence toSequence(int sequenceID) {
 		return new SingleCharSequenceAdapter<T>(getUnderlyingProvider(), sequenceID, isCutLongRepresentations());
 	}
 
 
 	/**
-	 * Returns the sequence with the specified ID as a string. Note that the string is a copy of the sequence
-	 * stored in the underlying data source and uses additional memory. Therefore {@link #asCharSequence(int)} #
-	 * should be used instead if possible.
+	 * Returns an implementation of {@code SingleCharSequenceAdapter<T>} that acts as a view to a subsequence
+	 * of the sequence with the specified ID.
 	 * 
 	 * @param sequenceID - the ID of the sequence to be viewed
-	 * @return a copy of the specified sequence as a string
-	 * 
-	 * @throws InvalidStringRepresentationException if one token in the underlying data source has a string 
-	 *         representation that is not exactly one character long and {@link #isCutLongRepresentations()} 
-	 *         was set to {@code false}
+	 * @param offset - the start index of the subsequence to be viewed (The first token has the index 0.)
+	 * @param length - the length of the subsequence to be viewed
+	 * @return a sequence as a {@link CharSequence}
 	 */
-	public String toString(int sequenceID) {
-		return asCharSequence(sequenceID).toString();
+	@Override
+	public CharSequence toSequence(int sequenceID, int offset, int length) {
+		return new SingleCharSequenceAdapter<T>(getUnderlyingProvider(), sequenceID, offset, length, 
+				isCutLongRepresentations());
+	}
+
+
+	/**
+	 * Returns {@code false} since this class always returns views of the underlying data source.
+	 * 
+	 * @return {@code false}
+	 */
+	@Override
+	public boolean returnsCopies() {
+		return false;
 	}
 }

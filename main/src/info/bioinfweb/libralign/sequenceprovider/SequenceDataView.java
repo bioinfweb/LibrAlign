@@ -22,9 +22,7 @@ package info.bioinfweb.libralign.sequenceprovider;
 
 /**
  * This interface should be implemented by all classes which return the contents of another implementation
- * of {@link SequenceDataProvider} in a modified way.
- * <p>
- * An example would be the translation from nucleotide sequences to amino acid sequences.
+ * of {@link SequenceDataProvider} in a modified way but can still act as sequence data providers.
  * 
  * @author Ben St&ouml;ver
  * @since 0.1.0
@@ -32,4 +30,4 @@ package info.bioinfweb.libralign.sequenceprovider;
  * @param <T> - the type of sequence elements (tokens) the implementing view works with
  * @param <U> - the type of sequence elements (tokens) the underlying provider works with
  */
-public interface SequenceDataView<T, U> extends SequenceDataProvider<T>, SequenceDataAdapter<U> {}
+public interface SequenceDataView<T, U> extends SequenceDataProvider<T>, BasicSequenceDataView<U> {}

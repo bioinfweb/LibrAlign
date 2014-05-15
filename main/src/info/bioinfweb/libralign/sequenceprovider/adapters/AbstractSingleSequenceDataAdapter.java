@@ -49,13 +49,29 @@ public class AbstractSingleSequenceDataAdapter<T> extends AbstractSequenceDataAd
 	 * @param offset - the start index of the subsequence to be viewed (The first token has the index 0.)
 	 * @param length - the length of the subsequence to be viewed
 	 */
-	public AbstractSingleSequenceDataAdapter(SequenceDataProvider<T> underlyingProvider, int sequenceID, 
+	protected AbstractSingleSequenceDataAdapter(SequenceDataProvider<T> underlyingProvider, int sequenceID, 
 			int offset,	int length) {
 		
 		super(underlyingProvider);
 		this.sequenceID = sequenceID;
 		this.offset = offset;
 		this.length = length;
+	}
+
+
+	/**
+	 * Creates a new instance of this class which views the whole length of a sequence in the underlying data 
+	 * source.
+	 * 
+	 * @param provider - the sequence data provider that contains the sequence to be viewed
+	 * @param sequenceID - the ID used in {@code provider} of the sequence to be viewed
+	 */
+	protected AbstractSingleSequenceDataAdapter(SequenceDataProvider<T> underlyingProvider, int sequenceID) {
+		
+		super(underlyingProvider);
+		this.sequenceID = sequenceID;
+		this.offset = 0;
+		this.length = Integer.MAX_VALUE;
 	}
 
 
@@ -81,11 +97,18 @@ public class AbstractSingleSequenceDataAdapter<T> extends AbstractSequenceDataAd
 	}
 
 
+	/**
+	 * Returns the length of this character sequence. Note that the return value might change if the length
+	 * of the viewed sequence changes.
+	 *
+	 * @return the number of characters in this sequence
+	 */
 	@Override
-	public int length() {
-		return length;
-	}	
-
+	public int getLength() {
+		return Math.min(length, 
+				Math.max(0, getUnderlyingProvider().getSequenceLength(getSequenceID()) - getOffset()));
+	}
+	
 	
 	protected void setLength(int length) {
 		this.length = length;

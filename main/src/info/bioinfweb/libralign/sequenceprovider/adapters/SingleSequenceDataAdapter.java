@@ -19,7 +19,7 @@
 package info.bioinfweb.libralign.sequenceprovider.adapters;
 
 
-import info.bioinfweb.libralign.sequenceprovider.SequenceDataAdapter;
+import info.bioinfweb.libralign.sequenceprovider.BasicSequenceDataView;
 import info.bioinfweb.libralign.sequenceprovider.SequenceDataProvider;
 
 
@@ -33,7 +33,7 @@ import info.bioinfweb.libralign.sequenceprovider.SequenceDataProvider;
  *
  * @param <T> - the token type used by the underlying sequence data provider
  */
-public interface SingleSequenceDataAdapter<T> extends SequenceDataAdapter<T> {
+public interface SingleSequenceDataAdapter<T> extends BasicSequenceDataView<T> {
 	/**
 	 * The ID of the viewed sequence in the underlying sequence data provider.
 	 * 
@@ -56,5 +56,5 @@ public interface SingleSequenceDataAdapter<T> extends SequenceDataAdapter<T> {
 	 * 
 	 * @return a value >= 0
 	 */
-	public int length();
+	public int getLength();
 }

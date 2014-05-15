@@ -94,12 +94,12 @@ public class SingleCharSequenceAdapter<T> extends AbstractSingleSequenceDataAdap
 	 * Returns the character representation of the token in the underlying data source at the specified position.
 	 * 
 	 * @see java.lang.CharSequence#charAt(int)
-	 * @throws InvalidStringRepresentationException if the underlying token has a string representation that is 
+	 * @throws InvalidUnderlyingTokenException if the underlying token has a string representation that is 
 	 *         not exactly one character long and {@link #isCutLongRepresentations()} was set to {@code false}
 	 * @throws IndexOutOfBoundsException if {@code index} was {@code < 0} or {@code >= }{@link #length()} 
 	 */
 	@Override
-	public char charAt(int index) throws InvalidStringRepresentationException, IndexOutOfBoundsException {
+	public char charAt(int index) throws InvalidUnderlyingTokenException, IndexOutOfBoundsException {
 		if (Math2.isBetween(index, 0, length() - 1)) {
 			T token = getUnderlyingProvider().getTokenAt(getSequenceID(), getOffset() + index); 
 			String representation = getUnderlyingProvider().getTokenSet().representationByToken(token);
@@ -107,7 +107,7 @@ public class SingleCharSequenceAdapter<T> extends AbstractSingleSequenceDataAdap
 				return representation.charAt(0);
 			}
 			else {
-				throw new InvalidStringRepresentationException(this, token, representation);
+				throw new InvalidUnderlyingTokenException(this, token, representation);
 			}
 		}
 		else {
@@ -117,18 +117,16 @@ public class SingleCharSequenceAdapter<T> extends AbstractSingleSequenceDataAdap
 
 	
 	/**
-	 * Returns the length of this character sequence. Note that the return value might change if the length
-	 * of the viewed sequence changes.
-	 *
+	 * This method delegates to {@link #getLength()}.
+	 * 
 	 * @return the number of characters in this sequence
 	 */
 	@Override
 	public int length() {
-		return Math.min(super.length(), 
-				Math.max(0, getUnderlyingProvider().getSequenceLength(getSequenceID()) - getOffset()));
+		return getLength();
 	}
 
-	
+
 	@Override
 	public CharSequence subSequence(int start, int end) {
 		if (Math2.isBetween(start, 0, end) && Math2.isBetween(end, start, length())) {
@@ -146,7 +144,7 @@ public class SingleCharSequenceAdapter<T> extends AbstractSingleSequenceDataAdap
 	 * 
 	 * @return the string representation of this object
 	 * 
-	 * @throws InvalidStringRepresentationException if one token in the underlying data source has a string 
+	 * @throws InvalidUnderlyingTokenException if one token in the underlying data source has a string 
 	 *         representation that is not exactly one character long and {@link #isCutLongRepresentations()} 
 	 *         was set to {@code false}
 	 */
