@@ -20,6 +20,7 @@ package info.bioinfweb.libralign.sequenceprovider.tokenset;
 
 
 import java.util.Iterator;
+import java.util.Map;
 
 import org.biojava3.core.sequence.template.Compound;
 import org.biojava3.core.sequence.template.CompoundSet;
@@ -47,17 +48,31 @@ public class BioJavaTokenSet<C extends Compound> extends AbstractTokenSet<C> imp
 	}
 	
 	
+	/**
+	 * Creates a new instance of this class.
+	 * <p>
+	 * The contents of {@code compoundSet} are copied to the new instance and the key character map of 
+	 * {@link AbstractTokenSet} is filled with the first character of the return values of #
+	 * {@link Compound#getShortName()} from every compound. Clear the contents {@link #getKeyMap()} 
+	 * afterwards, if you do not want this mapping.
+	 * 
+	 * @param compoundSet - the BioJava compound set containing the compounds to be copied into the new instance
+	 */
 	public BioJavaTokenSet(CompoundSet<C> compoundSet) {
 		super();
 		
 		addAll(compoundSet.getAllCompounds());
-		if ((compoundSet.getMaxSingleCompoundStringLength() == 1) && compoundSet.isCompoundStringLengthEqual()) {
-			Iterator<C> iterator = iterator();
-			while (iterator.hasNext()) {
-				C compound = iterator.next();
-				getKeyMap().put(representationByToken(compound).charAt(0), compound);
-			}
+		Iterator<C> iterator = iterator();
+		while (iterator.hasNext()) {
+			C compound = iterator.next();
+			getKeyMap().put(representationByToken(compound).charAt(0), compound);
 		}
+	}
+
+
+	@Override
+	public Map<Character, C> getKeyMap() {
+		return super.getKeyMap();
 	}
 
 
