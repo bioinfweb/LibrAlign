@@ -29,6 +29,7 @@ import info.bioinfweb.libralign.sequenceprovider.SequenceDataProvider;
  * {@link CharSequenceAdapter} should be used instead if possible for large sequences to save memory.
  * 
  * @author Ben St&ouml;ver
+ * @since 0.1.0
  *
  * @param <T> - the token type of the underlying data source
  */

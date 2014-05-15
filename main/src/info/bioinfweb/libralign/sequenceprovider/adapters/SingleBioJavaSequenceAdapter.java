@@ -54,6 +54,7 @@ public class SingleBioJavaSequenceAdapter<T, C extends Compound>
 	public static final NucleotideCompound UNKNOWN_NUCLEOTIDE_COMPOUND = 
 			AlignmentAmbiguityNucleotideCompoundSet.getAlignmentAmbiguityNucleotideCompoundSet().getCompoundForString(
 					"" + AlignmentAmbiguityNucleotideCompoundSet.UNKNOWN_CHARACTER);
+  //TODO Add constants for codons and amino acids
 	
 	
 	private CompoundSet<C> compoundSet;

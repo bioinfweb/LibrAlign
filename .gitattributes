@@ -62,6 +62,7 @@ main/src/info/bioinfweb/libralign/sequenceprovider/SequenceDataProviderWriteType
 main/src/info/bioinfweb/libralign/sequenceprovider/SequenceDataView.java -text svneol=unset#text/plain
 main/src/info/bioinfweb/libralign/sequenceprovider/adapters/AbstractSequenceDataAdapter.java -text svneol=unset#text/plain
 main/src/info/bioinfweb/libralign/sequenceprovider/adapters/AbstractSingleSequenceDataAdapter.java -text svneol=unset#text/plain
+main/src/info/bioinfweb/libralign/sequenceprovider/adapters/BioJavaSequenceAdapter.java -text svneol=unset#text/plain
 main/src/info/bioinfweb/libralign/sequenceprovider/adapters/CharSequenceAdapter.java -text svneol=unset#text/plain
 main/src/info/bioinfweb/libralign/sequenceprovider/adapters/InvalidUnderlyingTokenException.java -text svneol=unset#text/plain
 main/src/info/bioinfweb/libralign/sequenceprovider/adapters/SequenceDataAdapter.java -text svneol=unset#text/plain
