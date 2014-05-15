@@ -18,10 +18,10 @@
  */
 package info.bioinfweb.libralign.test;
 
+
 import java.util.ArrayList;
 import java.util.Collection;
 
-import info.bioinfweb.libralign.AlignmentSourceDataType;
 import info.bioinfweb.libralign.sequenceprovider.implementations.ArrayListSequenceDataProvider;
 
 
@@ -29,7 +29,7 @@ import info.bioinfweb.libralign.sequenceprovider.implementations.ArrayListSequen
 public class GenericCollectionTest {
   public static void main(String[] args) {
 		ArrayListSequenceDataProvider<Character> provider = 
-				new ArrayListSequenceDataProvider(AlignmentSourceDataType.OTHER);
+				new ArrayListSequenceDataProvider(null);  //TODO When implementation of main classes is finished, specifying null might lead to an exception.
 		
 		Collection collection = new ArrayList<Object>();
 		collection.add('a');
