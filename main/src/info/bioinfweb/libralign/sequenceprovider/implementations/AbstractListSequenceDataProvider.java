@@ -139,17 +139,6 @@ public abstract class AbstractListSequenceDataProvider<T>
 
 	
 	@Override
-	public int getMaxSequenceLength() {
-		int maxLength = 0;
-		Iterator<Integer> iterator = sequenceIDIterator();
-		while (iterator.hasNext()) {
-			maxLength = Math.max(maxLength, getSequence(iterator.next()).size());
-		}
-		return maxLength;
-	}
-	
-
-	@Override
 	public SequenceDataProviderWriteType getWriteType() {
 		return SequenceDataProviderWriteType.BOTH;
 	}

@@ -47,6 +47,8 @@ import info.bioinfweb.libralign.sequenceprovider.tokenset.TokenSet;
  */
 public class BioJavaSequenceDataProvider<S extends Sequence<C>, C extends Compound>
     extends AbstractSequenceDataProvider<C> implements SequenceDataProvider<C> {
+
+	//TODO Also create a version that implements SequenceObjectDataProvider for unmodifiable BioJava sequences.
 	
 	public static final String DEFAULT_SEQUENCE_NAME_PREFIX = "Sequence";
 	

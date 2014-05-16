@@ -27,9 +27,12 @@ import org.biojava3.core.sequence.compound.CodonCompound;
 import org.biojava3.core.sequence.compound.NucleotideCompound;
 
 import info.bioinfweb.libralign.AlignmentArea;
+import info.bioinfweb.libralign.sequenceprovider.adapters.AbstractSequenceDataAdapter;
 import info.bioinfweb.libralign.sequenceprovider.exception.AlignmentSourceNotWritableException;
 import info.bioinfweb.libralign.sequenceprovider.exception.DuplicateSequenceNameException;
 import info.bioinfweb.libralign.sequenceprovider.exception.SequenceNotFoundException;
+import info.bioinfweb.libralign.sequenceprovider.implementations.AbstractMapBasedSequenceDataProvider;
+import info.bioinfweb.libralign.sequenceprovider.implementations.AbstractSequenceDataProvider;
 import info.bioinfweb.libralign.sequenceprovider.tokenset.TokenSet;
 
 
@@ -49,9 +52,18 @@ import info.bioinfweb.libralign.sequenceprovider.tokenset.TokenSet;
  * The ID values do not have to match the order of the sequences, which is defined the 
  * {@link #sequenceNameIterator()}. The ordering of sequences in an {@link AlignmentArea} is anyway not
  * defined by the data provider but by the instance returned by {@link AlignmentArea#getSequenceOrder()}.
+ * <p>
+ * Note that this interface leafs it up to the implementation if the alignment data is organized in objects
+ * storing whole sequences (rows) or another storage pattern. If your implementation uses sequence objects
+ * consider implementing {@link SequenceObjectDataProvider}.
  * 
  * @author Ben St&ouml;ver
  * @since 0.0.0
+ * 
+ * @see SequenceObjectDataProvider
+ * @see AbstractSequenceDataProvider
+ * @see AbstractMapBasedSequenceDataProvider
+ * @see AbstractSequenceDataAdapter
  *
  * @param <T> - the type of sequence elements (tokens) the implementing provider object works with
  */
@@ -139,7 +151,7 @@ public interface SequenceDataProvider<T> {
   public String sequenceNameByID(int sequenceID);
 
   /**
-   * Adds a new empty sequence to the underlying data source.
+   * Adds a new empty sequence to the underlying data source and generates an ID for it.
    * 
    * @param sequenceName - the name of the new sequence
    * @return the unique ID of the new sequence

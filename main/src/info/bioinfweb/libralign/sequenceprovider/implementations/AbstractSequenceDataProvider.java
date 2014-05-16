@@ -238,6 +238,23 @@ public abstract class AbstractSequenceDataProvider<T> implements SequenceDataPro
 	protected void doRenameSequence(int sequenceID, String newSequenceName) {}
 	
 	
+	/**
+	 * Iterates over all sequence IDs and determines the maximum sequence length by calling
+	 * {@link #getSequenceLength(int)} for each ID.
+	 * 
+	 * @return the maximum length a sequence in the underlying data source currently has
+	 */
+	@Override
+	public int getMaxSequenceLength() {
+		int maxLength = 0;
+		Iterator<Integer> iterator = sequenceIDIterator();
+		while (iterator.hasNext()) {
+			maxLength = Math.max(maxLength, getSequenceLength(iterator.next()));
+		}
+		return maxLength;
+	}
+	
+
 	/* (non-Javadoc)
 	 * @see info.bioinfweb.libralign.alignmentprovider.SequenceDataProvider#renameSequence(int, java.lang.String)
 	 */

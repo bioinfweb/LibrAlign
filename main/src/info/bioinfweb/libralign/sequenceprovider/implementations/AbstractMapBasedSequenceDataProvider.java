@@ -22,6 +22,7 @@ package info.bioinfweb.libralign.sequenceprovider.implementations;
 import info.bioinfweb.commons.collections.ListChangeType;
 import info.bioinfweb.libralign.AlignmentArea;
 import info.bioinfweb.libralign.SequenceOrder;
+import info.bioinfweb.libralign.sequenceprovider.SequenceObjectDataProvider;
 import info.bioinfweb.libralign.sequenceprovider.events.SequenceChangeEvent;
 import info.bioinfweb.libralign.sequenceprovider.tokenset.TokenSet;
 
@@ -45,7 +46,10 @@ import org.biojava.bio.seq.Sequence;
  * {@link SequenceOrder} object used in an associated {@link AlignmentArea}.  
  * 
  * @author Ben St&ouml;ver
+ * 
+ * @see SequenceObjectDataProvider
  * @see SequenceOrder
+ * @see AlignmentArea
  *
  * @param <S> - the type of the sequence objects (e.g. {@link Sequence} or {@link List})
  * @param <T> - the type of sequence elements (tokens) the implementing provider object works with
@@ -74,7 +78,7 @@ public abstract class AbstractMapBasedSequenceDataProvider<S, T> extends Abstrac
 	/**
 	 * Creates a new instance of this class with a custom map implementation.
 	 * 
-	 * @param dataType - the token type the sequences of this alignment consist of
+	 * @param tokenSet - the token set which is supported by the implementation
 	 * @param sequenceMap - the map instance used to assign sequences to their IDs
 	 */
 	public AbstractMapBasedSequenceDataProvider(TokenSet<T> tokenSet,	Map<Integer, S> sequenceMap) {
@@ -85,7 +89,7 @@ public abstract class AbstractMapBasedSequenceDataProvider<S, T> extends Abstrac
 	/**
 	 * Creates a new instance of this class relying on a {@link TreeMap}.
 	 * 
-	 * @param dataType - the token type the sequences of this alignment consist of
+	 * @param tokenSet - the token set which is supported by the implementation
 	 */
 	public AbstractMapBasedSequenceDataProvider(TokenSet<T> tokenSet) {
 		this(tokenSet, new TreeMap<Integer, S>());

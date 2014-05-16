@@ -53,7 +53,7 @@ public class DataAreaList extends DataAreaChangeEventList {
 	 * @param listType - specifies if list represents data areas displayed above
 	 *        or underneath the alignment
 	 *        
-	 * @throws IllegalArgumentException - if {@link DataAreaListType#SEQUENCE} is specified as {@code listType}
+	 * @throws IllegalArgumentException if {@link DataAreaListType#SEQUENCE} is specified as {@code listType}
 	 */
 	public DataAreaList(DataAreaModel owner, DataAreaListType listType) {
 		super(new ArrayList<DataArea>(INITIAL_LIST_SIZE));

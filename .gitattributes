@@ -59,6 +59,7 @@ main/src/info/bioinfweb/libralign/sequenceprovider/SequenceDataChangeListener.ja
 main/src/info/bioinfweb/libralign/sequenceprovider/SequenceDataProvider.java -text svneol=unset#text/plain
 main/src/info/bioinfweb/libralign/sequenceprovider/SequenceDataProviderWriteType.java -text svneol=unset#text/plain
 main/src/info/bioinfweb/libralign/sequenceprovider/SequenceDataView.java -text svneol=unset#text/plain
+main/src/info/bioinfweb/libralign/sequenceprovider/SequenceObjectDataProvider.java -text svneol=unset#text/plain
 main/src/info/bioinfweb/libralign/sequenceprovider/adapters/AbstractSequenceDataAdapter.java -text svneol=unset#text/plain
 main/src/info/bioinfweb/libralign/sequenceprovider/adapters/AbstractSingleSequenceDataAdapter.java -text svneol=unset#text/plain
 main/src/info/bioinfweb/libralign/sequenceprovider/adapters/BioJavaSequenceAdapter.java -text svneol=unset#text/plain
@@ -86,9 +87,11 @@ main/src/info/bioinfweb/libralign/sequenceprovider/implementations/AbstractMapBa
 main/src/info/bioinfweb/libralign/sequenceprovider/implementations/AbstractSequenceDataProvider.java -text svneol=unset#text/plain
 main/src/info/bioinfweb/libralign/sequenceprovider/implementations/AbstractSequenceDataView.java -text svneol=unset#text/plain
 main/src/info/bioinfweb/libralign/sequenceprovider/implementations/AbstractSequenceIDIterator.java -text svneol=unset#text/plain
+main/src/info/bioinfweb/libralign/sequenceprovider/implementations/AbstractUnmodifyableSequenceDataProvider.java -text svneol=unset#text/plain
 main/src/info/bioinfweb/libralign/sequenceprovider/implementations/ArrayListSequenceDataProvider.java -text svneol=unset#text/plain
 main/src/info/bioinfweb/libralign/sequenceprovider/implementations/BioJavaSequenceDataProvider.java -text svneol=unset#text/plain
 main/src/info/bioinfweb/libralign/sequenceprovider/implementations/BitSequenceDataProvider.java -text svneol=unset#text/plain
+main/src/info/bioinfweb/libralign/sequenceprovider/implementations/CharSequenceDataProvider.java -text svneol=unset#text/plain
 main/src/info/bioinfweb/libralign/sequenceprovider/implementations/package-info.java -text svneol=unset#text/plain
 main/src/info/bioinfweb/libralign/sequenceprovider/implementations/swingundo/SwingEditFactory.java -text svneol=unset#text/plain
 main/src/info/bioinfweb/libralign/sequenceprovider/implementations/swingundo/SwingUndoSequenceDataProvider.java -text svneol=unset#text/plain
