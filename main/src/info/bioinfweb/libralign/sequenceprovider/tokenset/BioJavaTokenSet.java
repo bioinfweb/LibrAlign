@@ -103,7 +103,7 @@ public class BioJavaTokenSet<C extends Compound> extends AbstractTokenSet<C> imp
 	/**
 	 * Clones this instance.
 	 * 
-	 * @return a deep copy of this object.
+	 * @return a deep copy of this object
 	 */
 	@Override
 	public BioJavaTokenSet<C> clone() {
