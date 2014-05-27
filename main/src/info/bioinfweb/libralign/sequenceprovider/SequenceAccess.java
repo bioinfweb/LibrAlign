@@ -43,7 +43,7 @@ public interface SequenceAccess<S> {
 	 * If the implementing class also implements {@link SequenceDataAdapter} the returned object can be a view 
 	 * or copy of a sequence in the underlying data source depending in the return value of 
 	 * {@link SequenceDataAdapter#returnsCopies()}. If {@link SequenceAccessDataProvider} is implemented
-	 * the object used to store the seqeunce data is returned.
+	 * the object used to store the sequence data is returned.
 	 * 
 	 * @param sequenceID - the ID of the sequence to be returned
 	 * @return the sequence object as described above

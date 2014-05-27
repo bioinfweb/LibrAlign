@@ -43,14 +43,39 @@ import java.util.List;
 public abstract class AbstractListSequenceDataProvider<T> 
     extends AbstractMapBasedSequenceDataProvider<List<T>, T> {
 	
+	public static final int DEFAULT_INITIAL_CAPACITY = 256;
 	
+		
+  private int initialCapacity;
+  private boolean useMaxLength;
+  
+  
 	/**
-	 * Creates a new instance of this class.
+	 * Creates a new instance of this class using {@link #DEFAULT_INITIAL_CAPACITY} as the initial capacity
+	 * which is only used if it is lower than {@link #getMaxSequenceLength()} to create new sequence array 
+	 * lists.
 	 * 
 	 * @param tokenSet - the token set which is supported by the implementation
 	 */
 	public AbstractListSequenceDataProvider(TokenSet<T> tokenSet) {
+		this(tokenSet, DEFAULT_INITIAL_CAPACITY, true);
+	}
+
+
+	/**
+	 * Creates a new instance of this class.
+	 * 
+	 * @param tokenSet - the token set which is supported by the implementation
+	 * @param initialCapacity - the initial capacity newly generated array lists will have
+	 * @param useMaxLength - Specify {@code true} here if {@code initialCapacity} shall only be used if it 
+	 *        is lower than {@link #getMaxSequenceLength()} to create new sequence array lists.
+	 */
+	public AbstractListSequenceDataProvider(TokenSet<T> tokenSet, int initialCapacity, 
+			boolean useMaxLength) {
+		
 		super(tokenSet);
+		this.initialCapacity = initialCapacity;
+		this.useMaxLength = useMaxLength;
 	}
 
 	
@@ -142,4 +167,56 @@ public abstract class AbstractListSequenceDataProvider<T>
 	public SequenceDataProviderWriteType getWriteType() {
 		return SequenceDataProviderWriteType.BOTH;
 	}
+
+	
+	/**
+	 * Returns the default initial capacity of new list objects created by 
+	 * {@link #createNewSequence(int, String, int)}.
+	 * 
+	 * @return the default initial capacity specified in the constructor
+	 */
+	public int getInitialCapacity() {
+		return initialCapacity;
+	}
+
+
+	/**
+	 * Determines if the initial capacity of newly generated list objects shall only depend on the
+	 * default capacity or also on the maximum length of the other lists already contained in this provider. 
+	 * 
+	 * @return {@code true} if new lists shall have the maximum length of all other lists already present in 
+	 *         this provider if this maximum is higher than the return value of {@link #getInitialCapacity()},
+	 *         {@code false} if all new sequences shall always have an initial capacity of 
+	 *         {@link #getInitialCapacity()}. 
+	 */
+	public boolean isUseMaxLength() {
+		return useMaxLength;
+	}
+	
+	
+  /**
+   * This method is called by {@link #createNewSequence(int, String)} and must be implemented by inherited classes.
+   * In contrast to {@link #createNewSequence(int, String)} it provides an additional parameter specifying the
+   * initial capacity the returned list object shall have. This parameter value if set depending on the return 
+   * values of {@link #isUseMaxLength()} either to a fixed value as specified by {@link #getInitialCapacity()}
+   * or by the maximum length of other sequences in this provider if any of these contain more elements than
+   * {@link #getInitialCapacity()}. 
+   * 
+	 * @param sequenceID - the ID the new sequence must have
+	 * @param sequenceName - the name the new sequence will have
+   * @param initialCapacity - the initial capicity the returned list object shall have
+	 * @return the new sequence object
+   */
+  protected abstract List<T> createNewSequence(int sequenceID, String sequenceName, int initialCapacity);
+	
+
+	@Override
+	protected List<T> createNewSequence(int sequenceID, String sequenceName) {
+		int capacity = initialCapacity;
+		if (isUseMaxLength() && (getSequenceCount() > 0)) {
+			capacity = Math.max(initialCapacity, getMaxSequenceLength());
+		}
+		return createNewSequence(sequenceID, sequenceName, capacity);
+	}
+
 }

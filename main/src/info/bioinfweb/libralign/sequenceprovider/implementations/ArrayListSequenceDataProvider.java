@@ -38,13 +38,6 @@ import java.util.List;
  * @param <T> - the type of sequence elements (tokens) the implementing provider object works with
  */
 public class ArrayListSequenceDataProvider<T> extends AbstractListSequenceDataProvider<T> {
-	public static final int DEFAULT_INITIAL_CAPACITY = 256;
-	
-	
-  private int initialCapacity;
-  private boolean useMaxLength;
-  
-  
 	/**
 	 * Creates a new instance of this class using {@link #DEFAULT_INITIAL_CAPACITY} as the initial capacity
 	 * which is only used if it is lower than {@link #getMaxSequenceLength()} to create new sequence array 
@@ -53,7 +46,7 @@ public class ArrayListSequenceDataProvider<T> extends AbstractListSequenceDataPr
 	 * @param tokenSet - the token set which is supported by the implementation
 	 */
 	public ArrayListSequenceDataProvider(TokenSet<T> tokenSet) {
-		this(tokenSet, DEFAULT_INITIAL_CAPACITY, true);
+		super(tokenSet);
 	}
 
 
@@ -68,28 +61,14 @@ public class ArrayListSequenceDataProvider<T> extends AbstractListSequenceDataPr
 	public ArrayListSequenceDataProvider(TokenSet<T> tokenSet, int initialCapacity, 
 			boolean useMaxLength) {
 		
-		super(tokenSet);
-		this.initialCapacity = initialCapacity;
-		this.useMaxLength = useMaxLength;
-	}
-
-
-	public int getInitialCapacity() {
-		return initialCapacity;
-	}
-
-
-	public boolean isUseMaxLength() {
-		return useMaxLength;
+		super(tokenSet, initialCapacity, useMaxLength);
 	}
 
 
 	@Override
-	protected List<T> createNewSequence(int sequenceID, String sequenceName) {
-		int capacity = initialCapacity;
-		if (isUseMaxLength() && (getSequenceCount() > 0)) {
-			capacity = Math.max(initialCapacity, getMaxSequenceLength());
-		}
-		return new ArrayList<T>(capacity);
+	protected List<T> createNewSequence(int sequenceID, String sequenceName,
+			int initialCapacity) {
+
+		return new ArrayList<T>(initialCapacity);
 	}
 }

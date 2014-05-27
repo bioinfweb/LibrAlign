@@ -91,8 +91,8 @@ main/src/info/bioinfweb/libralign/sequenceprovider/implementations/AbstractSeque
 main/src/info/bioinfweb/libralign/sequenceprovider/implementations/AbstractUnmodifyableSequenceDataProvider.java -text svneol=unset#text/plain
 main/src/info/bioinfweb/libralign/sequenceprovider/implementations/ArrayListSequenceDataProvider.java -text svneol=unset#text/plain
 main/src/info/bioinfweb/libralign/sequenceprovider/implementations/BioJavaSequenceDataProvider.java -text svneol=unset#text/plain
-main/src/info/bioinfweb/libralign/sequenceprovider/implementations/BitSequenceDataProvider.java -text svneol=unset#text/plain
 main/src/info/bioinfweb/libralign/sequenceprovider/implementations/CharSequenceDataProvider.java -text svneol=unset#text/plain
+main/src/info/bioinfweb/libralign/sequenceprovider/implementations/PackedSequenceDataProvider.java -text svneol=unset#text/plain
 main/src/info/bioinfweb/libralign/sequenceprovider/implementations/package-info.java -text svneol=unset#text/plain
 main/src/info/bioinfweb/libralign/sequenceprovider/implementations/swingundo/SwingEditFactory.java -text svneol=unset#text/plain
 main/src/info/bioinfweb/libralign/sequenceprovider/implementations/swingundo/SwingUndoSequenceDataProvider.java -text svneol=unset#text/plain
