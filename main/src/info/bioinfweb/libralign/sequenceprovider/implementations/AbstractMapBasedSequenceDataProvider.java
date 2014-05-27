@@ -22,7 +22,7 @@ package info.bioinfweb.libralign.sequenceprovider.implementations;
 import info.bioinfweb.commons.collections.ListChangeType;
 import info.bioinfweb.libralign.AlignmentArea;
 import info.bioinfweb.libralign.SequenceOrder;
-import info.bioinfweb.libralign.sequenceprovider.SequenceObjectDataProvider;
+import info.bioinfweb.libralign.sequenceprovider.SequenceAccessDataProvider;
 import info.bioinfweb.libralign.sequenceprovider.events.SequenceChangeEvent;
 import info.bioinfweb.libralign.sequenceprovider.tokenset.TokenSet;
 
@@ -47,7 +47,7 @@ import org.biojava.bio.seq.Sequence;
  * 
  * @author Ben St&ouml;ver
  * 
- * @see SequenceObjectDataProvider
+ * @see SequenceAccessDataProvider
  * @see SequenceOrder
  * @see AlignmentArea
  *

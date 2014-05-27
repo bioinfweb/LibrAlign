@@ -55,12 +55,12 @@ import info.bioinfweb.libralign.sequenceprovider.tokenset.TokenSet;
  * <p>
  * Note that this interface leafs it up to the implementation if the alignment data is organized in objects
  * storing whole sequences (rows) or another storage pattern. If your implementation uses sequence objects
- * consider implementing {@link SequenceObjectDataProvider}.
+ * consider implementing {@link SequenceAccessDataProvider}.
  * 
  * @author Ben St&ouml;ver
  * @since 0.0.0
  * 
- * @see SequenceObjectDataProvider
+ * @see SequenceAccessDataProvider
  * @see AbstractSequenceDataProvider
  * @see AbstractMapBasedSequenceDataProvider
  * @see AbstractSequenceDataAdapter

@@ -79,7 +79,7 @@ public class BioJavaSequenceAdapter<T, C extends Compound> extends AbstractSeque
 	 * @return a sequence as an {@link Sequence} object
 	 */
 	@Override
-	public SingleBioJavaSequenceAdapter<T, C> toSequence(int sequenceID) {
+	public SingleBioJavaSequenceAdapter<T, C> getSequence(int sequenceID) {
 		return new SingleBioJavaSequenceAdapter<>(getUnderlyingProvider(), sequenceID, getCompoundSet());
 	}
 
@@ -92,7 +92,7 @@ public class BioJavaSequenceAdapter<T, C extends Compound> extends AbstractSeque
 	 * @return a subsequence as an {@link Sequence} object
 	 */
 	@Override
-	public SingleBioJavaSequenceAdapter<T, C> toSequence(int sequenceID, int offset, int length) {
+	public SingleBioJavaSequenceAdapter<T, C> getSubSequence(int sequenceID, int offset, int length) {
 		return new SingleBioJavaSequenceAdapter<>(getUnderlyingProvider(), sequenceID, offset, length, 
 				getCompoundSet());
 	}
@@ -109,7 +109,7 @@ public class BioJavaSequenceAdapter<T, C extends Compound> extends AbstractSeque
 		MultipleSequenceAlignment<Sequence<C>, C> result = new MultipleSequenceAlignment<Sequence<C>, C>();
 		Iterator<Integer> iterator = getUnderlyingProvider().sequenceIDIterator();
 		while (iterator.hasNext()) {
-			result.addAlignedSequence(toSequence(iterator.next()));
+			result.addAlignedSequence(getSequence(iterator.next()));
 		}
 		return result;
 	}
@@ -127,7 +127,7 @@ public class BioJavaSequenceAdapter<T, C extends Compound> extends AbstractSeque
 	public LightweightProfile<Sequence<C>, C> toLightweightProfile(SequenceOrder order) {
 		MultipleSequenceAlignment<Sequence<C>, C> result = new MultipleSequenceAlignment<Sequence<C>, C>();
 		for (int i = 0; i < getUnderlyingProvider().getSequenceCount(); i++) {
-			result.addAlignedSequence(toSequence(order.idByIndex(i)));
+			result.addAlignedSequence(getSequence(order.idByIndex(i)));
 		}
 		return result;
 	}

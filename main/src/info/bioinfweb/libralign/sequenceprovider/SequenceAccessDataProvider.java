@@ -26,9 +26,9 @@ import org.biojava.bio.seq.Sequence;
 
 
 /**
- * Interface for classes implementing {@link SequenceDataProvider} by sequence objects. Methods to replace a 
- * whole sequence are specified for the case that the sequence objects (e.g. Strings or BioJava sequences)
- * do not allow to be modified after creation. 
+ * Interface for classes implementing {@link SequenceDataProvider} by using sequence objects. Methods to 
+ * replace a whole sequence are specified for the case that the sequence objects (e.g. Strings or 
+ * BioJava sequences) do not allow to be modified after creation. 
  * 
  * @author Ben St&ouml;ver
  * @since 0.1.0
@@ -36,7 +36,7 @@ import org.biojava.bio.seq.Sequence;
  * @param <S> - the type of the sequence objects (e.g. {@link Sequence} or {@link String})
  * @param <T> - the type of sequence elements (tokens) the implementing provider object works with
  */
-public interface SequenceObjectDataProvider<S, T> extends SequenceDataProvider<T> {
+public interface SequenceAccessDataProvider<S, T> extends SequenceDataProvider<T>, SequenceAccess<S> {
   /**
    * Adds a the specified sequence to the underlying data source and generates an ID for it.
    * 
@@ -53,14 +53,8 @@ public interface SequenceObjectDataProvider<S, T> extends SequenceDataProvider<T
 	 * 
 	 * @param sequenceID - the ID of the sequence to be replaced
 	 * @param content - the new sequence object
-	 */
-	public void setSequenceContent(int sequenceID, S content);
-	
-	/**
-	 * Returns the sequence object with the specified ID.
-	 * 
-	 * @param sequenceID - the ID of the sequence to be returned
-	 * @return the sequence object from the underlying data source
-	 */
-	public S getSequence(int sequenceID);
+	 * @return the previous sequence identified by the specified ID, or {@code null} if there was no sequence 
+	 *         with the ID
+ 	 */
+	public S replaceSequence(int sequenceID, S content);
 }

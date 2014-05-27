@@ -20,7 +20,7 @@ package info.bioinfweb.libralign.sequenceprovider.implementations;
 
 
 import info.bioinfweb.libralign.sequenceprovider.SequenceDataProvider;
-import info.bioinfweb.libralign.sequenceprovider.SequenceObjectDataProvider;
+import info.bioinfweb.libralign.sequenceprovider.SequenceAccessDataProvider;
 import info.bioinfweb.libralign.sequenceprovider.tokenset.TokenSet;
 
 
@@ -37,25 +37,13 @@ import info.bioinfweb.libralign.sequenceprovider.tokenset.TokenSet;
  * @since 0.1.0
  */
 public class CharSequenceDataProvider extends AbstractUnmodifyableSequenceDataProvider<CharSequence, Character>
-    implements SequenceObjectDataProvider<CharSequence, Character> {
+    implements SequenceAccessDataProvider<CharSequence, Character> {
 	
 	public CharSequenceDataProvider(TokenSet<Character> tokenSet) {
 		super(tokenSet);
 	}
 
 
-	public int addSequence(String sequenceName, CharSequence content) {
-		int result = addSequence(sequenceName);
-		setSequenceContent(result, content);
-		return result;
-	}
-	
-	
-	public void setSequenceContent(int sequenceID, CharSequence content) {
-		getSequenceMap().put(sequenceID, content);
-	}
-	
-	
 	/**
 	 * Returns an empty string as the new character sequence.
 	 * 

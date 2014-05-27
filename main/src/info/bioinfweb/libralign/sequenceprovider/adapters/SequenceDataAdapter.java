@@ -22,6 +22,7 @@ package info.bioinfweb.libralign.sequenceprovider.adapters;
 import org.biojava3.core.sequence.template.Sequence;
 
 import info.bioinfweb.libralign.sequenceprovider.BasicSequenceDataView;
+import info.bioinfweb.libralign.sequenceprovider.SequenceAccess;
 import info.bioinfweb.libralign.sequenceprovider.SequenceDataProvider;
 
 
@@ -37,15 +38,7 @@ import info.bioinfweb.libralign.sequenceprovider.SequenceDataProvider;
  * @param <S> - the type of sequence object that is returned by the implementation of this interface
  * @param <T> - the token type used by the underlying provider
  */
-public interface SequenceDataAdapter<S, T> extends BasicSequenceDataView<T> {
-	/**
-	 * Returns a view or copy of a sequence in the underlying data source.
-	 * 
-	 * @param sequenceID - the ID of the sequence in the underlying {@link SequenceDataProvider} to be viewed
-	 * @return a copy or view depending on the return value of {@link #returnsCopies()}
-	 */
-	public S toSequence(int sequenceID);
-	
+public interface SequenceDataAdapter<S, T> extends BasicSequenceDataView<T>, SequenceAccess<S> {
 	/**
 	 * Returns a view or copy of a subsequence in the underlying data source.
 	 * 
@@ -54,10 +47,10 @@ public interface SequenceDataAdapter<S, T> extends BasicSequenceDataView<T> {
 	 * @param length - the length of the subsequence to be viewed
 	 * @return a copy or view depending on the return value of {@link #returnsCopies()}
 	 */
-	public S toSequence(int sequenceID, int offset, int length);
+	public S getSubSequence(int sequenceID, int offset, int length);
 	
 	/**
-	 * Specifies if the instances returned by {@link #toSequence(int)} are views of the underlying data source
+	 * Specifies if the instances returned by {@link #getSequence(int)} are views of the underlying data source
 	 * or independent copies of the sequences.
 	 * 
 	 * @return {@code true} if copies are returned, {@code false} if views are returned

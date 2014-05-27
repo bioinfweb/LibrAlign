@@ -73,7 +73,7 @@ public class CharSequenceAdapter<T> extends AbstractSequenceDataAdapter<T>
 	 * @return a sequence as a {@link CharSequence}
 	 */
 	@Override
-	public CharSequence toSequence(int sequenceID) {
+	public CharSequence getSequence(int sequenceID) {
 		return new SingleCharSequenceAdapter<T>(getUnderlyingProvider(), sequenceID, isCutLongRepresentations());
 	}
 
@@ -88,7 +88,7 @@ public class CharSequenceAdapter<T> extends AbstractSequenceDataAdapter<T>
 	 * @return a sequence as a {@link CharSequence}
 	 */
 	@Override
-	public CharSequence toSequence(int sequenceID, int offset, int length) {
+	public CharSequence getSubSequence(int sequenceID, int offset, int length) {
 		return new SingleCharSequenceAdapter<T>(getUnderlyingProvider(), sequenceID, offset, length, 
 				isCutLongRepresentations());
 	}

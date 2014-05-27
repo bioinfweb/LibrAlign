@@ -26,8 +26,10 @@ import java.util.TreeMap;
 
 import org.biojava.bio.seq.Sequence;
 
+import info.bioinfweb.commons.collections.ListChangeType;
+import info.bioinfweb.libralign.sequenceprovider.SequenceAccessDataProvider;
 import info.bioinfweb.libralign.sequenceprovider.SequenceDataProviderWriteType;
-import info.bioinfweb.libralign.sequenceprovider.SequenceObjectDataProvider;
+import info.bioinfweb.libralign.sequenceprovider.events.SequenceChangeEvent;
 import info.bioinfweb.libralign.sequenceprovider.exception.AlignmentSourceNotWritableException;
 import info.bioinfweb.libralign.sequenceprovider.tokenset.TokenSet;
 
@@ -45,7 +47,7 @@ import info.bioinfweb.libralign.sequenceprovider.tokenset.TokenSet;
  */
 public abstract class AbstractUnmodifyableSequenceDataProvider<S, T>
     extends AbstractMapBasedSequenceDataProvider<S, T>
-    implements SequenceObjectDataProvider<S, T> {
+    implements SequenceAccessDataProvider<S, T> {
 	
 	/**
 	 * Creates a new instance of this class with a custom map and list implementation.
@@ -82,17 +84,58 @@ public abstract class AbstractUnmodifyableSequenceDataProvider<S, T>
 	}
 
 
+  /**
+   * Adds a the specified sequence to the underlying data source and generates an ID for it.
+   * <p>
+   * This method calls first {@link #addSequence(String)} and than {@link #setSequenceContent(int, Object)}
+   * internally. Therefore two different events will be fired.
+   * 
+   * @param sequenceName - the name of the new sequence
+	 * @param content - the sequence object to be added.
+   * @return the unique ID of the new sequence
+	 * 
+	 * @throws AlignmentSourceNotWritableException This exception is not thrown by this implementation.
+   */
 	@Override
 	public int addSequence(String sequenceName, S content) {
 		int result = addSequence(sequenceName);
-		setSequenceContent(result, content);
+		replaceSequence(result, content);
 		return result;
 	}
 	
 	
+	/**
+	 * Replaces the sequence object with the specified ID by the specified contents. Internally the current 
+	 * sequence is first removed from the underlying map and after that the new sequence is added using
+	 * the same ID. Therefore two {@link SequenceChangeEvent}s are fired, one for the removal and one for the
+	 * insertion. 
+	 * <p>
+	 * Between these two events the underlying map does not contain any sequence with the specified ID. For the
+	 * case that event handlers of the first event add any new sequences to the map they have to make sure not
+	 * to use the ID passed to this method (which might accidentally be created by a call of 
+	 * {@link #addSequence(String)}), because the new contents would than be overwritten in the second step
+	 * of this method.
+	 * <p>
+	 * It also has to be noted that there 
+	 * 
+	 * @param sequenceID - the ID of the sequence to be replaced
+	 * @param content - the new sequence object
+	 * @return the previous sequence identified by the specified ID, or {@code null} if there was no sequence 
+	 *         with the ID
+	 */
 	@Override
-	public void setSequenceContent(int sequenceID, S content) {
+	public S replaceSequence(int sequenceID, S content) {
+		// Remove old sequence:
+		S previous = null;
+		if (removeSequence(sequenceID)) {
+			previous = getSequenceMap().get(sequenceID);
+			fireAfterSequenceChange(new SequenceChangeEvent<T>(this, sequenceID, ListChangeType.DELETION));
+		}
+		
+		// Add new sequence:
 		getSequenceMap().put(sequenceID, content);
+		fireAfterSequenceChange(new SequenceChangeEvent<T>(this, sequenceID, ListChangeType.INSERTION));
+		return previous;
 	}
 
 
