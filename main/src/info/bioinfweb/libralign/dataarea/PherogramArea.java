@@ -16,13 +16,14 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package info.bioinfweb.libralign.dataarea.pherogram;
+package info.bioinfweb.libralign.dataarea;
 
 
 import info.bioinfweb.commons.tic.TICPaintEvent;
 import info.bioinfweb.libralign.AlignmentArea;
-import info.bioinfweb.libralign.dataarea.DataArea;
-import info.bioinfweb.libralign.dataarea.DataAreaListType;
+import info.bioinfweb.libralign.SequenceColorSchema;
+import info.bioinfweb.libralign.pherogram.PherogramComponent;
+import info.bioinfweb.libralign.pherogram.PherogramProvider;
 
 import java.awt.Dimension;
 import java.util.EnumSet;
@@ -36,7 +37,7 @@ import java.util.Set;
  * @author Ben St&ouml;ver
  * @since 0.0.0
  */
-public class PherogramArea extends DataArea {
+public class PherogramArea extends DataArea implements PherogramComponent {
 	private PherogramProvider pherogram; 
 	
 	
@@ -59,6 +60,33 @@ public class PherogramArea extends DataArea {
 
 	@Override
 	public Dimension getSize() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+
+	@Override
+	public PherogramProvider getProvider() {
+		return pherogram;
+	}
+
+
+	@Override
+	public double getVerticalScale() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+
+	@Override
+	public void setVerticalScale(double value) {
+		// TODO Auto-generated method stub
+		
+	}
+
+
+	@Override
+	public SequenceColorSchema getColorSchema() {
 		// TODO Auto-generated method stub
 		return null;
 	}

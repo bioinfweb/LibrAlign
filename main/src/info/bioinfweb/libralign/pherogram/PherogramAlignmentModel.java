@@ -16,10 +16,11 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package info.bioinfweb.libralign.dataarea.pherogram;
+package info.bioinfweb.libralign.pherogram;
 
 
 import info.bioinfweb.libralign.AlignmentArea;
+import info.bioinfweb.libralign.dataarea.PherogramArea;
 
 
 
