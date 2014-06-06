@@ -20,10 +20,7 @@ package info.bioinfweb.libralign.dataarea.pherogram;
 
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
-
-import info.bioinfweb.libralign.AlignmentArea;
 
 
 
@@ -33,35 +30,41 @@ import info.bioinfweb.libralign.AlignmentArea;
  * @author Ben St&ouml;ver
  */
 public class DefaultPherogramAlignmentModel implements PherogramAlignmentModel {
-	protected static enum ListEntryType {
-		/** Both sequences are aligned onto each other. */
-		OVERLAP,
-		
-		/** An insertion in the aligned sequence (not the base call sequence). */
-		INSERTION,
-
-		/** An deletion in the aligned sequence (not the base call sequence). */
-    DELETION;
-	}
+	private int firstVisibleBaseCallIndex = 0;
+	private int visibleBaseCallLength = 0;
+	private int sequenceStartIndex = 0;
+	//protected List<Integer> sequenceByBaseCallIndexList = new ArrayList<Integer>();
+	protected List<Integer> baseCallBySequenceIndexList = new ArrayList<Integer>();
 	
 	
-	protected static class ListEntry {
-		public ListEntryType type;
-		public int length;
-
-		public ListEntry(ListEntryType type, int length) {
-			super();
-			this.type = type;
-			this.length = length;
+	private void changeListSizeAtEnd(int dif) {
+		if (dif > 0) {  // elongate list
+			int value = getSequenceStartIndex();
+			if (baseCallBySequenceIndexList.size() > 0) {
+				value = baseCallBySequenceIndexList.get(baseCallBySequenceIndexList.size() - 1);
+			}
+			for (int i = 0; i < dif; i++) {
+				baseCallBySequenceIndexList.add(value);
+				value++;
+			}
+		}
+		else {  // cut list
+			for (int i = 0; i < -dif; i++) {  // does nothing if dif == 0
+				baseCallBySequenceIndexList.remove(baseCallBySequenceIndexList.size() - 1);
+			}
 		}
 	}
 	
 	
-	private int firstVisibleBaseCallIndex = 0;
-	private int visibleBaseCallLength = 0;
-	private int sequenceStartIndex = 0;
-	private List<ListEntry> alignmentList = new ArrayList<ListEntry>();
-	
+	private void shiftList(int shift, int startIndex, int endIndex) {
+		if (shift != 0) {
+			for (int i = startIndex; i < endIndex; i++) {
+				if (baseCallBySequenceIndexList.get(i) >= 0) {  // Leave gap entries unchanged.
+					baseCallBySequenceIndexList.set(i, baseCallBySequenceIndexList.get(i) + shift);
+				}
+			}
+		}
+	}
 	
 	@Override
 	public int getFirstVisibleBaseCallIndex() {
@@ -72,6 +75,7 @@ public class DefaultPherogramAlignmentModel implements PherogramAlignmentModel {
 	@Override
 	public void setFirstVisibleBaseCallIndex(int baseCallIndex) {
 		firstVisibleBaseCallIndex = baseCallIndex;
+		//TODO update baseCallBySequenceIndexList
 	}
 
 	
@@ -83,7 +87,9 @@ public class DefaultPherogramAlignmentModel implements PherogramAlignmentModel {
 	
 	@Override
 	public void setVisibleBaseCallLength(int length) {
+		changeListSizeAtEnd(length - visibleBaseCallLength);
 		visibleBaseCallLength = length;
+		//TODO Somewhere the new nucleotides have to be copied. Should the list index changes also be done outside this class then?
 	}
 
 	
@@ -96,43 +102,64 @@ public class DefaultPherogramAlignmentModel implements PherogramAlignmentModel {
 	@Override
 	public void setSequenceStartIndex(int sequenceIndex) {
 		sequenceStartIndex = sequenceIndex;
+		//TODO update baseCallBySequenceIndexList
 	}
 
 	
+//	@Override
+//	public int sequenceByBaseCallIndex(int baseCallIndex) {
+//		if ((baseCallIndex < getFirstVisibleBaseCallIndex()) || 
+//				(baseCallIndex >= getFirstVisibleBaseCallIndex() + getVisibleBaseCallLength())) {
+//			
+//			return OUT_OF_RANGE;
+//		}
+//		else {
+//			return sequenceByBaseCallIndexList.get(baseCallIndex);
+//		}
+//	}
+
+
 	@Override
-	public int sequenceByBaseCallIndex(int baseCallIndex) {
-		if ((baseCallIndex < getFirstVisibleBaseCallIndex()) || 
-				(baseCallIndex >= getFirstVisibleBaseCallIndex() + getVisibleBaseCallLength())) {
+	public int baseCallBySequenceIndex(int sequenceIndex) {
+		if ((sequenceIndex < getSequenceStartIndex()) || 
+				(sequenceIndex >= getSequenceStartIndex() + baseCallBySequenceIndexList.size())) {
 			
 			return OUT_OF_RANGE;
 		}
 		else {
-			int result = getSequenceStartIndex();
-//			int 
-//      Iterator<ListEntry> iterator = getAlignmentList().iterator();
-//      while (iterator.hasNext()) {
-//      	ListEntry entry = iterator.next();
-//      	switch (entry.type) {
-//      		case OVERLAP:
-//      			result += entry.length;
-//      			break;
-//      		case INSERTION:
-//      		case DELETION:
-//      	}
-//      }
-			return result;
+			return baseCallBySequenceIndexList.get(sequenceIndex);
 		}
 	}
 
 	
 	@Override
-	public int baseCallBySequenceIndex(int sequenceIndex) {
-		// TODO Auto-generated method stub
-		return 0;
+	public void setSequenceInsertion(int sequenceStart, int length) {
+		//TODO Check range
+		
+		int listIndex = sequenceStart - getSequenceStartIndex();
+		int shift = 0;
+		for (int i = 0; i < length; i++) {
+			if ((listIndex == 0) || (baseCallBySequenceIndexList.get(listIndex) == GAP) ||
+					(baseCallBySequenceIndexList.get(listIndex) == baseCallBySequenceIndexList.get(listIndex - 1) + 1)) {
+				  // No base call position was skipped.
+				
+				baseCallBySequenceIndexList.add(listIndex, GAP);  // Time could be saved here, if the underlying array would only be moved once for all upcoming insertions, which is not trivial to implement in this case, even if array list would support it. 
+			}
+			else {
+				shift--;
+				baseCallBySequenceIndexList.set(listIndex, baseCallBySequenceIndexList.get(listIndex) + shift);
+			}
+			listIndex++;
+		}
+		
+		changeListSizeAtEnd(-length);  // Cut off end of list.
+		shiftList(shift, listIndex, baseCallBySequenceIndexList.size());  // Shift all indices behind the new gap if necessary.
 	}
 
 
-	protected List<ListEntry> getAlignmentList() {
-		return alignmentList;
+	@Override
+	public void setSequenceDeletion(int sequenceStart, int length) {
+		// TODO Auto-generated method stub
+		
 	}
 }

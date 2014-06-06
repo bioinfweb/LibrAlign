@@ -19,7 +19,6 @@
 package info.bioinfweb.libralign.dataarea;
 
 
-import java.util.EnumSet;
 import java.util.Set;
 
 import info.bioinfweb.libralign.AlignmentArea;

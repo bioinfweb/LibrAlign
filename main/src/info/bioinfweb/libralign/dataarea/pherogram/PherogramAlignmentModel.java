@@ -24,8 +24,8 @@ import info.bioinfweb.libralign.AlignmentArea;
 
 
 /**
- * Classes implementing this interface allow storing data that define the alignment between a
- * pherogram and a sequence in an alignment area it is associated with.
+ * Classes implementing this interface allow storing data that defines the alignment between a
+ * pherogram and the sequence in an alignment area it is associated with.
  * 
  * @author Ben St&ouml;ver
  */
@@ -99,21 +99,21 @@ public interface PherogramAlignmentModel {
    */
   public void setSequenceStartIndex(int sequenceIndex);
   
-  /**
-   * Returns the position in the associated sequence of the alignment area that is aligned with
-   * the specified position in the base call sequence of the pherogram.
-   * <p>
-   * If the specified base call position is aligned with a gap in the alignment sequence this pherogram
-   * is attached to, {@link #GAP} is returned. If the specified base call position is not contained in the 
-   * visible part of the pherogram (that is displayed in the alignment by the associated 
-   * {@link PherogramArea}), {@link #OUT_OF_RANGE} is returned. 
-   * 
-   * @param baseCallIndex - the absolute index in the base call sequence of the pherogram (Note that the 
-   *        first position of the bas calls associated with the aligned sequence might be greater zero.
-   *        Specifying invisible positions here would return {@link #OUT_OF_RANGE}.) 
-   * @return an integer value {@code >= 0} or {@link #GAP} or {@link #OUT_OF_RANGE}
-   */
-  public int sequenceByBaseCallIndex(int baseCallIndex);
+//  /**
+//   * Returns the position in the associated sequence of the alignment area that is aligned with
+//   * the specified position in the base call sequence of the pherogram.
+//   * <p>
+//   * If the specified base call position is aligned with a gap in the alignment sequence this pherogram
+//   * is attached to, {@link #GAP} is returned. If the specified base call position is not contained in the 
+//   * visible part of the pherogram (that is displayed in the alignment by the associated 
+//   * {@link PherogramArea}), {@link #OUT_OF_RANGE} is returned. 
+//   * 
+//   * @param baseCallIndex - the absolute index in the base call sequence of the pherogram (Note that the 
+//   *        first position of the bas calls associated with the aligned sequence might be greater zero.
+//   *        Specifying invisible positions here would return {@link #OUT_OF_RANGE}.) 
+//   * @return an integer value {@code >= 0} or {@link #GAP} or {@link #OUT_OF_RANGE}
+//   */
+//  public int sequenceByBaseCallIndex(int baseCallIndex);
   
   /**
    * Returns the position in the base call sequence of the pherogram.
@@ -128,4 +128,34 @@ public interface PherogramAlignmentModel {
    * @return an integer value {@code >= 0} or {@link #GAP} or {@link #OUT_OF_RANGE}
    */
   public int baseCallBySequenceIndex(int sequenceIndex);
+  
+  /**
+   * Stores a new insertion in the alignment sequence (the sequence in the alignment area this pherogram 
+   * is attached to) in this model. (This would be equivalent to a new deletion in the base call sequence.)
+   * <p>
+   * This is necessary if the sequence in the alignment is edited so that it is not identical with the
+   * base call sequence anymore. (Such an edit could e.g. be the insertion of a gap character into the
+   * alignment sequence.)
+   * 
+   * @param sequenceStart - the absolute position in the alignment sequence where the insertion did
+   *        take place
+   * @param length - the length of the insertion
+   */
+  public void setSequenceInsertion(int sequenceStart, int length);
+  
+  /**
+   * Adds a deletion or removes a stored insertion in the alignment sequence (the sequence in the alignment 
+   * area this pherogram is attached to) from this model. (This would be equivalent to adding an insertion
+   * the remaining a deletion in the base call sequence.)
+   * <p>
+   * This is necessary if the sequence in the alignment is edited so that it is not identical with the
+   * base call sequence anymore. (Such an edit could e.g. be the deletion of a previously inserted gap 
+   * character into the alignment sequence or the removal of an nucleotide initially copied from the base
+   * call sequence.)
+   * 
+   * @param sequenceStart - the absolute position in the alignment sequence where the insertion did
+   *        take place
+   * @param length - the length of the insertion
+   */
+  public void setSequenceDeletion(int sequenceStart, int length);
 }

@@ -27,7 +27,7 @@ import info.bioinfweb.libralign.sequenceprovider.DataProvider;
 
 /**
  * Interface that should be implemented by all classes providing pherogram data. Data provided by
- * such implementations can be displayed by {@link PherogramArea}.
+ * such implementations can be displayed by a {@link PherogramArea}.
  * 
  * @author Ben St&ouml;ver
  */
