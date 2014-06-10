@@ -88,6 +88,6 @@ public class PherogramView extends TICComponent implements PherogramComponent {
 
 	@Override
 	public void paint(TICPaintEvent e) {
-		painter.paintUnscaledTraceCurves(0, 300, e.getGraphics(), 0, 0, 1.0);  //TODO Provide correct x bounds depending on the position of the pherogram in the component and the area that needs to be repainted.
+		painter.paintUnscaledTraceCurves(1000, 1400, e.getGraphics(), 0, 0, 1.0);  //TODO Provide correct x bounds depending on the position of the pherogram in the component and the area that needs to be repainted.
 	}
 }

@@ -61,15 +61,16 @@ public class PherogramPainter {
 		for (TraceCurve nucleotide: TraceCurve.values()) {
 			height = Math.max(height, owner.getProvider().getMaxTraceValue(nucleotide));
 		}
+		height *= owner.getVerticalScale();
 		
 		for (TraceCurve nucleotide: TraceCurve.values()) {
 			Path2D path = new Path2D.Double();
 			double x = paintX;
-			path.moveTo(x, paintY - height + 
+			path.moveTo(x, paintY + height - 
 					owner.getProvider().getTraceValue(nucleotide, startX) * owner.getVerticalScale());
 			for (int traceX = startX + 1; traceX < endX; traceX++) {
 				x += horizontalScale;
-				path.lineTo(x, paintY - height + 
+				path.lineTo(x, paintY + height - 
 						owner.getProvider().getTraceValue(nucleotide, traceX) * owner.getVerticalScale());  //TODO curveTo() could be used alternatively.
 			}
 
