@@ -20,7 +20,9 @@ package info.bioinfweb.libralign.pherogram;
 
 
 import java.awt.Dimension;
+import java.awt.RenderingHints;
 
+import info.bioinfweb.commons.Math2;
 import info.bioinfweb.commons.tic.TICComponent;
 import info.bioinfweb.commons.tic.TICPaintEvent;
 import info.bioinfweb.libralign.AlignmentArea;
@@ -41,7 +43,8 @@ import info.bioinfweb.libralign.dataarea.PherogramArea;
  */
 public class PherogramView extends TICComponent implements PherogramComponent {
 	private PherogramProvider pherogram; 
-	private double verticalScale = 100f;
+	private double horizontalScale = 1.0;
+	private double verticalScale = 100.0;
 	private SequenceColorSchema colorSchema = new SequenceColorSchema();
 	private PherogramPainter painter = new PherogramPainter(this);
 	
@@ -52,8 +55,15 @@ public class PherogramView extends TICComponent implements PherogramComponent {
 	}
 
 	
+	private void updateUI() {
+		assignSize();
+		repaint();
+	}
+	
+	
 	public void setProvider(PherogramProvider pherogram) {
 		this.pherogram = pherogram;
+		updateUI();
 	}
 
 
@@ -66,6 +76,18 @@ public class PherogramView extends TICComponent implements PherogramComponent {
 	@Override
 	public void setVerticalScale(double value) {
 		verticalScale = value;
+		updateUI();
+	}
+
+
+	public double getHorizontalScale() {
+		return horizontalScale;
+	}
+
+
+	public void setHorizontalScale(double horizontalScale) {
+		this.horizontalScale = horizontalScale;
+		updateUI();
 	}
 
 
@@ -82,12 +104,18 @@ public class PherogramView extends TICComponent implements PherogramComponent {
 
 	@Override
 	public Dimension getSize() {
-		return new Dimension(300, 100);  //TODO Return size depending on the pherogram
+		return new Dimension((int)Math2.roundUp(getProvider().getTraceLength() * getHorizontalScale()), 
+				(int)Math2.roundUp(painter.calculateBaseCallHeight(getHorizontalScale()) + painter.calculateTraceCurvesHeight()));
 	}
 
 
 	@Override
 	public void paint(TICPaintEvent e) {
-		painter.paintUnscaledTraceCurves(1000, 1400, e.getGraphics(), 0, 0, 1.0);  //TODO Provide correct x bounds depending on the position of the pherogram in the component and the area that needs to be repainted.
+		e.getGraphics().setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+		int startX = (int)(e.getRectangle().getX() / getHorizontalScale());
+		int endX = (int)Math2.roundUp((e.getRectangle().x + e.getRectangle().width) / getHorizontalScale());
+		painter.paintUnscaledBaseCalls(startX, endX, e.getGraphics(), e.getRectangle().x, 0, getHorizontalScale());
+		painter.paintUnscaledTraceCurves(startX, endX, e.getGraphics(), 
+				e.getRectangle().x, painter.calculateBaseCallHeight(getHorizontalScale()), getHorizontalScale());
 	}
 }
