@@ -23,7 +23,6 @@ import java.awt.EventQueue;
 
 import javax.swing.JComponent;
 import javax.swing.JFrame;
-import javax.swing.JPanel;
 
 import org.biojava.bio.chromatogram.ChromatogramFactory;
 import org.biojava.bio.chromatogram.UnsupportedChromatogramFormatException;
@@ -31,12 +30,13 @@ import org.biojava.bio.chromatogram.UnsupportedChromatogramFormatException;
 import java.awt.BorderLayout;
 import java.io.File;
 import java.io.IOException;
+import javax.swing.JScrollPane;
 
 
 
-public class PherogramComponentTestApplication {
+public class SwingPherogramComponentApplication {
 	private JFrame frame;
-	private JComponent pherogramComponent = null;
+	private PherogramTraceCurveView pherogramView = null;
 	
 	
 	/**
@@ -46,7 +46,7 @@ public class PherogramComponentTestApplication {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					PherogramComponentTestApplication window = new PherogramComponentTestApplication();
+					SwingPherogramComponentApplication window = new SwingPherogramComponentApplication();
 					window.frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -59,19 +59,20 @@ public class PherogramComponentTestApplication {
 	/**
 	 * Create the application.
 	 */
-	public PherogramComponentTestApplication() {
+	public SwingPherogramComponentApplication() {
 		initialize();
 	}
 	
 	
-	public JComponent getPherogramComponent() throws UnsupportedChromatogramFormatException, IOException {
-		if (pherogramComponent == null) {
-			PherogramView pherogramView = new PherogramView();
+	public PherogramTraceCurveView getPherogramComponent() throws UnsupportedChromatogramFormatException, IOException {
+		if (pherogramView == null) {
+			pherogramView = new PherogramTraceCurveView();
 			pherogramView.setProvider(new BioJavaPherogramProvider(ChromatogramFactory.create(
 					new File("data\\pherograms\\Test_pel1PCR_Pel2Wdhg_PCR-7-A_1.ab1"))));
-			pherogramComponent = pherogramView.createSwingComponent();
+			pherogramView.setHorizontalScale(1);			
+			pherogramView.setVerticalScale(100);
 		}
-		return pherogramComponent;
+		return pherogramView;
 	}
 
 
@@ -84,7 +85,11 @@ public class PherogramComponentTestApplication {
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
 		try {
-			frame.getContentPane().add(getPherogramComponent(), BorderLayout.CENTER);
+			JScrollPane scrollPane = new JScrollPane();
+			frame.getContentPane().add(scrollPane, BorderLayout.CENTER);
+			
+			scrollPane.setViewportView(getPherogramComponent().createSwingComponent());
+			scrollPane.setColumnHeaderView(new PherogramHeadingView(getPherogramComponent()).createSwingComponent());
 		}
 		catch (Exception e) {
 			e.printStackTrace();
