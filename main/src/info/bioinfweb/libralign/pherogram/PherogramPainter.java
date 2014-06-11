@@ -20,7 +20,6 @@ package info.bioinfweb.libralign.pherogram;
 
 
 import java.awt.Color;
-import java.awt.Font;
 import java.awt.Graphics2D;
 import java.awt.geom.Path2D;
 
@@ -29,13 +28,14 @@ import info.bioinfweb.libralign.dataarea.PherogramArea;
 
 
 /**
- * Utility class used by GUI components that display a pherogram (e.g. {@link PherogramView} and 
+ * Utility class used by GUI components that display a pherogram (e.g. {@link PherogramTraceCurveView} and 
  * {@link PherogramArea}) that implements common painting routines.
  * 
  * @author Ben St&ouml;ver
  */
 public class PherogramPainter {
 	public static final int FONT_HEIGHT = 10;
+	public static final int INDEX_LABEL_INTERVAL = 5;
 	
 	
 	private PherogramComponent owner; 
@@ -58,26 +58,18 @@ public class PherogramPainter {
 		g.setColor(color);
 		
 		g.drawString(nucleotide, 
-				(float)(paintX + (owner.getProvider().getBaseCallPosition(index) - traceStart) * horizontalScale), 
+				(float)(paintX + (owner.getProvider().getBaseCallPosition(index) - traceStart) * horizontalScale - 
+				0.5 * g.getFontMetrics(). charWidth(nucleotide.charAt(0))), 
 				(float)paintY);
 	}
 	
 	
-	public int calculateFontHeight(double horizontalScale) {
-		return (int)Math.round(FONT_HEIGHT * horizontalScale);
-	}
-	
-	
-	public double calculateBaseCallHeight(double horizontalScale) {
-		return calculateFontHeight(horizontalScale) * 1.2;
-	}
-	
-
 	/**
 	 * Paints the nucleotide characters of the base call sequence at the x-positions stored in the underlying
 	 * pherogram model.
 	 * <p>
-	 * Note that no background will be painted by this method.
+	 * Note that no background will be painted by this method and the font currently set in the specified 
+	 * graphics context will be used.
 	 * 
 	 * @param startX - the index in {@code provider} of the first trace value to be painted
 	 * @param endX - the index in {@code provider} after the last value to be painted
@@ -88,9 +80,6 @@ public class PherogramPainter {
 	 */
 	public void paintUnscaledBaseCalls(int startX, int endX, Graphics2D g, double paintX, double paintY, 
 			double horizontalScale) {
-		
-		int fontHeight = calculateFontHeight(horizontalScale);
-		g.setFont(new Font(Font.SANS_SERIF, Font.PLAIN, (int)Math.round(FONT_HEIGHT * horizontalScale)));
 		
 		int index = 1;  // BioJava indices start with 1.
 		while ((index <= owner.getProvider().getSequenceLength()) && 
@@ -107,24 +96,26 @@ public class PherogramPainter {
 			while ((index <= owner.getProvider().getSequenceLength()) && 
 					(owner.getProvider().getBaseCallPosition(index) < endX)) {
 				
-				paintNucleotide(index, startX, g, paintX, paintY + fontHeight, horizontalScale);
+				paintNucleotide(index, startX, g, paintX, paintY + g.getFont().getSize(), horizontalScale);
 				index++;			
 			}
 
 			if (index <= owner.getProvider().getSequenceLength()) {
-				paintNucleotide(index, startX, g, paintX, paintY + fontHeight, horizontalScale);;  // Also paint last possible partly visible character
+				paintNucleotide(index, startX, g, paintX, paintY + g.getFont().getSize(), horizontalScale);;  // Also paint last possible partly visible character
 			}
     }
 	}
 	
 	
+	/**
+	 * Returns the height that is used to paint the trace curves. Since the trace data in {@link PherogramProvider}
+	 * is normalized to 1.0, the returned value is equal to the vertical scale value of the owning pherogram component
+	 * ({@link PherogramComponent#getVerticalScale()}).
+	 * 
+	 * @return the height in pixels
+	 */
 	public double calculateTraceCurvesHeight() {
-		double height = 0.0;
-		for (TraceCurve nucleotide: TraceCurve.values()) {
-			height = Math.max(height, owner.getProvider().getMaxTraceValue(nucleotide));
-			System.out.println(height);
-		}
-		return height * owner.getVerticalScale();
+		return owner.getVerticalScale();  // At least one curve must have 1.0 as the maximum height, because the model is normalized.
 	}
 	
 
@@ -162,5 +153,63 @@ public class PherogramPainter {
 		}
 		
 		return height;
+	}
+	
+	
+	public void paintBaseCallLines(int startX, int endX, Graphics2D g, double paintX, double paintY, double height,
+			double horizontalScale) {
+		
+		int index = 1;  // BioJava indices start with 1.
+		while ((index <= owner.getProvider().getSequenceLength()) && 
+				(owner.getProvider().getBaseCallPosition(index) < startX)) {
+			
+			index++;			
+		}
+		
+		if (index <= owner.getProvider().getSequenceLength()) {
+			while ((index <= owner.getProvider().getSequenceLength()) && 
+					(owner.getProvider().getBaseCallPosition(index) < endX)) {
+				
+	  		double x = paintX + (owner.getProvider().getBaseCallPosition(index) - startX) * horizontalScale;
+	  		Path2D path = new  Path2D.Double();
+	  		path.moveTo(x, paintY);
+	  		path.lineTo(x, paintY + height);
+				g.draw(path);
+				
+				index++;			
+			}
+    }		
+	}
+	
+	
+	public void paintBaseCallIndices(int startX, int endX, Graphics2D g, double paintX, double paintY, 
+			double horizontalScale) {
+		
+		int index = 1;  // BioJava indices start with 1.
+		while ((index <= owner.getProvider().getSequenceLength()) && 
+				(owner.getProvider().getBaseCallPosition(index) < startX)) {
+			
+			index++;			
+		}
+		
+		float leftMostLabelStart = 0;  // Make sure the first label is always painted
+		if (index <= owner.getProvider().getSequenceLength()) {
+			index = Math.max(INDEX_LABEL_INTERVAL, index - index % INDEX_LABEL_INTERVAL - INDEX_LABEL_INTERVAL);
+			
+			while ((index <= owner.getProvider().getSequenceLength()) && 
+					(owner.getProvider().getBaseCallPosition(index) < endX)) {
+				
+				String label = "" + index;
+				int labelWidth = g.getFontMetrics().stringWidth(label);
+				float labelX = (float)(paintX + (owner.getProvider().getBaseCallPosition(index) - startX) * horizontalScale - 
+						0.5 * labelWidth);
+				if (labelX > leftMostLabelStart) {  // Draw label only if it does not overlap with its left neighbor.
+					g.drawString(label, labelX,	(float)paintY + g.getFont().getSize());
+				}
+				
+				leftMostLabelStart = labelX + labelWidth;
+				index += INDEX_LABEL_INTERVAL;			
+			}
+    }
 	}
 }

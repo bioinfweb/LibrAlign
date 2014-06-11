@@ -43,9 +43,10 @@ main/src/info/bioinfweb/libralign/pherogram/BioJavaPherogramProvider.java -text 
 main/src/info/bioinfweb/libralign/pherogram/DefaultPherogramAlignmentModel.java -text svneol=unset#text/plain
 main/src/info/bioinfweb/libralign/pherogram/PherogramAlignmentModel.java -text svneol=unset#text/plain
 main/src/info/bioinfweb/libralign/pherogram/PherogramComponent.java -text svneol=unset#text/plain
+main/src/info/bioinfweb/libralign/pherogram/PherogramHeadingView.java -text svneol=unset#text/plain
 main/src/info/bioinfweb/libralign/pherogram/PherogramPainter.java -text svneol=unset#text/plain
 main/src/info/bioinfweb/libralign/pherogram/PherogramProvider.java -text svneol=unset#text/plain
-main/src/info/bioinfweb/libralign/pherogram/PherogramView.java -text svneol=unset#text/plain
+main/src/info/bioinfweb/libralign/pherogram/PherogramTraceCurveView.java -text svneol=unset#text/plain
 main/src/info/bioinfweb/libralign/pherogram/TraceCurve.java -text svneol=unset#text/plain
 main/src/info/bioinfweb/libralign/pherogram/package-info.java -text svneol=unset#text/plain
 main/src/info/bioinfweb/libralign/selection/AlignmentCursor.java -text svneol=unset#text/plain
