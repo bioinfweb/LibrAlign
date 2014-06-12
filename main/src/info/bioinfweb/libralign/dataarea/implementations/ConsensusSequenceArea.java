@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package info.bioinfweb.libralign.dataarea;
+package info.bioinfweb.libralign.dataarea.implementations;
 
 
 import java.awt.Color;
@@ -36,6 +36,8 @@ import info.bioinfweb.commons.bio.AmbiguityBaseScore;
 import info.bioinfweb.commons.tic.TICPaintEvent;
 import info.bioinfweb.libralign.AlignmentArea;
 import info.bioinfweb.libralign.alignmentareacomponents.SequenceArea;
+import info.bioinfweb.libralign.dataarea.DataArea;
+import info.bioinfweb.libralign.dataarea.DataAreaListType;
 import info.bioinfweb.libralign.sequenceprovider.SequenceDataChangeListener;
 import info.bioinfweb.libralign.sequenceprovider.SequenceDataProvider;
 import info.bioinfweb.libralign.sequenceprovider.events.SequenceChangeEvent;

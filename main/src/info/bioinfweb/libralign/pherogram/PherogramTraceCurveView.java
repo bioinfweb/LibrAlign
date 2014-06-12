@@ -30,7 +30,7 @@ import info.bioinfweb.commons.tic.TICComponent;
 import info.bioinfweb.commons.tic.TICPaintEvent;
 import info.bioinfweb.libralign.AlignmentArea;
 import info.bioinfweb.libralign.SequenceColorSchema;
-import info.bioinfweb.libralign.dataarea.PherogramArea;
+import info.bioinfweb.libralign.dataarea.implementations.PherogramArea;
 
 
 
@@ -45,33 +45,17 @@ import info.bioinfweb.libralign.dataarea.PherogramArea;
  * @see PherogramArea
  */
 public class PherogramTraceCurveView extends TICComponent implements PherogramComponent {
-	public static final float BASE_CALL_LINE_COLOR_FACTOR = 0.1f;
-
-	
 	private PherogramProvider pherogram;
 	private double horizontalScale = 1.0;
 	private double verticalScale = 100.0;
-	private SequenceColorSchema colorSchema = new SequenceColorSchema();
-	private Color backgroundColor;
-	private Color baseCallLineColor;
-	private boolean showBaseCallLines = true;
+	private PherogramFormats formats = new PherogramFormats();
 	private PherogramPainter painter = new PherogramPainter(this);
 	private PherogramHeadingView headingView = null;
 	
 	
 	public PherogramTraceCurveView() {
 		super();
-		
-		backgroundColor = getColorSchema().getDefaultBgColor();
-		float factor;
-		if (GraphicsUtils.rgbToGrayValue(getColorSchema().getDefaultBgColor()) > 127) {
-			factor = 1f - BASE_CALL_LINE_COLOR_FACTOR;
-		}
-		else {
-			factor = 1f + BASE_CALL_LINE_COLOR_FACTOR;
-		}
-		baseCallLineColor = GraphicsUtils.multiplyColorChannels(backgroundColor, factor);
-}
+  }
 
 
 	@Override
@@ -133,47 +117,15 @@ public class PherogramTraceCurveView extends TICComponent implements PherogramCo
 
 
 	@Override
-	public SequenceColorSchema getColorSchema() {
-		return colorSchema;
+	public PherogramFormats getFormats() {
+		return formats;
 	}
 
 
-	public void setColorSchema(SequenceColorSchema colorSchema) {
-		this.colorSchema = colorSchema;
-		repaintAll();
-	}
-
-	
-	public Color getBackgroundColor() {
-		return backgroundColor;
-	}
-
-
-	public void setBackgroundColor(Color backgroundColor) {
-		this.backgroundColor = backgroundColor;
-		repaint();  // Repainting the heading component is not necessary here because it stores its own background color.
-	}
-
-
-	public Color getBaseCallLineColor() {
-		return baseCallLineColor;
-	}
-
-
-	public void setBaseCallLineColor(Color baseCallLineColor) {
-		this.baseCallLineColor = baseCallLineColor;
-		repaint();  // Repainting the heading component is not necessary here because it has no base call lines.
-	}
-
-
-	public boolean isShowBaseCallLines() {
-		return showBaseCallLines;
-	}
-
-
-	public void setShowBaseCallLines(boolean showBaseCallLines) {
-		this.showBaseCallLines = showBaseCallLines;
-		repaint();
+	@Override
+	public void setFormats(PherogramFormats layout) {
+		this.formats = layout;
+		updateUI();
 	}
 
 
@@ -219,12 +171,12 @@ public class PherogramTraceCurveView extends TICComponent implements PherogramCo
 	@Override
 	public void paint(TICPaintEvent e) {
 		e.getGraphics().setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-		e.getGraphics().setColor(getBackgroundColor());
+		e.getGraphics().setColor(getFormats().getBackgroundColor());
 		e.getGraphics().fillRect(e.getRectangle().x, e.getRectangle().y, e.getRectangle().width, e.getRectangle().height);
 
 		SimpleSequenceInterval paintRange = calculatePaintRange(e);
-		if (isShowBaseCallLines()) {
-			e.getGraphics().setColor(getBaseCallLineColor());
+		if (getFormats().isShowBaseCallLines()) {
+			e.getGraphics().setColor(getFormats().getBaseCallLineColor());
 			
 			getPainter().paintBaseCallLines(paintRange.getFirstPos(), paintRange.getLastPos(), 
 					e.getGraphics(), e.getRectangle().x, 0, getSize().getHeight(), getHorizontalScale());

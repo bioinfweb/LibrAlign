@@ -16,13 +16,16 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package info.bioinfweb.libralign.dataarea;
+package info.bioinfweb.libralign.dataarea.implementations;
 
 
 import info.bioinfweb.commons.tic.TICPaintEvent;
 import info.bioinfweb.libralign.AlignmentArea;
-import info.bioinfweb.libralign.SequenceColorSchema;
+import info.bioinfweb.libralign.dataarea.DataArea;
+import info.bioinfweb.libralign.dataarea.DataAreaListType;
 import info.bioinfweb.libralign.pherogram.PherogramComponent;
+import info.bioinfweb.libralign.pherogram.PherogramFormats;
+import info.bioinfweb.libralign.pherogram.PherogramPainter;
 import info.bioinfweb.libralign.pherogram.PherogramProvider;
 
 import java.awt.Dimension;
@@ -38,7 +41,10 @@ import java.util.Set;
  * @since 0.0.0
  */
 public class PherogramArea extends DataArea implements PherogramComponent {
-	private PherogramProvider pherogram; 
+	private PherogramProvider pherogram;
+	private double verticalScale = 100f;
+	private PherogramFormats formats = new PherogramFormats();
+	private PherogramPainter painter = new PherogramPainter(this);
 	
 	
 	public PherogramArea(AlignmentArea owner, PherogramProvider pherogram) {
@@ -73,8 +79,7 @@ public class PherogramArea extends DataArea implements PherogramComponent {
 
 	@Override
 	public double getVerticalScale() {
-		// TODO Auto-generated method stub
-		return 0;
+		return verticalScale;
 	}
 
 
@@ -86,8 +91,15 @@ public class PherogramArea extends DataArea implements PherogramComponent {
 
 
 	@Override
-	public SequenceColorSchema getColorSchema() {
+	public PherogramFormats getFormats() {
 		// TODO Auto-generated method stub
 		return null;
+	}
+
+
+	@Override
+	public void setFormats(PherogramFormats layout) {
+		// TODO Auto-generated method stub
+		
 	}
 }

@@ -20,7 +20,7 @@ package info.bioinfweb.libralign.pherogram;
 
 
 import info.bioinfweb.libralign.AlignmentArea;
-import info.bioinfweb.libralign.dataarea.PherogramArea;
+import info.bioinfweb.libralign.dataarea.implementations.PherogramArea;
 
 
 

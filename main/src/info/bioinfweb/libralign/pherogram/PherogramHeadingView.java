@@ -43,15 +43,11 @@ public class PherogramHeadingView extends TICComponent {
 	
 	
 	private PherogramTraceCurveView traceCurveView;
-	private Color backgroundColor;
-	private Font baseCallFont = new Font(Font.DIALOG, Font.BOLD, 12);
-	private Font indexFont = new Font(Font.DIALOG, Font.PLAIN, 8);
 	
 	
 	public PherogramHeadingView(PherogramTraceCurveView traceCurveView) {
 		super();
 		this.traceCurveView = traceCurveView;
-		backgroundColor = traceCurveView.getBackgroundColor();
 	}
 
 
@@ -60,56 +56,21 @@ public class PherogramHeadingView extends TICComponent {
 	}
 
 
-	public Color getBackgroundColor() {
-		return backgroundColor;
-	}
-
-
-	public void setBackgroundColor(Color backgroundColor) {
-		this.backgroundColor = backgroundColor;
-		repaint();
-	}
-
-
-	public Font getBaseCallFont() {
-		return baseCallFont;
-	}
-
-
-	public void setBaseCallFont(Font font) {
-		this.baseCallFont = font;
-		assignSize();
-		repaint();
-	}
-
-
-	public Font getIndexFont() {
-		return indexFont;
-	}
-
-
-	public void setIndexFont(Font indexFont) {
-		this.indexFont = indexFont;
-		assignSize();
-		repaint();
-	}
-
-
 	@Override
 	public void paint(TICPaintEvent e) {
 		e.getGraphics().setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-		e.getGraphics().setColor(getBackgroundColor());
+		e.getGraphics().setColor(getTraceCurveView().getFormats().getBackgroundColor());
 		e.getGraphics().fillRect(e.getRectangle().x, e.getRectangle().y, e.getRectangle().width, e.getRectangle().height);
 		SimpleSequenceInterval paintRange = getTraceCurveView().calculatePaintRange(e);
 		
-		e.getGraphics().setFont(getIndexFont());
+		e.getGraphics().setFont(getTraceCurveView().getFormats().getIndexFont());
 		e.getGraphics().setColor(Color.BLACK);
 		getTraceCurveView().getPainter().paintBaseCallIndices(paintRange.getFirstPos(), paintRange.getLastPos(), 
 				e.getGraphics(), e.getRectangle().x, 0, getTraceCurveView().getHorizontalScale());
 
-		e.getGraphics().setFont(getBaseCallFont());
+		e.getGraphics().setFont(getTraceCurveView().getFormats().getBaseCallFont());
 		getTraceCurveView().getPainter().paintUnscaledBaseCalls(paintRange.getFirstPos(), paintRange.getLastPos(), 
-				e.getGraphics(), e.getRectangle().x, getIndexFont().getSize() * FONT_HEIGHT_FACTOR, 
+				e.getGraphics(), e.getRectangle().x, getTraceCurveView().getFormats().getIndexFont().getSize() * FONT_HEIGHT_FACTOR, 
 				getTraceCurveView().getHorizontalScale());
 	}
 
@@ -117,6 +78,7 @@ public class PherogramHeadingView extends TICComponent {
 	@Override
 	public Dimension getSize() {
 		return new Dimension(getTraceCurveView().getWidth(), 
-				(int)Math2.roundUp((getBaseCallFont().getSize() + getIndexFont().getSize()) * FONT_HEIGHT_FACTOR));
+				(int)Math2.roundUp((getTraceCurveView().getFormats().getBaseCallFont().getSize() + 
+						getTraceCurveView().getFormats().getIndexFont().getSize()) * FONT_HEIGHT_FACTOR));
 	}
 }

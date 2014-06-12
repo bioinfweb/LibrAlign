@@ -23,7 +23,7 @@ import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.geom.Path2D;
 
-import info.bioinfweb.libralign.dataarea.PherogramArea;
+import info.bioinfweb.libralign.dataarea.implementations.PherogramArea;
 
 
 
@@ -51,9 +51,9 @@ public class PherogramPainter {
 			double horizontalScale) {
 		
 		String nucleotide = owner.getProvider().getBaseCall(index).getUpperedBase();
-		Color color = owner.getColorSchema().getNucleotideColorMap().get(nucleotide); 
+		Color color = owner.getFormats().getNucleotideColorSchema().getNucleotideColorMap().get(nucleotide); 
 		if (color == null) {
-			color = owner.getColorSchema().getFontColor();
+			color = owner.getFormats().getNucleotideColorSchema().getFontColor();
 		}
 		g.setColor(color);
 		
@@ -148,7 +148,7 @@ public class PherogramPainter {
 						owner.getProvider().getTraceValue(nucleotide, traceX) * owner.getVerticalScale());  //TODO curveTo() could be used alternatively.
 			}
 
-			g.setColor(owner.getColorSchema().getNucleotideColorMap().get("" + nucleotide.toString().charAt(0)));
+			g.setColor(owner.getFormats().getNucleotideColorSchema().getNucleotideColorMap().get("" + nucleotide.toString().charAt(0)));
 			g.draw(path);
 		}
 		

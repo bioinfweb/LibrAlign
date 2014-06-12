@@ -21,7 +21,7 @@ package info.bioinfweb.libralign.pherogram;
 
 import org.biojava3.core.sequence.compound.NucleotideCompound;
 
-import info.bioinfweb.libralign.dataarea.PherogramArea;
+import info.bioinfweb.libralign.dataarea.implementations.PherogramArea;
 import info.bioinfweb.libralign.sequenceprovider.DataProvider;
 
 

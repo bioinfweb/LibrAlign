@@ -19,7 +19,7 @@
 package info.bioinfweb.libralign.pherogram;
 
 
-import info.bioinfweb.libralign.SequenceColorSchema;
+import java.awt.Color;
 
 
 
@@ -52,8 +52,18 @@ public interface PherogramComponent {
 	public void setVerticalScale(double value);
 	
 	/**
-	 * Returns the color schema that is used to paint the trace curves and base call sequence of the displayed
-	 * pherogram.
+	 * Returns the format object that is used to paint the displayed pherogram.
+	 * 
+	 * @return the layout object containing color and font definitions
 	 */
-	public SequenceColorSchema getColorSchema();
+	public PherogramFormats getFormats();
+
+	/**
+	 * Sets a new format object that is used to paint the displayed pherogram.
+	 * 
+	 * @param colorSchema - the new color schema to be used
+	 * @see #setBackgroundColor(Color)
+	 * @see #setBaseCallLineColor(Color)
+	 */
+	public void setFormats(PherogramFormats layout);
 }
