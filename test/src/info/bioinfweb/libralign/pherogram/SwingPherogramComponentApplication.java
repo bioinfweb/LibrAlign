@@ -67,8 +67,10 @@ public class SwingPherogramComponentApplication {
 	public PherogramTraceCurveView getPherogramComponent() throws UnsupportedChromatogramFormatException, IOException {
 		if (pherogramView == null) {
 			pherogramView = new PherogramTraceCurveView();
-			pherogramView.setProvider(new BioJavaPherogramProvider(ChromatogramFactory.create(
-					new File("data\\pherograms\\Test_pel1PCR_Pel2Wdhg_PCR-7-A_1.ab1"))));
+//		pherogramView.setProvider(new BioJavaPherogramProvider(ChromatogramFactory.create(
+//		new File("data\\pherograms\\Test_pel1PCR_Pel2Wdhg_PCR-7-A_1.ab1"))));
+  		pherogramView.setProvider(new BioJavaPherogramProvider(ChromatogramFactory.create(
+	      	new File("data\\pherograms\\Test_pel1PCR_Pel2Wdhg_PCR-7-A_1.ab1"))));
 			pherogramView.setHorizontalScale(1);			
 			pherogramView.setVerticalScale(100);
 		}
