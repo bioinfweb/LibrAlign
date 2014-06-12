@@ -23,7 +23,7 @@ import info.bioinfweb.commons.bio.biojava3.alignment.SimpleAlignment;
 import info.bioinfweb.commons.bio.biojava3.alignment.template.Alignment;
 import info.bioinfweb.commons.bio.biojava3.core.sequence.compound.AlignmentAmbiguityNucleotideCompoundSet;
 import info.bioinfweb.libralign.AlignmentArea;
-import info.bioinfweb.libralign.dataarea.ConsensusSequenceArea;
+import info.bioinfweb.libralign.dataarea.implementations.ConsensusSequenceArea;
 import info.bioinfweb.libralign.sequenceprovider.implementations.BioJavaSequenceDataProvider;
 import info.bioinfweb.libralign.sequenceprovider.tokenset.BioJavaTokenSet;
 
