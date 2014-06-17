@@ -25,7 +25,6 @@ import java.awt.geom.Path2D;
 
 import org.biojava3.core.sequence.compound.NucleotideCompound;
 
-import info.bioinfweb.commons.bio.biojava3.core.sequence.compound.NoGapDNACompoundSet;
 import info.bioinfweb.libralign.dataarea.implementations.PherogramArea;
 import info.bioinfweb.libralign.pherogram.PherogramFormats.QualityOutputType;
 
@@ -60,34 +59,41 @@ public class PherogramPainter {
 	}
 	
 	
+	private double paintQuality(NucleotideCompound nucleotide, int index, int traceStart, 
+			Graphics2D g, double paintX, double paintY,	double horizontalScale) {
+		
+		int quality = owner.getProvider().getQuality(nucleotide, index);
+		if (quality >= 0) {
+			paintBaseCallText("" + quality, index, traceStart, g, paintX, paintY, horizontalScale);
+		}
+		return paintY + g.getFont().getSize() * FONT_HEIGHT_FACTOR;
+	}
+	
+	
 	private void paintBaseCallData(int index, int traceStart, Graphics2D g, double paintX, double paintY, 
 			double horizontalScale) {
 		
 		PherogramFormats formats = owner.getFormats();
-		String nucleotide = owner.getProvider().getBaseCall(index).getUpperedBase();
+		NucleotideCompound nucleotide = owner.getProvider().getBaseCall(index);
 		
 		g.setFont(formats.getBaseCallFont());
-		g.setColor(getNucleotideColor(nucleotide));
-		paintBaseCallText(nucleotide, index, traceStart, g, paintX, paintY, horizontalScale);
+		g.setColor(getNucleotideColor(nucleotide.getUpperedBase()));
+		paintBaseCallText(nucleotide.getUpperedBase(), index, traceStart, 
+				g, paintX, paintY, horizontalScale);
 		
 		paintY += g.getFont().getSize() * FONT_HEIGHT_FACTOR;
 		if (!formats.getQualityOutputType().equals(QualityOutputType.NONE)) {
 			g.setFont(formats.getAnnotationFont());
 			if (formats.getQualityOutputType().equals(QualityOutputType.MAXIMUM)) {
 				// Color is already set correctly by the nucleotide output.
-				//paintBaseCallText(owner.getProvider().getAnnotation(label, baseIndex), index, traceStart, g, paintX, paintY, horizontalScale);
+				paintY = paintQuality(nucleotide, index, traceStart, g, paintX, paintY, horizontalScale);
 			}
 			else {  // QualityOutputType.ALL
-				
+				for (NucleotideCompound qualityNucleotide: PherogramUtils.TRACE_CURVE_NUCLEOTIDES) {
+					g.setColor(getNucleotideColor(qualityNucleotide.getUpperedBase()));
+					paintY = paintQuality(qualityNucleotide, index, traceStart, g, paintX, paintY, horizontalScale);
+				}
 			}
-			
-			paintY += g.getFont().getSize() * FONT_HEIGHT_FACTOR;
-		}
- 		switch (formats.getQualityOutputType()) {
-			case ALL:
-				
-				break;
-			case MAXIMUM:
 		}
 		if (formats.isShowProbabilityValues()) {
 		}
@@ -98,7 +104,7 @@ public class PherogramPainter {
 			double paintX, double paintY,	double horizontalScale) {
 		
 		g.drawString(text, (float)(paintX + (owner.getProvider().getBaseCallPosition(index) - traceStart) * horizontalScale - 
-				0.5 * g.getFontMetrics().stringWidth(text)), (float)paintY);
+				0.5 * g.getFontMetrics().stringWidth(text)), (float)(paintY + g.getFont().getSize()));
 	}
 	
 	
@@ -134,7 +140,7 @@ public class PherogramPainter {
 			while ((index <= owner.getProvider().getSequenceLength()) && 
 					(owner.getProvider().getBaseCallPosition(index) < endX)) {
 				
-				paintBaseCallData(index, startX, g, paintX, paintY + g.getFont().getSize(), horizontalScale);
+				paintBaseCallData(index, startX, g, paintX, paintY, horizontalScale);
 				index++;			
 			}
 
@@ -175,7 +181,7 @@ public class PherogramPainter {
 		
 		double height = calculateTraceCurvesHeight();
 		
-		for (NucleotideCompound nucleotide: NoGapDNACompoundSet.getNoGapDNACompoundSet().getAllCompounds()) {
+		for (NucleotideCompound nucleotide: PherogramUtils.TRACE_CURVE_NUCLEOTIDES) {
 			Path2D path = new Path2D.Double();
 			double x = paintX;
 			path.moveTo(x, paintY + height - 

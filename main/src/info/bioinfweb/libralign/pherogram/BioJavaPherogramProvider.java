@@ -25,6 +25,7 @@ import info.bioinfweb.commons.bio.biojava3.core.sequence.compound.NoGapDNACompou
 import java.util.HashMap;
 import java.util.Map;
 import java.util.NoSuchElementException;
+import java.util.TreeMap;
 
 import org.biojava.bio.chromatogram.Chromatogram;
 import org.biojava.bio.chromatogram.ChromatogramFactory;
@@ -49,7 +50,7 @@ public class BioJavaPherogramProvider implements PherogramProvider {
 	
 	
 	private Chromatogram chromatogram;
-	private Map<NucleotideCompound, AtomicSymbol> traceCurveMap = createTraceCurveMap();
+	private Map<String, AtomicSymbol> traceCurveMap = createTraceCurveMap();
 	private double maxTraceValue = 0;  // Must be double in order to avoid an integer division in normalizeTraceValue().
 	private DefaultPherogramAlignmentModel alignmentModel = new DefaultPherogramAlignmentModel();
 
@@ -61,25 +62,24 @@ public class BioJavaPherogramProvider implements PherogramProvider {
 	 */
 	public BioJavaPherogramProvider(Chromatogram chromatogram) {
 		super();
-		System.out.println(chromatogram.getBaseCalls().getLabels());
 		this.chromatogram = chromatogram;
 		maxTraceValue = chromatogram.getMax();
 	}
 
 	
-	private static Map<NucleotideCompound, AtomicSymbol> createTraceCurveMap() {
-		Map<NucleotideCompound, AtomicSymbol> result = new HashMap<NucleotideCompound, AtomicSymbol>();
+	private static Map<String, AtomicSymbol> createTraceCurveMap() {
+		Map<String, AtomicSymbol> result = new TreeMap<String, AtomicSymbol>();
 		NoGapDNACompoundSet set = NoGapDNACompoundSet.getNoGapDNACompoundSet(); 
-		result.put(set.getCompoundForString("A"), DNATools.a());
-		result.put(set.getCompoundForString("T"), DNATools.t());
-		result.put(set.getCompoundForString("C"), DNATools.c());
-		result.put(set.getCompoundForString("G"), DNATools.g());
+		result.put("A", DNATools.a());
+		result.put("T", DNATools.t());
+		result.put("C", DNATools.c());
+		result.put("G", DNATools.g());
 		return result;
 	}
 	
 	
 	private AtomicSymbol symbolByNucleotide(NucleotideCompound nucleotide) {
-		return traceCurveMap.get(nucleotide);
+		return traceCurveMap.get(nucleotide.getUpperedBase());
 	}
 
 	
