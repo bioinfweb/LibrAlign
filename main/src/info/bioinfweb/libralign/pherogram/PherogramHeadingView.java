@@ -21,7 +21,6 @@ package info.bioinfweb.libralign.pherogram;
 
 import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.Font;
 import java.awt.RenderingHints;
 
 import info.bioinfweb.commons.Math2;
@@ -39,9 +38,6 @@ import info.bioinfweb.commons.tic.TICPaintEvent;
  * @since 0.1.0
  */
 public class PherogramHeadingView extends TICComponent {
-	public static final double FONT_HEIGHT_FACTOR = 1.2;
-	
-	
 	private PherogramTraceCurveView traceCurveView;
 	
 	
@@ -58,27 +54,43 @@ public class PherogramHeadingView extends TICComponent {
 
 	@Override
 	public void paint(TICPaintEvent e) {
+		PherogramFormats formats = getTraceCurveView().getFormats();
+		PherogramPainter painter = getTraceCurveView().getPainter();
 		e.getGraphics().setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-		e.getGraphics().setColor(getTraceCurveView().getFormats().getBackgroundColor());
+		
+		e.getGraphics().setColor(formats.getBackgroundColor());
 		e.getGraphics().fillRect(e.getRectangle().x, e.getRectangle().y, e.getRectangle().width, e.getRectangle().height);
 		SimpleSequenceInterval paintRange = getTraceCurveView().calculatePaintRange(e);
 		
-		e.getGraphics().setFont(getTraceCurveView().getFormats().getIndexFont());
+		e.getGraphics().setFont(formats.getIndexFont());
 		e.getGraphics().setColor(Color.BLACK);
-		getTraceCurveView().getPainter().paintBaseCallIndices(paintRange.getFirstPos(), paintRange.getLastPos(), 
+		painter.paintBaseCallIndices(paintRange.getFirstPos(), paintRange.getLastPos(), 
 				e.getGraphics(), e.getRectangle().x, 0, getTraceCurveView().getHorizontalScale());
 
-		e.getGraphics().setFont(getTraceCurveView().getFormats().getBaseCallFont());
-		getTraceCurveView().getPainter().paintUnscaledBaseCalls(paintRange.getFirstPos(), paintRange.getLastPos(), 
-				e.getGraphics(), e.getRectangle().x, getTraceCurveView().getFormats().getIndexFont().getSize() * FONT_HEIGHT_FACTOR, 
+		e.getGraphics().setFont(formats.getBaseCallFont());
+		painter.paintUnscaledBaseCalls(paintRange.getFirstPos(), paintRange.getLastPos(), 
+				e.getGraphics(), e.getRectangle().x, formats.getIndexFont().getSize() * PherogramPainter.FONT_HEIGHT_FACTOR, 
 				getTraceCurveView().getHorizontalScale());
+
 	}
 
 	
 	@Override
 	public Dimension getSize() {
+		PherogramFormats formats = getTraceCurveView().getFormats(); 
+		int height = formats.getBaseCallFont().getSize() + formats.getIndexFont().getSize();
+		switch (formats.getQualityOutputType()) {
+			case ALL:
+				height += 4 * formats.getAnnotationFont().getSize();
+				break;
+			case MAXIMUM:
+				height += formats.getAnnotationFont().getSize();
+		}
+		if (formats.isShowProbabilityValues()) {
+			height += 3 * formats.getAnnotationFont().getSize();
+		}
+		
 		return new Dimension(getTraceCurveView().getWidth(), 
-				(int)Math2.roundUp((getTraceCurveView().getFormats().getBaseCallFont().getSize() + 
-						getTraceCurveView().getFormats().getIndexFont().getSize()) * FONT_HEIGHT_FACTOR));
+				(int)Math2.roundUp(height * PherogramPainter.FONT_HEIGHT_FACTOR));
 	}
 }

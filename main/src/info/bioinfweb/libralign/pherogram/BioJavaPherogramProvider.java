@@ -23,6 +23,7 @@ import info.bioinfweb.commons.bio.biojava3.core.sequence.BioJava1SymbolTranslato
 
 import java.util.EnumMap;
 import java.util.Map;
+import java.util.NoSuchElementException;
 
 import org.biojava.bio.chromatogram.Chromatogram;
 import org.biojava.bio.chromatogram.ChromatogramFactory;
@@ -45,7 +46,7 @@ import org.biojava3.core.sequence.compound.NucleotideCompound;
 public class BioJavaPherogramProvider implements PherogramProvider {
 	private Chromatogram chromatogram;
 	private Map<TraceCurve, AtomicSymbol> traceCurveMap = createTraceCurveMap();
-	private double maxTraceValue = 0;  // Must be double in order to avoid a integer division in normalizeTraceValue().
+	private double maxTraceValue = 0;  // Must be double in order to avoid an integer division in normalizeTraceValue().
 	private DefaultPherogramAlignmentModel alignmentModel = new DefaultPherogramAlignmentModel();
 
 	
@@ -56,6 +57,7 @@ public class BioJavaPherogramProvider implements PherogramProvider {
 	 */
 	public BioJavaPherogramProvider(Chromatogram chromatogram) {
 		super();
+		System.out.println(chromatogram.getBaseCalls().getLabels());
 		this.chromatogram = chromatogram;
 		maxTraceValue = chromatogram.getMax();
 	}
@@ -128,6 +130,18 @@ public class BioJavaPherogramProvider implements PherogramProvider {
 	public int getBaseCallPosition(int baseIndex) {
 		return ((IntegerAlphabet.IntegerSymbol)chromatogram.getBaseCalls().symbolAt(
 				Chromatogram.OFFSETS, baseIndex)).intValue();
+	}
+
+
+	@Override
+	public int getAnnotation(String label, int baseIndex) {
+		try {
+			return ((IntegerAlphabet.IntegerSymbol)chromatogram.getBaseCalls().symbolAt(
+					label, baseIndex)).intValue();
+		}
+		catch (NoSuchElementException e) {
+			return -1;
+		}
 	}
 
 

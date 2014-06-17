@@ -19,17 +19,14 @@
 package info.bioinfweb.libralign.pherogram;
 
 
-import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.RenderingHints;
 
 import info.bioinfweb.commons.Math2;
 import info.bioinfweb.commons.collections.SimpleSequenceInterval;
-import info.bioinfweb.commons.graphics.GraphicsUtils;
 import info.bioinfweb.commons.tic.TICComponent;
 import info.bioinfweb.commons.tic.TICPaintEvent;
 import info.bioinfweb.libralign.AlignmentArea;
-import info.bioinfweb.libralign.SequenceColorSchema;
 import info.bioinfweb.libralign.dataarea.implementations.PherogramArea;
 
 

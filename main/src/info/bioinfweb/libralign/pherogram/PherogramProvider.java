@@ -19,6 +19,7 @@
 package info.bioinfweb.libralign.pherogram;
 
 
+import org.biojava.bio.program.scf.SCF;
 import org.biojava3.core.sequence.compound.NucleotideCompound;
 
 import info.bioinfweb.libralign.dataarea.implementations.PherogramArea;
@@ -33,6 +34,28 @@ import info.bioinfweb.libralign.sequenceprovider.DataProvider;
  * @author Ben St&ouml;ver
  */
 public interface PherogramProvider extends DataProvider {
+	/** Label to be used with {@link #getAnnotation(String, int)} to determine the quality score for adenine */
+	public static final String LABEL_QUALITY_A = SCF.PROB_NUC_A;
+	
+	/** Label to be used with {@link #getAnnotation(String, int)} to determine the quality score for thymine */
+	public static final String LABEL_QUALITY_T = SCF.PROB_NUC_T;
+	
+	/** Label to be used with {@link #getAnnotation(String, int)} to determine the quality score for cytosine */
+	public static final String LABEL_QUALITY_C = SCF.PROB_NUC_C;
+	
+	/** Label to be used with {@link #getAnnotation(String, int)} to determine the quality score for guanine */
+	public static final String LABEL_QUALITY_G = SCF.PROB_NUC_G;
+	
+	/** Label to be used with {@link #getAnnotation(String, int)} to determine the substitution probability */
+	public static final String LABEL_SUBSTITUTION_PROBABILITY = "substitution-probability";
+	
+	/** Label to be used with {@link #getAnnotation(String, int)} to determine the overcall probability */
+	public static final String LABEL_OVERCALL_PROBABILITY = "overcall-probability";
+	
+	/** Label to be used with {@link #getAnnotation(String, int)} to determine the undercall probability */
+	public static final String LABEL_UNDERCALL_PROBABILITY = "undercall-probability";
+	
+	
   /**
    * Returns the y value of the specified trace curve at the specified position.
    * 
@@ -76,6 +99,19 @@ public interface PherogramProvider extends DataProvider {
    * @return an integer value between 0 and {@link #getTraceLength()}{@code - 1}
    */
   public int getBaseCallPosition(int baseIndex);
+  
+  //public int getQuality(TraceCurve trace, int baseIndex);
+  
+  /**
+   * Returns the specified annotation (e.g. quality score or probability) associated with the base call at 
+   * the specified position.
+   * 
+   * @param label - the name of the attachment to be returned
+   * @param baseIndex - the index of base call to which the returned attachment score belongs
+   * @return the attached value or -1 if no value is stored at the specified position under the specified label
+   */
+  public int getAnnotation(String label, int baseIndex);  
+  
   
   /**
    * Returns the length of the sequence associated with the stored trace.
