@@ -121,8 +121,8 @@ public class DataAreaModel {
 	 * 
 	 * @return a double value greater of equal to zero
 	 */
-	public double getVisibleSequenceAreaHeight() {
-		double result = 0.0;
+	public int getVisibleSequenceAreaHeight() {
+		int result = 0;
 		Iterator<Integer> iterator = sequenceAreaLists.keySet().iterator(); 
 		while (iterator.hasNext()) {
 			result += getSequenceAreas(iterator.next()).getVisibleHeight();
@@ -137,8 +137,24 @@ public class DataAreaModel {
 	 * 
 	 * @return a double value greater of equal to zero
 	 */
-	public double getVisibleAreaHeight() {
+	public int getVisibleAreaHeight() {
 		return getTopAreas().getVisibleHeight() + getVisibleSequenceAreaHeight() + getBottomAreas().getVisibleHeight();
+	}
+	
+	
+	/**
+	 * Returns maximum space left of the alignment start that is needed by any currently visible data area in
+	 * any list contained in this model.
+	 * 
+	 * @return an integer >= 0
+	 */
+	public int getMaxLengthBeforeStart() {
+		int result = Math.max(getTopAreas().getMaxLengthBeforeStart(), getBottomAreas().getMaxLengthBeforeStart());
+		Iterator<Integer> iterator = sequenceAreaLists.keySet().iterator(); 
+		while (iterator.hasNext()) {
+			result = Math.max(result, getSequenceAreas(iterator.next()).getMaxLengthBeforeStart());
+		}
+		return result;
 	}
 	
 	

@@ -19,10 +19,8 @@
 package info.bioinfweb.libralign.pherogram;
 
 
-import java.util.ArrayList;
 import java.util.List;
 
-import org.biojava3.core.sequence.compound.DNACompoundSet;
 import org.biojava3.core.sequence.compound.NucleotideCompound;
 
 import info.bioinfweb.libralign.dataarea.implementations.PherogramArea;
@@ -35,6 +33,7 @@ import info.bioinfweb.libralign.sequenceprovider.DataProvider;
  * such implementations can be displayed by a {@link PherogramArea}.
  * 
  * @author Ben St&ouml;ver
+ * @since 0.1.0
  */
 public interface PherogramProvider extends DataProvider {
 	/** A list of the nucleotides A, T, C and G to which trace curves exist in a trace file from Sanger sequencing. */ 

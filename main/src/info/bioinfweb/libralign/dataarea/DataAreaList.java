@@ -157,13 +157,28 @@ public class DataAreaList extends DataAreaChangeEventList {
 	/**
 	 * Calculates the sum of the heights of all visible data areas contained in this list. 
 	 * 
-	 * @return a double value greater of equal to zero
+	 * @return an integer value greater of equal to zero
 	 */
-	public double getVisibleHeight() {
-		double result = 0.0;
+	public int getVisibleHeight() {
+		int result = 0;
 		Iterator<DataArea> iterator = visibleIterator();
 		while (iterator.hasNext()) {
-			result += iterator.next().getSize().getHeight();
+			result += iterator.next().getHeight();
+		}
+		return result;
+	}
+	
+	
+	/**
+	 * Returns maximum space left of the alignment start that is needed by any currently visible data area in this list.
+	 * 
+	 * @return an integer >= 0
+	 */
+	public int getMaxLengthBeforeStart() {
+		int result = 0;
+		Iterator<DataArea> iterator = visibleIterator();
+		while (iterator.hasNext()) {
+			result = Math.max(result, iterator.next().getLengthBeforeStart());
 		}
 		return result;
 	}

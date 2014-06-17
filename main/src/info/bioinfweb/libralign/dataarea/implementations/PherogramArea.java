@@ -38,7 +38,7 @@ import java.util.Set;
  * A data area displaying a trace file resulting from Sanger sequencing.
  * 
  * @author Ben St&ouml;ver
- * @since 0.0.0
+ * @since 0.1.0
  */
 public class PherogramArea extends DataArea implements PherogramComponent {
 	private PherogramProvider pherogram;
@@ -65,13 +65,6 @@ public class PherogramArea extends DataArea implements PherogramComponent {
 
 
 	@Override
-	public Dimension getSize() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-
-	@Override
 	public PherogramProvider getProvider() {
 		return pherogram;
 	}
@@ -85,21 +78,39 @@ public class PherogramArea extends DataArea implements PherogramComponent {
 
 	@Override
 	public void setVerticalScale(double value) {
-		// TODO Auto-generated method stub
-		
+		this.verticalScale = value;
 	}
 
 
 	@Override
 	public PherogramFormats getFormats() {
-		// TODO Auto-generated method stub
-		return null;
+		return formats;
 	}
 
 
 	@Override
-	public void setFormats(PherogramFormats layout) {
+	public void setFormats(PherogramFormats formats) {
+		this.formats = formats;
+	}
+
+
+	@Override
+	public int getLengthBeforeStart() {
 		// TODO Auto-generated method stub
-		
+		return super.getLengthBeforeStart();
+	}
+
+
+	@Override
+	public int getLength() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+
+	@Override
+	public int getHeight() {
+		// TODO Auto-generated method stub
+		return 0;
 	}
 }

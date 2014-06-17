@@ -137,7 +137,7 @@ public class PherogramPainter {
 		while ((index <= owner.getProvider().getSequenceLength()) && 
 				(owner.getProvider().getBaseCallPosition(index) < startX)) {
 			
-			index++;			
+			index++;
 		}
 		
 		if (index <= owner.getProvider().getSequenceLength()) {
@@ -149,7 +149,7 @@ public class PherogramPainter {
 					(owner.getProvider().getBaseCallPosition(index) < endX)) {
 				
 				paintBaseCallData(index, startX, g, paintX, paintY, horizontalScale);
-				index++;			
+				index++;
 			}
 
 			if (index <= owner.getProvider().getSequenceLength()) {

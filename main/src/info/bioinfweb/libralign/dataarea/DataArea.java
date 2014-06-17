@@ -19,6 +19,7 @@
 package info.bioinfweb.libralign.dataarea;
 
 
+import java.awt.Dimension;
 import java.util.Set;
 
 import info.bioinfweb.libralign.AlignmentArea;
@@ -104,4 +105,41 @@ public abstract class DataArea extends AlignmentSubArea {
 	 * @return a non-empty set of locations
 	 */
 	public abstract Set<DataAreaListType> validLocations();
+	
+	
+	/**
+	 * Returns the length in pixels considering the current zoom factor this component needs to display
+	 * data left of the first alignment column.
+	 * <p>
+	 * Overwrite this method if your component displays additional information left of the alignment.
+	 * 
+	 * @return This default implementation always returns 0. 
+	 */
+	public int getLengthBeforeStart() {
+		return 0;
+	}
+	
+	
+	/**
+	 * Returns the length in pixels considering the current zoom factor starting at the left most alignment column.
+	 * 
+	 * @return an integer value >= 0
+	 */
+	public abstract int getLength();
+	
+
+	/**
+	 * Returns the height in pixels considering the current zoom factor this compoment needs.
+	 * 
+	 * @return an integer value > 0
+	 */
+	public abstract int getHeight();
+
+
+	@Override
+	public Dimension getSize() {
+		return new Dimension(getLength(),	getHeight());  
+		//TODO Add length left of the alignment start depending on the data area in the current alignment that needs the most space.
+		//TODO Add additional space on the right, depending on the longest component in the alignment area?
+	}
 }

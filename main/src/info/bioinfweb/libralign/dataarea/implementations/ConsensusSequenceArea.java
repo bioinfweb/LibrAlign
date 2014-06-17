@@ -20,7 +20,6 @@ package info.bioinfweb.libralign.dataarea.implementations;
 
 
 import java.awt.Color;
-import java.awt.Dimension;
 import java.awt.Graphics2D;
 import java.awt.geom.Rectangle2D;
 import java.util.EnumSet;
@@ -132,6 +131,7 @@ public class ConsensusSequenceArea extends DataArea {
 	}
 	
 	
+	@Override
 	public int getHeight() {
 		return height;
 	}
@@ -139,11 +139,17 @@ public class ConsensusSequenceArea extends DataArea {
 
 	public void setHeight(int height) {
 		this.height = height;
-		//TODO send height change
+		assignSize();
 		repaint();
 	}
 
 
+	@Override
+	public int getLength() {
+		return getOwner().getCompoundWidth() * getOwner().getSequenceProvider().getMaxSequenceLength();
+	}
+
+	
 	@Override
 	public void paint(TICPaintEvent event) {
 		int firstIndex = Math.max(0, getOwner().columnByPaintX((int)event.getRectangle().getMinX()));
@@ -182,13 +188,5 @@ public class ConsensusSequenceArea extends DataArea {
 	@Override
 	public Set<DataAreaListType> validLocations() {
 		return EnumSet.of(DataAreaListType.TOP, DataAreaListType.BOTTOM);
-	}
-
-
-	@Override
-	public Dimension getSize() {
-		return new Dimension(
-				getOwner().getCompoundWidth() * getOwner().getSequenceProvider().getMaxSequenceLength(), 
-				getHeight());
 	}
 }
