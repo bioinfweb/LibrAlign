@@ -20,8 +20,9 @@ package info.bioinfweb.libralign.pherogram;
 
 
 import info.bioinfweb.commons.bio.biojava3.core.sequence.BioJava1SymbolTranslator;
+import info.bioinfweb.commons.bio.biojava3.core.sequence.compound.NoGapDNACompoundSet;
 
-import java.util.EnumMap;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.NoSuchElementException;
 
@@ -44,8 +45,11 @@ import org.biojava3.core.sequence.compound.NucleotideCompound;
  * @author Ben St&ouml;ver
  */
 public class BioJavaPherogramProvider implements PherogramProvider {
+	public static final String QUALITY_LABEL_PREFIX = "quality-";
+	
+	
 	private Chromatogram chromatogram;
-	private Map<TraceCurve, AtomicSymbol> traceCurveMap = createTraceCurveMap();
+	private Map<NucleotideCompound, AtomicSymbol> traceCurveMap = createTraceCurveMap();
 	private double maxTraceValue = 0;  // Must be double in order to avoid an integer division in normalizeTraceValue().
 	private DefaultPherogramAlignmentModel alignmentModel = new DefaultPherogramAlignmentModel();
 
@@ -63,18 +67,19 @@ public class BioJavaPherogramProvider implements PherogramProvider {
 	}
 
 	
-	private static Map<TraceCurve, AtomicSymbol> createTraceCurveMap() {
-		Map<TraceCurve, AtomicSymbol> result = new EnumMap<TraceCurve, AtomicSymbol>(TraceCurve.class);
-		result.put(TraceCurve.ADENINE, DNATools.a());
-		result.put(TraceCurve.THYMINE, DNATools.t());
-		result.put(TraceCurve.CYTOSINE, DNATools.c());
-		result.put(TraceCurve.GUIANINE, DNATools.g());
+	private static Map<NucleotideCompound, AtomicSymbol> createTraceCurveMap() {
+		Map<NucleotideCompound, AtomicSymbol> result = new HashMap<NucleotideCompound, AtomicSymbol>();
+		NoGapDNACompoundSet set = NoGapDNACompoundSet.getNoGapDNACompoundSet(); 
+		result.put(set.getCompoundForString("A"), DNATools.a());
+		result.put(set.getCompoundForString("T"), DNATools.t());
+		result.put(set.getCompoundForString("C"), DNATools.c());
+		result.put(set.getCompoundForString("G"), DNATools.g());
 		return result;
 	}
 	
 	
-	private AtomicSymbol symbolByTraceCurve(TraceCurve traceCurve) {
-		return traceCurveMap.get(traceCurve);
+	private AtomicSymbol symbolByNucleotide(NucleotideCompound nucleotide) {
+		return traceCurveMap.get(nucleotide);
 	}
 
 	
@@ -84,9 +89,9 @@ public class BioJavaPherogramProvider implements PherogramProvider {
 	
 
 	@Override
-	public double getTraceValue(TraceCurve traceCurve, int x) {
+	public double getTraceValue(NucleotideCompound nucleotide, int x) {
 		try {
-			return normalizeTraceValue(chromatogram.getTrace(symbolByTraceCurve(traceCurve))[x]);
+			return normalizeTraceValue(chromatogram.getTrace(symbolByNucleotide(nucleotide))[x]);
 		}
 		catch (IllegalSymbolException e) {
 			throw new InternalError("An unexpected internal error occurred. No trace data for the symbol " + 
@@ -102,9 +107,9 @@ public class BioJavaPherogramProvider implements PherogramProvider {
 
 
 	@Override
-	public double getMaxTraceValue(TraceCurve traceCurve) {
+	public double getMaxTraceValue(NucleotideCompound nucleotide) {
 		try {
-			return normalizeTraceValue(chromatogram.getMax(symbolByTraceCurve(traceCurve)));
+			return normalizeTraceValue(chromatogram.getMax(symbolByNucleotide(nucleotide)));
 		}
 		catch (IllegalSymbolException e) {
 			throw new InternalError("An unexpected internal error occurred. No trace data for the symbol " + 
@@ -130,6 +135,12 @@ public class BioJavaPherogramProvider implements PherogramProvider {
 	public int getBaseCallPosition(int baseIndex) {
 		return ((IntegerAlphabet.IntegerSymbol)chromatogram.getBaseCalls().symbolAt(
 				Chromatogram.OFFSETS, baseIndex)).intValue();
+	}
+
+
+	@Override
+	public int getQuality(NucleotideCompound nucleotide, int baseIndex) {
+		return getAnnotation(QUALITY_LABEL_PREFIX + nucleotide.getBase().toLowerCase(), baseIndex);
 	}
 
 

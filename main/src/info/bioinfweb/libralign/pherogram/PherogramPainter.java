@@ -23,6 +23,9 @@ import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.geom.Path2D;
 
+import org.biojava3.core.sequence.compound.NucleotideCompound;
+
+import info.bioinfweb.commons.bio.biojava3.core.sequence.compound.NoGapDNACompoundSet;
 import info.bioinfweb.libralign.dataarea.implementations.PherogramArea;
 import info.bioinfweb.libralign.pherogram.PherogramFormats.QualityOutputType;
 
@@ -172,7 +175,7 @@ public class PherogramPainter {
 		
 		double height = calculateTraceCurvesHeight();
 		
-		for (TraceCurve nucleotide: TraceCurve.values()) {
+		for (NucleotideCompound nucleotide: NoGapDNACompoundSet.getNoGapDNACompoundSet().getAllCompounds()) {
 			Path2D path = new Path2D.Double();
 			double x = paintX;
 			path.moveTo(x, paintY + height - 
