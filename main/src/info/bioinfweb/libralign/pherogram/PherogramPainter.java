@@ -59,12 +59,11 @@ public class PherogramPainter {
 	}
 	
 	
-	private double paintQuality(NucleotideCompound nucleotide, int index, int traceStart, 
+	private double paintAnnotation(int annotation, int index, int traceStart, 
 			Graphics2D g, double paintX, double paintY,	double horizontalScale) {
 		
-		int quality = owner.getProvider().getQuality(nucleotide, index);
-		if (quality >= 0) {
-			paintBaseCallText("" + quality, index, traceStart, g, paintX, paintY, horizontalScale);
+		if (annotation >= 0) {
+			paintBaseCallText("" + annotation, index, traceStart, g, paintX, paintY, horizontalScale);
 		}
 		return paintY + g.getFont().getSize() * FONT_HEIGHT_FACTOR;
 	}
@@ -86,16 +85,25 @@ public class PherogramPainter {
 			g.setFont(formats.getAnnotationFont());
 			if (formats.getQualityOutputType().equals(QualityOutputType.MAXIMUM)) {
 				// Color is already set correctly by the nucleotide output.
-				paintY = paintQuality(nucleotide, index, traceStart, g, paintX, paintY, horizontalScale);
+				paintY = paintAnnotation(owner.getProvider().getQuality(nucleotide, index), index, traceStart, 
+						g, paintX, paintY, horizontalScale);
 			}
 			else {  // QualityOutputType.ALL
-				for (NucleotideCompound qualityNucleotide: PherogramUtils.TRACE_CURVE_NUCLEOTIDES) {
+				for (NucleotideCompound qualityNucleotide: PherogramProvider.TRACE_CURVE_NUCLEOTIDES) {
 					g.setColor(getNucleotideColor(qualityNucleotide.getUpperedBase()));
-					paintY = paintQuality(qualityNucleotide, index, traceStart, g, paintX, paintY, horizontalScale);
+					paintY = paintAnnotation(owner.getProvider().getQuality(qualityNucleotide, index), index, traceStart, 
+							g, paintX, paintY, horizontalScale);
 				}
 			}
 		}
 		if (formats.isShowProbabilityValues()) {
+			g.setColor(formats.getProbabilityColor());
+			g.setFont(formats.getAnnotationFont());
+			
+			for (String label: PherogramProvider.PROBABILITY_LABELS) {
+				paintY = paintAnnotation(owner.getProvider().getAnnotation(label, index), index, traceStart, 
+						g, paintX, paintY, horizontalScale);
+			}
 		}
 	}
 	
@@ -181,7 +189,7 @@ public class PherogramPainter {
 		
 		double height = calculateTraceCurvesHeight();
 		
-		for (NucleotideCompound nucleotide: PherogramUtils.TRACE_CURVE_NUCLEOTIDES) {
+		for (NucleotideCompound nucleotide: PherogramProvider.TRACE_CURVE_NUCLEOTIDES) {
 			Path2D path = new Path2D.Double();
 			double x = paintX;
 			path.moveTo(x, paintY + height - 

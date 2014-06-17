@@ -28,23 +28,28 @@ import org.biojava3.core.sequence.compound.NucleotideCompound;
 
 
 /**
- * Tool class that implements useful methods to work with implementations of {@link PherogramProvider}.
+ * Class for internal that provides values for constants of {@link PherogramProvider}. 
  * 
  * @author Ben St&ouml;ver
  * @since 0.1.0
  */
-public class PherogramUtils {
-	/** A list of the nucleotides A, T, C and G to which trace curves exist in a trace file from Sanger sequencing. */ 
-  public static final List<NucleotideCompound> TRACE_CURVE_NUCLEOTIDES = createTraceCurveNucleotideList();
-  
-  
-  private static List<NucleotideCompound> createTraceCurveNucleotideList() {
+class PherogramUtils {
+  public static List<NucleotideCompound> createTraceCurveNucleotideList() {
   	List<NucleotideCompound> result = new ArrayList<NucleotideCompound>(4);
   	DNACompoundSet set = DNACompoundSet.getDNACompoundSet();
   	result.add(set.getCompoundForString("A"));
   	result.add(set.getCompoundForString("T"));
   	result.add(set.getCompoundForString("C"));
   	result.add(set.getCompoundForString("G"));
+  	return result;
+  }
+
+  
+  public static List<String> createProbabilityLabelsList() {
+  	List<String> result = new ArrayList<String>(3);
+  	result.add(PherogramProvider.LABEL_SUBSTITUTION_PROBABILITY);
+  	result.add(PherogramProvider.LABEL_OVERCALL_PROBABILITY);
+  	result.add(PherogramProvider.LABEL_UNDERCALL_PROBABILITY);
   	return result;
   }
 }

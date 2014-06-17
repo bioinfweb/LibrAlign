@@ -19,7 +19,10 @@
 package info.bioinfweb.libralign.pherogram;
 
 
-import org.biojava.bio.program.scf.SCF;
+import java.util.ArrayList;
+import java.util.List;
+
+import org.biojava3.core.sequence.compound.DNACompoundSet;
 import org.biojava3.core.sequence.compound.NucleotideCompound;
 
 import info.bioinfweb.libralign.dataarea.implementations.PherogramArea;
@@ -34,6 +37,9 @@ import info.bioinfweb.libralign.sequenceprovider.DataProvider;
  * @author Ben St&ouml;ver
  */
 public interface PherogramProvider extends DataProvider {
+	/** A list of the nucleotides A, T, C and G to which trace curves exist in a trace file from Sanger sequencing. */ 
+  public static final List<NucleotideCompound> TRACE_CURVE_NUCLEOTIDES = PherogramUtils.createTraceCurveNucleotideList();
+  
 	/** Label to be used with {@link #getAnnotation(String, int)} to determine the substitution probability */
 	public static final String LABEL_SUBSTITUTION_PROBABILITY = "substitution-probability";
 	
@@ -42,8 +48,11 @@ public interface PherogramProvider extends DataProvider {
 	
 	/** Label to be used with {@link #getAnnotation(String, int)} to determine the undercall probability */
 	public static final String LABEL_UNDERCALL_PROBABILITY = "undercall-probability";
-	
-	
+
+	/** A list that allows to iterate over all probability labels. */
+  public static final List<String> PROBABILITY_LABELS = PherogramUtils.createProbabilityLabelsList();
+
+  
   /**
    * Returns the y value of the specified trace curve at the specified position.
    * 
