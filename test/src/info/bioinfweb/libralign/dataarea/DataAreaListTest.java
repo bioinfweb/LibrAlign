@@ -25,7 +25,6 @@ import static org.junit.Assert.* ;
 import info.bioinfweb.commons.tic.TICPaintEvent;
 import info.bioinfweb.libralign.AlignmentArea;
 
-import java.awt.Dimension;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.EnumSet;
@@ -61,8 +60,13 @@ public class DataAreaListTest {
 						public void paint(TICPaintEvent event) {}
 						
 						@Override
-						public Dimension getSize() {
-							return new Dimension(1, 1);
+						public int getLength() {
+							return 1;
+						}
+
+						@Override
+						public int getHeight() {
+							return 1;
 						}
 
 						@Override

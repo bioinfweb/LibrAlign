@@ -19,6 +19,8 @@
 package info.bioinfweb.libralign.pherogram;
 
 
+import info.bioinfweb.libralign.pherogram.PherogramFormats.QualityOutputType;
+
 import java.awt.EventQueue;
 
 import javax.swing.JComponent;
@@ -70,9 +72,11 @@ public class SwingPherogramComponentApplication {
 //		pherogramView.setProvider(new BioJavaPherogramProvider(ChromatogramFactory.create(
 //		new File("data\\pherograms\\Test_pel1PCR_Pel2Wdhg_PCR-7-A_1.ab1"))));
   		pherogramView.setProvider(new BioJavaPherogramProvider(ChromatogramFactory.create(
-	      	new File("data\\pherograms\\Test_pel1PCR_Pel2Wdhg_PCR-7-A_1.ab1"))));
+	      	new File("data\\pherograms\\Test_qualityScore.scf"))));
 			pherogramView.setHorizontalScale(1);			
 			pherogramView.setVerticalScale(100);
+			pherogramView.getFormats().setQualityOutputType(QualityOutputType.ALL);
+			pherogramView.getFormats().setShowProbabilityValues(true);
 		}
 		return pherogramView;
 	}
