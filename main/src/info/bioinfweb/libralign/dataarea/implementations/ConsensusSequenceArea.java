@@ -21,6 +21,7 @@ package info.bioinfweb.libralign.dataarea.implementations;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
+import java.awt.RenderingHints;
 import java.awt.geom.Rectangle2D;
 import java.util.EnumSet;
 import java.util.Iterator;
@@ -165,6 +166,7 @@ public class ConsensusSequenceArea extends DataArea {
 		AlignmentAmbiguityNucleotideCompoundSet compoundSet =  
 				AlignmentAmbiguityNucleotideCompoundSet.getAlignmentAmbiguityNucleotideCompoundSet();
 		Graphics2D g = event.getGraphics();
+		g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
   	float x = firstIndex * getOwner().getCompoundWidth();
 		float sequenceY = 2 * getOwner().getCompoundHeight();
 		final float barWidth = getOwner().getCompoundWidth() / 4; 

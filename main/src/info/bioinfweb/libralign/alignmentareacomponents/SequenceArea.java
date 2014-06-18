@@ -23,6 +23,7 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FontMetrics;
 import java.awt.Graphics2D;
+import java.awt.RenderingHints;
 import java.awt.geom.Rectangle2D;
 import java.util.Iterator;
 import java.util.Set;
@@ -163,6 +164,9 @@ public class SequenceArea extends AlignmentSubArea {
   
   @Override
 	public void paint(TICPaintEvent event) {
+		event.getGraphics().setColor(getOwner().getColorSchema().getDefaultBgColor());  //TODO Define different background color for whole component and unknown tokens
+		event.getGraphics().fillRect(event.getRectangle().x, event.getRectangle().y, event.getRectangle().width, event.getRectangle().height);
+
 		int firstIndex = Math.max(0, getOwner().columnByPaintX((int)event.getRectangle().getMinX()));
 		int lastIndex = getOwner().columnByPaintX((int)event.getRectangle().getMaxX());
 		int lastColumn = getOwner().getSequenceProvider().getSequenceLength(getSeqenceID()) - 1;
@@ -170,7 +174,8 @@ public class SequenceArea extends AlignmentSubArea {
 			lastIndex = lastColumn;
 		}
 		
-  	float x = firstIndex * getOwner().getCompoundWidth();
+		event.getGraphics().setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+		float x = firstIndex * getOwner().getCompoundWidth() + getOwner().getDataAreas().getMaxLengthBeforeStart();
 		for (int i = firstIndex; i <= lastIndex; i++) {			
     	paintCompound(getOwner(), event.getGraphics(), 
     			getOwner().getSequenceProvider().getTokenAt(getSeqenceID(), i), x, 0f,	
@@ -183,6 +188,7 @@ public class SequenceArea extends AlignmentSubArea {
 	@Override
 	public Dimension getSize() {
 		return new Dimension(
+				getOwner().getDataAreas().getMaxLengthBeforeStart() + 
 				getOwner().getCompoundWidth() * getOwner().getSequenceProvider().getSequenceLength(getSeqenceID()),  //TODO Elongate to the length of the longest sequence and paint empty/special tokens on the right end? 
 				getOwner().getCompoundHeight());
 	}

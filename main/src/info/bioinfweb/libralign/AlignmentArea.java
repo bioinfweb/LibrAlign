@@ -315,11 +315,11 @@ public class AlignmentArea extends TICComponent implements SequenceDataChangeLis
 	/**
 	 * Returns the column containing the specified x coordinate.
 	 *  
-	 * @param x the paint coordinate
+	 * @param x - the paint coordinate
 	 * @return the alignment column or <code>-1</code> id the coordinate is outside the alignment area.
 	 */
 	public int columnByPaintX(int x) {
-		int result = (int)(x / getCompoundWidth());
+		int result = (int)((x - getDataAreas().getMaxLengthBeforeStart()) / getCompoundWidth());
 		if (Math2.isBetween(result, 0, getSequenceProvider().getMaxSequenceLength() - 1)) {
 			return result;
 		}
@@ -330,7 +330,7 @@ public class AlignmentArea extends TICComponent implements SequenceDataChangeLis
 
 
 	public int paintXByColumn(int column) {
-		return (int)((column - 1) * getCompoundWidth());
+		return (int)((column - 1) * getCompoundWidth()) + getDataAreas().getMaxLengthBeforeStart();
 	}
 
 
