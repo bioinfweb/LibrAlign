@@ -129,17 +129,23 @@ public abstract class DataArea extends AlignmentSubArea {
 	
 
 	/**
-	 * Returns the height in pixels considering the current zoom factor this compoment needs.
+	 * Returns the height in pixels considering the current zoom factor this component needs.
 	 * 
 	 * @return an integer value > 0
 	 */
 	public abstract int getHeight();
 
 
+	/**
+	 * Returns the size of the component depending on the return values of {@link #getLength()}, {@link #getHeight()}
+	 * and the maximum length before the first alignment position in the associated alignment area. (That means this
+	 * method might return a different dimension depending on the {@link AlignmentArea} is it contained in.)
+	 * 
+	 * @return the (minimal) width and height of this component
+	 */
 	@Override
 	public Dimension getSize() {
-		return new Dimension(getLength(),	getHeight());  
-		//TODO Add length left of the alignment start depending on the data area in the current alignment that needs the most space.
-		//TODO Add additional space on the right, depending on the longest component in the alignment area?
+		return new Dimension(getOwner().getDataAreas().getMaxLengthBeforeStart() + getLength(),	getHeight());  
+		//TODO Add additional space on the right, depending on the longest component in the alignment area? (Do area components need to have the same width?)
 	}
 }
