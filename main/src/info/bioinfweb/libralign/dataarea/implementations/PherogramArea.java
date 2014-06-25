@@ -28,8 +28,9 @@ import info.bioinfweb.libralign.pherogram.PherogramFormats;
 import info.bioinfweb.libralign.pherogram.PherogramPainter;
 import info.bioinfweb.libralign.pherogram.PherogramProvider;
 
-import java.awt.Dimension;
+import java.util.ArrayList;
 import java.util.EnumSet;
+import java.util.List;
 import java.util.Set;
 
 
@@ -41,15 +42,33 @@ import java.util.Set;
  * @since 0.1.0
  */
 public class PherogramArea extends DataArea implements PherogramComponent {
+	public static class SequenceAnchor {
+		public int sequencePos;
+		public int baseCallPos;
+
+		public SequenceAnchor(int sequencePos, int baseCallPos) {
+			super();
+			this.sequencePos = sequencePos;
+			this.baseCallPos = baseCallPos;
+		}
+	}
+	
+	
 	private PherogramProvider pherogram;
+	private int firstSeqPos;
+	private int leftCutPosition;
+	private int rightCutPosition;
 	private double verticalScale = 100f;
 	private PherogramFormats formats = new PherogramFormats();
 	private PherogramPainter painter = new PherogramPainter(this);
+	private List<SequenceAnchor> anchorList = new ArrayList<SequenceAnchor>();
 	
 	
 	public PherogramArea(AlignmentArea owner, PherogramProvider pherogram) {
 		super(owner);
 		this.pherogram = pherogram;
+		leftCutPosition = 0;
+		rightCutPosition = pherogram.getSequenceLength();
 	}
 
 
@@ -64,9 +83,57 @@ public class PherogramArea extends DataArea implements PherogramComponent {
 	}
 
 
+	/**
+	 * Returns the position in the sequence this pherogram is attached to where the output of the visible part
+	 * of the pherogram starts. 
+	 * 
+	 * @return a valid index in the sequence carrying this data area 
+	 */
+	public int getFirstSeqPos() {
+		return firstSeqPos;
+	}
+
+
+	/**
+	 * Sets the index in the sequence this pherogram is attached to where the displaying of the visible part 
+	 * of the pherogram starts. 
+	 * 
+	 * @param firstSeqPos - the new index
+	 */
+	public void setFirstSeqPos(int firstSeqPos) {
+		this.firstSeqPos = firstSeqPos;
+	}
+
+
 	@Override
 	public PherogramProvider getProvider() {
 		return pherogram;
+	}
+
+
+	@Override
+	public int getLeftCutPosition() {
+		return leftCutPosition;
+	}
+
+
+	@Override
+	public void setLeftCutPosition(int baseCallIndex) {
+		leftCutPosition = baseCallIndex;
+		repaint();
+	}
+
+
+	@Override
+	public int getRightCutPosition() {
+		return rightCutPosition;
+	}
+
+
+	@Override
+	public void setRightCutPosition(int baseCallIndex) {
+		rightCutPosition = baseCallIndex;
+		repaint();
 	}
 
 

@@ -128,5 +128,5 @@ public interface PherogramProvider extends DataProvider {
    * 
    * @return the model instance currently used
    */
-  public PherogramAlignmentModel getAlignmentModel();
+  public PherogramAlignmentModel getAlignmentModel();  //TODO Should this be defined here? (It is not necessary for the TraceCurveView.)
 }

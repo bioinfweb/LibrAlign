@@ -43,6 +43,8 @@ import info.bioinfweb.libralign.dataarea.implementations.PherogramArea;
  */
 public class PherogramTraceCurveView extends TICComponent implements PherogramComponent {
 	private PherogramProvider pherogram;
+	private int leftCutPosition = 0;
+	private int rightCutPosition = 0;
 	private double horizontalScale = 1.0;
 	private double verticalScale = 100.0;
 	private PherogramFormats formats = new PherogramFormats();
@@ -85,7 +87,35 @@ public class PherogramTraceCurveView extends TICComponent implements PherogramCo
 	
 	public void setProvider(PherogramProvider pherogram) {
 		this.pherogram = pherogram;
+		leftCutPosition = 0;
+		rightCutPosition = pherogram.getSequenceLength();
 		updateUI();
+	}
+
+
+	@Override
+	public int getLeftCutPosition() {
+		return leftCutPosition;
+	}
+
+
+	@Override
+	public void setLeftCutPosition(int baseCallIndex) {
+		leftCutPosition = baseCallIndex;
+		repaint();
+	}
+
+
+	@Override
+	public int getRightCutPosition() {
+		return rightCutPosition;
+	}
+
+
+	@Override
+	public void setRightCutPosition(int baseCallIndex) {
+		rightCutPosition = baseCallIndex;
+		repaint();
 	}
 
 

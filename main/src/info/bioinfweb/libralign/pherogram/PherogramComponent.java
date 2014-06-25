@@ -66,4 +66,33 @@ public interface PherogramComponent {
 	 * @see #setBaseCallLineColor(Color)
 	 */
 	public void setFormats(PherogramFormats layout);
+	
+	/**
+	 * Returns the first base call index of the pherogram which has not been cut off.
+	 * 
+	 * @return a base call index > 0
+	 */
+	public int getLeftCutPosition();
+	
+	/**
+	 * Sets a new cut position for the left border of the visible part of the pherogram.
+	 * 
+	 * @param baseCallIndex - the index of the first nucleotide in the base call sequence that shall be visible
+	 */
+	public void setLeftCutPosition(int baseCallIndex);
+	
+	/**
+	 * Returns the first base call index of the pherogram that has been cut off (so that the length of the visible
+	 * area of the pherogram can be calculated as {@code getRightCutPosition() - }{@link #getLeftCutPosition()}).
+	 * 
+	 * @return a base call index >= {@link #getLeftCutPosition()}
+	 */
+	public int getRightCutPosition();
+	
+	/**
+	 * Sets a new cut position for the right border of the visible part of the pherogram.
+	 * 
+	 * @param baseCallIndex - the index of the first nucleotide after the visible part in the base call sequence
+	 */
+	public void setRightCutPosition(int baseCallIndex);
 }

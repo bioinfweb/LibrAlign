@@ -24,6 +24,7 @@ main/src/info/bioinfweb/libralign/alignmentareacomponents/SWTAlignmentArea.java 
 main/src/info/bioinfweb/libralign/alignmentareacomponents/SequenceArea.java -text svneol=unset#text/plain
 main/src/info/bioinfweb/libralign/alignmentareacomponents/SequenceAreaMap.java -text svneol=unset#text/plain
 main/src/info/bioinfweb/libralign/alignmentareacomponents/SwingAlignmentArea.java -text svneol=unset#text/plain
+main/src/info/bioinfweb/libralign/alignmentareacomponents/TokenPainter.java -text svneol=unset#text/plain
 main/src/info/bioinfweb/libralign/alignmentareacomponents/ToolkitSpecificAlignmentArea.java -text svneol=unset#text/plain
 main/src/info/bioinfweb/libralign/alignmentareacomponents/package-info.java -text svneol=unset#text/plain
 main/src/info/bioinfweb/libralign/dataarea/DataArea.java -text svneol=unset#text/plain
@@ -41,7 +42,6 @@ main/src/info/bioinfweb/libralign/dataarea/implementations/package-info.java -te
 main/src/info/bioinfweb/libralign/dataarea/package-info.java -text svneol=unset#text/plain
 main/src/info/bioinfweb/libralign/package-info.java -text svneol=unset#text/plain
 main/src/info/bioinfweb/libralign/pherogram/BioJavaPherogramProvider.java -text svneol=unset#text/plain
-main/src/info/bioinfweb/libralign/pherogram/DefaultPherogramAlignmentModel.java -text svneol=unset#text/plain
 main/src/info/bioinfweb/libralign/pherogram/PherogramAlignmentModel.java -text svneol=unset#text/plain
 main/src/info/bioinfweb/libralign/pherogram/PherogramComponent.java -text svneol=unset#text/plain
 main/src/info/bioinfweb/libralign/pherogram/PherogramFormats.java -text svneol=unset#text/plain

@@ -22,7 +22,6 @@ package info.bioinfweb.libralign.pherogram;
 import info.bioinfweb.commons.bio.biojava3.core.sequence.BioJava1SymbolTranslator;
 import info.bioinfweb.commons.bio.biojava3.core.sequence.compound.NoGapDNACompoundSet;
 
-import java.util.HashMap;
 import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.TreeMap;
@@ -52,7 +51,7 @@ public class BioJavaPherogramProvider implements PherogramProvider {
 	private Chromatogram chromatogram;
 	private Map<String, AtomicSymbol> traceCurveMap = createTraceCurveMap();
 	private double maxTraceValue = 0;  // Must be double in order to avoid an integer division in normalizeTraceValue().
-	private DefaultPherogramAlignmentModel alignmentModel = new DefaultPherogramAlignmentModel();
+	private PherogramAlignmentModel alignmentModel = new PherogramAlignmentModel();
 
 	
 	/**
