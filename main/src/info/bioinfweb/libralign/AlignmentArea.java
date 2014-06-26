@@ -32,7 +32,8 @@ import info.bioinfweb.commons.Math2;
 import info.bioinfweb.commons.tic.TICComponent;
 import info.bioinfweb.commons.tic.TICPaintEvent;
 import info.bioinfweb.libralign.alignmentareacomponents.SWTAlignmentArea;
-import info.bioinfweb.libralign.alignmentareacomponents.SwingAlignmentArea;
+import info.bioinfweb.libralign.alignmentareacomponents.SwingAlignmentOverviewArea;
+import info.bioinfweb.libralign.alignmentareacomponents.SwingAlignmentPartArea;
 import info.bioinfweb.libralign.alignmentareacomponents.ToolkitSpecificAlignmentArea;
 import info.bioinfweb.libralign.dataarea.DataAreaChangeEvent;
 import info.bioinfweb.libralign.dataarea.DataAreaModel;
@@ -316,7 +317,7 @@ public class AlignmentArea extends TICComponent implements SequenceDataChangeLis
 	 * Returns the column containing the specified x coordinate.
 	 *  
 	 * @param x - the paint coordinate
-	 * @return the alignment column or <code>-1</code> id the coordinate is outside the alignment area.
+	 * @return the alignment column or {@code -1} if the coordinate lies outside the alignment area
 	 */
 	public int columnByPaintX(int x) {
 		int result = (int)((x - getDataAreas().getMaxLengthBeforeStart()) / getCompoundWidth());
@@ -336,7 +337,7 @@ public class AlignmentArea extends TICComponent implements SequenceDataChangeLis
 
 	@Override
 	protected JComponent doCreateSwingComponent() {
-		return new SwingAlignmentArea(this);
+		return new SwingAlignmentOverviewArea(this);
 	}
 
 

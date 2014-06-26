@@ -27,12 +27,9 @@ import java.util.Iterator;
 
 import info.bioinfweb.libralign.AlignmentArea;
 import info.bioinfweb.libralign.dataarea.DataArea;
-import info.bioinfweb.libralign.dataarea.DataAreaChangeEvent;
 import info.bioinfweb.libralign.dataarea.DataAreaList;
-import info.bioinfweb.libralign.dataarea.DataAreaModelListener;
 
 import javax.swing.BoxLayout;
-import javax.swing.JComponent;
 import javax.swing.JPanel;
 import javax.swing.Scrollable;
 
@@ -44,34 +41,19 @@ import javax.swing.Scrollable;
  * @author Ben St&ouml;ver
  * @since 0.0.0
  */
-public class SwingAlignmentArea extends JPanel 
-    implements ToolkitSpecificAlignmentArea, DataAreaModelListener, Scrollable {
-	
-	private AlignmentArea independentComponent;
-	private SequenceAreaMap sequenceAreaMap;
-	
-
-	public SwingAlignmentArea(AlignmentArea independentComponent) {
+public class SwingAlignmentPartArea extends JPanel implements Scrollable {
+	public SwingAlignmentPartArea() {
 		super();
-		this.independentComponent = independentComponent;
-		sequenceAreaMap = new SequenceAreaMap(getIndependentComponent());
 		init();
 	}
 	
 	
 	private void init() {
 		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
-		reinsertSubelements();
 	}
 
 
-	@Override
-	public AlignmentArea getIndependentComponent() {
-		return independentComponent;
-	}
-	
-	
-	private void addDataAreaList(DataAreaList list) {
+	public void addDataAreaList(DataAreaList list) {
 		Iterator<DataArea> iterator = list.iterator();
 		while (iterator.hasNext()) {
 			DataArea dataArea = iterator.next();
@@ -81,22 +63,6 @@ public class SwingAlignmentArea extends JPanel
 		}
 	}
 	
-	
-	@Override
-	public void reinsertSubelements() {
-		removeAll();
-		addDataAreaList(getIndependentComponent().getDataAreas().getTopAreas());
-		
-		Iterator<Integer> idIterator = getIndependentComponent().getSequenceOrder().getIdList().iterator();
-		while (idIterator.hasNext()) {
-			Integer id = idIterator.next();
-			add(sequenceAreaMap.get(id).createSwingComponent());
-			addDataAreaList(getIndependentComponent().getDataAreas().getSequenceAreas(id));
-		}
-
-		addDataAreaList(getIndependentComponent().getDataAreas().getBottomAreas());
-	}
-
 	
 	@Override
 	@Transient
@@ -145,40 +111,5 @@ public class SwingAlignmentArea extends JPanel
 	public int getScrollableUnitIncrement(Rectangle arg0, int arg1, int arg2) {
 		// TODO Auto-generated method stub
 		return 10;
-	}
-
-
-	private int componentIndex(JComponent component) {
-		for (int i = 0; i < getComponentCount(); i++) {
-			if (component == getComponent(i)) {
-				return i;
-			}
-		}
-		return -1;
-	}
-	
-
-	@Override
-	public void dataAreaInsertedRemoved(DataAreaChangeEvent e) {
-		reinsertSubelements();
-		//TODO possibly implement more efficient method that only deals with the affected elements later.
-		//		switch (e.getType()) {
-		//			case INSERTION:
-		//				
-		//				add(comp, index)
-		//				e.getAffectedElements()
-		//				break;
-		//			case DELETION:
-		//				break;
-		//			case REPLACEMENT:
-		//				break;
-		//		}
-	}
-
-
-	@Override
-	public void dataAreaVisibilityChanged(DataAreaChangeEvent e) {
-		reinsertSubelements();
-		//TODO possibly implement more efficient method that only deals with the affected elements later.
 	}
 }

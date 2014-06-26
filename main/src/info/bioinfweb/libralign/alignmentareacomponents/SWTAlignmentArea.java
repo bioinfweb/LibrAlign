@@ -42,6 +42,7 @@ import info.bioinfweb.libralign.dataarea.DataAreaList;
  * @since 0.0.0
  */
 public class SWTAlignmentArea extends Composite implements ToolkitSpecificAlignmentArea {
+	//TODO Implement changes similar to Swing version
 	private AlignmentArea independentComponent;
 	private SequenceAreaMap sequenceAreaMap;
 	
