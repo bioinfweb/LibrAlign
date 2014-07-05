@@ -123,10 +123,9 @@ public interface PherogramProvider extends DataProvider {
   public int getSequenceLength();
   
   /**
-   * Returns a model instance defining the alignment of this pherogram onto the associated sequence
-   * in the alignment.
+   * Returns a reverse complemented view of this provider.
    * 
-   * @return the model instance currently used
+   * @return another instance with a possibly shared data source 
    */
-  public PherogramAlignmentModel getAlignmentModel();  //TODO Should this be defined here? (It is not necessary for the TraceCurveView.)
+  public PherogramProvider reverseComplement();
 }

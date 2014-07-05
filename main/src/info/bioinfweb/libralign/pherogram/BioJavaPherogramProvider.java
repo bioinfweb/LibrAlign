@@ -51,7 +51,6 @@ public class BioJavaPherogramProvider implements PherogramProvider {
 	private Chromatogram chromatogram;
 	private Map<String, AtomicSymbol> traceCurveMap = createTraceCurveMap();
 	private double maxTraceValue = 0;  // Must be double in order to avoid an integer division in normalizeTraceValue().
-	private PherogramAlignmentModel alignmentModel = new PherogramAlignmentModel();
 
 	
 	/**
@@ -161,8 +160,14 @@ public class BioJavaPherogramProvider implements PherogramProvider {
 	}
 
 
+	/**
+	 * Returns a new instance of this class which uses the reverse complemented version of the underlying BioJava 1 
+	 * chromatogram.
+	 * 
+	 * @return a new instance of this class
+	 */
 	@Override
-	public PherogramAlignmentModel getAlignmentModel() {
-		return alignmentModel;
+	public PherogramProvider reverseComplement() {
+		return new BioJavaPherogramProvider(chromatogram.reverseComplement());
 	}
 }

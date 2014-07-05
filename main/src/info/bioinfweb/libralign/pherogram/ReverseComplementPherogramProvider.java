@@ -80,9 +80,13 @@ public class ReverseComplementPherogramProvider implements PherogramProvider {
 	}
 
 
+	/**
+	 * Returns the source instance.
+	 * 
+	 * @return the instance specified in the constructor
+	 */
 	@Override
-	public PherogramAlignmentModel getAlignmentModel() {
-		//TODO Implement reversed alignment model or use other alignment model directly with this class (RC won't happen after a sequence has been aligned)
-		return null;
+	public PherogramProvider reverseComplement() {
+		return source;
 	}
 }

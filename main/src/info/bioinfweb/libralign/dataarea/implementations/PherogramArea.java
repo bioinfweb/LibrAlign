@@ -23,6 +23,7 @@ import info.bioinfweb.commons.tic.TICPaintEvent;
 import info.bioinfweb.libralign.AlignmentArea;
 import info.bioinfweb.libralign.dataarea.DataArea;
 import info.bioinfweb.libralign.dataarea.DataAreaListType;
+import info.bioinfweb.libralign.pherogram.PherogramAlignmentModel;
 import info.bioinfweb.libralign.pherogram.PherogramComponent;
 import info.bioinfweb.libralign.pherogram.PherogramFormats;
 import info.bioinfweb.libralign.pherogram.PherogramPainter;
@@ -55,6 +56,7 @@ public class PherogramArea extends DataArea implements PherogramComponent {
 	
 	
 	private PherogramProvider pherogram;
+	private PherogramAlignmentModel alignmentModel = new PherogramAlignmentModel();
 	private int firstSeqPos;
 	private int leftCutPosition;
 	private int rightCutPosition;
@@ -109,6 +111,16 @@ public class PherogramArea extends DataArea implements PherogramComponent {
 	public PherogramProvider getProvider() {
 		return pherogram;
 	}
+  
+  /**
+   * Returns a model instance defining the alignment of this pherogram onto the associated sequence
+   * in the alignment.
+   * 
+   * @return the model instance currently used
+   */
+  public PherogramAlignmentModel getAlignmentModel() {
+  	return alignmentModel;
+  }
 
 
 	@Override
