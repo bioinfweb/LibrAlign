@@ -51,6 +51,7 @@ main/src/info/bioinfweb/libralign/pherogram/PherogramPainter.java -text svneol=u
 main/src/info/bioinfweb/libralign/pherogram/PherogramProvider.java -text svneol=unset#text/plain
 main/src/info/bioinfweb/libralign/pherogram/PherogramTraceCurveView.java -text svneol=unset#text/plain
 main/src/info/bioinfweb/libralign/pherogram/PherogramUtils.java -text svneol=unset#text/plain
+main/src/info/bioinfweb/libralign/pherogram/ReverseComplementPherogramProvider.java -text svneol=unset#text/plain
 main/src/info/bioinfweb/libralign/pherogram/package-info.java -text svneol=unset#text/plain
 main/src/info/bioinfweb/libralign/selection/AlignmentCursor.java -text svneol=unset#text/plain
 main/src/info/bioinfweb/libralign/selection/OneDimensionalSelection.java -text svneol=unset#text/plain
