@@ -19,14 +19,14 @@
 package info.bioinfweb.libralign.alignmentareacomponents;
 
 
+import info.bioinfweb.libralign.AlignmentArea;
+
 import java.util.Iterator;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Layout;
 import org.eclipse.swt.widgets.ScrollBar;
-
-import info.bioinfweb.libralign.AlignmentArea;
 import org.eclipse.swt.custom.SashForm;
 import org.eclipse.swt.custom.ScrolledComposite;
 import org.eclipse.swt.layout.FillLayout;
@@ -53,6 +53,7 @@ public class SWTAlignmentOverviewArea extends Composite implements ToolkitSpecif
 	private ScrolledComposite bottomScrolledComposite;
 	private Composite contentScrollContainer;
 	private Composite headScrollContainer;
+	private SashForm sashForm;
 	
 
 	public SWTAlignmentOverviewArea(Composite parent, int style, AlignmentArea independentComponent) {
@@ -65,7 +66,7 @@ public class SWTAlignmentOverviewArea extends Composite implements ToolkitSpecif
 	private void init() {
 		super.setLayout(new FillLayout(SWT.HORIZONTAL));
 
-		SashForm sashForm = new SashForm(this, SWT.VERTICAL);
+		sashForm = new SashForm(this, SWT.VERTICAL);
 		sashForm.setSashWidth(AlignmentArea.DIVIDER_WIDTH);
 		
 		SelectionListener listener = new SelectionAdapter() {
@@ -209,5 +210,10 @@ public class SWTAlignmentOverviewArea extends Composite implements ToolkitSpecif
 	
 	public Composite getContentScrollContainer() {
 		return contentScrollContainer;
+	}
+	
+	
+	public SashForm getSashForm() {
+		return sashForm;
 	}
 }

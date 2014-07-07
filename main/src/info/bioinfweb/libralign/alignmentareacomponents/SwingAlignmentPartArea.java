@@ -39,7 +39,7 @@ import javax.swing.Scrollable;
  * The Swing component rendering the top central or bottom part of an {@link AlignmentArea}.
  * 
  * @author Ben St&ouml;ver
- * @since 0.0.0
+ * @since 0.2.0
  */
 public class SwingAlignmentPartArea extends JPanel implements Scrollable, ToolkitSpecificAlignmentPartArea {
 	public SwingAlignmentPartArea() {
