@@ -59,6 +59,7 @@ public class SequenceArea extends AlignmentSubArea {
 	public SequenceArea(AlignmentArea owner, int seqenceID) {
 		super(owner);
 		this.seqenceID = seqenceID;
+		assignSize();
 	}
 
 

@@ -29,7 +29,7 @@ import java.util.TreeMap;
 
 /**
  * Manages the {@link SequenceArea}s that are contained in an implementation of 
- * {@link ToolkitSpecificAlignmentArea}.
+ * {@link ToolkitSpecificAlignmentOverviewArea}.
  * 
  * @author Ben St&ouml;ver
  * @since 0.0.0

@@ -23,6 +23,6 @@ import info.bioinfweb.commons.tic.toolkit.ToolkitComponent;
 
 
 
-public interface ToolkitSpecificAlignmentArea extends ToolkitComponent {
+public interface ToolkitSpecificAlignmentOverviewArea extends ToolkitComponent {
   public void reinsertSubelements();	
 }

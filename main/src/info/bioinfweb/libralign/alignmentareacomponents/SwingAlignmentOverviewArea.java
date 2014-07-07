@@ -19,9 +19,10 @@
 package info.bioinfweb.libralign.alignmentareacomponents;
 
 
+import java.awt.event.AdjustmentEvent;
+import java.awt.event.AdjustmentListener;
 import java.util.Iterator;
 
-import info.bioinfweb.commons.tic.TICComponent;
 import info.bioinfweb.libralign.AlignmentArea;
 
 import javax.swing.JComponent;
@@ -38,10 +39,7 @@ import javax.swing.JSplitPane;
  * @author Ben St&oumol;ver
  * @since 0.1.0
  */
-public class SwingAlignmentOverviewArea extends JComponent implements ToolkitSpecificAlignmentArea {
-	public static int DIVIDER_WIDTH = 2;
-	
-	
+public class SwingAlignmentOverviewArea extends JComponent implements ToolkitSpecificAlignmentOverviewArea {
 	private AlignmentArea independentComponent;
 	private SequenceAreaMap sequenceAreaMap;
 	
@@ -55,6 +53,12 @@ public class SwingAlignmentOverviewArea extends JComponent implements ToolkitSpe
 	private SwingAlignmentPartArea bottomArea;
 	
 	
+	/**
+	 * Creates a new instance of this class.
+	 * 
+	 * @param independentComponent - the alignment area class that uses this instance to display its contents 
+	 *        in a Swing GUI
+	 */
 	public SwingAlignmentOverviewArea(AlignmentArea independentComponent) {
 		super();
 		this.independentComponent = independentComponent;
@@ -80,21 +84,42 @@ public class SwingAlignmentOverviewArea extends JComponent implements ToolkitSpe
 		bottomArea = new SwingAlignmentPartArea();
 		bottomScrollPane.setViewportView(bottomArea);
 		
+		AdjustmentListener listener = new AdjustmentListener() {
+			@Override
+			public void adjustmentValueChanged(AdjustmentEvent e) {
+				if (headScrollPane.getHorizontalScrollBar() != e.getSource()) {
+					headScrollPane.getHorizontalScrollBar().getModel().setValue(e.getValue());
+				}
+				if (contentScrollPane.getHorizontalScrollBar() != e.getSource()) {
+					contentScrollPane.getHorizontalScrollBar().getModel().setValue(e.getValue());
+				}
+				if (bottomScrollPane.getHorizontalScrollBar() != e.getSource()) {
+					bottomScrollPane.getHorizontalScrollBar().getModel().setValue(e.getValue());
+				}
+				// If the operation would only be performed outside valueIsAdjusting the other scroll panes would not be moved while the scroll bar is dragged. 
+			}
+		};
+		headScrollPane.getHorizontalScrollBar().addAdjustmentListener(listener);
+		contentScrollPane.getHorizontalScrollBar().addAdjustmentListener(listener);
+		bottomScrollPane.getHorizontalScrollBar().addAdjustmentListener(listener);
+		// If one model for all scroll bars is set the scroll bar disappears after the first move. (TODO Why?)		
+		
 		topSplitPane = new JSplitPane();
 		topSplitPane.setOrientation(JSplitPane.VERTICAL_SPLIT);
 		
 		bottomSplitPane = new JSplitPane();
 		bottomSplitPane.setResizeWeight(1.0);
 		bottomSplitPane.setOrientation(JSplitPane.VERTICAL_SPLIT);
-		bottomSplitPane.setDividerSize(DIVIDER_WIDTH);
+		bottomSplitPane.setDividerSize(AlignmentArea.DIVIDER_WIDTH);
 
 		topSplitPane.setTopComponent(headScrollPane);
 		topSplitPane.setBottomComponent(bottomSplitPane);
-		topSplitPane.setDividerSize(DIVIDER_WIDTH);
+		topSplitPane.setDividerSize(AlignmentArea.DIVIDER_WIDTH);
 		
 		bottomSplitPane.setTopComponent(contentScrollPane);
 		bottomSplitPane.setBottomComponent(bottomScrollPane);
 
+		
 		reinsertSubelements();
 		add(topSplitPane);
 	}

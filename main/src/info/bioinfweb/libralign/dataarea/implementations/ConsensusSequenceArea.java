@@ -70,6 +70,7 @@ public class ConsensusSequenceArea extends DataArea {
 					@Override
 					public void afterTokenChange(TokenChangeEvent e) {
 						scores.clear();  // Each scores is recalculated the next time it is requested. 
+						assignSize();
 					}
 					
 					@Override
@@ -78,13 +79,17 @@ public class ConsensusSequenceArea extends DataArea {
 					@Override
 					public void afterSequenceChange(SequenceChangeEvent e) {
 						scores.clear();
+						assignSize();
 					}
 					
 					@Override
 					public void afterProviderChanged(SequenceDataProvider previous,	SequenceDataProvider current) {
 						scores.clear();
+						assignSize();
 					}
 				});
+		
+		assignSize();
 	}
 
 	

@@ -31,10 +31,9 @@ import org.eclipse.swt.widgets.Composite;
 import info.bioinfweb.commons.Math2;
 import info.bioinfweb.commons.tic.TICComponent;
 import info.bioinfweb.commons.tic.TICPaintEvent;
-import info.bioinfweb.libralign.alignmentareacomponents.SWTAlignmentArea;
+import info.bioinfweb.libralign.alignmentareacomponents.SWTAlignmentOverviewArea;
 import info.bioinfweb.libralign.alignmentareacomponents.SwingAlignmentOverviewArea;
-import info.bioinfweb.libralign.alignmentareacomponents.SwingAlignmentPartArea;
-import info.bioinfweb.libralign.alignmentareacomponents.ToolkitSpecificAlignmentArea;
+import info.bioinfweb.libralign.alignmentareacomponents.ToolkitSpecificAlignmentOverviewArea;
 import info.bioinfweb.libralign.dataarea.DataAreaChangeEvent;
 import info.bioinfweb.libralign.dataarea.DataAreaModel;
 import info.bioinfweb.libralign.dataarea.DataAreaModelListener;
@@ -55,6 +54,9 @@ import info.bioinfweb.libralign.sequenceprovider.events.TokenChangeEvent;
  * @since 0.0.0
  */
 public class AlignmentArea extends TICComponent implements SequenceDataChangeListener {
+	/** Defines the width of the divider of the GUI components for the head, content, and bottom area. */ 
+	public static int DIVIDER_WIDTH = 2;
+	
 	public static final int COMPOUND_WIDTH = 10;
 	public static final int COMPOUND_HEIGHT = 14;
 	public static final String FONT_NAME = Font.SANS_SERIF;
@@ -75,7 +77,7 @@ public class AlignmentArea extends TICComponent implements SequenceDataChangeLis
 	private float zoomY = 1f;
 	private int compoundWidth = COMPOUND_WIDTH;
 	private int compoundHeight = COMPOUND_HEIGHT;	
-	private Font font = new Font(Font.SANS_SERIF, Font.PLAIN, Math.round(COMPOUND_HEIGHT * 0.7f));
+	private Font compoundFont = new Font(Font.SANS_SERIF, Font.PLAIN, Math.round(COMPOUND_HEIGHT * 0.7f));
 	
 	
 	public AlignmentArea() {
@@ -243,14 +245,8 @@ public class AlignmentArea extends TICComponent implements SequenceDataChangeLis
 	
 	
 	private void calculateFont() {
-		int fontSize = Math.round(Math.min(compoundHeight * (COMPOUND_WIDTH / COMPOUND_HEIGHT), compoundWidth) * 
-				FONT_SIZE_FACTOR);  //TODO Equation correct?
-		if (fontSize >= MIN_FONT_SIZE) {
-			font = new Font(FONT_NAME, FONT_STYLE, fontSize);
-		}
-		else {
-			font = null;
-		}
+		compoundFont = new Font(FONT_NAME, FONT_STYLE, Math.round(Math.min(
+				compoundHeight * (COMPOUND_WIDTH / COMPOUND_HEIGHT), compoundWidth) * FONT_SIZE_FACTOR));
 	}
 
 	
@@ -304,12 +300,12 @@ public class AlignmentArea extends TICComponent implements SequenceDataChangeLis
 	 * @return {@code true}, if any compound text will be painted, {@code false} otherwise
 	 */
 	public boolean isPaintCompoundText() {
-		return getCompoundFont() != null;
+		return getCompoundFont().getSize() >= MIN_FONT_SIZE;
 	}
 	
 	
 	public Font getCompoundFont() {
-		return font;
+		return compoundFont;
 	}
 	
 	
@@ -343,13 +339,13 @@ public class AlignmentArea extends TICComponent implements SequenceDataChangeLis
 
 	@Override
 	protected Composite doCreateSWTWidget(Composite parent, int style) {
-		return new SWTAlignmentArea(parent, style, this);
+		return new SWTAlignmentOverviewArea(parent, style, this);
 	}
 
 
 	@Override
-	public ToolkitSpecificAlignmentArea getToolkitComponent() {
-		return (ToolkitSpecificAlignmentArea)super.getToolkitComponent();
+	public ToolkitSpecificAlignmentOverviewArea getToolkitComponent() {
+		return (ToolkitSpecificAlignmentOverviewArea)super.getToolkitComponent();
 	}
 
 
