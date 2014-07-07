@@ -23,7 +23,6 @@ import info.bioinfweb.libralign.pherogram.PherogramFormats.QualityOutputType;
 
 import java.awt.EventQueue;
 
-import javax.swing.JComponent;
 import javax.swing.JFrame;
 
 import org.biojava.bio.chromatogram.ChromatogramFactory;
