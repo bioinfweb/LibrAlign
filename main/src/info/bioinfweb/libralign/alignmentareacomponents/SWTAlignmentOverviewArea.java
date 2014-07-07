@@ -30,11 +30,6 @@ import info.bioinfweb.libralign.AlignmentArea;
 import org.eclipse.swt.custom.SashForm;
 import org.eclipse.swt.custom.ScrolledComposite;
 import org.eclipse.swt.layout.FillLayout;
-import org.eclipse.swt.graphics.Point;
-import org.eclipse.swt.graphics.Rectangle;
-import org.eclipse.swt.events.ControlAdapter;
-import org.eclipse.swt.events.ControlEvent;
-import org.eclipse.swt.events.ControlListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
@@ -210,6 +205,8 @@ public class SWTAlignmentOverviewArea extends Composite implements ToolkitSpecif
 	public ScrolledComposite getBottomScrolledComposite() {
 		return bottomScrolledComposite;
 	}
+	
+	
 	public Composite getContentScrollContainer() {
 		return contentScrollContainer;
 	}
