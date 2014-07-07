@@ -80,12 +80,6 @@ public class Main extends AbstractTestApplication {
 		shell.setText("SWT Application");
 		shell.setLayout(new FillLayout(SWT.HORIZONTAL));
 		
-		ScrolledComposite scrolledComposite = new ScrolledComposite(shell, SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL);
-		scrolledComposite.setExpandHorizontal(true);
-		scrolledComposite.setExpandVertical(true);
-		
-		Composite alignmentWidget = createAlignmentArea().createSWTWidget(scrolledComposite, SWT.NONE);
-		scrolledComposite.setContent(alignmentWidget);
-		scrolledComposite.setMinSize(alignmentWidget.computeSize(SWT.DEFAULT, SWT.DEFAULT));
+		Composite alignmentWidget = createAlignmentArea().createSWTWidget(shell, SWT.NONE);
 	}
 }

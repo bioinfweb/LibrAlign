@@ -80,15 +80,12 @@ public class Main extends AbstractTestApplication {
 		gridBagLayout.rowWeights = new double[]{1.0, Double.MIN_VALUE};
 		frame.getContentPane().setLayout(gridBagLayout);
 		
-		JScrollPane scrollPane = new JScrollPane();
+		AlignmentArea alignmentArea = createAlignmentArea();
+		JComponent alignmentPanel = alignmentArea.createSwingComponent();
 		GridBagConstraints gbc_scrollPane = new GridBagConstraints();
 		gbc_scrollPane.fill = GridBagConstraints.BOTH;
 		gbc_scrollPane.gridx = 0;
 		gbc_scrollPane.gridy = 0;
-		frame.getContentPane().add(scrollPane, gbc_scrollPane);
-		
-		AlignmentArea alignmentArea = createAlignmentArea();
-		JComponent upperAlignmentPanel = alignmentArea.createSwingComponent();
-		scrollPane.setViewportView(upperAlignmentPanel);
+		frame.getContentPane().add(alignmentPanel, gbc_scrollPane);
 	}
 }
