@@ -37,12 +37,31 @@ import org.eclipse.swt.widgets.Composite;
 public class SWTScrolledCompositeResizeListener implements ControlListener {
 	private Composite container;
 	private ScrolledComposite scrolledComposite;
+	private boolean hideVerticalBar;
 	
 	
-	public SWTScrolledCompositeResizeListener(Composite container, ScrolledComposite scrolledComposite) {
+	public SWTScrolledCompositeResizeListener(Composite container, ScrolledComposite scrolledComposite, 
+			boolean hideVerticalBar) {
+		
 		super();
 		this.container = container;
 		this.scrolledComposite = scrolledComposite;
+		this.hideVerticalBar = hideVerticalBar;
+	}
+
+
+	public Composite getContainer() {
+		return container;
+	}
+
+
+	public ScrolledComposite getScrolledComposite() {
+		return scrolledComposite;
+	}
+
+
+	public boolean isHideVerticalBar() {
+		return hideVerticalBar;
 	}
 
 
@@ -53,7 +72,12 @@ public class SWTScrolledCompositeResizeListener implements ControlListener {
 	@Override
 	public void controlResized(ControlEvent e) {
 		Rectangle bounds = container.getBounds();
-		scrolledComposite.setBounds(0, 0, bounds.width, 
+		int width = bounds.width;
+		if (isHideVerticalBar()) {
+			width += scrolledComposite.getVerticalBar().getSize().x + 
+					scrolledComposite.getBorderWidth();
+		}
+		scrolledComposite.setBounds(0, 0, width, 
 				bounds.height + scrolledComposite.getHorizontalBar().getSize().y + 
 				scrolledComposite.getBorderWidth());
 	}
