@@ -54,7 +54,10 @@ public class AbstractTestApplication {
 		
 		AlignmentArea result = new AlignmentArea();
 		result.setSequenceProvider(sequenceProvider, false);
-		result.getDataAreas().getTopAreas().add(new SequenceIndexArea(result));
+		SequenceIndexArea sequenceIndexArea = new SequenceIndexArea(result);
+		//sequenceIndexArea.setFirstIndex(5);
+		//sequenceIndexArea.setHeight(25);
+		result.getDataAreas().getTopAreas().add(sequenceIndexArea);
 		result.getDataAreas().getBottomAreas().add(new ConsensusSequenceArea(result));
 		return result;
 	}
