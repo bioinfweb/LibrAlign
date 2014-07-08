@@ -6,7 +6,6 @@
 	<classpathentry kind="lib" path="lib/biojava3-core-3.0.7.jar"/>
 	<classpathentry kind="lib" path="lib/biojava3-alignment-3.0.7.jar"/>
 	<classpathentry kind="lib" path="lib/swt.jar"/>
-	<classpathentry kind="lib" path="/JFreeChartSWT/bin"/>
 	<classpathentry kind="lib" path="lib/core-1.8.5.jar"/>
 	<classpathentry kind="lib" path="lib/sequencing-1.8.5.jar"/>
 	<classpathentry kind="output" path="bin"/>
