@@ -126,7 +126,8 @@ public class SequenceIndexArea extends CustomHeightFullWidthArea {
     		float dashLength = DASH_LENGTH_FACTOR * getHeight();
     		int compoundIndex = Math.round(x / compoundWidth); 
     		if ((compoundIndex - 1) % labelInterval == 0) {  // BioJava indices start with 1
-    			g.drawString("" + compoundIndex, x + labelLeftDistance,	LABEL_TOP_DISTANCE_FACTOR * getHeight());
+    			g.drawString("" + (compoundIndex + getFirstIndex() - 1), x + labelLeftDistance,	
+    					LABEL_TOP_DISTANCE_FACTOR * getHeight());
     			dashLength = LABELED_DASH_LENGTH_FACTOR * getHeight();
     		}
     		
