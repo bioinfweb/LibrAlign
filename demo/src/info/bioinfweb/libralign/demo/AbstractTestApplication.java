@@ -24,6 +24,7 @@ import info.bioinfweb.commons.bio.biojava3.alignment.template.Alignment;
 import info.bioinfweb.commons.bio.biojava3.core.sequence.compound.AlignmentAmbiguityNucleotideCompoundSet;
 import info.bioinfweb.libralign.AlignmentArea;
 import info.bioinfweb.libralign.dataarea.implementations.ConsensusSequenceArea;
+import info.bioinfweb.libralign.dataarea.implementations.SequenceIndexArea;
 import info.bioinfweb.libralign.sequenceprovider.implementations.BioJavaSequenceDataProvider;
 import info.bioinfweb.libralign.sequenceprovider.tokenset.BioJavaTokenSet;
 
@@ -53,6 +54,7 @@ public class AbstractTestApplication {
 		
 		AlignmentArea result = new AlignmentArea();
 		result.setSequenceProvider(sequenceProvider, false);
+		result.getDataAreas().getTopAreas().add(new SequenceIndexArea(result));
 		result.getDataAreas().getBottomAreas().add(new ConsensusSequenceArea(result));
 		return result;
 	}
