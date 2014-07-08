@@ -21,7 +21,9 @@ package info.bioinfweb.libralign.dataarea.implementations;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
+import java.awt.Rectangle;
 import java.awt.RenderingHints;
+import java.awt.SystemColor;
 import java.awt.geom.Rectangle2D;
 import java.util.EnumSet;
 import java.util.Iterator;
@@ -36,7 +38,6 @@ import info.bioinfweb.commons.bio.AmbiguityBaseScore;
 import info.bioinfweb.commons.tic.TICPaintEvent;
 import info.bioinfweb.libralign.AlignmentArea;
 import info.bioinfweb.libralign.alignmentareacomponents.SequenceArea;
-import info.bioinfweb.libralign.dataarea.DataArea;
 import info.bioinfweb.libralign.dataarea.DataAreaListType;
 import info.bioinfweb.libralign.sequenceprovider.SequenceDataChangeListener;
 import info.bioinfweb.libralign.sequenceprovider.SequenceDataProvider;
@@ -143,6 +144,13 @@ public class ConsensusSequenceArea extends CustomHeightFullWidthArea {
 	
 	@Override
 	public void paint(TICPaintEvent event) {
+		// Paint background:
+		Graphics2D g = event.getGraphics();
+		g.setColor(SystemColor.menu);
+		g.fill(event.getRectangle());
+
+		
+		// Determine area to be painted:
 		int firstIndex = Math.max(0, getOwner().columnByPaintX((int)event.getRectangle().getMinX()));
 		int lastIndex = getOwner().columnByPaintX((int)event.getRectangle().getMaxX());
 		int lastColumn = getOwner().getSequenceProvider().getMaxSequenceLength() - 1;
@@ -150,12 +158,12 @@ public class ConsensusSequenceArea extends CustomHeightFullWidthArea {
 			lastIndex = lastColumn;
 		}
 		
+		// Paint output:
 		Map<String, Color> map = getOwner().getColorSchema().getNucleotideColorMap();
     Color[] bgColors = new Color[]{map.get("A"), map.get("T"), map.get("C"), map.get("G")};
     
 		AlignmentAmbiguityNucleotideCompoundSet compoundSet =  
 				AlignmentAmbiguityNucleotideCompoundSet.getAlignmentAmbiguityNucleotideCompoundSet();
-		Graphics2D g = event.getGraphics();
 		g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
   	float x = firstIndex * getOwner().getCompoundWidth();
 		float sequenceY = 2 * getOwner().getCompoundHeight();
