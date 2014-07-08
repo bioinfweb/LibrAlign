@@ -19,6 +19,7 @@
 package info.bioinfweb.libralign.alignmentareacomponents;
 
 
+import info.bioinfweb.commons.swt.ScrolledCompositeSyncListener;
 import info.bioinfweb.libralign.AlignmentArea;
 import info.bioinfweb.libralign.dataarea.DataAreaListType;
 
@@ -52,8 +53,6 @@ public class SWTAlignmentOverviewArea extends Composite implements ToolkitSpecif
 	private ScrolledComposite headScrolledComposite;
 	private ScrolledComposite contentScrolledComposite;
 	private ScrolledComposite bottomScrolledComposite;
-	private Composite contentScrollContainer;
-	private Composite headScrollContainer;
 	private SashForm sashForm;
 	private Composite headContainer;
 	private Composite contentContainer;
@@ -67,89 +66,78 @@ public class SWTAlignmentOverviewArea extends Composite implements ToolkitSpecif
 	}
 	
 	
-	private void init() {
-		super.setLayout(new FillLayout(SWT.HORIZONTAL));
-
-		sashForm = new SashForm(this, SWT.VERTICAL);
-		sashForm.setSashWidth(AlignmentArea.DIVIDER_WIDTH);
-		
-		SelectionListener listener = new SelectionAdapter() {
-					@Override
-					public void widgetSelected(SelectionEvent e) {
-						int value = ((ScrollBar)e.getSource()).getSelection();
-						if (headScrolledComposite.getHorizontalBar() != e.getSource()) {
-							headScrolledComposite.setOrigin(value, headScrolledComposite.getOrigin().y);
-						}
-						if (contentScrolledComposite.getHorizontalBar() != e.getSource()) {
-							contentScrolledComposite.setOrigin(value, contentScrolledComposite.getOrigin().y);
-						}
-						if (bottomScrolledComposite.getHorizontalBar() != e.getSource()) {
-							bottomScrolledComposite.setOrigin(value, bottomScrolledComposite.getOrigin().y);
-						}
-					}
-				};
-		
-		headContainer = new Composite(sashForm, SWT.NONE);
-		headContainer.setLayout(new FillLayout(SWT.HORIZONTAL));
-		
-		Composite headLabelScrollContainer = new Composite(headContainer, SWT.NONE);
-		ScrolledComposite headLabelScrolledComposite = new ScrolledComposite(headLabelScrollContainer, 
+	private Composite createContainer() {
+		Composite result = new Composite(sashForm, SWT.NONE);
+		result.setLayout(new FillLayout(SWT.HORIZONTAL));
+		return result;
+	}
+	
+	
+	private void createLabelElements(Composite parent, DataAreaListType position) {
+		Composite labelScrollContainer = new Composite(parent, SWT.NONE);
+		ScrolledComposite labelScrolledComposite = new ScrolledComposite(labelScrollContainer, 
 				SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL);
-		AlignmentLabelArea headLabelArea = new AlignmentLabelArea(getIndependentComponent(), DataAreaListType.TOP);
-		headLabelScrolledComposite.setContent(headLabelArea.createSWTWidget(headLabelScrolledComposite, SWT.NONE));
-		headLabelScrollContainer.addControlListener(  // Must not be called before both field are initialized.
-				new SWTScrolledCompositeResizeListener(headLabelScrollContainer, headLabelScrolledComposite, true));
-		
-		headScrollContainer = new Composite(headContainer, SWT.NONE);
+		AlignmentLabelArea labelArea = new AlignmentLabelArea(getIndependentComponent(), position);
+		labelScrolledComposite.setContent(labelArea.createSWTWidget(labelScrolledComposite, SWT.NONE));
+		labelScrollContainer.addControlListener(  // Must not be called before both field are initialized.
+				new SWTScrolledCompositeResizeListener(labelScrollContainer, labelScrolledComposite, true));
+	}
+	
+	
+	private void createHeadComponents() {
+		headContainer = createContainer();
+		createLabelElements(headContainer, DataAreaListType.TOP);
+
+		Composite headScrollContainer = new Composite(headContainer, SWT.NONE);
 		headScrolledComposite = new ScrolledComposite(headScrollContainer, SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL);
 		headArea = new SWTAlignmentPartArea(headScrolledComposite, SWT.NONE);
 		headScrolledComposite.setContent(headArea);
 		headScrolledComposite.setMinSize(headArea.computeSize(SWT.DEFAULT, SWT.DEFAULT));
-		headScrolledComposite.getHorizontalBar().addSelectionListener(listener);
 		headScrollContainer.addControlListener(  // Must not be called before both field are initialized.
 				new SWTScrolledCompositeResizeListener(headScrollContainer, headScrolledComposite, false));
+	}
+	
+	
+	private void createContentComponents() {
+		contentContainer = createContainer();
+		createLabelElements(contentContainer, DataAreaListType.SEQUENCE);
 		
-		contentContainer = new Composite(sashForm, SWT.NONE);
-		contentContainer.setLayout(new FillLayout(SWT.HORIZONTAL));
-		
-		Composite contentLabelScrollContainer = new Composite(contentContainer, SWT.NONE);
-		ScrolledComposite contentLabelScrolledComposite = new ScrolledComposite(contentLabelScrollContainer, 
-				SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL);
-		AlignmentLabelArea contentLabelArea = new AlignmentLabelArea(getIndependentComponent(), DataAreaListType.TOP);
-		contentLabelScrolledComposite.setContent(contentLabelArea.createSWTWidget(contentLabelScrolledComposite, SWT.NONE));
-		contentLabelScrollContainer.addControlListener(  // Must not be called before both field are initialized.
-				new SWTScrolledCompositeResizeListener(contentLabelScrollContainer, contentLabelScrolledComposite, true));
-		
-		contentScrollContainer = new Composite(contentContainer, SWT.NONE);
+		Composite contentScrollContainer = new Composite(contentContainer, SWT.NONE);
 		contentScrolledComposite = new ScrolledComposite(contentScrollContainer, SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL);
 		contentArea = new SWTAlignmentPartArea(contentScrolledComposite, SWT.NONE);
 		contentScrolledComposite.setContent(contentArea);
 		contentScrolledComposite.setMinSize(contentArea.computeSize(SWT.DEFAULT, SWT.DEFAULT));
-		contentScrolledComposite.getHorizontalBar().addSelectionListener(listener);
 		contentScrollContainer.addControlListener(  // Must not be called before both field are initialized.
-				new SWTScrolledCompositeResizeListener(contentScrollContainer, contentScrolledComposite, false));
-		
-		bottomContainer = new Composite(sashForm, SWT.NONE);
-		bottomContainer.setLayout(new FillLayout(SWT.HORIZONTAL));
-
-		Composite bottomLabelScrollContainer = new Composite(bottomContainer, SWT.NONE);
-		ScrolledComposite bottomLabelScrolledComposite = new ScrolledComposite(contentLabelScrollContainer, 
-				SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL);
-		AlignmentLabelArea bottomLabelArea = new AlignmentLabelArea(getIndependentComponent(), DataAreaListType.TOP);
-		bottomLabelScrolledComposite.setContent(bottomLabelArea.createSWTWidget(contentLabelScrolledComposite, SWT.NONE));
-		bottomLabelScrollContainer.addControlListener(  // Must not be called before both field are initialized.
-				new SWTScrolledCompositeResizeListener(bottomLabelScrollContainer, bottomLabelScrolledComposite, true));
+				new SWTScrolledCompositeResizeListener(contentScrollContainer, contentScrolledComposite, false));		
+	}
+	
+	
+	private void createBottomComponents() {
+		bottomContainer = createContainer();
+		createLabelElements(bottomContainer, DataAreaListType.BOTTOM);
 		
 		bottomScrolledComposite = new ScrolledComposite(bottomContainer, SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL);
 		bottomArea = new SWTAlignmentPartArea(bottomScrolledComposite, SWT.NONE);
 		bottomScrolledComposite.setContent(bottomArea);
 		bottomScrolledComposite.setMinSize(bottomArea.computeSize(SWT.DEFAULT, SWT.DEFAULT));
-		bottomScrolledComposite.getHorizontalBar().addSelectionListener(listener);
-		
 		sashForm.setWeights(new int[] {1, 1, 1});  //TODO Adjust
 		sequenceAreaMap = new SequenceAreaMap(getIndependentComponent());
+	}
+	
+	
+	private void init() {
+		super.setLayout(new FillLayout(SWT.HORIZONTAL));
 		
+		sashForm = new SashForm(this, SWT.VERTICAL);
+		sashForm.setSashWidth(AlignmentArea.DIVIDER_WIDTH);
+		createHeadComponents();
+		createContentComponents();
+		createBottomComponents();
 		reinsertSubelements();
+		
+		ScrolledCompositeSyncListener horizontalSyncListener = new ScrolledCompositeSyncListener(
+				new ScrolledComposite[]{headScrolledComposite, contentScrolledComposite, bottomScrolledComposite}, true);
+		horizontalSyncListener.registerToAll();
 	}
 
 
@@ -258,14 +246,10 @@ public class SWTAlignmentOverviewArea extends Composite implements ToolkitSpecif
 	}
 	
 	
-	public Composite getContentScrollContainer() {
-		return contentScrollContainer;
-	}
-	
-	
 	public SashForm getSashForm() {
 		return sashForm;
 	}
+
 	public Composite getBottomContainer() {
 		return bottomContainer;
 	}
