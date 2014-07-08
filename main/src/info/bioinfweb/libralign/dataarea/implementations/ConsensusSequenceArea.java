@@ -52,20 +52,18 @@ import info.bioinfweb.libralign.sequenceprovider.events.TokenChangeEvent;
  * @author Ben St&ouml;ver
  * @since 0.0.0
  */
-public class ConsensusSequenceArea extends DataArea {
+public class ConsensusSequenceArea extends CustomHeightFullWidthArea {
 	public static final float DEFAULT_HEIGHT_FACTOR = 3f;
 	
 	
 	private TreeMap<String, AmbiguityBaseScore> mapByBase;
 	private Map<Integer, AmbiguityBaseScore> scores;
-	private int height;
 	
 	
 	public ConsensusSequenceArea(AlignmentArea owner) {
-		super(owner);
+		super(owner, Math.round(DEFAULT_HEIGHT_FACTOR * owner.getCompoundHeight()));
 		createMap();
 		scores = new TreeMap<Integer, AmbiguityBaseScore>();  // Saves scores between change events of the provider.
-		height = Math.round(DEFAULT_HEIGHT_FACTOR * owner.getCompoundHeight());
 		owner.getSequenceProvider().getChangeListeners().add(new SequenceDataChangeListener() {
 					@Override
 					public void afterTokenChange(TokenChangeEvent e) {
@@ -137,19 +135,6 @@ public class ConsensusSequenceArea extends DataArea {
 	}
 	
 	
-	@Override
-	public int getHeight() {
-		return height;
-	}
-
-
-	public void setHeight(int height) {
-		this.height = height;
-		assignSize();
-		repaint();
-	}
-
-
 	@Override
 	public int getLength() {
 		return getOwner().getCompoundWidth() * getOwner().getSequenceProvider().getMaxSequenceLength();
