@@ -20,6 +20,7 @@ main/src/info/bioinfweb/libralign/GeneticCode.java -text svneol=unset#text/plain
 main/src/info/bioinfweb/libralign/SequenceColorSchema.java -text svneol=unset#text/plain
 main/src/info/bioinfweb/libralign/SequenceOrder.java -text svneol=unset#text/plain
 main/src/info/bioinfweb/libralign/WorkingMode.java -text svneol=unset#text/plain
+main/src/info/bioinfweb/libralign/alignmentareacomponents/AlignmentLabelArea.java -text svneol=unset#text/plain
 main/src/info/bioinfweb/libralign/alignmentareacomponents/SWTAlignmentOverviewArea.java -text svneol=unset#text/plain
 main/src/info/bioinfweb/libralign/alignmentareacomponents/SWTAlignmentPartArea.java -text svneol=unset#text/plain
 main/src/info/bioinfweb/libralign/alignmentareacomponents/SWTScrolledCompositeResizeListener.java -text svneol=unset#text/plain

@@ -20,9 +20,29 @@ package info.bioinfweb.libralign.alignmentareacomponents;
 
 
 import info.bioinfweb.commons.tic.toolkit.ToolkitComponent;
+import info.bioinfweb.libralign.dataarea.DataAreaListType;
 
 
 
+/**
+ * Common interface for toolkit specific components displaying a whole alignment area. 
+ * 
+ * @author Ben St&ouml;ver
+ * @since 0.2.0
+ */
 public interface ToolkitSpecificAlignmentOverviewArea extends ToolkitComponent {
+	/**
+	 * Returns the contained toolkit specific component displaying the part of the alignment area
+	 * at the specified position.
+	 * 
+	 * @param position - the position of the alignment part area
+	 * @return an instance of {@link SwingAlignmentPartArea} or {@link SWTAlignmentPartArea}
+	 */
+	public ToolkitSpecificAlignmentPartArea getPartArea(DataAreaListType position);
+	
+  /**
+   * Recreates the components displaying sequences and data areas in the alignment according to
+   * the current model information. 
+   */
   public void reinsertSubelements();	
 }

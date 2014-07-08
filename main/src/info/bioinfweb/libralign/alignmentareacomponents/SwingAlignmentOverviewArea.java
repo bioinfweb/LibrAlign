@@ -24,6 +24,7 @@ import java.awt.event.AdjustmentListener;
 import java.util.Iterator;
 
 import info.bioinfweb.libralign.AlignmentArea;
+import info.bioinfweb.libralign.dataarea.DataAreaListType;
 
 import javax.swing.JComponent;
 import javax.swing.BoxLayout;
@@ -51,6 +52,9 @@ public class SwingAlignmentOverviewArea extends JComponent implements ToolkitSpe
 	private SwingAlignmentPartArea headArea;
 	private SwingAlignmentPartArea contentArea;
 	private SwingAlignmentPartArea bottomArea;
+	private AlignmentLabelArea headLabelArea;
+	private AlignmentLabelArea contentLabelArea;
+	private AlignmentLabelArea bottomLabelArea;
 	
 	
 	/**
@@ -74,15 +78,21 @@ public class SwingAlignmentOverviewArea extends JComponent implements ToolkitSpe
 		headScrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
 		headArea = new SwingAlignmentPartArea();
 		headScrollPane.setViewportView(headArea);
+		headLabelArea = new AlignmentLabelArea(getIndependentComponent(), DataAreaListType.TOP); 
+		headScrollPane.setRowHeaderView(headLabelArea.createSwingComponent());
 
 		contentScrollPane = new JScrollPane();
 		contentScrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
 		contentArea = new SwingAlignmentPartArea();
 		contentScrollPane.setViewportView(contentArea);
+		contentLabelArea = new AlignmentLabelArea(getIndependentComponent(), DataAreaListType.SEQUENCE); 
+		contentScrollPane.setRowHeaderView(contentLabelArea.createSwingComponent());
 		
 		bottomScrollPane = new JScrollPane();
 		bottomArea = new SwingAlignmentPartArea();
 		bottomScrollPane.setViewportView(bottomArea);
+		bottomLabelArea = new AlignmentLabelArea(getIndependentComponent(), DataAreaListType.BOTTOM); 
+		bottomScrollPane.setRowHeaderView(bottomLabelArea.createSwingComponent());
 		
 		AdjustmentListener listener = new AdjustmentListener() {
 			@Override
@@ -168,6 +178,19 @@ public class SwingAlignmentOverviewArea extends JComponent implements ToolkitSpe
 	@Override
 	public AlignmentArea getIndependentComponent() {
 		return independentComponent;
+	}
+
+
+	@Override
+	public ToolkitSpecificAlignmentPartArea getPartArea(DataAreaListType position) {
+		switch (position) {
+			case TOP:
+				return getHeadArea();
+			case SEQUENCE:
+				return getContentArea();
+			default:
+				return getBottomArea();
+		}
 	}
 
 

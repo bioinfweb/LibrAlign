@@ -20,6 +20,7 @@ package info.bioinfweb.libralign.alignmentareacomponents;
 
 
 import info.bioinfweb.libralign.AlignmentArea;
+import info.bioinfweb.libralign.dataarea.DataAreaListType;
 
 import java.util.Iterator;
 
@@ -128,6 +129,19 @@ public class SWTAlignmentOverviewArea extends Composite implements ToolkitSpecif
 	}
 
 	
+	@Override
+	public ToolkitSpecificAlignmentPartArea getPartArea(DataAreaListType position) {
+		switch (position) {
+			case TOP:
+				return getHeadArea();
+			case SEQUENCE:
+				return getContentArea();
+			default:
+				return getBottomArea();
+		}
+	}
+
+
 	@Override
 	public void reinsertSubelements() {
 		// Head elements:

@@ -59,6 +59,12 @@ public class SWTAlignmentPartArea extends Composite implements ToolkitSpecificAl
 	}
 
 	
+	@Override
+	public int getHeight() {
+		return getSize().y;
+	}
+
+
 	public void addDataAreaList(DataAreaList list) {
 		int width = 0;
 		Iterator<DataArea> iterator = list.iterator();
