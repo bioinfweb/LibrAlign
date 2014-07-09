@@ -23,6 +23,7 @@ main/src/info/bioinfweb/libralign/WorkingMode.java -text svneol=unset#text/plain
 main/src/info/bioinfweb/libralign/alignmentareacomponents/AlignmentLabelArea.java -text svneol=unset#text/plain
 main/src/info/bioinfweb/libralign/alignmentareacomponents/SWTAlignmentOverviewArea.java -text svneol=unset#text/plain
 main/src/info/bioinfweb/libralign/alignmentareacomponents/SWTAlignmentPartArea.java -text svneol=unset#text/plain
+main/src/info/bioinfweb/libralign/alignmentareacomponents/SWTAlignmentPartScroller.java -text svneol=unset#text/plain
 main/src/info/bioinfweb/libralign/alignmentareacomponents/SWTScrolledCompositeResizeListener.java -text svneol=unset#text/plain
 main/src/info/bioinfweb/libralign/alignmentareacomponents/SequenceArea.java -text svneol=unset#text/plain
 main/src/info/bioinfweb/libralign/alignmentareacomponents/SequenceAreaMap.java -text svneol=unset#text/plain

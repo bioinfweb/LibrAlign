@@ -48,6 +48,7 @@ public class AlignmentLabelArea extends TICComponent {
 	
 	
   private AlignmentArea owner;
+  private ToolkitSpecificAlignmentPartArea alignmentPartArea;
   private DataAreaListType position;
 	
 	
@@ -61,7 +62,19 @@ public class AlignmentLabelArea extends TICComponent {
 	public AlignmentLabelArea(AlignmentArea owner, DataAreaListType position) {
 		super();
 		this.owner = owner;
+		this.alignmentPartArea = null;
 		this.position = position;
+	}
+
+
+	public ToolkitSpecificAlignmentPartArea getAlignmentPartArea() {
+		return alignmentPartArea;
+	}
+
+
+	public void setAlignmentPartArea(ToolkitSpecificAlignmentPartArea alignmentPartArea) {
+		this.alignmentPartArea = alignmentPartArea;
+		assignSize();
 	}
 
 
@@ -103,8 +116,12 @@ public class AlignmentLabelArea extends TICComponent {
 	
 	@Override
 	public Dimension getSize() {
-		return new Dimension(Math2.roundUp(calculateWidth()), 
-				getOwner().getToolkitComponent().getPartArea(getPosition()).getHeight());  //TODO Could getToolkitComponent() still return null when this method is called?
+		int height = 0;
+		if (getAlignmentPartArea() != null) {
+			height = getAlignmentPartArea().getHeight();
+		}
+		System.out.println(height);
+		return new Dimension(Math2.roundUp(calculateWidth()),	height);  // If references starting from owner would be used here, there would be problems in initialization order.
 	}
 
 	

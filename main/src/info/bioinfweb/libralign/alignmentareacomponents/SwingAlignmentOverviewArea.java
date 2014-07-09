@@ -79,19 +79,22 @@ public class SwingAlignmentOverviewArea extends JComponent implements ToolkitSpe
 		headArea = new SwingAlignmentPartArea();
 		headScrollPane.setViewportView(headArea);
 		headLabelArea = new AlignmentLabelArea(getIndependentComponent(), DataAreaListType.TOP); 
+		headLabelArea.setAlignmentPartArea(headArea);
 		headScrollPane.setRowHeaderView(headLabelArea.createSwingComponent());
 
 		contentScrollPane = new JScrollPane();
 		contentScrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
 		contentArea = new SwingAlignmentPartArea();
 		contentScrollPane.setViewportView(contentArea);
-		contentLabelArea = new AlignmentLabelArea(getIndependentComponent(), DataAreaListType.SEQUENCE); 
+		contentLabelArea = new AlignmentLabelArea(getIndependentComponent(), DataAreaListType.SEQUENCE);
+		contentLabelArea.setAlignmentPartArea(contentArea);
 		contentScrollPane.setRowHeaderView(contentLabelArea.createSwingComponent());
 		
 		bottomScrollPane = new JScrollPane();
 		bottomArea = new SwingAlignmentPartArea();
 		bottomScrollPane.setViewportView(bottomArea);
 		bottomLabelArea = new AlignmentLabelArea(getIndependentComponent(), DataAreaListType.BOTTOM); 
+		bottomLabelArea.setAlignmentPartArea(bottomArea);
 		bottomScrollPane.setRowHeaderView(bottomLabelArea.createSwingComponent());
 		
 		AdjustmentListener listener = new AdjustmentListener() {

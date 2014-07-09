@@ -28,13 +28,9 @@ import java.util.Iterator;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Layout;
-import org.eclipse.swt.widgets.ScrollBar;
 import org.eclipse.swt.custom.SashForm;
 import org.eclipse.swt.custom.ScrolledComposite;
 import org.eclipse.swt.layout.FillLayout;
-import org.eclipse.swt.events.SelectionAdapter;
-import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.events.SelectionListener;
 
 
 
@@ -47,16 +43,10 @@ import org.eclipse.swt.events.SelectionListener;
 public class SWTAlignmentOverviewArea extends Composite implements ToolkitSpecificAlignmentOverviewArea {
 	private AlignmentArea independentComponent;
 	private SequenceAreaMap sequenceAreaMap;
-	private SWTAlignmentPartArea headArea;
-	private SWTAlignmentPartArea contentArea;
-	private SWTAlignmentPartArea bottomArea;
-	private ScrolledComposite headScrolledComposite;
-	private ScrolledComposite contentScrolledComposite;
-	private ScrolledComposite bottomScrolledComposite;
 	private SashForm sashForm;
-	private Composite headContainer;
-	private Composite contentContainer;
-	private Composite bottomContainer;
+	private SWTAlignmentPartScroller headComponent;
+	private SWTAlignmentPartScroller contentComponent;
+	private SWTAlignmentPartScroller bottomComponent;
 	
 
 	public SWTAlignmentOverviewArea(Composite parent, int style, AlignmentArea independentComponent) {
@@ -66,77 +56,28 @@ public class SWTAlignmentOverviewArea extends Composite implements ToolkitSpecif
 	}
 	
 	
-	private Composite createContainer() {
-		Composite result = new Composite(sashForm, SWT.NONE);
-		result.setLayout(new FillLayout(SWT.HORIZONTAL));
-		return result;
-	}
-	
-	
-	private void createLabelElements(Composite parent, DataAreaListType position) {
-		Composite labelScrollContainer = new Composite(parent, SWT.NONE);
-		ScrolledComposite labelScrolledComposite = new ScrolledComposite(labelScrollContainer, 
-				SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL);
-		AlignmentLabelArea labelArea = new AlignmentLabelArea(getIndependentComponent(), position);
-		labelScrolledComposite.setContent(labelArea.createSWTWidget(labelScrolledComposite, SWT.NONE));
-		labelScrollContainer.addControlListener(  // Must not be called before both field are initialized.
-				new SWTScrolledCompositeResizeListener(labelScrollContainer, labelScrolledComposite, true));
-	}
-	
-	
-	private void createHeadComponents() {
-		headContainer = createContainer();
-		createLabelElements(headContainer, DataAreaListType.TOP);
-
-		Composite headScrollContainer = new Composite(headContainer, SWT.NONE);
-		headScrolledComposite = new ScrolledComposite(headScrollContainer, SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL);
-		headArea = new SWTAlignmentPartArea(headScrolledComposite, SWT.NONE);
-		headScrolledComposite.setContent(headArea);
-		headScrolledComposite.setMinSize(headArea.computeSize(SWT.DEFAULT, SWT.DEFAULT));
-		headScrollContainer.addControlListener(  // Must not be called before both field are initialized.
-				new SWTScrolledCompositeResizeListener(headScrollContainer, headScrolledComposite, false));
-	}
-	
-	
-	private void createContentComponents() {
-		contentContainer = createContainer();
-		createLabelElements(contentContainer, DataAreaListType.SEQUENCE);
-		
-		Composite contentScrollContainer = new Composite(contentContainer, SWT.NONE);
-		contentScrolledComposite = new ScrolledComposite(contentScrollContainer, SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL);
-		contentArea = new SWTAlignmentPartArea(contentScrolledComposite, SWT.NONE);
-		contentScrolledComposite.setContent(contentArea);
-		contentScrolledComposite.setMinSize(contentArea.computeSize(SWT.DEFAULT, SWT.DEFAULT));
-		contentScrollContainer.addControlListener(  // Must not be called before both field are initialized.
-				new SWTScrolledCompositeResizeListener(contentScrollContainer, contentScrolledComposite, false));		
-	}
-	
-	
-	private void createBottomComponents() {
-		bottomContainer = createContainer();
-		createLabelElements(bottomContainer, DataAreaListType.BOTTOM);
-		
-		bottomScrolledComposite = new ScrolledComposite(bottomContainer, SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL);
-		bottomArea = new SWTAlignmentPartArea(bottomScrolledComposite, SWT.NONE);
-		bottomScrolledComposite.setContent(bottomArea);
-		bottomScrolledComposite.setMinSize(bottomArea.computeSize(SWT.DEFAULT, SWT.DEFAULT));
-		sashForm.setWeights(new int[] {1, 1, 1});  //TODO Adjust
-		sequenceAreaMap = new SequenceAreaMap(getIndependentComponent());
-	}
-	
-	
 	private void init() {
 		super.setLayout(new FillLayout(SWT.HORIZONTAL));
-		
+
+		// Create components:
 		sashForm = new SashForm(this, SWT.VERTICAL);
 		sashForm.setSashWidth(AlignmentArea.DIVIDER_WIDTH);
-		createHeadComponents();
-		createContentComponents();
-		createBottomComponents();
+		headComponent = new SWTAlignmentPartScroller(getIndependentComponent(), sashForm, DataAreaListType.TOP, true);
+		contentComponent = new SWTAlignmentPartScroller(getIndependentComponent(), sashForm, DataAreaListType.SEQUENCE, true);
+		bottomComponent = new SWTAlignmentPartScroller(getIndependentComponent(), sashForm, DataAreaListType.BOTTOM, false);
+		sashForm.setWeights(new int[] {1, 1, 1});  //TODO Adjust
+		sequenceAreaMap = new SequenceAreaMap(getIndependentComponent());
 		reinsertSubelements();
 		
+		// Resize label areas according to alignment part areas:
+		headComponent.getLabelArea().assignSize();
+		contentComponent.getLabelArea().assignSize();
+		bottomComponent.getLabelArea().assignSize();
+		
+		// Synchronize horizontal scrolling:
 		ScrolledCompositeSyncListener horizontalSyncListener = new ScrolledCompositeSyncListener(
-				new ScrolledComposite[]{headScrolledComposite, contentScrolledComposite, bottomScrolledComposite}, true);
+				new ScrolledComposite[]{headComponent.getPartScroller(), contentComponent.getPartScroller(), 
+						bottomComponent.getPartScroller()}, true);
 		horizontalSyncListener.registerToAll();
 	}
 
@@ -157,11 +98,11 @@ public class SWTAlignmentOverviewArea extends Composite implements ToolkitSpecif
 	public ToolkitSpecificAlignmentPartArea getPartArea(DataAreaListType position) {
 		switch (position) {
 			case TOP:
-				return getHeadArea();
+				return headComponent.getPartArea();
 			case SEQUENCE:
-				return getContentArea();
+				return contentComponent.getPartArea();
 			default:
-				return getBottomArea();
+				return bottomComponent.getPartArea();
 		}
 	}
 
@@ -169,25 +110,25 @@ public class SWTAlignmentOverviewArea extends Composite implements ToolkitSpecif
 	@Override
 	public void reinsertSubelements() {
 		// Head elements:
-		getHeadArea().removeAll();
-		getHeadArea().addDataAreaList(getIndependentComponent().getDataAreas().getTopAreas());
-		getHeadArea().assignSize();
+		headComponent.getPartArea().removeAll();
+		headComponent.getPartArea().addDataAreaList(getIndependentComponent().getDataAreas().getTopAreas());
+		headComponent.getPartArea().assignSize();
 		
 		// Content elements:
-		getContentArea().removeAll();
+		contentComponent.getPartArea().removeAll();
 		Iterator<Integer> idIterator = getIndependentComponent().getSequenceOrder().getIdList().iterator();
 		while (idIterator.hasNext()) {
 			Integer id = idIterator.next();
-			sequenceAreaMap.get(id).createSWTWidget(getContentArea(), SWT.NONE);
+			sequenceAreaMap.get(id).createSWTWidget(contentComponent.getPartArea(), SWT.NONE);
 			sequenceAreaMap.get(id).assignSize();
-			getContentArea().addDataAreaList(getIndependentComponent().getDataAreas().getSequenceAreas(id));
+			contentComponent.getPartArea().addDataAreaList(getIndependentComponent().getDataAreas().getSequenceAreas(id));
 		}
-		getContentArea().assignSize();
+		contentComponent.getPartArea().assignSize();
 
 		// Bottom elements:
-		getBottomArea().removeAll();
-		getBottomArea().addDataAreaList(getIndependentComponent().getDataAreas().getBottomAreas());
-		getBottomArea().assignSize();
+		bottomComponent.getPartArea().removeAll();
+		bottomComponent.getPartArea().addDataAreaList(getIndependentComponent().getDataAreas().getBottomAreas());
+		bottomComponent.getPartArea().assignSize();
 
     //assignSize();
 		//layout(true, true);  //TODO Necessary?
@@ -216,41 +157,7 @@ public class SWTAlignmentOverviewArea extends Composite implements ToolkitSpecif
 	public void setLayout(Layout layout) {}
 	
 	
-	public SWTAlignmentPartArea getHeadArea() {
-		return headArea;
-	}
-	
-	
-	public SWTAlignmentPartArea getContentArea() {
-		return contentArea;
-	}
-	
-	
-	public SWTAlignmentPartArea getBottomArea() {
-		return bottomArea;
-	}
-	
-	
-	public ScrolledComposite getHeadScrolledComposite() {
-		return headScrolledComposite;
-	}
-	
-	
-	public ScrolledComposite getContentScrolledComposite() {
-		return contentScrolledComposite;
-	}
-	
-	
-	public ScrolledComposite getBottomScrolledComposite() {
-		return bottomScrolledComposite;
-	}
-	
-	
 	public SashForm getSashForm() {
 		return sashForm;
-	}
-
-	public Composite getBottomContainer() {
-		return bottomContainer;
 	}
 }
