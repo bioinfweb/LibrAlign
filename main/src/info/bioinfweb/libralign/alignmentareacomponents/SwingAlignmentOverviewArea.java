@@ -75,6 +75,7 @@ public class SwingAlignmentOverviewArea extends JComponent implements ToolkitSpe
 		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 		
 		headScrollPane = new JScrollPane();
+		headScrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
 		headScrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
 		headArea = new SwingAlignmentPartArea();
 		headScrollPane.setViewportView(headArea);
@@ -84,6 +85,7 @@ public class SwingAlignmentOverviewArea extends JComponent implements ToolkitSpe
 
 		contentScrollPane = new JScrollPane();
 		contentScrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+		contentScrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
 		contentArea = new SwingAlignmentPartArea();
 		contentScrollPane.setViewportView(contentArea);
 		contentLabelArea = new AlignmentLabelArea(getIndependentComponent(), DataAreaListType.SEQUENCE);
@@ -93,6 +95,7 @@ public class SwingAlignmentOverviewArea extends JComponent implements ToolkitSpe
 		bottomScrollPane = new JScrollPane();
 		bottomArea = new SwingAlignmentPartArea();
 		bottomScrollPane.setViewportView(bottomArea);
+		bottomScrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
 		bottomLabelArea = new AlignmentLabelArea(getIndependentComponent(), DataAreaListType.BOTTOM); 
 		bottomLabelArea.setAlignmentPartArea(bottomArea);
 		bottomScrollPane.setRowHeaderView(bottomLabelArea.createSwingComponent());

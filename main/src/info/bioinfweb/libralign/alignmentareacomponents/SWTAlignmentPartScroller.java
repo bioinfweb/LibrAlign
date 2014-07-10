@@ -104,6 +104,7 @@ public class SWTAlignmentPartScroller extends Composite {
 		labelContainer = new Composite(this, SWT.NONE);
 		labelContainer.setLayoutData(createGridData(false));
 		labelScroller = new ScrolledComposite(labelContainer,	SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL);
+		labelScroller.setAlwaysShowScrollBars(true);
 		labelArea = new AlignmentLabelArea(getOwner(), getPosition());
 		labelScroller.setContent(labelArea.createSWTWidget(labelScroller, SWT.NONE));
 		labelContainer.addControlListener(  // Must not be called before both field are initialized.
@@ -120,6 +121,7 @@ public class SWTAlignmentPartScroller extends Composite {
 			partScroller = new ScrolledComposite(this, SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL);
 			partScroller.setLayoutData(createGridData(true));
 		}
+		partScroller.setAlwaysShowScrollBars(true);
 		partArea = new SWTAlignmentPartArea(partScroller, SWT.NONE);
 		partScroller.setContent(partArea);
 		if (hidePartScrollBar) {
