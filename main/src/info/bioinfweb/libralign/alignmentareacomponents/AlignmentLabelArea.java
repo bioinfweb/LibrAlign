@@ -145,7 +145,9 @@ public class AlignmentLabelArea extends TICComponent {
 			int y = 0;
 			while (idIterator.hasNext()) {
 				int id = idIterator.next();
-				g.draw(new Line2D.Float(0, y, getSize().width, y));
+				if (y > 0) {  // Do not draw a line at the top of the component.
+					g.draw(new Line2D.Float(0, y, getSize().width, y));
+				}
 		  	g.drawString(getOwner().getSequenceProvider().sequenceNameByID(id), BORDER_WIDTH, y + fm.getAscent());
 		  	y += getOwner().getCompoundHeight() + getOwner().getDataAreas().getSequenceAreas(id).getVisibleHeight();
 			}
