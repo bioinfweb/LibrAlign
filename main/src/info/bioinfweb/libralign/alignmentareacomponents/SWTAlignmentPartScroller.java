@@ -107,7 +107,7 @@ public class SWTAlignmentPartScroller extends Composite {
 		labelScroller.setAlwaysShowScrollBars(true);
 		labelArea = new AlignmentLabelArea(getOwner(), getPosition());
 		labelScroller.setContent(labelArea.createSWTWidget(labelScroller, SWT.NONE));
-		labelContainer.addControlListener(  // Must not be called before both field are initialized.
+		labelContainer.addControlListener(  // Must not be called before both fields are initialized.
 				new SWTScrolledCompositeResizeListener(labelContainer, labelScroller, true));
 		
 		// Alignment area part components:
@@ -125,7 +125,7 @@ public class SWTAlignmentPartScroller extends Composite {
 		partArea = new SWTAlignmentPartArea(partScroller, SWT.NONE);
 		partScroller.setContent(partArea);
 		if (hidePartScrollBar) {
-			partContainer.addControlListener(  // Must not be called before both field are initialized.
+			partContainer.addControlListener(  // Must not be called before both fields are initialized.
 					new SWTScrolledCompositeResizeListener(partContainer, partScroller, false));
 		}
 				

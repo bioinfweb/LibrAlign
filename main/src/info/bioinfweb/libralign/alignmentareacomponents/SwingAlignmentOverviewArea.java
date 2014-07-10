@@ -71,31 +71,36 @@ public class SwingAlignmentOverviewArea extends JComponent implements ToolkitSpe
 	}
 	
 	
+	private JScrollPane createScrollPane() {
+		JScrollPane result = new JScrollPane();
+		result.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
+		result.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+		result.setBorder(null);
+		return result;
+	}
+	
+	
 	private void initGUI() {
 		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 		
-		headScrollPane = new JScrollPane();
-		headScrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
-		headScrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+		headScrollPane = createScrollPane();
 		headArea = new SwingAlignmentPartArea();
 		headScrollPane.setViewportView(headArea);
 		headLabelArea = new AlignmentLabelArea(getIndependentComponent(), DataAreaListType.TOP); 
 		headLabelArea.setAlignmentPartArea(headArea);
 		headScrollPane.setRowHeaderView(headLabelArea.createSwingComponent());
 
-		contentScrollPane = new JScrollPane();
-		contentScrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
-		contentScrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
+		contentScrollPane = createScrollPane();
 		contentArea = new SwingAlignmentPartArea();
 		contentScrollPane.setViewportView(contentArea);
 		contentLabelArea = new AlignmentLabelArea(getIndependentComponent(), DataAreaListType.SEQUENCE);
 		contentLabelArea.setAlignmentPartArea(contentArea);
 		contentScrollPane.setRowHeaderView(contentLabelArea.createSwingComponent());
 		
-		bottomScrollPane = new JScrollPane();
+		bottomScrollPane = createScrollPane();
+		bottomScrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 		bottomArea = new SwingAlignmentPartArea();
 		bottomScrollPane.setViewportView(bottomArea);
-		bottomScrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
 		bottomLabelArea = new AlignmentLabelArea(getIndependentComponent(), DataAreaListType.BOTTOM); 
 		bottomLabelArea.setAlignmentPartArea(bottomArea);
 		bottomScrollPane.setRowHeaderView(bottomLabelArea.createSwingComponent());
