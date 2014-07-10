@@ -69,11 +69,6 @@ public class SWTAlignmentOverviewArea extends Composite implements ToolkitSpecif
 		sequenceAreaMap = new SequenceAreaMap(getIndependentComponent());
 		reinsertSubelements();
 		
-		// Resize label areas according to alignment part areas:
-		headComponent.getLabelArea().assignSize();
-		contentComponent.getLabelArea().assignSize();
-		bottomComponent.getLabelArea().assignSize();
-		
 		// Synchronize horizontal scrolling:
 		ScrolledCompositeSyncListener horizontalSyncListener = new ScrolledCompositeSyncListener(
 				new ScrolledComposite[]{headComponent.getPartScroller(), contentComponent.getPartScroller(), 

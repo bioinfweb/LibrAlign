@@ -19,13 +19,20 @@
 package info.bioinfweb.libralign.alignmentareacomponents;
 
 
+import java.awt.Dimension;
+
 import info.bioinfweb.commons.swt.ScrolledCompositeSyncListener;
 import info.bioinfweb.libralign.AlignmentArea;
 import info.bioinfweb.libralign.dataarea.DataAreaListType;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.ScrolledComposite;
+import org.eclipse.swt.events.ControlAdapter;
+import org.eclipse.swt.events.ControlEvent;
 import org.eclipse.swt.layout.FillLayout;
+import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.layout.RowLayout;
 import org.eclipse.swt.widgets.Composite;
 
 
@@ -70,11 +77,32 @@ public class SWTAlignmentPartScroller extends Composite {
 	}
 	
 	
+	private GridData createGridData(boolean grabExcessHorizontalSpace) {
+		GridData gridData = new GridData();
+		gridData.horizontalAlignment = GridData.FILL;
+		gridData.grabExcessHorizontalSpace = grabExcessHorizontalSpace;
+		gridData.verticalAlignment = GridData.FILL;
+		gridData.grabExcessVerticalSpace = true;
+		return gridData;
+	}
+	
+	
 	private void initGUI(boolean hidePartScrollBar) {
-		setLayout(new FillLayout(SWT.HORIZONTAL));
+		// Set layout:
+		GridLayout layout = new GridLayout(2, false);
+		layout.horizontalSpacing = 0;
+		layout.verticalSpacing = 0;
+		layout.marginLeft = 0;
+		layout.marginTop = 0;
+		layout.marginRight = 0;
+		layout.marginBottom = 0;
+		layout.marginWidth = 0;
+		layout.marginHeight = 0;
+		setLayout(layout);
 		
 		// Label components:
 		labelContainer = new Composite(this, SWT.NONE);
+		labelContainer.setLayoutData(createGridData(false));
 		labelScroller = new ScrolledComposite(labelContainer,	SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL);
 		labelArea = new AlignmentLabelArea(getOwner(), getPosition());
 		labelScroller.setContent(labelArea.createSWTWidget(labelScroller, SWT.NONE));
@@ -84,11 +112,13 @@ public class SWTAlignmentPartScroller extends Composite {
 		// Alignment area part components:
 		if (hidePartScrollBar) {
 			partContainer = new Composite(this, SWT.NONE);
+			partContainer.setLayoutData(createGridData(true));
 			partScroller = new ScrolledComposite(partContainer, SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL);
 		}
 		else {
 			partContainer = null;
 			partScroller = new ScrolledComposite(this, SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL);
+			partScroller.setLayoutData(createGridData(true));
 		}
 		partArea = new SWTAlignmentPartArea(partScroller, SWT.NONE);
 		partScroller.setContent(partArea);
@@ -96,14 +126,34 @@ public class SWTAlignmentPartScroller extends Composite {
 			partContainer.addControlListener(  // Must not be called before both field are initialized.
 					new SWTScrolledCompositeResizeListener(partContainer, partScroller, false));
 		}
-		
-		// Link label area:
-		labelArea.setAlignmentPartArea(partArea);
-		
+				
 		// Synchronize vertical scrolling:
 		ScrolledCompositeSyncListener verticalSyncListener = new ScrolledCompositeSyncListener(
 				new ScrolledComposite[]{labelScroller, partScroller}, false);
 		verticalSyncListener.registerToAll();		
+
+		// Link label area:
+		labelArea.setAlignmentPartArea(partArea);
+		partArea.addControlListener(new ControlAdapter() {
+					@Override
+					public void controlResized(ControlEvent e) {
+						labelArea.assignSize();
+					}
+				});
+		
+		// Ensure correct width of label components:
+		((Composite)labelArea.getToolkitComponent()).addControlListener(new ControlAdapter() {
+					@Override
+					public void controlResized(ControlEvent e) {
+						Dimension size = labelArea.getSize();
+  					int borderWidth = 2 * (labelContainer.getBorderWidth() + labelScroller.getBorderWidth());
+						GridData data = (GridData)labelContainer.getLayoutData();
+						data.widthHint = size.width + borderWidth;
+						data.heightHint = size.height + borderWidth;
+						labelContainer.setLayoutData(data);
+						labelContainer.setSize(data.widthHint, data.heightHint);
+					}
+				});
 	}
 
 

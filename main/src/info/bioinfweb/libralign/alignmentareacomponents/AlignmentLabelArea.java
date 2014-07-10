@@ -120,7 +120,6 @@ public class AlignmentLabelArea extends TICComponent {
 		if (getAlignmentPartArea() != null) {
 			height = getAlignmentPartArea().getHeight();
 		}
-		System.out.println(height);
 		return new Dimension(Math2.roundUp(calculateWidth()),	height);  // If references starting from owner would be used here, there would be problems in initialization order.
 	}
 
