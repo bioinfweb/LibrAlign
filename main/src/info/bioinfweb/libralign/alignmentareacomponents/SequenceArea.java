@@ -1,6 +1,6 @@
 /*
  * LibrAlign - A GUI library for displaying and editing multiple sequence alignments and attached data
- * Copyright (C) 2014  Ben Stöver
+ * Copyright (C) 2014  Ben StÃ¶ver
  * <http://bioinfweb.info/LibrAlign>
  * 
  * This program is free software: you can redistribute it and/or modify
@@ -131,7 +131,7 @@ public class SequenceArea extends AlignmentSubArea {
 			case DNA:
 			case RNA:
 				paintNucleotideCompound(area, g, (NucleotideCompound)compound, x, y, selected);
-				//TODO Type cast funktioniert so nicht, wenn Quelldaten nicht diesen Datentyp haben! => Konvertierung mit GeneticCode hinzufügen.
+				//TODO Type cast funktioniert so nicht, wenn Quelldaten nicht diesen Datentyp haben! => Konvertierung mit GeneticCode hinzufï¿½gen.
 				break;
 			case CODON:
 				break;
