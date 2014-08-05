@@ -19,6 +19,7 @@
 package info.bioinfweb.libralign.demo.swt;
 
 
+import info.bioinfweb.libralign.AlignmentArea;
 import info.bioinfweb.libralign.demo.AbstractTestApplication;
 
 import org.eclipse.swt.widgets.Composite;
@@ -37,6 +38,7 @@ import org.eclipse.swt.layout.FillLayout;
  */
 public class Main extends AbstractTestApplication {
 	protected Shell shell;
+	private AlignmentArea alignmentArea;
 	
 	
 	/**
@@ -63,6 +65,7 @@ public class Main extends AbstractTestApplication {
 		createContents();
 		shell.open();
 		shell.layout();
+		alignmentArea.getToolkitComponent().redistributeHeight();
 		while (!shell.isDisposed()) {
 			if (!display.readAndDispatch()) {
 				display.sleep();
@@ -80,6 +83,10 @@ public class Main extends AbstractTestApplication {
 		shell.setText("SWT Application");
 		shell.setLayout(new FillLayout(SWT.HORIZONTAL));
 		
-		Composite alignmentWidget = createAlignmentArea().createSWTWidget(shell, SWT.NONE);
+		alignmentArea = createAlignmentArea();
+		//alignmentArea.setScrollBottomArea(true);
+		//alignmentArea.setScrollHeadArea(true);
+		alignmentArea.createSWTWidget(shell, SWT.NONE);
+		//alignmentArea.getToolkitComponent().redistributeHeight();
 	}
 }

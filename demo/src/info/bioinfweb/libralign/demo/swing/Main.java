@@ -26,9 +26,9 @@ import java.awt.EventQueue;
 
 import javax.swing.JComponent;
 import javax.swing.JFrame;
+
 import java.awt.GridBagLayout;
 import java.awt.GridBagConstraints;
-import javax.swing.JScrollPane;
 
 
 
@@ -39,6 +39,7 @@ import javax.swing.JScrollPane;
  */
 public class Main extends AbstractTestApplication {
 	private JFrame frame;
+	private AlignmentArea alignmentArea;
 	
 	
 	/**
@@ -50,7 +51,9 @@ public class Main extends AbstractTestApplication {
 				try {
 					Main window = new Main();
 					window.frame.setVisible(true);
-				} catch (Exception e) {
+					window.alignmentArea.getToolkitComponent().redistributeHeight();
+				} 
+				catch (Exception e) {
 					e.printStackTrace();
 				}
 			}
@@ -71,7 +74,7 @@ public class Main extends AbstractTestApplication {
 	 */
 	private void initialize() {
 		frame = new JFrame();
-		frame.setBounds(100, 100, 450, 300);
+		frame.setBounds(100, 100, 450, 250);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		GridBagLayout gridBagLayout = new GridBagLayout();
 		gridBagLayout.columnWidths = new int[]{0, 0};
@@ -80,7 +83,9 @@ public class Main extends AbstractTestApplication {
 		gridBagLayout.rowWeights = new double[]{1.0, Double.MIN_VALUE};
 		frame.getContentPane().setLayout(gridBagLayout);
 		
-		AlignmentArea alignmentArea = createAlignmentArea();
+		alignmentArea = createAlignmentArea();
+		//alignmentArea.setScrollHeadArea(true);
+		//alignmentArea.setScrollBottomArea(true);
 		JComponent alignmentPanel = alignmentArea.createSwingComponent();
 		GridBagConstraints gbc_scrollPane = new GridBagConstraints();
 		gbc_scrollPane.fill = GridBagConstraints.BOTH;
