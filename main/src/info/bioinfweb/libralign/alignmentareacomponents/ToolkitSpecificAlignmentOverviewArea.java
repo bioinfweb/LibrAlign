@@ -45,4 +45,10 @@ public interface ToolkitSpecificAlignmentOverviewArea extends ToolkitComponent {
    * the current model information. 
    */
   public void reinsertSubelements();	
+  
+	/**
+	 * Distributes the available height to the head, content, and bottom area. The previous distribution is not
+	 * considered.
+	 */
+  public void redistributeHeight();
 }

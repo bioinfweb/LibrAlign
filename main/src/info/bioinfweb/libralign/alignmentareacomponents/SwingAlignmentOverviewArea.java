@@ -21,6 +21,8 @@ package info.bioinfweb.libralign.alignmentareacomponents;
 
 import java.awt.event.AdjustmentEvent;
 import java.awt.event.AdjustmentListener;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
 import java.util.Iterator;
 
 import info.bioinfweb.libralign.AlignmentArea;
@@ -82,6 +84,13 @@ public class SwingAlignmentOverviewArea extends JComponent implements ToolkitSpe
 	
 	private void initGUI() {
 		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
+		addComponentListener(new ComponentAdapter() {
+					@Override
+					public void componentResized(ComponentEvent e) {
+						redistributeHeight();
+						//TODO Implement distributeNewHeight() in future versions to save user defined splitter positions during resize
+					}
+				});
 		
 		headScrollPane = createScrollPane();
 		headArea = new SwingAlignmentPartArea();
@@ -224,4 +233,79 @@ public class SwingAlignmentOverviewArea extends JComponent implements ToolkitSpe
 		getBottomArea().removeAll();
 		getBottomArea().addDataAreaList(getIndependentComponent().getDataAreas().getBottomAreas());
 	}
+	
+
+//	@Override
+//	@Transient
+//	public Dimension getMinimumSize() {
+//		if ((contentLabelArea != null) && (contentScrollPane != null) && (bottomScrollPane != null)) {
+//			Dimension result = new Dimension(contentLabelArea.getSize().width + MIN_PART_AREA_WIDTH + 
+//					contentScrollPane.getVerticalScrollBar().getWidth(), 
+//					3 * MIN_PART_AREA_HEIGHT + bottomScrollPane.getHorizontalScrollBar().getHeight());  //TODO Add border widths
+//			System.out.println("calculating value " + result + " " + getPreferredSize() + " " + getSize());
+//			return result;
+//		}
+//		else {
+//			System.out.println("returning default value");
+//			return super.getMinimumSize();
+//		}
+//	}
+
+
+  @Override
+	public void redistributeHeight() {
+  	int overallHeight = headScrollPane.getViewport().getHeight() + 
+  			contentScrollPane.getViewport().getHeight() + bottomScrollPane.getViewport().getHeight();
+  	int neededHeight = headArea.getHeight() + contentArea.getHeight() + bottomArea.getHeight();
+		double headHeight = headArea.getHeight();
+		double contentHeight = contentArea.getHeight();
+		double bottomHeight = bottomArea.getHeight();
+		if (bottomScrollPane.getHorizontalScrollBar().isVisible()) {
+			overallHeight += bottomScrollPane.getHorizontalScrollBar().getHeight();
+			neededHeight += bottomScrollPane.getHorizontalScrollBar().getHeight();
+			bottomHeight += bottomScrollPane.getHorizontalScrollBar().getHeight();
+		}
+		
+  	if (overallHeight < neededHeight) {
+  		if (getIndependentComponent().isScrollHeadArea()) {
+  			headHeight = 0;
+  		}
+  		if (getIndependentComponent().isScrollBottomArea()) {
+  			bottomHeight = 0;
+  		}
+  		
+  		if (headHeight + bottomHeight + AlignmentArea.MIN_PART_AREA_HEIGHT > overallHeight) {
+  			headHeight = 0;
+  			bottomHeight = 0;
+  		}
+  		else {
+  			neededHeight -= (headHeight + bottomHeight);
+  		}
+  		
+  		double availableHeight = overallHeight - (headHeight + bottomHeight);
+  		double reduceFactor = (double)availableHeight / (double)neededHeight;
+  		if (headHeight == 0) {
+  			headHeight = headArea.getHeight() * reduceFactor;
+  		}
+ 			contentHeight = contentArea.getHeight() * reduceFactor;
+  		if (bottomHeight == 0) {
+  			bottomHeight = bottomArea.getHeight() * reduceFactor;
+  			if (bottomScrollPane.getHorizontalScrollBar().isVisible()) {
+  				bottomHeight += bottomScrollPane.getHorizontalScrollBar().getHeight();
+  			}
+  		}
+  	}
+
+  	topSplitPane.setDividerLocation(headHeight / (double)overallHeight);
+		bottomSplitPane.setDividerLocation(contentHeight / (double)(overallHeight - headHeight));
+	}
+	
+	
+//	/**
+//	 * Distributes the height that has become available since the last call of this method to the head, content, 
+//	 * and bottom area. This method can also be used if the available height was reduces since the last call.
+//	 */
+//	public void distributeNewHeight() {
+//		
+//	}
 }

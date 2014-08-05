@@ -56,6 +56,7 @@ import info.bioinfweb.libralign.sequenceprovider.events.TokenChangeEvent;
 public class AlignmentArea extends TICComponent implements SequenceDataChangeListener {
 	/** Defines the width of the divider of the GUI components for the head, content, and bottom area. */ 
 	public static int DIVIDER_WIDTH = 2;
+	public static final int MIN_PART_AREA_HEIGHT = 5;
 	
 	public static final int COMPOUND_WIDTH = 10;
 	public static final int COMPOUND_HEIGHT = 14;
@@ -75,6 +76,8 @@ public class AlignmentArea extends TICComponent implements SequenceDataChangeLis
 	private DataAreaModel dataAreas = new DataAreaModel();
 	private float zoomX = 1f;
 	private float zoomY = 1f;
+	private boolean scrollHeadArea = false;
+	private boolean scrollBottomArea = false;
 	private int compoundWidth = COMPOUND_WIDTH;
 	private int compoundHeight = COMPOUND_HEIGHT;	
 	private Font compoundFont = new Font(Font.SANS_SERIF, Font.PLAIN, Math.round(COMPOUND_HEIGHT * 0.7f));
@@ -244,6 +247,28 @@ public class AlignmentArea extends TICComponent implements SequenceDataChangeLis
 	}
 	
 	
+	public boolean isScrollHeadArea() {
+		return scrollHeadArea;
+	}
+
+
+	public void setScrollHeadArea(boolean scrollHeadArea) {
+		this.scrollHeadArea = scrollHeadArea;
+		//TODO update GUI
+	}
+
+
+	public boolean isScrollBottomArea() {
+		return scrollBottomArea;
+	}
+
+
+	public void setScrollBottomArea(boolean scrollBottomArea) {
+		this.scrollBottomArea = scrollBottomArea;
+		//TODO update GUI
+	}
+
+
 	private void calculateFont() {
 		compoundFont = new Font(FONT_NAME, FONT_STYLE, Math.round(Math.min(
 				compoundHeight * (COMPOUND_WIDTH / COMPOUND_HEIGHT), compoundWidth) * FONT_SIZE_FACTOR));
