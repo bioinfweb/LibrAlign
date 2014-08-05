@@ -16,14 +16,13 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package info.bioinfweb.libralign.dataarea.implementations;
+package info.bioinfweb.libralign.dataarea.implementations.pherogram;
 
 
 import info.bioinfweb.commons.tic.TICPaintEvent;
 import info.bioinfweb.libralign.AlignmentArea;
 import info.bioinfweb.libralign.dataarea.DataArea;
 import info.bioinfweb.libralign.dataarea.DataAreaListType;
-import info.bioinfweb.libralign.pherogram.PherogramAlignmentModel;
 import info.bioinfweb.libralign.pherogram.PherogramComponent;
 import info.bioinfweb.libralign.pherogram.PherogramFormats;
 import info.bioinfweb.libralign.pherogram.PherogramPainter;
@@ -56,7 +55,7 @@ public class PherogramArea extends DataArea implements PherogramComponent {
 	
 	
 	private PherogramProvider pherogram;
-	private PherogramAlignmentModel alignmentModel = new PherogramAlignmentModel();
+	private PherogramAlignmentModel alignmentModel = new PherogramAlignmentModel(this);
 	private int firstSeqPos;
 	private int leftCutPosition;
 	private int rightCutPosition;

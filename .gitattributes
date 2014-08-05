@@ -44,13 +44,14 @@ main/src/info/bioinfweb/libralign/dataarea/DataAreaModelListener.java -text svne
 main/src/info/bioinfweb/libralign/dataarea/DataAreaVisibleIterator.java -text svneol=unset#text/plain
 main/src/info/bioinfweb/libralign/dataarea/implementations/ConsensusSequenceArea.java -text svneol=unset#text/plain
 main/src/info/bioinfweb/libralign/dataarea/implementations/CustomHeightFullWidthArea.java -text svneol=unset#text/plain
-main/src/info/bioinfweb/libralign/dataarea/implementations/PherogramArea.java -text svneol=unset#text/plain
 main/src/info/bioinfweb/libralign/dataarea/implementations/SequenceIndexArea.java -text svneol=unset#text/plain
 main/src/info/bioinfweb/libralign/dataarea/implementations/package-info.java -text svneol=unset#text/plain
+main/src/info/bioinfweb/libralign/dataarea/implementations/pherogram/PherogramAlignmentModel.java -text svneol=unset#text/plain
+main/src/info/bioinfweb/libralign/dataarea/implementations/pherogram/PherogramArea.java -text svneol=unset#text/plain
+main/src/info/bioinfweb/libralign/dataarea/implementations/pherogram/package-info.java -text svneol=unset#text/plain
 main/src/info/bioinfweb/libralign/dataarea/package-info.java -text svneol=unset#text/plain
 main/src/info/bioinfweb/libralign/package-info.java -text svneol=unset#text/plain
 main/src/info/bioinfweb/libralign/pherogram/BioJavaPherogramProvider.java -text svneol=unset#text/plain
-main/src/info/bioinfweb/libralign/pherogram/PherogramAlignmentModel.java -text svneol=unset#text/plain
 main/src/info/bioinfweb/libralign/pherogram/PherogramComponent.java -text svneol=unset#text/plain
 main/src/info/bioinfweb/libralign/pherogram/PherogramFormats.java -text svneol=unset#text/plain
 main/src/info/bioinfweb/libralign/pherogram/PherogramHeadingView.java -text svneol=unset#text/plain
