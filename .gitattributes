@@ -2,6 +2,7 @@
 demo/.classpath -text svneol=unset#text/plain
 demo/.project -text svneol=unset#text/plain
 demo/.settings/org.eclipse.jdt.core.prefs -text svneol=unset#text/plain
+demo/data/Test_qualityScore.scf -text
 demo/src/info/bioinfweb/libralign/demo/AbstractTestApplication.java -text svneol=unset#text/plain
 demo/src/info/bioinfweb/libralign/demo/swing/Main.java -text svneol=unset#text/plain
 demo/src/info/bioinfweb/libralign/demo/swt/Main.java -text svneol=unset#text/plain

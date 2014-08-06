@@ -1,6 +1,6 @@
 /*
  * LibrAlign - A GUI library for displaying and editing multiple sequence alignments and attached data
- * Copyright (C) 2014  Ben Stöver
+ * Copyright (C) 2014  Ben Stï¿½ver
  * <http://bioinfweb.info/LibrAlign>
  * 
  * This program is free software: you can redistribute it and/or modify
@@ -19,15 +19,20 @@
 package info.bioinfweb.libralign.demo;
 
 
+import java.io.File;
+
 import info.bioinfweb.commons.bio.biojava3.alignment.SimpleAlignment;
 import info.bioinfweb.commons.bio.biojava3.alignment.template.Alignment;
 import info.bioinfweb.commons.bio.biojava3.core.sequence.compound.AlignmentAmbiguityNucleotideCompoundSet;
 import info.bioinfweb.libralign.AlignmentArea;
 import info.bioinfweb.libralign.dataarea.implementations.ConsensusSequenceArea;
 import info.bioinfweb.libralign.dataarea.implementations.SequenceIndexArea;
+import info.bioinfweb.libralign.dataarea.implementations.pherogram.PherogramArea;
+import info.bioinfweb.libralign.pherogram.BioJavaPherogramProvider;
 import info.bioinfweb.libralign.sequenceprovider.implementations.BioJavaSequenceDataProvider;
 import info.bioinfweb.libralign.sequenceprovider.tokenset.BioJavaTokenSet;
 
+import org.biojava.bio.chromatogram.ChromatogramFactory;
 import org.biojava3.core.sequence.DNASequence;
 import org.biojava3.core.sequence.compound.NucleotideCompound;
 
@@ -40,25 +45,41 @@ import org.biojava3.core.sequence.compound.NucleotideCompound;
  */
 public class AbstractTestApplication {
 	protected AlignmentArea createAlignmentArea() {
-		Alignment<DNASequence, NucleotideCompound> alignment = 
-				new SimpleAlignment<DNASequence, NucleotideCompound>();
-		alignment.add("Sequence 1", new DNASequence("ATCGTAGATCGTAGATCGTAGATCGTAGATCGTAGATCGTAGATCGTAG"));
-		alignment.add("Sequence 2", new DNASequence("AT-GTTG"));
-		alignment.add("Sequence 3", new DNASequence("AT-GTAG"));
-		
-		BioJavaSequenceDataProvider<DNASequence, NucleotideCompound> sequenceProvider = 
-				new BioJavaSequenceDataProvider<DNASequence, NucleotideCompound>(
-						new BioJavaTokenSet<NucleotideCompound>(
-								AlignmentAmbiguityNucleotideCompoundSet.getAlignmentAmbiguityNucleotideCompoundSet()),
-						alignment);
-		
-		AlignmentArea result = new AlignmentArea();
-		result.setSequenceProvider(sequenceProvider, false);
-		SequenceIndexArea sequenceIndexArea = new SequenceIndexArea(result);
-		//sequenceIndexArea.setFirstIndex(5);
-		//sequenceIndexArea.setHeight(25);
-		result.getDataAreas().getTopAreas().add(sequenceIndexArea);
-		result.getDataAreas().getBottomAreas().add(new ConsensusSequenceArea(result));
-		return result;
+		try {
+			BioJavaPherogramProvider pherogramProvider = new BioJavaPherogramProvider(ChromatogramFactory.create(
+	      	new File("data\\Test_qualityScore.scf")));	
+			
+			Alignment<DNASequence, NucleotideCompound> alignment = 
+					new SimpleAlignment<DNASequence, NucleotideCompound>();
+			alignment.add("Sequence 1", new DNASequence("ATCGTAGATCGTAGATCGTAGATCGTAGATCGTAGATCGTAGATCGTAG"));
+			alignment.add("Sequence 2", new DNASequence("AT-GTTG"));
+			alignment.add("Sequence 3", new DNASequence("AT-GTAG"));
+			
+			StringBuffer seqBuffer = new StringBuffer(pherogramProvider.getSequenceLength());
+			for (int i = 1; i <= pherogramProvider.getSequenceLength(); i++) {
+				seqBuffer.append(pherogramProvider.getBaseCall(i).getUpperedBase());
+			}
+			alignment.add("Sequence 4", new DNASequence(seqBuffer.toString()));
+			
+			BioJavaSequenceDataProvider<DNASequence, NucleotideCompound> sequenceProvider = 
+					new BioJavaSequenceDataProvider<DNASequence, NucleotideCompound>(
+							new BioJavaTokenSet<NucleotideCompound>(
+									AlignmentAmbiguityNucleotideCompoundSet.getAlignmentAmbiguityNucleotideCompoundSet()),
+							alignment);
+			
+			AlignmentArea result = new AlignmentArea();
+			result.setSequenceProvider(sequenceProvider, false);
+			SequenceIndexArea sequenceIndexArea = new SequenceIndexArea(result);
+			//sequenceIndexArea.setFirstIndex(5);
+			//sequenceIndexArea.setHeight(25);
+			result.getDataAreas().getTopAreas().add(sequenceIndexArea);
+			result.getDataAreas().getSequenceAreas(sequenceProvider.sequenceIDByName("Sequence 4")).add(
+					new PherogramArea(result, pherogramProvider));
+			result.getDataAreas().getBottomAreas().add(new ConsensusSequenceArea(result));
+			return result;
+		}
+		catch (Exception e) {
+			throw new RuntimeException(e);
+		}
 	}
 }
