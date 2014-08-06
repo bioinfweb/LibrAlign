@@ -81,10 +81,10 @@ public class PherogramAlignmentModel {
    * @param baseCallIndex - the absolute index in the base call sequence
    * @return the absolute index in the editable sequence or {@link #GAP} if the according position in the 
    *         editable sequence has been deleted or {@link #OUT_OF_RANGE} if the specified base call index
-   *         lies outside the area of the pherogram that is represented by the associated editable sequence
+   *         lies outside the range of the pherogram
    */
   public int editableIndexByBaseCallIndex(int baseCallIndex) {
-  	if (Math2.isBetween(baseCallIndex, getOwner().getLeftCutPosition(), getOwner().getRightCutPosition() - 1)) {
+  	if (Math2.isBetween(baseCallIndex, 1, getOwner().getProvider().getSequenceLength())) {
     	int result = baseCallIndex - getOwner().getLeftCutPosition() + getOwner().getFirstSeqPos();
     	
     	if (!shiftChangeList.isEmpty()) {
@@ -104,6 +104,35 @@ public class PherogramAlignmentModel {
       		}
       	}
     	}
+  		return result;
+  	}
+  	else {
+  		return OUT_OF_RANGE;
+  	}
+  }
+  
+  
+  public int baseCallIndexByEditableIndex(int editableIndex) {
+  	int result = editableIndex - getOwner().getFirstSeqPos() + getOwner().getLeftCutPosition();
+  	
+  	if (!shiftChangeList.isEmpty()) {
+    	Iterator<ShiftChange> iterator = shiftChangeList.iterator();
+    	while (iterator.hasNext()) {
+    		ShiftChange shiftChangeEntry = iterator.next();
+    		if ((shiftChangeEntry.shiftChange > 0) && (Math2.isBetween(result, 
+    				shiftChangeEntry.baseCallIndex, shiftChangeEntry.baseCallIndex + shiftChangeEntry.shiftChange - 1))) {
+    			
+    			return GAP;
+    		}
+    		else if ((shiftChangeEntry.baseCallIndex <= result)) {
+    			result -= shiftChangeEntry.shiftChange;
+    		}
+    		else {
+    			return result;
+    		}
+    	}
+  	}
+  	if (Math2.isBetween(result, 1, getOwner().getProvider().getSequenceLength())) {
   		return result;
   	}
   	else {

@@ -19,6 +19,8 @@
 package info.bioinfweb.libralign.dataarea.implementations.pherogram;
 
 
+import info.bioinfweb.commons.Math2;
+import info.bioinfweb.commons.collections.SimpleSequenceInterval;
 import info.bioinfweb.commons.tic.TICPaintEvent;
 import info.bioinfweb.libralign.AlignmentArea;
 import info.bioinfweb.libralign.dataarea.DataArea;
@@ -28,9 +30,9 @@ import info.bioinfweb.libralign.pherogram.PherogramFormats;
 import info.bioinfweb.libralign.pherogram.PherogramPainter;
 import info.bioinfweb.libralign.pherogram.PherogramProvider;
 
-import java.util.ArrayList;
+import java.awt.Dimension;
+import java.awt.RenderingHints;
 import java.util.EnumSet;
-import java.util.List;
 import java.util.Set;
 
 
@@ -42,18 +44,6 @@ import java.util.Set;
  * @since 0.1.0
  */
 public class PherogramArea extends DataArea implements PherogramComponent {
-	public static class SequenceAnchor {
-		public int sequencePos;
-		public int baseCallPos;
-
-		public SequenceAnchor(int sequencePos, int baseCallPos) {
-			super();
-			this.sequencePos = sequencePos;
-			this.baseCallPos = baseCallPos;
-		}
-	}
-	
-	
 	private PherogramProvider pherogram;
 	private PherogramAlignmentModel alignmentModel = new PherogramAlignmentModel(this);
 	private int firstSeqPos;
@@ -62,7 +52,6 @@ public class PherogramArea extends DataArea implements PherogramComponent {
 	private double verticalScale = 100f;
 	private PherogramFormats formats = new PherogramFormats();
 	private PherogramPainter painter = new PherogramPainter(this);
-	private List<SequenceAnchor> anchorList = new ArrayList<SequenceAnchor>();
 	
 	
 	public PherogramArea(AlignmentArea owner, PherogramProvider pherogram) {
@@ -72,9 +61,28 @@ public class PherogramArea extends DataArea implements PherogramComponent {
 		rightCutPosition = pherogram.getSequenceLength();
 	}
 
+	
+	protected SimpleSequenceInterval calculatePaintRange(TICPaintEvent e) {
+		int upperBorder = getAlignmentModel().baseCallIndexByEditableIndex((e.getRectangle().x + e.getRectangle().width) / 
+				getOwner().getCompoundWidth() + 1);  // BioJava indices start with 1
+		if (upperBorder == PherogramAlignmentModel.OUT_OF_RANGE) {
+			upperBorder = getProvider().getSequenceLength();
+		}
+		return new SimpleSequenceInterval(Math.max(1, 
+				getAlignmentModel().baseCallIndexByEditableIndex(e.getRectangle().x / getOwner().getCompoundWidth() + 1) - 1),  // BioJava indices start with 1
+				upperBorder);
+	}
+	
 
 	@Override
-	public void paint(TICPaintEvent event) {
+	public void paint(TICPaintEvent e) {
+		e.getGraphics().setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+		e.getGraphics().setColor(getFormats().getBackgroundColor());
+		e.getGraphics().fillRect(e.getRectangle().x, e.getRectangle().y, e.getRectangle().width, e.getRectangle().height);
+
+		SimpleSequenceInterval paintRange = calculatePaintRange(e);
+		painter.paintScaledTraceCurves(paintRange.getFirstPos(), paintRange.getLastPos(), e.getGraphics(), 
+				(paintRange.getFirstPos() - 0.5) * getOwner().getCompoundWidth(), 0);
 	}
 
 
@@ -174,21 +182,18 @@ public class PherogramArea extends DataArea implements PherogramComponent {
 
 	@Override
 	public int getLengthBeforeStart() {
-		// TODO Auto-generated method stub
-		return super.getLengthBeforeStart();
+		return Math.max(0, getProvider().getSequenceLength() * getOwner().getCompoundWidth() - getLength());
 	}
 
 
 	@Override
 	public int getLength() {
-		// TODO Auto-generated method stub
-		return 0;
+		return (getFirstSeqPos() + getProvider().getSequenceLength() - getLeftCutPosition()) * getOwner().getCompoundWidth();
 	}
 
 
 	@Override
 	public int getHeight() {
-		// TODO Auto-generated method stub
-		return 0;
+		return (int)Math2.roundUp(painter.calculateTraceCurvesHeight());
 	}
 }

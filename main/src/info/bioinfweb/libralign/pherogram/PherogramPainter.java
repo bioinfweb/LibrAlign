@@ -25,6 +25,7 @@ import java.awt.geom.Path2D;
 
 import org.biojava3.core.sequence.compound.NucleotideCompound;
 
+import info.bioinfweb.libralign.dataarea.implementations.pherogram.PherogramAlignmentModel;
 import info.bioinfweb.libralign.dataarea.implementations.pherogram.PherogramArea;
 import info.bioinfweb.libralign.pherogram.PherogramFormats.QualityOutputType;
 
@@ -198,6 +199,44 @@ public class PherogramPainter {
 				x += horizontalScale;
 				path.lineTo(x, paintY + height - 
 						owner.getProvider().getTraceValue(nucleotide, traceX) * owner.getVerticalScale());  //TODO curveTo() could be used alternatively.
+			}
+
+			g.setColor(owner.getFormats().getNucleotideColorSchema().getNucleotideColorMap().get("" + nucleotide.toString().charAt(0)));
+			g.draw(path);
+		}
+		
+		return height;
+	}
+	
+	
+	public double paintScaledTraceCurves(int startBaseCallIndex, int endBaseCallIndex, Graphics2D g, 
+			double paintX, double paintY) throws IllegalStateException {
+		
+		if (!(owner instanceof PherogramArea)) {
+			throw new IllegalStateException("This method can only be called if the owner is an instance of " + 
+		    PherogramArea.class.getName());
+		}
+		PherogramArea pherogramArea = (PherogramArea)owner; 
+		
+		double height = calculateTraceCurvesHeight();
+		
+		for (NucleotideCompound nucleotide: PherogramProvider.TRACE_CURVE_NUCLEOTIDES) {
+			Path2D path = new Path2D.Double();
+			double x = paintX;
+			int startTraceIndex = owner.getProvider().getBaseCallPosition(startBaseCallIndex);
+			path.moveTo(x, paintY + height - 
+					owner.getProvider().getTraceValue(nucleotide, startTraceIndex) * owner.getVerticalScale());
+			
+			for (int baseCallIndex = startBaseCallIndex; baseCallIndex < endBaseCallIndex; baseCallIndex++) {
+				int endTraceIndex = owner.getProvider().getBaseCallPosition(baseCallIndex + 1);
+				double horizontalScale = pherogramArea.getOwner().getCompoundWidth() / (double)(endTraceIndex - startTraceIndex);
+
+				for (int traceX = startTraceIndex; traceX < endTraceIndex; traceX++) {
+					x += horizontalScale;
+					path.lineTo(x, paintY + height - 
+							owner.getProvider().getTraceValue(nucleotide, traceX) * owner.getVerticalScale());  //TODO curveTo() could be used alternatively.
+				}
+				startTraceIndex = endTraceIndex;
 			}
 
 			g.setColor(owner.getFormats().getNucleotideColorSchema().getNucleotideColorMap().get("" + nucleotide.toString().charAt(0)));
