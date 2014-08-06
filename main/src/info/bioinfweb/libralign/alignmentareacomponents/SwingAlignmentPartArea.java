@@ -65,7 +65,7 @@ public class SwingAlignmentPartArea extends JPanel implements Scrollable, Toolki
 	
 	
 	@Override
-	@Transient
+	//@Transient
 	public Dimension getPreferredSize() {
 		//TODO AWT tree lock?;
 		Dimension result = new Dimension(0, 0);

@@ -85,6 +85,9 @@ public class PherogramHeadingView extends TICComponent {
 				break;
 			case MAXIMUM:
 				height += formats.getAnnotationFont().getSize();
+				break;
+			case NONE:  // Nothing to do.
+				break;
 		}
 		if (formats.isShowProbabilityValues()) {
 			height += 3 * formats.getAnnotationFont().getSize();

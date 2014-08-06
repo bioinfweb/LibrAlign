@@ -101,6 +101,8 @@ public class SelectionModel {
 						getColumnSelection().selectAll();
 					}
 					break;
+				case CELLS:  // Nothing to do.
+					break;
 			}
 		}
 		this.type = type;
