@@ -80,7 +80,7 @@ public class BioJavaSequenceAdapter<T, C extends Compound> extends AbstractSeque
 	 */
 	@Override
 	public SingleBioJavaSequenceAdapter<T, C> getSequence(int sequenceID) {
-		return new SingleBioJavaSequenceAdapter<>(getUnderlyingProvider(), sequenceID, getCompoundSet());
+		return new SingleBioJavaSequenceAdapter<T, C>(getUnderlyingProvider(), sequenceID, getCompoundSet());
 	}
 
 	
@@ -93,7 +93,7 @@ public class BioJavaSequenceAdapter<T, C extends Compound> extends AbstractSeque
 	 */
 	@Override
 	public SingleBioJavaSequenceAdapter<T, C> getSubSequence(int sequenceID, int offset, int length) {
-		return new SingleBioJavaSequenceAdapter<>(getUnderlyingProvider(), sequenceID, offset, length, 
+		return new SingleBioJavaSequenceAdapter<T, C>(getUnderlyingProvider(), sequenceID, offset, length, 
 				getCompoundSet());
 	}
 	
