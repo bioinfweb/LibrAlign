@@ -25,7 +25,6 @@ import info.bioinfweb.libralign.demo.AbstractTestApplication;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
-import org.eclipse.swt.custom.ScrolledComposite;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.FillLayout;
 
