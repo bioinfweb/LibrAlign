@@ -46,6 +46,19 @@ public class PherogramAlignmentModel {
   public static final int OUT_OF_RANGE = -2;
   
   
+	private static class ShiftChange {
+		public int baseCallIndex = 0;
+		public int shiftChange = 0;
+
+	
+		public ShiftChange(int baseCallIndex, int shiftChange) {
+			super();
+			this.baseCallIndex = baseCallIndex;
+			this.shiftChange = shiftChange;
+		}		
+	}
+	
+	
   private PherogramArea owner;
   private List<ShiftChange> shiftChangeList = new ArrayList<ShiftChange>();
   
@@ -78,14 +91,13 @@ public class PherogramAlignmentModel {
       	Iterator<ShiftChange> iterator = shiftChangeList.iterator();
       	while (iterator.hasNext()) {
       		ShiftChange shiftChangeEntry = iterator.next();
-      		if ((shiftChangeEntry.getShiftChange() < 0) && (Math2.isBetween(baseCallIndex, 
-      				shiftChangeEntry.getBaseCallIndex(), 
-      				shiftChangeEntry.getBaseCallIndex()- shiftChangeEntry.getShiftChange() - 1))) {
+      		if ((shiftChangeEntry.shiftChange < 0) && (Math2.isBetween(baseCallIndex, 
+      				shiftChangeEntry.baseCallIndex, shiftChangeEntry.baseCallIndex - shiftChangeEntry.shiftChange - 1))) {
       			
       			return GAP;
       		}
-      		else if ((shiftChangeEntry.getBaseCallIndex() <= baseCallIndex)) {
-      			result += shiftChangeEntry.getShiftChange();
+      		else if ((shiftChangeEntry.baseCallIndex <= baseCallIndex)) {
+      			result += shiftChangeEntry.shiftChange;
       		}
       		else {
       			return result;
@@ -106,7 +118,7 @@ public class PherogramAlignmentModel {
    */
   private int shiftChangeListIndexByBaseCallIndex(int baseCallIndex) {
   	int pos = 0;
-  	while ((pos < shiftChangeList.size()) && (shiftChangeList.get(pos).getBaseCallIndex() < baseCallIndex)) {
+  	while ((pos < shiftChangeList.size()) && (shiftChangeList.get(pos).baseCallIndex < baseCallIndex)) {
   		pos++;
 		}
   	return pos;
@@ -128,8 +140,8 @@ public class PherogramAlignmentModel {
   		
   	}
   	else {
-	  	if (listIndex < shiftChangeList.size() &&  (shiftChangeList.get(listIndex).getBaseCallIndex() == baseCallIndex)) {
-	  		shiftChangeList.get(listIndex).setShiftChange(shiftChange);
+	  	if (listIndex < shiftChangeList.size() &&  (shiftChangeList.get(listIndex).baseCallIndex == baseCallIndex)) {
+	  		shiftChangeList.get(listIndex).shiftChange = shiftChange;
 	  	}
 	  	shiftChangeList.add(listIndex, new ShiftChange(baseCallIndex, shiftChange));
   	}
