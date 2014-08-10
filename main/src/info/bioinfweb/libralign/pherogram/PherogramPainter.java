@@ -214,7 +214,7 @@ public class PherogramPainter {
 		
 		if (!(owner instanceof PherogramArea)) {
 			throw new IllegalStateException("This method can only be called if the owner is an instance of " + 
-		    PherogramArea.class.getName());
+		      PherogramArea.class.getName());
 		}
 		PherogramArea pherogramArea = (PherogramArea)owner; 
 		

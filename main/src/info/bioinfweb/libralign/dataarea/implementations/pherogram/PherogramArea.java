@@ -30,7 +30,6 @@ import info.bioinfweb.libralign.pherogram.PherogramFormats;
 import info.bioinfweb.libralign.pherogram.PherogramPainter;
 import info.bioinfweb.libralign.pherogram.PherogramProvider;
 
-import java.awt.Dimension;
 import java.awt.RenderingHints;
 import java.util.EnumSet;
 import java.util.Set;
@@ -63,14 +62,26 @@ public class PherogramArea extends DataArea implements PherogramComponent {
 
 	
 	protected SimpleSequenceInterval calculatePaintRange(TICPaintEvent e) {
-		int upperBorder = getAlignmentModel().baseCallIndexByEditableIndex((e.getRectangle().x + e.getRectangle().width) / 
+		PherogramAlignmentRelation upperBorderRelation = getAlignmentModel().baseCallIndexByEditableIndex((e.getRectangle().x + e.getRectangle().width) / 
 				getOwner().getCompoundWidth() + 1);  // BioJava indices start with 1
-		if (upperBorder == PherogramAlignmentModel.OUT_OF_RANGE) {
-			upperBorder = getProvider().getSequenceLength();
+		int upperBorder;
+		if (upperBorderRelation.getCorresponding() == PherogramAlignmentRelation.GAP) {
+			upperBorder = upperBorderRelation.getAfter();
 		}
-		return new SimpleSequenceInterval(Math.max(1, 
-				getAlignmentModel().baseCallIndexByEditableIndex(e.getRectangle().x / getOwner().getCompoundWidth() + 1) - 1),  // BioJava indices start with 1
-				upperBorder);
+		else {  // OUT_OF_RANGE or valid index
+			upperBorder = upperBorderRelation.getBefore();  // For a valid index, getBefore() is equal to getCorresponding() 
+		}
+
+		PherogramAlignmentRelation lowerBorderRelation = getAlignmentModel().baseCallIndexByEditableIndex(e.getRectangle().x / getOwner().getCompoundWidth() + 1); 
+		int lowerBorder;
+		if (lowerBorderRelation.getCorresponding() == PherogramAlignmentRelation.GAP) {
+			lowerBorder = lowerBorderRelation.getBefore();
+		}
+		else {  // OUT_OF_RANGE or valid index
+			lowerBorder = lowerBorderRelation.getAfter();  // For a valid index, getAfter() is equal to getCorresponding() 
+		}
+
+		return new SimpleSequenceInterval(Math.max(1, lowerBorder - 1),	upperBorder);  // One is subtracted to draw half visible positions.
 	}
 	
 

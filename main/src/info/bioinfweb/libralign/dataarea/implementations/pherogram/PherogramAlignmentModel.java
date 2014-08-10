@@ -34,18 +34,6 @@ import info.bioinfweb.commons.Math2;
  * @author Ben St&ouml;ver
  */
 public class PherogramAlignmentModel {
-  /**
-   * This value returned as an index indicates that there is a gap in the associated sequence.
-   */
-  public static final int GAP = -1;
-  
-  /**
-   * This value returned as an index indicates that the position specified to obtain lies outside
-   * the parts of the two sequences that are aligned with each other.
-   */
-  public static final int OUT_OF_RANGE = -2;
-  
-  
 	private static class ShiftChange {
 		public int baseCallIndex = 0;
 		public int shiftChange = 0;
@@ -83,9 +71,18 @@ public class PherogramAlignmentModel {
    *         editable sequence has been deleted or {@link #OUT_OF_RANGE} if the specified base call index
    *         lies outside the range of the pherogram
    */
-  public int editableIndexByBaseCallIndex(int baseCallIndex) {
-  	if (Math2.isBetween(baseCallIndex, 1, getOwner().getProvider().getSequenceLength())) {
-    	int result = baseCallIndex - getOwner().getLeftCutPosition() + getOwner().getFirstSeqPos();
+  public PherogramAlignmentRelation editableIndexByBaseCallIndex(int baseCallIndex) {
+  	if (baseCallIndex < 1) {  // BioJava indices start with 1
+  		return new PherogramAlignmentRelation(PherogramAlignmentRelation.OUT_OF_RANGE, PherogramAlignmentRelation.OUT_OF_RANGE, 
+  				1 - getOwner().getLeftCutPosition() + getOwner().getFirstSeqPos());
+  	}
+  	else if (baseCallIndex > getOwner().getProvider().getSequenceLength()) {
+  		return new PherogramAlignmentRelation(
+  				editableIndexByBaseCallIndex(getOwner().getProvider().getSequenceLength()).getCorresponding(), 
+  				PherogramAlignmentRelation.OUT_OF_RANGE, PherogramAlignmentRelation.OUT_OF_RANGE);
+  	}
+    else {
+    	int resultPos = baseCallIndex - getOwner().getLeftCutPosition() + getOwner().getFirstSeqPos();
     	
     	if (!shiftChangeList.isEmpty()) {
       	Iterator<ShiftChange> iterator = shiftChangeList.iterator();
@@ -94,49 +91,52 @@ public class PherogramAlignmentModel {
       		if ((shiftChangeEntry.shiftChange < 0) && (Math2.isBetween(baseCallIndex, 
       				shiftChangeEntry.baseCallIndex, shiftChangeEntry.baseCallIndex - shiftChangeEntry.shiftChange - 1))) {
       			
-      			return GAP;
+      			resultPos -= baseCallIndex - shiftChangeEntry.baseCallIndex;
+      			return new PherogramAlignmentRelation(resultPos - 1, PherogramAlignmentRelation.GAP,	resultPos);
       		}
       		else if ((shiftChangeEntry.baseCallIndex <= baseCallIndex)) {
-      			result += shiftChangeEntry.shiftChange;
+      			resultPos += shiftChangeEntry.shiftChange;
       		}
       		else {
-      			return result;
+      			return new PherogramAlignmentRelation(resultPos, resultPos, resultPos);
       		}
       	}
     	}
-  		return result;
-  	}
-  	else {
-  		return OUT_OF_RANGE;
+			return new PherogramAlignmentRelation(resultPos, resultPos, resultPos);
   	}
   }
   
   
-  public int baseCallIndexByEditableIndex(int editableIndex) {
-  	int result = editableIndex - getOwner().getFirstSeqPos() + getOwner().getLeftCutPosition();
+  public PherogramAlignmentRelation baseCallIndexByEditableIndex(int editableIndex) {
+  	int resultPos = editableIndex - getOwner().getFirstSeqPos() + getOwner().getLeftCutPosition();
   	
   	if (!shiftChangeList.isEmpty()) {
     	Iterator<ShiftChange> iterator = shiftChangeList.iterator();
     	while (iterator.hasNext()) {
     		ShiftChange shiftChangeEntry = iterator.next();
-    		if ((shiftChangeEntry.shiftChange > 0) && (Math2.isBetween(result, 
+    		if ((shiftChangeEntry.shiftChange > 0) && (Math2.isBetween(resultPos, 
     				shiftChangeEntry.baseCallIndex, shiftChangeEntry.baseCallIndex + shiftChangeEntry.shiftChange - 1))) {
     			
-    			return GAP;
+    			return new PherogramAlignmentRelation(shiftChangeEntry.baseCallIndex - 1, PherogramAlignmentRelation.GAP,	
+    					shiftChangeEntry.baseCallIndex);
     		}
-    		else if ((shiftChangeEntry.baseCallIndex <= result)) {
-    			result -= shiftChangeEntry.shiftChange;
+    		else if ((shiftChangeEntry.baseCallIndex <= resultPos)) {
+    			resultPos -= shiftChangeEntry.shiftChange;
     		}
     		else {
-    			return result;
+    			break;  // End loop and go on with range check. 
     		}
     	}
   	}
-  	if (Math2.isBetween(result, 1, getOwner().getProvider().getSequenceLength())) {
-  		return result;
+  	if (resultPos < 1) {
+  		return new PherogramAlignmentRelation(PherogramAlignmentRelation.OUT_OF_RANGE, PherogramAlignmentRelation.OUT_OF_RANGE, 1);
+  	}
+  	else if (resultPos > getOwner().getProvider().getSequenceLength()) {
+  		return new PherogramAlignmentRelation(getOwner().getProvider().getSequenceLength(), 
+  				PherogramAlignmentRelation.OUT_OF_RANGE, PherogramAlignmentRelation.OUT_OF_RANGE);
   	}
   	else {
-  		return OUT_OF_RANGE;
+  		return new PherogramAlignmentRelation(resultPos, resultPos, resultPos);
   	}
   }
   
