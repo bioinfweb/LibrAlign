@@ -63,20 +63,36 @@ public class PherogramAlignmentModelTest {
 		  model.setShiftChange(10, 2);
 		  model.setShiftChange(20, -2);
 		  
-		  assertEquals(10, model.editableIndexByBaseCallIndex(5));
-		  assertEquals(14, model.editableIndexByBaseCallIndex(9));
-		  assertEquals(17, model.editableIndexByBaseCallIndex(10));
-		  assertEquals(18, model.editableIndexByBaseCallIndex(11));
+		  assertEquals(10, model.editableIndexByBaseCallIndex(5).getCorresponding());
+		  assertEquals(14, model.editableIndexByBaseCallIndex(9).getCorresponding());
+		  assertEquals(17, model.editableIndexByBaseCallIndex(10).getCorresponding());
+		  assertEquals(18, model.editableIndexByBaseCallIndex(11).getCorresponding());
 
-		  assertEquals(25, model.editableIndexByBaseCallIndex(18));
-		  assertEquals(26, model.editableIndexByBaseCallIndex(19));
-		  assertEquals(PherogramAlignmentModel.GAP, model.editableIndexByBaseCallIndex(20));
-		  assertEquals(PherogramAlignmentModel.GAP, model.editableIndexByBaseCallIndex(21));
-		  assertEquals(27, model.editableIndexByBaseCallIndex(22));
-		  assertEquals(28, model.editableIndexByBaseCallIndex(23));
+		  assertEquals(25, model.editableIndexByBaseCallIndex(18).getCorresponding());
+		  assertEquals(26, model.editableIndexByBaseCallIndex(19).getCorresponding());
+		  
+		  PherogramAlignmentRelation relation = model.editableIndexByBaseCallIndex(20);
+		  assertEquals(26, relation.getBefore());
+		  assertEquals(PherogramAlignmentRelation.GAP, relation.getCorresponding());
+		  assertEquals(27, relation.getAfter());
+		  
+		  relation = model.editableIndexByBaseCallIndex(21);
+		  assertEquals(26, relation.getBefore());
+		  assertEquals(PherogramAlignmentRelation.GAP, relation.getCorresponding());
+		  assertEquals(27, relation.getAfter());
+		  
+		  assertEquals(27, model.editableIndexByBaseCallIndex(22).getCorresponding());
+		  assertEquals(28, model.editableIndexByBaseCallIndex(23).getCorresponding());
 
-		  assertEquals(PherogramAlignmentModel.OUT_OF_RANGE, model.editableIndexByBaseCallIndex(0));
-		  assertEquals(PherogramAlignmentModel.OUT_OF_RANGE, model.editableIndexByBaseCallIndex(851));  // The source pherogram base call sequence has a length of 850.
+		  relation = model.editableIndexByBaseCallIndex(0);
+		  assertEquals(PherogramAlignmentRelation.OUT_OF_RANGE, relation.getBefore());
+		  assertEquals(PherogramAlignmentRelation.OUT_OF_RANGE, relation.getCorresponding());
+		  assertEquals(6, relation.getAfter());
+
+		  relation = model.editableIndexByBaseCallIndex(851);
+		  assertEquals(855, relation.getBefore());
+		  assertEquals(PherogramAlignmentRelation.OUT_OF_RANGE, relation.getCorresponding());
+		  assertEquals(PherogramAlignmentRelation.OUT_OF_RANGE, relation.getAfter());
 		}
 		catch (IOException | UnsupportedChromatogramFormatException e) {
 			fail(e.getMessage());
@@ -108,20 +124,38 @@ public class PherogramAlignmentModelTest {
 		  model.setShiftChange(10, 2);
 		  model.setShiftChange(20, -2);
 		  
-		  assertEquals(5, model.baseCallIndexByEditableIndex(10));
-		  assertEquals(9, model.baseCallIndexByEditableIndex(14));
-		  assertEquals(PherogramAlignmentModel.GAP, model.baseCallIndexByEditableIndex(15));
-		  assertEquals(PherogramAlignmentModel.GAP, model.baseCallIndexByEditableIndex(16));
-		  assertEquals(10, model.baseCallIndexByEditableIndex(17));
-		  assertEquals(11, model.baseCallIndexByEditableIndex(18));
+		  assertEquals(5, model.baseCallIndexByEditableIndex(10).getCorresponding());
+		  assertEquals(9, model.baseCallIndexByEditableIndex(14).getCorresponding());
+		  
+		  PherogramAlignmentRelation relation = model.baseCallIndexByEditableIndex(15);
+		  assertEquals(9, relation.getBefore());
+		  assertEquals(PherogramAlignmentRelation.GAP, relation.getCorresponding());
+		  assertEquals(10, relation.getAfter());
+		  
+		  relation = model.baseCallIndexByEditableIndex(16);
+		  assertEquals(9, relation.getBefore());
+		  assertEquals(PherogramAlignmentRelation.GAP, relation.getCorresponding());
+		  assertEquals(10, relation.getAfter());
+		  
+		  assertEquals(10, model.baseCallIndexByEditableIndex(17).getCorresponding());
+		  assertEquals(11, model.baseCallIndexByEditableIndex(18).getCorresponding());
 
-		  assertEquals(18, model.baseCallIndexByEditableIndex(25));
-		  assertEquals(19, model.baseCallIndexByEditableIndex(26));
-		  assertEquals(22, model.baseCallIndexByEditableIndex(27));
-		  assertEquals(23, model.baseCallIndexByEditableIndex(28));
+		  assertEquals(18, model.baseCallIndexByEditableIndex(25).getCorresponding());
+		  assertEquals(19, model.baseCallIndexByEditableIndex(26).getCorresponding());
+		  assertEquals(22, model.baseCallIndexByEditableIndex(27).getCorresponding());
+		  assertEquals(23, model.baseCallIndexByEditableIndex(28).getCorresponding());
 
-		  assertEquals(PherogramAlignmentModel.OUT_OF_RANGE, model.editableIndexByBaseCallIndex(0));
-		  assertEquals(PherogramAlignmentModel.OUT_OF_RANGE, model.editableIndexByBaseCallIndex(851));  // The source pherogram base call sequence has a length of 850.
+		  relation = model.baseCallIndexByEditableIndex(5);
+		  assertEquals(PherogramAlignmentRelation.OUT_OF_RANGE, relation.getBefore());
+		  assertEquals(PherogramAlignmentRelation.OUT_OF_RANGE, relation.getCorresponding());
+		  assertEquals(1, relation.getAfter());
+		  assertEquals(1, model.baseCallIndexByEditableIndex(6).getCorresponding());
+		  
+		  assertEquals(850, model.baseCallIndexByEditableIndex(855).getCorresponding());
+		  relation = model.baseCallIndexByEditableIndex(856);
+		  assertEquals(850, relation.getBefore());
+		  assertEquals(PherogramAlignmentRelation.OUT_OF_RANGE, relation.getCorresponding());
+		  assertEquals(PherogramAlignmentRelation.OUT_OF_RANGE, relation.getAfter());  // The source pherogram base call sequence has a length of 850.
 		}
 		catch (IOException | UnsupportedChromatogramFormatException e) {
 			fail(e.getMessage());
