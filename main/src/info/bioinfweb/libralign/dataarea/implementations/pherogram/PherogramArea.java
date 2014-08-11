@@ -31,6 +31,7 @@ import info.bioinfweb.libralign.pherogram.PherogramPainter;
 import info.bioinfweb.libralign.pherogram.PherogramProvider;
 
 import java.awt.RenderingHints;
+import java.awt.geom.Rectangle2D;
 import java.util.EnumSet;
 import java.util.Set;
 
@@ -81,19 +82,43 @@ public class PherogramArea extends DataArea implements PherogramComponent {
 			lowerBorder = lowerBorderRelation.getAfter();  // For a valid index, getAfter() is equal to getCorresponding() 
 		}
 
-		return new SimpleSequenceInterval(Math.max(1, lowerBorder - 1),	upperBorder);  // One is subtracted to draw half visible positions.
+		return new SimpleSequenceInterval(Math.max(1, lowerBorder - 1),	Math.min(getProvider().getSequenceLength(), upperBorder + 1));  // Extend one in each direction to draw half visible positions.
 	}
 	
 
 	@Override
 	public void paint(TICPaintEvent e) {
 		e.getGraphics().setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+		
+		double leftX = (getAlignmentModel().editableIndexByBaseCallIndex(getLeftCutPosition()).getAfter() - 1) * 
+				getOwner().getCompoundWidth();
+		double rightX = getAlignmentModel().editableIndexByBaseCallIndex(getRightCutPosition()).getBefore() * 
+				getOwner().getCompoundWidth();
+		
+		// Draw cot off backgroud:
+		e.getGraphics().setColor(getFormats().getCutBackgroundColor());
+		if (leftX >= e.getRectangle().x) {
+			e.getGraphics().fill(new Rectangle2D.Double(e.getRectangle().x, e.getRectangle().y, 
+					leftX - e.getRectangle().x, e.getRectangle().height));
+		}
+		else {
+			leftX = e.getRectangle().x;
+		}
+		if (rightX <= e.getRectangle().x + e.getRectangle().width) {
+			e.getGraphics().fill(new Rectangle2D.Double(rightX, e.getRectangle().y, e.getRectangle().x + e.getRectangle().width - rightX, e.getRectangle().height));
+		}
+		else {
+			rightX = e.getRectangle().x + e.getRectangle().width;
+		}
+		
+		// Draw center background:
 		e.getGraphics().setColor(getFormats().getBackgroundColor());
-		e.getGraphics().fillRect(e.getRectangle().x, e.getRectangle().y, e.getRectangle().width, e.getRectangle().height);
+		e.getGraphics().fill(new Rectangle2D.Double(leftX, e.getRectangle().y, rightX - leftX, e.getRectangle().height));
 
+		// Draw curves:
 		SimpleSequenceInterval paintRange = calculatePaintRange(e);
 		painter.paintScaledTraceCurves(paintRange.getFirstPos(), paintRange.getLastPos(), e.getGraphics(), 
-				(paintRange.getFirstPos() - 0.5) * getOwner().getCompoundWidth(), 0);
+				(getFirstSeqPos() - getLeftCutPosition() + paintRange.getFirstPos() - 0.5) * getOwner().getCompoundWidth(), 0);
 	}
 
 
