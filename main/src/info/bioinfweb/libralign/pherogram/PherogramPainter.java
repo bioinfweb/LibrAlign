@@ -239,7 +239,7 @@ public class PherogramPainter {
 		for (NucleotideCompound nucleotide: PherogramProvider.TRACE_CURVE_NUCLEOTIDES) {
 			Path2D path = new Path2D.Double();
 			double x = paintX;
-			int startTraceIndex = getTracePosition(startBaseCallIndex); //owner.getProvider().getBaseCallPosition(startBaseCallIndex);
+			int startTraceIndex = getTracePosition(startBaseCallIndex);
 			path.moveTo(x, paintY + height - 
 					owner.getProvider().getTraceValue(nucleotide, startTraceIndex) * owner.getVerticalScale());
 			
@@ -249,25 +249,34 @@ public class PherogramPainter {
 				shiftChange = shiftChangeIterator.next();
 			}
 			
-			int stepWidth = 1; 
+			int stepWidth = 1;
+			int horizontalScaleFactor = 1;
 			for (int baseCallIndex = startBaseCallIndex; baseCallIndex < endBaseCallIndex; baseCallIndex += stepWidth) {
 				// Treat possible gaps:
 				if ((shiftChange != null) && (baseCallIndex + 1 == shiftChange.getBaseCallIndex())) {
-					stepWidth = -shiftChange.getShiftChange() + 1;
-					if (shiftChangeIterator.hasNext()) {
-						shiftChange = shiftChangeIterator.next();
+					if (shiftChange.getShiftChange() < 0) {  // Deletion in editable sequence
+						stepWidth = -shiftChange.getShiftChange() + 1;
+						horizontalScaleFactor = 1;
+						if (shiftChangeIterator.hasNext()) {
+							shiftChange = shiftChangeIterator.next();
+						}
+						else {
+							shiftChange = null;
+						}
 					}
-					else {
-						shiftChange = null;
+					else {  // Insertion in editable sequence
+						stepWidth = 1;
+						horizontalScaleFactor = shiftChange.getShiftChange() + 1;
 					}
 				}
 				else {
 					stepWidth = 1;
+					horizontalScaleFactor = 1;
 				}
 				
 				// Calculate scale:
-				int endTraceIndex = getTracePosition(baseCallIndex + stepWidth);  //owner.getProvider().getBaseCallPosition(baseCallIndex + stepWidth);
-				double horizontalScale = pherogramArea.getOwner().getCompoundWidth() / (double)(endTraceIndex - startTraceIndex);
+				int endTraceIndex = getTracePosition(baseCallIndex + stepWidth);
+				double horizontalScale = horizontalScaleFactor * pherogramArea.getOwner().getCompoundWidth() / (double)(endTraceIndex - startTraceIndex);
 
 				for (int traceX = startTraceIndex; traceX < endTraceIndex; traceX++) {
 					x += horizontalScale;
