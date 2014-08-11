@@ -22,11 +22,13 @@ package info.bioinfweb.libralign.pherogram;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.geom.Path2D;
+import java.util.Iterator;
 
 import org.biojava3.core.sequence.compound.NucleotideCompound;
 
 import info.bioinfweb.libralign.dataarea.implementations.pherogram.PherogramAlignmentModel;
 import info.bioinfweb.libralign.dataarea.implementations.pherogram.PherogramArea;
+import info.bioinfweb.libralign.dataarea.implementations.pherogram.ShiftChange;
 import info.bioinfweb.libralign.pherogram.PherogramFormats.QualityOutputType;
 
 
@@ -209,6 +211,20 @@ public class PherogramPainter {
 	}
 	
 	
+	private int getTracePosition(int baseCallIndex) {
+		if (baseCallIndex == 1) {  // BioJava indices start with 1
+			return 1;
+		}
+		else if (baseCallIndex >= owner.getProvider().getSequenceLength()) {
+			return owner.getProvider().getTraceLength();
+		}
+		else {
+			return (owner.getProvider().getBaseCallPosition(baseCallIndex) + 
+					owner.getProvider().getBaseCallPosition(baseCallIndex + 1)) / 2; 
+		}
+	}
+	
+	
 	public double paintScaledTraceCurves(int startBaseCallIndex, int endBaseCallIndex, Graphics2D g, 
 			double paintX, double paintY) throws IllegalStateException {
 		
@@ -223,12 +239,34 @@ public class PherogramPainter {
 		for (NucleotideCompound nucleotide: PherogramProvider.TRACE_CURVE_NUCLEOTIDES) {
 			Path2D path = new Path2D.Double();
 			double x = paintX;
-			int startTraceIndex = owner.getProvider().getBaseCallPosition(startBaseCallIndex);
+			int startTraceIndex = getTracePosition(startBaseCallIndex); //owner.getProvider().getBaseCallPosition(startBaseCallIndex);
 			path.moveTo(x, paintY + height - 
 					owner.getProvider().getTraceValue(nucleotide, startTraceIndex) * owner.getVerticalScale());
 			
-			for (int baseCallIndex = startBaseCallIndex; baseCallIndex < endBaseCallIndex; baseCallIndex++) {
-				int endTraceIndex = owner.getProvider().getBaseCallPosition(baseCallIndex + 1);
+			Iterator<ShiftChange> shiftChangeIterator = pherogramArea.getAlignmentModel().shiftChangeIterator();
+			ShiftChange shiftChange = null;
+			if (shiftChangeIterator.hasNext()) {
+				shiftChange = shiftChangeIterator.next();
+			}
+			
+			int stepWidth = 1; 
+			for (int baseCallIndex = startBaseCallIndex; baseCallIndex < endBaseCallIndex; baseCallIndex += stepWidth) {
+				// Treat possible gaps:
+				if ((shiftChange != null) && (baseCallIndex + 1 == shiftChange.getBaseCallIndex())) {
+					stepWidth = -shiftChange.getShiftChange() + 1;
+					if (shiftChangeIterator.hasNext()) {
+						shiftChange = shiftChangeIterator.next();
+					}
+					else {
+						shiftChange = null;
+					}
+				}
+				else {
+					stepWidth = 1;
+				}
+				
+				// Calculate scale:
+				int endTraceIndex = getTracePosition(baseCallIndex + stepWidth);  //owner.getProvider().getBaseCallPosition(baseCallIndex + stepWidth);
 				double horizontalScale = pherogramArea.getOwner().getCompoundWidth() / (double)(endTraceIndex - startTraceIndex);
 
 				for (int traceX = startTraceIndex; traceX < endTraceIndex; traceX++) {

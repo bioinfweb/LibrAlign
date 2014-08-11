@@ -50,6 +50,7 @@ main/src/info/bioinfweb/libralign/dataarea/implementations/package-info.java -te
 main/src/info/bioinfweb/libralign/dataarea/implementations/pherogram/PherogramAlignmentModel.java -text svneol=unset#text/plain
 main/src/info/bioinfweb/libralign/dataarea/implementations/pherogram/PherogramAlignmentRelation.java -text svneol=unset#text/plain
 main/src/info/bioinfweb/libralign/dataarea/implementations/pherogram/PherogramArea.java -text svneol=unset#text/plain
+main/src/info/bioinfweb/libralign/dataarea/implementations/pherogram/ShiftChange.java -text svneol=unset#text/plain
 main/src/info/bioinfweb/libralign/dataarea/implementations/pherogram/package-info.java -text svneol=unset#text/plain
 main/src/info/bioinfweb/libralign/dataarea/package-info.java -text svneol=unset#text/plain
 main/src/info/bioinfweb/libralign/package-info.java -text svneol=unset#text/plain

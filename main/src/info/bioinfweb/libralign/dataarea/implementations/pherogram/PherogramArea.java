@@ -105,7 +105,8 @@ public class PherogramArea extends DataArea implements PherogramComponent {
 			leftX = e.getRectangle().x;
 		}
 		if (rightX <= e.getRectangle().x + e.getRectangle().width) {
-			e.getGraphics().fill(new Rectangle2D.Double(rightX, e.getRectangle().y, e.getRectangle().x + e.getRectangle().width - rightX, e.getRectangle().height));
+			e.getGraphics().fill(new Rectangle2D.Double(rightX, e.getRectangle().y, 
+					e.getRectangle().x + e.getRectangle().width - rightX, e.getRectangle().height));
 		}
 		else {
 			rightX = e.getRectangle().x + e.getRectangle().width;
@@ -118,7 +119,7 @@ public class PherogramArea extends DataArea implements PherogramComponent {
 		// Draw curves:
 		SimpleSequenceInterval paintRange = calculatePaintRange(e);
 		painter.paintScaledTraceCurves(paintRange.getFirstPos(), paintRange.getLastPos(), e.getGraphics(), 
-				(getFirstSeqPos() - getLeftCutPosition() + paintRange.getFirstPos() - 0.5) * getOwner().getCompoundWidth(), 0);
+				(getFirstSeqPos() - getLeftCutPosition() + paintRange.getFirstPos()) * getOwner().getCompoundWidth(), 0);
 	}
 
 

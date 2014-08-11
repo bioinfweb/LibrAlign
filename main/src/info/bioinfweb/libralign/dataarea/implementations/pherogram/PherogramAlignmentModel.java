@@ -34,20 +34,7 @@ import info.bioinfweb.commons.Math2;
  * @author Ben St&ouml;ver
  */
 public class PherogramAlignmentModel {
-	private static class ShiftChange {
-		public int baseCallIndex = 0;
-		public int shiftChange = 0;
-
-	
-		public ShiftChange(int baseCallIndex, int shiftChange) {
-			super();
-			this.baseCallIndex = baseCallIndex;
-			this.shiftChange = shiftChange;
-		}		
-	}
-	
-	
-  private PherogramArea owner;
+	private PherogramArea owner;
   private List<ShiftChange> shiftChangeList = new ArrayList<ShiftChange>();
   
 	
@@ -174,5 +161,27 @@ public class PherogramAlignmentModel {
 	  	}
 	  	shiftChangeList.add(listIndex, new ShiftChange(baseCallIndex, shiftChange));
   	}
+  }
+  
+  
+  public Iterator<ShiftChange> shiftChangeIterator() {
+  	final Iterator<ShiftChange> iterator = shiftChangeList.iterator();
+  	return new Iterator<ShiftChange>() {
+			@Override
+			public boolean hasNext() {
+				return iterator.hasNext();
+			}
+
+			@Override
+			public ShiftChange next() {
+				return iterator.next();
+			}
+
+			@Override
+			public void remove() {
+				throw new UnsupportedOperationException();
+				//TODO Possibly delegate to interator in future versions and fire according events.
+			}
+		};
   }
 }
