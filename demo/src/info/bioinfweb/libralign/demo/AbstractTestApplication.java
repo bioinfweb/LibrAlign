@@ -47,7 +47,7 @@ public class AbstractTestApplication {
 	protected AlignmentArea createAlignmentArea() {
 		try {
 			BioJavaPherogramProvider pherogramProvider = new BioJavaPherogramProvider(ChromatogramFactory.create(
-	      	new File("data\\Test_qualityScore.scf")));	
+	      	new File("data\\Test_qualityScore.scf")));
 			
 			Alignment<DNASequence, NucleotideCompound> alignment = 
 					new SimpleAlignment<DNASequence, NucleotideCompound>();
@@ -59,7 +59,7 @@ public class AbstractTestApplication {
 			for (int i = 1; i <= pherogramProvider.getSequenceLength(); i++) {
 				seqBuffer.append(pherogramProvider.getBaseCall(i).getUpperedBase());
 			}
-			alignment.add("Sequence 4", new DNASequence(seqBuffer.toString()));
+			alignment.add("Sequence 4", new DNASequence("-----" + seqBuffer.toString()));
 			
 			BioJavaSequenceDataProvider<DNASequence, NucleotideCompound> sequenceProvider = 
 					new BioJavaSequenceDataProvider<DNASequence, NucleotideCompound>(
@@ -73,8 +73,11 @@ public class AbstractTestApplication {
 			//sequenceIndexArea.setFirstIndex(5);
 			//sequenceIndexArea.setHeight(25);
 			result.getDataAreas().getTopAreas().add(sequenceIndexArea);
-			result.getDataAreas().getSequenceAreas(sequenceProvider.sequenceIDByName("Sequence 4")).add(
-					new PherogramArea(result, pherogramProvider));
+			PherogramArea pherogramArea = new PherogramArea(result, pherogramProvider);
+			pherogramArea.setFirstSeqPos(34 + 5);
+			pherogramArea.setLeftCutPosition(34);
+			pherogramArea.setRightCutPosition(820);
+			result.getDataAreas().getSequenceAreas(sequenceProvider.sequenceIDByName("Sequence 4")).add(pherogramArea);
 			result.getDataAreas().getBottomAreas().add(new ConsensusSequenceArea(result));
 			return result;
 		}
