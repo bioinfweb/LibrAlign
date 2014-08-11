@@ -95,7 +95,7 @@ public class PherogramArea extends DataArea implements PherogramComponent {
 		double rightX = getAlignmentModel().editableIndexByBaseCallIndex(getRightCutPosition()).getBefore() * 
 				getOwner().getCompoundWidth();
 		
-		// Draw cot off backgroud:
+		// Draw cut off background:
 		e.getGraphics().setColor(getFormats().getCutBackgroundColor());
 		if (leftX >= e.getRectangle().x) {
 			e.getGraphics().fill(new Rectangle2D.Double(e.getRectangle().x, e.getRectangle().y, 
