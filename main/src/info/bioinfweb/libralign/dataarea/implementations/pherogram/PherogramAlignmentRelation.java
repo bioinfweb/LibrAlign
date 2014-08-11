@@ -19,6 +19,8 @@
 package info.bioinfweb.libralign.dataarea.implementations.pherogram;
 
 
+import java.util.ListIterator;
+
 import info.bioinfweb.libralign.AlignmentArea;
 
 
@@ -47,6 +49,7 @@ public class PherogramAlignmentRelation {
   private int before = OUT_OF_RANGE;	
   private int corresponding = OUT_OF_RANGE;	
   private int after = OUT_OF_RANGE;
+	private ListIterator<ShiftChange> iterator;
   
   
 	public PherogramAlignmentRelation() {
@@ -54,11 +57,12 @@ public class PherogramAlignmentRelation {
 	}
 
 
-	public PherogramAlignmentRelation(int before, int corresponding, int after) {
+	public PherogramAlignmentRelation(int before, int corresponding, int after, ListIterator<ShiftChange> iterator) {
 		super();
 		this.before = before;
 		this.corresponding = corresponding;
 		this.after = after;
+		this.iterator = iterator;
 	}
 
 
@@ -74,11 +78,6 @@ public class PherogramAlignmentRelation {
 	}
 	
 	
-	public void setBefore(int before) {
-		this.before = before;
-	}
-	
-	
 	/**
 	 * Returns the position corresponding to the one specified to obtain this result object. 
 	 * 
@@ -87,11 +86,6 @@ public class PherogramAlignmentRelation {
 	 */
 	public int getCorresponding() {
 		return corresponding;
-	}
-	
-	
-	public void setCorresponding(int corresponding) {
-		this.corresponding = corresponding;
 	}
 	
 	
@@ -107,7 +101,10 @@ public class PherogramAlignmentRelation {
 	}
 	
 	
-	public void setAfter(int after) {
-		this.after = after;
+	/**
+	 * Returns an iterator positioned before the next gap (shift change entry). 
+	 */
+	public ListIterator<ShiftChange> getIterator() {
+		return iterator;
 	}	
 }

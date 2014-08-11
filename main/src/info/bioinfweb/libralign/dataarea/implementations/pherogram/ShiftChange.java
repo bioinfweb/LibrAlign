@@ -46,5 +46,5 @@ public class ShiftChange {
 
 	public int getShiftChange() {
 		return shiftChange;
-	}		
+	}
 }

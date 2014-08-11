@@ -20,8 +20,8 @@ package info.bioinfweb.libralign.dataarea.implementations.pherogram;
 
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
+import java.util.ListIterator;
 
 import info.bioinfweb.commons.Math2;
 
@@ -61,35 +61,39 @@ public class PherogramAlignmentModel {
   public PherogramAlignmentRelation editableIndexByBaseCallIndex(int baseCallIndex) {
   	if (baseCallIndex < 1) {  // BioJava indices start with 1
   		return new PherogramAlignmentRelation(PherogramAlignmentRelation.OUT_OF_RANGE, PherogramAlignmentRelation.OUT_OF_RANGE, 
-  				1 - getOwner().getLeftCutPosition() + getOwner().getFirstSeqPos());
+  				1 - getOwner().getLeftCutPosition() + getOwner().getFirstSeqPos(), shiftChangeList.listIterator());
   	}
   	else if (baseCallIndex > getOwner().getProvider().getSequenceLength()) {
   		return new PherogramAlignmentRelation(
   				editableIndexByBaseCallIndex(getOwner().getProvider().getSequenceLength()).getCorresponding(), 
-  				PherogramAlignmentRelation.OUT_OF_RANGE, PherogramAlignmentRelation.OUT_OF_RANGE);
+  				PherogramAlignmentRelation.OUT_OF_RANGE, PherogramAlignmentRelation.OUT_OF_RANGE, 
+  				shiftChangeList.listIterator(shiftChangeList.size()));  // Iterator positioned behind the last element of the list.
   	}
     else {
     	int resultPos = baseCallIndex - getOwner().getLeftCutPosition() + getOwner().getFirstSeqPos();
     	
+    	ListIterator<ShiftChange> iterator = shiftChangeList.listIterator();
     	if (!shiftChangeList.isEmpty()) {
-      	Iterator<ShiftChange> iterator = shiftChangeList.iterator();
       	while (iterator.hasNext()) {
       		ShiftChange shiftChangeEntry = iterator.next();
       		if ((shiftChangeEntry.shiftChange < 0) && (Math2.isBetween(baseCallIndex, 
       				shiftChangeEntry.baseCallIndex, shiftChangeEntry.baseCallIndex - shiftChangeEntry.shiftChange - 1))) {
       			
       			resultPos -= baseCallIndex - shiftChangeEntry.baseCallIndex;
-      			return new PherogramAlignmentRelation(resultPos - 1, PherogramAlignmentRelation.GAP,	resultPos);
+      			return new PherogramAlignmentRelation(resultPos - 1, PherogramAlignmentRelation.GAP,	resultPos, iterator);
       		}
       		else if ((shiftChangeEntry.baseCallIndex <= baseCallIndex)) {
       			resultPos += shiftChangeEntry.shiftChange;
       		}
       		else {
-      			return new PherogramAlignmentRelation(resultPos, resultPos, resultPos);
+      			if (iterator.hasPrevious()) {
+      				iterator.previous();
+      			}
+      			return new PherogramAlignmentRelation(resultPos, resultPos, resultPos, iterator);
       		}
       	}
     	}
-			return new PherogramAlignmentRelation(resultPos, resultPos, resultPos);
+			return new PherogramAlignmentRelation(resultPos, resultPos, resultPos, iterator);
   	}
   }
   
@@ -97,33 +101,37 @@ public class PherogramAlignmentModel {
   public PherogramAlignmentRelation baseCallIndexByEditableIndex(int editableIndex) {
   	int resultPos = editableIndex - getOwner().getFirstSeqPos() + getOwner().getLeftCutPosition();
   	
+  	ListIterator<ShiftChange> iterator = shiftChangeList.listIterator(); //shiftChangeList.iterator();
   	if (!shiftChangeList.isEmpty()) {
-    	Iterator<ShiftChange> iterator = shiftChangeList.iterator();
     	while (iterator.hasNext()) {
     		ShiftChange shiftChangeEntry = iterator.next();
     		if ((shiftChangeEntry.shiftChange > 0) && (Math2.isBetween(resultPos, 
     				shiftChangeEntry.baseCallIndex, shiftChangeEntry.baseCallIndex + shiftChangeEntry.shiftChange - 1))) {
     			
     			return new PherogramAlignmentRelation(shiftChangeEntry.baseCallIndex - 1, PherogramAlignmentRelation.GAP,	
-    					shiftChangeEntry.baseCallIndex);
+    					shiftChangeEntry.baseCallIndex, iterator);
     		}
     		else if ((shiftChangeEntry.baseCallIndex <= resultPos)) {
     			resultPos -= shiftChangeEntry.shiftChange;
     		}
     		else {
+    			if (iterator.hasPrevious()) {
+    				iterator.previous();  // Move iterator back by one position if the next gap has not been reached.
+    			}
     			break;  // End loop and go on with range check. 
     		}
     	}
   	}
   	if (resultPos < 1) {
-  		return new PherogramAlignmentRelation(PherogramAlignmentRelation.OUT_OF_RANGE, PherogramAlignmentRelation.OUT_OF_RANGE, 1);
+  		return new PherogramAlignmentRelation(PherogramAlignmentRelation.OUT_OF_RANGE, PherogramAlignmentRelation.OUT_OF_RANGE, 1, 
+  				iterator);
   	}
   	else if (resultPos > getOwner().getProvider().getSequenceLength()) {
   		return new PherogramAlignmentRelation(getOwner().getProvider().getSequenceLength(), 
-  				PherogramAlignmentRelation.OUT_OF_RANGE, PherogramAlignmentRelation.OUT_OF_RANGE);
+  				PherogramAlignmentRelation.OUT_OF_RANGE, PherogramAlignmentRelation.OUT_OF_RANGE, iterator);
   	}
   	else {
-  		return new PherogramAlignmentRelation(resultPos, resultPos, resultPos);
+  		return new PherogramAlignmentRelation(resultPos, resultPos, resultPos, iterator);
   	}
   }
   
@@ -164,9 +172,9 @@ public class PherogramAlignmentModel {
   }
   
   
-  public Iterator<ShiftChange> shiftChangeIterator() {
-  	final Iterator<ShiftChange> iterator = shiftChangeList.iterator();
-  	return new Iterator<ShiftChange>() {
+  public ListIterator<ShiftChange> shiftChangeIterator(int index) {
+  	final ListIterator<ShiftChange> iterator = shiftChangeList.listIterator(index);
+  	return new ListIterator<ShiftChange>() {
 			@Override
 			public boolean hasNext() {
 				return iterator.hasNext();
@@ -182,6 +190,43 @@ public class PherogramAlignmentModel {
 				throw new UnsupportedOperationException();
 				//TODO Possibly delegate to interator in future versions and fire according events.
 			}
+
+			@Override
+			public void add(ShiftChange e) {
+				throw new UnsupportedOperationException();
+				//TODO Possibly delegate to interator in future versions and fire according events.
+			}
+
+			@Override
+			public boolean hasPrevious() {
+				return iterator.hasPrevious();
+			}
+
+			@Override
+			public int nextIndex() {
+				return iterator.nextIndex();
+			}
+
+			@Override
+			public ShiftChange previous() {
+				return iterator.previous();
+			}
+
+			@Override
+			public int previousIndex() {
+				return iterator.previousIndex();
+			}
+
+			@Override
+			public void set(ShiftChange e) {
+				throw new UnsupportedOperationException();
+				//TODO Possibly delegate to interator in future versions and fire according events.
+			}
 		};
+  }
+
+
+  public ListIterator<ShiftChange> shiftChangeIterator() {
+  	return shiftChangeIterator(0);
   }
 }
