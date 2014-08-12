@@ -26,6 +26,7 @@ import info.bioinfweb.libralign.pherogram.BioJavaPherogramProvider;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ListIterator;
 
 import org.biojava.bio.chromatogram.ChromatogramFactory;
 import org.biojava.bio.chromatogram.UnsupportedChromatogramFormatException;
@@ -160,5 +161,45 @@ public class PherogramAlignmentModelTest {
 		catch (IOException | UnsupportedChromatogramFormatException e) {
 			fail(e.getMessage());
 		}
+	}
+	
+	
+	@Test
+	public void test_shiftChangeIteratorByBaseCallIndex() {
+		try {
+			PherogramArea pherogramArea = new PherogramArea(null, new BioJavaPherogramProvider(ChromatogramFactory.create(
+	      	new File("data\\pherograms\\Test_qualityScore.scf"))));
+			pherogramArea.setFirstSeqPos(10);
+			pherogramArea.setLeftCutPosition(5);
+			pherogramArea.setRightCutPosition(55);
+			
+			PherogramAlignmentModel model = new PherogramAlignmentModel(pherogramArea);
+		  model.setShiftChange(10, 2);
+		  model.setShiftChange(20, -2);
+		  
+		  ListIterator<ShiftChange> iterator = model.shiftChangeIteratorByBaseCallIndex(0);
+		  assertEquals(10, iterator.next().getBaseCallIndex());
+		  assertEquals(20, iterator.next().getBaseCallIndex());
+		  assertFalse(iterator.hasNext());
+		  
+		  iterator = model.shiftChangeIteratorByBaseCallIndex(10);
+		  assertEquals(10, iterator.next().getBaseCallIndex());
+		  assertEquals(20, iterator.next().getBaseCallIndex());
+		  assertFalse(iterator.hasNext());
+		  
+		  iterator = model.shiftChangeIteratorByBaseCallIndex(11);
+		  assertEquals(20, iterator.next().getBaseCallIndex());
+		  assertFalse(iterator.hasNext());
+		  
+		  iterator = model.shiftChangeIteratorByBaseCallIndex(20);
+		  assertEquals(20, iterator.next().getBaseCallIndex());
+		  assertFalse(iterator.hasNext());
+		  
+		  iterator = model.shiftChangeIteratorByBaseCallIndex(21);
+		  assertFalse(iterator.hasNext());
+		}
+		catch (IOException | UnsupportedChromatogramFormatException e) {
+			fail(e.getMessage());
+		}		  
 	}
 }
