@@ -21,6 +21,7 @@ package info.bioinfweb.libralign.pherogram;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
+import java.awt.geom.Line2D;
 import java.awt.geom.Path2D;
 import java.awt.geom.Rectangle2D;
 import java.util.Iterator;
@@ -297,7 +298,6 @@ public class PherogramPainter {
 						stepWidth = 1;
 						gapPattern = getGapPattern(pherogramArea, shiftChange);
 						editPosPerBaseCallPos = shiftChange.getShiftChange() + 1 - gapPattern.gapCount;
-						// Zahl der Positionen mit Lücken abziehen und unten Zeichenvorgang bei Lücken unterbrechen und in aktuellem Schleifendurchlauf graues Rechteck zeichnen
 					}
 
 					if (shiftChangeIterator.hasNext()) {
@@ -312,7 +312,7 @@ public class PherogramPainter {
 					editPosPerBaseCallPos = 1;
 				}
 				
-				// Calculate scale:
+				// Calculate scale and initialize variables:
 				int endTraceIndex = getTracePosition(baseCallIndex + stepWidth);
 				double horizontalScale = editPosPerBaseCallPos * pherogramArea.getOwner().getCompoundWidth() / 
 						(double)(endTraceIndex - startTraceIndex);
@@ -338,7 +338,7 @@ public class PherogramPainter {
 							owner.getProvider().getTraceValue(nucleotide, traceX) * owner.getVerticalScale());  //TODO curveTo() could be used alternatively.
 				}
 				
-				// Leaf space for remaining gaps at the end:
+				// Leave space for remaining gaps at the end:
 				if (gapPattern != null) {
 					for (int i = editablePos + 1; i <= editPosPerBaseCallPos + gapPattern.gapCount; i++) { 
 						paintTraceGap(g, pherogramArea, x, paintY, height);
@@ -348,6 +348,14 @@ public class PherogramPainter {
 					}
 				}
 				
+				//g.setColor(Color.BLUE);
+				double baseCallPaintDistance = pherogramArea.getOwner().getCompoundWidth() * editPosPerBaseCallPos / stepWidth; 
+				double baseCallPaintX = x - 0.5 * baseCallPaintDistance;
+				for (int i = 0; i < stepWidth; i++) {
+					// paintBaseCallData()
+					//g.draw(new Line2D.Double(baseCallPaintX,	paintY, baseCallPaintX, paintY + height));
+					baseCallPaintX -= baseCallPaintDistance;
+				}
 				startTraceIndex = endTraceIndex;
 			}
 
