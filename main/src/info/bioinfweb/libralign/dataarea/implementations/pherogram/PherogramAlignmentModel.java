@@ -101,7 +101,7 @@ public class PherogramAlignmentModel {
   public PherogramAlignmentRelation baseCallIndexByEditableIndex(int editableIndex) {
   	int resultPos = editableIndex - getOwner().getFirstSeqPos() + getOwner().getLeftCutPosition();
   	
-  	ListIterator<ShiftChange> iterator = shiftChangeList.listIterator(); //shiftChangeList.iterator();
+  	ListIterator<ShiftChange> iterator = shiftChangeList.listIterator();
   	if (!shiftChangeList.isEmpty()) {
     	while (iterator.hasNext()) {
     		ShiftChange shiftChangeEntry = iterator.next();
@@ -133,6 +133,24 @@ public class PherogramAlignmentModel {
   	else {
   		return new PherogramAlignmentRelation(resultPos, resultPos, resultPos, iterator);
   	}
+  }
+  
+  
+  public int shiftAtBaseCallIndex(int baseCallIndex) {
+  	int result = 0;
+  	ListIterator<ShiftChange> iterator = shiftChangeList.listIterator();
+  	if (!shiftChangeList.isEmpty()) {
+    	while (iterator.hasNext()) {
+    		ShiftChange shiftChangeEntry = iterator.next();
+    		if ((shiftChangeEntry.baseCallIndex <= baseCallIndex)) {
+    			result += shiftChangeEntry.shiftChange;
+    		}
+    		else {
+    			return result;
+    		}
+    	}
+  	}
+  	return result;
   }
   
   

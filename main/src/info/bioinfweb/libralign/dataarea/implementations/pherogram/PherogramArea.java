@@ -63,17 +63,8 @@ public class PherogramArea extends DataArea implements PherogramComponent {
 
 	
 	protected SimpleSequenceInterval calculatePaintRange(TICPaintEvent e) {
-		PherogramAlignmentRelation upperBorderRelation = getAlignmentModel().baseCallIndexByEditableIndex((e.getRectangle().x + e.getRectangle().width) / 
-				getOwner().getCompoundWidth() + 1);  // BioJava indices start with 1
-		int upperBorder;
-		if (upperBorderRelation.getCorresponding() == PherogramAlignmentRelation.GAP) {
-			upperBorder = upperBorderRelation.getAfter();
-		}
-		else {  // OUT_OF_RANGE or valid index
-			upperBorder = upperBorderRelation.getBefore();  // For a valid index, getBefore() is equal to getCorresponding() 
-		}
-
-		PherogramAlignmentRelation lowerBorderRelation = getAlignmentModel().baseCallIndexByEditableIndex(e.getRectangle().x / getOwner().getCompoundWidth() + 1); 
+		PherogramAlignmentRelation lowerBorderRelation = getAlignmentModel().baseCallIndexByEditableIndex(
+				e.getRectangle().x / getOwner().getCompoundWidth() - 1);  // + 1 - 2 because BioJava indices start with 1 and two (experimetally obtained) half visible column should be painted. (Why are this two?) 
 		int lowerBorder;
 		if (lowerBorderRelation.getCorresponding() == PherogramAlignmentRelation.GAP) {
 			lowerBorder = lowerBorderRelation.getBefore();
@@ -82,7 +73,17 @@ public class PherogramArea extends DataArea implements PherogramComponent {
 			lowerBorder = lowerBorderRelation.getAfter();  // For a valid index, getAfter() is equal to getCorresponding() 
 		}
 
-		return new SimpleSequenceInterval(Math.max(1, lowerBorder - 1),	Math.min(getProvider().getSequenceLength(), upperBorder + 1));  // Extend one in each direction to draw half visible positions.
+		PherogramAlignmentRelation upperBorderRelation = getAlignmentModel().baseCallIndexByEditableIndex(
+				(e.getRectangle().x + e.getRectangle().width) /	getOwner().getCompoundWidth() + 2);  // + 1 + 1 because BioJava indices start with 1 and one half visible column should be painted.
+		int upperBorder;
+		if (upperBorderRelation.getCorresponding() == PherogramAlignmentRelation.GAP) {
+			upperBorder = upperBorderRelation.getAfter();
+		}
+		else {  // OUT_OF_RANGE or valid index
+			upperBorder = upperBorderRelation.getBefore();  // For a valid index, getBefore() is equal to getCorresponding() 
+		}
+
+		return new SimpleSequenceInterval(lowerBorder, upperBorder);
 	}
 	
 
@@ -119,7 +120,8 @@ public class PherogramArea extends DataArea implements PherogramComponent {
 		// Draw curves:
 		SimpleSequenceInterval paintRange = calculatePaintRange(e);
 		painter.paintScaledTraceCurves(paintRange.getFirstPos(), paintRange.getLastPos(), e.getGraphics(), 
-				(getFirstSeqPos() - getLeftCutPosition() + paintRange.getFirstPos()) * getOwner().getCompoundWidth(), 0);
+				(getFirstSeqPos() - getLeftCutPosition() + paintRange.getFirstPos() + 
+						getAlignmentModel().shiftAtBaseCallIndex(paintRange.getFirstPos())) * getOwner().getCompoundWidth(), 0);
 	}
 
 

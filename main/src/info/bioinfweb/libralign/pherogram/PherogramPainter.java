@@ -27,6 +27,7 @@ import java.util.Iterator;
 import org.biojava3.core.sequence.compound.NucleotideCompound;
 
 import info.bioinfweb.libralign.dataarea.implementations.pherogram.PherogramAlignmentModel;
+import info.bioinfweb.libralign.dataarea.implementations.pherogram.PherogramAlignmentRelation;
 import info.bioinfweb.libralign.dataarea.implementations.pherogram.PherogramArea;
 import info.bioinfweb.libralign.dataarea.implementations.pherogram.ShiftChange;
 import info.bioinfweb.libralign.pherogram.PherogramFormats.QualityOutputType;
@@ -235,7 +236,6 @@ public class PherogramPainter {
 		PherogramArea pherogramArea = (PherogramArea)owner; 
 		
 		double height = calculateTraceCurvesHeight();
-		
 		for (NucleotideCompound nucleotide: PherogramProvider.TRACE_CURVE_NUCLEOTIDES) {
 			Path2D path = new Path2D.Double();
 			double x = paintX;
@@ -243,7 +243,8 @@ public class PherogramPainter {
 			path.moveTo(x, paintY + height - 
 					owner.getProvider().getTraceValue(nucleotide, startTraceIndex) * owner.getVerticalScale());
 			
-			Iterator<ShiftChange> shiftChangeIterator = pherogramArea.getAlignmentModel().shiftChangeIterator();
+			Iterator<ShiftChange> shiftChangeIterator = 
+					pherogramArea.getAlignmentModel().shiftChangeIteratorByBaseCallIndex(startBaseCallIndex);
 			ShiftChange shiftChange = null;
 			if (shiftChangeIterator.hasNext()) {
 				shiftChange = shiftChangeIterator.next();
@@ -267,6 +268,7 @@ public class PherogramPainter {
 					else {  // Insertion in editable sequence
 						stepWidth = 1;
 						horizontalScaleFactor = shiftChange.getShiftChange() + 1;
+						// Zahl der Positionen mit Lücken abziehen und unten Zeichenvorgang bei Lücken unterbrechen und in aktuellem Schleifendurchlauf graues Rechteck zeichnen
 					}
 				}
 				else {
