@@ -22,10 +22,12 @@ package info.bioinfweb.libralign.pherogram;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.geom.Path2D;
+import java.awt.geom.Rectangle2D;
 import java.util.Iterator;
 
 import org.biojava3.core.sequence.compound.NucleotideCompound;
 
+import info.bioinfweb.commons.bio.biojava3.core.sequence.compound.AlignmentAmbiguityNucleotideCompoundSet;
 import info.bioinfweb.libralign.dataarea.implementations.pherogram.PherogramAlignmentModel;
 import info.bioinfweb.libralign.dataarea.implementations.pherogram.PherogramAlignmentRelation;
 import info.bioinfweb.libralign.dataarea.implementations.pherogram.PherogramArea;
@@ -43,6 +45,12 @@ import info.bioinfweb.libralign.pherogram.PherogramFormats.QualityOutputType;
 public class PherogramPainter {
 	public static final double FONT_HEIGHT_FACTOR = 1.2;
 	public static final int INDEX_LABEL_INTERVAL = 5;
+	
+	
+	private static class GapPattern {
+		public boolean[] gapPattern;
+		public int gapCount;
+	}
 	
 	
 	private PherogramComponent owner; 
@@ -226,6 +234,31 @@ public class PherogramPainter {
 	}
 	
 	
+	private GapPattern getGapPattern(PherogramArea pherogramArea, ShiftChange shiftChange) {
+		GapPattern result = new GapPattern();
+		result.gapPattern =	new boolean[shiftChange.getShiftChange() + 1];
+		result.gapCount = 0;
+		int firstEditableIndex = pherogramArea.getAlignmentModel().editableIndexByBaseCallIndex(
+				shiftChange.getBaseCallIndex()).getCorresponding() - shiftChange.getShiftChange() - 1;
+		for (int i = 0; i < result.gapPattern.length; i++) {
+			result.gapPattern[i] = ((NucleotideCompound)pherogramArea.getOwner().getSequenceProvider().getTokenAt(
+					pherogramArea.getList().getLocation().getSequenceID(), firstEditableIndex + i)).getBase().equals(
+							"" + AlignmentAmbiguityNucleotideCompoundSet.GAP_CHARACTER);
+			if (result.gapPattern[i]) {
+				result.gapCount++;
+			}
+		}
+		return result;
+	}
+	
+	
+	private void paintTraceGap(Graphics2D g, PherogramArea pherogramArea, double x, double y, double height) {
+		g.setColor(pherogramArea.getFormats().getNucleotideColorSchema().getNucleotideColorMap().get(
+				"" + AlignmentAmbiguityNucleotideCompoundSet.GAP_CHARACTER));
+		g.fill(new Rectangle2D.Double(x, y, pherogramArea.getOwner().getCompoundWidth(), height));
+	}
+	
+	
 	public double paintScaledTraceCurves(int startBaseCallIndex, int endBaseCallIndex, Graphics2D g, 
 			double paintX, double paintY) throws IllegalStateException {
 		
@@ -251,44 +284,76 @@ public class PherogramPainter {
 			}
 			
 			int stepWidth = 1;
-			int horizontalScaleFactor = 1;
+			int editPosPerBaseCallPos = 1;
 			for (int baseCallIndex = startBaseCallIndex; baseCallIndex < endBaseCallIndex; baseCallIndex += stepWidth) {
 				// Treat possible gaps:
+				GapPattern gapPattern = null;
 				if ((shiftChange != null) && (baseCallIndex + 1 == shiftChange.getBaseCallIndex())) {
 					if (shiftChange.getShiftChange() < 0) {  // Deletion in editable sequence
 						stepWidth = -shiftChange.getShiftChange() + 1;
-						horizontalScaleFactor = 1;
-						if (shiftChangeIterator.hasNext()) {
-							shiftChange = shiftChangeIterator.next();
-						}
-						else {
-							shiftChange = null;
-						}
+						editPosPerBaseCallPos = 1;
 					}
 					else {  // Insertion in editable sequence
 						stepWidth = 1;
-						horizontalScaleFactor = shiftChange.getShiftChange() + 1;
+						gapPattern = getGapPattern(pherogramArea, shiftChange);
+						editPosPerBaseCallPos = shiftChange.getShiftChange() + 1 - gapPattern.gapCount;
 						// Zahl der Positionen mit Lücken abziehen und unten Zeichenvorgang bei Lücken unterbrechen und in aktuellem Schleifendurchlauf graues Rechteck zeichnen
+					}
+
+					if (shiftChangeIterator.hasNext()) {
+						shiftChange = shiftChangeIterator.next();
+					}
+					else {
+						shiftChange = null;
 					}
 				}
 				else {
 					stepWidth = 1;
-					horizontalScaleFactor = 1;
+					editPosPerBaseCallPos = 1;
 				}
 				
 				// Calculate scale:
 				int endTraceIndex = getTracePosition(baseCallIndex + stepWidth);
-				double horizontalScale = horizontalScaleFactor * pherogramArea.getOwner().getCompoundWidth() / (double)(endTraceIndex - startTraceIndex);
+				double horizontalScale = editPosPerBaseCallPos * pherogramArea.getOwner().getCompoundWidth() / 
+						(double)(endTraceIndex - startTraceIndex);
+				double previousX = x - pherogramArea.getOwner().getCompoundWidth();
+				int editablePos = 0;
 
+        // Create path for trace curve:
 				for (int traceX = startTraceIndex; traceX < endTraceIndex; traceX++) {
+					if (x - previousX >= pherogramArea.getOwner().getCompoundWidth()) {
+						previousX += pherogramArea.getOwner().getCompoundWidth();
+						if ((gapPattern != null) && (gapPattern.gapPattern[editablePos])) {
+							paintTraceGap(g, pherogramArea, x, paintY, height);
+							x += pherogramArea.getOwner().getCompoundWidth();
+							path.moveTo(x, paintY + height - owner.getProvider().getTraceValue(nucleotide, 
+									Math.max(startTraceIndex, traceX - 1)) * owner.getVerticalScale());
+							previousX += pherogramArea.getOwner().getCompoundWidth();
+							editablePos++;
+						}
+						editablePos++;
+					}
 					x += horizontalScale;
 					path.lineTo(x, paintY + height - 
 							owner.getProvider().getTraceValue(nucleotide, traceX) * owner.getVerticalScale());  //TODO curveTo() could be used alternatively.
 				}
+				
+				// Leaf space for remaining gaps at the end:
+				if (gapPattern != null) {
+					for (int i = editablePos + 1; i <= editPosPerBaseCallPos + gapPattern.gapCount; i++) { 
+						paintTraceGap(g, pherogramArea, x, paintY, height);
+						x += pherogramArea.getOwner().getCompoundWidth();
+						path.moveTo(x, paintY + height - owner.getProvider().getTraceValue(nucleotide, 
+								Math.max(startTraceIndex, endTraceIndex - 1)) * owner.getVerticalScale());
+					}
+				}
+				
 				startTraceIndex = endTraceIndex;
 			}
 
-			g.setColor(owner.getFormats().getNucleotideColorSchema().getNucleotideColorMap().get("" + nucleotide.toString().charAt(0)));
+			// Paint trace curve path:
+			g.setColor(pherogramArea.getFormats().getNucleotideColorSchema().getNucleotideColorMap().get(
+					"" + nucleotide.toString().charAt(0)));
 			g.draw(path);
 		}
 		
