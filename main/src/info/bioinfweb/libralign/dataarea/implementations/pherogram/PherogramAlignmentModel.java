@@ -172,8 +172,8 @@ public class PherogramAlignmentModel {
   }
   
   
-  public ListIterator<ShiftChange> shiftChangeIterator(int index) {
-  	final ListIterator<ShiftChange> iterator = shiftChangeList.listIterator(index);
+  public ListIterator<ShiftChange> shiftChangeIterator(int listIndex) {
+  	final ListIterator<ShiftChange> iterator = shiftChangeList.listIterator(listIndex);
   	return new ListIterator<ShiftChange>() {
 			@Override
 			public boolean hasNext() {
@@ -188,13 +188,13 @@ public class PherogramAlignmentModel {
 			@Override
 			public void remove() {
 				throw new UnsupportedOperationException();
-				//TODO Possibly delegate to interator in future versions and fire according events.
+				//TODO Possibly delegate to iterator in future versions and fire according events.
 			}
 
 			@Override
 			public void add(ShiftChange e) {
 				throw new UnsupportedOperationException();
-				//TODO Possibly delegate to interator in future versions and fire according events.
+				//TODO Possibly delegate to iterator in future versions and fire according events.
 			}
 
 			@Override
@@ -220,7 +220,7 @@ public class PherogramAlignmentModel {
 			@Override
 			public void set(ShiftChange e) {
 				throw new UnsupportedOperationException();
-				//TODO Possibly delegate to interator in future versions and fire according events.
+				//TODO Possibly delegate to iterator in future versions and fire according events.
 			}
 		};
   }
@@ -228,5 +228,18 @@ public class PherogramAlignmentModel {
 
   public ListIterator<ShiftChange> shiftChangeIterator() {
   	return shiftChangeIterator(0);
+  }
+
+
+  public ListIterator<ShiftChange> shiftChangeIteratorByBaseCallIndex(int baseCallIndex) {
+  	ListIterator<ShiftChange> result = shiftChangeIterator();
+  	while (result.hasNext()) {
+  		ShiftChange shiftChange = result.next();
+  		if (shiftChange.getBaseCallIndex() >= baseCallIndex) {
+  			result.previous();
+  			return result;  // Return iterator positioned before the first element at or after the specified base call index.
+  		}
+  	}
+  	return result;  // Return iterator positioned behind the end of the list
   }
 }
