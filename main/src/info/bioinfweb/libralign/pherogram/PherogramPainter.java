@@ -29,8 +29,6 @@ import java.util.Iterator;
 import org.biojava3.core.sequence.compound.NucleotideCompound;
 
 import info.bioinfweb.commons.bio.biojava3.core.sequence.compound.AlignmentAmbiguityNucleotideCompoundSet;
-import info.bioinfweb.libralign.dataarea.implementations.pherogram.PherogramAlignmentModel;
-import info.bioinfweb.libralign.dataarea.implementations.pherogram.PherogramAlignmentRelation;
 import info.bioinfweb.libralign.dataarea.implementations.pherogram.PherogramArea;
 import info.bioinfweb.libralign.dataarea.implementations.pherogram.ShiftChange;
 import info.bioinfweb.libralign.pherogram.PherogramFormats.QualityOutputType;
@@ -72,40 +70,33 @@ public class PherogramPainter {
 	}
 	
 	
-	private double paintAnnotation(int annotation, int index, int traceStart, 
-			Graphics2D g, double paintX, double paintY,	double horizontalScale) {
-		
+	private double paintAnnotation(Graphics2D g, int annotation, double paintX, double paintY) {
 		if (annotation >= 0) {
-			paintBaseCallText("" + annotation, index, traceStart, g, paintX, paintY, horizontalScale);
+			paintBaseCallText(g, "" + annotation, paintX, paintY);
 		}
 		return paintY + g.getFont().getSize() * FONT_HEIGHT_FACTOR;
 	}
 	
 	
-	private void paintBaseCallData(int index, int traceStart, Graphics2D g, double paintX, double paintY, 
-			double horizontalScale) {
-		
+	private void paintBaseCallData(Graphics2D g, int index, double paintX, double paintY) {
 		PherogramFormats formats = owner.getFormats();
 		NucleotideCompound nucleotide = owner.getProvider().getBaseCall(index);
 		
 		g.setFont(formats.getBaseCallFont());
 		g.setColor(getNucleotideColor(nucleotide.getUpperedBase()));
-		paintBaseCallText(nucleotide.getUpperedBase(), index, traceStart, 
-				g, paintX, paintY, horizontalScale);
+		paintBaseCallText(g, nucleotide.getUpperedBase(), paintX, paintY);
 		
 		paintY += g.getFont().getSize() * FONT_HEIGHT_FACTOR;
 		if (!formats.getQualityOutputType().equals(QualityOutputType.NONE)) {
 			g.setFont(formats.getAnnotationFont());
 			if (formats.getQualityOutputType().equals(QualityOutputType.MAXIMUM)) {
 				// Color is already set correctly by the nucleotide output.
-				paintY = paintAnnotation(owner.getProvider().getQuality(nucleotide, index), index, traceStart, 
-						g, paintX, paintY, horizontalScale);
+				paintY = paintAnnotation(g, owner.getProvider().getQuality(nucleotide, index), paintX, paintY);
 			}
 			else {  // QualityOutputType.ALL
 				for (NucleotideCompound qualityNucleotide: PherogramProvider.TRACE_CURVE_NUCLEOTIDES) {
 					g.setColor(getNucleotideColor(qualityNucleotide.getUpperedBase()));
-					paintY = paintAnnotation(owner.getProvider().getQuality(qualityNucleotide, index), index, traceStart, 
-							g, paintX, paintY, horizontalScale);
+					paintY = paintAnnotation(g, owner.getProvider().getQuality(qualityNucleotide, index), paintX, paintY);
 				}
 			}
 		}
@@ -114,18 +105,14 @@ public class PherogramPainter {
 			g.setFont(formats.getAnnotationFont());
 			
 			for (String label: PherogramProvider.PROBABILITY_LABELS) {
-				paintY = paintAnnotation(owner.getProvider().getAnnotation(label, index), index, traceStart, 
-						g, paintX, paintY, horizontalScale);
+				paintY = paintAnnotation(g, owner.getProvider().getAnnotation(label, index), paintX, paintY);
 			}
 		}
 	}
 	
 	
-	private void paintBaseCallText(String text, int index, int traceStart, Graphics2D g, 
-			double paintX, double paintY,	double horizontalScale) {
-		
-		g.drawString(text, (float)(paintX + (owner.getProvider().getBaseCallPosition(index) - traceStart) * horizontalScale - 
-				0.5 * g.getFontMetrics().stringWidth(text)), (float)(paintY + g.getFont().getSize()));
+	private void paintBaseCallText(Graphics2D g, String text, double paintX, double paintY) {
+		g.drawString(text, (float)(paintX - 0.5 * g.getFontMetrics().stringWidth(text)), (float)(paintY + g.getFont().getSize()));
 	}
 	
 	
@@ -143,7 +130,7 @@ public class PherogramPainter {
 	 * @param paintY - the top most coordinate of the area where the trace curves will be painted
 	 * @param horizontalScale - the factor by which the trace curves shall be scaled (zoomed) on the x-axis
 	 */
-	public void paintUnscaledBaseCalls(int startX, int endX, Graphics2D g, double paintX, double paintY, 
+	public void paintUnscaledBaseCalls(int startX, int endX, Graphics2D g, double paintStartX, double paintY, 
 			double horizontalScale) {
 		
 		int index = 1;  // BioJava indices start with 1.
@@ -161,12 +148,14 @@ public class PherogramPainter {
 			while ((index <= owner.getProvider().getSequenceLength()) && 
 					(owner.getProvider().getBaseCallPosition(index) < endX)) {
 				
-				paintBaseCallData(index, startX, g, paintX, paintY, horizontalScale);
+    		paintBaseCallData(g, index, paintStartX + (owner.getProvider().getBaseCallPosition(index) - startX) * horizontalScale, 
+    				paintY);
 				index++;
 			}
 
 			if (index <= owner.getProvider().getSequenceLength()) {
-				paintBaseCallData(index, startX, g, paintX, paintY + g.getFont().getSize(), horizontalScale);;  // Also paint last possible partly visible character
+				paintBaseCallData(g, index, paintStartX + (owner.getProvider().getBaseCallPosition(index) - startX) * horizontalScale, 
+						paintY + g.getFont().getSize());  // Also paint last possible partly visible character
 			}
     }
 	}
@@ -352,7 +341,7 @@ public class PherogramPainter {
 				double baseCallPaintDistance = pherogramArea.getOwner().getCompoundWidth() * editPosPerBaseCallPos / stepWidth; 
 				double baseCallPaintX = x - 0.5 * baseCallPaintDistance;
 				for (int i = 0; i < stepWidth; i++) {
-					// paintBaseCallData()
+					//paintBaseCallData(g, baseCallIndex, paintX, paintY);
 					//g.draw(new Line2D.Double(baseCallPaintX,	paintY, baseCallPaintX, paintY + height));
 					baseCallPaintX -= baseCallPaintDistance;
 				}
