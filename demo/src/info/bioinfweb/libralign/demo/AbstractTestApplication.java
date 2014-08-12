@@ -60,7 +60,7 @@ public class AbstractTestApplication {
 				seqBuffer.append(pherogramProvider.getBaseCall(i).getUpperedBase());
 			}
 			alignment.add("Sequence 4", new DNASequence("-----" + seqBuffer.substring(0, 38) + 
-					seqBuffer.substring(39, 49) + "A" + seqBuffer.substring(49)));  // One A is deleted for shift change specified below. 
+					seqBuffer.substring(39, 49) + "-A" + seqBuffer.substring(49)));  // One A is deleted for shift change specified below. 
 			
 			BioJavaSequenceDataProvider<DNASequence, NucleotideCompound> sequenceProvider = 
 					new BioJavaSequenceDataProvider<DNASequence, NucleotideCompound>(
@@ -80,7 +80,7 @@ public class AbstractTestApplication {
 			pherogramArea.setLeftCutPosition(34);
 			pherogramArea.setRightCutPosition(820);
 			pherogramArea.getAlignmentModel().setShiftChange(38, -1);
-			pherogramArea.getAlignmentModel().setShiftChange(49, 1);
+			pherogramArea.getAlignmentModel().setShiftChange(49, 2);
 			result.getDataAreas().getSequenceAreas(sequenceProvider.sequenceIDByName("Sequence 4")).add(pherogramArea);
 			
 			result.getDataAreas().getBottomAreas().add(new ConsensusSequenceArea(result));
