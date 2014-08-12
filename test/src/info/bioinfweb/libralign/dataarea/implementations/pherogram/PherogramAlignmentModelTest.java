@@ -202,4 +202,30 @@ public class PherogramAlignmentModelTest {
 			fail(e.getMessage());
 		}		  
 	}
+	
+	
+	@Test
+	public void test_shiftAtBaseCallIndex() {
+		try {
+			PherogramArea pherogramArea = new PherogramArea(null, new BioJavaPherogramProvider(ChromatogramFactory.create(
+	      	new File("data\\pherograms\\Test_qualityScore.scf"))));
+			pherogramArea.setFirstSeqPos(10);
+			pherogramArea.setLeftCutPosition(5);
+			pherogramArea.setRightCutPosition(55);
+			
+			PherogramAlignmentModel model = new PherogramAlignmentModel(pherogramArea);
+		  model.setShiftChange(10, 2);
+		  model.setShiftChange(20, -2);
+		  
+		  assertEquals(0, model.shiftAtBaseCallIndex(1));
+		  assertEquals(0, model.shiftAtBaseCallIndex(9));
+		  assertEquals(2, model.shiftAtBaseCallIndex(10));
+		  assertEquals(2, model.shiftAtBaseCallIndex(19));
+		  assertEquals(0, model.shiftAtBaseCallIndex(20));
+		  assertEquals(0, model.shiftAtBaseCallIndex(21));
+		}
+		catch (IOException | UnsupportedChromatogramFormatException e) {
+			fail(e.getMessage());
+		}		  
+	}
 }
