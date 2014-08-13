@@ -32,7 +32,7 @@ import info.bioinfweb.commons.bio.biojava3.core.sequence.compound.AlignmentAmbig
 import info.bioinfweb.libralign.dataarea.implementations.pherogram.PherogramArea;
 import info.bioinfweb.libralign.dataarea.implementations.pherogram.ShiftChange;
 import info.bioinfweb.libralign.pherogram.PherogramFormats.QualityOutputType;
-import info.bioinfweb.libralign.pherogram.distorsion.GapPattern;
+import info.bioinfweb.libralign.pherogram.distortion.GapPattern;
 
 
 
