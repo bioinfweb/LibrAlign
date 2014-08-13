@@ -32,6 +32,7 @@ import info.bioinfweb.commons.bio.biojava3.core.sequence.compound.AlignmentAmbig
 import info.bioinfweb.libralign.dataarea.implementations.pherogram.PherogramArea;
 import info.bioinfweb.libralign.dataarea.implementations.pherogram.ShiftChange;
 import info.bioinfweb.libralign.pherogram.PherogramFormats.QualityOutputType;
+import info.bioinfweb.libralign.pherogram.distorsion.GapPattern;
 
 
 
@@ -44,12 +45,6 @@ import info.bioinfweb.libralign.pherogram.PherogramFormats.QualityOutputType;
 public class PherogramPainter {
 	public static final double FONT_HEIGHT_FACTOR = 1.2;
 	public static final int INDEX_LABEL_INTERVAL = 5;
-	
-	
-	class GapPattern {
-		public boolean[] gapPattern;
-		public int gapCount;
-	}
 	
 	
 	private PherogramComponent owner; 
@@ -225,18 +220,13 @@ public class PherogramPainter {
 	
 	
 	private GapPattern getGapPattern(PherogramArea pherogramArea, ShiftChange shiftChange) {
-		GapPattern result = new GapPattern();
-		result.gapPattern =	new boolean[shiftChange.getShiftChange() + 1];
-		result.gapCount = 0;
+		GapPattern result = new GapPattern(shiftChange.getShiftChange() + 1);
 		int firstEditableIndex = pherogramArea.getAlignmentModel().editableIndexByBaseCallIndex(
 				shiftChange.getBaseCallIndex()).getCorresponding() - shiftChange.getShiftChange() - 1;
-		for (int i = 0; i < result.gapPattern.length; i++) {
-			result.gapPattern[i] = ((NucleotideCompound)pherogramArea.getOwner().getSequenceProvider().getTokenAt(
+		for (int i = 0; i < result.size(); i++) {
+			result.setGap(i, ((NucleotideCompound)pherogramArea.getOwner().getSequenceProvider().getTokenAt(
 					pherogramArea.getList().getLocation().getSequenceID(), firstEditableIndex + i)).getBase().equals(
-							"" + AlignmentAmbiguityNucleotideCompoundSet.GAP_CHARACTER);
-			if (result.gapPattern[i]) {
-				result.gapCount++;
-			}
+							"" + AlignmentAmbiguityNucleotideCompoundSet.GAP_CHARACTER));
 		}
 		return result;
 	}
@@ -288,7 +278,7 @@ public class PherogramPainter {
 					else {  // Insertion in editable sequence
 						stepWidth = 1;
 						gapPattern = getGapPattern(pherogramArea, shiftChange);
-						editPosPerBaseCallPos = shiftChange.getShiftChange() + 1 - gapPattern.gapCount;
+						editPosPerBaseCallPos = shiftChange.getShiftChange() + 1 - gapPattern.getGapCount();
 					}
 
 					if (shiftChangeIterator.hasNext()) {
@@ -314,7 +304,7 @@ public class PherogramPainter {
 				for (int traceX = startTraceIndex; traceX < endTraceIndex; traceX++) {
 					if (x - previousX >= pherogramArea.getOwner().getCompoundWidth()) {
 						previousX += pherogramArea.getOwner().getCompoundWidth();
-						if ((gapPattern != null) && (gapPattern.gapPattern[editablePos])) {
+						if ((gapPattern != null) && (gapPattern.isGap(editablePos))) {
 							paintTraceGap(g, pherogramArea, x, paintY, height);
 							x += pherogramArea.getOwner().getCompoundWidth();
 							path.moveTo(x, paintY + height - owner.getProvider().getTraceValue(nucleotide, 
@@ -331,7 +321,7 @@ public class PherogramPainter {
 				
 				// Leave space for remaining gaps at the end:
 				if (gapPattern != null) {
-					for (int i = editablePos + 1; i <= editPosPerBaseCallPos + gapPattern.gapCount; i++) { 
+					for (int i = editablePos + 1; i <= editPosPerBaseCallPos + gapPattern.getGapCount(); i++) { 
 						if (nucleotide.equals(lastNucleotide)) {  // Make sure gap is painted only once and to for each trace curve.  
   						paintTraceGap(g, pherogramArea, x, paintY, height);
 						}
