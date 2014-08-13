@@ -46,7 +46,7 @@ public class PherogramPainter {
 	public static final int INDEX_LABEL_INTERVAL = 5;
 	
 	
-	private static class GapPattern {
+	class GapPattern {
 		public boolean[] gapPattern;
 		public int gapCount;
 	}
@@ -259,6 +259,8 @@ public class PherogramPainter {
 		PherogramArea pherogramArea = (PherogramArea)owner; 
 		
 		double height = calculateTraceCurvesHeight();
+		NucleotideCompound lastNucleotide = PherogramProvider.TRACE_CURVE_NUCLEOTIDES.get(
+				PherogramProvider.TRACE_CURVE_NUCLEOTIDES.size() - 1);
 		for (NucleotideCompound nucleotide: PherogramProvider.TRACE_CURVE_NUCLEOTIDES) {
 			Path2D path = new Path2D.Double();
 			double x = paintX;
@@ -330,20 +332,24 @@ public class PherogramPainter {
 				// Leave space for remaining gaps at the end:
 				if (gapPattern != null) {
 					for (int i = editablePos + 1; i <= editPosPerBaseCallPos + gapPattern.gapCount; i++) { 
-						paintTraceGap(g, pherogramArea, x, paintY, height);
+						if (nucleotide.equals(lastNucleotide)) {  // Make sure gap is painted only once and to for each trace curve.  
+  						paintTraceGap(g, pherogramArea, x, paintY, height);
+						}
 						x += pherogramArea.getOwner().getCompoundWidth();
 						path.moveTo(x, paintY + height - owner.getProvider().getTraceValue(nucleotide, 
 								Math.max(startTraceIndex, endTraceIndex - 1)) * owner.getVerticalScale());
 					}
 				}
 				
-				//g.setColor(Color.BLUE);
-				double baseCallPaintDistance = pherogramArea.getOwner().getCompoundWidth() * editPosPerBaseCallPos / stepWidth; 
-				double baseCallPaintX = x - 0.5 * baseCallPaintDistance;
-				for (int i = 0; i < stepWidth; i++) {
-					//paintBaseCallData(g, baseCallIndex, paintX, paintY);
-					//g.draw(new Line2D.Double(baseCallPaintX,	paintY, baseCallPaintX, paintY + height));
-					baseCallPaintX -= baseCallPaintDistance;
+				if (nucleotide.equals(lastNucleotide)) {  // Make sure further information is painted only once and to for each trace curve.  
+					//g.setColor(Color.BLUE);
+					double baseCallPaintDistance = pherogramArea.getOwner().getCompoundWidth() * editPosPerBaseCallPos / stepWidth; 
+					double baseCallPaintX = x - 0.5 * baseCallPaintDistance;
+					for (int i = 0; i < stepWidth; i++) {
+						paintBaseCallData(g, baseCallIndex + i, baseCallPaintX, paintY);
+						//g.draw(new Line2D.Double(baseCallPaintX,	paintY, baseCallPaintX, paintY + height));
+						baseCallPaintX -= baseCallPaintDistance;
+					}
 				}
 				startTraceIndex = endTraceIndex;
 			}
