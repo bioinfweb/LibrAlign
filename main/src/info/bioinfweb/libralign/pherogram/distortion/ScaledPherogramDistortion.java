@@ -32,6 +32,7 @@ import info.bioinfweb.libralign.dataarea.implementations.pherogram.PherogramArea
 public class ScaledPherogramDistortion implements PherogramDistortion {
 	class BaseCallInfo {
 		public double horizontalScale = 0;
+		public double paintX = 0;
 		public GapPattern gapPattern = null;
 	}
 	
@@ -65,6 +66,17 @@ public class ScaledPherogramDistortion implements PherogramDistortion {
 	}
 
 	
+	public void setPaintX(int baseCallIndex, double paintX) {
+		baseCallInfos[baseCallIndex].paintX = paintX;
+	}
+
+
+	@Override
+	public double getPaintX(int baseCallIndex) {
+		return baseCallInfos[baseCallIndex].paintX;
+	}
+
+
 	public void setGapPattern(int baseCallIndex, GapPattern pattern) {
 		baseCallInfos[baseCallIndex].gapPattern = pattern;
 	}

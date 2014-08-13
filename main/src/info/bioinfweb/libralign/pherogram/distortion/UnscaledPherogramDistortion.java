@@ -19,6 +19,7 @@
 package info.bioinfweb.libralign.pherogram.distortion;
 
 
+import info.bioinfweb.libralign.pherogram.PherogramProvider;
 import info.bioinfweb.libralign.pherogram.PherogramTraceCurveView;
 
 
@@ -31,17 +32,25 @@ import info.bioinfweb.libralign.pherogram.PherogramTraceCurveView;
  */
 public class UnscaledPherogramDistortion implements PherogramDistortion {
 	private double horizontalScale;
+	private PherogramProvider provider;
 	
 
-	public UnscaledPherogramDistortion(double horizontalScale) {
+	public UnscaledPherogramDistortion(double horizontalScale, PherogramProvider provider) {
 		super();
 		this.horizontalScale = horizontalScale;
+		this.provider = provider;
 	}
 
 
 	@Override
 	public double getHorizontalScale(int baseCallIndex) {
 		return horizontalScale;
+	}
+
+	
+	@Override
+	public double getPaintX(int baseCallIndex) {
+		return provider.getBaseCallPosition(baseCallIndex) * horizontalScale;
 	}
 
 	
