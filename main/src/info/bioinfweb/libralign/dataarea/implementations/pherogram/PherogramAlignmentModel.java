@@ -300,7 +300,7 @@ public class PherogramAlignmentModel {
 		double baseCallPaintX = 0; //0.5 * compoundWidth;
 		for (int baseCallIndex = 1; baseCallIndex <= getOwner().getProvider().getSequenceLength(); baseCallIndex += stepWidth) {
 			// Treat possible gaps:
-			if ((shiftChange != null) && (baseCallIndex + 1 == shiftChange.getBaseCallIndex())) {
+			if ((shiftChange != null) && (baseCallIndex == shiftChange.getBaseCallIndex())) {
 				if (shiftChange.getShiftChange() < 0) {  // Deletion in editable sequence
 					stepWidth = -shiftChange.getShiftChange() + 1;
 					editPosPerBaseCallPos = 1;

@@ -417,8 +417,6 @@ public class PherogramPainter {
 	public void paintTraceCurves(Graphics2D g, int firstBaseCallIndex, int lastBaseCallIndex, int x, int y, 
 			PherogramDistortion distortion, double compoundWidth) {
 		
-		System.out.println(x + " " + firstBaseCallIndex);
-		
 		final double height = calculateTraceCurvesHeight();
 		for (NucleotideCompound nucleotide: PherogramProvider.TRACE_CURVE_NUCLEOTIDES) {
 			int startTraceIndex = getTracePosition(owner.getProvider(), firstBaseCallIndex);
@@ -429,10 +427,6 @@ public class PherogramPainter {
 			for (int baseCallIndex = firstBaseCallIndex; baseCallIndex <= lastBaseCallIndex; baseCallIndex++) {
         // Create path for trace curve:
 				int endTraceIndex = getTracePosition(owner.getProvider(), baseCallIndex + 1);
-				
-				if (baseCallIndex < 5) {
-					System.out.println("  " + baseCallIndex + ": " + startTraceIndex + " " + endTraceIndex + " " + distortion.getPaintX(baseCallIndex));
-				}
 				
 				double paintX = x + distortion.getPaintX(baseCallIndex) - 
 						0.5 * (endTraceIndex - startTraceIndex /* + 1 ? */) * distortion.getHorizontalScale(baseCallIndex);
