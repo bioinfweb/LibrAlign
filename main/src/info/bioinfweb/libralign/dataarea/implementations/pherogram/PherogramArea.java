@@ -119,9 +119,13 @@ public class PherogramArea extends DataArea implements PherogramComponent {
 
 		// Draw curves:
 		SimpleSequenceInterval paintRange = calculatePaintRange(e);
-		painter.paintScaledTraceCurves(paintRange.getFirstPos(), paintRange.getLastPos(), e.getGraphics(), 
+//		painter.paintScaledTraceCurves(paintRange.getFirstPos(), paintRange.getLastPos(), e.getGraphics(), 
+//				(getFirstSeqPos() - getLeftCutPosition() + paintRange.getFirstPos() + 
+//						getAlignmentModel().shiftAtBaseCallIndex(paintRange.getFirstPos())) * getOwner().getCompoundWidth(), 0);
+		painter.paintTraceCurves(e.getGraphics(), paintRange.getFirstPos(), paintRange.getLastPos(), 
 				(getFirstSeqPos() - getLeftCutPosition() + paintRange.getFirstPos() + 
-						getAlignmentModel().shiftAtBaseCallIndex(paintRange.getFirstPos())) * getOwner().getCompoundWidth(), 0);
+							getAlignmentModel().shiftAtBaseCallIndex(paintRange.getFirstPos()) - 1) * getOwner().getCompoundWidth(), 0, 
+				getAlignmentModel().createPherogramDistortion(), getOwner().getCompoundWidth());
 	}
 
 

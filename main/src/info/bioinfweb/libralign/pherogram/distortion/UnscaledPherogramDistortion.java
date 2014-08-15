@@ -25,7 +25,7 @@ import info.bioinfweb.libralign.pherogram.PherogramTraceCurveView;
 
 
 /**
- * Implementation that does not scale the pherogram or insert any gaps. (Used e.g. with {@link PherogramTraceCurveView}.
+ * Implementation that does not scale the pherogram or insert any gaps. (Used e.g. with {@link PherogramTraceCurveView}).
  * 
  * @author Ben St&ouml;ver
  * @since 0.2.0

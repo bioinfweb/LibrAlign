@@ -24,7 +24,7 @@ import info.bioinfweb.libralign.dataarea.implementations.pherogram.PherogramArea
 
 
 /**
- * Stores scales and gap pattern for each base call index of a pherogram. (Used with {@link PherogramArea}.
+ * Stores scales and gap pattern for each base call index of a pherogram. (Used with {@link PherogramArea}).
  * 
  * @author Ben St&ouml;ver
  * @since 0.2.0
@@ -56,34 +56,34 @@ public class ScaledPherogramDistortion implements PherogramDistortion {
 
 
 	public void setHorizontalScale(int baseCallIndex, double scale) {
-		baseCallInfos[baseCallIndex].horizontalScale = scale; 
+		baseCallInfos[baseCallIndex - 1].horizontalScale = scale; 
 	}
 
 
 	@Override
 	public double getHorizontalScale(int baseCallIndex) {
-		return baseCallInfos[baseCallIndex].horizontalScale;
+		return baseCallInfos[baseCallIndex - 1].horizontalScale;
 	}
 
 	
 	public void setPaintX(int baseCallIndex, double paintX) {
-		baseCallInfos[baseCallIndex].paintX = paintX;
+		baseCallInfos[baseCallIndex - 1].paintX = paintX;
 	}
 
 
 	@Override
 	public double getPaintX(int baseCallIndex) {
-		return baseCallInfos[baseCallIndex].paintX;
+		return baseCallInfos[baseCallIndex - 1].paintX;
 	}
 
 
 	public void setGapPattern(int baseCallIndex, GapPattern pattern) {
-		baseCallInfos[baseCallIndex].gapPattern = pattern;
+		baseCallInfos[baseCallIndex - 1].gapPattern = pattern;
 	}
 
 	
 	@Override
 	public GapPattern getGapPattern(int baseCallIndex) {
-		return baseCallInfos[baseCallIndex].gapPattern;
+		return baseCallInfos[baseCallIndex - 1].gapPattern;
 	}
 }

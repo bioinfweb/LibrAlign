@@ -19,11 +19,20 @@
 package info.bioinfweb.libralign.dataarea.implementations.pherogram;
 
 
+import java.awt.geom.Path2D;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
 
+import org.biojava3.core.sequence.compound.NucleotideCompound;
+
 import info.bioinfweb.commons.Math2;
+import info.bioinfweb.commons.bio.biojava3.core.sequence.compound.AlignmentAmbiguityNucleotideCompoundSet;
+import info.bioinfweb.libralign.pherogram.PherogramPainter;
+import info.bioinfweb.libralign.pherogram.PherogramProvider;
+import info.bioinfweb.libralign.pherogram.distortion.GapPattern;
+import info.bioinfweb.libralign.pherogram.distortion.ScaledPherogramDistortion;
 
 
 
@@ -259,5 +268,87 @@ public class PherogramAlignmentModel {
   		}
   	}
   	return result;  // Return iterator positioned behind the end of the list
+  }
+  
+  
+	private GapPattern getGapPattern(ShiftChange shiftChange) {
+		GapPattern result = new GapPattern(shiftChange.getShiftChange() + 1);
+		int firstEditableIndex = editableIndexByBaseCallIndex(shiftChange.getBaseCallIndex()).getCorresponding() - 
+				shiftChange.getShiftChange() - 1;
+		for (int i = 0; i < result.size(); i++) {
+			result.setGap(i, ((NucleotideCompound)getOwner().getOwner().getSequenceProvider().getTokenAt(
+					getOwner().getList().getLocation().getSequenceID(), firstEditableIndex + i)).getBase().equals(
+							"" + AlignmentAmbiguityNucleotideCompoundSet.GAP_CHARACTER));
+		}
+		return result;
+	}
+	
+	
+  public ScaledPherogramDistortion createPherogramDistortion() {
+  	ScaledPherogramDistortion result = new ScaledPherogramDistortion(getOwner().getProvider().getSequenceLength());
+  	
+		int startTraceIndex = 1;  //getTracePosition(startBaseCallIndex);
+		Iterator<ShiftChange> shiftChangeIterator = shiftChangeIterator();
+		ShiftChange shiftChange = null;
+		if (shiftChangeIterator.hasNext()) {
+			shiftChange = shiftChangeIterator.next();
+		}
+		
+		final int compoundWidth = getOwner().getOwner().getCompoundWidth();
+		int stepWidth = 1;
+		int editPosPerBaseCallPos = 1;
+		double baseCallPaintX = 0; //0.5 * compoundWidth;
+		for (int baseCallIndex = 1; baseCallIndex <= getOwner().getProvider().getSequenceLength(); baseCallIndex += stepWidth) {
+			// Treat possible gaps:
+			if ((shiftChange != null) && (baseCallIndex + 1 == shiftChange.getBaseCallIndex())) {
+				if (shiftChange.getShiftChange() < 0) {  // Deletion in editable sequence
+					stepWidth = -shiftChange.getShiftChange() + 1;
+					editPosPerBaseCallPos = 1;
+				}
+				else {  // Insertion in editable sequence
+					stepWidth = 1;
+					GapPattern gapPattern = getGapPattern(shiftChange);
+					editPosPerBaseCallPos = shiftChange.getShiftChange() + 1 - gapPattern.getGapCount();
+					result.setGapPattern(baseCallIndex, gapPattern);
+				}
+
+				if (shiftChangeIterator.hasNext()) {
+					shiftChange = shiftChangeIterator.next();
+				}
+				else {
+					shiftChange = null;
+				}
+			}
+			else {
+				stepWidth = 1;
+				editPosPerBaseCallPos = 1;
+			}
+			
+			// Calculate scale and initialize variables:
+			int endTraceIndex = PherogramPainter.getTracePosition(getOwner().getProvider(), baseCallIndex + stepWidth);
+			result.setHorizontalScale(baseCallIndex, editPosPerBaseCallPos * compoundWidth / (double)(endTraceIndex - startTraceIndex));
+
+			double baseCallPaintDistance = compoundWidth * editPosPerBaseCallPos / stepWidth; 
+			baseCallPaintX += 0.5 * baseCallPaintDistance;
+  		if (result.getGapPattern(baseCallIndex) == null) {
+				result.setPaintX(baseCallIndex, baseCallPaintX);
+				for (int i = 1; i < stepWidth; i++) {
+					result.setHorizontalScale(baseCallIndex + i, result.getHorizontalScale(baseCallIndex));  // Scale remains constant.
+					baseCallPaintX += baseCallPaintDistance;
+					result.setPaintX(baseCallIndex + i, baseCallPaintX);
+					// GapPattern does not need to be set, because it must be null in this case.
+				}
+  		}
+  		else {	// Treat gaps (in this case stepWidth should always be 1):
+  			int gapCount = result.getGapPattern(baseCallIndex).getGapCount();
+  			result.setPaintX(baseCallIndex, baseCallPaintX + compoundWidth * (gapCount / 2));
+  			baseCallPaintX += compoundWidth * gapCount;
+  		}
+			baseCallPaintX += 0.5 * baseCallPaintDistance;
+			//TODO baseCallPaintX entsprechend der Zahl der Lücken erhöhen
+			startTraceIndex = endTraceIndex;
+		}
+  	
+  	return result;
   }
 }
