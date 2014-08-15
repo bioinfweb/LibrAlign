@@ -45,7 +45,7 @@ public class PherogramUtils {
 		if (baseCallIndex <= 1) {  // BioJava indices start with 1
 			return 1;
 		}
-		else if (baseCallIndex >= provider.getSequenceLength()) {
+		else if (baseCallIndex > provider.getSequenceLength()) {
 			return provider.getTraceLength();
 		}
 		else {
