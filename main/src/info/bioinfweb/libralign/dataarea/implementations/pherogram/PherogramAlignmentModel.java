@@ -31,6 +31,7 @@ import info.bioinfweb.commons.Math2;
 import info.bioinfweb.commons.bio.biojava3.core.sequence.compound.AlignmentAmbiguityNucleotideCompoundSet;
 import info.bioinfweb.libralign.pherogram.PherogramPainter;
 import info.bioinfweb.libralign.pherogram.PherogramProvider;
+import info.bioinfweb.libralign.pherogram.PherogramUtils;
 import info.bioinfweb.libralign.pherogram.distortion.GapPattern;
 import info.bioinfweb.libralign.pherogram.distortion.ScaledPherogramDistortion;
 
@@ -325,23 +326,26 @@ public class PherogramAlignmentModel {
 			}
 			
 			// Calculate scale and initialize variables:
-			int endTraceIndex = PherogramPainter.getTracePosition(getOwner().getProvider(), baseCallIndex + stepWidth);
+			int endTraceIndex = PherogramUtils.getFirstTracePosition(getOwner().getProvider(), baseCallIndex + stepWidth);
 			result.setHorizontalScale(baseCallIndex, editPosPerBaseCallPos * compoundWidth / (double)(endTraceIndex - startTraceIndex));
 
-			double baseCallPaintDistance = compoundWidth * editPosPerBaseCallPos / stepWidth; 
+			double baseCallPaintDistance = compoundWidth * editPosPerBaseCallPos / stepWidth;
+			result.setPaintStartX(baseCallIndex, baseCallPaintX);
 			baseCallPaintX += 0.5 * baseCallPaintDistance;
   		if (result.getGapPattern(baseCallIndex) == null) {
-				result.setPaintX(baseCallIndex, baseCallPaintX);
+				result.setPaintCenterX(baseCallIndex, baseCallPaintX);
 				for (int i = 1; i < stepWidth; i++) {
 					result.setHorizontalScale(baseCallIndex + i, result.getHorizontalScale(baseCallIndex));  // Scale remains constant.
-					baseCallPaintX += baseCallPaintDistance;
-					result.setPaintX(baseCallIndex + i, baseCallPaintX);
+					baseCallPaintX += 0.5 * baseCallPaintDistance;
+					result.setPaintStartX(baseCallIndex + i, baseCallPaintX);
+					baseCallPaintX += 0.5 * baseCallPaintDistance;
+					result.setPaintCenterX(baseCallIndex + i, baseCallPaintX);
 					// GapPattern does not need to be set, because it must be null in this case.
 				}
   		}
   		else {	// Treat gaps (in this case stepWidth should always be 1):
   			int gapCount = result.getGapPattern(baseCallIndex).getGapCount();
-  			result.setPaintX(baseCallIndex, baseCallPaintX + compoundWidth * (gapCount / 2));
+  			result.setPaintCenterX(baseCallIndex, baseCallPaintX + compoundWidth * (gapCount / 2));
   			baseCallPaintX += compoundWidth * gapCount;
   		}
 			baseCallPaintX += 0.5 * baseCallPaintDistance;

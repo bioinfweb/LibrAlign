@@ -28,12 +28,33 @@ import org.biojava3.core.sequence.compound.NucleotideCompound;
 
 
 /**
- * Class for internal that provides values for constants of {@link PherogramProvider}. 
+ * provides values for constants of {@link PherogramProvider}  and general tool methods to deal with pherogram data. 
  * 
  * @author Ben St&ouml;ver
  * @since 0.1.0
  */
-class PherogramUtils {
+public class PherogramUtils {
+	/**
+	 * Returns the index of the first trace value in the area of a trace curve belonging the base call with the specified index.
+	 * 
+	 * @param provider - the provider of the pherogram data
+	 * @param baseCallIndex - the index of the base call
+	 * @return a valid trace value index
+	 */
+	public static int getFirstTracePosition(PherogramProvider provider, int baseCallIndex) {
+		if (baseCallIndex <= 1) {  // BioJava indices start with 1
+			return 1;
+		}
+		else if (baseCallIndex >= provider.getSequenceLength()) {
+			return provider.getTraceLength();
+		}
+		else {
+			return (provider.getBaseCallPosition(baseCallIndex - 1) + 
+					provider.getBaseCallPosition(baseCallIndex)) / 2; 
+		}
+	}
+	
+	
   public static List<NucleotideCompound> createTraceCurveNucleotideList() {
   	List<NucleotideCompound> result = new ArrayList<NucleotideCompound>(4);
   	DNACompoundSet set = DNACompoundSet.getDNACompoundSet();

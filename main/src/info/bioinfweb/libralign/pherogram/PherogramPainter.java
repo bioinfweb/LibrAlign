@@ -123,7 +123,7 @@ public class PherogramPainter {
 	 * @param startX - the index in {@code provider} of the first trace value to be painted
 	 * @param endX - the index in {@code provider} after the last value to be painted
 	 * @param g - the graphics context to paint on
-	 * @param paintX - the left most coordinate of the area where the trace curves will be painted
+	 * @param paintCenterX - the left most coordinate of the area where the trace curves will be painted
 	 * @param paintY - the top most coordinate of the area where the trace curves will be painted
 	 * @param horizontalScale - the factor by which the trace curves shall be scaled (zoomed) on the x-axis
 	 */
@@ -207,20 +207,6 @@ public class PherogramPainter {
 	}
 	
 	
-	public static int getTracePosition(PherogramProvider provider, int baseCallIndex) {
-		if (baseCallIndex <= 1) {  // BioJava indices start with 1
-			return 1;
-		}
-		else if (baseCallIndex >= provider.getSequenceLength()) {
-			return provider.getTraceLength();
-		}
-		else {
-			return (provider.getBaseCallPosition(baseCallIndex - 1) + 
-					provider.getBaseCallPosition(baseCallIndex)) / 2; 
-		}
-	}
-	
-	
 	private GapPattern getGapPattern(PherogramArea pherogramArea, ShiftChange shiftChange) {
 		GapPattern result = new GapPattern(shiftChange.getShiftChange() + 1);
 		int firstEditableIndex = pherogramArea.getAlignmentModel().editableIndexByBaseCallIndex(
@@ -256,7 +242,7 @@ public class PherogramPainter {
 		for (NucleotideCompound nucleotide: PherogramProvider.TRACE_CURVE_NUCLEOTIDES) {
 			Path2D path = new Path2D.Double();
 			double x = paintX;
-			int startTraceIndex = getTracePosition(owner.getProvider(), startBaseCallIndex);
+			int startTraceIndex = PherogramUtils.getFirstTracePosition(owner.getProvider(), startBaseCallIndex);
 			path.moveTo(x, paintY + height - 
 					owner.getProvider().getTraceValue(nucleotide, startTraceIndex) * owner.getVerticalScale());
 			
@@ -296,7 +282,7 @@ public class PherogramPainter {
 				}
 				
 				// Calculate scale and initialize variables:
-				int endTraceIndex = getTracePosition(owner.getProvider(), baseCallIndex + stepWidth);
+				int endTraceIndex = PherogramUtils.getFirstTracePosition(owner.getProvider(), baseCallIndex + stepWidth);
 				double horizontalScale = editPosPerBaseCallPos * pherogramArea.getOwner().getCompoundWidth() / 
 						(double)(endTraceIndex - startTraceIndex);
 				double previousX = x - pherogramArea.getOwner().getCompoundWidth();
@@ -419,17 +405,16 @@ public class PherogramPainter {
 		
 		final double height = calculateTraceCurvesHeight();
 		for (NucleotideCompound nucleotide: PherogramProvider.TRACE_CURVE_NUCLEOTIDES) {
-			int startTraceIndex = getTracePosition(owner.getProvider(), firstBaseCallIndex);
+			int startTraceIndex = PherogramUtils.getFirstTracePosition(owner.getProvider(), firstBaseCallIndex);
 			Path2D path = new Path2D.Double();
-			path.moveTo(x + distortion.getPaintX(firstBaseCallIndex) - 0.5 * distortion.getHorizontalScale(firstBaseCallIndex) *
-					(getTracePosition(owner.getProvider(), firstBaseCallIndex + 1) - startTraceIndex /* + 1 ? */), 
+			path.moveTo(x + distortion.getPaintStartX(firstBaseCallIndex), 
 					y + height - owner.getProvider().getTraceValue(nucleotide, startTraceIndex) * owner.getVerticalScale());
 			for (int baseCallIndex = firstBaseCallIndex; baseCallIndex <= lastBaseCallIndex; baseCallIndex++) {
         // Create path for trace curve:
-				int endTraceIndex = getTracePosition(owner.getProvider(), baseCallIndex + 1);
+				int endTraceIndex = PherogramUtils.getFirstTracePosition(owner.getProvider(), baseCallIndex + 1);
 				
-				double paintX = x + distortion.getPaintX(baseCallIndex) - 
-						0.5 * (endTraceIndex - startTraceIndex /* + 1 ? */) * distortion.getHorizontalScale(baseCallIndex);
+				double paintX = x + distortion.getPaintStartX(baseCallIndex); // - 
+						//0.5 * (endTraceIndex - startTraceIndex /* + 1 ? */) * distortion.getHorizontalScale(baseCallIndex);
 				double previousX = paintX - compoundWidth;
 				int editablePos = 0;
 				

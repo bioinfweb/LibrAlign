@@ -40,13 +40,22 @@ public interface PherogramDistortion {
 	public double getHorizontalScale(int baseCallIndex);
 	
 	/**
+	 * Returns the x coordinate relative to the left border of the pherogram where the first trace position of the area associated
+	 * with the specified base call index shall be painted.
+	 * 
+	 * @param baseCallIndex - the index of the base call. 
+	 * @return a floating point value greater than or equal to zero
+	 */
+	public double getPaintStartX(int baseCallIndex);
+	
+	/**
 	 * Returns the x coordinate relative to the left border of the pherogram where the base call with the specified 
 	 * index shall be painted. (That would be the center of trace curve area belonging to this base call.)
 	 * 
 	 * @param baseCallIndex - the index of the base call. 
 	 * @return a floating point value greater than or equal to zero
 	 */
-	public double getPaintX(int baseCallIndex);
+	public double getPaintCenterX(int baseCallIndex);
 	
 	/**
 	 * A description of gaps in the pherogram in the area surrounding the specified base call.
