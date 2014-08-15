@@ -329,6 +329,7 @@ public class PherogramAlignmentModel {
 			int endTraceIndex = PherogramUtils.getFirstTracePosition(getOwner().getProvider(), baseCallIndex + stepWidth);
 			result.setHorizontalScale(baseCallIndex, editPosPerBaseCallPos * compoundWidth / (double)(endTraceIndex - startTraceIndex));
 
+			// Calculate paint positions:
 			double baseCallPaintDistance = compoundWidth * editPosPerBaseCallPos / stepWidth;
 			result.setPaintStartX(baseCallIndex, baseCallPaintX);
 			baseCallPaintX += 0.5 * baseCallPaintDistance;
@@ -350,7 +351,6 @@ public class PherogramAlignmentModel {
   			baseCallPaintX += compoundWidth * gapPattern.getGapCount();
   		}
 			baseCallPaintX += 0.5 * baseCallPaintDistance;
-			//TODO baseCallPaintX entsprechend der Zahl der Lücken erhöhen
 			startTraceIndex = endTraceIndex;
 		}
   	

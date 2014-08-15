@@ -64,7 +64,7 @@ public class PherogramHeadingView extends TICComponent {
 		
 		e.getGraphics().setFont(formats.getIndexFont());
 		e.getGraphics().setColor(Color.BLACK);
-		painter.paintBaseCallIndices(paintRange.getFirstPos(), paintRange.getLastPos(), 
+		painter.paintUnscaledBaseCallIndices(paintRange.getFirstPos(), paintRange.getLastPos(), 
 				e.getGraphics(), e.getRectangle().x, 0, getTraceCurveView().getHorizontalScale());
 
 		e.getGraphics().setFont(formats.getBaseCallFont());

@@ -204,8 +204,7 @@ public class PherogramTraceCurveView extends TICComponent implements PherogramCo
 		SimpleSequenceInterval paintRange = calculatePaintRange(e);
 		if (getFormats().isShowBaseCallLines()) {
 			e.getGraphics().setColor(getFormats().getBaseCallLineColor());
-			
-			getPainter().paintBaseCallLines(paintRange.getFirstPos(), paintRange.getLastPos(), 
+			getPainter().paintUnscaledBaseCallLines(paintRange.getFirstPos(), paintRange.getLastPos(), 
 					e.getGraphics(), e.getRectangle().x, 0, getSize().getHeight(), getHorizontalScale());
 		}
 		getPainter().paintUnscaledTraceCurves(paintRange.getFirstPos(), paintRange.getLastPos(), 

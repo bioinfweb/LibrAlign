@@ -66,5 +66,16 @@ public class GapPattern {
 	
 	public int getGapCount() {
 		return gapCount;
-	}	
+	}
+	
+	
+	public int countGaps(int index) {
+		int result = 0;
+		for (int i = 0; i <= index; i++) {
+			if (isGap(i)) {
+				result++;
+			}
+		}
+		return result;
+	}
 }

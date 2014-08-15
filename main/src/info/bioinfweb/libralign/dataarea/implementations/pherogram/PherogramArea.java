@@ -30,6 +30,7 @@ import info.bioinfweb.libralign.pherogram.PherogramFormats;
 import info.bioinfweb.libralign.pherogram.PherogramPainter;
 import info.bioinfweb.libralign.pherogram.PherogramProvider;
 
+import java.awt.Color;
 import java.awt.RenderingHints;
 import java.awt.geom.Rectangle2D;
 import java.util.EnumSet;
@@ -117,11 +118,35 @@ public class PherogramArea extends DataArea implements PherogramComponent {
 		e.getGraphics().setColor(getFormats().getBackgroundColor());
 		e.getGraphics().fill(new Rectangle2D.Double(leftX, e.getRectangle().y, rightX - leftX, e.getRectangle().height));
 
-		// Draw curves:
 		SimpleSequenceInterval paintRange = calculatePaintRange(e);
-		painter.paintTraceCurves(e.getGraphics(), paintRange.getFirstPos(), paintRange.getLastPos(), 
-				(getFirstSeqPos() - getLeftCutPosition()) * getOwner().getCompoundWidth(), 0, 
+		double x = (getFirstSeqPos() - getLeftCutPosition()) * getOwner().getCompoundWidth();
+		double y = 0; 
+		double height = getHeight();
+		
+		// Paint gaps:
+		painter.paintGaps(e.getGraphics(), paintRange.getFirstPos(), paintRange.getLastPos(), x, y, height,
 				getAlignmentModel().createPherogramDistortion(), getOwner().getCompoundWidth());
+		
+    // Paint indices:
+		e.getGraphics().setFont(formats.getIndexFont());
+		e.getGraphics().setColor(Color.BLACK);
+		painter.paintBaseCallIndices(e.getGraphics(), paintRange.getFirstPos(), paintRange.getLastPos(), x, y, 
+				getAlignmentModel().createPherogramDistortion(), getOwner().getCompoundWidth());
+		y += getFormats().getIndexFont().getSize();
+
+    // Paint base call lines
+		if (getFormats().isShowBaseCallLines()) {
+			e.getGraphics().setColor(getFormats().getBaseCallLineColor());
+			painter.paintBaseCallLines(e.getGraphics(), paintRange.getFirstPos(), paintRange.getLastPos(), x, y, 
+					painter.calculateTraceCurvesHeight(),	getAlignmentModel().createPherogramDistortion());
+		}
+
+		// Draw curves:
+		height = painter.paintTraceCurves(e.getGraphics(), paintRange.getFirstPos(), paintRange.getLastPos(), x, y, 
+				getAlignmentModel().createPherogramDistortion(), getOwner().getCompoundWidth());
+		// Repaint gaps:
+//		painter.paintGaps(e.getGraphics(), paintRange.getFirstPos(), paintRange.getLastPos(), x, y, height,
+//				getAlignmentModel().createPherogramDistortion(), getOwner().getCompoundWidth());
 	}
 
 
@@ -233,6 +258,6 @@ public class PherogramArea extends DataArea implements PherogramComponent {
 
 	@Override
 	public int getHeight() {
-		return (int)Math2.roundUp(painter.calculateTraceCurvesHeight());
+		return (int)Math2.roundUp(painter.calculateTraceCurvesHeight() + getFormats().getIndexFont().getSize());
 	}
 }

@@ -227,122 +227,7 @@ public class PherogramPainter {
 	}
 	
 	
-	public double paintScaledTraceCurves(int startBaseCallIndex, int endBaseCallIndex, Graphics2D g, 
-			double paintX, double paintY) throws IllegalStateException {
-		
-		if (!(owner instanceof PherogramArea)) {
-			throw new IllegalStateException("This method can only be called if the owner is an instance of " + 
-		      PherogramArea.class.getName());
-		}
-		PherogramArea pherogramArea = (PherogramArea)owner; 
-		
-		double height = calculateTraceCurvesHeight();
-		NucleotideCompound lastNucleotide = PherogramProvider.TRACE_CURVE_NUCLEOTIDES.get(
-				PherogramProvider.TRACE_CURVE_NUCLEOTIDES.size() - 1);
-		for (NucleotideCompound nucleotide: PherogramProvider.TRACE_CURVE_NUCLEOTIDES) {
-			Path2D path = new Path2D.Double();
-			double x = paintX;
-			int startTraceIndex = PherogramUtils.getFirstTracePosition(owner.getProvider(), startBaseCallIndex);
-			path.moveTo(x, paintY + height - 
-					owner.getProvider().getTraceValue(nucleotide, startTraceIndex) * owner.getVerticalScale());
-			
-			Iterator<ShiftChange> shiftChangeIterator = 
-					pherogramArea.getAlignmentModel().shiftChangeIteratorByBaseCallIndex(startBaseCallIndex);
-			ShiftChange shiftChange = null;
-			if (shiftChangeIterator.hasNext()) {
-				shiftChange = shiftChangeIterator.next();
-			}
-			
-			int stepWidth = 1;
-			int editPosPerBaseCallPos = 1;
-			for (int baseCallIndex = startBaseCallIndex; baseCallIndex < endBaseCallIndex; baseCallIndex += stepWidth) {
-				// Treat possible gaps:
-				GapPattern gapPattern = null;
-				if ((shiftChange != null) && (baseCallIndex + 1 == shiftChange.getBaseCallIndex())) {
-					if (shiftChange.getShiftChange() < 0) {  // Deletion in editable sequence
-						stepWidth = -shiftChange.getShiftChange() + 1;
-						editPosPerBaseCallPos = 1;
-					}
-					else {  // Insertion in editable sequence
-						stepWidth = 1;
-						gapPattern = getGapPattern(pherogramArea, shiftChange);
-						editPosPerBaseCallPos = shiftChange.getShiftChange() + 1 - gapPattern.getGapCount();
-					}
-
-					if (shiftChangeIterator.hasNext()) {
-						shiftChange = shiftChangeIterator.next();
-					}
-					else {
-						shiftChange = null;
-					}
-				}
-				else {
-					stepWidth = 1;
-					editPosPerBaseCallPos = 1;
-				}
-				
-				// Calculate scale and initialize variables:
-				int endTraceIndex = PherogramUtils.getFirstTracePosition(owner.getProvider(), baseCallIndex + stepWidth);
-				double horizontalScale = editPosPerBaseCallPos * pherogramArea.getOwner().getCompoundWidth() / 
-						(double)(endTraceIndex - startTraceIndex);
-				double previousX = x - pherogramArea.getOwner().getCompoundWidth();
-				int editablePos = 0;
-
-        // Create path for trace curve:
-				for (int traceX = startTraceIndex; traceX < endTraceIndex; traceX++) {
-					if (x - previousX >= pherogramArea.getOwner().getCompoundWidth()) {
-						previousX += pherogramArea.getOwner().getCompoundWidth();
-						if ((gapPattern != null) && (gapPattern.isGap(editablePos))) {
-							paintTraceGap(g, pherogramArea, x, paintY, height);
-							x += pherogramArea.getOwner().getCompoundWidth();
-							path.moveTo(x, paintY + height - owner.getProvider().getTraceValue(nucleotide, 
-									Math.max(startTraceIndex, traceX - 1)) * owner.getVerticalScale());
-							previousX += pherogramArea.getOwner().getCompoundWidth();
-							editablePos++;
-						}
-						editablePos++;
-					}
-					x += horizontalScale;
-					path.lineTo(x, paintY + height - 
-							owner.getProvider().getTraceValue(nucleotide, traceX) * owner.getVerticalScale());  //TODO curveTo() could be used alternatively.
-				}
-				
-				// Leave space for remaining gaps at the end:
-				if (gapPattern != null) {
-					for (int i = editablePos + 1; i <= editPosPerBaseCallPos + gapPattern.getGapCount(); i++) { 
-						if (nucleotide.equals(lastNucleotide)) {  // Make sure gap is painted only once and to for each trace curve.  
-  						paintTraceGap(g, pherogramArea, x, paintY, height);
-						}
-						x += pherogramArea.getOwner().getCompoundWidth();
-						path.moveTo(x, paintY + height - owner.getProvider().getTraceValue(nucleotide, 
-								Math.max(startTraceIndex, endTraceIndex - 1)) * owner.getVerticalScale());
-					}
-				}
-				
-				if (nucleotide.equals(lastNucleotide)) {  // Make sure further information is painted only once and to for each trace curve.  
-					//g.setColor(Color.BLUE);
-					double baseCallPaintDistance = pherogramArea.getOwner().getCompoundWidth() * editPosPerBaseCallPos / stepWidth; 
-					double baseCallPaintX = x - 0.5 * baseCallPaintDistance;
-					for (int i = 0; i < stepWidth; i++) {
-						paintBaseCallData(g, baseCallIndex + i, baseCallPaintX, paintY);
-						//g.draw(new Line2D.Double(baseCallPaintX,	paintY, baseCallPaintX, paintY + height));
-						baseCallPaintX -= baseCallPaintDistance;
-					}
-				}
-				startTraceIndex = endTraceIndex;
-			}
-
-			// Paint trace curve path:
-			g.setColor(pherogramArea.getFormats().getNucleotideColorSchema().getNucleotideColorMap().get(
-					"" + nucleotide.toString().charAt(0)));
-			g.draw(path);
-		}
-		
-		return height;
-	}
-	
-	
-	public void paintBaseCallLines(int startX, int endX, Graphics2D g, double paintX, double paintY, double height,
+	public void paintUnscaledBaseCallLines(int startX, int endX, Graphics2D g, double paintX, double paintY, double height,
 			double horizontalScale) {
 		
 		int index = 1;  // BioJava indices start with 1.
@@ -368,7 +253,27 @@ public class PherogramPainter {
 	}
 	
 	
-	public void paintBaseCallIndices(int startX, int endX, Graphics2D g, double paintX, double paintY, 
+	public void paintBaseCallLines(Graphics2D g, int firstBaseCallIndex, int lastBaseCallIndex, double startX, double startY,
+			double height, PherogramDistortion distortion) {
+		
+		int baseCallIndex = firstBaseCallIndex;
+		if (baseCallIndex <= owner.getProvider().getSequenceLength()) {
+			while ((baseCallIndex <= owner.getProvider().getSequenceLength()) && 
+					(baseCallIndex <= lastBaseCallIndex)) {
+				
+	  		double x = startX + distortion.getPaintCenterX(baseCallIndex);
+	  		Path2D path = new  Path2D.Double();
+	  		path.moveTo(x, startY);
+	  		path.lineTo(x, startY + height);
+				g.draw(path);
+				
+				baseCallIndex++;			
+			}
+    }		
+	}
+	
+	
+	public void paintUnscaledBaseCallIndices(int startX, int endX, Graphics2D g, double paintX, double paintY, 
 			double horizontalScale) {
 		
 		int index = 1;  // BioJava indices start with 1.
@@ -400,7 +305,32 @@ public class PherogramPainter {
 	}
 	
 	
-	public void paintTraceCurves(Graphics2D g, int firstBaseCallIndex, int lastBaseCallIndex, int x, int y, 
+	public void paintBaseCallIndices(Graphics2D g, int firstBaseCallIndex, int lastBaseCallIndex, double startX, double startY, 
+			PherogramDistortion distortion, double compoundWidth) {
+		
+		int baseCallIndex = firstBaseCallIndex;
+		float leftMostLabelStart = 0;  // Make sure the first label is always painted
+		if (baseCallIndex <= owner.getProvider().getSequenceLength()) {
+			baseCallIndex = Math.max(INDEX_LABEL_INTERVAL, baseCallIndex - baseCallIndex % INDEX_LABEL_INTERVAL - INDEX_LABEL_INTERVAL);
+			
+			while ((baseCallIndex <= owner.getProvider().getSequenceLength()) && 
+					(baseCallIndex <= lastBaseCallIndex)) {
+				
+				String label = "" + baseCallIndex;
+				int labelWidth = g.getFontMetrics().stringWidth(label);
+				float labelX = (float)(startX + distortion.getPaintCenterX(baseCallIndex) - 0.5 * labelWidth);
+				if (labelX > leftMostLabelStart) {  // Draw label only if it does not overlap with its left neighbor.
+					g.drawString(label, labelX,	(float)startY + g.getFont().getSize());
+				}
+				
+				leftMostLabelStart = labelX + labelWidth;
+				baseCallIndex += INDEX_LABEL_INTERVAL;			
+			}
+    }
+	}
+	
+	
+	public double paintTraceCurves(Graphics2D g, int firstBaseCallIndex, int lastBaseCallIndex, double x, double y, 
 			PherogramDistortion distortion, double compoundWidth) {
 		
 		final double height = calculateTraceCurvesHeight();
@@ -449,6 +379,29 @@ public class PherogramPainter {
 			g.setColor(owner.getFormats().getNucleotideColorSchema().getNucleotideColorMap().get(
 					"" + nucleotide.toString().charAt(0)));
 			g.draw(path);
+		}
+		
+		return height;
+	}
+	
+	
+	public void paintGaps(Graphics2D g, int firstBaseCallIndex, int lastBaseCallIndex, double startX, double startY, double height, 
+			PherogramDistortion distortion, double compoundWidth) {
+		
+		g.setColor(owner.getFormats().getNucleotideColorSchema().getNucleotideColorMap().get(
+				"" + AlignmentAmbiguityNucleotideCompoundSet.GAP_CHARACTER));
+		
+		for (int baseCallIndex = firstBaseCallIndex; baseCallIndex <= lastBaseCallIndex; baseCallIndex++) {
+			if (distortion.getGapPattern(baseCallIndex) != null) {
+				GapPattern gapPattern = distortion.getGapPattern(baseCallIndex);
+				double x = startX + distortion.getPaintStartX(baseCallIndex);
+				for (int gapPos = 0; gapPos < gapPattern.size(); gapPos++) {
+					if (gapPattern.isGap(gapPos)) {
+						g.fill(new Rectangle2D.Double(x, startY, compoundWidth, height));
+					}
+					x += compoundWidth;
+				}
+			}
 		}
 	}
 }
