@@ -57,8 +57,13 @@ public class PherogramFormats {
 	}
 	
 	
-	public static final float CUT_COLOR_FACTOR = 2f;
+	/** Used to calculate the default background color for the cut off areas. */
+	public static final float CUT_COLOR_FACTOR = 1.5f;
+
+	/** Used to calculate the default base call line color. */
 	public static final float BASE_CALL_LINE_COLOR_FACTOR = 1.1f;
+	
+	/** Used to determine the line spacing around base calls, indices or probabilities. */
 	public static final double FONT_HEIGHT_FACTOR = 1.2;
 	
 	
