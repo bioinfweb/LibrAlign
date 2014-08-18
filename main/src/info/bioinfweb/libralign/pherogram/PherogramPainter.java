@@ -21,17 +21,13 @@ package info.bioinfweb.libralign.pherogram;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
-import java.awt.geom.Line2D;
 import java.awt.geom.Path2D;
 import java.awt.geom.Rectangle2D;
-import java.util.Iterator;
 
 import org.biojava3.core.sequence.compound.NucleotideCompound;
 
-import info.bioinfweb.commons.Math2;
 import info.bioinfweb.commons.bio.biojava3.core.sequence.compound.AlignmentAmbiguityNucleotideCompoundSet;
 import info.bioinfweb.libralign.dataarea.implementations.pherogram.PherogramArea;
-import info.bioinfweb.libralign.dataarea.implementations.pherogram.ShiftChange;
 import info.bioinfweb.libralign.pherogram.PherogramFormats.QualityOutputType;
 import info.bioinfweb.libralign.pherogram.distortion.GapPattern;
 import info.bioinfweb.libralign.pherogram.distortion.PherogramDistortion;
@@ -45,7 +41,6 @@ import info.bioinfweb.libralign.pherogram.distortion.PherogramDistortion;
  * @author Ben St&ouml;ver
  */
 public class PherogramPainter {
-	public static final double FONT_HEIGHT_FACTOR = 1.2;
 	public static final int INDEX_LABEL_INTERVAL = 5;
 	
 	
@@ -71,7 +66,7 @@ public class PherogramPainter {
 		if (annotation >= 0) {
 			paintBaseCallText(g, "" + annotation, paintX, paintY);
 		}
-		return paintY + g.getFont().getSize() * FONT_HEIGHT_FACTOR;
+		return paintY + g.getFont().getSize() * PherogramFormats.FONT_HEIGHT_FACTOR;
 	}
 	
 	
@@ -83,7 +78,7 @@ public class PherogramPainter {
 		g.setColor(getNucleotideColor(nucleotide.getUpperedBase()));
 		paintBaseCallText(g, nucleotide.getUpperedBase(), paintX, paintY);
 		
-		paintY += g.getFont().getSize() * FONT_HEIGHT_FACTOR;
+		paintY += g.getFont().getSize() * PherogramFormats.FONT_HEIGHT_FACTOR;
 		if (!formats.getQualityOutputType().equals(QualityOutputType.NONE)) {
 			g.setFont(formats.getAnnotationFont());
 			if (formats.getQualityOutputType().equals(QualityOutputType.MAXIMUM)) {
@@ -110,6 +105,15 @@ public class PherogramPainter {
 	
 	private void paintBaseCallText(Graphics2D g, String text, double paintX, double paintY) {
 		g.drawString(text, (float)(paintX - 0.5 * g.getFontMetrics().stringWidth(text)), (float)(paintY + g.getFont().getSize()));
+	}
+	
+	
+	public void paintBaseCalls(Graphics2D g, int firstBaseCallIndex, int lastBaseCallIndex, double startX, double startY, 
+			PherogramDistortion distortion) {
+		
+		for (int baseCallIndex = firstBaseCallIndex; baseCallIndex <= lastBaseCallIndex; baseCallIndex++) {
+			paintBaseCallData(g, baseCallIndex, startX + distortion.getPaintCenterX(baseCallIndex), startY);
+		}
 	}
 	
 	
@@ -204,26 +208,6 @@ public class PherogramPainter {
 		}
 		
 		return height;
-	}
-	
-	
-	private GapPattern getGapPattern(PherogramArea pherogramArea, ShiftChange shiftChange) {
-		GapPattern result = new GapPattern(shiftChange.getShiftChange() + 1);
-		int firstEditableIndex = pherogramArea.getAlignmentModel().editableIndexByBaseCallIndex(
-				shiftChange.getBaseCallIndex()).getCorresponding() - shiftChange.getShiftChange() - 1;
-		for (int i = 0; i < result.size(); i++) {
-			result.setGap(i, ((NucleotideCompound)pherogramArea.getOwner().getSequenceProvider().getTokenAt(
-					pherogramArea.getList().getLocation().getSequenceID(), firstEditableIndex + i)).getBase().equals(
-							"" + AlignmentAmbiguityNucleotideCompoundSet.GAP_CHARACTER));
-		}
-		return result;
-	}
-	
-	
-	private void paintTraceGap(Graphics2D g, PherogramArea pherogramArea, double x, double y, double height) {
-		g.setColor(pherogramArea.getFormats().getNucleotideColorSchema().getNucleotideColorMap().get(
-				"" + AlignmentAmbiguityNucleotideCompoundSet.GAP_CHARACTER));
-		g.fill(new Rectangle2D.Double(x, y, pherogramArea.getOwner().getCompoundWidth(), height));
 	}
 	
 	
@@ -343,8 +327,7 @@ public class PherogramPainter {
         // Create path for trace curve:
 				int endTraceIndex = PherogramUtils.getFirstTracePosition(owner.getProvider(), baseCallIndex + 1);
 				
-				double paintX = x + distortion.getPaintStartX(baseCallIndex); // - 
-						//0.5 * (endTraceIndex - startTraceIndex /* + 1 ? */) * distortion.getHorizontalScale(baseCallIndex);
+				double paintX = x + distortion.getPaintStartX(baseCallIndex);
 				double previousX = paintX - compoundWidth;
 				int editablePos = 0;
 				

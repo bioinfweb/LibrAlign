@@ -59,6 +59,7 @@ public class PherogramFormats {
 	
 	public static final float CUT_COLOR_FACTOR = 2f;
 	public static final float BASE_CALL_LINE_COLOR_FACTOR = 1.1f;
+	public static final double FONT_HEIGHT_FACTOR = 1.2;
 	
 	
 	private SequenceColorSchema  nucleotideColorSchema;
@@ -323,6 +324,18 @@ public class PherogramFormats {
 		this.qualityOutputType = qualityOutputType;
 	}
 
+	
+	public double qualityOutputHeight() {
+		switch (getQualityOutputType()) {
+			case ALL:
+				return 4 * getAnnotationFont().getSize() * FONT_HEIGHT_FACTOR;
+			case MAXIMUM:
+				return getAnnotationFont().getSize() * FONT_HEIGHT_FACTOR;
+			default:
+				return 0;
+		}
+	}
+	
 
 	/**
 	 * Determines whether probability values (substitution, overcall and undercall) should be displayed

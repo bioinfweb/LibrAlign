@@ -69,7 +69,7 @@ public class PherogramHeadingView extends TICComponent {
 
 		e.getGraphics().setFont(formats.getBaseCallFont());
 		painter.paintUnscaledBaseCalls(paintRange.getFirstPos(), paintRange.getLastPos(), 
-				e.getGraphics(), e.getRectangle().x, formats.getIndexFont().getSize() * PherogramPainter.FONT_HEIGHT_FACTOR, 
+				e.getGraphics(), e.getRectangle().x, formats.getIndexFont().getSize() * PherogramFormats.FONT_HEIGHT_FACTOR, 
 				getTraceCurveView().getHorizontalScale());
 
 	}
@@ -78,22 +78,13 @@ public class PherogramHeadingView extends TICComponent {
 	@Override
 	public Dimension getSize() {
 		PherogramFormats formats = getTraceCurveView().getFormats(); 
-		int height = formats.getBaseCallFont().getSize() + formats.getIndexFont().getSize();
-		switch (formats.getQualityOutputType()) {
-			case ALL:
-				height += 4 * formats.getAnnotationFont().getSize();
-				break;
-			case MAXIMUM:
-				height += formats.getAnnotationFont().getSize();
-				break;
-			case NONE:  // Nothing to do.
-				break;
-		}
+		double height = ((formats.getBaseCallFont().getSize() + formats.getIndexFont().getSize()) * PherogramFormats.FONT_HEIGHT_FACTOR) + 
+				formats.qualityOutputHeight();
 		if (formats.isShowProbabilityValues()) {
-			height += 3 * formats.getAnnotationFont().getSize();
+			height += 3 * formats.getAnnotationFont().getSize() * PherogramFormats.FONT_HEIGHT_FACTOR;
 		}
 		
 		return new Dimension(getTraceCurveView().getWidth(), 
-				(int)Math2.roundUp(height * PherogramPainter.FONT_HEIGHT_FACTOR));
+				(int)Math2.roundUp(height));
 	}
 }

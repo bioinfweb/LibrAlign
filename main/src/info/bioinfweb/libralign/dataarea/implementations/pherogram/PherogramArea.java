@@ -29,8 +29,10 @@ import info.bioinfweb.libralign.pherogram.PherogramComponent;
 import info.bioinfweb.libralign.pherogram.PherogramFormats;
 import info.bioinfweb.libralign.pherogram.PherogramPainter;
 import info.bioinfweb.libralign.pherogram.PherogramProvider;
+import info.bioinfweb.libralign.pherogram.distortion.ScaledPherogramDistortion;
 
 import java.awt.Color;
+import java.awt.Graphics2D;
 import java.awt.RenderingHints;
 import java.awt.geom.Rectangle2D;
 import java.util.EnumSet;
@@ -90,7 +92,9 @@ public class PherogramArea extends DataArea implements PherogramComponent {
 
 	@Override
 	public void paint(TICPaintEvent e) {
-		e.getGraphics().setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+		Graphics2D g = e.getGraphics();
+		
+		g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 		
 		double leftX = (getAlignmentModel().editableIndexByBaseCallIndex(getLeftCutPosition()).getAfter() - 1) * 
 				getOwner().getCompoundWidth();
@@ -98,16 +102,16 @@ public class PherogramArea extends DataArea implements PherogramComponent {
 				getOwner().getCompoundWidth();
 		
 		// Draw cut off background:
-		e.getGraphics().setColor(getFormats().getCutBackgroundColor());
+		g.setColor(getFormats().getCutBackgroundColor());
 		if (leftX >= e.getRectangle().x) {
-			e.getGraphics().fill(new Rectangle2D.Double(e.getRectangle().x, e.getRectangle().y, 
+			g.fill(new Rectangle2D.Double(e.getRectangle().x, e.getRectangle().y, 
 					leftX - e.getRectangle().x, e.getRectangle().height));
 		}
 		else {
 			leftX = e.getRectangle().x;
 		}
 		if (rightX <= e.getRectangle().x + e.getRectangle().width) {
-			e.getGraphics().fill(new Rectangle2D.Double(rightX, e.getRectangle().y, 
+			g.fill(new Rectangle2D.Double(rightX, e.getRectangle().y, 
 					e.getRectangle().x + e.getRectangle().width - rightX, e.getRectangle().height));
 		}
 		else {
@@ -115,38 +119,43 @@ public class PherogramArea extends DataArea implements PherogramComponent {
 		}
 		
 		// Draw center background:
-		e.getGraphics().setColor(getFormats().getBackgroundColor());
-		e.getGraphics().fill(new Rectangle2D.Double(leftX, e.getRectangle().y, rightX - leftX, e.getRectangle().height));
+		g.setColor(getFormats().getBackgroundColor());
+		g.fill(new Rectangle2D.Double(leftX, e.getRectangle().y, rightX - leftX, e.getRectangle().height));
 
 		SimpleSequenceInterval paintRange = calculatePaintRange(e);
 		double x = (getFirstSeqPos() - getLeftCutPosition()) * getOwner().getCompoundWidth();
 		double y = 0; 
 		double height = getHeight();
+		ScaledPherogramDistortion distortion = getAlignmentModel().createPherogramDistortion();
 		
 		// Paint gaps:
-		painter.paintGaps(e.getGraphics(), paintRange.getFirstPos(), paintRange.getLastPos(), x, y, height,
-				getAlignmentModel().createPherogramDistortion(), getOwner().getCompoundWidth());
+		painter.paintGaps(g, paintRange.getFirstPos(), paintRange.getLastPos(), x, y, height,	distortion, 
+				getOwner().getCompoundWidth());
 		
     // Paint indices:
-		e.getGraphics().setFont(formats.getIndexFont());
-		e.getGraphics().setColor(Color.BLACK);
-		painter.paintBaseCallIndices(e.getGraphics(), paintRange.getFirstPos(), paintRange.getLastPos(), x, y, 
-				getAlignmentModel().createPherogramDistortion(), getOwner().getCompoundWidth());
-		y += getFormats().getIndexFont().getSize();
+		g.setFont(getFormats().getIndexFont());
+		g.setColor(Color.BLACK);
+		painter.paintBaseCallIndices(g, paintRange.getFirstPos(), paintRange.getLastPos(), x, y, 
+				distortion, getOwner().getCompoundWidth());
+		y += getFormats().getIndexFont().getSize() * PherogramFormats.FONT_HEIGHT_FACTOR;
+		
+		// Paint base calls and probabilities:
+		painter.paintBaseCalls(g, paintRange.getFirstPos(), paintRange.getLastPos(), x, y, distortion);
+		y += getFormats().getBaseCallFont().getSize() * PherogramFormats.FONT_HEIGHT_FACTOR + getFormats().qualityOutputHeight();
 
     // Paint base call lines
 		if (getFormats().isShowBaseCallLines()) {
-			e.getGraphics().setColor(getFormats().getBaseCallLineColor());
-			painter.paintBaseCallLines(e.getGraphics(), paintRange.getFirstPos(), paintRange.getLastPos(), x, y, 
-					painter.calculateTraceCurvesHeight(),	getAlignmentModel().createPherogramDistortion());
+			g.setColor(getFormats().getBaseCallLineColor());
+			painter.paintBaseCallLines(g, paintRange.getFirstPos(), paintRange.getLastPos(), x, y, 
+					painter.calculateTraceCurvesHeight(),	distortion);
 		}
 
 		// Draw curves:
-		height = painter.paintTraceCurves(e.getGraphics(), paintRange.getFirstPos(), paintRange.getLastPos(), x, y, 
-				getAlignmentModel().createPherogramDistortion(), getOwner().getCompoundWidth());
+		height = painter.paintTraceCurves(g, paintRange.getFirstPos(), paintRange.getLastPos(), x, y, 
+				distortion, getOwner().getCompoundWidth());
 		// Repaint gaps:
-//		painter.paintGaps(e.getGraphics(), paintRange.getFirstPos(), paintRange.getLastPos(), x, y, height,
-//				getAlignmentModel().createPherogramDistortion(), getOwner().getCompoundWidth());
+//		painter.paintGaps(g, paintRange.getFirstPos(), paintRange.getLastPos(), x, y, height,
+//				distortion, getOwner().getCompoundWidth());
 	}
 
 
@@ -258,6 +267,7 @@ public class PherogramArea extends DataArea implements PherogramComponent {
 
 	@Override
 	public int getHeight() {
-		return (int)Math2.roundUp(painter.calculateTraceCurvesHeight() + getFormats().getIndexFont().getSize());
+		return (int)Math2.roundUp(painter.calculateTraceCurvesHeight() + getFormats().qualityOutputHeight() +
+				(getFormats().getIndexFont().getSize() + getFormats().getBaseCallFont().getSize()) * PherogramFormats.FONT_HEIGHT_FACTOR);
 	}
 }
