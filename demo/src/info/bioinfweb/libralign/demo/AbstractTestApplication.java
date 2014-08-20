@@ -61,6 +61,7 @@ public class AbstractTestApplication {
 			}
 			alignment.add("Sequence 4", new DNASequence("-----" + seqBuffer.substring(0, 38) + 
 					seqBuffer.substring(39, 49) + "-A" + seqBuffer.substring(49)));  // One A is deleted for shift change specified below. 
+					//seqBuffer.substring(39, 49) + "--" + seqBuffer.substring(49)));  // One A is deleted for shift change specified below. 
 			
 			BioJavaSequenceDataProvider<DNASequence, NucleotideCompound> sequenceProvider = 
 					new BioJavaSequenceDataProvider<DNASequence, NucleotideCompound>(
