@@ -19,6 +19,7 @@
 package info.bioinfweb.libralign;
 
 
+import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.util.Iterator;
@@ -32,13 +33,19 @@ import info.bioinfweb.commons.Math2;
 import info.bioinfweb.commons.tic.TICComponent;
 import info.bioinfweb.commons.tic.TICPaintEvent;
 import info.bioinfweb.libralign.alignmentareacomponents.SWTAlignmentOverviewArea;
+import info.bioinfweb.libralign.alignmentareacomponents.SequenceArea;
 import info.bioinfweb.libralign.alignmentareacomponents.SwingAlignmentOverviewArea;
 import info.bioinfweb.libralign.alignmentareacomponents.ToolkitSpecificAlignmentOverviewArea;
+import info.bioinfweb.libralign.alignmentareacomponents.ToolkitSpecificAlignmentPartArea;
+import info.bioinfweb.libralign.dataarea.DataArea;
 import info.bioinfweb.libralign.dataarea.DataAreaChangeEvent;
+import info.bioinfweb.libralign.dataarea.DataAreaListType;
+import info.bioinfweb.libralign.dataarea.DataAreaLocation;
 import info.bioinfweb.libralign.dataarea.DataAreaModel;
 import info.bioinfweb.libralign.dataarea.DataAreaModelListener;
 import info.bioinfweb.libralign.selection.AlignmentCursor;
 import info.bioinfweb.libralign.selection.SelectionModel;
+import info.bioinfweb.libralign.selection.SelectionInputListener;
 import info.bioinfweb.libralign.sequenceprovider.SequenceDataChangeListener;
 import info.bioinfweb.libralign.sequenceprovider.SequenceDataProvider;
 import info.bioinfweb.libralign.sequenceprovider.events.SequenceChangeEvent;
@@ -205,7 +212,28 @@ public class AlignmentArea extends TICComponent implements SequenceDataChangeLis
 		return selection;
 	}
 
-
+	
+	/**
+	 * Calculates the y coordinate relative to the alignment part area the specified sequence area is contained in.
+	 * 
+	 * @param sequenceArea - the sequence area where {@code relativeY} belongs to 
+	 * @param relativeY - the y coordinate relative to {@code sequenceArea}
+	 * @return the y coordinate relative to the parent instance of {@link ToolkitSpecificAlignmentPartArea}
+	 * @throws IllegalStateException if neither or Swing or a SWT component has been created for the specified sequence
+	 *         area before the call of this method
+	 */
+	public int alignmentPartY(SequenceArea sequenceArea, int relativeY) {
+		switch (sequenceArea.getCurrentToolkit()) {  // SequenceAreas need to be direct children of the ToolkitSpecificAlignmentPartAreas for this method to work.
+			case SWING:
+				return ((Component)sequenceArea.getToolkitComponent()).getLocation().y + relativeY;
+			case SWT:
+				return ((Composite)sequenceArea.getToolkitComponent()).getLocation().y + relativeY;
+			default:
+				throw new IllegalStateException("No Swing or SWT component of the specfied sequence area has already been created.");
+		}
+	}
+	
+	
 	/**
 	 * Returns the data area model used by this object containing all data areas attached 
 	 * to this alignment. 
@@ -355,6 +383,31 @@ public class AlignmentArea extends TICComponent implements SequenceDataChangeLis
 		return (int)((column - 1) * getCompoundWidth()) + getDataAreas().getMaxLengthBeforeStart();
 	}
 
+
+	/**
+	 * Returns the row index of the sequence displayed at the specified y coordinate considering the current order
+	 * of sequences. If a data area is displayed at the specified position, the row of the associated sequence is returned
+	 * anyway.
+	 * 
+	 * @param y - the y coordinate relative to the alignment part area containing the sequence areas
+	 * @return a valid sequence position of -1 if no according sequence was found.
+	 */
+	public int rowByPaintY(int y) {
+		AlignmentSubArea subArea = getToolkitComponent().getPartArea(DataAreaListType.SEQUENCE).getAreaByY(y);
+		if (subArea instanceof DataArea) {
+			DataAreaLocation location = ((DataArea)subArea).getList().getLocation();
+			if (location.getListType().equals(DataAreaListType.SEQUENCE)) {
+				subArea = getToolkitComponent().getSequenceAreaByID(location.getSequenceID());
+			}
+		}
+		if (subArea instanceof SequenceArea) {
+			return getSequenceOrder().indexByID(((SequenceArea)subArea).getSeqenceID());
+		}
+		else {
+			return -1;
+		}
+	}
+	
 
 	@Override
 	protected JComponent doCreateSwingComponent() {

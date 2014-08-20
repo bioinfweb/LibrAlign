@@ -32,6 +32,10 @@ import org.biojava3.core.sequence.compound.NucleotideCompound;
 
 import info.bioinfweb.commons.graphics.GraphicsUtils;
 import info.bioinfweb.commons.tic.TICPaintEvent;
+import info.bioinfweb.commons.tic.input.TICKeyAdapter;
+import info.bioinfweb.commons.tic.input.TICKeyEvent;
+import info.bioinfweb.commons.tic.input.TICMouseAdapter;
+import info.bioinfweb.commons.tic.input.TICMouseEvent;
 import info.bioinfweb.libralign.AlignmentArea;
 import info.bioinfweb.libralign.AlignmentDataViewMode;
 import info.bioinfweb.libralign.AlignmentSubArea;
@@ -60,6 +64,46 @@ public class SequenceArea extends AlignmentSubArea {
 		super(owner);
 		this.seqenceID = seqenceID;
 		assignSize();
+		
+//		addMouseListener(new TICMouseAdapter() {
+//			@Override
+//			public void mousePressed(TICMouseEvent event) {
+//				System.out.println("Pressed: " + event.getButton() + " " + event.getComponentX() + " " + event.getComponentY());
+//				//System.out.println(event.getButton() + " " + event.getModifiers() + " " + event.isControlDown() + " " + event.isMetaDown());
+//			}
+//
+//			@Override
+//			public void mouseDragged(TICMouseEvent event) {
+//				System.out.println("Dragged: " + event.getButton() + " " + event.getComponentX() + " " + event.getComponentY());
+//			}
+//
+//			@Override
+//			public void mouseEntered(TICMouseEvent event) {
+//				System.out.println("Entered: " + event.getButton() + " " + event.getComponentX() + " " + event.getComponentY());
+//			}
+//
+//			@Override
+//			public void mouseExited(TICMouseEvent event) {
+//				System.out.println("Exited: " + event.getButton() + " " + event.getComponentX() + " " + event.getComponentY());
+//			}
+//
+//			@Override
+//			public void mouseMoved(TICMouseEvent event) {
+//				System.out.println("Moved: " + event.getButton() + " " + event.getComponentX() + " " + event.getComponentY());
+//			}
+//
+//			@Override
+//			public void mouseReleased(TICMouseEvent event) {
+//				System.out.println("Released: " + event.getButton() + " " + event.getComponentX() + " " + event.getComponentY());
+//			}
+//		});
+//
+//		addKeyListener(new TICKeyAdapter() {
+//			@Override
+//			public void keyPressed(TICKeyEvent event) {
+//				//System.out.println(event.getKeyCharacter() + " " + event.getKeyCode() + " " + event.getKeyLocation());
+//			}
+//		});
 	}
 
 
@@ -107,7 +151,7 @@ public class SequenceArea extends AlignmentSubArea {
   	float bgY = y;
   	while (iterator.hasNext()) {  // Fill the compound rectangle with differently colored zones, if ambiguity codes are used.
   		g.setColor(getBGColor(area.getColorSchema(), area.getColorSchema().getNucleotideColorMap().get(
-  				getNucleotideBaseString(area.getViewMode(), iterator.next())),	selected));
+  				getNucleotideBaseString(area.getViewMode(), iterator.next())), selected));
     	g.fill(new Rectangle2D.Float(x, bgY, area.getCompoundWidth(), height));
     	bgY += height;
   	}
@@ -131,7 +175,7 @@ public class SequenceArea extends AlignmentSubArea {
 			case DNA:
 			case RNA:
 				paintNucleotideCompound(area, g, (NucleotideCompound)compound, x, y, selected);
-				//TODO Type cast funktioniert so nicht, wenn Quelldaten nicht diesen Datentyp haben! => Konvertierung mit GeneticCode hinzuf�gen.
+				//TODO Type cast funktioniert so nicht, wenn Quelldaten nicht diesen Datentyp haben! => Konvertierung mit GeneticCode hinzufügen.
 				break;
 			case CODON:
 				break;

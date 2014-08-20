@@ -27,6 +27,7 @@ import java.util.Iterator;
 
 import info.bioinfweb.libralign.AlignmentArea;
 import info.bioinfweb.libralign.dataarea.DataAreaListType;
+import info.bioinfweb.libralign.selection.SelectionInputListener;
 
 import javax.swing.JComponent;
 import javax.swing.BoxLayout;
@@ -211,6 +212,12 @@ public class SwingAlignmentOverviewArea extends JComponent implements ToolkitSpe
 			default:
 				return getBottomArea();
 		}
+	}
+
+
+	@Override
+	public SequenceArea getSequenceAreaByID(int sequenceID) {
+		return sequenceAreaMap.get(sequenceID);
 	}
 
 

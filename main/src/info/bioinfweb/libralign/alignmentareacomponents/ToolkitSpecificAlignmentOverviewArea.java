@@ -51,4 +51,12 @@ public interface ToolkitSpecificAlignmentOverviewArea extends ToolkitComponent {
 	 * considered.
 	 */
   public void redistributeHeight();
+  
+  /**
+   * Returns the {@link SequenceArea} inside this area that displays the sequence with the specified ID.
+   * 
+   * @param sequenceID - the ID of the sequence displayed in the returned area
+   * @return the GUI component or {@code null} if no sequence with the specified ID is displayed in this area
+   */
+  public SequenceArea getSequenceAreaByID(int sequenceID);
 }

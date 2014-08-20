@@ -19,7 +19,11 @@
 package info.bioinfweb.libralign.alignmentareacomponents;
 
 
+import info.bioinfweb.commons.Math2;
+import info.bioinfweb.commons.tic.TICComponent;
+import info.bioinfweb.commons.tic.toolkit.ToolkitComponent;
 import info.bioinfweb.libralign.AlignmentArea;
+import info.bioinfweb.libralign.AlignmentSubArea;
 import info.bioinfweb.libralign.dataarea.DataArea;
 import info.bioinfweb.libralign.dataarea.DataAreaList;
 
@@ -28,6 +32,7 @@ import java.util.Iterator;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Point;
+import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.layout.RowData;
 import org.eclipse.swt.layout.RowLayout;
 import org.eclipse.swt.widgets.Composite;
@@ -98,5 +103,21 @@ public class SWTAlignmentPartArea extends Composite implements ToolkitSpecificAl
 			height += size.y;
     }
 		setSize(width, height);
+	}
+
+
+	@Override
+	public AlignmentSubArea getAreaByY(int y) {
+		Control[] children = getChildren();
+		for (int i = 0; i < children.length; i++) {
+			Rectangle r = children[i].getBounds();
+			if (Math2.isBetween(y, r.y, r.y + r.width - 1) && (children[i] instanceof ToolkitComponent)) {
+				TICComponent ticComponent = ((ToolkitComponent)children[i]).getIndependentComponent();
+				if (ticComponent instanceof AlignmentSubArea) {
+					return (AlignmentSubArea)ticComponent;
+				}
+			}
+		}
+		return null;
 	}	
 }

@@ -25,7 +25,10 @@ import java.awt.Rectangle;
 import java.beans.Transient;
 import java.util.Iterator;
 
+import info.bioinfweb.commons.tic.TICComponent;
+import info.bioinfweb.commons.tic.toolkit.ToolkitComponent;
 import info.bioinfweb.libralign.AlignmentArea;
+import info.bioinfweb.libralign.AlignmentSubArea;
 import info.bioinfweb.libralign.dataarea.DataArea;
 import info.bioinfweb.libralign.dataarea.DataAreaList;
 
@@ -111,5 +114,18 @@ public class SwingAlignmentPartArea extends JPanel implements Scrollable, Toolki
 	public int getScrollableUnitIncrement(Rectangle arg0, int arg1, int arg2) {
 		// TODO Auto-generated method stub
 		return 10;
+	}
+
+
+	@Override
+	public AlignmentSubArea getAreaByY(int y) {
+		Component child = getComponentAt(0, y);
+		if ((child != null) && (child instanceof ToolkitComponent)) {
+			TICComponent ticComponent = ((ToolkitComponent)child).getIndependentComponent();
+			if (ticComponent instanceof AlignmentSubArea) {
+				return (AlignmentSubArea)ticComponent;
+			}
+		}
+		return null;
 	}
 }

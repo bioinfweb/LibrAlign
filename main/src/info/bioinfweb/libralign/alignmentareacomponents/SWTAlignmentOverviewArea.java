@@ -111,6 +111,12 @@ public class SWTAlignmentOverviewArea extends Composite implements ToolkitSpecif
 
 
 	@Override
+	public SequenceArea getSequenceAreaByID(int sequenceID) {
+		return sequenceAreaMap.get(sequenceID);
+	}
+
+
+	@Override
 	public void reinsertSubelements() {
 		// Head elements:
 		headComponent.getPartArea().removeAll();

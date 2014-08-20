@@ -146,6 +146,12 @@ public class SelectionModel {
 	}
 	
 	
+	public void clear() {
+		getColumnSelection().clear();
+		getRowSelection().clear();
+	}
+	
+	
 	/**
 	 * Adds a lister to this object that will be informed about future changes of the selection.
 	 * 

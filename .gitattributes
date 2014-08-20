@@ -73,6 +73,7 @@ main/src/info/bioinfweb/libralign/selection/AlignmentCursor.java -text svneol=un
 main/src/info/bioinfweb/libralign/selection/OneDimensionalSelection.java -text svneol=unset#text/plain
 main/src/info/bioinfweb/libralign/selection/SelectionChangeEvent.java -text svneol=unset#text/plain
 main/src/info/bioinfweb/libralign/selection/SelectionDimension.java -text svneol=unset#text/plain
+main/src/info/bioinfweb/libralign/selection/SelectionInputListener.java -text svneol=unset#text/plain
 main/src/info/bioinfweb/libralign/selection/SelectionListener.java -text svneol=unset#text/plain
 main/src/info/bioinfweb/libralign/selection/SelectionModel.java -text svneol=unset#text/plain
 main/src/info/bioinfweb/libralign/selection/SelectionType.java -text svneol=unset#text/plain

@@ -20,6 +20,10 @@ package info.bioinfweb.libralign.alignmentareacomponents;
 
 
 import info.bioinfweb.libralign.AlignmentArea;
+import info.bioinfweb.libralign.selection.OneDimensionalSelection;
+import info.bioinfweb.libralign.selection.SelectionChangeEvent;
+import info.bioinfweb.libralign.selection.SelectionInputListener;
+import info.bioinfweb.libralign.selection.SelectionListener;
 import info.bioinfweb.libralign.sequenceprovider.SequenceDataProvider;
 
 import java.util.Iterator;
@@ -34,13 +38,16 @@ import java.util.TreeMap;
  * @author Ben St&ouml;ver
  * @since 0.0.0
  */
-public class SequenceAreaMap extends TreeMap<Integer, SequenceArea> {
+public class SequenceAreaMap extends TreeMap<Integer, SequenceArea> implements SelectionListener {
 	private AlignmentArea owner;
+	private SelectionInputListener selectionInputListener;
 
 	
 	public SequenceAreaMap(AlignmentArea owner) {
 		super();
 		this.owner = owner;
+		selectionInputListener = new SelectionInputListener(owner);
+		owner.getSelection().addSelectionListener(this);
 		recreateElements();
 	}
 
@@ -61,8 +68,24 @@ public class SequenceAreaMap extends TreeMap<Integer, SequenceArea> {
 			Iterator<Integer> iterator = provider.sequenceIDIterator();
 			while (iterator.hasNext()) {
 				Integer id = iterator.next();
-				put(id, new SequenceArea(getOwner(), id));
+				SequenceArea sequenceArea = new SequenceArea(getOwner(), id);
+				sequenceArea.addMouseListener(selectionInputListener);
+				//TODO Also add key and mouse wheel listener 
+				put(id, sequenceArea);
 			}
 		}
+	}
+
+
+	public void repaintSequenceAreas() {
+		for (SequenceArea sequenceArea: values()) {
+			sequenceArea.repaint();
+		}
+	}
+	
+	
+	@Override
+	public void selectionChanged(SelectionChangeEvent e) {
+		repaintSequenceAreas();  // Just repainting the areas in the selection is not enough, because other might have just become deselected.
 	}
 }

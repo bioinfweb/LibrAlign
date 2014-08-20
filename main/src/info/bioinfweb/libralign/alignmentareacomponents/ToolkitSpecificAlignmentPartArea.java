@@ -19,6 +19,7 @@
 package info.bioinfweb.libralign.alignmentareacomponents;
 
 
+import info.bioinfweb.libralign.AlignmentSubArea;
 import info.bioinfweb.libralign.dataarea.DataAreaList;
 
 
@@ -34,4 +35,6 @@ public interface ToolkitSpecificAlignmentPartArea {
 	public int getHeight();
 	
 	public void addDataAreaList(DataAreaList list);
+	
+	public AlignmentSubArea getAreaByY(int y);
 }
