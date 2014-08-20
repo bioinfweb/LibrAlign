@@ -347,7 +347,7 @@ public class PherogramAlignmentModel {
   		else {	// Treat gaps (in this case stepWidth should always be 1):
   			GapPattern gapPattern = result.getGapPattern(baseCallIndex);
   			result.setPaintCenterX(baseCallIndex, baseCallPaintX + 
-  					compoundWidth * gapPattern.countGaps(gapPattern.size() / 2 + gapPattern.size() % 2));
+  					compoundWidth * gapPattern.countGapsBeforeCurveCenter());
   			baseCallPaintX += compoundWidth * gapPattern.getGapCount();
   		}
 			baseCallPaintX += 0.5 * baseCallPaintDistance;

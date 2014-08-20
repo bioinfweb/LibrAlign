@@ -71,9 +71,28 @@ public class GapPattern {
 	
 	public int countGaps(int index) {
 		int result = 0;
-		for (int i = 0; i <= index; i++) {
+		for (int i = 0; i < index; i++) {
 			if (isGap(i)) {
 				result++;
+			}
+		}
+		return result;
+	}
+
+	
+	public int countGapsBeforeCurveCenter() {
+		int centerElement = (size() - getGapCount()) / 2;
+		int curveElementCount = 0;
+		int result = 0;
+		for (int i = 0; i < size(); i++) {
+			if (isGap(i)) {
+				result++;
+			}
+			else {
+				curveElementCount++;
+				if (curveElementCount >= centerElement) {
+					return result;
+				}
 			}
 		}
 		return result;
