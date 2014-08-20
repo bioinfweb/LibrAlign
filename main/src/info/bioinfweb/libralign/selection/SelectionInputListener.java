@@ -19,6 +19,8 @@
 package info.bioinfweb.libralign.selection;
 
 
+import java.awt.event.MouseEvent;
+
 import info.bioinfweb.commons.tic.input.TICMouseAdapter;
 import info.bioinfweb.commons.tic.input.TICMouseEvent;
 import info.bioinfweb.commons.tic.input.TICMouseListener;
@@ -44,18 +46,26 @@ public class SelectionInputListener extends TICMouseAdapter implements TICMouseL
 
 	@Override
 	public void mousePressed(TICMouseEvent event) {
-		if ((event.isMouseButton1Down()) && (event.getSource() instanceof SequenceArea)) {
+		if (event.getClickCount() > 1) {
+			// Handle double click events here
+		}
+		else if ((event.isMouseButton1Down()) && (event.getSource() instanceof SequenceArea)) {
 			SequenceArea source = (SequenceArea)event.getSource();
 			SelectionModel selection = getOwner().getSelection();
 			selection.getColumnSelection().setNewSelection(getOwner().columnByPaintX(event.getComponentX()));
 			selection.getRowSelection().setNewSelection(getOwner().rowByPaintY(
 					getOwner().alignmentPartY(source, event.getComponentY())));
 		}
-		else if (event.isMouseButton3Down()) {
-			getOwner().getSelection().clear();
-		}
 	}
 	
+
+	@Override
+	public void mouseReleased(TICMouseEvent event) {
+		if (event.getButton() == MouseEvent.BUTTON3) {
+			getOwner().getSelection().clear();  //TODO When cursor positioning is implemented, this operation should be removed.
+		}
+	}
+
 
 	@Override
 	public void mouseDragged(TICMouseEvent event) {
