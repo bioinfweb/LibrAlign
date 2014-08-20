@@ -27,7 +27,6 @@ import java.util.Iterator;
 
 import info.bioinfweb.libralign.AlignmentArea;
 import info.bioinfweb.libralign.dataarea.DataAreaListType;
-import info.bioinfweb.libralign.selection.SelectionInputListener;
 
 import javax.swing.JComponent;
 import javax.swing.BoxLayout;

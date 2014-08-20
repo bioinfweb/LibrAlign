@@ -37,6 +37,7 @@ import info.bioinfweb.libralign.alignmentareacomponents.SequenceArea;
 import info.bioinfweb.libralign.alignmentareacomponents.SwingAlignmentOverviewArea;
 import info.bioinfweb.libralign.alignmentareacomponents.ToolkitSpecificAlignmentOverviewArea;
 import info.bioinfweb.libralign.alignmentareacomponents.ToolkitSpecificAlignmentPartArea;
+import info.bioinfweb.libralign.cursor.AlignmentCursor;
 import info.bioinfweb.libralign.dataarea.DataArea;
 import info.bioinfweb.libralign.dataarea.DataAreaChangeEvent;
 import info.bioinfweb.libralign.dataarea.DataAreaListType;
@@ -77,6 +78,7 @@ public class AlignmentArea extends TICComponent implements SequenceDataChangeLis
 	private WorkingMode workingMode = WorkingMode.VIEW;  //TODO Should this better be part of the controller (key and mouse listener)?
 	private AlignmentDataViewMode viewMode = AlignmentDataViewMode.NUCLEOTIDE;  //TODO Initial value should be adjusted when the data type of the specified provider is known.
 	private SelectionModel selection = new SelectionModel(this);
+	private AlignmentCursor cursor = new AlignmentCursor();
 	private DataAreaModel dataAreas = new DataAreaModel();
 	private float zoomX = 1f;
 	private float zoomY = 1f;
@@ -205,6 +207,14 @@ public class AlignmentArea extends TICComponent implements SequenceDataChangeLis
 	}
 
 	
+	/**
+	 * Returns the alignment cursor.
+	 */
+	public AlignmentCursor getCursor() {
+		return cursor;
+	}
+
+
 	/**
 	 * Calculates the y coordinate relative to the alignment part area the specified sequence area is contained in.
 	 * 

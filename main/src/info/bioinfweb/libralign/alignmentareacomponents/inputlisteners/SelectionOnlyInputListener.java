@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package info.bioinfweb.libralign.selection;
+package info.bioinfweb.libralign.alignmentareacomponents.inputlisteners;
 
 
 import java.awt.event.MouseEvent;
@@ -26,14 +26,21 @@ import info.bioinfweb.commons.tic.input.TICMouseEvent;
 import info.bioinfweb.commons.tic.input.TICMouseListener;
 import info.bioinfweb.libralign.AlignmentArea;
 import info.bioinfweb.libralign.alignmentareacomponents.SequenceArea;
+import info.bioinfweb.libralign.selection.SelectionModel;
 
 
 
-public class SelectionInputListener extends TICMouseAdapter implements TICMouseListener {
+/**
+ * Mouse and key listener modifying the selection if no cursor is used.
+ * 
+ * @author Ben St&ouml;ver
+ * @since 0.2.0
+ */
+public class SelectionOnlyInputListener extends TICMouseAdapter implements TICMouseListener {
 	private AlignmentArea owner;
 	
 	
-	public SelectionInputListener(AlignmentArea owner) {
+	public SelectionOnlyInputListener(AlignmentArea owner) {
 		super();
 		this.owner = owner;
 	}

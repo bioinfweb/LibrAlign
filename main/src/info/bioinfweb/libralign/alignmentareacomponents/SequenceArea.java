@@ -19,17 +19,21 @@
 package info.bioinfweb.libralign.alignmentareacomponents;
 
 
+import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FontMetrics;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
+import java.awt.Stroke;
+import java.awt.geom.Line2D;
 import java.awt.geom.Rectangle2D;
 import java.util.Iterator;
 import java.util.Set;
 
 import org.biojava3.core.sequence.compound.NucleotideCompound;
 
+import info.bioinfweb.commons.Math2;
 import info.bioinfweb.commons.graphics.GraphicsUtils;
 import info.bioinfweb.commons.tic.TICPaintEvent;
 import info.bioinfweb.commons.tic.input.TICKeyAdapter;
@@ -40,6 +44,8 @@ import info.bioinfweb.libralign.AlignmentArea;
 import info.bioinfweb.libralign.AlignmentDataViewMode;
 import info.bioinfweb.libralign.AlignmentSubArea;
 import info.bioinfweb.libralign.SequenceColorSchema;
+import info.bioinfweb.libralign.cursor.AlignmentCursor;
+import info.bioinfweb.libralign.selection.SelectionType;
 import info.bioinfweb.libralign.sequenceprovider.SequenceDataProvider;
 
 
@@ -207,6 +213,26 @@ public class SequenceArea extends AlignmentSubArea {
   }
   
   
+  private void paintCursor(Graphics2D g, double x, double y) {
+  	AlignmentCursor cursor = getOwner().getCursor();
+  	if (Math2.isBetween(getOwner().getSequenceOrder().indexByID(getSeqenceID()), 
+  			cursor.getRow(), cursor.getRow() + cursor.getHeight() - 1)) {
+  		
+  		Stroke previousStroke = g.getStroke();
+  		try {
+  			SequenceColorSchema colorSchema = getOwner().getColorSchema();
+  			g.setColor(colorSchema.getCursorColor());
+  			g.setStroke(new BasicStroke(colorSchema.getCursorLineWidth()));
+  			x += cursor.getColumn() * getOwner().getCompoundWidth();
+  			g.draw(new Line2D.Double(x, y, x, y + getOwner().getCompoundHeight()));
+  		}
+  		finally {
+  			g.setStroke(previousStroke);
+  		}
+  	}
+  }
+  
+  
   @Override
 	public void paint(TICPaintEvent event) {
 		event.getGraphics().setColor(getOwner().getColorSchema().getDefaultBgColor());  //TODO Define different background color for whole component and unknown tokens
@@ -220,13 +246,18 @@ public class SequenceArea extends AlignmentSubArea {
 		}
 		
 		event.getGraphics().setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-		float x = firstIndex * getOwner().getCompoundWidth() + getOwner().getDataAreas().getMaxLengthBeforeStart();
+		float startX = firstIndex * getOwner().getCompoundWidth() + getOwner().getDataAreas().getMaxLengthBeforeStart(); 
+		float x = startX;
 		for (int i = firstIndex; i <= lastIndex; i++) {			
     	paintCompound(getOwner(), event.getGraphics(), 
     			getOwner().getSequenceProvider().getTokenAt(getSeqenceID(), i), x, 0f,	
     			getOwner().getSelection().isSelected(i, getOwner().getSequenceOrder().indexByID(getSeqenceID())));
 	    x += getOwner().getCompoundWidth();
     }
+		
+		if (getOwner().getSelection().getType().equals(SelectionType.CELLS)) {
+			paintCursor(event.getGraphics(), startX, 0);
+		}
 	}
 
 	

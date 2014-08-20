@@ -41,8 +41,7 @@ public class SelectionModel {
   private SelectionType type = SelectionType.CELLS;
   private OneDimensionalSelection columnSelection = new OneDimensionalSelection(this, SelectionDimension.COLUMN);
   private OneDimensionalSelection rowSelection = new OneDimensionalSelection(this, SelectionDimension.ROW);
-	private AlignmentCursor cursor = new AlignmentCursor();
-  private List<SelectionListener> selectionListeners = new ArrayList<SelectionListener>(16);
+	private List<SelectionListener> selectionListeners = new ArrayList<SelectionListener>(16);
   
   
 	/**
@@ -128,14 +127,6 @@ public class SelectionModel {
 
 	
 	/**
-	 * Returns the alignment cursor.
-	 */
-	public AlignmentCursor getCursor() {
-		return cursor;
-	}
-
-
-	/**
 	 * Checks if the specified cell is contained in this selection.
 	 * <p>
 	 * If the selection type is {@link SelectionType#COLUMN_ONLY} (or {@link SelectionType#ROW_ONLY})
@@ -157,6 +148,11 @@ public class SelectionModel {
 	public void clear() {
 		getColumnSelection().clear();
 		getRowSelection().clear();
+	}
+	
+	
+	public boolean isEmpty() {
+		return getColumnSelection().isEmpty() && getRowSelection().isEmpty();
 	}
 	
 	
@@ -193,7 +189,6 @@ public class SelectionModel {
 		}
 
 		//TODO Check if the following has to be implemented here:
-		//repaint();  // Called here directly because this class does not register itself as a listener.
 		//Main.getInstance().getMainFrame().getActionManagement().refreshActionStatus();
 	}
 }

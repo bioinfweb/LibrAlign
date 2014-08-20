@@ -16,8 +16,11 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package info.bioinfweb.libralign.selection;
+package info.bioinfweb.libralign.cursor;
 
+
+import java.util.ArrayList;
+import java.util.List;
 
 import info.bioinfweb.libralign.AlignmentArea;
 
@@ -33,6 +36,7 @@ public class AlignmentCursor {
   private int column = 0;
   private int row = 0;
   private int height = 1;
+  private List<CursorListener> listeners = new ArrayList<CursorListener>();
   
   
 	/**
@@ -44,7 +48,10 @@ public class AlignmentCursor {
 	
 	
 	public void setColumn(int column) {
-		this.column = column;
+		if (this.column != column) {
+			this.column = column;
+			fireCursorMoved();
+		}
 	}
 	
 	
@@ -57,7 +64,10 @@ public class AlignmentCursor {
 	
 	
 	public void setRow(int row) {
-		this.row = row;
+		if (this.row != row) {
+			this.row = row;
+			fireCursorMoved();
+		}
 	}
 	
 	
@@ -70,6 +80,52 @@ public class AlignmentCursor {
 	
 	
 	public void setHeight(int height) {
-		this.height = height;
+		if (this.height != height) {
+			this.height = height;
+			fireCursorResized();
+		}
+	}
+	
+	
+	/**
+	 * Informs all listeners that this cursor moved.
+	 */
+	protected void fireCursorMoved() {
+		CursorChangeEvent event = new CursorChangeEvent(this);
+		for (CursorListener listener : listeners) {
+			listener.cursorMoved(event);
+		}
+	}
+	
+	
+	/**
+	 * Informs all listeners that the height of this cursor changed.
+	 */
+	protected void fireCursorResized() {
+		CursorChangeEvent event = new CursorChangeEvent(this);
+		for (CursorListener listener : listeners) {
+			listener.cursorResized(event);
+		}
+	}
+	
+	
+	/**
+	 * Adds a listener to this cursor.
+	 * 
+	 * @param listener - the listener that will track changes
+	 */
+	public void addCursorListener(CursorListener listener) {
+		listeners.add(listener);
+	}
+	
+	
+	/**
+	 * Removes a listener from this cursor.
+	 * 
+	 * @param listener - the listener to be removed.
+	 * @return {@code true} if the listener was removed, {@code false} if the specified listener was not contained in the list
+	 */
+	public boolean removeCursorListener(CursorListener listener) {
+		return listeners.remove(listener);
 	}
 }

@@ -40,6 +40,8 @@ public class SequenceColorSchema {
 	private Color tokenBorderColor = Color.WHITE;
 	private Color defaultBgColor = Color.LIGHT_GRAY.brighter();
 	private Color fontColor = Color.BLACK;
+	private Color cursorColor = Color.BLACK;
+	private float cursorLineWidth = 2f;
 	private Color selectionColor = SystemColor.textHighlight;
 	private Color selectionFontColor = SystemColor.textHighlightText;
 	private Map<String, Color> nucleotideColorMap = createDefaultNucleotideColorMap();
@@ -115,6 +117,26 @@ public class SequenceColorSchema {
 
 	public void setFontColor(Color fontColor) {
 		this.fontColor = fontColor;
+	}
+
+
+	public Color getCursorColor() {
+		return cursorColor;
+	}
+
+
+	public void setCursorColor(Color cursorColor) {
+		this.cursorColor = cursorColor;
+	}
+
+
+	public float getCursorLineWidth() {
+		return cursorLineWidth;
+	}
+
+
+	public void setCursorLineWidth(float cursorLineWidth) {
+		this.cursorLineWidth = cursorLineWidth;
 	}
 
 
