@@ -62,8 +62,8 @@ public class SelectionInputListener extends TICMouseAdapter implements TICMouseL
 		if ((event.isMouseButton1Down()) && (event.getSource() instanceof SequenceArea)) {
 			SequenceArea source = (SequenceArea)event.getSource();
 			SelectionModel selection = getOwner().getSelection();
-			selection.getColumnSelection().setLastPos(getOwner().columnByPaintX(event.getComponentX()));
-			selection.getRowSelection().setLastPos(getOwner().rowByPaintY(
+			selection.getColumnSelection().extendSelectionTo(getOwner().columnByPaintX(event.getComponentX()));
+			selection.getRowSelection().extendSelectionTo(getOwner().rowByPaintY(
 					getOwner().alignmentPartY(source, event.getComponentY())));
 		}
 	}
