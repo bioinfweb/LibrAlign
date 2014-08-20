@@ -41,6 +41,7 @@ public class SelectionModel {
   private SelectionType type = SelectionType.CELLS;
   private OneDimensionalSelection columnSelection = new OneDimensionalSelection(this, SelectionDimension.COLUMN);
   private OneDimensionalSelection rowSelection = new OneDimensionalSelection(this, SelectionDimension.ROW);
+	private AlignmentCursor cursor = new AlignmentCursor();
   private List<SelectionListener> selectionListeners = new ArrayList<SelectionListener>(16);
   
   
@@ -127,11 +128,18 @@ public class SelectionModel {
 
 	
 	/**
+	 * Returns the alignment cursor.
+	 */
+	public AlignmentCursor getCursor() {
+		return cursor;
+	}
+
+
+	/**
 	 * Checks if the specified cell is contained in this selection.
 	 * <p>
 	 * If the selection type is {@link SelectionType#COLUMN_ONLY} (or {@link SelectionType#ROW_ONLY})
 	 * and the selection is not empty all row (or columns) are considered as selected.
-	 * </p>
 	 * 
 	 * @param column - the column index of the cell to be checked
 	 * @param row - the row index of the cell to be checked

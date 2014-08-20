@@ -131,11 +131,13 @@ public class OneDimensionalSelection {
 	public void setFirstPos(int firstPos) {
   	firstPos = secureValidPos(firstPos);
 		
-		this.firstPos = firstPos;
-		if ((getLastPos() < firstPos) || (firstPos == NO_SELECTION)) {  // also true if lastPos == NO_SELECTION
-			lastPos = firstPos;
-		}
-		getOwner().fireSelectionChanged();
+  	if (this.firstPos != firstPos) {  // Avoid firing unnecessary events
+			this.firstPos = firstPos;
+			if ((getLastPos() < firstPos) || (firstPos == NO_SELECTION)) {  // also true if lastPos == NO_SELECTION
+				lastPos = firstPos;
+			}
+			getOwner().fireSelectionChanged();
+  	}
 	}
 	
 	
@@ -151,22 +153,24 @@ public class OneDimensionalSelection {
 	public void setLastPos(int lastPos) {
   	lastPos = secureValidPos(lastPos);
 		
-		if (lastPos == NO_SELECTION) {
-			this.lastPos = getFirstPos();
-		}
-		else {
-			if (getFirstPos() > lastPos) {
+    if (lastPos != this.lastPos) {  // Avoid firing unnecessary events
+	  	if (lastPos == NO_SELECTION) {
 				this.lastPos = getFirstPos();
-				firstPos = lastPos; 
 			}
 			else {
-				if (getFirstPos() == NO_SELECTION) {
-					firstPos = lastPos;
+				if (getFirstPos() > lastPos) {
+					this.lastPos = getFirstPos();
+					firstPos = lastPos; 
 				}
-				this.lastPos = lastPos;
+				else {
+					if (getFirstPos() == NO_SELECTION) {
+						firstPos = lastPos;
+					}
+					this.lastPos = lastPos;
+				}
 			}
-		}
-		getOwner().fireSelectionChanged();
+			getOwner().fireSelectionChanged();
+    }
 	}
 	
 	
@@ -277,8 +281,9 @@ public class OneDimensionalSelection {
 	 * Clears this selection.
 	 */
 	public void clear() {
-		startPos = NO_SELECTION;
-		setFirstPos(NO_SELECTION);  // lastPos will be set automatically
-		getOwner().fireSelectionChanged();
+		if (!isEmpty()) {
+			startPos = NO_SELECTION;
+			setFirstPos(NO_SELECTION);  // lastPos will be set automatically, change event will be fired in here
+		}
 	}	
 }

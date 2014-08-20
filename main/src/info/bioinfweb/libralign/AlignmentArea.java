@@ -43,9 +43,7 @@ import info.bioinfweb.libralign.dataarea.DataAreaListType;
 import info.bioinfweb.libralign.dataarea.DataAreaLocation;
 import info.bioinfweb.libralign.dataarea.DataAreaModel;
 import info.bioinfweb.libralign.dataarea.DataAreaModelListener;
-import info.bioinfweb.libralign.selection.AlignmentCursor;
 import info.bioinfweb.libralign.selection.SelectionModel;
-import info.bioinfweb.libralign.selection.SelectionInputListener;
 import info.bioinfweb.libralign.sequenceprovider.SequenceDataChangeListener;
 import info.bioinfweb.libralign.sequenceprovider.SequenceDataProvider;
 import info.bioinfweb.libralign.sequenceprovider.events.SequenceChangeEvent;
@@ -78,7 +76,6 @@ public class AlignmentArea extends TICComponent implements SequenceDataChangeLis
 	private SequenceColorSchema colorSchema = new SequenceColorSchema();
 	private WorkingMode workingMode = WorkingMode.VIEW;  //TODO Should this better be part of the controller (key and mouse listener)?
 	private AlignmentDataViewMode viewMode = AlignmentDataViewMode.NUCLEOTIDE;  //TODO Initial value should be adjusted when the data type of the specified provider is known.
-	private AlignmentCursor cursor = new AlignmentCursor();
 	private SelectionModel selection = new SelectionModel(this);
 	private DataAreaModel dataAreas = new DataAreaModel();
 	private float zoomX = 1f;
@@ -197,11 +194,6 @@ public class AlignmentArea extends TICComponent implements SequenceDataChangeLis
 	public void setViewMode(AlignmentDataViewMode viewMode) {
 		this.viewMode = viewMode;
 		//TODO repaint
-	}
-
-
-	public AlignmentCursor getCursor() {
-		return cursor;
 	}
 
 
