@@ -111,7 +111,7 @@ public class SWTAlignmentPartArea extends Composite implements ToolkitSpecificAl
 		Control[] children = getChildren();
 		for (int i = 0; i < children.length; i++) {
 			Rectangle r = children[i].getBounds();
-			if (Math2.isBetween(y, r.y, r.y + r.width - 1) && (children[i] instanceof ToolkitComponent)) {
+			if (Math2.isBetween(y, r.y, r.y + r.height - 1) && (children[i] instanceof ToolkitComponent)) {
 				TICComponent ticComponent = ((ToolkitComponent)children[i]).getIndependentComponent();
 				if (ticComponent instanceof AlignmentSubArea) {
 					return (AlignmentSubArea)ticComponent;
