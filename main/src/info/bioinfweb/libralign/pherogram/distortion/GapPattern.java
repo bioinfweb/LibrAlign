@@ -34,6 +34,11 @@ public class GapPattern {
 	private int gapCount;
 	
 	
+	/**
+	 * Creates a new instance of this class initially containing no gaps.
+	 * 
+	 * @param size - the size the new gap pattern shall have
+	 */
 	public GapPattern(int size) {
 		super();
 		gapPattern = new boolean[size];
@@ -43,11 +48,25 @@ public class GapPattern {
 	}
 
 
+	/**
+	 * Indicates whether a gap is located at the specified position.
+	 * 
+	 * @param index - the index in this pattern (the compound index in the editable sequence relative to the start of 
+	 *        this gap pattern) 
+	 * @return {@code true} if a gap is located here, {@code false} otherwise
+	 */
 	public boolean isGap(int index) {
 		return gapPattern[index];
 	}
 	
 	
+	/**
+	 * This method allows to define whether a gap is located at the specified position or not. 
+	 * 
+	 * @param index - the index in this pattern (the compound index in the editable sequence relative to the start of 
+	 *        this gap pattern) 
+	 * @param gap - Specify {@code true} here if a gap shall be located here, {@code false} otherwise.
+	 */
 	public void setGap(int index, boolean gap) {
 		if (gap && !gapPattern[index]) {
 			gapCount++;
@@ -59,16 +78,33 @@ public class GapPattern {
 	}
 	
 	
+	/**
+	 * Returns the length of this pattern.
+	 * 
+	 * @return a value >= 0
+	 */
 	public int size() {
 		return gapPattern.length;
 	}
 	
 	
+	/**
+	 * Returns the number of gaps contained in this pattern
+	 * 
+	 * @return a value >= 0
+	 */
 	public int getGapCount() {
 		return gapCount;
 	}
 	
 	
+	/**
+	 * Counts the number of gaps located before the specified position.
+	 * 
+	 * @param index - the index in this pattern (the compound index in the editable sequence relative to the start of 
+	 *        this gap pattern) 
+	 * @return a value >= 0
+	 */
 	public int countGaps(int index) {
 		int result = 0;
 		for (int i = 0; i < index; i++) {
@@ -80,6 +116,12 @@ public class GapPattern {
 	}
 
 	
+	/**
+	 * Calculates the number of gaps that are located before the center of the trace curves belonging to the region
+	 * this gap pattern belongs to.
+	 * 
+	 * @return a value >= 0
+	 */
 	public int countGapsBeforeCurveCenter() {
 		int centerElement = (size() - getGapCount()) / 2;
 		int curveElementCount = 0;
