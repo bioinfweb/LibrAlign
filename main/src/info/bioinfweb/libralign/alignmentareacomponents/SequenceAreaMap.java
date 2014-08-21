@@ -73,7 +73,7 @@ public class SequenceAreaMap extends TreeMap<Integer, SequenceArea> implements S
 				Integer id = iterator.next();
 				SequenceArea sequenceArea = new SequenceArea(getOwner(), id);
 				sequenceArea.addMouseListener(selectionInputListener);
-				//TODO Also add key and mouse wheel listener 
+				sequenceArea.addKeyListener(selectionInputListener);
 				put(id, sequenceArea);
 			}
 		}

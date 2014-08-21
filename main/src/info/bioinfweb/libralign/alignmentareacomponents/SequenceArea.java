@@ -36,10 +36,6 @@ import org.biojava3.core.sequence.compound.NucleotideCompound;
 import info.bioinfweb.commons.Math2;
 import info.bioinfweb.commons.graphics.GraphicsUtils;
 import info.bioinfweb.commons.tic.TICPaintEvent;
-import info.bioinfweb.commons.tic.input.TICKeyAdapter;
-import info.bioinfweb.commons.tic.input.TICKeyEvent;
-import info.bioinfweb.commons.tic.input.TICMouseAdapter;
-import info.bioinfweb.commons.tic.input.TICMouseEvent;
 import info.bioinfweb.libralign.AlignmentArea;
 import info.bioinfweb.libralign.AlignmentDataViewMode;
 import info.bioinfweb.libralign.AlignmentSubArea;
@@ -246,8 +242,7 @@ public class SequenceArea extends AlignmentSubArea {
 		}
 		
 		event.getGraphics().setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-		float startX = firstIndex * getOwner().getCompoundWidth() + getOwner().getDataAreas().getMaxLengthBeforeStart(); 
-		float x = startX;
+		float x = firstIndex * getOwner().getCompoundWidth() + getOwner().getDataAreas().getMaxLengthBeforeStart(); 
 		for (int i = firstIndex; i <= lastIndex; i++) {			
     	paintCompound(getOwner(), event.getGraphics(), 
     			getOwner().getSequenceProvider().getTokenAt(getSeqenceID(), i), x, 0f,	
@@ -256,7 +251,7 @@ public class SequenceArea extends AlignmentSubArea {
     }
 		
 		if (getOwner().getSelection().getType().equals(SelectionType.CELLS)) {
-			paintCursor(event.getGraphics(), startX, 0);
+			paintCursor(event.getGraphics(), getOwner().getDataAreas().getMaxLengthBeforeStart(), 0);
 		}
 	}
 

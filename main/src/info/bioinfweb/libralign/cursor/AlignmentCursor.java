@@ -33,12 +33,24 @@ import info.bioinfweb.libralign.AlignmentArea;
  * @since 0.0.0
  */
 public class AlignmentCursor {
+	private AlignmentArea owner;
   private int column = 0;
   private int row = 0;
   private int height = 1;
   private List<CursorListener> listeners = new ArrayList<CursorListener>();
   
   
+	public AlignmentCursor(AlignmentArea owner) {
+		super();
+		this.owner = owner;
+	}
+
+
+	public AlignmentArea getOwner() {
+		return owner;
+	}
+
+
 	/**
 	 * Returns the column index in front of which the cursor is located. (The initial value is 0.)
 	 */
@@ -48,6 +60,7 @@ public class AlignmentCursor {
 	
 	
 	public void setColumn(int column) {
+		column = Math.max(0, Math.min(column, getOwner().getSequenceProvider().getMaxSequenceLength()));
 		if (this.column != column) {
 			this.column = column;
 			fireCursorMoved();
@@ -64,6 +77,7 @@ public class AlignmentCursor {
 	
 	
 	public void setRow(int row) {
+		row = Math.max(0, Math.min(row, getOwner().getSequenceProvider().getSequenceCount() - getHeight()));
 		if (this.row != row) {
 			this.row = row;
 			fireCursorMoved();
@@ -80,6 +94,7 @@ public class AlignmentCursor {
 	
 	
 	public void setHeight(int height) {
+		height = Math.max(1, Math.min(height, getOwner().getSequenceProvider().getSequenceCount() - getRow()));
 		if (this.height != height) {
 			this.height = height;
 			fireCursorResized();

@@ -32,6 +32,8 @@ import org.eclipse.swt.widgets.Composite;
 import info.bioinfweb.commons.Math2;
 import info.bioinfweb.commons.tic.TICComponent;
 import info.bioinfweb.commons.tic.TICPaintEvent;
+import info.bioinfweb.commons.tic.input.TICKeyAdapter;
+import info.bioinfweb.commons.tic.input.TICKeyEvent;
 import info.bioinfweb.libralign.alignmentareacomponents.SWTAlignmentOverviewArea;
 import info.bioinfweb.libralign.alignmentareacomponents.SequenceArea;
 import info.bioinfweb.libralign.alignmentareacomponents.SwingAlignmentOverviewArea;
@@ -78,7 +80,7 @@ public class AlignmentArea extends TICComponent implements SequenceDataChangeLis
 	private WorkingMode workingMode = WorkingMode.VIEW;  //TODO Should this better be part of the controller (key and mouse listener)?
 	private AlignmentDataViewMode viewMode = AlignmentDataViewMode.NUCLEOTIDE;  //TODO Initial value should be adjusted when the data type of the specified provider is known.
 	private SelectionModel selection = new SelectionModel(this);
-	private AlignmentCursor cursor = new AlignmentCursor();
+	private AlignmentCursor cursor = new AlignmentCursor(this);
 	private DataAreaModel dataAreas = new DataAreaModel();
 	private float zoomX = 1f;
 	private float zoomY = 1f;

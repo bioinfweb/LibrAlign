@@ -20,7 +20,10 @@ package info.bioinfweb.libralign.alignmentareacomponents.inputlisteners;
 
 
 import java.awt.Point;
+import java.awt.event.KeyEvent;
 
+import info.bioinfweb.commons.tic.input.TICKeyEvent;
+import info.bioinfweb.commons.tic.input.TICKeyListener;
 import info.bioinfweb.commons.tic.input.TICMouseAdapter;
 import info.bioinfweb.commons.tic.input.TICMouseEvent;
 import info.bioinfweb.commons.tic.input.TICMouseListener;
@@ -37,7 +40,7 @@ import info.bioinfweb.libralign.selection.SelectionModel;
  * @author Ben St&ouml;ver
  * @since 0.2.0
  */
-public class CursorSelectionInputListener extends TICMouseAdapter implements TICMouseListener {
+public class CursorSelectionInputListener extends TICMouseAdapter implements TICMouseListener, TICKeyListener {
 	private AlignmentArea owner;
 	private Point lastClickColumnRow = null;
 	
@@ -106,7 +109,51 @@ public class CursorSelectionInputListener extends TICMouseAdapter implements TIC
 			else {
 				cursor.setColumn(columnRow.x);
 			}
-			cursor.setHeight(columnRow.y - cursor.getRow() + 1);
+			if (lastClickColumnRow.y > columnRow.y) {
+				cursor.setRow(columnRow.y);
+				cursor.setHeight(lastClickColumnRow.y - cursor.getRow() + 1);
+			}
+			else {
+				cursor.setHeight(columnRow.y - cursor.getRow() + 1);
+			}
 		}
 	}
+
+
+	@Override
+	public void keyPressed(TICKeyEvent event) {
+		AlignmentCursor cursor = getOwner().getCursor();
+		switch (event.getKeyCode()) {
+			case KeyEvent.VK_LEFT:
+				cursor.setColumn(cursor.getColumn() - 1);
+				if (event.isShiftDown()) {  //TODO Does not work this way
+					getOwner().getSelection().getColumnSelection().extendSelectionTo(cursor.getColumn());
+				}
+				break;
+			case KeyEvent.VK_RIGHT:
+				cursor.setColumn(cursor.getColumn() + 1);
+				if (event.isShiftDown()) {  //TODO Does not work this way
+					getOwner().getSelection().getColumnSelection().extendSelectionTo(cursor.getColumn());
+				}
+				break;
+			case KeyEvent.VK_UP:
+				cursor.setRow(cursor.getRow() - 1);
+				if (event.isShiftDown()) {  //TODO Does not work this way
+					getOwner().getSelection().getRowSelection().extendSelectionTo(cursor.getRow());
+				}
+				break;
+			case KeyEvent.VK_DOWN:
+				cursor.setRow(cursor.getRow() + 1);
+				if (event.isShiftDown()) {  //TODO Does not work this way
+					getOwner().getSelection().getRowSelection().extendSelectionTo(cursor.getRow());
+				}
+				break;
+			default:
+				break;
+		}
+	}
+
+
+	@Override
+	public void keyReleased(TICKeyEvent event) {}
 }
