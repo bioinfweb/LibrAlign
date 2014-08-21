@@ -90,11 +90,11 @@ public class SwingAlignmentOverviewArea extends JComponent implements ToolkitSpe
 
 
 	@Override
-	public void scrollCursorToVisible() {
-		scrollAlignmentRectToVisible(getIndependentComponent().getCursorRectangle());
+	public Rectangle getVisibleAlignmentRect() {
+		return getContentArea().getVisibleRect();
 	}
-	
-	
+
+
 	/**
 	 * Removes the arrow key bindings, so that the alignment cursor can be moved with these keys instead without
 	 * scrolling.

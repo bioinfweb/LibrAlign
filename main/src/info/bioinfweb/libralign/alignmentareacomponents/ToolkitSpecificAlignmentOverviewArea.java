@@ -66,9 +66,12 @@ public interface ToolkitSpecificAlignmentOverviewArea extends ToolkitComponent {
    * Scrolls the contained components so that the specified rectangle is visible. 
    */
   public void scrollAlignmentRectToVisible(Rectangle rectangle);
-
+  
   /**
-   * Scrolls the contained components so that the cursor is visible. 
+   * Returns the rectangle in pixels of the alignment (with associated data areas) that is visible in the current
+   * scroll container. 
+   * 
+   * @return a rectangle object
    */
-  public void scrollCursorToVisible();
+  public Rectangle getVisibleAlignmentRect();
  }

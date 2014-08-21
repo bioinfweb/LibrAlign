@@ -84,6 +84,7 @@ public class AlignmentArea extends TICComponent implements SequenceDataChangeLis
 	private AlignmentDataViewMode viewMode = AlignmentDataViewMode.NUCLEOTIDE;  //TODO Initial value should be adjusted when the data type of the specified provider is known.
 	private SelectionModel selection = new SelectionModel(this);
 	private AlignmentCursor cursor = new AlignmentCursor(this);
+	private Rectangle lastCursorRectangle = null;
 	private DataAreaModel dataAreas = new DataAreaModel();
 	private float zoomX = 1f;
 	private float zoomY = 1f;
@@ -458,16 +459,36 @@ public class AlignmentArea extends TICComponent implements SequenceDataChangeLis
 	}
 	
 	
+	public void scrollCursorToVisible() {
+		Rectangle visibleRectangle = getToolkitComponent().getVisibleAlignmentRect();
+		Rectangle currentRectangle = getCursorRectangle();
+		Rectangle scrollRectangle = new Rectangle(currentRectangle);
+		int dy = currentRectangle.height - visibleRectangle.height;
+		if ((dy > 0) && (lastCursorRectangle != null)) {
+			scrollRectangle.height -= dy;
+			System.out.println("correct 1 " + dy);
+			if (lastCursorRectangle.y == currentRectangle.y) {  // Not moved upwards (= downwards).
+				scrollRectangle.y += dy;
+				System.out.println("correct 2");
+			}
+		}
+		getToolkitComponent().scrollAlignmentRectToVisible(scrollRectangle);
+		lastCursorRectangle = currentRectangle;
+	}
+	
+	
 	private void addCursorScrollListener() {
 		getCursor().addCursorListener(new CursorListener() {
 					@Override
 					public void cursorResized(CursorChangeEvent event) {
-						getToolkitComponent().scrollCursorToVisible();
+						System.out.println("resized");
+						scrollCursorToVisible();
 					}
 					
 					@Override
 					public void cursorMoved(CursorChangeEvent event) {
-						getToolkitComponent().scrollCursorToVisible();
+						System.out.println("moved");
+						scrollCursorToVisible();
 					}
 				});
 	}

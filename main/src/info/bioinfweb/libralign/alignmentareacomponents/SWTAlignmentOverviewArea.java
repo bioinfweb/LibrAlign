@@ -198,9 +198,8 @@ public class SWTAlignmentOverviewArea extends Composite implements ToolkitSpecif
 
   @Override
 	public void scrollAlignmentRectToVisible(Rectangle rectangle) {
-		org.eclipse.swt.graphics.Rectangle clientArea = contentComponent.getPartScroller().getClientArea();
 		org.eclipse.swt.graphics.Point origin = contentComponent.getPartScroller().getOrigin();
-		Rectangle visibleRect = new Rectangle(origin.x, origin.y, clientArea.width, clientArea.height);
+		Rectangle visibleRect = getVisibleAlignmentRect();
 		
 		int x = origin.x;  // Do not scroll
 		if (rectangle.x < visibleRect.x) {
@@ -223,11 +222,13 @@ public class SWTAlignmentOverviewArea extends Composite implements ToolkitSpecif
 
 
 	@Override
-	public void scrollCursorToVisible() {
-		scrollAlignmentRectToVisible(getIndependentComponent().getCursorRectangle());
+	public Rectangle getVisibleAlignmentRect() {
+		org.eclipse.swt.graphics.Rectangle clientArea = contentComponent.getPartScroller().getClientArea();
+		org.eclipse.swt.graphics.Point origin = contentComponent.getPartScroller().getOrigin();
+		return new Rectangle(origin.x, origin.y, clientArea.width, clientArea.height);
 	}
-	
-	
+
+
 	//TODO Overwriting this methods is probably not necessary.
 //	@Override
 //	public Point computeSize(int wHint, int hHint, boolean changed) {
