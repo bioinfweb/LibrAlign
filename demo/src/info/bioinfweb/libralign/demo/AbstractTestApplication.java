@@ -29,6 +29,7 @@ import info.bioinfweb.libralign.dataarea.implementations.ConsensusSequenceArea;
 import info.bioinfweb.libralign.dataarea.implementations.SequenceIndexArea;
 import info.bioinfweb.libralign.dataarea.implementations.pherogram.PherogramArea;
 import info.bioinfweb.libralign.pherogram.BioJavaPherogramProvider;
+import info.bioinfweb.libralign.selection.SelectionType;
 import info.bioinfweb.libralign.sequenceprovider.implementations.BioJavaSequenceDataProvider;
 import info.bioinfweb.libralign.sequenceprovider.tokenset.BioJavaTokenSet;
 
@@ -85,6 +86,9 @@ public class AbstractTestApplication {
 			result.getDataAreas().getSequenceAreas(sequenceProvider.sequenceIDByName("Sequence 4")).add(pherogramArea);
 			
 			result.getDataAreas().getBottomAreas().add(new ConsensusSequenceArea(result));
+			
+			//result.getSelection().setType(SelectionType.ROW_ONLY);
+			
 			return result;
 		}
 		catch (Exception e) {
