@@ -373,16 +373,11 @@ public class AlignmentArea extends TICComponent implements SequenceDataChangeLis
 	 * Returns the column containing the specified x coordinate.
 	 *  
 	 * @param x - the paint coordinate
-	 * @return the alignment column or {@code -1} if the coordinate lies outside the alignment area
+	 * @return the alignment column
 	 */
 	public int columnByPaintX(int x) {
-		int result = (int)((x - getDataAreas().getMaxLengthBeforeStart()) / getCompoundWidth());
-		if (Math2.isBetween(result, 0, getSequenceProvider().getMaxSequenceLength() - 1)) {
-			return result;
-		}
-		else {
-			return -1;
-		}
+		return Math.max(0, Math.min(getSequenceProvider().getMaxSequenceLength() - 1, 
+				(int)((x - getDataAreas().getMaxLengthBeforeStart()) / getCompoundWidth())));
 	}
 
 
@@ -405,7 +400,7 @@ public class AlignmentArea extends TICComponent implements SequenceDataChangeLis
 	 * anyway.
 	 * 
 	 * @param y - the y coordinate relative to the alignment part area containing the sequence areas
-	 * @return a valid sequence position of -1 if no according sequence was found.
+	 * @return a valid sequence position.
 	 */
 	public int rowByPaintY(int y) {
 		AlignmentSubArea subArea = getToolkitComponent().getPartArea(DataAreaListType.SEQUENCE).getAreaByY(y);
@@ -418,8 +413,11 @@ public class AlignmentArea extends TICComponent implements SequenceDataChangeLis
 		if (subArea instanceof SequenceArea) {
 			return getSequenceOrder().indexByID(((SequenceArea)subArea).getSeqenceID());
 		}
+		else if (y < 0) {
+			return 0;
+		}
 		else {
-			return -1;
+			return getSequenceProvider().getSequenceCount() - 1;
 		}
 	}
 	
