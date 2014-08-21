@@ -428,11 +428,15 @@ public class AlignmentArea extends TICComponent implements SequenceDataChangeLis
 	 * Returns the top most y-coordinate of the area the specified row is painted in relative to the
 	 * component on which the sequences are painted. Use this method to convert between cell indices and 
 	 * paint coordinates.
+	 * <p>
+	 * If an index lower than zero or greater than the highest index is specified the y-coordinate of the first
+	 * or the last sequence is returned accordingly.
 	 * 
 	 * @param row - the row painted at the returned x-position
 	 * @return a value >= 0
 	 */
 	public int paintYByRow(int row) {
+		row = Math.max(0, Math.min(getSequenceProvider().getSequenceCount() - 1, row));
     return getToolkitComponent().getSequenceAreaByID(getSequenceOrder().idByIndex(row)).getLocationInParent().y;		
 	}
 	
@@ -440,13 +444,19 @@ public class AlignmentArea extends TICComponent implements SequenceDataChangeLis
 	/**
 	 * Returns the rectangle in the paint coordinate system of scrolled area displaying the sequences, that contains
 	 * all cells currently occupied by the alignment cursor. 
+	 * <p>
+	 * If the last row has associated data areas, the height of these areas is also included in the rectangle. 
 	 * 
 	 * @return a rectangle with paint coordinates
 	 */
 	public Rectangle getCursorRectangle() {
 		int y = paintYByRow(getCursor().getRow());
-		return new Rectangle(paintXByColumn(getCursor().getColumn()), y, 
-				getCompoundWidth(), paintYByRow(getCursor().getRow() + getCursor().getHeight() - 1) + getCompoundHeight() - y);
+		Rectangle result = new Rectangle(paintXByColumn(getCursor().getColumn()), y,
+				getCompoundWidth(), paintYByRow(getCursor().getRow() + getCursor().getHeight()) - y); 
+		if (getCursor().getRow() + getCursor().getHeight() - 1 == getSequenceProvider().getSequenceCount() - 1) {
+			result.height += getCompoundHeight();  // Add height of the last row, because the return value of paintYByRow(maxIndex + 1) is equal to paintYByRow(maxIndex).
+		}
+		return result; 
 	}
 	
 	
