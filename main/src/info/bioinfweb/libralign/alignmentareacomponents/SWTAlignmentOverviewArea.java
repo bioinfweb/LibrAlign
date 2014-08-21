@@ -19,10 +19,14 @@
 package info.bioinfweb.libralign.alignmentareacomponents;
 
 
+import info.bioinfweb.commons.Math2;
 import info.bioinfweb.commons.swt.ScrolledCompositeSyncListener;
 import info.bioinfweb.libralign.AlignmentArea;
+import info.bioinfweb.libralign.cursor.AlignmentCursor;
 import info.bioinfweb.libralign.dataarea.DataAreaListType;
 
+import java.awt.Point;
+import java.awt.Rectangle;
 import java.util.Iterator;
 
 import org.eclipse.swt.SWT;
@@ -192,6 +196,38 @@ public class SWTAlignmentOverviewArea extends Composite implements ToolkitSpecif
 	}
 
 
+  @Override
+	public void scrollAlignmentRectToVisible(Rectangle rectangle) {
+		org.eclipse.swt.graphics.Rectangle clientArea = contentComponent.getPartScroller().getClientArea();
+		org.eclipse.swt.graphics.Point origin = contentComponent.getPartScroller().getOrigin();
+		Rectangle visibleRect = new Rectangle(origin.x, origin.y, clientArea.width, clientArea.height);
+		
+		int x = origin.x;  // Do not scroll
+		if (rectangle.x < visibleRect.x) {
+			x = rectangle.x;  // Scroll left
+		}
+		else if (rectangle.x + rectangle.width > visibleRect.x + visibleRect.width) {
+			x = rectangle.x + rectangle.width - visibleRect.width;  // Scroll right 
+		}
+		
+		int y = origin.y;  // Do not scroll
+		if (rectangle.y < visibleRect.y) {
+			y = rectangle.y;  // Scroll up
+		}
+		if (rectangle.y + rectangle.height > visibleRect.y + visibleRect.height) {
+			y = rectangle.y + rectangle.height - visibleRect.height;  // Scroll down
+		}
+		
+		contentComponent.getPartScroller().setOrigin(x, y);
+	}
+
+
+	@Override
+	public void scrollCursorToVisible() {
+		scrollAlignmentRectToVisible(getIndependentComponent().getCursorRectangle());
+	}
+	
+	
 	//TODO Overwriting this methods is probably not necessary.
 //	@Override
 //	public Point computeSize(int wHint, int hHint, boolean changed) {

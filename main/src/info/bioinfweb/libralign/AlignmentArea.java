@@ -22,6 +22,7 @@ package info.bioinfweb.libralign;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Font;
+import java.awt.Rectangle;
 import java.util.Iterator;
 
 import javax.swing.JComponent;
@@ -40,6 +41,8 @@ import info.bioinfweb.libralign.alignmentareacomponents.SwingAlignmentOverviewAr
 import info.bioinfweb.libralign.alignmentareacomponents.ToolkitSpecificAlignmentOverviewArea;
 import info.bioinfweb.libralign.alignmentareacomponents.ToolkitSpecificAlignmentPartArea;
 import info.bioinfweb.libralign.cursor.AlignmentCursor;
+import info.bioinfweb.libralign.cursor.CursorChangeEvent;
+import info.bioinfweb.libralign.cursor.CursorListener;
 import info.bioinfweb.libralign.dataarea.DataArea;
 import info.bioinfweb.libralign.dataarea.DataAreaChangeEvent;
 import info.bioinfweb.libralign.dataarea.DataAreaListType;
@@ -383,6 +386,14 @@ public class AlignmentArea extends TICComponent implements SequenceDataChangeLis
 	}
 
 
+	/**
+	 * Returns the left most x-coordinate of the area the specified column is painted in relative to the
+	 * component on which the sequences are painted. Use this method to convert between cell indices and 
+	 * paint coordinates.
+	 * 
+	 * @param column - the column painted at the returned x-position
+	 * @return a value >= 0
+	 */
 	public int paintXByColumn(int column) {
 		return (int)((column - 1) * getCompoundWidth()) + getDataAreas().getMaxLengthBeforeStart();
 	}
@@ -413,15 +424,60 @@ public class AlignmentArea extends TICComponent implements SequenceDataChangeLis
 	}
 	
 
+	/**
+	 * Returns the top most y-coordinate of the area the specified row is painted in relative to the
+	 * component on which the sequences are painted. Use this method to convert between cell indices and 
+	 * paint coordinates.
+	 * 
+	 * @param row - the row painted at the returned x-position
+	 * @return a value >= 0
+	 */
+	public int paintYByRow(int row) {
+    return getToolkitComponent().getSequenceAreaByID(getSequenceOrder().idByIndex(row)).getLocationInParent().y;		
+	}
+	
+	
+	/**
+	 * Returns the rectangle in the paint coordinate system of scrolled area displaying the sequences, that contains
+	 * all cells currently occupied by the alignment cursor. 
+	 * 
+	 * @return a rectangle with paint coordinates
+	 */
+	public Rectangle getCursorRectangle() {
+		int y = paintYByRow(getCursor().getRow());
+		return new Rectangle(paintXByColumn(getCursor().getColumn()), y, 
+				getCompoundWidth(), paintYByRow(getCursor().getRow() + getCursor().getHeight() - 1) + getCompoundHeight() - y);
+	}
+	
+	
+	private void addCursorScrollListener() {
+		getCursor().addCursorListener(new CursorListener() {
+					@Override
+					public void cursorResized(CursorChangeEvent event) {
+						getToolkitComponent().scrollCursorToVisible();
+					}
+					
+					@Override
+					public void cursorMoved(CursorChangeEvent event) {
+						getToolkitComponent().scrollCursorToVisible();
+					}
+				});
+	}
+	
+	
 	@Override
 	protected JComponent doCreateSwingComponent() {
-		return new SwingAlignmentOverviewArea(this);
+		SwingAlignmentOverviewArea result = new SwingAlignmentOverviewArea(this);
+		addCursorScrollListener();
+		return result;
 	}
 
 
 	@Override
 	protected Composite doCreateSWTWidget(Composite parent, int style) {
-		return new SWTAlignmentOverviewArea(parent, style, this);
+		SWTAlignmentOverviewArea result = new SWTAlignmentOverviewArea(parent, style, this);
+		addCursorScrollListener();
+		return result;
 	}
 
 

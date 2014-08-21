@@ -19,6 +19,8 @@
 package info.bioinfweb.libralign.alignmentareacomponents;
 
 
+import java.awt.Rectangle;
+
 import info.bioinfweb.commons.tic.toolkit.ToolkitComponent;
 import info.bioinfweb.libralign.dataarea.DataAreaListType;
 
@@ -59,4 +61,14 @@ public interface ToolkitSpecificAlignmentOverviewArea extends ToolkitComponent {
    * @return the GUI component or {@code null} if no sequence with the specified ID is displayed in this area
    */
   public SequenceArea getSequenceAreaByID(int sequenceID);
-}
+  
+  /**
+   * Scrolls the contained components so that the specified rectangle is visible. 
+   */
+  public void scrollAlignmentRectToVisible(Rectangle rectangle);
+
+  /**
+   * Scrolls the contained components so that the cursor is visible. 
+   */
+  public void scrollCursorToVisible();
+ }

@@ -22,6 +22,9 @@ package info.bioinfweb.libralign.alignmentareacomponents.inputlisteners;
 import java.awt.Point;
 import java.awt.event.KeyEvent;
 
+import javax.swing.JComponent;
+
+import info.bioinfweb.commons.tic.TargetToolkit;
 import info.bioinfweb.commons.tic.input.TICKeyEvent;
 import info.bioinfweb.commons.tic.input.TICKeyListener;
 import info.bioinfweb.commons.tic.input.TICMouseAdapter;
@@ -59,10 +62,18 @@ public class CursorSelectionInputListener extends TICMouseAdapter implements TIC
 	private Point calculateColumnRow(SequenceArea source, int x, int y) {
 		return new Point(getOwner().columnByPaintX(x), getOwner().rowByPaintY(getOwner().alignmentPartY(source, y)));
 	}
+	
+	
+	private void setSwingFocus(TICMouseEvent event) {
+		if (event.getSource().getCurrentToolkit().equals(TargetToolkit.SWING)) {
+			((JComponent)event.getSource().getToolkitComponent()).requestFocus();
+		}
+	}
 
 
 	@Override
 	public void mousePressed(TICMouseEvent event) {
+		setSwingFocus(event);  // Necessary for Swing components to react to keyboard events.
 		if (event.getClickCount() > 1) {
 			// Handle double click events here
 		}

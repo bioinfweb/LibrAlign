@@ -19,6 +19,8 @@
 package info.bioinfweb.libralign.alignmentareacomponents;
 
 
+import java.awt.Rectangle;
+import java.awt.event.ActionEvent;
 import java.awt.event.AdjustmentEvent;
 import java.awt.event.AdjustmentListener;
 import java.awt.event.ComponentAdapter;
@@ -28,6 +30,8 @@ import java.util.Iterator;
 import info.bioinfweb.libralign.AlignmentArea;
 import info.bioinfweb.libralign.dataarea.DataAreaListType;
 
+import javax.swing.AbstractAction;
+import javax.swing.Action;
 import javax.swing.JComponent;
 import javax.swing.BoxLayout;
 import javax.swing.JScrollPane;
@@ -43,6 +47,12 @@ import javax.swing.JSplitPane;
  * @since 0.1.0
  */
 public class SwingAlignmentOverviewArea extends JComponent implements ToolkitSpecificAlignmentOverviewArea {
+	private static Action VOID_ACTION = new AbstractAction() {
+				@Override
+				public void actionPerformed(ActionEvent e) {}
+			};
+	
+	
 	private AlignmentArea independentComponent;
 	private SequenceAreaMap sequenceAreaMap;
 	
@@ -73,11 +83,38 @@ public class SwingAlignmentOverviewArea extends JComponent implements ToolkitSpe
 	}
 	
 	
+	@Override
+	public void scrollAlignmentRectToVisible(Rectangle rectangle) {
+		getContentArea().scrollRectToVisible(rectangle);
+	}
+
+
+	@Override
+	public void scrollCursorToVisible() {
+		scrollAlignmentRectToVisible(getIndependentComponent().getCursorRectangle());
+	}
+	
+	
+	/**
+	 * Removes the arrow key bindings, so that the alignment cursor can be moved with these keys instead without
+	 * scrolling.
+	 * 
+	 * @param scrollPane - the the scroll pane to remove the key bindings from
+	 */
+	private void removeArrowKeyBindings(JScrollPane scrollPane) {
+	  scrollPane.getActionMap().put("unitScrollLeft", VOID_ACTION);  // remove() does not work here.
+	  scrollPane.getActionMap().put("unitScrollUp", VOID_ACTION);
+		scrollPane.getActionMap().put("unitScrollRight", VOID_ACTION);
+	  scrollPane.getActionMap().put("unitScrollDown", VOID_ACTION);
+	}
+	
+	
 	private JScrollPane createScrollPane() {
 		JScrollPane result = new JScrollPane();
 		result.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
 		result.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
 		result.setBorder(null);
+		removeArrowKeyBindings(result);
 		return result;
 	}
 	
@@ -115,20 +152,21 @@ public class SwingAlignmentOverviewArea extends JComponent implements ToolkitSpe
 		bottomScrollPane.setRowHeaderView(bottomLabelArea.createSwingComponent());
 		
 		AdjustmentListener listener = new AdjustmentListener() {
-			@Override
-			public void adjustmentValueChanged(AdjustmentEvent e) {
-				if (headScrollPane.getHorizontalScrollBar() != e.getSource()) {
-					headScrollPane.getHorizontalScrollBar().getModel().setValue(e.getValue());
-				}
-				if (contentScrollPane.getHorizontalScrollBar() != e.getSource()) {
-					contentScrollPane.getHorizontalScrollBar().getModel().setValue(e.getValue());
-				}
-				if (bottomScrollPane.getHorizontalScrollBar() != e.getSource()) {
-					bottomScrollPane.getHorizontalScrollBar().getModel().setValue(e.getValue());
-				}
-				// If the operation would only be performed outside valueIsAdjusting the other scroll panes would not be moved while the scroll bar is dragged. 
-			}
-		};
+					@Override
+					public void adjustmentValueChanged(AdjustmentEvent e) {
+						if (headScrollPane.getHorizontalScrollBar() != e.getSource()) {
+							headScrollPane.getHorizontalScrollBar().getModel().setValue(e.getValue());
+						}
+						if (contentScrollPane.getHorizontalScrollBar() != e.getSource()) {
+							contentScrollPane.getHorizontalScrollBar().getModel().setValue(e.getValue());
+						}
+						if (bottomScrollPane.getHorizontalScrollBar() != e.getSource()) {
+							bottomScrollPane.getHorizontalScrollBar().getModel().setValue(e.getValue());
+						}
+						// If the operation would only be performed outside valueIsAdjusting the other scroll panes 
+						// would not be moved while the scroll bar is dragged. 
+					}
+				};
 		headScrollPane.getHorizontalScrollBar().addAdjustmentListener(listener);
 		contentScrollPane.getHorizontalScrollBar().addAdjustmentListener(listener);
 		bottomScrollPane.getHorizontalScrollBar().addAdjustmentListener(listener);
@@ -305,8 +343,8 @@ public class SwingAlignmentOverviewArea extends JComponent implements ToolkitSpe
   	topSplitPane.setDividerLocation(headHeight / (double)overallHeight);
 		bottomSplitPane.setDividerLocation(contentHeight / (double)(overallHeight - headHeight));
 	}
-	
-	
+
+
 //	/**
 //	 * Distributes the height that has become available since the last call of this method to the head, content, 
 //	 * and bottom area. This method can also be used if the available height was reduces since the last call.

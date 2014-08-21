@@ -22,6 +22,8 @@ package info.bioinfweb.libralign.alignmentareacomponents;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Rectangle;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.beans.Transient;
 import java.util.Iterator;
 
