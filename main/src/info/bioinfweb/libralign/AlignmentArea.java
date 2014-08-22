@@ -37,7 +37,6 @@ import info.bioinfweb.libralign.alignmentareacomponents.SequenceArea;
 import info.bioinfweb.libralign.alignmentareacomponents.SwingAlignmentOverviewArea;
 import info.bioinfweb.libralign.alignmentareacomponents.ToolkitSpecificAlignmentOverviewArea;
 import info.bioinfweb.libralign.alignmentareacomponents.ToolkitSpecificAlignmentPartArea;
-import info.bioinfweb.libralign.cursor.AlignmentCursor;
 import info.bioinfweb.libralign.cursor.CursorChangeEvent;
 import info.bioinfweb.libralign.cursor.CursorListener;
 import info.bioinfweb.libralign.dataarea.DataArea;
@@ -46,6 +45,7 @@ import info.bioinfweb.libralign.dataarea.DataAreaListType;
 import info.bioinfweb.libralign.dataarea.DataAreaLocation;
 import info.bioinfweb.libralign.dataarea.DataAreaModel;
 import info.bioinfweb.libralign.dataarea.DataAreaModelListener;
+import info.bioinfweb.libralign.selection.AlignmentCursor;
 import info.bioinfweb.libralign.selection.SelectionModel;
 import info.bioinfweb.libralign.sequenceprovider.SequenceDataChangeListener;
 import info.bioinfweb.libralign.sequenceprovider.SequenceDataProvider;
@@ -80,7 +80,7 @@ public class AlignmentArea extends TICComponent implements SequenceDataChangeLis
 	private WorkingMode workingMode = WorkingMode.VIEW;  //TODO Should this better be part of the controller (key and mouse listener)?
 	private AlignmentDataViewMode viewMode = AlignmentDataViewMode.NUCLEOTIDE;  //TODO Initial value should be adjusted when the data type of the specified provider is known.
 	private SelectionModel selection = new SelectionModel(this);
-	private AlignmentCursor cursor = new AlignmentCursor(this);
+	//private AlignmentCursor cursor = new AlignmentCursor(this);
 	private Rectangle lastCursorRectangle = null;
 	private DataAreaModel dataAreas = new DataAreaModel();
 	private float zoomX = 1f;
@@ -210,12 +210,12 @@ public class AlignmentArea extends TICComponent implements SequenceDataChangeLis
 	}
 
 	
-	/**
-	 * Returns the alignment cursor.
-	 */
-	public AlignmentCursor getCursor() {
-		return cursor;
-	}
+//	/**
+//	 * Returns the alignment cursor.
+//	 */
+//	public AlignmentCursor getCursor() {
+//		return cursor;
+//	}
 
 
 	/**
@@ -446,10 +446,10 @@ public class AlignmentArea extends TICComponent implements SequenceDataChangeLis
 	 * @return a rectangle with paint coordinates
 	 */
 	public Rectangle getCursorRectangle() {
-		int y = paintYByRow(getCursor().getRow());
-		Rectangle result = new Rectangle(paintXByColumn(getCursor().getColumn()), y,
-				getCompoundWidth(), paintYByRow(getCursor().getRow() + getCursor().getHeight()) - y); 
-		if (getCursor().getRow() + getCursor().getHeight() - 1 == getSequenceProvider().getSequenceCount() - 1) {
+		int y = paintYByRow(getSelection().getCursorRow());
+		Rectangle result = new Rectangle(paintXByColumn(getSelection().getCursorColumn()), y,
+				getCompoundWidth(), paintYByRow(getSelection().getCursorRow() + getSelection().getCursorHeight()) - y); 
+		if (getSelection().getCursorRow() + getSelection().getCursorHeight() - 1 == getSequenceProvider().getSequenceCount() - 1) {
 			result.height += getCompoundHeight();  // Add height of the last row, because the return value of paintYByRow(maxIndex + 1) is equal to paintYByRow(maxIndex).
 		}
 		return result; 
@@ -473,12 +473,12 @@ public class AlignmentArea extends TICComponent implements SequenceDataChangeLis
 	
 	
 	private void addCursorScrollListener() {
-		getCursor().addCursorListener(new CursorListener() {
-					@Override
-					public void cursorMovedResized(CursorChangeEvent event) {
-						scrollCursorToVisible();
-					}
-				});
+//		getCursor().addCursorListener(new CursorListener() {
+//					@Override
+//					public void cursorMovedResized(CursorChangeEvent event) {
+//						scrollCursorToVisible();
+//					}
+//				});
 	}
 	
 	

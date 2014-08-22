@@ -91,6 +91,16 @@ public class OneDimensionalSelection {
   public int getStartPos() {
 		return startPos;
 	}
+  
+  
+  public int getLength() {
+  	if (isEmpty()) {
+  		return 0;
+  	}
+  	else {
+  		return lastPos - firstPos + 1;
+  	}
+  }
 
 
 	private int secureValidPos(int pos) {
@@ -126,7 +136,7 @@ public class OneDimensionalSelection {
   		firstPos = pos;
   		lastPos = pos;
   		startPos = pos;
-			getOwner().fireSelectionChanged();
+			//getOwner().fireSelectionChanged();
   	}
   }
   
@@ -147,7 +157,7 @@ public class OneDimensionalSelection {
 			if ((getLastPos() < firstPos) || (firstPos == NO_SELECTION)) {  // also true if lastPos == NO_SELECTION
 				lastPos = firstPos;
 			}
-			getOwner().fireSelectionChanged();
+			//getOwner().fireSelectionChanged();
   	}
 	}
 	
@@ -180,7 +190,7 @@ public class OneDimensionalSelection {
 					this.lastPos = lastPos;
 				}
 			}
-			getOwner().fireSelectionChanged();
+			//getOwner().fireSelectionChanged();
     }
 	}
 	
@@ -209,7 +219,7 @@ public class OneDimensionalSelection {
 				firstPos = startPos;
 				lastPos = pos;
 			}
-			getOwner().fireSelectionChanged();
+			//getOwner().fireSelectionChanged();
 		}
 	}
 	
@@ -256,12 +266,12 @@ public class OneDimensionalSelection {
 			else if (startPos < pos) {
 				firstPos = startPos;  // Not using the setter to avoid firing two events
 				lastPos = pos;
-				getOwner().fireSelectionChanged();
+				//getOwner().fireSelectionChanged();
 			}
 			else {
 				firstPos = pos;  // Not using the setter to avoid firing two events
 				lastPos = startPos;
-				getOwner().fireSelectionChanged();
+				//getOwner().fireSelectionChanged();
 			}
 		}
 	}

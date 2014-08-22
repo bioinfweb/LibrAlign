@@ -59,9 +59,9 @@ public class SelectionOnlyInputListener extends TICMouseAdapter implements TICMo
 		else if ((event.isMouseButton1Down()) && (event.getSource() instanceof SequenceArea)) {
 			SequenceArea source = (SequenceArea)event.getSource();
 			SelectionModel selection = getOwner().getSelection();
-			selection.getColumnSelection().setNewSelection(getOwner().columnByPaintX(event.getComponentX()));
-			selection.getRowSelection().setNewSelection(getOwner().rowByPaintY(
-					getOwner().alignmentPartY(source, event.getComponentY())));
+//			selection.getColumnSelection().setNewSelection(getOwner().columnByPaintX(event.getComponentX()));
+//			selection.getRowSelection().setNewSelection(getOwner().rowByPaintY(
+//					getOwner().alignmentPartY(source, event.getComponentY())));
 		}
 	}
 	
@@ -79,9 +79,9 @@ public class SelectionOnlyInputListener extends TICMouseAdapter implements TICMo
 		if ((event.isMouseButton1Down()) && (event.getSource() instanceof SequenceArea)) {
 			SequenceArea source = (SequenceArea)event.getSource();
 			SelectionModel selection = getOwner().getSelection();
-			selection.getColumnSelection().extendSelectionTo(getOwner().columnByPaintX(event.getComponentX()));
-			selection.getRowSelection().extendSelectionTo(getOwner().rowByPaintY(
-					getOwner().alignmentPartY(source, event.getComponentY())));
+//			selection.getColumnSelection().extendSelectionTo(getOwner().columnByPaintX(event.getComponentX()));
+//			selection.getRowSelection().extendSelectionTo(getOwner().rowByPaintY(
+//					getOwner().alignmentPartY(source, event.getComponentY())));
 		}
 	}
 }

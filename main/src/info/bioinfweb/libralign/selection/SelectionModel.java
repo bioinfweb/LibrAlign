@@ -41,6 +41,7 @@ public class SelectionModel {
   private SelectionType type = SelectionType.CELLS;
   private OneDimensionalSelection columnSelection = new OneDimensionalSelection(this, SelectionDimension.COLUMN);
   private OneDimensionalSelection rowSelection = new OneDimensionalSelection(this, SelectionDimension.ROW);
+  private AlignmentCursor cursor;
 	private List<SelectionListener> selectionListeners = new ArrayList<SelectionListener>(16);
   
   
@@ -52,6 +53,7 @@ public class SelectionModel {
 	public SelectionModel(AlignmentArea owner) {
 		super();
 		this.owner = owner;
+		cursor = new AlignmentCursor(owner);
 	}
 
 
@@ -113,7 +115,7 @@ public class SelectionModel {
 	/**
 	 * Returns the column selection.
 	 */
-	public OneDimensionalSelection getColumnSelection() {
+	protected OneDimensionalSelection getColumnSelection() {
 		return columnSelection;
 	}
 
@@ -121,8 +123,102 @@ public class SelectionModel {
 	/**
 	 * Returns the row selection.
 	 */
-	public OneDimensionalSelection getRowSelection() {
+	protected OneDimensionalSelection getRowSelection() {
 		return rowSelection;
+	}
+	
+	
+	public int getCursorColumn() {
+		return cursor.getColumn();
+	}
+	
+	
+	public int getCursorRow() {
+		return cursor.getRow();
+	}
+	
+	
+	public int getCursorHeight() {
+		return cursor.getHeight();
+	}
+	
+	
+	public void setNewCursorColumn(int column) {
+    setNewCursorPosition(column, cursor.getRow(), cursor.getHeight());
+	}
+	
+	
+	public void setNewCursorRow(int row) {
+    setNewCursorPosition(cursor.getColumn(), row, cursor.getHeight());
+	}
+	
+	
+	public void setNewCursorPosition(int column, int row) {
+    setNewCursorPosition(column, row, cursor.getHeight());
+	}
+	
+	
+	public void setNewCursorPosition(int column, int row, int height) {
+		clear();
+		cursor.setColumnRowHeight(column, row, height);
+    fireSelectionChanged();
+	}
+	
+	
+	private int bringCursorColumnInRange(int column) {
+		 return Math.max(0, Math.min(column, getOwner().getSequenceProvider().getMaxSequenceLength()));
+	}
+	
+	
+	private int bringRowInRange(int row) {
+		 return Math.max(0, Math.min(row, getOwner().getSequenceProvider().getSequenceCount() - 1));
+	}
+	
+	
+	/**
+	 * @param column - the new cursor position
+	 * @param row - the new cursor position
+	 */
+	public void setSelectionEnd(int column, int row) {
+		column = bringCursorColumnInRange(column);
+		row = bringRowInRange(row);
+		
+		if (((column == getStartColumn()) && (cursor.getColumn() > column)) ||  // Selection shrunk to zero from right
+				((column == getStartColumn() + 1) && (cursor.getColumn() < column))) {  // Selection shrunk to zero from left
+			
+			clear();  // Selection needs to be cleared because the new start point might be different depending on the direction of the next cursor move.
+			cursor.setColumn(column);
+		}
+		else {
+			boolean wasEmpty = isEmpty();
+			if (isEmpty()) {  // Define selection start
+				if (column < cursor.getColumn()) {
+					getColumnSelection().setNewSelection(cursor.getColumn() - 1);
+				}
+				else {
+					getColumnSelection().setNewSelection(cursor.getColumn());
+				}
+				getRowSelection().setNewSelection(cursor.getRow());
+			}
+			
+			if (column <= getStartColumn()) {
+				getColumnSelection().setSelectionEnd(column);
+			}
+			else {
+				getColumnSelection().setSelectionEnd(column - 1);
+			}
+			getRowSelection().setSelectionEnd(row);
+
+			boolean movedSidewards = column != cursor.getColumn();
+			cursor.setColumn(column);
+			cursor.setRow(getRowSelection().getFirstPos());
+			cursor.setHeight(getRowSelection().getLength());
+			
+			if (!movedSidewards && wasEmpty && (getStartColumn() == cursor.getColumn())) {
+				clear();  // Avoid one column wide selection when cursor height is changed.
+			}
+		}
+    fireSelectionChanged();
 	}
 
 	
@@ -142,6 +238,16 @@ public class SelectionModel {
 		return (getType().equals(SelectionType.CELLS) && columnSelected && rowSelected) ||
 				(getType().equals(SelectionType.ROW_ONLY) && rowSelected) ||
 				(getType().equals(SelectionType.COLUMN_ONLY) && columnSelected);
+	}
+	
+	
+	public int getStartColumn() {
+		return getColumnSelection().getStartPos();
+	}
+	
+	
+	public int getStartRow() {
+		return getRowSelection().getStartPos();
 	}
 	
 	

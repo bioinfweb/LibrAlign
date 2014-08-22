@@ -37,7 +37,6 @@ main/src/info/bioinfweb/libralign/alignmentareacomponents/inputlisteners/CursorS
 main/src/info/bioinfweb/libralign/alignmentareacomponents/inputlisteners/SelectionOnlyInputListener.java -text svneol=unset#text/plain
 main/src/info/bioinfweb/libralign/alignmentareacomponents/inputlisteners/package-info.java -text svneol=unset#text/plain
 main/src/info/bioinfweb/libralign/alignmentareacomponents/package-info.java -text svneol=unset#text/plain
-main/src/info/bioinfweb/libralign/cursor/AlignmentCursor.java -text svneol=unset#text/plain
 main/src/info/bioinfweb/libralign/cursor/CursorChangeEvent.java -text svneol=unset#text/plain
 main/src/info/bioinfweb/libralign/cursor/CursorListener.java -text svneol=unset#text/plain
 main/src/info/bioinfweb/libralign/cursor/package-info.java -text svneol=unset#text/plain
@@ -76,6 +75,7 @@ main/src/info/bioinfweb/libralign/pherogram/distortion/ScaledPherogramDistortion
 main/src/info/bioinfweb/libralign/pherogram/distortion/UnscaledPherogramDistortion.java -text svneol=unset#text/plain
 main/src/info/bioinfweb/libralign/pherogram/distortion/package-info.java -text svneol=unset#text/plain
 main/src/info/bioinfweb/libralign/pherogram/package-info.java -text svneol=unset#text/plain
+main/src/info/bioinfweb/libralign/selection/AlignmentCursor.java -text svneol=unset#text/plain
 main/src/info/bioinfweb/libralign/selection/OneDimensionalSelection.java -text svneol=unset#text/plain
 main/src/info/bioinfweb/libralign/selection/SelectionChangeEvent.java -text svneol=unset#text/plain
 main/src/info/bioinfweb/libralign/selection/SelectionDimension.java -text svneol=unset#text/plain

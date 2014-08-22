@@ -22,8 +22,8 @@ package info.bioinfweb.libralign.alignmentareacomponents;
 import info.bioinfweb.commons.Math2;
 import info.bioinfweb.commons.swt.ScrolledCompositeSyncListener;
 import info.bioinfweb.libralign.AlignmentArea;
-import info.bioinfweb.libralign.cursor.AlignmentCursor;
 import info.bioinfweb.libralign.dataarea.DataAreaListType;
+import info.bioinfweb.libralign.selection.AlignmentCursor;
 
 import java.awt.Point;
 import java.awt.Rectangle;

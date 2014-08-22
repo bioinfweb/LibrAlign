@@ -16,13 +16,15 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package info.bioinfweb.libralign.cursor;
+package info.bioinfweb.libralign.selection;
 
 
 import java.util.ArrayList;
 import java.util.List;
 
 import info.bioinfweb.libralign.AlignmentArea;
+import info.bioinfweb.libralign.cursor.CursorChangeEvent;
+import info.bioinfweb.libralign.cursor.CursorListener;
 
 
 
@@ -68,7 +70,7 @@ public class AlignmentCursor {
 		column = bringColumnInRange(column);
 		if (this.column != column) {
 			this.column = column;
-			fireCursorMovedResized();
+			//fireCursorMovedResized();
 		}
 	}
 	
@@ -90,7 +92,7 @@ public class AlignmentCursor {
 		row = bringRowInRange(row);
 		if (this.row != row) {
 			this.row = row;
-			fireCursorMovedResized();
+			//fireCursorMovedResized();
 		}
 	}
 	
@@ -112,7 +114,7 @@ public class AlignmentCursor {
 		height = bringHeightInRange(height);
 		if (this.height != height) {
 			this.height = height;
-			fireCursorMovedResized();
+			//fireCursorMovedResized();
 		}
 	}
 	
@@ -136,39 +138,39 @@ public class AlignmentCursor {
 		height = bringHeightInRange(height);
 		if (change || (this.height != height)) {
 			this.height = height;
-			fireCursorMovedResized();
+			//fireCursorMovedResized();
 		}
 	}
 	
 	
-	/**
-	 * Informs all listeners that this cursor moved.
-	 */
-	protected void fireCursorMovedResized() {
-		CursorChangeEvent event = new CursorChangeEvent(this);
-		for (CursorListener listener : listeners) {
-			listener.cursorMovedResized(event);
-		}
-	}
+//	/**
+//	 * Informs all listeners that this cursor moved.
+//	 */
+//	protected void fireCursorMovedResized() {
+//		CursorChangeEvent event = new CursorChangeEvent(this);
+//		for (CursorListener listener : listeners) {
+//			listener.cursorMovedResized(event);
+//		}
+//	}
 	
 	
-	/**
-	 * Adds a listener to this cursor.
-	 * 
-	 * @param listener - the listener that will track changes
-	 */
-	public void addCursorListener(CursorListener listener) {
-		listeners.add(listener);
-	}
-	
-	
-	/**
-	 * Removes a listener from this cursor.
-	 * 
-	 * @param listener - the listener to be removed.
-	 * @return {@code true} if the listener was removed, {@code false} if the specified listener was not contained in the list
-	 */
-	public boolean removeCursorListener(CursorListener listener) {
-		return listeners.remove(listener);
-	}
+//	/**
+//	 * Adds a listener to this cursor.
+//	 * 
+//	 * @param listener - the listener that will track changes
+//	 */
+//	public void addCursorListener(CursorListener listener) {
+//		listeners.add(listener);
+//	}
+//	
+//	
+//	/**
+//	 * Removes a listener from this cursor.
+//	 * 
+//	 * @param listener - the listener to be removed.
+//	 * @return {@code true} if the listener was removed, {@code false} if the specified listener was not contained in the list
+//	 */
+//	public boolean removeCursorListener(CursorListener listener) {
+//		return listeners.remove(listener);
+//	}
 }

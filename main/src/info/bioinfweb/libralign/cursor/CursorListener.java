@@ -19,6 +19,8 @@
 package info.bioinfweb.libralign.cursor;
 
 
+import info.bioinfweb.libralign.selection.AlignmentCursor;
+
 import java.util.EventListener;
 
 

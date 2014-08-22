@@ -40,7 +40,8 @@ import info.bioinfweb.libralign.AlignmentArea;
 import info.bioinfweb.libralign.AlignmentDataViewMode;
 import info.bioinfweb.libralign.AlignmentSubArea;
 import info.bioinfweb.libralign.SequenceColorSchema;
-import info.bioinfweb.libralign.cursor.AlignmentCursor;
+import info.bioinfweb.libralign.selection.AlignmentCursor;
+import info.bioinfweb.libralign.selection.SelectionModel;
 import info.bioinfweb.libralign.selection.SelectionType;
 import info.bioinfweb.libralign.sequenceprovider.SequenceDataProvider;
 
@@ -170,16 +171,16 @@ public class SequenceArea extends AlignmentSubArea {
   
   
   private void paintCursor(Graphics2D g, double x, double y) {
-  	AlignmentCursor cursor = getOwner().getCursor();
+  	SelectionModel selection = getOwner().getSelection();
   	if (Math2.isBetween(getOwner().getSequenceOrder().indexByID(getSeqenceID()), 
-  			cursor.getRow(), cursor.getRow() + cursor.getHeight() - 1)) {
+  			selection.getCursorRow(), selection.getCursorRow() + selection.getCursorHeight() - 1)) {
   		
   		Stroke previousStroke = g.getStroke();
   		try {
   			SequenceColorSchema colorSchema = getOwner().getColorSchema();
   			g.setColor(colorSchema.getCursorColor());
   			g.setStroke(new BasicStroke(colorSchema.getCursorLineWidth()));
-  			x += cursor.getColumn() * getOwner().getCompoundWidth();
+  			x += selection.getCursorColumn() * getOwner().getCompoundWidth();
   			g.draw(new Line2D.Double(x, y, x, y + getOwner().getCompoundHeight()));
   		}
   		finally {

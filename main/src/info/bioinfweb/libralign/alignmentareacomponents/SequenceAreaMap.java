@@ -50,7 +50,7 @@ public class SequenceAreaMap extends TreeMap<Integer, SequenceArea> implements S
 		this.owner = owner;
 		selectionInputListener = new CursorSelectionInputListener(owner);
 		owner.getSelection().addSelectionListener(this);
-		owner.getCursor().addCursorListener(this);
+		//owner.getCursor().addCursorListener(this);
 		recreateElements();
 	}
 
