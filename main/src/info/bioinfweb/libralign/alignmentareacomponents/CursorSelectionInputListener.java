@@ -148,6 +148,33 @@ public class CursorSelectionInputListener extends TICMouseAdapter implements TIC
 					selection.setNewCursorRow(selection.getCursorRow() + 1);
 				}
 				break;
+			case KeyEvent.VK_HOME:
+				if (event.isShiftDown()) {
+					if (selection.getCursorRow() < selection.getStartRow()) {  // Above selection start
+						selection.setSelectionEnd(0, selection.getCursorRow());
+					}
+					else { // Below selection start
+						selection.setSelectionEnd(0, 
+								selection.getCursorRow() + selection.getCursorHeight() - 1);
+					}
+				}
+				else {
+					selection.setNewCursorColumn(0);
+				}
+				break;
+			case KeyEvent.VK_END:
+				if (event.isShiftDown()) {
+					if (selection.getCursorRow() < selection.getStartRow()) {  // Above selection start
+						selection.setSelectionEnd(getOwner().getSequenceProvider().getMaxSequenceLength(), selection.getCursorRow());
+					}
+					else { // Below selection start
+						selection.setSelectionEnd(getOwner().getSequenceProvider().getMaxSequenceLength(), 
+								selection.getCursorRow() + selection.getCursorHeight() - 1);
+					}
+				}
+				else {
+					selection.setNewCursorColumn(getOwner().getSequenceProvider().getMaxSequenceLength());
+				}
 			default:
 				break;
 		}
