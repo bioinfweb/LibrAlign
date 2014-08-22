@@ -30,11 +30,8 @@ import javax.swing.JComponent;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.Composite;
 
-import info.bioinfweb.commons.Math2;
 import info.bioinfweb.commons.tic.TICComponent;
 import info.bioinfweb.commons.tic.TICPaintEvent;
-import info.bioinfweb.commons.tic.input.TICKeyAdapter;
-import info.bioinfweb.commons.tic.input.TICKeyEvent;
 import info.bioinfweb.libralign.alignmentareacomponents.SWTAlignmentOverviewArea;
 import info.bioinfweb.libralign.alignmentareacomponents.SequenceArea;
 import info.bioinfweb.libralign.alignmentareacomponents.SwingAlignmentOverviewArea;

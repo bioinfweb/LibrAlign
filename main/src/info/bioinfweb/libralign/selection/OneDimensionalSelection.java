@@ -82,7 +82,18 @@ public class OneDimensionalSelection {
 	}
 	
 	
-  private int secureValidPos(int pos) {
+  /**
+   * Returns the position where the current selection process started. This value is e.g. used to calculate
+   * the new selection range in a call of {@link #setSelectionEnd(int)}.
+   * 
+   * @return the selection start position or {@link #NO_SELECTION} if no selection process is ongoing
+   */
+  public int getStartPos() {
+		return startPos;
+	}
+
+
+	private int secureValidPos(int pos) {
   	if (pos != NO_SELECTION) {
   		if (getDimension().equals(SelectionDimension.COLUMN)) {
   			pos = Math.max(0, Math.min(getOwner().getOwner().getSequenceProvider().getMaxSequenceLength() - 1, pos));  //TODO Problematic if getMaxSequenceLength() would always be calculated over all sequences, since this method is called often.
@@ -185,6 +196,24 @@ public class OneDimensionalSelection {
 	}
 	
 	
+	public void setSelectionEnd(int pos) {
+		if (isEmpty()) {
+			setNewSelection(pos);
+		}
+		else {
+			if (pos < startPos) {
+				firstPos = pos;
+				lastPos = startPos;
+			}
+			else {
+				firstPos = startPos;
+				lastPos = pos;
+			}
+			getOwner().fireSelectionChanged();
+		}
+	}
+	
+	
 	/**
 	 * Moves the selection by the specified number of columns (or rows). The new selection
 	 * will only be one column (or row) wide, no matter how wide is was before.
@@ -211,19 +240,29 @@ public class OneDimensionalSelection {
 		
 	
 	/**
-	 * Extends the selection in either direction so that the specified and column (or row) all 
-	 * previously selected columns (or rows) are included.
+	 * Extends the selection in either direction so that the specified column (or row) and all 
+	 * previously selected columns (or rows) are included. If the previous selection is empty this
+	 * method delegated to {@link #setNewSelection(int)}.
 	 * 
 	 * @param pos - the index of the column or row that shall additionally be included in this selection
 	 */
 	public void extendSelectionTo(int pos) {
-		if (startPos < pos) {
-			firstPos = startPos;  // Not using the setter to avoid firing two events
-			setLastPos(pos);
-		}
-		else {
-			firstPos = pos;  // Not using the setter to avoid firing two events
-			setLastPos(startPos);
+  	pos = secureValidPos(pos);
+		
+		if (!isSelected(pos)) {
+			if (isEmpty()) {
+				setNewSelection(pos);
+			}
+			else if (startPos < pos) {
+				firstPos = startPos;  // Not using the setter to avoid firing two events
+				lastPos = pos;
+				getOwner().fireSelectionChanged();
+			}
+			else {
+				firstPos = pos;  // Not using the setter to avoid firing two events
+				lastPos = startPos;
+				getOwner().fireSelectionChanged();
+			}
 		}
 	}
 	
@@ -231,20 +270,20 @@ public class OneDimensionalSelection {
 	/**
 	 * Extends the selection to the left (or to the bottom).
 	 * 
-	 * @param columnCount - the number of columns to be added to the selection.
+	 * @param posCount - the number of columns to be added to the selection.
 	 */
-	public void extendSelectionRelatively(int columnCount) {
+	public void extendSelectionRelatively(int posCount) {
 		if (isEmpty()) {
 			startPos = 1;
 			firstPos = 1;  // setter not used to avoid firing a second event 
-			setLastPos(columnCount);  // calls fireColumnSelectionChanged()
+			setLastPos(posCount);  // calls fireColumnSelectionChanged()
 		}
 		else {
 			if ((getLastPos() > startPos) || (getFirstPos() == startPos)) {  // second condition must not be checked, if first is true
-				setLastPos(getLastPos() + columnCount);  // calls fireColumnSelectionChanged()
+				setLastPos(getLastPos() + posCount);  // calls fireColumnSelectionChanged()
 			}
 			else if (getFirstPos() < startPos) {
-				setFirstPos(getFirstPos() + columnCount);  // calls fireColumnSelectionChanged()
+				setFirstPos(getFirstPos() + posCount);  // calls fireColumnSelectionChanged()
 			}
 			else {
 				setNewSelection(startPos);  // calls fireColumnSelectionChanged()

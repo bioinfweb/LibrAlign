@@ -66,46 +66,6 @@ public class SequenceArea extends AlignmentSubArea {
 		super(owner);
 		this.seqenceID = seqenceID;
 		assignSize();
-		
-//		addMouseListener(new TICMouseAdapter() {
-//			@Override
-//			public void mousePressed(TICMouseEvent event) {
-//				System.out.println("Pressed: " + event.getButton() + " " + event.getComponentX() + " " + event.getComponentY());
-//				//System.out.println(event.getButton() + " " + event.getModifiers() + " " + event.isControlDown() + " " + event.isMetaDown());
-//			}
-//
-//			@Override
-//			public void mouseDragged(TICMouseEvent event) {
-//				System.out.println("Dragged: " + event.getButton() + " " + event.getComponentX() + " " + event.getComponentY());
-//			}
-//
-//			@Override
-//			public void mouseEntered(TICMouseEvent event) {
-//				System.out.println("Entered: " + event.getButton() + " " + event.getComponentX() + " " + event.getComponentY());
-//			}
-//
-//			@Override
-//			public void mouseExited(TICMouseEvent event) {
-//				System.out.println("Exited: " + event.getButton() + " " + event.getComponentX() + " " + event.getComponentY());
-//			}
-//
-//			@Override
-//			public void mouseMoved(TICMouseEvent event) {
-//				System.out.println("Moved: " + event.getButton() + " " + event.getComponentX() + " " + event.getComponentY());
-//			}
-//
-//			@Override
-//			public void mouseReleased(TICMouseEvent event) {
-//				System.out.println("Released: " + event.getButton() + " " + event.getComponentX() + " " + event.getComponentY());
-//			}
-//		});
-//
-//		addKeyListener(new TICKeyAdapter() {
-//			@Override
-//			public void keyPressed(TICKeyEvent event) {
-//				//System.out.println(event.getKeyCharacter() + " " + event.getKeyCode() + " " + event.getKeyLocation());
-//			}
-//		});
 	}
 
 

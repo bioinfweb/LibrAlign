@@ -106,8 +106,8 @@ public class CursorSelectionInputListener extends TICMouseAdapter implements TIC
 				selection.getRowSelection().setNewSelection(lastClickColumnRow.y);
 		  }
 		  if (!selection.isEmpty()) {  // Do not create new selection before the upper condition was met.
-				selection.getColumnSelection().extendSelectionTo(columnRow.x);
-				selection.getRowSelection().extendSelectionTo(columnRow.y);
+				selection.getColumnSelection().setSelectionEnd(columnRow.x);
+				selection.getRowSelection().setSelectionEnd(columnRow.y);
 		  }
 			
 			AlignmentCursor cursor = getOwner().getCursor();
@@ -135,29 +135,70 @@ public class CursorSelectionInputListener extends TICMouseAdapter implements TIC
 	@Override
 	public void keyPressed(TICKeyEvent event) {
 		AlignmentCursor cursor = getOwner().getCursor();
+		SelectionModel selection = getOwner().getSelection();
 		switch (event.getKeyCode()) {
 			case KeyEvent.VK_LEFT:
 				cursor.setColumn(cursor.getColumn() - 1);
-				if (event.isShiftDown()) {  //TODO Does not work this way
-					getOwner().getSelection().getColumnSelection().extendSelectionTo(cursor.getColumn());
+				
+				if (event.isShiftDown()) {
+					if (!selection.isEmpty() && selection.getColumnSelection().getStartPos() < cursor.getColumn()) {
+						selection.getColumnSelection().setSelectionEnd(cursor.getColumn() - 1);
+					}
+					else {
+						selection.getColumnSelection().setSelectionEnd(cursor.getColumn());
+					}
+					selection.getRowSelection().setSelectionEnd(cursor.getRow());
+				}
+				else {
+					getOwner().getSelection().clear();
 				}
 				break;
 			case KeyEvent.VK_RIGHT:
 				cursor.setColumn(cursor.getColumn() + 1);
-				if (event.isShiftDown()) {  //TODO Does not work this way
-					getOwner().getSelection().getColumnSelection().extendSelectionTo(cursor.getColumn());
+				
+				if (event.isShiftDown()) {
+					if (selection.isEmpty() || selection.getColumnSelection().getStartPos() < cursor.getColumn()) {
+						selection.getColumnSelection().setSelectionEnd(cursor.getColumn() - 1);
+					}
+					else {
+						selection.getColumnSelection().setSelectionEnd(cursor.getColumn());
+					}
+					selection.getRowSelection().setSelectionEnd(cursor.getRow());
+				}
+				else {
+					getOwner().getSelection().clear();
 				}
 				break;
 			case KeyEvent.VK_UP:
 				cursor.setRow(cursor.getRow() - 1);
-				if (event.isShiftDown()) {  //TODO Does not work this way
-					getOwner().getSelection().getRowSelection().extendSelectionTo(cursor.getRow());
+				
+				if (event.isShiftDown()) {
+					selection.getColumnSelection().setSelectionEnd(cursor.getColumn());
+					if (!selection.isEmpty() && selection.getRowSelection().getStartPos() < cursor.getRow()) {
+						selection.getRowSelection().setSelectionEnd(cursor.getRow() - 1);
+					}
+					else {
+						selection.getRowSelection().setSelectionEnd(cursor.getRow());
+					}
+				}
+				else {
+					getOwner().getSelection().clear();
 				}
 				break;
 			case KeyEvent.VK_DOWN:
 				cursor.setRow(cursor.getRow() + 1);
-				if (event.isShiftDown()) {  //TODO Does not work this way
-					getOwner().getSelection().getRowSelection().extendSelectionTo(cursor.getRow());
+				
+				if (event.isShiftDown()) {
+					selection.getColumnSelection().setSelectionEnd(cursor.getColumn());
+					if (selection.isEmpty() || selection.getRowSelection().getStartPos() < cursor.getRow()) {
+						selection.getRowSelection().setSelectionEnd(cursor.getRow() - 1);
+					}
+					else {
+						selection.getRowSelection().setSelectionEnd(cursor.getRow());
+					}
+				}
+				else {
+					getOwner().getSelection().clear();
 				}
 				break;
 			default:
