@@ -19,12 +19,7 @@
 package info.bioinfweb.libralign.selection;
 
 
-import java.util.ArrayList;
-import java.util.List;
-
 import info.bioinfweb.libralign.AlignmentArea;
-import info.bioinfweb.libralign.cursor.CursorChangeEvent;
-import info.bioinfweb.libralign.cursor.CursorListener;
 
 
 
@@ -39,7 +34,6 @@ public class AlignmentCursor {
   private int column = 0;
   private int row = 0;
   private int height = 1;
-  private List<CursorListener> listeners = new ArrayList<CursorListener>();
   
   
 	public AlignmentCursor(AlignmentArea owner) {
@@ -61,17 +55,8 @@ public class AlignmentCursor {
 	}
 	
 	
-	private int bringColumnInRange(int column) {
-		 return Math.max(0, Math.min(column, getOwner().getSequenceProvider().getMaxSequenceLength()));
-	}
-	
-	
 	public void setColumn(int column) {
-		column = bringColumnInRange(column);
-		if (this.column != column) {
-			this.column = column;
-			//fireCursorMovedResized();
-		}
+		this.column = column;
 	}
 	
 	
@@ -83,17 +68,8 @@ public class AlignmentCursor {
 	}
 	
 	
-	private int bringRowInRange(int row) {
-		 return Math.max(0, Math.min(row, getOwner().getSequenceProvider().getSequenceCount() - getHeight()));
-	}
-	
-	
 	public void setRow(int row) {
-		row = bringRowInRange(row);
-		if (this.row != row) {
-			this.row = row;
-			//fireCursorMovedResized();
-		}
+		this.row = row;
 	}
 	
 	
@@ -105,17 +81,8 @@ public class AlignmentCursor {
 	}
 	
 	
-	private int bringHeightInRange(int height) {
-		 return Math.max(1, Math.min(height, getOwner().getSequenceProvider().getSequenceCount() - getRow()));
-	}
-	
-	
 	public void setHeight(int height) {
-		height = bringHeightInRange(height);
-		if (this.height != height) {
-			this.height = height;
-			//fireCursorMovedResized();
-		}
+		this.height = height;
 	}
 	
 	
@@ -128,49 +95,8 @@ public class AlignmentCursor {
 	 * @param height - the new height (in rows)
 	 */
 	public void setColumnRowHeight(int column, int row, int height) {
-		boolean change = this.column != column;
-		this.column = bringColumnInRange(column);
-		
-		row = bringRowInRange(row);
-		change = change || this.row != row;
-		this.row = row;  // Needs to be done first, to calculate the correct range for the new height.
-		
-		height = bringHeightInRange(height);
-		if (change || (this.height != height)) {
-			this.height = height;
-			//fireCursorMovedResized();
-		}
+		this.column = column;
+		this.row = row;
+		this.height = height;
 	}
-	
-	
-//	/**
-//	 * Informs all listeners that this cursor moved.
-//	 */
-//	protected void fireCursorMovedResized() {
-//		CursorChangeEvent event = new CursorChangeEvent(this);
-//		for (CursorListener listener : listeners) {
-//			listener.cursorMovedResized(event);
-//		}
-//	}
-	
-	
-//	/**
-//	 * Adds a listener to this cursor.
-//	 * 
-//	 * @param listener - the listener that will track changes
-//	 */
-//	public void addCursorListener(CursorListener listener) {
-//		listeners.add(listener);
-//	}
-//	
-//	
-//	/**
-//	 * Removes a listener from this cursor.
-//	 * 
-//	 * @param listener - the listener to be removed.
-//	 * @return {@code true} if the listener was removed, {@code false} if the specified listener was not contained in the list
-//	 */
-//	public boolean removeCursorListener(CursorListener listener) {
-//		return listeners.remove(listener);
-//	}
 }

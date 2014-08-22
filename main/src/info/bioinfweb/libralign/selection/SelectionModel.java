@@ -88,19 +88,19 @@ public class SelectionModel {
 		if (type.equals(SelectionType.CELLS)) {
 			switch (this.type) {
 				case COLUMN_ONLY:
-					if (getColumnSelection().isEmpty()) {
-						getRowSelection().clear();
+					if (columnSelection.isEmpty()) {
+						rowSelection.clear();
 					}
 					else {
-						getRowSelection().selectAll();
+						rowSelection.selectAll();
 					}
 					break;
 				case ROW_ONLY:
-					if (getRowSelection().isEmpty()) {
-						getColumnSelection().clear();
+					if (rowSelection.isEmpty()) {
+						columnSelection.clear();
 					}
 					else {
-						getColumnSelection().selectAll();
+						columnSelection.selectAll();
 					}
 					break;
 				case CELLS:  // Nothing to do.
@@ -109,22 +109,6 @@ public class SelectionModel {
 		}
 		this.type = type;
 		fireSelectionChanged();
-	}
-	
-	
-	/**
-	 * Returns the column selection.
-	 */
-	protected OneDimensionalSelection getColumnSelection() {
-		return columnSelection;
-	}
-
-
-	/**
-	 * Returns the row selection.
-	 */
-	protected OneDimensionalSelection getRowSelection() {
-		return rowSelection;
 	}
 	
 	
@@ -193,26 +177,26 @@ public class SelectionModel {
 			boolean wasEmpty = isEmpty();
 			if (isEmpty()) {  // Define selection start
 				if (column < cursor.getColumn()) {
-					getColumnSelection().setNewSelection(cursor.getColumn() - 1);
+					columnSelection.setNewSelection(cursor.getColumn() - 1);
 				}
 				else {
-					getColumnSelection().setNewSelection(cursor.getColumn());
+					columnSelection.setNewSelection(cursor.getColumn());
 				}
-				getRowSelection().setNewSelection(cursor.getRow());
+				rowSelection.setNewSelection(cursor.getRow());
 			}
 			
 			if (column <= getStartColumn()) {
-				getColumnSelection().setSelectionEnd(column);
+				columnSelection.setSelectionEnd(column);
 			}
 			else {
-				getColumnSelection().setSelectionEnd(column - 1);
+				columnSelection.setSelectionEnd(column - 1);
 			}
-			getRowSelection().setSelectionEnd(row);
+			rowSelection.setSelectionEnd(row);
 
 			boolean movedSidewards = column != cursor.getColumn();
 			cursor.setColumn(column);
-			cursor.setRow(getRowSelection().getFirstPos());
-			cursor.setHeight(getRowSelection().getLength());
+			cursor.setRow(rowSelection.getFirstPos());
+			cursor.setHeight(rowSelection.getLength());
 			
 			if (!movedSidewards && wasEmpty && (getStartColumn() == cursor.getColumn())) {
 				clear();  // Avoid one column wide selection when cursor height is changed.
@@ -233,8 +217,8 @@ public class SelectionModel {
 	 * @return {@code true} if the specified cell is contained in the selection, {@code false} otherwise
 	 */
 	public boolean isSelected(int column, int row) {
-		boolean columnSelected = getColumnSelection().isSelected(column);
-		boolean rowSelected = getRowSelection().isSelected(row);
+		boolean columnSelected = columnSelection.isSelected(column);
+		boolean rowSelected = rowSelection.isSelected(row);
 		return (getType().equals(SelectionType.CELLS) && columnSelected && rowSelected) ||
 				(getType().equals(SelectionType.ROW_ONLY) && rowSelected) ||
 				(getType().equals(SelectionType.COLUMN_ONLY) && columnSelected);
@@ -242,23 +226,23 @@ public class SelectionModel {
 	
 	
 	public int getStartColumn() {
-		return getColumnSelection().getStartPos();
+		return columnSelection.getStartPos();
 	}
 	
 	
 	public int getStartRow() {
-		return getRowSelection().getStartPos();
+		return rowSelection.getStartPos();
 	}
 	
 	
 	public void clear() {
-		getColumnSelection().clear();
-		getRowSelection().clear();
+		columnSelection.clear();
+		rowSelection.clear();
 	}
 	
 	
 	public boolean isEmpty() {
-		return getColumnSelection().isEmpty() && getRowSelection().isEmpty();
+		return columnSelection.isEmpty() && rowSelection.isEmpty();
 	}
 	
 	

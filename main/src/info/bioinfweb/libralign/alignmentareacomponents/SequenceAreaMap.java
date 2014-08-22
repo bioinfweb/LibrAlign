@@ -21,8 +21,6 @@ package info.bioinfweb.libralign.alignmentareacomponents;
 
 import info.bioinfweb.libralign.AlignmentArea;
 import info.bioinfweb.libralign.alignmentareacomponents.inputlisteners.CursorSelectionInputListener;
-import info.bioinfweb.libralign.cursor.CursorChangeEvent;
-import info.bioinfweb.libralign.cursor.CursorListener;
 import info.bioinfweb.libralign.selection.OneDimensionalSelection;
 import info.bioinfweb.libralign.selection.SelectionChangeEvent;
 import info.bioinfweb.libralign.selection.SelectionListener;
@@ -40,7 +38,7 @@ import java.util.TreeMap;
  * @author Ben St&ouml;ver
  * @since 0.0.0
  */
-public class SequenceAreaMap extends TreeMap<Integer, SequenceArea> implements SelectionListener, CursorListener {
+public class SequenceAreaMap extends TreeMap<Integer, SequenceArea> implements SelectionListener {
 	private AlignmentArea owner;
 	private CursorSelectionInputListener selectionInputListener;
 
@@ -50,7 +48,6 @@ public class SequenceAreaMap extends TreeMap<Integer, SequenceArea> implements S
 		this.owner = owner;
 		selectionInputListener = new CursorSelectionInputListener(owner);
 		owner.getSelection().addSelectionListener(this);
-		//owner.getCursor().addCursorListener(this);
 		recreateElements();
 	}
 
@@ -90,11 +87,5 @@ public class SequenceAreaMap extends TreeMap<Integer, SequenceArea> implements S
 	@Override
 	public void selectionChanged(SelectionChangeEvent e) {
 		repaintSequenceAreas();  // Just repainting the areas in the selection is not enough, because other might have just become deselected.
-	}
-
-
-	@Override
-	public void cursorMovedResized(CursorChangeEvent event) {
-		repaintSequenceAreas();
 	}
 }

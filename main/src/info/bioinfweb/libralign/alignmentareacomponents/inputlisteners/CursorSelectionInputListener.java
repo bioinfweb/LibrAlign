@@ -32,7 +32,6 @@ import info.bioinfweb.commons.tic.input.TICMouseEvent;
 import info.bioinfweb.commons.tic.input.TICMouseListener;
 import info.bioinfweb.libralign.AlignmentArea;
 import info.bioinfweb.libralign.alignmentareacomponents.SequenceArea;
-import info.bioinfweb.libralign.selection.AlignmentCursor;
 import info.bioinfweb.libralign.selection.SelectionModel;
 
 
@@ -45,7 +44,6 @@ import info.bioinfweb.libralign.selection.SelectionModel;
  */
 public class CursorSelectionInputListener extends TICMouseAdapter implements TICMouseListener, TICKeyListener {
 	private AlignmentArea owner;
-	private Point lastClickColumnRow = null;
 	
 	
 	public CursorSelectionInputListener(AlignmentArea owner) {
@@ -80,96 +78,18 @@ public class CursorSelectionInputListener extends TICMouseAdapter implements TIC
 		else if ((event.isMouseButton1Down()) && (event.getSource() instanceof SequenceArea)) {
 			Point columnRow = calculateColumnRow((SequenceArea)event.getSource(), event.getComponentX(), event.getComponentY());
 			getOwner().getSelection().setNewCursorPosition(columnRow.x, columnRow.y, 1);  // Height is alway set to 1 on a mouse click.
-//			getOwner().getSelection().clear();
-//			
-//			lastClickColumnRow = calculateColumnRow((SequenceArea)event.getSource(), event.getComponentX(), event.getComponentY());
-//			getOwner().getCursor().setColumnRowHeight(lastClickColumnRow.x, lastClickColumnRow.y, 1);
 		}
 	}
-	
-
-//	@Override
-//	public void mouseReleased(TICMouseEvent event) {
-//		lastClickColumnRow = null;
-//	}
 
 
 	@Override
 	public void mouseDragged(TICMouseEvent event) {
 		if ((event.isMouseButton1Down()) && (event.getSource() instanceof SequenceArea)) {
-			if (lastClickColumnRow == null) {  // By some fast mouse movements lastClickColumnRow could still be null here.
-				mousePressed(event);
-			}
 			Point columnRow = calculateColumnRow((SequenceArea)event.getSource(), event.getComponentX(), event.getComponentY());
 			getOwner().getSelection().setSelectionEnd(columnRow.x, columnRow.y);
-			
-//			SelectionModel selection = getOwner().getSelection();
-//			if (selection.isEmpty() && (lastClickColumnRow != null) && (columnRow.x != lastClickColumnRow.x)) { 
-//				selection.getColumnSelection().setNewSelection(lastClickColumnRow.x);
-//				selection.getRowSelection().setNewSelection(lastClickColumnRow.y);
-//		  }
-//		  if (!selection.isEmpty()) {  // Do not create new selection before the upper condition was met.
-//				selection.getColumnSelection().setSelectionEnd(columnRow.x);
-//				selection.getRowSelection().setSelectionEnd(columnRow.y);
-//		  }
-//			
-//			AlignmentCursor cursor = getOwner().getCursor();
-//		  int newColumn = cursor.getColumn(); 
-//		  int newRow = cursor.getRow(); 
-//		  int newHeight = cursor.getHeight(); 
-//			if (lastClickColumnRow.x < columnRow.x) {
-//				newColumn = columnRow.x + 1;
-//			}
-//			else {
-//				newColumn = columnRow.x;
-//			}
-//			if (lastClickColumnRow.y > columnRow.y) {
-//				newRow = columnRow.y;
-//				newHeight = lastClickColumnRow.y - newRow + 1;
-//			}
-//			else {
-//				newHeight = columnRow.y - cursor.getRow() + 1;
-//			}
-//			cursor.setColumnRowHeight(newColumn, newRow, newHeight);
 		}
 	}
 
-	
-//	private void setLeftKeyboardSelection(TICKeyEvent event) {
-//		AlignmentCursor cursor = getOwner().getCursor();
-//		SelectionModel selection = getOwner().getSelection();
-//		if (event.isShiftDown()) {
-//			if (!selection.isEmpty() && selection.getColumnSelection().getStartPos() < cursor.getColumn()) {
-//				selection.getColumnSelection().setSelectionEnd(cursor.getColumn() - 1);
-//			}
-//			else {
-//				selection.getColumnSelection().setSelectionEnd(cursor.getColumn());
-//			}
-//			selection.getRowSelection().setSelectionEnd(cursor.getRow());
-//		}
-//		else {
-//			getOwner().getSelection().clear();
-//		}
-//	}
-//	
-//
-//	private void setRightKeyboardSelection(TICKeyEvent event) {
-//		AlignmentCursor cursor = getOwner().getCursor();
-//		SelectionModel selection = getOwner().getSelection();
-//		if (event.isShiftDown()) {
-//			if (selection.isEmpty() || selection.getColumnSelection().getStartPos() < cursor.getColumn()) {
-//				selection.getColumnSelection().setSelectionEnd(cursor.getColumn() - 1);
-//			}
-//			else {
-//				selection.getColumnSelection().setSelectionEnd(cursor.getColumn());
-//			}
-//			selection.getRowSelection().setSelectionEnd(cursor.getRow());
-//		}
-//		else {
-//			getOwner().getSelection().clear();
-//		}
-//	}
-	
 	
 	@Override
 	public void keyPressed(TICKeyEvent event) {
@@ -232,27 +152,6 @@ public class CursorSelectionInputListener extends TICMouseAdapter implements TIC
 			default:
 				break;
 		}
-//		AlignmentCursor cursor = getOwner().getCursor();
-//		switch (event.getKeyCode()) {
-//			case KeyEvent.VK_LEFT:
-//				cursor.setColumn(cursor.getColumn() - 1);
-//				setLeftKeyboardSelection(event);
-//				break;
-//			case KeyEvent.VK_RIGHT:
-//				cursor.setColumn(cursor.getColumn() + 1);
-//				setRightKeyboardSelection(event);
-//				break;
-//			case KeyEvent.VK_UP:
-//				cursor.setRow(cursor.getRow() - 1);
-//				setLeftKeyboardSelection(event);
-//				break;
-//			case KeyEvent.VK_DOWN:
-//				cursor.setRow(cursor.getRow() + 1);
-//				setLeftKeyboardSelection(event);
-//				break;
-//			default:
-//				break;
-//		}
 	}
 
 
