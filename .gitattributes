@@ -11,6 +11,7 @@ main/.project -text svneol=unset#text/plain
 main/.settings/org.eclipse.jdt.core.prefs -text svneol=unset#text/plain
 main/lib/biojava3-alignment-3.0.7.jar -text
 main/lib/biojava3-core-3.0.7.jar -text
+main/lib/commons-lang3-3.1.jar -text
 main/lib/core-1.8.5.jar -text
 main/lib/sequencing-1.8.5.jar -text
 main/lib/swt.jar -text

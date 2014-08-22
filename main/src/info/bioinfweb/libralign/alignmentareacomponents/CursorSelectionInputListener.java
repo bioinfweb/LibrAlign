@@ -20,6 +20,7 @@ package info.bioinfweb.libralign.alignmentareacomponents;
 
 
 import java.awt.Point;
+import java.awt.Toolkit;
 import java.awt.event.KeyEvent;
 
 import javax.swing.JComponent;
@@ -32,6 +33,7 @@ import info.bioinfweb.commons.tic.input.TICMouseEvent;
 import info.bioinfweb.commons.tic.input.TICMouseListener;
 import info.bioinfweb.libralign.AlignmentArea;
 import info.bioinfweb.libralign.selection.SelectionModel;
+import info.bioinfweb.libralign.sequenceprovider.SequenceDataProvider;
 
 
 
@@ -150,30 +152,47 @@ public class CursorSelectionInputListener extends TICMouseAdapter implements TIC
 				break;
 			case KeyEvent.VK_HOME:
 				if (event.isShiftDown()) {
-					if (selection.getCursorRow() < selection.getStartRow()) {  // Above selection start
-						selection.setSelectionEnd(0, selection.getCursorRow());
+					if (event.isMenuShortcutKeyDown()) {
+						selection.setSelectionEnd(0, 0);
 					}
-					else { // Below selection start
-						selection.setSelectionEnd(0, 
-								selection.getCursorRow() + selection.getCursorHeight() - 1);
+					else {
+						if (selection.getCursorRow() < selection.getStartRow()) {  // Above selection start
+							selection.setSelectionEnd(0, selection.getCursorRow());
+						}
+						else { // Below selection start
+							selection.setSelectionEnd(0, 
+									selection.getCursorRow() + selection.getCursorHeight() - 1);
+						}
 					}
+				}
+				else if (event.isMenuShortcutKeyDown()) {
+					selection.setNewCursorPosition(0, 0);
 				}
 				else {
 					selection.setNewCursorColumn(0);
 				}
 				break;
 			case KeyEvent.VK_END:
+				SequenceDataProvider provider = getOwner().getSequenceProvider();
 				if (event.isShiftDown()) {
-					if (selection.getCursorRow() < selection.getStartRow()) {  // Above selection start
-						selection.setSelectionEnd(getOwner().getSequenceProvider().getMaxSequenceLength(), selection.getCursorRow());
+					if (event.isMenuShortcutKeyDown()) {
+						selection.setSelectionEnd(provider.getMaxSequenceLength(), provider.getSequenceCount() - 1);
 					}
-					else { // Below selection start
-						selection.setSelectionEnd(getOwner().getSequenceProvider().getMaxSequenceLength(), 
-								selection.getCursorRow() + selection.getCursorHeight() - 1);
+					else {
+						if (selection.getCursorRow() < selection.getStartRow()) {  // Above selection start
+							selection.setSelectionEnd(provider.getMaxSequenceLength(), selection.getCursorRow());
+						}
+						else { // Below selection start
+							selection.setSelectionEnd(provider.getMaxSequenceLength(), 
+									selection.getCursorRow() + selection.getCursorHeight() - 1);
+						}
 					}
 				}
+				else if (event.isMenuShortcutKeyDown()) {
+					selection.setNewCursorPosition(provider.getMaxSequenceLength(), provider.getSequenceCount() - 1);
+				}
 				else {
-					selection.setNewCursorColumn(getOwner().getSequenceProvider().getMaxSequenceLength());
+					selection.setNewCursorColumn(provider.getMaxSequenceLength());
 				}
 			default:
 				break;
