@@ -131,75 +131,62 @@ public class CursorSelectionInputListener extends TICMouseAdapter implements TIC
 		}
 	}
 
+	
+	private void setLeftKeyboardSelection(TICKeyEvent event) {
+		AlignmentCursor cursor = getOwner().getCursor();
+		SelectionModel selection = getOwner().getSelection();
+		if (event.isShiftDown()) {
+			if (!selection.isEmpty() && selection.getColumnSelection().getStartPos() < cursor.getColumn()) {
+				selection.getColumnSelection().setSelectionEnd(cursor.getColumn() - 1);
+			}
+			else {
+				selection.getColumnSelection().setSelectionEnd(cursor.getColumn());
+			}
+			selection.getRowSelection().setSelectionEnd(cursor.getRow());
+		}
+		else {
+			getOwner().getSelection().clear();
+		}
+	}
+	
 
+	private void setRightKeyboardSelection(TICKeyEvent event) {
+		AlignmentCursor cursor = getOwner().getCursor();
+		SelectionModel selection = getOwner().getSelection();
+		if (event.isShiftDown()) {
+			if (selection.isEmpty() || selection.getColumnSelection().getStartPos() < cursor.getColumn()) {
+				selection.getColumnSelection().setSelectionEnd(cursor.getColumn() - 1);
+			}
+			else {
+				selection.getColumnSelection().setSelectionEnd(cursor.getColumn());
+			}
+			selection.getRowSelection().setSelectionEnd(cursor.getRow());
+		}
+		else {
+			getOwner().getSelection().clear();
+		}
+	}
+	
+	
 	@Override
 	public void keyPressed(TICKeyEvent event) {
 		AlignmentCursor cursor = getOwner().getCursor();
-		SelectionModel selection = getOwner().getSelection();
 		switch (event.getKeyCode()) {
 			case KeyEvent.VK_LEFT:
 				cursor.setColumn(cursor.getColumn() - 1);
-				
-				if (event.isShiftDown()) {
-					if (!selection.isEmpty() && selection.getColumnSelection().getStartPos() < cursor.getColumn()) {
-						selection.getColumnSelection().setSelectionEnd(cursor.getColumn() - 1);
-					}
-					else {
-						selection.getColumnSelection().setSelectionEnd(cursor.getColumn());
-					}
-					selection.getRowSelection().setSelectionEnd(cursor.getRow());
-				}
-				else {
-					getOwner().getSelection().clear();
-				}
+				setLeftKeyboardSelection(event);
 				break;
 			case KeyEvent.VK_RIGHT:
 				cursor.setColumn(cursor.getColumn() + 1);
-				
-				if (event.isShiftDown()) {
-					if (selection.isEmpty() || selection.getColumnSelection().getStartPos() < cursor.getColumn()) {
-						selection.getColumnSelection().setSelectionEnd(cursor.getColumn() - 1);
-					}
-					else {
-						selection.getColumnSelection().setSelectionEnd(cursor.getColumn());
-					}
-					selection.getRowSelection().setSelectionEnd(cursor.getRow());
-				}
-				else {
-					getOwner().getSelection().clear();
-				}
+				setRightKeyboardSelection(event);
 				break;
 			case KeyEvent.VK_UP:
 				cursor.setRow(cursor.getRow() - 1);
-				
-				if (event.isShiftDown()) {
-					selection.getColumnSelection().setSelectionEnd(cursor.getColumn());
-					if (!selection.isEmpty() && selection.getRowSelection().getStartPos() < cursor.getRow()) {
-						selection.getRowSelection().setSelectionEnd(cursor.getRow() - 1);
-					}
-					else {
-						selection.getRowSelection().setSelectionEnd(cursor.getRow());
-					}
-				}
-				else {
-					getOwner().getSelection().clear();
-				}
+				setLeftKeyboardSelection(event);
 				break;
 			case KeyEvent.VK_DOWN:
 				cursor.setRow(cursor.getRow() + 1);
-				
-				if (event.isShiftDown()) {
-					selection.getColumnSelection().setSelectionEnd(cursor.getColumn());
-					if (selection.isEmpty() || selection.getRowSelection().getStartPos() < cursor.getRow()) {
-						selection.getRowSelection().setSelectionEnd(cursor.getRow() - 1);
-					}
-					else {
-						selection.getRowSelection().setSelectionEnd(cursor.getRow());
-					}
-				}
-				else {
-					getOwner().getSelection().clear();
-				}
+				setLeftKeyboardSelection(event);
 				break;
 			default:
 				break;
