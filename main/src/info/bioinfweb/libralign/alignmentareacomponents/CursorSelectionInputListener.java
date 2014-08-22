@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package info.bioinfweb.libralign.alignmentareacomponents.inputlisteners;
+package info.bioinfweb.libralign.alignmentareacomponents;
 
 
 import java.awt.Point;
@@ -31,7 +31,6 @@ import info.bioinfweb.commons.tic.input.TICMouseAdapter;
 import info.bioinfweb.commons.tic.input.TICMouseEvent;
 import info.bioinfweb.commons.tic.input.TICMouseListener;
 import info.bioinfweb.libralign.AlignmentArea;
-import info.bioinfweb.libralign.alignmentareacomponents.SequenceArea;
 import info.bioinfweb.libralign.selection.SelectionModel;
 
 

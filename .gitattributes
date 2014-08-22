@@ -22,6 +22,7 @@ main/src/info/bioinfweb/libralign/SequenceColorSchema.java -text svneol=unset#te
 main/src/info/bioinfweb/libralign/SequenceOrder.java -text svneol=unset#text/plain
 main/src/info/bioinfweb/libralign/WorkingMode.java -text svneol=unset#text/plain
 main/src/info/bioinfweb/libralign/alignmentareacomponents/AlignmentLabelArea.java -text svneol=unset#text/plain
+main/src/info/bioinfweb/libralign/alignmentareacomponents/CursorSelectionInputListener.java -text svneol=unset#text/plain
 main/src/info/bioinfweb/libralign/alignmentareacomponents/SWTAlignmentOverviewArea.java -text svneol=unset#text/plain
 main/src/info/bioinfweb/libralign/alignmentareacomponents/SWTAlignmentPartArea.java -text svneol=unset#text/plain
 main/src/info/bioinfweb/libralign/alignmentareacomponents/SWTAlignmentPartScroller.java -text svneol=unset#text/plain
@@ -33,9 +34,6 @@ main/src/info/bioinfweb/libralign/alignmentareacomponents/SwingAlignmentPartArea
 main/src/info/bioinfweb/libralign/alignmentareacomponents/TokenPainter.java -text svneol=unset#text/plain
 main/src/info/bioinfweb/libralign/alignmentareacomponents/ToolkitSpecificAlignmentOverviewArea.java -text svneol=unset#text/plain
 main/src/info/bioinfweb/libralign/alignmentareacomponents/ToolkitSpecificAlignmentPartArea.java -text svneol=unset#text/plain
-main/src/info/bioinfweb/libralign/alignmentareacomponents/inputlisteners/CursorSelectionInputListener.java -text svneol=unset#text/plain
-main/src/info/bioinfweb/libralign/alignmentareacomponents/inputlisteners/SelectionOnlyInputListener.java -text svneol=unset#text/plain
-main/src/info/bioinfweb/libralign/alignmentareacomponents/inputlisteners/package-info.java -text svneol=unset#text/plain
 main/src/info/bioinfweb/libralign/alignmentareacomponents/package-info.java -text svneol=unset#text/plain
 main/src/info/bioinfweb/libralign/dataarea/DataArea.java -text svneol=unset#text/plain
 main/src/info/bioinfweb/libralign/dataarea/DataAreaChangeEvent.java -text svneol=unset#text/plain

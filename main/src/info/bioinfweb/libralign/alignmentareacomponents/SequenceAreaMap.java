@@ -20,7 +20,6 @@ package info.bioinfweb.libralign.alignmentareacomponents;
 
 
 import info.bioinfweb.libralign.AlignmentArea;
-import info.bioinfweb.libralign.alignmentareacomponents.inputlisteners.CursorSelectionInputListener;
 import info.bioinfweb.libralign.selection.OneDimensionalSelection;
 import info.bioinfweb.libralign.selection.SelectionChangeEvent;
 import info.bioinfweb.libralign.selection.SelectionListener;
