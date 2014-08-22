@@ -195,6 +195,12 @@ public class CursorSelectionInputListener extends TICMouseAdapter implements TIC
 					selection.setNewCursorColumn(provider.getMaxSequenceLength());
 				}
 			default:
+				if (event.isMenuShortcutKeyDown() && (event.getKeyCode() == KeyEvent.VK_A)) {  // Select all
+					selection.selectAll();
+				}
+				else {
+					//TODO Delegate to TokenSet for inserting new tokens here
+				}
 				break;
 		}
 	}

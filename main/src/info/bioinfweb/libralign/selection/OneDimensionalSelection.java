@@ -306,6 +306,7 @@ public class OneDimensionalSelection {
 	 * Selects all columns or rows (depending on {@link #getDimension()}).
 	 */
 	public void selectAll() {
+		startPos = 0;
 		setFirstPos(0);
 		if (getDimension().equals(SelectionDimension.COLUMN)) {
 			setLastPos(getOwner().getOwner().getSequenceProvider().getMaxSequenceLength() - 1);

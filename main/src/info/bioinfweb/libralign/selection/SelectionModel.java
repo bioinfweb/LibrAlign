@@ -25,6 +25,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import info.bioinfweb.libralign.AlignmentArea;
+import info.bioinfweb.libralign.sequenceprovider.SequenceDataProvider;
 
 
 
@@ -204,6 +205,15 @@ public class SelectionModel {
     fireSelectionChanged();
 	}
 
+	
+	public void selectAll() {
+		columnSelection.selectAll();
+		rowSelection.selectAll();
+		SequenceDataProvider provider = getOwner().getSequenceProvider();
+		cursor.setColumnRowHeight(provider.getMaxSequenceLength(), 0, provider.getSequenceCount());
+		fireSelectionChanged();
+	}
+	
 	
 	/**
 	 * Checks if the specified cell is contained in this selection.
