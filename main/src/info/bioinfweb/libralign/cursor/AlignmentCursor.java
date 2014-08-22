@@ -59,11 +59,16 @@ public class AlignmentCursor {
 	}
 	
 	
+	private int bringColumnInRange(int column) {
+		 return Math.max(0, Math.min(column, getOwner().getSequenceProvider().getMaxSequenceLength()));
+	}
+	
+	
 	public void setColumn(int column) {
-		column = Math.max(0, Math.min(column, getOwner().getSequenceProvider().getMaxSequenceLength()));
+		column = bringColumnInRange(column);
 		if (this.column != column) {
 			this.column = column;
-			fireCursorMoved();
+			fireCursorMovedResized();
 		}
 	}
 	
@@ -76,11 +81,16 @@ public class AlignmentCursor {
 	}
 	
 	
+	private int bringRowInRange(int row) {
+		 return Math.max(0, Math.min(row, getOwner().getSequenceProvider().getSequenceCount() - getHeight()));
+	}
+	
+	
 	public void setRow(int row) {
-		row = Math.max(0, Math.min(row, getOwner().getSequenceProvider().getSequenceCount() - getHeight()));
+		row = bringRowInRange(row);
 		if (this.row != row) {
 			this.row = row;
-			fireCursorMoved();
+			fireCursorMovedResized();
 		}
 	}
 	
@@ -93,11 +103,40 @@ public class AlignmentCursor {
 	}
 	
 	
+	private int bringHeightInRange(int height) {
+		 return Math.max(1, Math.min(height, getOwner().getSequenceProvider().getSequenceCount() - getRow()));
+	}
+	
+	
 	public void setHeight(int height) {
-		height = Math.max(1, Math.min(height, getOwner().getSequenceProvider().getSequenceCount() - getRow()));
+		height = bringHeightInRange(height);
 		if (this.height != height) {
 			this.height = height;
-			fireCursorResized();
+			fireCursorMovedResized();
+		}
+	}
+	
+	
+	/**
+	 * Sets a new column, row and height in one step. Use this method to make sure that only one event is fired for 
+	 * the change of several properties
+	 * 
+	 * @param column - the new column index
+	 * @param row - the new row index
+	 * @param height - the new height (in rows)
+	 */
+	public void setColumnRowHeight(int column, int row, int height) {
+		boolean change = this.column != column;
+		this.column = bringColumnInRange(column);
+		
+		row = bringRowInRange(row);
+		change = change || this.row != row;
+		this.row = row;  // Needs to be done first, to calculate the correct range for the new height.
+		
+		height = bringHeightInRange(height);
+		if (change || (this.height != height)) {
+			this.height = height;
+			fireCursorMovedResized();
 		}
 	}
 	
@@ -105,21 +144,10 @@ public class AlignmentCursor {
 	/**
 	 * Informs all listeners that this cursor moved.
 	 */
-	protected void fireCursorMoved() {
+	protected void fireCursorMovedResized() {
 		CursorChangeEvent event = new CursorChangeEvent(this);
 		for (CursorListener listener : listeners) {
-			listener.cursorMoved(event);
-		}
-	}
-	
-	
-	/**
-	 * Informs all listeners that the height of this cursor changed.
-	 */
-	protected void fireCursorResized() {
-		CursorChangeEvent event = new CursorChangeEvent(this);
-		for (CursorListener listener : listeners) {
-			listener.cursorResized(event);
+			listener.cursorMovedResized(event);
 		}
 	}
 	

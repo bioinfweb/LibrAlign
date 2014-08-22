@@ -466,10 +466,8 @@ public class AlignmentArea extends TICComponent implements SequenceDataChangeLis
 		int dy = currentRectangle.height - visibleRectangle.height;
 		if ((dy > 0) && (lastCursorRectangle != null)) {
 			scrollRectangle.height -= dy;
-			System.out.println("correct 1 " + dy);
 			if (lastCursorRectangle.y == currentRectangle.y) {  // Not moved upwards (= downwards).
 				scrollRectangle.y += dy;
-				System.out.println("correct 2");
 			}
 		}
 		getToolkitComponent().scrollAlignmentRectToVisible(scrollRectangle);
@@ -480,14 +478,7 @@ public class AlignmentArea extends TICComponent implements SequenceDataChangeLis
 	private void addCursorScrollListener() {
 		getCursor().addCursorListener(new CursorListener() {
 					@Override
-					public void cursorResized(CursorChangeEvent event) {
-						System.out.println("resized");
-						scrollCursorToVisible();
-					}
-					
-					@Override
-					public void cursorMoved(CursorChangeEvent event) {
-						System.out.println("moved");
+					public void cursorMovedResized(CursorChangeEvent event) {
 						scrollCursorToVisible();
 					}
 				});

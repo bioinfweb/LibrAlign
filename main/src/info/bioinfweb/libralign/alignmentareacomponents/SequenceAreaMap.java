@@ -94,13 +94,7 @@ public class SequenceAreaMap extends TreeMap<Integer, SequenceArea> implements S
 
 
 	@Override
-	public void cursorMoved(CursorChangeEvent event) {
-		repaintSequenceAreas();
-	}
-
-
-	@Override
-	public void cursorResized(CursorChangeEvent event) {
+	public void cursorMovedResized(CursorChangeEvent event) {
 		repaintSequenceAreas();
 	}
 }

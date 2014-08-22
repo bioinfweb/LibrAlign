@@ -81,10 +81,7 @@ public class CursorSelectionInputListener extends TICMouseAdapter implements TIC
 			getOwner().getSelection().clear();
 			
 			lastClickColumnRow = calculateColumnRow((SequenceArea)event.getSource(), event.getComponentX(), event.getComponentY());
-			AlignmentCursor cursor = getOwner().getCursor();
-			cursor.setColumn(lastClickColumnRow.x);
-			cursor.setRow(lastClickColumnRow.y);
-			cursor.setHeight(1);
+			getOwner().getCursor().setColumnRowHeight(lastClickColumnRow.x, lastClickColumnRow.y, 1);
 		}
 	}
 	
@@ -114,19 +111,23 @@ public class CursorSelectionInputListener extends TICMouseAdapter implements TIC
 		  }
 			
 			AlignmentCursor cursor = getOwner().getCursor();
+		  int newColumn = cursor.getColumn(); 
+		  int newRow = cursor.getRow(); 
+		  int newHeight = cursor.getHeight(); 
 			if (lastClickColumnRow.x < columnRow.x) {
-				cursor.setColumn(columnRow.x + 1);
+				newColumn = columnRow.x + 1;
 			}
 			else {
-				cursor.setColumn(columnRow.x);
+				newColumn = columnRow.x;
 			}
 			if (lastClickColumnRow.y > columnRow.y) {
-				cursor.setRow(columnRow.y);
-				cursor.setHeight(lastClickColumnRow.y - cursor.getRow() + 1);
+				newRow = columnRow.y;
+				newHeight = lastClickColumnRow.y - newRow + 1;
 			}
 			else {
-				cursor.setHeight(columnRow.y - cursor.getRow() + 1);
+				newHeight = columnRow.y - cursor.getRow() + 1;
 			}
+			cursor.setColumnRowHeight(newColumn, newRow, newHeight);
 		}
 	}
 

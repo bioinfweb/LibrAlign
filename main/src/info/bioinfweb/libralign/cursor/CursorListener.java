@@ -32,16 +32,9 @@ import java.util.EventListener;
  */
 public interface CursorListener extends EventListener {
 	/**
-	 * This method is called every time the cursor is moved.
+	 * This method is called every time the cursor is moved or its height changed.
 	 * 
 	 * @param event - an object containing further information on this event
 	 */
-	public void cursorMoved(CursorChangeEvent event);
-	
-	/**
-	 * This method is called every time the cursor height is changed.
-	 * 
-	 * @param event - an object containing further information on this event
-	 */
-	public void cursorResized(CursorChangeEvent event);
+	public void cursorMovedResized(CursorChangeEvent event);
 }
