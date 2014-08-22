@@ -29,12 +29,11 @@ import info.bioinfweb.libralign.AlignmentArea;
 
 
 /**
- * The selection model of {@link AlignmentArea}.
+ * The selection model of {@link AlignmentArea}. Stores the cursor position and height as well as the selected area.
  * 
  * @author Ben St&ouml;ver
  * @since 0.0.0
  * @see AlignmentArea
- * @see OneDimensionalSelection
  */
 public class SelectionModel {
   private AlignmentArea owner;
