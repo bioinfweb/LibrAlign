@@ -25,6 +25,9 @@ import info.bioinfweb.commons.Math2;
 
 /**
  * Manages the selection of columns or rows.
+ * <p>
+ * <b>Warning:</b> This class is meant only for internal use in LibrAlign and its API is not guaranteed to remain 
+ * stable within on major version number.
  * 
  * @author Ben St&ouml;ver
  * @since 0.0.0
@@ -93,7 +96,12 @@ public class OneDimensionalSelection {
 	}
   
   
-  public int getLength() {
+  public void setStartPos(int startPos) {
+		this.startPos = startPos;
+	}
+
+
+	public int getLength() {
   	if (isEmpty()) {
   		return 0;
   	}

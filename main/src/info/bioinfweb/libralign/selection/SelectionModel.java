@@ -42,6 +42,8 @@ public class SelectionModel {
   private OneDimensionalSelection columnSelection = new OneDimensionalSelection(this, SelectionDimension.COLUMN);
   private OneDimensionalSelection rowSelection = new OneDimensionalSelection(this, SelectionDimension.ROW);
   private AlignmentCursor cursor;
+  private boolean cursorOnly = true;
+  private int cursorStartRow = 0;
 	private List<SelectionListener> selectionListeners = new ArrayList<SelectionListener>(16);
   
   
@@ -127,6 +129,11 @@ public class SelectionModel {
 	}
 	
 	
+	public int getCursorStartRow() {
+		return cursorStartRow;
+	}
+
+
 	public void setNewCursorColumn(int column) {
     setNewCursorPosition(column, cursor.getRow(), cursor.getHeight());
 	}
@@ -142,13 +149,6 @@ public class SelectionModel {
 	}
 	
 	
-	public void setNewCursorPosition(int column, int row, int height) {
-		clear();
-		cursor.setColumnRowHeight(column, row, height);
-    fireSelectionChanged();
-	}
-	
-	
 	private int bringCursorColumnInRange(int column) {
 		 return Math.max(0, Math.min(column, getOwner().getSequenceProvider().getMaxSequenceLength()));
 	}
@@ -156,6 +156,17 @@ public class SelectionModel {
 	
 	private int bringRowInRange(int row) {
 		 return Math.max(0, Math.min(row, getOwner().getSequenceProvider().getSequenceCount() - 1));
+	}
+	
+	
+	public void setNewCursorPosition(int column, int row, int height) {
+		column = bringCursorColumnInRange(column);
+		row = bringRowInRange(row);
+		cursorStartRow = row;
+		height = Math.max(1, Math.min(getOwner().getSequenceProvider().getSequenceCount() - row, height));
+		clear();
+		cursor.setColumnRowHeight(column, row, height);
+    fireSelectionChanged();
 	}
 	
 	
@@ -167,39 +178,51 @@ public class SelectionModel {
 		column = bringCursorColumnInRange(column);
 		row = bringRowInRange(row);
 		
-		if (((column == getStartColumn()) && (cursor.getColumn() > column)) ||  // Selection shrunk to zero from right
-				((column == getStartColumn() + 1) && (cursor.getColumn() < column))) {  // Selection shrunk to zero from left
-			
-			clear();  // Selection needs to be cleared because the new start point might be different depending on the direction of the next cursor move.
-			cursor.setColumn(column);
-		}
-		else {
-			boolean wasEmpty = isEmpty();
-			if (isEmpty()) {  // Define selection start
-				if (column < cursor.getColumn()) {
-					columnSelection.setNewSelection(cursor.getColumn() - 1);
-				}
-				else {
-					columnSelection.setNewSelection(cursor.getColumn());
-				}
-				rowSelection.setNewSelection(cursor.getRow());
-			}
-			
-			if (column <= getStartColumn()) {
-				columnSelection.setSelectionEnd(column);
+		cursorOnly = cursorOnly && (column == cursor.getColumn());
+		if (cursorOnly) {  //TODO Dieser Teil funktioniert noch nicht richtig
+			if (cursorStartRow < row) {
+				cursor.setHeight(row - cursorStartRow + 1);
 			}
 			else {
-				columnSelection.setSelectionEnd(column - 1);
+				cursor.setRow(row);
+				cursor.setHeight(cursorStartRow - row + 1);
 			}
-			rowSelection.setSelectionEnd(row);
-
-			boolean movedSidewards = column != cursor.getColumn();
-			cursor.setColumn(column);
-			cursor.setRow(rowSelection.getFirstPos());
-			cursor.setHeight(rowSelection.getLength());
-			
-			if (!movedSidewards && wasEmpty && (getStartColumn() == cursor.getColumn())) {
-				clear();  // Avoid one column wide selection when cursor height is changed.
+		}
+		else {
+			if (((column == getStartColumn()) && (cursor.getColumn() > column)) ||  // Selection shrunk to zero from right
+					((column == getStartColumn() + 1) && (cursor.getColumn() < column))) {  // Selection shrunk to zero from left
+				
+				clear();  // Selection needs to be cleared because the new start point might be different depending on the direction of the next cursor move.
+				cursor.setColumn(column);
+				cursorOnly = true;
+			}
+			else {
+				if (isEmpty()) {  // Define selection start
+					if (column < cursor.getColumn()) {
+						columnSelection.setNewSelection(cursor.getColumn() - 1);
+					}
+					else {
+						columnSelection.setNewSelection(cursor.getColumn());
+					}
+					rowSelection.setNewSelection(cursorStartRow);
+				}
+				
+				if (column <= getStartColumn()) {
+					columnSelection.setSelectionEnd(column);
+				}
+				else {
+					columnSelection.setSelectionEnd(column - 1);
+				}
+				rowSelection.setSelectionEnd(row);
+	
+				boolean movedSidewards = column != cursor.getColumn();
+				cursor.setColumn(column);
+				cursor.setRow(rowSelection.getFirstPos());
+				cursor.setHeight(rowSelection.getLength());
+				
+				if (!movedSidewards && (getStartColumn() == cursor.getColumn())) {
+					clear();
+				}
 			}
 		}
     fireSelectionChanged();

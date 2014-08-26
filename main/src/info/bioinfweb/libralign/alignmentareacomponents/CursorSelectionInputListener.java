@@ -98,7 +98,7 @@ public class CursorSelectionInputListener extends TICMouseAdapter implements TIC
 		switch (event.getKeyCode()) {
 			case KeyEvent.VK_LEFT:
 				if (event.isShiftDown()) {
-					if (selection.getCursorRow() < selection.getStartRow()) {  // Above selection start
+					if (selection.getCursorRow() < selection.getCursorStartRow()) {  // Above selection start
 						selection.setSelectionEnd(selection.getCursorColumn() - 1, selection.getCursorRow());
 					}
 					else { // Below selection start
@@ -112,7 +112,7 @@ public class CursorSelectionInputListener extends TICMouseAdapter implements TIC
 				break;
 			case KeyEvent.VK_RIGHT:
 				if (event.isShiftDown()) {
-					if (selection.getCursorRow() < selection.getStartRow()) {  // Above selection start
+					if (selection.getCursorRow() < selection.getCursorStartRow()) {  // Above selection start
 						selection.setSelectionEnd(selection.getCursorColumn() + 1, selection.getCursorRow());
 					}
 					else { // Below selection start
@@ -126,7 +126,7 @@ public class CursorSelectionInputListener extends TICMouseAdapter implements TIC
 				break;
 			case KeyEvent.VK_UP:
 				if (event.isShiftDown()) {
-					if (selection.getCursorRow() < selection.getStartRow()) {  // Above selection start
+					if (selection.getCursorRow() < selection.getCursorStartRow()) {  // Above selection start
 						selection.setSelectionEnd(selection.getCursorColumn(), selection.getCursorRow() - 1);
 					}
 					else {  // Below selection start
@@ -139,7 +139,7 @@ public class CursorSelectionInputListener extends TICMouseAdapter implements TIC
 				break;
 			case KeyEvent.VK_DOWN:
 				if (event.isShiftDown()) {
-					if (selection.getCursorRow() < selection.getStartRow()) {  // Above selection start
+					if (selection.getCursorRow() < selection.getCursorStartRow()) {  // Above selection start
 						selection.setSelectionEnd(selection.getCursorColumn(), selection.getCursorRow() + 1);
 					}
 					else {  // Below selection start
@@ -156,7 +156,7 @@ public class CursorSelectionInputListener extends TICMouseAdapter implements TIC
 						selection.setSelectionEnd(0, 0);
 					}
 					else {
-						if (selection.getCursorRow() < selection.getStartRow()) {  // Above selection start
+						if (selection.getCursorRow() < selection.getCursorStartRow()) {  // Above selection start
 							selection.setSelectionEnd(0, selection.getCursorRow());
 						}
 						else { // Below selection start
@@ -179,7 +179,7 @@ public class CursorSelectionInputListener extends TICMouseAdapter implements TIC
 						selection.setSelectionEnd(provider.getMaxSequenceLength(), provider.getSequenceCount() - 1);
 					}
 					else {
-						if (selection.getCursorRow() < selection.getStartRow()) {  // Above selection start
+						if (selection.getCursorRow() < selection.getCursorStartRow()) {  // Above selection start
 							selection.setSelectionEnd(provider.getMaxSequenceLength(), selection.getCursorRow());
 						}
 						else { // Below selection start
