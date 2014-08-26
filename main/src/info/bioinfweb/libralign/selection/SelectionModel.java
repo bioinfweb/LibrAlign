@@ -186,7 +186,7 @@ public class SelectionModel {
 		row = bringRowInRange(row);
 		
 		cursorOnly = cursorOnly && (column == cursor.getColumn());
-		if (cursorOnly) {  //TODO Dieser Teil funktioniert noch nicht richtig
+		if (cursorOnly) {
 			if (cursorStartRow < row) {
 				cursor.setHeight(row - cursorStartRow + 1);
 			}
@@ -197,7 +197,7 @@ public class SelectionModel {
 		}
 		else {
 			if (column == getStartColumn()) {  // Selection shrunk to zero
-				clear();  // Selection needs to be cleared because the new start point might be different depending on the direction of the next cursor move.
+				clear();
 				cursor.setColumn(column);
 				cursorOnly = true;
 			}
