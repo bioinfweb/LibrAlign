@@ -44,6 +44,7 @@ public class SelectionModel {
   private AlignmentCursor cursor;
   private boolean cursorOnly = true;
   private int cursorStartRow = 0;
+  private int cursorStartColumn = 0;
 	private List<SelectionListener> selectionListeners = new ArrayList<SelectionListener>(16);
   
   
@@ -129,11 +130,16 @@ public class SelectionModel {
 	}
 	
 	
-	public int getCursorStartRow() {
+	public int getStartColumn() {
+		return cursorStartColumn;
+	}
+	
+	
+	public int getStartRow() {
 		return cursorStartRow;
 	}
-
-
+	
+	
 	public void setNewCursorColumn(int column) {
     setNewCursorPosition(column, cursor.getRow(), cursor.getHeight());
 	}
@@ -163,6 +169,7 @@ public class SelectionModel {
 		column = bringCursorColumnInRange(column);
 		row = bringRowInRange(row);
 		cursorStartRow = row;
+		cursorStartColumn = column;
 		height = Math.max(1, Math.min(getOwner().getSequenceProvider().getSequenceCount() - row, height));
 		clear();
 		cursor.setColumnRowHeight(column, row, height);
@@ -189,9 +196,7 @@ public class SelectionModel {
 			}
 		}
 		else {
-			if (((column == getStartColumn()) && (cursor.getColumn() > column)) ||  // Selection shrunk to zero from right
-					((column == getStartColumn() + 1) && (cursor.getColumn() < column))) {  // Selection shrunk to zero from left
-				
+			if (column == getStartColumn()) {  // Selection shrunk to zero
 				clear();  // Selection needs to be cleared because the new start point might be different depending on the direction of the next cursor move.
 				cursor.setColumn(column);
 				cursorOnly = true;
@@ -254,16 +259,6 @@ public class SelectionModel {
 		return (getType().equals(SelectionType.CELLS) && columnSelected && rowSelected) ||
 				(getType().equals(SelectionType.ROW_ONLY) && rowSelected) ||
 				(getType().equals(SelectionType.COLUMN_ONLY) && columnSelected);
-	}
-	
-	
-	public int getStartColumn() {
-		return columnSelection.getStartPos();
-	}
-	
-	
-	public int getStartRow() {
-		return rowSelection.getStartPos();
 	}
 	
 	
