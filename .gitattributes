@@ -169,6 +169,7 @@ test/src/info/bioinfweb/libralign/test/BioJavaAlignmentRendererTest.java -text s
 test/src/info/bioinfweb/libralign/test/BioJavaPherogramTest.java -text svneol=unset#text/plain
 test/src/info/bioinfweb/libralign/test/BitShiftTest.java -text svneol=unset#text/plain
 test/src/info/bioinfweb/libralign/test/GenericCollectionTest.java -text svneol=unset#text/plain
+test/src/info/bioinfweb/libralign/test/NeXMLTest.java -text svneol=unset#text/plain
 test/src/info/bioinfweb/libralign/test/PrimitiveIntegersPerformanceTest.java -text svneol=unset#text/plain
 test/src/info/bioinfweb/libralign/test/SWTFixedSize.java -text svneol=unset#text/plain
 test/src/info/bioinfweb/libralign/test/SashFormAdvanced.java -text svneol=unset#text/plain
