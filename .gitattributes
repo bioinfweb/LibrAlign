@@ -9,6 +9,7 @@ demo/src/info/bioinfweb/libralign/demo/swt/Main.java -text svneol=unset#text/pla
 main/.classpath -text svneol=unset#text/plain
 main/.project -text svneol=unset#text/plain
 main/.settings/org.eclipse.jdt.core.prefs -text svneol=unset#text/plain
+main/lib/NeXML.jar -text
 main/lib/biojava3-alignment-3.0.7.jar -text
 main/lib/biojava3-core-3.0.7.jar -text
 main/lib/commons-lang3-3.1.jar -text
@@ -55,6 +56,7 @@ main/src/info/bioinfweb/libralign/dataarea/implementations/pherogram/PherogramAr
 main/src/info/bioinfweb/libralign/dataarea/implementations/pherogram/ShiftChange.java -text svneol=unset#text/plain
 main/src/info/bioinfweb/libralign/dataarea/implementations/pherogram/package-info.java -text svneol=unset#text/plain
 main/src/info/bioinfweb/libralign/dataarea/package-info.java -text svneol=unset#text/plain
+main/src/info/bioinfweb/libralign/io/package-info.java -text svneol=unset#text/plain
 main/src/info/bioinfweb/libralign/package-info.java -text svneol=unset#text/plain
 main/src/info/bioinfweb/libralign/pherogram/BioJavaPherogramProvider.java -text svneol=unset#text/plain
 main/src/info/bioinfweb/libralign/pherogram/PherogramComponent.java -text svneol=unset#text/plain
