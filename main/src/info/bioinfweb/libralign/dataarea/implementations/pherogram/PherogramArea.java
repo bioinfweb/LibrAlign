@@ -69,27 +69,27 @@ public class PherogramArea extends DataArea implements PherogramComponent {
 		leftCutPosition = 0;
 		rightCutPosition = pherogram.getSequenceLength();
 	}
-
+	
 	
 	protected SimpleSequenceInterval calculatePaintRange(TICPaintEvent e) {
 		PherogramAlignmentRelation lowerBorderRelation = getAlignmentModel().baseCallIndexByEditableIndex(
-				e.getRectangle().x / getOwner().getCompoundWidth() - 1);  // + 1 - 2 because BioJava indices start with 1 and two (experimetally obtained) half visible column should be painted. (Why are this two?) 
+				getOwner().columnByPaintX(e.getRectangle().x) - 1);  // + 1 - 2 because BioJava indices start with 1 and two (experimetally obtained) half visible column should be painted. (Why are this two?) 
 		int lowerBorder;
 		if (lowerBorderRelation.getCorresponding() == PherogramAlignmentRelation.GAP) {
 			lowerBorder = lowerBorderRelation.getBefore();
 		}
 		else {  // OUT_OF_RANGE or valid index
-			lowerBorder = lowerBorderRelation.getAfter();  // For a valid index, getAfter() is equal to getCorresponding() 
+			lowerBorder = 1;  // BioJava indices start with 1.
 		}
 
 		PherogramAlignmentRelation upperBorderRelation = getAlignmentModel().baseCallIndexByEditableIndex(
-				(e.getRectangle().x + e.getRectangle().width) /	getOwner().getCompoundWidth() + 2);  // + 1 + 1 because BioJava indices start with 1 and one half visible column should be painted.
+				getOwner().columnByPaintX(e.getRectangle().x + e.getRectangle().width) + 2);  // + 1 + 1 because BioJava indices start with 1 and one half visible column should be painted.
 		int upperBorder;
 		if (upperBorderRelation.getCorresponding() == PherogramAlignmentRelation.GAP) {
 			upperBorder = upperBorderRelation.getAfter();
 		}
 		else {  // OUT_OF_RANGE or valid index
-			upperBorder = upperBorderRelation.getBefore();  // For a valid index, getBefore() is equal to getCorresponding() 
+			upperBorder = getProvider().getSequenceLength(); 
 		}
 
 		return new SimpleSequenceInterval(lowerBorder, upperBorder);
@@ -103,9 +103,9 @@ public class PherogramArea extends DataArea implements PherogramComponent {
 		g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 		
 		double leftX = (getAlignmentModel().editableIndexByBaseCallIndex(getLeftCutPosition()).getAfter() - 1) * 
-				getOwner().getCompoundWidth();
+				getOwner().getCompoundWidth() + getList().getMaxLengthBeforeStart();
 		double rightX = getAlignmentModel().editableIndexByBaseCallIndex(getRightCutPosition()).getBefore() * 
-				getOwner().getCompoundWidth();
+				getOwner().getCompoundWidth() + getList().getMaxLengthBeforeStart();
 		
 		// Draw cut off background:
 		g.setColor(getFormats().getCutBackgroundColor());
@@ -129,7 +129,8 @@ public class PherogramArea extends DataArea implements PherogramComponent {
 		g.fill(new Rectangle2D.Double(leftX, e.getRectangle().y, rightX - leftX, e.getRectangle().height));
 
 		SimpleSequenceInterval paintRange = calculatePaintRange(e);
-		double x = (getFirstSeqPos() - getLeftCutPosition()) * getOwner().getCompoundWidth();
+		double x = (getFirstSeqPos() - getLeftCutPosition()) * getOwner().getCompoundWidth() + 
+				getList().getMaxLengthBeforeStart();
 		double y = 0; 
 		double height = getHeight();
 		ScaledPherogramDistortion distortion = getAlignmentModel().createPherogramDistortion();
