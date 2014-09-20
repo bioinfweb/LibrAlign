@@ -57,6 +57,12 @@ public class PherogramArea extends DataArea implements PherogramComponent {
 	private PherogramPainter painter = new PherogramPainter(this);
 	
 	
+	/**
+	 * Creates a new instance of this class.
+	 * 
+	 * @param owner - the alignment area that will be containing the returned data area instance
+	 * @param pherogram - the provider for the pherogram data to be displayed by the returned instance
+	 */
 	public PherogramArea(AlignmentArea owner, PherogramProvider pherogram) {
 		super(owner);
 		this.pherogram = pherogram;

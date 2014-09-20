@@ -21,7 +21,6 @@ package info.bioinfweb.libralign.dataarea.implementations;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
-import java.awt.Rectangle;
 import java.awt.RenderingHints;
 import java.awt.SystemColor;
 import java.awt.geom.Rectangle2D;
@@ -61,6 +60,11 @@ public class ConsensusSequenceArea extends CustomHeightFullWidthArea {
 	private Map<Integer, AmbiguityBaseScore> scores;
 	
 	
+	/**
+	 * Creates a new instance of this class.
+	 * 
+	 * @param owner - the alignment area that will be containing the returned data area instance
+	 */
 	public ConsensusSequenceArea(AlignmentArea owner) {
 		super(owner, Math.round(DEFAULT_HEIGHT_FACTOR * owner.getCompoundHeight()));
 		createMap();
