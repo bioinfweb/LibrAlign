@@ -49,28 +49,33 @@ public class ReverseComplementPherogramProvider implements PherogramProvider {
 		return source.getMaxTraceValue(nucleotide);
 	}
 
+	
+	private int convertBaseIndex(int baseIndex) {
+		return source.getSequenceLength() - baseIndex + 1;
+	}
+	
 
 	@Override
 	public NucleotideCompound getBaseCall(int baseIndex) {
-		return (NucleotideCompound)source.getBaseCall(source.getSequenceLength() - baseIndex - 1).getComplement();
+		return (NucleotideCompound)source.getBaseCall(convertBaseIndex(baseIndex)).getComplement();
 	}
 
 
 	@Override
 	public int getBaseCallPosition(int baseIndex) {
-		return source.getTraceLength() - source.getBaseCallPosition(source.getSequenceLength() - baseIndex - 1) - 1;
+		return source.getTraceLength() - source.getBaseCallPosition(convertBaseIndex(baseIndex)) - 1;
 	}
 
 
 	@Override
 	public int getQuality(NucleotideCompound nucleotide, int baseIndex) {
-		return source.getQuality((NucleotideCompound)nucleotide.getComplement(), source.getSequenceLength() - baseIndex - 1);
+		return source.getQuality((NucleotideCompound)nucleotide.getComplement(), convertBaseIndex(baseIndex));
 	}
 
 
 	@Override
 	public int getAnnotation(String label, int baseIndex) {
-		return source.getAnnotation(label, source.getSequenceLength() - baseIndex - 1);  //TODO if a quality label would be specified here, it would have to be complemented as well
+		return source.getAnnotation(label, convertBaseIndex(baseIndex));  //TODO if a quality label would be specified here, it would have to be complemented as well
 	}
 
 

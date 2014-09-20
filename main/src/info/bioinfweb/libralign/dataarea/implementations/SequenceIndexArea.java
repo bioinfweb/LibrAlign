@@ -113,6 +113,7 @@ public class SequenceIndexArea extends CustomHeightFullWidthArea {
     g.draw(new Line2D.Float(visibleRect.x, getHeight() - 1, visibleRect.x + visibleRect.width, getHeight() - 1));  // base line
     
     // Paint text data and dashes:
+    final int maxLengthBeforeStart = getOwner().getDataAreas().getMaxLengthBeforeStart(); 
     float labelLeftDistance = LABEL_LEFT_DISTANCE_FACTOR * getOwner().getCompoundWidth();
     g.setFont(getOwner().getCompoundFont());
     int labelInterval = Math2.roundUp(
@@ -124,7 +125,7 @@ public class SequenceIndexArea extends CustomHeightFullWidthArea {
       while (x <= visibleRect.x + visibleRect.width) {
     		// Text output
     		float dashLength = DASH_LENGTH_FACTOR * getHeight();
-    		int compoundIndex = Math.round(x / compoundWidth); 
+    		int compoundIndex = Math.round((x - maxLengthBeforeStart) / compoundWidth); 
     		if ((compoundIndex - 1) % labelInterval == 0) {  // BioJava indices start with 1
     			g.drawString("" + (compoundIndex + getFirstIndex() - 1), x + labelLeftDistance,	
     					LABEL_TOP_DISTANCE_FACTOR * getHeight());

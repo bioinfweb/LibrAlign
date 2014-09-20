@@ -103,9 +103,9 @@ public class PherogramArea extends DataArea implements PherogramComponent {
 		g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 		
 		double leftX = (getAlignmentModel().editableIndexByBaseCallIndex(getLeftCutPosition()).getAfter() - 1) * 
-				getOwner().getCompoundWidth() + getList().getMaxLengthBeforeStart();
+				getOwner().getCompoundWidth() + getOwner().getDataAreas().getMaxLengthBeforeStart();
 		double rightX = getAlignmentModel().editableIndexByBaseCallIndex(getRightCutPosition()).getBefore() * 
-				getOwner().getCompoundWidth() + getList().getMaxLengthBeforeStart();
+				getOwner().getCompoundWidth() + getOwner().getDataAreas().getMaxLengthBeforeStart();
 		
 		// Draw cut off background:
 		g.setColor(getFormats().getCutBackgroundColor());
@@ -130,7 +130,7 @@ public class PherogramArea extends DataArea implements PherogramComponent {
 
 		SimpleSequenceInterval paintRange = calculatePaintRange(e);
 		double x = (getFirstSeqPos() - getLeftCutPosition()) * getOwner().getCompoundWidth() + 
-				getList().getMaxLengthBeforeStart();
+				getOwner().getDataAreas().getMaxLengthBeforeStart();
 		double y = 0; 
 		double height = getHeight();
 		ScaledPherogramDistortion distortion = getAlignmentModel().createPherogramDistortion();
