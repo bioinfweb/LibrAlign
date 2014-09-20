@@ -19,7 +19,10 @@
 package info.bioinfweb.libralign.demo;
 
 
+import java.awt.Color;
 import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 
 import info.bioinfweb.commons.bio.biojava3.alignment.SimpleAlignment;
 import info.bioinfweb.commons.bio.biojava3.alignment.template.Alignment;
@@ -27,6 +30,8 @@ import info.bioinfweb.commons.bio.biojava3.core.sequence.compound.AlignmentAmbig
 import info.bioinfweb.libralign.AlignmentArea;
 import info.bioinfweb.libralign.dataarea.implementations.ConsensusSequenceArea;
 import info.bioinfweb.libralign.dataarea.implementations.SequenceIndexArea;
+import info.bioinfweb.libralign.dataarea.implementations.charset.CharSet;
+import info.bioinfweb.libralign.dataarea.implementations.charset.CharSetArea;
 import info.bioinfweb.libralign.dataarea.implementations.pherogram.PherogramArea;
 import info.bioinfweb.libralign.pherogram.BioJavaPherogramProvider;
 import info.bioinfweb.libralign.selection.SelectionType;
@@ -45,6 +50,27 @@ import org.biojava3.core.sequence.compound.NucleotideCompound;
  * @author Ben St&ouml;ver
  */
 public class AbstractTestApplication {
+	private CharSetArea createCharSetArea(AlignmentArea owner) {
+		List<CharSet> model = new ArrayList<CharSet>(3);
+		
+		CharSet charSet = new CharSet("A", Color.RED);
+		charSet.add(2, 5);
+		charSet.add(8, 20);
+		model.add(charSet);
+		
+		charSet = new CharSet("B", Color.GREEN.darker());
+		charSet.add(1, 20);
+		model.add(charSet);
+		
+		charSet = new CharSet("C", Color.BLUE);
+		charSet.add(7, 12);
+		charSet.add(17, 25);
+		model.add(charSet);
+		
+		return new CharSetArea(owner, model);
+	}
+	
+	
 	protected AlignmentArea createAlignmentArea() {
 		try {
 			BioJavaPherogramProvider pherogramProvider = new BioJavaPherogramProvider(ChromatogramFactory.create(
@@ -79,6 +105,8 @@ public class AbstractTestApplication {
 			//sequenceIndexArea.setHeight(25);
 			result.getDataAreas().getTopAreas().add(sequenceIndexArea);
 			
+			result.getDataAreas().getTopAreas().add(createCharSetArea(result));
+			
 			PherogramArea pherogramArea = new PherogramArea(result, pherogramProvider);
 			pherogramArea.setFirstSeqPos(34 + 5);
 			pherogramArea.setLeftCutPosition(34);
@@ -89,7 +117,7 @@ public class AbstractTestApplication {
 			
 			result.getDataAreas().getBottomAreas().add(new ConsensusSequenceArea(result));
 			
-			//result.getSelection().setType(SelectionType.ROW_ONLY);
+			result.getSelection().setType(SelectionType.COLUMN_ONLY);
 			
 			return result;
 		}
