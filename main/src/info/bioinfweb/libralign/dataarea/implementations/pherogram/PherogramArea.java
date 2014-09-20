@@ -160,9 +160,6 @@ public class PherogramArea extends DataArea implements PherogramComponent {
 		// Draw curves:
 		height = painter.paintTraceCurves(g, paintRange.getFirstPos(), paintRange.getLastPos(), x, y, 
 				distortion, getOwner().getCompoundWidth());
-		// Repaint gaps:
-//		painter.paintGaps(g, paintRange.getFirstPos(), paintRange.getLastPos(), x, y, height,
-//				distortion, getOwner().getCompoundWidth());
 	}
 
 
