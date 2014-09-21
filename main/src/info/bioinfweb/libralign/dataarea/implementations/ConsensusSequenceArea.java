@@ -148,8 +148,6 @@ public class ConsensusSequenceArea extends CustomHeightFullWidthArea {
 	
 	@Override
 	public void paint(TICPaintEvent event) {
-		System.out.println("paint");
-		
 		// Paint background:
 		Graphics2D g = event.getGraphics();
 		g.setColor(SystemColor.menu);
@@ -163,7 +161,6 @@ public class ConsensusSequenceArea extends CustomHeightFullWidthArea {
 		if ((lastIndex == -1) || (lastIndex > lastColumn)) {  //TODO Elongate to the length of the longest sequence and paint empty/special tokens on the right end?
 			lastIndex = lastColumn;
 		}
-		System.out.println(firstIndex + " " + lastIndex);
 		
 		// Paint output:
 		Map<String, Color> map = getOwner().getColorSchema().getNucleotideColorMap();
