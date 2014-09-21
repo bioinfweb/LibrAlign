@@ -334,7 +334,9 @@ public class PherogramPainter {
 				for (int traceX = startTraceIndex; traceX < endTraceIndex; traceX++) {
 					if (paintX - previousX >= compoundWidth) {
 						previousX += compoundWidth;
-						while ((distortion.getGapPattern(baseCallIndex) != null) && (distortion.getGapPattern(baseCallIndex).isGap(editablePos))) {
+						while ((distortion.getGapPattern(baseCallIndex) != null) && 
+								(distortion.getGapPattern(baseCallIndex).isGap(editablePos))) {
+							
 							paintX += compoundWidth;
 							path.moveTo(paintX, y + height - owner.getProvider().getTraceValue(nucleotide, 
 									Math.max(startTraceIndex, traceX - 1)) * owner.getVerticalScale());

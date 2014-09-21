@@ -25,6 +25,7 @@ import info.bioinfweb.commons.tic.TICPaintEvent;
 import info.bioinfweb.libralign.AlignmentArea;
 import info.bioinfweb.libralign.dataarea.DataArea;
 import info.bioinfweb.libralign.dataarea.DataAreaListType;
+import info.bioinfweb.libralign.dataarea.implementations.CustomHeightFullWidthArea;
 import info.bioinfweb.libralign.pherogram.PherogramComponent;
 import info.bioinfweb.libralign.pherogram.PherogramFormats;
 import info.bioinfweb.libralign.pherogram.PherogramPainter;
@@ -46,13 +47,16 @@ import java.util.Set;
  * @author Ben St&ouml;ver
  * @since 0.1.0
  */
-public class PherogramArea extends DataArea implements PherogramComponent {
+public class PherogramArea extends CustomHeightFullWidthArea implements PherogramComponent {
+	public static final int DEFAULT_HEIGHT_FACTOR = 5;
+	
+	
 	private PherogramProvider pherogram;
 	private PherogramAlignmentModel alignmentModel = new PherogramAlignmentModel(this);
 	private int firstSeqPos;
 	private int leftCutPosition;
 	private int rightCutPosition;
-	private double verticalScale = 100f;
+	private double verticalScale;
 	private PherogramFormats formats = new PherogramFormats();
 	private PherogramPainter painter = new PherogramPainter(this);
 	
@@ -64,8 +68,9 @@ public class PherogramArea extends DataArea implements PherogramComponent {
 	 * @param pherogram - the provider for the pherogram data to be displayed by the returned instance
 	 */
 	public PherogramArea(AlignmentArea owner, PherogramProvider pherogram) {
-		super(owner);
+		super(owner, DEFAULT_HEIGHT_FACTOR * owner.getCompoundHeight());
 		this.pherogram = pherogram;
+		verticalScale = getHeight();
 		leftCutPosition = 0;
 		rightCutPosition = pherogram.getSequenceLength();
 	}
@@ -139,6 +144,13 @@ public class PherogramArea extends DataArea implements PherogramComponent {
 		painter.paintGaps(g, paintRange.getFirstPos(), paintRange.getLastPos(), x, y, height,	distortion, 
 				getOwner().getCompoundWidth());
 		
+		// Paint base call lines
+		if (getFormats().isShowBaseCallLines()) {
+			g.setColor(getFormats().getBaseCallLineColor());
+			painter.paintBaseCallLines(g, paintRange.getFirstPos(), paintRange.getLastPos(), x, y, 
+					getHeight(),	distortion);
+		}
+
     // Paint indices:
 		g.setFont(getFormats().getIndexFont());
 		g.setColor(Color.BLACK);
@@ -148,18 +160,11 @@ public class PherogramArea extends DataArea implements PherogramComponent {
 		
 		// Paint base calls and probabilities:
 		painter.paintBaseCalls(g, paintRange.getFirstPos(), paintRange.getLastPos(), x, y, distortion);
-		y += getFormats().getBaseCallFont().getSize() * PherogramFormats.FONT_HEIGHT_FACTOR + getFormats().qualityOutputHeight();
-
-    // Paint base call lines
-		if (getFormats().isShowBaseCallLines()) {
-			g.setColor(getFormats().getBaseCallLineColor());
-			painter.paintBaseCallLines(g, paintRange.getFirstPos(), paintRange.getLastPos(), x, y, 
-					painter.calculateTraceCurvesHeight(),	distortion);
-		}
-
+		//y += getFormats().getBaseCallFont().getSize() * PherogramFormats.FONT_HEIGHT_FACTOR + getFormats().qualityOutputHeight();
+		
 		// Draw curves:
-		height = painter.paintTraceCurves(g, paintRange.getFirstPos(), paintRange.getLastPos(), x, y, 
-				distortion, getOwner().getCompoundWidth());
+		height = painter.paintTraceCurves(g, paintRange.getFirstPos(), paintRange.getLastPos(), 
+				x, getHeight() - painter.calculateTraceCurvesHeight(),	distortion, getOwner().getCompoundWidth());
 	}
 
 
@@ -269,9 +274,9 @@ public class PherogramArea extends DataArea implements PherogramComponent {
 	}
 
 
-	@Override
-	public int getHeight() {
-		return (int)Math2.roundUp(painter.calculateTraceCurvesHeight() + getFormats().qualityOutputHeight() +
-				(getFormats().getIndexFont().getSize() + getFormats().getBaseCallFont().getSize()) * PherogramFormats.FONT_HEIGHT_FACTOR);
-	}
+//	@Override
+//	public int getHeight() {
+//		return (int)Math2.roundUp(painter.calculateTraceCurvesHeight() + getFormats().qualityOutputHeight() +
+//				(getFormats().getIndexFont().getSize() + getFormats().getBaseCallFont().getSize()) * PherogramFormats.FONT_HEIGHT_FACTOR);
+//	}
 }
