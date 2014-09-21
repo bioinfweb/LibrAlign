@@ -148,6 +148,8 @@ public class ConsensusSequenceArea extends CustomHeightFullWidthArea {
 	
 	@Override
 	public void paint(TICPaintEvent event) {
+		System.out.println("paint");
+		
 		// Paint background:
 		Graphics2D g = event.getGraphics();
 		g.setColor(SystemColor.menu);
@@ -161,6 +163,7 @@ public class ConsensusSequenceArea extends CustomHeightFullWidthArea {
 		if ((lastIndex == -1) || (lastIndex > lastColumn)) {  //TODO Elongate to the length of the longest sequence and paint empty/special tokens on the right end?
 			lastIndex = lastColumn;
 		}
+		System.out.println(firstIndex + " " + lastIndex);
 		
 		// Paint output:
 		Map<String, Color> map = getOwner().getColorSchema().getNucleotideColorMap();
@@ -169,7 +172,7 @@ public class ConsensusSequenceArea extends CustomHeightFullWidthArea {
 		AlignmentAmbiguityNucleotideCompoundSet compoundSet =  
 				AlignmentAmbiguityNucleotideCompoundSet.getAlignmentAmbiguityNucleotideCompoundSet();
 		g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-  	float x = firstIndex * getOwner().getCompoundWidth();
+  	float x = firstIndex * getOwner().getCompoundWidth() + getOwner().getDataAreas().getMaxLengthBeforeStart();
 		float sequenceY = 2 * getOwner().getCompoundHeight();
 		final float barWidth = getOwner().getCompoundWidth() / 4; 
 		for (int i = firstIndex; i <= lastIndex; i++) {
