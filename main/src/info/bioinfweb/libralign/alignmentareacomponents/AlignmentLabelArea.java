@@ -48,7 +48,7 @@ public class AlignmentLabelArea extends TICComponent {
 	
 	
   private AlignmentArea owner;
-  private ToolkitSpecificAlignmentPartArea alignmentPartArea;
+  private ToolkitSpecificAlignmentArea alignmentPartArea;
   private DataAreaListType position;
 	
 	
@@ -67,12 +67,12 @@ public class AlignmentLabelArea extends TICComponent {
 	}
 
 
-	public ToolkitSpecificAlignmentPartArea getAlignmentPartArea() {
+	public ToolkitSpecificAlignmentArea getAlignmentPartArea() {
 		return alignmentPartArea;
 	}
 
 
-	public void setAlignmentPartArea(ToolkitSpecificAlignmentPartArea alignmentPartArea) {
+	public void setAlignmentPartArea(ToolkitSpecificAlignmentArea alignmentPartArea) {
 		this.alignmentPartArea = alignmentPartArea;
 		assignSize();
 	}

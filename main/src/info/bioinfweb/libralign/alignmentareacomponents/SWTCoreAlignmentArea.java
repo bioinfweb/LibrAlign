@@ -46,8 +46,8 @@ import org.eclipse.swt.widgets.Control;
  * @author Ben St&ouml;ver
  * @since 0.2.0
  */
-public class SWTAlignmentPartArea extends Composite implements ToolkitSpecificAlignmentPartArea {
-	public SWTAlignmentPartArea(Composite parent, int style) {
+public class SWTCoreAlignmentArea extends Composite implements ToolkitSpecificAlignmentArea {
+	public SWTCoreAlignmentArea(Composite parent, int style) {
 		super(parent, style);
 		
 		RowLayout rowLayout = new RowLayout();

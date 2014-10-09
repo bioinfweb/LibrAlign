@@ -32,11 +32,11 @@ import org.eclipse.swt.widgets.Composite;
 
 import info.bioinfweb.commons.tic.TICComponent;
 import info.bioinfweb.commons.tic.TICPaintEvent;
-import info.bioinfweb.libralign.alignmentareacomponents.SWTAlignmentOverviewArea;
+import info.bioinfweb.libralign.alignmentareacomponents.SWTMultipleAlignmentsContainer;
 import info.bioinfweb.libralign.alignmentareacomponents.SequenceArea;
-import info.bioinfweb.libralign.alignmentareacomponents.SwingAlignmentOverviewArea;
-import info.bioinfweb.libralign.alignmentareacomponents.ToolkitSpecificAlignmentOverviewArea;
-import info.bioinfweb.libralign.alignmentareacomponents.ToolkitSpecificAlignmentPartArea;
+import info.bioinfweb.libralign.alignmentareacomponents.SwingMultipleAlignmentsContainer;
+import info.bioinfweb.libralign.alignmentareacomponents.ToolkitSpecificMultipleAlignmentsContainer;
+import info.bioinfweb.libralign.alignmentareacomponents.ToolkitSpecificAlignmentArea;
 import info.bioinfweb.libralign.dataarea.DataArea;
 import info.bioinfweb.libralign.dataarea.DataAreaChangeEvent;
 import info.bioinfweb.libralign.dataarea.DataAreaListType;
@@ -83,8 +83,9 @@ public class AlignmentArea extends TICComponent implements SequenceDataChangeLis
 	private DataAreaModel dataAreas = new DataAreaModel();
 	private float zoomX = 1f;
 	private float zoomY = 1f;
-	private boolean scrollHeadArea = false;
-	private boolean scrollBottomArea = false;
+	private boolean allowVerticalScrolling = true;
+//	private boolean scrollHeadArea = false;
+//	private boolean scrollBottomArea = false;
 	private int compoundWidth = COMPOUND_WIDTH;
 	private int compoundHeight = COMPOUND_HEIGHT;	
 	private Font compoundFont = new Font(Font.SANS_SERIF, Font.PLAIN, Math.round(COMPOUND_HEIGHT * 0.7f));
@@ -213,7 +214,7 @@ public class AlignmentArea extends TICComponent implements SequenceDataChangeLis
 	 * 
 	 * @param sequenceArea - the sequence area where {@code relativeY} belongs to 
 	 * @param relativeY - the y coordinate relative to {@code sequenceArea}
-	 * @return the y coordinate relative to the parent instance of {@link ToolkitSpecificAlignmentPartArea}
+	 * @return the y coordinate relative to the parent instance of {@link ToolkitSpecificAlignmentArea}
 	 * @throws IllegalStateException if neither or Swing or a SWT component has been created for the specified sequence
 	 *         area before the call of this method
 	 */
@@ -270,26 +271,37 @@ public class AlignmentArea extends TICComponent implements SequenceDataChangeLis
 	}
 	
 	
-	public boolean isScrollHeadArea() {
-		return scrollHeadArea;
+	public boolean isAllowVerticalScrolling() {
+		return allowVerticalScrolling;
 	}
 
 
-	public void setScrollHeadArea(boolean scrollHeadArea) {
-		this.scrollHeadArea = scrollHeadArea;
-		//TODO update GUI
+	public void setAllowVerticalScrolling(boolean allowVerticalScrolling) {
+		this.allowVerticalScrolling = allowVerticalScrolling;
+		//TODO redistribute size
 	}
 
 
-	public boolean isScrollBottomArea() {
-		return scrollBottomArea;
-	}
-
-
-	public void setScrollBottomArea(boolean scrollBottomArea) {
-		this.scrollBottomArea = scrollBottomArea;
-		//TODO update GUI
-	}
+//	public boolean isScrollHeadArea() {
+//		return scrollHeadArea;
+//	}
+//
+//
+//	public void setScrollHeadArea(boolean scrollHeadArea) {
+//		this.scrollHeadArea = scrollHeadArea;
+//		//TODO update GUI
+//	}
+//
+//
+//	public boolean isScrollBottomArea() {
+//		return scrollBottomArea;
+//	}
+//
+//
+//	public void setScrollBottomArea(boolean scrollBottomArea) {
+//		this.scrollBottomArea = scrollBottomArea;
+//		//TODO update GUI
+//	}
 
 
 	private void calculateFont() {
@@ -474,7 +486,7 @@ public class AlignmentArea extends TICComponent implements SequenceDataChangeLis
 	
 	@Override
 	protected JComponent doCreateSwingComponent() {
-		SwingAlignmentOverviewArea result = new SwingAlignmentOverviewArea(this);
+		SwingMultipleAlignmentsContainer result = new SwingMultipleAlignmentsContainer(this);
 		addCursorScrollListener();
 		return result;
 	}
@@ -482,15 +494,15 @@ public class AlignmentArea extends TICComponent implements SequenceDataChangeLis
 
 	@Override
 	protected Composite doCreateSWTWidget(Composite parent, int style) {
-		SWTAlignmentOverviewArea result = new SWTAlignmentOverviewArea(parent, style, this);
+		SWTMultipleAlignmentsContainer result = new SWTMultipleAlignmentsContainer(parent, style, this);
 		addCursorScrollListener();
 		return result;
 	}
 
 
 	@Override
-	public ToolkitSpecificAlignmentOverviewArea getToolkitComponent() {
-		return (ToolkitSpecificAlignmentOverviewArea)super.getToolkitComponent();
+	public ToolkitSpecificMultipleAlignmentsContainer getToolkitComponent() {
+		return (ToolkitSpecificMultipleAlignmentsContainer)super.getToolkitComponent();
 	}
 
 

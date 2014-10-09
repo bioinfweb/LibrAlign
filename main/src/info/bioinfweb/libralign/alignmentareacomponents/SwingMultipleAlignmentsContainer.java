@@ -46,7 +46,7 @@ import javax.swing.JSplitPane;
  * @author Ben St&oumol;ver
  * @since 0.1.0
  */
-public class SwingAlignmentOverviewArea extends JComponent implements ToolkitSpecificAlignmentOverviewArea {
+public class SwingMultipleAlignmentsContainer extends JComponent implements ToolkitSpecificMultipleAlignmentsContainer {
 	private static Action VOID_ACTION = new AbstractAction() {
 				@Override
 				public void actionPerformed(ActionEvent e) {}
@@ -61,9 +61,9 @@ public class SwingAlignmentOverviewArea extends JComponent implements ToolkitSpe
 	private JScrollPane bottomScrollPane;
 	private JSplitPane topSplitPane;
 	private JSplitPane bottomSplitPane;
-	private SwingAlignmentPartArea headArea;
-	private SwingAlignmentPartArea contentArea;
-	private SwingAlignmentPartArea bottomArea;
+	private SwingAlignmentArea headArea;
+	private SwingAlignmentArea contentArea;
+	private SwingAlignmentArea bottomArea;
 	private AlignmentLabelArea headLabelArea;
 	private AlignmentLabelArea contentLabelArea;
 	private AlignmentLabelArea bottomLabelArea;
@@ -75,7 +75,7 @@ public class SwingAlignmentOverviewArea extends JComponent implements ToolkitSpe
 	 * @param independentComponent - the alignment area class that uses this instance to display its contents 
 	 *        in a Swing GUI
 	 */
-	public SwingAlignmentOverviewArea(AlignmentArea independentComponent) {
+	public SwingMultipleAlignmentsContainer(AlignmentArea independentComponent) {
 		super();
 		this.independentComponent = independentComponent;
 		sequenceAreaMap = new SequenceAreaMap(independentComponent);
@@ -130,14 +130,14 @@ public class SwingAlignmentOverviewArea extends JComponent implements ToolkitSpe
 				});
 		
 		headScrollPane = createScrollPane();
-		headArea = new SwingAlignmentPartArea();
+		headArea = new SwingAlignmentArea();
 		headScrollPane.setViewportView(headArea);
 		headLabelArea = new AlignmentLabelArea(getIndependentComponent(), DataAreaListType.TOP); 
 		headLabelArea.setAlignmentPartArea(headArea);
 		headScrollPane.setRowHeaderView(headLabelArea.createSwingComponent());
 
 		contentScrollPane = createScrollPane();
-		contentArea = new SwingAlignmentPartArea();
+		contentArea = new SwingAlignmentArea();
 		contentScrollPane.setViewportView(contentArea);
 		contentLabelArea = new AlignmentLabelArea(getIndependentComponent(), DataAreaListType.SEQUENCE);
 		contentLabelArea.setAlignmentPartArea(contentArea);
@@ -145,7 +145,7 @@ public class SwingAlignmentOverviewArea extends JComponent implements ToolkitSpe
 		
 		bottomScrollPane = createScrollPane();
 		bottomScrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
-		bottomArea = new SwingAlignmentPartArea();
+		bottomArea = new SwingAlignmentArea();
 		bottomScrollPane.setViewportView(bottomArea);
 		bottomLabelArea = new AlignmentLabelArea(getIndependentComponent(), DataAreaListType.BOTTOM); 
 		bottomLabelArea.setAlignmentPartArea(bottomArea);
@@ -218,17 +218,17 @@ public class SwingAlignmentOverviewArea extends JComponent implements ToolkitSpe
 	}
 
 
-	public SwingAlignmentPartArea getHeadArea() {
+	public SwingAlignmentArea getHeadArea() {
 		return headArea;
 	}
 
 
-	public SwingAlignmentPartArea getContentArea() {
+	public SwingAlignmentArea getContentArea() {
 		return contentArea;
 	}
 
 
-	public SwingAlignmentPartArea getBottomArea() {
+	public SwingAlignmentArea getBottomArea() {
 		return bottomArea;
 	}
 
@@ -240,7 +240,7 @@ public class SwingAlignmentOverviewArea extends JComponent implements ToolkitSpe
 
 
 	@Override
-	public ToolkitSpecificAlignmentPartArea getPartArea(DataAreaListType position) {
+	public ToolkitSpecificAlignmentArea getPartArea(DataAreaListType position) {
 		switch (position) {
 			case TOP:
 				return getHeadArea();
@@ -311,12 +311,12 @@ public class SwingAlignmentOverviewArea extends JComponent implements ToolkitSpe
 		}
 		
   	if (overallHeight < neededHeight) {
-  		if (getIndependentComponent().isScrollHeadArea()) {
-  			headHeight = 0;
-  		}
-  		if (getIndependentComponent().isScrollBottomArea()) {
-  			bottomHeight = 0;
-  		}
+//  		if (getIndependentComponent().isScrollHeadArea()) {
+//  			headHeight = 0;
+//  		}
+//  		if (getIndependentComponent().isScrollBottomArea()) {
+//  			bottomHeight = 0;
+//  		}
   		
   		if (headHeight + bottomHeight + AlignmentArea.MIN_PART_AREA_HEIGHT > overallHeight) {
   			headHeight = 0;

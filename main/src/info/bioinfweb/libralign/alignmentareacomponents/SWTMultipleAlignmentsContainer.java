@@ -46,16 +46,16 @@ import org.eclipse.swt.layout.FillLayout;
  * @author Ben St&ouml;ver
  * @since 0.2.0
  */
-public class SWTAlignmentOverviewArea extends Composite implements ToolkitSpecificAlignmentOverviewArea {
+public class SWTMultipleAlignmentsContainer extends Composite implements ToolkitSpecificMultipleAlignmentsContainer {
 	private AlignmentArea independentComponent;
 	private SequenceAreaMap sequenceAreaMap;
 	private SashForm sashForm;
-	private SWTAlignmentPartScroller headComponent;
-	private SWTAlignmentPartScroller contentComponent;
-	private SWTAlignmentPartScroller bottomComponent;
+	private SWTAlignmentArea headComponent;
+	private SWTAlignmentArea contentComponent;
+	private SWTAlignmentArea bottomComponent;
 	
 
-	public SWTAlignmentOverviewArea(Composite parent, int style, AlignmentArea independentComponent) {
+	public SWTMultipleAlignmentsContainer(Composite parent, int style, AlignmentArea independentComponent) {
 		super(parent, style);
 		this.independentComponent = independentComponent;		
 		init();
@@ -74,17 +74,17 @@ public class SWTAlignmentOverviewArea extends Composite implements ToolkitSpecif
 		// Create components:
 		sashForm = new SashForm(this, SWT.VERTICAL);
 		sashForm.setSashWidth(AlignmentArea.DIVIDER_WIDTH);
-		headComponent = new SWTAlignmentPartScroller(getIndependentComponent(), sashForm, DataAreaListType.TOP, true);
-		contentComponent = new SWTAlignmentPartScroller(getIndependentComponent(), sashForm, DataAreaListType.SEQUENCE, true);
-		bottomComponent = new SWTAlignmentPartScroller(getIndependentComponent(), sashForm, DataAreaListType.BOTTOM, false);
+		headComponent = new SWTAlignmentArea(getIndependentComponent(), sashForm, DataAreaListType.TOP, true);
+		contentComponent = new SWTAlignmentArea(getIndependentComponent(), sashForm, DataAreaListType.SEQUENCE, true);
+		bottomComponent = new SWTAlignmentArea(getIndependentComponent(), sashForm, DataAreaListType.BOTTOM, false);
 		sashForm.setWeights(new int[]{1, 2, 1});  //TODO Adjust
 		sequenceAreaMap = new SequenceAreaMap(getIndependentComponent());
 		reinsertSubelements();
 		
 		// Synchronize horizontal scrolling:
 		ScrolledCompositeSyncListener horizontalSyncListener = new ScrolledCompositeSyncListener(
-				new ScrolledComposite[]{headComponent.getPartScroller(), contentComponent.getPartScroller(), 
-						bottomComponent.getPartScroller()}, true);
+				new ScrolledComposite[]{headComponent.getContentScroller(), contentComponent.getContentScroller(), 
+						bottomComponent.getContentScroller()}, true);
 		horizontalSyncListener.registerToAll();
 	}
 
@@ -102,14 +102,14 @@ public class SWTAlignmentOverviewArea extends Composite implements ToolkitSpecif
 
 	
 	@Override
-	public ToolkitSpecificAlignmentPartArea getPartArea(DataAreaListType position) {
+	public ToolkitSpecificAlignmentArea getPartArea(DataAreaListType position) {
 		switch (position) {
 			case TOP:
-				return headComponent.getPartArea();
+				return headComponent.getContentArea();
 			case SEQUENCE:
-				return contentComponent.getPartArea();
+				return contentComponent.getContentArea();
 			default:
-				return bottomComponent.getPartArea();
+				return bottomComponent.getContentArea();
 		}
 	}
 
@@ -123,25 +123,25 @@ public class SWTAlignmentOverviewArea extends Composite implements ToolkitSpecif
 	@Override
 	public void reinsertSubelements() {
 		// Head elements:
-		headComponent.getPartArea().removeAll();
-		headComponent.getPartArea().addDataAreaList(getIndependentComponent().getDataAreas().getTopAreas());
-		headComponent.getPartArea().assignSize();
+		headComponent.getContentArea().removeAll();
+		headComponent.getContentArea().addDataAreaList(getIndependentComponent().getDataAreas().getTopAreas());
+		headComponent.getContentArea().assignSize();
 		
 		// Content elements:
-		contentComponent.getPartArea().removeAll();
+		contentComponent.getContentArea().removeAll();
 		Iterator<Integer> idIterator = getIndependentComponent().getSequenceOrder().getIdList().iterator();
 		while (idIterator.hasNext()) {
 			Integer id = idIterator.next();
-			sequenceAreaMap.get(id).createSWTWidget(contentComponent.getPartArea(), SWT.NONE);
+			sequenceAreaMap.get(id).createSWTWidget(contentComponent.getContentArea(), SWT.NONE);
 			sequenceAreaMap.get(id).assignSize();
-			contentComponent.getPartArea().addDataAreaList(getIndependentComponent().getDataAreas().getSequenceAreas(id));
+			contentComponent.getContentArea().addDataAreaList(getIndependentComponent().getDataAreas().getSequenceAreas(id));
 		}
-		contentComponent.getPartArea().assignSize();
+		contentComponent.getContentArea().assignSize();
 
 		// Bottom elements:
-		bottomComponent.getPartArea().removeAll();
-		bottomComponent.getPartArea().addDataAreaList(getIndependentComponent().getDataAreas().getBottomAreas());
-		bottomComponent.getPartArea().assignSize();
+		bottomComponent.getContentArea().removeAll();
+		bottomComponent.getContentArea().addDataAreaList(getIndependentComponent().getDataAreas().getBottomAreas());
+		bottomComponent.getContentArea().assignSize();
 
     //assignSize();
 		//layout(true, true);  //TODO Necessary?
@@ -151,21 +151,21 @@ public class SWTAlignmentOverviewArea extends Composite implements ToolkitSpecif
 	@Override
 	public void redistributeHeight() {
 		// Horizontal scroll bar in SWT is always visible (difference to Swing implementation).
-		int horzScrollBarHeight = bottomComponent.getPartScroller().getHorizontalBar().getSize().y;
+		int horzScrollBarHeight = bottomComponent.getContentScroller().getHorizontalBar().getSize().y;
   	int overallHeight = getSashForm().getSize().y;  //headComponent.getPartScroller().getSize().y +	contentComponent.getPartScroller().getSize().y + bottomComponent.getPartScroller().getSize().y + horzScrollBarHeight;
   	final int verticalBorderWidth = 3;  // The additional width used up by component borders in each part of the SashForm.  //TODO Can this be reduced?
-		int headHeight = headComponent.getPartArea().getHeight() + verticalBorderWidth;
-		int contentHeight = contentComponent.getPartArea().getHeight() + verticalBorderWidth;
-		int bottomHeight = bottomComponent.getPartArea().getHeight() + verticalBorderWidth + horzScrollBarHeight;
+		int headHeight = headComponent.getContentArea().getHeight() + verticalBorderWidth;
+		int contentHeight = contentComponent.getContentArea().getHeight() + verticalBorderWidth;
+		int bottomHeight = bottomComponent.getContentArea().getHeight() + verticalBorderWidth + horzScrollBarHeight;
   	int neededHeight = headHeight + contentHeight + bottomHeight;
 		
   	if (overallHeight < neededHeight) {
-  		if (getIndependentComponent().isScrollHeadArea()) {
-  			headHeight = 0;
-  		}
-  		if (getIndependentComponent().isScrollBottomArea()) {
-  			bottomHeight = 0;
-  		}
+//  		if (getIndependentComponent().isScrollHeadArea()) {
+//  			headHeight = 0;
+//  		}
+//  		if (getIndependentComponent().isScrollBottomArea()) {
+//  			bottomHeight = 0;
+//  		}
   		
   		if (headHeight + bottomHeight + AlignmentArea.MIN_PART_AREA_HEIGHT > overallHeight) {
   			headHeight = 0;
@@ -178,11 +178,11 @@ public class SWTAlignmentOverviewArea extends Composite implements ToolkitSpecif
   		double availableHeight = overallHeight - (headHeight + bottomHeight);
   		double reduceFactor = (double)availableHeight / (double)neededHeight;
   		if (headHeight == 0) {
-  			headHeight = (int)Math.round(headComponent.getPartArea().getHeight() * reduceFactor);
+  			headHeight = (int)Math.round(headComponent.getContentArea().getHeight() * reduceFactor);
   		}
- 			contentHeight = (int)Math.round(contentComponent.getPartArea().getHeight() * reduceFactor);
+ 			contentHeight = (int)Math.round(contentComponent.getContentArea().getHeight() * reduceFactor);
   		if (bottomHeight == 0) {
-  			bottomHeight = (int)Math.round((bottomComponent.getPartArea().getHeight() + horzScrollBarHeight) * reduceFactor);
+  			bottomHeight = (int)Math.round((bottomComponent.getContentArea().getHeight() + horzScrollBarHeight) * reduceFactor);
   		}
   		
   		headHeight = Math.max(1, headHeight);
@@ -198,7 +198,7 @@ public class SWTAlignmentOverviewArea extends Composite implements ToolkitSpecif
 
   @Override
 	public void scrollAlignmentRectToVisible(Rectangle rectangle) {
-		org.eclipse.swt.graphics.Point origin = contentComponent.getPartScroller().getOrigin();
+		org.eclipse.swt.graphics.Point origin = contentComponent.getContentScroller().getOrigin();
 		Rectangle visibleRect = getVisibleAlignmentRect();
 		
 		int x = origin.x;  // Do not scroll
@@ -217,14 +217,14 @@ public class SWTAlignmentOverviewArea extends Composite implements ToolkitSpecif
 			y = rectangle.y + rectangle.height - visibleRect.height;  // Scroll down
 		}
 		
-		contentComponent.getPartScroller().setOrigin(x, y);
+		contentComponent.getContentScroller().setOrigin(x, y);
 	}
 
 
 	@Override
 	public Rectangle getVisibleAlignmentRect() {
-		org.eclipse.swt.graphics.Rectangle clientArea = contentComponent.getPartScroller().getClientArea();
-		org.eclipse.swt.graphics.Point origin = contentComponent.getPartScroller().getOrigin();
+		org.eclipse.swt.graphics.Rectangle clientArea = contentComponent.getContentScroller().getClientArea();
+		org.eclipse.swt.graphics.Point origin = contentComponent.getContentScroller().getOrigin();
 		return new Rectangle(origin.x, origin.y, clientArea.width, clientArea.height);
 	}
 

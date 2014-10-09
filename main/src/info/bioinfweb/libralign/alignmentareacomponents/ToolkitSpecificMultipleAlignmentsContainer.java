@@ -32,15 +32,15 @@ import info.bioinfweb.libralign.dataarea.DataAreaListType;
  * @author Ben St&ouml;ver
  * @since 0.2.0
  */
-public interface ToolkitSpecificAlignmentOverviewArea extends ToolkitComponent {
+public interface ToolkitSpecificMultipleAlignmentsContainer extends ToolkitComponent {
 	/**
 	 * Returns the contained toolkit specific component displaying the part of the alignment area
 	 * at the specified position.
 	 * 
 	 * @param position - the position of the alignment part area
-	 * @return an instance of {@link SwingAlignmentPartArea} or {@link SWTAlignmentPartArea}
+	 * @return an instance of {@link SwingAlignmentArea} or {@link SWTCoreAlignmentArea}
 	 */
-	public ToolkitSpecificAlignmentPartArea getPartArea(DataAreaListType position);
+	public ToolkitSpecificAlignmentArea getPartArea(DataAreaListType position);
 	
   /**
    * Recreates the components displaying sequences and data areas in the alignment according to

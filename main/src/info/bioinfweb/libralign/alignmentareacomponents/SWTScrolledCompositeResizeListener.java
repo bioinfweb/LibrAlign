@@ -24,6 +24,7 @@ import org.eclipse.swt.events.ControlEvent;
 import org.eclipse.swt.events.ControlListener;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Event;
 
 
 
@@ -38,15 +39,17 @@ public class SWTScrolledCompositeResizeListener implements ControlListener {
 	private Composite container;
 	private ScrolledComposite scrolledComposite;
 	private boolean hideVerticalBar;
+	private boolean hideHorizontalBar;
 	
 	
 	public SWTScrolledCompositeResizeListener(Composite container, ScrolledComposite scrolledComposite, 
-			boolean hideVerticalBar) {
+			boolean hideVerticalBar, boolean hideHorizontalBar) {
 		
 		super();
 		this.container = container;
 		this.scrolledComposite = scrolledComposite;
 		this.hideVerticalBar = hideVerticalBar;
+		this.hideHorizontalBar = hideHorizontalBar;
 	}
 
 
@@ -62,6 +65,17 @@ public class SWTScrolledCompositeResizeListener implements ControlListener {
 
 	public boolean isHideVerticalBar() {
 		return hideVerticalBar;
+	}
+
+
+	public boolean isHideHorizontalBar() {
+		return hideHorizontalBar;
+	}
+
+
+	public void setHideHorizontalBar(boolean hideHorizontalBar) {
+		this.hideHorizontalBar = hideHorizontalBar;
+		controlResized(new ControlEvent(new Event()));  // Resize child components. (Event object is currently not used in controlResized().) 
 	}
 
 

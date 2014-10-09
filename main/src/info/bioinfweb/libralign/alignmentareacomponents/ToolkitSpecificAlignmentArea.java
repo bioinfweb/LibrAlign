@@ -31,7 +31,7 @@ import info.bioinfweb.libralign.dataarea.DataAreaList;
  * @author Ben St&ouml;ver
  * @since 0.2.0
  */
-public interface ToolkitSpecificAlignmentPartArea {
+public interface ToolkitSpecificAlignmentArea {
 	public int getHeight();
 	
 	public void addDataAreaList(DataAreaList list);

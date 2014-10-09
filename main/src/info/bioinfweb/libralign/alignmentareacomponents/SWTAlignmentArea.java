@@ -44,16 +44,18 @@ import org.eclipse.swt.widgets.Composite;
  * @author Ben St&ouml;ver
  * @since 0.2.0
  */
-public class SWTAlignmentPartScroller extends Composite {
+public class SWTAlignmentArea extends Composite {
 	private AlignmentArea owner;
 	private DataAreaListType position;
 	
 	private Composite labelContainer;
 	private ScrolledComposite labelScroller;
   private AlignmentLabelArea labelArea;
-  private Composite partContainer;
-  private ScrolledComposite partScroller;
-  private SWTAlignmentPartArea partArea;
+  private SWTScrolledCompositeResizeListener labelResizeListener;
+  private Composite contentContainer;
+  private ScrolledComposite contentScroller;
+  private SWTCoreAlignmentArea contentArea;
+  private SWTScrolledCompositeResizeListener contentResizeListener;
   
   
 	/**
@@ -62,16 +64,16 @@ public class SWTAlignmentPartScroller extends Composite {
 	 * @param owner - the alignment area using this component
 	 * @param parent - the parent SWT component
 	 * @param position - the position of this component in {@code owner}
-	 * @param hidePartScrollBar - Specify {@code true} here if you want no horizontal scroll bar to be displayed
+	 * @param hideHorizontalScrollBar - Specify {@code true} here if you want no horizontal scroll bar to be displayed
 	 *        in this part of the alignment are or {@code false} otherwise.
 	 */
-	public SWTAlignmentPartScroller(AlignmentArea owner, Composite parent, DataAreaListType position, 
-			boolean hidePartScrollBar) {
+	public SWTAlignmentArea(AlignmentArea owner, Composite parent, DataAreaListType position, 
+			boolean hideHorizontalScrollBar) {
 		
 		super(parent, SWT.NONE);
 		this.owner = owner;
 		this.position = position;
-		initGUI(hidePartScrollBar);
+		initGUI(hideHorizontalScrollBar);
 	}
 	
 	
@@ -85,7 +87,7 @@ public class SWTAlignmentPartScroller extends Composite {
 	}
 	
 	
-	private void initGUI(boolean hidePartScrollBar) {
+	private void initGUI(boolean hideHorizontalScrollBar) {
 		// Set layout:
 		GridLayout layout = new GridLayout(2, false);
 		layout.horizontalSpacing = 0;
@@ -105,36 +107,29 @@ public class SWTAlignmentPartScroller extends Composite {
 		labelScroller.setAlwaysShowScrollBars(true);
 		labelArea = new AlignmentLabelArea(getOwner(), getPosition());
 		labelScroller.setContent(labelArea.createSWTWidget(labelScroller, SWT.NONE));
-		labelContainer.addControlListener(  // Must not be called before both fields are initialized.
-				new SWTScrolledCompositeResizeListener(labelContainer, labelScroller, true));
+		labelResizeListener = new SWTScrolledCompositeResizeListener(labelContainer, labelScroller, true, 
+				hideHorizontalScrollBar); 
+		labelContainer.addControlListener(labelResizeListener);  // Must not be called before both fields are initialized.
 		
 		// Alignment area part components:
-		if (hidePartScrollBar) {
-			partContainer = new Composite(this, SWT.NONE);
-			partContainer.setLayoutData(createGridData(true));
-			partScroller = new ScrolledComposite(partContainer, SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL);
-		}
-		else {
-			partContainer = null;
-			partScroller = new ScrolledComposite(this, SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL);
-			partScroller.setLayoutData(createGridData(true));
-		}
-		partScroller.setAlwaysShowScrollBars(true);
-		partArea = new SWTAlignmentPartArea(partScroller, SWT.NONE);
-		partScroller.setContent(partArea);
-		if (hidePartScrollBar) {
-			partContainer.addControlListener(  // Must not be called before both fields are initialized.
-					new SWTScrolledCompositeResizeListener(partContainer, partScroller, false));
-		}
+		contentContainer = new Composite(this, SWT.NONE);
+		contentContainer.setLayoutData(createGridData(true));
+		contentScroller = new ScrolledComposite(contentContainer, SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL);
+		contentScroller.setAlwaysShowScrollBars(true);
+		contentArea = new SWTCoreAlignmentArea(contentScroller, SWT.NONE);
+		contentScroller.setContent(contentArea);
+		contentResizeListener = new SWTScrolledCompositeResizeListener(contentContainer, contentScroller, false, 
+				hideHorizontalScrollBar); 
+		contentContainer.addControlListener(contentResizeListener);  // Must not be called before both fields are initialized.
 				
 		// Synchronize vertical scrolling:
 		ScrolledCompositeSyncListener verticalSyncListener = new ScrolledCompositeSyncListener(
-				new ScrolledComposite[]{labelScroller, partScroller}, false);
+				new ScrolledComposite[]{labelScroller, contentScroller}, false);
 		verticalSyncListener.registerToAll();		
 
 		// Link label area:
-		labelArea.setAlignmentPartArea(partArea);
-		partArea.addControlListener(new ControlAdapter() {
+		labelArea.setAlignmentPartArea(contentArea);
+		contentArea.addControlListener(new ControlAdapter() {
 					@Override
 					public void controlResized(ControlEvent e) {
 						labelArea.assignSize();
@@ -182,17 +177,28 @@ public class SWTAlignmentPartScroller extends Composite {
 	}
 
 
-	public Composite getPartContainer() {
-		return partContainer;
+	public Composite getContentContainer() {
+		return contentContainer;
 	}
 
 
-	public ScrolledComposite getPartScroller() {
-		return partScroller;
+	public ScrolledComposite getContentScroller() {
+		return contentScroller;
 	}
 
 
-	public SWTAlignmentPartArea getPartArea() {
-		return partArea;
+	public SWTCoreAlignmentArea getContentArea() {
+		return contentArea;
+	}
+	
+	
+	public boolean isHideHorizontalScrollBars() {
+		return contentResizeListener.isHideHorizontalBar();
+	}
+	
+	
+	public void setHideHorizontalScrollBars(boolean hide) {
+		labelResizeListener.setHideHorizontalBar(hide);
+		contentResizeListener.setHideHorizontalBar(hide);
 	}
 }

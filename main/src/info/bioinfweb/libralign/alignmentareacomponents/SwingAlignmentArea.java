@@ -22,9 +22,6 @@ package info.bioinfweb.libralign.alignmentareacomponents;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Rectangle;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
-import java.beans.Transient;
 import java.util.Iterator;
 
 import info.bioinfweb.commons.tic.TICComponent;
@@ -46,8 +43,8 @@ import javax.swing.Scrollable;
  * @author Ben St&ouml;ver
  * @since 0.2.0
  */
-public class SwingAlignmentPartArea extends JPanel implements Scrollable, ToolkitSpecificAlignmentPartArea {
-	public SwingAlignmentPartArea() {
+public class SwingAlignmentArea extends JPanel implements Scrollable, ToolkitSpecificAlignmentArea {
+	public SwingAlignmentArea() {
 		super();
 		init();
 	}
