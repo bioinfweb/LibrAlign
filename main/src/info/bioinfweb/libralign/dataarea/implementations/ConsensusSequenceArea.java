@@ -35,7 +35,7 @@ import org.biojava3.core.sequence.compound.NucleotideCompound;
 import info.bioinfweb.commons.bio.AmbiguityBaseScore;
 import info.bioinfweb.commons.bio.biojava3.core.sequence.compound.AlignmentAmbiguityNucleotideCompoundSet;
 import info.bioinfweb.commons.tic.TICPaintEvent;
-import info.bioinfweb.libralign.AlignmentArea;
+import info.bioinfweb.libralign.AlignmentContentArea;
 import info.bioinfweb.libralign.alignmentareacomponents.SequenceArea;
 import info.bioinfweb.libralign.dataarea.DataAreaListType;
 import info.bioinfweb.libralign.sequenceprovider.SequenceDataChangeListener;
@@ -65,7 +65,7 @@ public class ConsensusSequenceArea extends CustomHeightFullWidthArea {
 	 * 
 	 * @param owner - the alignment area that will be containing the returned data area instance
 	 */
-	public ConsensusSequenceArea(AlignmentArea owner) {
+	public ConsensusSequenceArea(AlignmentContentArea owner) {
 		super(owner, Math.round(DEFAULT_HEIGHT_FACTOR * owner.getCompoundHeight()));
 		createMap();
 		scores = new TreeMap<Integer, AmbiguityBaseScore>();  // Saves scores between change events of the provider.

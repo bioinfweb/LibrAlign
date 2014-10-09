@@ -28,7 +28,7 @@ import java.util.List;
 import java.util.Set;
 
 import info.bioinfweb.commons.tic.TICPaintEvent;
-import info.bioinfweb.libralign.AlignmentArea;
+import info.bioinfweb.libralign.AlignmentContentArea;
 import info.bioinfweb.libralign.dataarea.DataArea;
 import info.bioinfweb.libralign.dataarea.DataAreaListType;
 
@@ -54,7 +54,7 @@ public class CharSetArea extends DataArea {
 	 * @param owner - the alignment area that will be containing the returned data area instance
 	 * @param model - the model providing the character set data
 	 */
-	public CharSetArea(AlignmentArea owner, List<CharSet> model) {
+	public CharSetArea(AlignmentContentArea owner, List<CharSet> model) {
 		super(owner);
 		this.model = model;
 	}

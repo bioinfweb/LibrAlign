@@ -25,6 +25,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import info.bioinfweb.libralign.AlignmentArea;
+import info.bioinfweb.libralign.AlignmentContentArea;
 import info.bioinfweb.libralign.sequenceprovider.SequenceDataProvider;
 
 
@@ -37,7 +38,7 @@ import info.bioinfweb.libralign.sequenceprovider.SequenceDataProvider;
  * @see AlignmentArea
  */
 public class SelectionModel {
-  private AlignmentArea owner;
+  private AlignmentContentArea owner;
   private SelectionType type = SelectionType.CELLS;
   private OneDimensionalSelection columnSelection = new OneDimensionalSelection(this, SelectionDimension.COLUMN);
   private OneDimensionalSelection rowSelection = new OneDimensionalSelection(this, SelectionDimension.ROW);
@@ -53,7 +54,7 @@ public class SelectionModel {
 	 * 
 	 * @param owner - the alignment area that will be using this selection object
 	 */
-	public SelectionModel(AlignmentArea owner) {
+	public SelectionModel(AlignmentContentArea owner) {
 		super();
 		this.owner = owner;
 		cursor = new AlignmentCursor(owner);
@@ -63,7 +64,7 @@ public class SelectionModel {
 	/**
 	 * Returns the alignment area that uses this selection object.
 	 */
-	public AlignmentArea getOwner() {
+	public AlignmentContentArea getOwner() {
 		return owner;
 	}
 

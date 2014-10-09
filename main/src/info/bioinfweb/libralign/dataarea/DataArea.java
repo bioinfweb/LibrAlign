@@ -23,6 +23,7 @@ import java.awt.Dimension;
 import java.util.Set;
 
 import info.bioinfweb.libralign.AlignmentArea;
+import info.bioinfweb.libralign.AlignmentContentArea;
 import info.bioinfweb.libralign.AlignmentSubArea;
 
 
@@ -43,7 +44,7 @@ public abstract class DataArea extends AlignmentSubArea {
 	 * 
 	 * @param owner - the alignment area that will contain this instance
 	 */
-	public DataArea(AlignmentArea owner) {
+	public DataArea(AlignmentContentArea owner) {
 		super(owner);
 	}
 

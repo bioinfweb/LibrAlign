@@ -30,24 +30,24 @@ import info.bioinfweb.commons.tic.TICComponent;
  * @since 0.0.0
  */
 public abstract class AlignmentSubArea extends TICComponent {
-	private AlignmentArea owner = null;
+	private AlignmentContentArea owner = null;
 
 	
 	/**
 	 * Creates a new instance of this class.
 	 * 
-	 * @param owner - the alignment area that will contain this instance
+	 * @param owner - the alignment content area that will contain this instance
 	 */
-	public AlignmentSubArea(AlignmentArea owner) {
+	public AlignmentSubArea(AlignmentContentArea owner) {
 		super();
 		this.owner = owner;
 	}
 
 
 	/**
-	 * Returns the alignment area that displays this data area.
+	 * Returns the alignment content area that displays this data area.
 	 */
-	public AlignmentArea getOwner() {
+	public AlignmentContentArea getOwner() {
 		return owner;
 	}
 }

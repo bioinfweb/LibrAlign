@@ -20,6 +20,7 @@ package info.bioinfweb.libralign.selection;
 
 
 import info.bioinfweb.libralign.AlignmentArea;
+import info.bioinfweb.libralign.AlignmentContentArea;
 
 
 
@@ -30,19 +31,19 @@ import info.bioinfweb.libralign.AlignmentArea;
  * @since 0.0.0
  */
 public class AlignmentCursor {
-	private AlignmentArea owner;
+	private AlignmentContentArea owner;
   private int column = 0;
   private int row = 0;
   private int height = 1;
   
   
-	public AlignmentCursor(AlignmentArea owner) {
+	public AlignmentCursor(AlignmentContentArea owner) {
 		super();
 		this.owner = owner;
 	}
 
 
-	public AlignmentArea getOwner() {
+	public AlignmentContentArea getOwner() {
 		return owner;
 	}
 

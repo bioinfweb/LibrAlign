@@ -20,6 +20,7 @@ package info.bioinfweb.libralign.alignmentareacomponents;
 
 
 import info.bioinfweb.libralign.AlignmentArea;
+import info.bioinfweb.libralign.AlignmentContentArea;
 import info.bioinfweb.libralign.selection.OneDimensionalSelection;
 import info.bioinfweb.libralign.selection.SelectionChangeEvent;
 import info.bioinfweb.libralign.selection.SelectionListener;
@@ -38,11 +39,11 @@ import java.util.TreeMap;
  * @since 0.0.0
  */
 public class SequenceAreaMap extends TreeMap<Integer, SequenceArea> implements SelectionListener {
-	private AlignmentArea owner;
+	private AlignmentContentArea owner;
 	private CursorSelectionInputListener selectionInputListener;
 
 	
-	public SequenceAreaMap(AlignmentArea owner) {
+	public SequenceAreaMap(AlignmentContentArea owner) {
 		super();
 		this.owner = owner;
 		selectionInputListener = new CursorSelectionInputListener(owner);
@@ -51,7 +52,7 @@ public class SequenceAreaMap extends TreeMap<Integer, SequenceArea> implements S
 	}
 
 
-	public AlignmentArea getOwner() {
+	public AlignmentContentArea getOwner() {
 		return owner;
 	}
 	

@@ -52,7 +52,7 @@ public class SequenceOrder {
 	};
 
 
-	private AlignmentArea owner;
+	private AlignmentContentArea owner;
 	private List<Integer> idList = new ArrayList<Integer>();
 
 	
@@ -64,14 +64,14 @@ public class SequenceOrder {
 	 * 
 	 * @param owner - the alignment view objects the returned instance should be used for
 	 */
-	public SequenceOrder(AlignmentArea owner) {
+	public SequenceOrder(AlignmentContentArea owner) {
 		super();
 		this.owner = owner;
 		setSourceSequenceOrder();
 	}
 
 
-	public AlignmentArea getOwner() {
+	public AlignmentContentArea getOwner() {
 		return owner;
 	}
 

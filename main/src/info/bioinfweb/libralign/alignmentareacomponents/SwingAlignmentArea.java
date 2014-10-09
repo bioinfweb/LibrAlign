@@ -22,18 +22,17 @@ package info.bioinfweb.libralign.alignmentareacomponents;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Rectangle;
+import java.awt.event.ActionEvent;
 import java.util.Iterator;
 
-import info.bioinfweb.commons.tic.TICComponent;
-import info.bioinfweb.commons.tic.toolkit.ToolkitComponent;
 import info.bioinfweb.libralign.AlignmentArea;
-import info.bioinfweb.libralign.AlignmentSubArea;
 import info.bioinfweb.libralign.dataarea.DataArea;
 import info.bioinfweb.libralign.dataarea.DataAreaList;
 
-import javax.swing.BoxLayout;
-import javax.swing.JPanel;
-import javax.swing.Scrollable;
+import javax.swing.AbstractAction;
+import javax.swing.Action;
+import javax.swing.JScrollPane;
+import javax.swing.ScrollPaneConstants;
 
 
 
@@ -43,26 +42,49 @@ import javax.swing.Scrollable;
  * @author Ben St&ouml;ver
  * @since 0.2.0
  */
-public class SwingAlignmentArea extends JPanel implements Scrollable, ToolkitSpecificAlignmentArea {
-	public SwingAlignmentArea() {
+public class SwingAlignmentArea extends JScrollPane implements ToolkitSpecificAlignmentArea {
+	private static Action VOID_ACTION = new AbstractAction() {
+				@Override
+				public void actionPerformed(ActionEvent e) {}
+			};
+
+
+	private AlignmentArea independentComponent;
+	
+	
+	public SwingAlignmentArea(AlignmentArea independentComponent) {
 		super();
+		this.independentComponent = independentComponent;
 		init();
 	}
 	
-	
-	private void init() {
-		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
+
+	@Override
+	public AlignmentArea getIndependentComponent() {
+		return independentComponent;
 	}
 
 
-	public void addDataAreaList(DataAreaList list) {
-		Iterator<DataArea> iterator = list.iterator();
-		while (iterator.hasNext()) {
-			DataArea dataArea = iterator.next();
-			if (dataArea.isVisible()) {
-				add(dataArea.createSwingComponent());
-			}
-		}
+	private void init() {
+		setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
+		setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);
+		setBorder(null);
+		removeArrowKeyBindings();
+		
+		setViewportView(getIndependentComponent().getContentArea().createSwingComponent());
+		setRowHeaderView(getIndependentComponent().getLabelArea().createSwingComponent());
+	}
+
+
+	/**
+	 * Removes the arrow key bindings, so that the alignment cursor can be moved with these keys instead without
+	 * scrolling.
+	 */
+	private void removeArrowKeyBindings() {
+	  getActionMap().put("unitScrollLeft", VOID_ACTION);  // remove() does not work here.
+	  getActionMap().put("unitScrollUp", VOID_ACTION);
+		getActionMap().put("unitScrollRight", VOID_ACTION);
+	  getActionMap().put("unitScrollDown", VOID_ACTION);
 	}
 	
 	
@@ -82,49 +104,26 @@ public class SwingAlignmentArea extends JPanel implements Scrollable, ToolkitSpe
 
 
 	@Override
-	public Dimension getPreferredScrollableViewportSize() {
-		// TODO Auto-generated method stub
-		return getPreferredSize();
+	public void scrollAlignmentRectToVisible(Rectangle rectangle) {
+		((SwingAlignmentContentArea)
+				getIndependentComponent().getContentArea().getToolkitComponent()).scrollRectToVisible(rectangle);
 	}
 
 
 	@Override
-	public int getScrollableBlockIncrement(Rectangle arg0, int arg1, int arg2) {
-		// TODO Auto-generated method stub
-		return 10;
+	public Rectangle getVisibleAlignmentRect() {
+		return ((SwingAlignmentContentArea)
+				getIndependentComponent().getContentArea().getToolkitComponent()).getVisibleRect();
 	}
 
 
 	@Override
-	public boolean getScrollableTracksViewportHeight() {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-
-	@Override
-	public boolean getScrollableTracksViewportWidth() {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-
-	@Override
-	public int getScrollableUnitIncrement(Rectangle arg0, int arg1, int arg2) {
-		// TODO Auto-generated method stub
-		return 10;
-	}
-
-
-	@Override
-	public AlignmentSubArea getAreaByY(int y) {
-		Component child = getComponentAt(0, y);
-		if ((child != null) && (child instanceof ToolkitComponent)) {
-			TICComponent ticComponent = ((ToolkitComponent)child).getIndependentComponent();
-			if (ticComponent instanceof AlignmentSubArea) {
-				return (AlignmentSubArea)ticComponent;
-			}
+	public void setHideHorizontalScrollBar(boolean hideHorizontalScrollBar) {
+		if (hideHorizontalScrollBar) {
+			setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
 		}
-		return null;
+		else {
+			setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);
+		}
 	}
 }

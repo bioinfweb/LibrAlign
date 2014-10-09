@@ -37,10 +37,10 @@ import info.bioinfweb.commons.Math2;
 import info.bioinfweb.commons.graphics.GraphicsUtils;
 import info.bioinfweb.commons.tic.TICPaintEvent;
 import info.bioinfweb.libralign.AlignmentArea;
+import info.bioinfweb.libralign.AlignmentContentArea;
 import info.bioinfweb.libralign.AlignmentDataViewMode;
 import info.bioinfweb.libralign.AlignmentSubArea;
 import info.bioinfweb.libralign.SequenceColorSchema;
-import info.bioinfweb.libralign.selection.AlignmentCursor;
 import info.bioinfweb.libralign.selection.SelectionModel;
 import info.bioinfweb.libralign.selection.SelectionType;
 import info.bioinfweb.libralign.sequenceprovider.SequenceDataProvider;
@@ -63,7 +63,7 @@ public class SequenceArea extends AlignmentSubArea {
 	 * @param owner - the alignment area that will contain this instance
 	 * @param seqenceID - the unique identifier of the sequence that will be displayed in this area
 	 */
-	public SequenceArea(AlignmentArea owner, int seqenceID) {
+	public SequenceArea(AlignmentContentArea owner, int seqenceID) {
 		super(owner);
 		this.seqenceID = seqenceID;
 		assignSize();
@@ -105,7 +105,7 @@ public class SequenceArea extends AlignmentSubArea {
 	}
 	
 	
-  private static void paintNucleotideCompound(AlignmentArea area, Graphics2D g, NucleotideCompound compound, 
+  private static void paintNucleotideCompound(AlignmentContentArea area, Graphics2D g, NucleotideCompound compound, 
   		float x, float y, boolean selected) {
   	
   	Set<NucleotideCompound> consituents = compound.getConstituents();
@@ -129,7 +129,7 @@ public class SequenceArea extends AlignmentSubArea {
   }
   
   
-  public static void paintCompound(AlignmentArea area, Graphics2D g, Object compound, float x, float y, boolean selected) {
+  public static void paintCompound(AlignmentContentArea area, Graphics2D g, Object compound, float x, float y, boolean selected) {
   	g.setColor(area.getColorSchema().getTokenBorderColor());
   	g.draw(new Rectangle2D.Float(x, y, area.getCompoundWidth(), area.getCompoundHeight()));
   	
@@ -152,7 +152,7 @@ public class SequenceArea extends AlignmentSubArea {
   }
 
   
-  public static void paintSequence(AlignmentArea area, int sequenceID, TICPaintEvent event, float x, float y) {
+  public static void paintSequence(AlignmentContentArea area, int sequenceID, TICPaintEvent event, float x, float y) {
 		int firstIndex = Math.max(0, area.columnByPaintX((int)event.getRectangle().getMinX()));
 		int lastIndex = area.columnByPaintX((int)event.getRectangle().getMaxX());
 		int lastColumn = area.getSequenceProvider().getSequenceLength(sequenceID) - 1;

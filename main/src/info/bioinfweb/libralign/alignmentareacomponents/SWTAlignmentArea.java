@@ -20,10 +20,11 @@ package info.bioinfweb.libralign.alignmentareacomponents;
 
 
 import java.awt.Dimension;
+import java.awt.Rectangle;
 
 import info.bioinfweb.commons.swt.ScrolledCompositeSyncListener;
 import info.bioinfweb.libralign.AlignmentArea;
-import info.bioinfweb.libralign.dataarea.DataAreaListType;
+import info.bioinfweb.libralign.AlignmentLabelArea;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.ScrolledComposite;
@@ -44,17 +45,14 @@ import org.eclipse.swt.widgets.Composite;
  * @author Ben St&ouml;ver
  * @since 0.2.0
  */
-public class SWTAlignmentArea extends Composite {
+public class SWTAlignmentArea extends Composite implements ToolkitSpecificAlignmentArea {
 	private AlignmentArea owner;
-	private DataAreaListType position;
 	
 	private Composite labelContainer;
 	private ScrolledComposite labelScroller;
-  private AlignmentLabelArea labelArea;
   private SWTScrolledCompositeResizeListener labelResizeListener;
   private Composite contentContainer;
   private ScrolledComposite contentScroller;
-  private SWTCoreAlignmentArea contentArea;
   private SWTScrolledCompositeResizeListener contentResizeListener;
   
   
@@ -67,12 +65,9 @@ public class SWTAlignmentArea extends Composite {
 	 * @param hideHorizontalScrollBar - Specify {@code true} here if you want no horizontal scroll bar to be displayed
 	 *        in this part of the alignment are or {@code false} otherwise.
 	 */
-	public SWTAlignmentArea(AlignmentArea owner, Composite parent, DataAreaListType position, 
-			boolean hideHorizontalScrollBar) {
-		
-		super(parent, SWT.NONE);
+	public SWTAlignmentArea(Composite parent, int style, AlignmentArea owner, boolean hideHorizontalScrollBar) {
+		super(parent, style);
 		this.owner = owner;
-		this.position = position;
 		initGUI(hideHorizontalScrollBar);
 	}
 	
@@ -105,7 +100,7 @@ public class SWTAlignmentArea extends Composite {
 		labelContainer.setLayoutData(createGridData(false));
 		labelScroller = new ScrolledComposite(labelContainer,	SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL);
 		labelScroller.setAlwaysShowScrollBars(true);
-		labelArea = new AlignmentLabelArea(getOwner(), getPosition());
+		AlignmentLabelArea labelArea = getIndependentComponent().getLabelArea();
 		labelScroller.setContent(labelArea.createSWTWidget(labelScroller, SWT.NONE));
 		labelResizeListener = new SWTScrolledCompositeResizeListener(labelContainer, labelScroller, true, 
 				hideHorizontalScrollBar); 
@@ -116,7 +111,8 @@ public class SWTAlignmentArea extends Composite {
 		contentContainer.setLayoutData(createGridData(true));
 		contentScroller = new ScrolledComposite(contentContainer, SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL);
 		contentScroller.setAlwaysShowScrollBars(true);
-		contentArea = new SWTCoreAlignmentArea(contentScroller, SWT.NONE);
+		SWTAlignmentContentArea contentArea =
+				(SWTAlignmentContentArea)getIndependentComponent().getContentArea().createSWTWidget(contentScroller, SWT.NONE);
 		contentScroller.setContent(contentArea);
 		contentResizeListener = new SWTScrolledCompositeResizeListener(contentContainer, contentScroller, false, 
 				hideHorizontalScrollBar); 
@@ -128,11 +124,11 @@ public class SWTAlignmentArea extends Composite {
 		verticalSyncListener.registerToAll();		
 
 		// Link label area:
-		labelArea.setAlignmentPartArea(contentArea);
+		labelArea.setAlignmentContentArea(contentArea);
 		contentArea.addControlListener(new ControlAdapter() {
 					@Override
 					public void controlResized(ControlEvent e) {
-						labelArea.assignSize();
+						getIndependentComponent().getLabelArea().assignSize();
 					}
 				});
 		
@@ -140,7 +136,7 @@ public class SWTAlignmentArea extends Composite {
 		((Composite)labelArea.getToolkitComponent()).addControlListener(new ControlAdapter() {
 					@Override
 					public void controlResized(ControlEvent e) {
-						Dimension size = labelArea.getSize();
+						Dimension size = getIndependentComponent().getLabelArea().getSize();
   					int borderWidth = 2 * (labelContainer.getBorderWidth() + labelScroller.getBorderWidth());
 						GridData data = (GridData)labelContainer.getLayoutData();
 						data.widthHint = size.width + borderWidth;
@@ -152,46 +148,11 @@ public class SWTAlignmentArea extends Composite {
 	}
 
 
-	public AlignmentArea getOwner() {
-		return owner;
-	}
-
-
-	public DataAreaListType getPosition() {
-		return position;
-	}
-
-
-	public Composite getLabelContainer() {
-		return labelContainer;
-	}
-
-
-	public ScrolledComposite getLabelScroller() {
-		return labelScroller;
-	}
-
-
-	public AlignmentLabelArea getLabelArea() {
-		return labelArea;
-	}
-
-
-	public Composite getContentContainer() {
-		return contentContainer;
-	}
-
-
 	public ScrolledComposite getContentScroller() {
 		return contentScroller;
 	}
 
 
-	public SWTCoreAlignmentArea getContentArea() {
-		return contentArea;
-	}
-	
-	
 	public boolean isHideHorizontalScrollBars() {
 		return contentResizeListener.isHideHorizontalBar();
 	}
@@ -200,5 +161,63 @@ public class SWTAlignmentArea extends Composite {
 	public void setHideHorizontalScrollBars(boolean hide) {
 		labelResizeListener.setHideHorizontalBar(hide);
 		contentResizeListener.setHideHorizontalBar(hide);
+	}
+
+
+	@Override
+	public AlignmentArea getIndependentComponent() {
+		return owner;
+	}
+
+
+	@Override
+	public void repaint() {
+		redraw();
+	}
+
+
+	@Override
+	public int getHeight() {
+		return getSize().y;
+	}
+
+
+  @Override
+	public void setHideHorizontalScrollBar(boolean hideHorizontalScrollBar) {
+  	labelResizeListener.setHideHorizontalBar(hideHorizontalScrollBar);
+  	contentResizeListener.setHideHorizontalBar(hideHorizontalScrollBar);
+  }
+
+
+	@Override
+	public void scrollAlignmentRectToVisible(Rectangle rectangle) {
+		org.eclipse.swt.graphics.Point origin = getContentScroller().getOrigin();
+		Rectangle visibleRect = getVisibleAlignmentRect();
+		
+		int x = origin.x;  // Do not scroll
+		if (rectangle.x < visibleRect.x) {
+			x = rectangle.x;  // Scroll left
+		}
+		else if (rectangle.x + rectangle.width > visibleRect.x + visibleRect.width) {
+			x = rectangle.x + rectangle.width - visibleRect.width;  // Scroll right 
+		}
+		
+		int y = origin.y;  // Do not scroll
+		if (rectangle.y < visibleRect.y) {
+			y = rectangle.y;  // Scroll up
+		}
+		if (rectangle.y + rectangle.height > visibleRect.y + visibleRect.height) {
+			y = rectangle.y + rectangle.height - visibleRect.height;  // Scroll down
+		}
+		
+		getContentScroller().setOrigin(x, y);
+	}
+  
+  
+	@Override
+	public Rectangle getVisibleAlignmentRect() {
+		org.eclipse.swt.graphics.Rectangle clientArea = getContentScroller().getClientArea();
+		org.eclipse.swt.graphics.Point origin = getContentScroller().getOrigin();
+		return new Rectangle(origin.x, origin.y, clientArea.width, clientArea.height);
 	}
 }

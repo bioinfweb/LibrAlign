@@ -19,22 +19,48 @@
 package info.bioinfweb.libralign.alignmentareacomponents;
 
 
+import java.awt.Rectangle;
+
+import info.bioinfweb.commons.tic.toolkit.ToolkitComponent;
+import info.bioinfweb.libralign.AlignmentArea;
 import info.bioinfweb.libralign.AlignmentSubArea;
+import info.bioinfweb.libralign.MultipleAlignmentsContainer;
 import info.bioinfweb.libralign.dataarea.DataAreaList;
 
 
 
 /**
- * Interface implemented by all toolkit specific components displaying the top central of bottom part
- * of an alignment.
+ * Interface implemented by all toolkit specific components displaying the contents of an {@link AlignmentArea}.
  * 
  * @author Ben St&ouml;ver
  * @since 0.2.0
  */
-public interface ToolkitSpecificAlignmentArea {
+public interface ToolkitSpecificAlignmentArea extends ToolkitComponent {
 	public int getHeight();
 	
-	public void addDataAreaList(DataAreaList list);
-	
-	public AlignmentSubArea getAreaByY(int y);
+  /**
+   * Scrolls the contained components so that the specified rectangle is visible.
+   *  
+   * @param rectangle - the rectangle in the specified alignment that shall become visible
+   */
+  public void scrollAlignmentRectToVisible(Rectangle rectangle);
+
+  /**
+   * Returns the rectangle in pixels of the alignment (with associated data areas) that is visible in the current
+   * scroll container. 
+   * 
+   * @return a rectangle object
+   */
+  public Rectangle getVisibleAlignmentRect();
+  
+	/**
+	 * Determines whether a horizontal scroll bar should be displayed underneath this element. (In a 
+	 * {@link MultipleAlignmentsContainer} only the scroll bar of the bottom most alignment is displayed. If
+	 * you use an instance of {@link AlignmentArea} is used outside {@link MultipleAlignmentsContainer} you would
+	 * usually display a scroll bar.
+	 * 
+	 * @param hideHorizontalScrollBar - Specify {@link true} here to display a horizontal scroll bar and {@code false}
+	 *        otherwise
+	 */
+	public void setHideHorizontalScrollBar(boolean hideHorizontalScrollBar);
 }

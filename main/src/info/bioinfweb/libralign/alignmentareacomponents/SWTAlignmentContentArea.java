@@ -23,9 +23,11 @@ import info.bioinfweb.commons.Math2;
 import info.bioinfweb.commons.tic.TICComponent;
 import info.bioinfweb.commons.tic.toolkit.ToolkitComponent;
 import info.bioinfweb.libralign.AlignmentArea;
+import info.bioinfweb.libralign.AlignmentContentArea;
 import info.bioinfweb.libralign.AlignmentSubArea;
 import info.bioinfweb.libralign.dataarea.DataArea;
 import info.bioinfweb.libralign.dataarea.DataAreaList;
+import info.bioinfweb.libralign.dataarea.DataAreaModel;
 
 import java.awt.geom.Dimension2D;
 import java.util.Iterator;
@@ -46,9 +48,14 @@ import org.eclipse.swt.widgets.Control;
  * @author Ben St&ouml;ver
  * @since 0.2.0
  */
-public class SWTCoreAlignmentArea extends Composite implements ToolkitSpecificAlignmentArea {
-	public SWTCoreAlignmentArea(Composite parent, int style) {
-		super(parent, style);
+public class SWTAlignmentContentArea extends Composite implements ToolkitSpecificAlignmentContentArea {
+	private AlignmentContentArea independentComponent;
+	private SequenceAreaMap sequenceAreaMap;
+
+	
+	public SWTAlignmentContentArea(Composite parentComposite, int style, AlignmentContentArea independentComponent) {
+		super(parentComposite, style);
+		this.independentComponent = independentComponent;
 		
 		RowLayout rowLayout = new RowLayout();
 		rowLayout.wrap = false;
@@ -61,12 +68,21 @@ public class SWTCoreAlignmentArea extends Composite implements ToolkitSpecificAl
 		rowLayout.marginBottom = 0;
 		rowLayout.spacing = 0;
 		setLayout(rowLayout);
-	}
+
+		sequenceAreaMap = new SequenceAreaMap(getIndependentComponent());
+		reinsertSubelements();
+  }
 
 	
 	@Override
-	public int getHeight() {
-		return getSize().y;
+	public AlignmentContentArea getIndependentComponent() {
+		return independentComponent;
+	}
+
+
+	@Override
+	public void repaint() {
+		redraw();
 	}
 
 
@@ -120,4 +136,38 @@ public class SWTCoreAlignmentArea extends Composite implements ToolkitSpecificAl
 		}
 		return null;
 	}	
+
+
+	@Override
+	public void reinsertSubelements() {
+		DataAreaModel dataAreaModel = getIndependentComponent().getDataAreas();
+    removeAll();
+
+		addDataAreaList(dataAreaModel.getTopAreas());
+
+		Iterator<Integer> idIterator = getIndependentComponent().getSequenceOrder().getIdList().iterator();
+		while (idIterator.hasNext()) {
+			Integer id = idIterator.next();
+			sequenceAreaMap.get(id).createSWTWidget(this, SWT.NONE);
+			sequenceAreaMap.get(id).assignSize();
+			addDataAreaList(dataAreaModel.getSequenceAreas(id));
+		}
+
+		addDataAreaList(dataAreaModel.getBottomAreas());
+
+    assignSize();
+		//layout(true, true);  //TODO Necessary?
+	}
+
+	
+	@Override
+	public SequenceArea getSequenceAreaByID(int sequenceID) {
+		return sequenceAreaMap.get(sequenceID);
+	}
+
+
+	@Override
+	public int getHeight() {
+		return getSize().y;
+	}
 }

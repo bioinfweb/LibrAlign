@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package info.bioinfweb.libralign.alignmentareacomponents;
+package info.bioinfweb.libralign;
 
 
 import java.awt.Dimension;
@@ -32,7 +32,8 @@ import info.bioinfweb.commons.Math2;
 import info.bioinfweb.commons.graphics.FontCalculator;
 import info.bioinfweb.commons.tic.TICComponent;
 import info.bioinfweb.commons.tic.TICPaintEvent;
-import info.bioinfweb.libralign.AlignmentArea;
+import info.bioinfweb.libralign.alignmentareacomponents.ToolkitSpecificAlignmentArea;
+import info.bioinfweb.libralign.alignmentareacomponents.ToolkitSpecificAlignmentContentArea;
 import info.bioinfweb.libralign.dataarea.DataAreaListType;
 
 
@@ -48,8 +49,7 @@ public class AlignmentLabelArea extends TICComponent {
 	
 	
   private AlignmentArea owner;
-  private ToolkitSpecificAlignmentArea alignmentPartArea;
-  private DataAreaListType position;
+  private ToolkitSpecificAlignmentContentArea alignmentContentArea;
 	
 	
 	/**
@@ -59,21 +59,20 @@ public class AlignmentLabelArea extends TICComponent {
 	 * @param position - Specify here whether this area will be used to label the head, the content, or the 
 	 *        bottom part of the alignment area.
 	 */
-	public AlignmentLabelArea(AlignmentArea owner, DataAreaListType position) {
+	public AlignmentLabelArea(AlignmentArea owner) {
 		super();
 		this.owner = owner;
-		this.alignmentPartArea = null;
-		this.position = position;
+		this.alignmentContentArea = null;
 	}
 
 
-	public ToolkitSpecificAlignmentArea getAlignmentPartArea() {
-		return alignmentPartArea;
+	public ToolkitSpecificAlignmentContentArea getAlignmentContentArea() {
+		return alignmentContentArea;
 	}
 
 
-	public void setAlignmentPartArea(ToolkitSpecificAlignmentArea alignmentPartArea) {
-		this.alignmentPartArea = alignmentPartArea;
+	public void setAlignmentContentArea(ToolkitSpecificAlignmentContentArea alignmentContentArea) {
+		this.alignmentContentArea = alignmentContentArea;
 		assignSize();
 	}
 
@@ -89,26 +88,15 @@ public class AlignmentLabelArea extends TICComponent {
 
 
 	/**
-	 * Returns whether this area is used to label the head, the content, or the bottom part of the 
-	 * alignment area.
-	 * 
-	 * @return the position of this area
-	 */
-	public DataAreaListType getPosition() {
-		return position;
-	}
-
-
-	/**
 	 * Calculates the necessary with of the component depending on the maximal label length.
 	 */
 	private float calculateWidth() {
-		Font font = getOwner().getCompoundFont();
-		Iterator<Integer> idIterator = getOwner().getSequenceOrder().getIdList().iterator();
+		Font font = getOwner().getContentArea().getCompoundFont();
+		Iterator<Integer> idIterator = getOwner().getContentArea().getSequenceOrder().getIdList().iterator();
 		float maxLength = 0;
 		while (idIterator.hasNext()) {
 			maxLength = Math.max(maxLength, FontCalculator.getInstance().getWidth(font, 
-					getOwner().getSequenceProvider().sequenceNameByID(idIterator.next()))); 			
+					getOwner().getContentArea().getSequenceProvider().sequenceNameByID(idIterator.next()))); 			
 		}
 		return maxLength + 2 * BORDER_WIDTH;  //TODO Is the font for the correct zoom already set before this method is called?
   }
@@ -117,8 +105,8 @@ public class AlignmentLabelArea extends TICComponent {
 	@Override
 	public Dimension getSize() {
 		int height = 0;
-		if (getAlignmentPartArea() != null) {
-			height = getAlignmentPartArea().getHeight();
+		if (getAlignmentContentArea() != null) {
+			height = getAlignmentContentArea().getHeight();
 		}
 		return new Dimension(Math2.roundUp(calculateWidth()),	height);  // If references starting from owner would be used here, there would be problems in initialization order.
 	}
@@ -134,22 +122,24 @@ public class AlignmentLabelArea extends TICComponent {
 		g.setColor(SystemColor.menu);
 		g.fill(e.getRectangle());
 		
-		if (getPosition().equals(DataAreaListType.SEQUENCE)) {
+		if (getOwner().getContentArea().hasSequenceProvider()) {
 			// Set font:
 			g.setColor(SystemColor.menuText);
-			g.setFont(getOwner().getCompoundFont());
+			g.setFont(getOwner().getContentArea().getCompoundFont());
 			FontMetrics fm = g.getFontMetrics();
 			
 			// Paint labels:
-			Iterator<Integer> idIterator = getOwner().getSequenceOrder().getIdList().iterator();
+			Iterator<Integer> idIterator = getOwner().getContentArea().getSequenceOrder().getIdList().iterator();
 			int y = 0;
 			while (idIterator.hasNext()) {
 				int id = idIterator.next();
 				if (y > 0) {  // Do not draw a line at the top of the component.
 					g.draw(new Line2D.Float(0, y, getSize().width, y));
 				}
-		  	g.drawString(getOwner().getSequenceProvider().sequenceNameByID(id), BORDER_WIDTH, y + fm.getAscent());
-		  	y += getOwner().getCompoundHeight() + getOwner().getDataAreas().getSequenceAreas(id).getVisibleHeight();
+		  	g.drawString(getOwner().getContentArea().getSequenceProvider().sequenceNameByID(id), BORDER_WIDTH, 
+		  			y + fm.getAscent());
+		  	y += getOwner().getContentArea().getCompoundHeight() + 
+		  			getOwner().getContentArea().getDataAreas().getSequenceAreas(id).getVisibleHeight();
 			}
 		}
 	}	

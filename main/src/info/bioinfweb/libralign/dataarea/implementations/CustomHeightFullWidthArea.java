@@ -19,7 +19,7 @@
 package info.bioinfweb.libralign.dataarea.implementations;
 
 
-import info.bioinfweb.libralign.AlignmentArea;
+import info.bioinfweb.libralign.AlignmentContentArea;
 import info.bioinfweb.libralign.dataarea.DataArea;
 
 
@@ -41,7 +41,7 @@ public abstract class CustomHeightFullWidthArea extends DataArea {
 	 * @param owner - the alignment area that is going to contain this data area
 	 * @param height - the height of the component in pixels
 	 */
-	public CustomHeightFullWidthArea(AlignmentArea owner, int height) {
+	public CustomHeightFullWidthArea(AlignmentContentArea owner, int height) {
 		super(owner);
 		this.height = height;
 	}

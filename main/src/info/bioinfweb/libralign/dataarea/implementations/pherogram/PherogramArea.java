@@ -19,11 +19,9 @@
 package info.bioinfweb.libralign.dataarea.implementations.pherogram;
 
 
-import info.bioinfweb.commons.Math2;
 import info.bioinfweb.commons.collections.SimpleSequenceInterval;
 import info.bioinfweb.commons.tic.TICPaintEvent;
-import info.bioinfweb.libralign.AlignmentArea;
-import info.bioinfweb.libralign.dataarea.DataArea;
+import info.bioinfweb.libralign.AlignmentContentArea;
 import info.bioinfweb.libralign.dataarea.DataAreaListType;
 import info.bioinfweb.libralign.dataarea.implementations.CustomHeightFullWidthArea;
 import info.bioinfweb.libralign.pherogram.PherogramComponent;
@@ -67,7 +65,7 @@ public class PherogramArea extends CustomHeightFullWidthArea implements Pherogra
 	 * @param owner - the alignment area that will be containing the returned data area instance
 	 * @param pherogram - the provider for the pherogram data to be displayed by the returned instance
 	 */
-	public PherogramArea(AlignmentArea owner, PherogramProvider pherogram) {
+	public PherogramArea(AlignmentContentArea owner, PherogramProvider pherogram) {
 		super(owner, DEFAULT_HEIGHT_FACTOR * owner.getCompoundHeight());
 		this.pherogram = pherogram;
 		verticalScale = getHeight();

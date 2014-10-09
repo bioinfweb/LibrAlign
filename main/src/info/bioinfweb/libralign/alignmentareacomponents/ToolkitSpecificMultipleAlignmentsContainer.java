@@ -22,12 +22,12 @@ package info.bioinfweb.libralign.alignmentareacomponents;
 import java.awt.Rectangle;
 
 import info.bioinfweb.commons.tic.toolkit.ToolkitComponent;
-import info.bioinfweb.libralign.dataarea.DataAreaListType;
+import info.bioinfweb.libralign.MultipleAlignmentsContainer;
 
 
 
 /**
- * Common interface for toolkit specific components displaying a whole alignment area. 
+ * Common interface for toolkit specific components displaying the contents of a {@link MultipleAlignmentsContainer}. 
  * 
  * @author Ben St&ouml;ver
  * @since 0.2.0
@@ -37,41 +37,14 @@ public interface ToolkitSpecificMultipleAlignmentsContainer extends ToolkitCompo
 	 * Returns the contained toolkit specific component displaying the part of the alignment area
 	 * at the specified position.
 	 * 
-	 * @param position - the position of the alignment part area
-	 * @return an instance of {@link SwingAlignmentArea} or {@link SWTCoreAlignmentArea}
+   * @param alignmentIndex - the index of the alignment in this component
+	 * @return an instance of {@link SwingAlignmentArea} or {@link SWTAlignmentArea}
 	 */
-	public ToolkitSpecificAlignmentArea getPartArea(DataAreaListType position);
+	public ToolkitSpecificAlignmentArea getPartArea(int alignmentIndex);
 	
-  /**
-   * Recreates the components displaying sequences and data areas in the alignment according to
-   * the current model information. 
-   */
-  public void reinsertSubelements();	
-  
 	/**
 	 * Distributes the available height to the head, content, and bottom area. The previous distribution is not
 	 * considered.
 	 */
   public void redistributeHeight();
-  
-  /**
-   * Returns the {@link SequenceArea} inside this area that displays the sequence with the specified ID.
-   * 
-   * @param sequenceID - the ID of the sequence displayed in the returned area
-   * @return the GUI component or {@code null} if no sequence with the specified ID is displayed in this area
-   */
-  public SequenceArea getSequenceAreaByID(int sequenceID);
-  
-  /**
-   * Scrolls the contained components so that the specified rectangle is visible. 
-   */
-  public void scrollAlignmentRectToVisible(Rectangle rectangle);
-  
-  /**
-   * Returns the rectangle in pixels of the alignment (with associated data areas) that is visible in the current
-   * scroll container. 
-   * 
-   * @return a rectangle object
-   */
-  public Rectangle getVisibleAlignmentRect();
- }
+}

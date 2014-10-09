@@ -31,6 +31,7 @@ import info.bioinfweb.commons.tic.input.TICMouseAdapter;
 import info.bioinfweb.commons.tic.input.TICMouseEvent;
 import info.bioinfweb.commons.tic.input.TICMouseListener;
 import info.bioinfweb.libralign.AlignmentArea;
+import info.bioinfweb.libralign.AlignmentContentArea;
 import info.bioinfweb.libralign.selection.SelectionModel;
 import info.bioinfweb.libralign.sequenceprovider.SequenceDataProvider;
 
@@ -43,16 +44,16 @@ import info.bioinfweb.libralign.sequenceprovider.SequenceDataProvider;
  * @since 0.2.0
  */
 public class CursorSelectionInputListener extends TICMouseAdapter implements TICMouseListener, TICKeyListener {
-	private AlignmentArea owner;
+	private AlignmentContentArea owner;
 	
 	
-	public CursorSelectionInputListener(AlignmentArea owner) {
+	public CursorSelectionInputListener(AlignmentContentArea owner) {
 		super();
 		this.owner = owner;
 	}
 
 
-	public AlignmentArea getOwner() {
+	public AlignmentContentArea getOwner() {
 		return owner;
 	}
 	

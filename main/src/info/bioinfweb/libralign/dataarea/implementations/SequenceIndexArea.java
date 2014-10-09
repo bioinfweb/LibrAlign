@@ -33,6 +33,7 @@ import java.util.Set;
 import info.bioinfweb.commons.Math2;
 import info.bioinfweb.commons.tic.TICPaintEvent;
 import info.bioinfweb.libralign.AlignmentArea;
+import info.bioinfweb.libralign.AlignmentContentArea;
 import info.bioinfweb.libralign.dataarea.DataAreaListType;
 
 
@@ -80,7 +81,7 @@ public class SequenceIndexArea extends CustomHeightFullWidthArea {
 	 * 
 	 * @param owner - the alignment area that is going to contain this data area
 	 */
-	public SequenceIndexArea(AlignmentArea owner) {
+	public SequenceIndexArea(AlignmentContentArea owner) {
 		super(owner, owner.getCompoundHeight());
 	}
 

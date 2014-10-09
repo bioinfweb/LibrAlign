@@ -28,6 +28,7 @@ import java.awt.event.ComponentEvent;
 import java.util.Iterator;
 
 import info.bioinfweb.libralign.AlignmentArea;
+import info.bioinfweb.libralign.AlignmentLabelArea;
 import info.bioinfweb.libralign.dataarea.DataAreaListType;
 
 import javax.swing.AbstractAction;
@@ -47,14 +48,7 @@ import javax.swing.JSplitPane;
  * @since 0.1.0
  */
 public class SwingMultipleAlignmentsContainer extends JComponent implements ToolkitSpecificMultipleAlignmentsContainer {
-	private static Action VOID_ACTION = new AbstractAction() {
-				@Override
-				public void actionPerformed(ActionEvent e) {}
-			};
-	
-	
 	private AlignmentArea independentComponent;
-	private SequenceAreaMap sequenceAreaMap;
 	
 	private JScrollPane headScrollPane;
 	private JScrollPane contentScrollPane;
@@ -78,118 +72,81 @@ public class SwingMultipleAlignmentsContainer extends JComponent implements Tool
 	public SwingMultipleAlignmentsContainer(AlignmentArea independentComponent) {
 		super();
 		this.independentComponent = independentComponent;
-		sequenceAreaMap = new SequenceAreaMap(independentComponent);
 		initGUI();
 	}
 	
 	
-	@Override
-	public void scrollAlignmentRectToVisible(Rectangle rectangle) {
-		getContentArea().scrollRectToVisible(rectangle);
-	}
-
-
-	@Override
-	public Rectangle getVisibleAlignmentRect() {
-		return getContentArea().getVisibleRect();
-	}
-
-
-	/**
-	 * Removes the arrow key bindings, so that the alignment cursor can be moved with these keys instead without
-	 * scrolling.
-	 * 
-	 * @param scrollPane - the the scroll pane to remove the key bindings from
-	 */
-	private void removeArrowKeyBindings(JScrollPane scrollPane) {
-	  scrollPane.getActionMap().put("unitScrollLeft", VOID_ACTION);  // remove() does not work here.
-	  scrollPane.getActionMap().put("unitScrollUp", VOID_ACTION);
-		scrollPane.getActionMap().put("unitScrollRight", VOID_ACTION);
-	  scrollPane.getActionMap().put("unitScrollDown", VOID_ACTION);
-	}
-	
-	
-	private JScrollPane createScrollPane() {
-		JScrollPane result = new JScrollPane();
-		result.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
-		result.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
-		result.setBorder(null);
-		removeArrowKeyBindings(result);
-		return result;
-	}
-	
-	
 	private void initGUI() {
-		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
-		addComponentListener(new ComponentAdapter() {
-					@Override
-					public void componentResized(ComponentEvent e) {
-						redistributeHeight();
-						//TODO Implement distributeNewHeight() in future versions to save user defined splitter positions during resize
-					}
-				});
-		
-		headScrollPane = createScrollPane();
-		headArea = new SwingAlignmentArea();
-		headScrollPane.setViewportView(headArea);
-		headLabelArea = new AlignmentLabelArea(getIndependentComponent(), DataAreaListType.TOP); 
-		headLabelArea.setAlignmentPartArea(headArea);
-		headScrollPane.setRowHeaderView(headLabelArea.createSwingComponent());
-
-		contentScrollPane = createScrollPane();
-		contentArea = new SwingAlignmentArea();
-		contentScrollPane.setViewportView(contentArea);
-		contentLabelArea = new AlignmentLabelArea(getIndependentComponent(), DataAreaListType.SEQUENCE);
-		contentLabelArea.setAlignmentPartArea(contentArea);
-		contentScrollPane.setRowHeaderView(contentLabelArea.createSwingComponent());
-		
-		bottomScrollPane = createScrollPane();
-		bottomScrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
-		bottomArea = new SwingAlignmentArea();
-		bottomScrollPane.setViewportView(bottomArea);
-		bottomLabelArea = new AlignmentLabelArea(getIndependentComponent(), DataAreaListType.BOTTOM); 
-		bottomLabelArea.setAlignmentPartArea(bottomArea);
-		bottomScrollPane.setRowHeaderView(bottomLabelArea.createSwingComponent());
-		
-		AdjustmentListener listener = new AdjustmentListener() {
-					@Override
-					public void adjustmentValueChanged(AdjustmentEvent e) {
-						if (headScrollPane.getHorizontalScrollBar() != e.getSource()) {
-							headScrollPane.getHorizontalScrollBar().getModel().setValue(e.getValue());
-						}
-						if (contentScrollPane.getHorizontalScrollBar() != e.getSource()) {
-							contentScrollPane.getHorizontalScrollBar().getModel().setValue(e.getValue());
-						}
-						if (bottomScrollPane.getHorizontalScrollBar() != e.getSource()) {
-							bottomScrollPane.getHorizontalScrollBar().getModel().setValue(e.getValue());
-						}
-						// If the operation would only be performed outside valueIsAdjusting the other scroll panes 
-						// would not be moved while the scroll bar is dragged. 
-					}
-				};
-		headScrollPane.getHorizontalScrollBar().addAdjustmentListener(listener);
-		contentScrollPane.getHorizontalScrollBar().addAdjustmentListener(listener);
-		bottomScrollPane.getHorizontalScrollBar().addAdjustmentListener(listener);
-		// If one model for all scroll bars is set the scroll bar disappears after the first move. (TODO Why?)		
-		
-		topSplitPane = new JSplitPane();
-		topSplitPane.setOrientation(JSplitPane.VERTICAL_SPLIT);
-		
-		bottomSplitPane = new JSplitPane();
-		bottomSplitPane.setResizeWeight(1.0);
-		bottomSplitPane.setOrientation(JSplitPane.VERTICAL_SPLIT);
-		bottomSplitPane.setDividerSize(AlignmentArea.DIVIDER_WIDTH);
-
-		topSplitPane.setTopComponent(headScrollPane);
-		topSplitPane.setBottomComponent(bottomSplitPane);
-		topSplitPane.setDividerSize(AlignmentArea.DIVIDER_WIDTH);
-		
-		bottomSplitPane.setTopComponent(contentScrollPane);
-		bottomSplitPane.setBottomComponent(bottomScrollPane);
-
-		
-		reinsertSubelements();
-		add(topSplitPane);
+//		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
+//		addComponentListener(new ComponentAdapter() {
+//					@Override
+//					public void componentResized(ComponentEvent e) {
+//						redistributeHeight();
+//						//TODO Implement distributeNewHeight() in future versions to save user defined splitter positions during resize
+//					}
+//				});
+//		
+//		headScrollPane = createScrollPane();
+//		headArea = new SwingAlignmentArea();
+//		headScrollPane.setViewportView(headArea);
+//		headLabelArea = new AlignmentLabelArea(getIndependentComponent(), DataAreaListType.TOP); 
+//		headLabelArea.setAlignmentPartArea(headArea);
+//		headScrollPane.setRowHeaderView(headLabelArea.createSwingComponent());
+//
+//		contentScrollPane = createScrollPane();
+//		contentArea = new SwingAlignmentArea();
+//		contentScrollPane.setViewportView(contentArea);
+//		contentLabelArea = new AlignmentLabelArea(getIndependentComponent(), DataAreaListType.SEQUENCE);
+//		contentLabelArea.setAlignmentPartArea(contentArea);
+//		contentScrollPane.setRowHeaderView(contentLabelArea.createSwingComponent());
+//		
+//		bottomScrollPane = createScrollPane();
+//		bottomScrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+//		bottomArea = new SwingAlignmentArea();
+//		bottomScrollPane.setViewportView(bottomArea);
+//		bottomLabelArea = new AlignmentLabelArea(getIndependentComponent(), DataAreaListType.BOTTOM); 
+//		bottomLabelArea.setAlignmentPartArea(bottomArea);
+//		bottomScrollPane.setRowHeaderView(bottomLabelArea.createSwingComponent());
+//		
+//		AdjustmentListener listener = new AdjustmentListener() {
+//					@Override
+//					public void adjustmentValueChanged(AdjustmentEvent e) {
+//						if (headScrollPane.getHorizontalScrollBar() != e.getSource()) {
+//							headScrollPane.getHorizontalScrollBar().getModel().setValue(e.getValue());
+//						}
+//						if (contentScrollPane.getHorizontalScrollBar() != e.getSource()) {
+//							contentScrollPane.getHorizontalScrollBar().getModel().setValue(e.getValue());
+//						}
+//						if (bottomScrollPane.getHorizontalScrollBar() != e.getSource()) {
+//							bottomScrollPane.getHorizontalScrollBar().getModel().setValue(e.getValue());
+//						}
+//						// If the operation would only be performed outside valueIsAdjusting the other scroll panes 
+//						// would not be moved while the scroll bar is dragged. 
+//					}
+//				};
+//		headScrollPane.getHorizontalScrollBar().addAdjustmentListener(listener);
+//		contentScrollPane.getHorizontalScrollBar().addAdjustmentListener(listener);
+//		bottomScrollPane.getHorizontalScrollBar().addAdjustmentListener(listener);
+//		// If one model for all scroll bars is set the scroll bar disappears after the first move. (TODO Why?)		
+//		
+//		topSplitPane = new JSplitPane();
+//		topSplitPane.setOrientation(JSplitPane.VERTICAL_SPLIT);
+//		
+//		bottomSplitPane = new JSplitPane();
+//		bottomSplitPane.setResizeWeight(1.0);
+//		bottomSplitPane.setOrientation(JSplitPane.VERTICAL_SPLIT);
+//		bottomSplitPane.setDividerSize(AlignmentArea.DIVIDER_WIDTH);
+//
+//		topSplitPane.setTopComponent(headScrollPane);
+//		topSplitPane.setBottomComponent(bottomSplitPane);
+//		topSplitPane.setDividerSize(AlignmentArea.DIVIDER_WIDTH);
+//		
+//		bottomSplitPane.setTopComponent(contentScrollPane);
+//		bottomSplitPane.setBottomComponent(bottomScrollPane);
+//
+//		
+//		reinsertSubelements();
+//		add(topSplitPane);
 	}
 	
 	
@@ -239,46 +196,6 @@ public class SwingMultipleAlignmentsContainer extends JComponent implements Tool
 	}
 
 
-	@Override
-	public ToolkitSpecificAlignmentArea getPartArea(DataAreaListType position) {
-		switch (position) {
-			case TOP:
-				return getHeadArea();
-			case SEQUENCE:
-				return getContentArea();
-			default:
-				return getBottomArea();
-		}
-	}
-
-
-	@Override
-	public SequenceArea getSequenceAreaByID(int sequenceID) {
-		return sequenceAreaMap.get(sequenceID);
-	}
-
-
-	@Override
-	public void reinsertSubelements() {
-		// Head elements:
-		getHeadArea().removeAll();
-		getHeadArea().addDataAreaList(getIndependentComponent().getDataAreas().getTopAreas());
-		
-		// Content elements:
-		getContentArea().removeAll();
-		Iterator<Integer> idIterator = getIndependentComponent().getSequenceOrder().getIdList().iterator();
-		while (idIterator.hasNext()) {
-			Integer id = idIterator.next();
-			getContentArea().add(sequenceAreaMap.get(id).createSwingComponent());
-			getContentArea().addDataAreaList(getIndependentComponent().getDataAreas().getSequenceAreas(id));
-		}
-
-		// Bottom elements:
-		getBottomArea().removeAll();
-		getBottomArea().addDataAreaList(getIndependentComponent().getDataAreas().getBottomAreas());
-	}
-	
-
 //	@Override
 //	@Transient
 //	public Dimension getMinimumSize() {
@@ -294,6 +211,13 @@ public class SwingMultipleAlignmentsContainer extends JComponent implements Tool
 //			return super.getMinimumSize();
 //		}
 //	}
+
+
+	@Override
+	public ToolkitSpecificAlignmentArea getPartArea(int alignmentIndex) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 
 
   @Override
