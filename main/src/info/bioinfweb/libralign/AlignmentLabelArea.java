@@ -32,9 +32,7 @@ import info.bioinfweb.commons.Math2;
 import info.bioinfweb.commons.graphics.FontCalculator;
 import info.bioinfweb.commons.tic.TICComponent;
 import info.bioinfweb.commons.tic.TICPaintEvent;
-import info.bioinfweb.libralign.alignmentareacomponents.ToolkitSpecificAlignmentArea;
 import info.bioinfweb.libralign.alignmentareacomponents.ToolkitSpecificAlignmentContentArea;
-import info.bioinfweb.libralign.dataarea.DataAreaListType;
 
 
 
@@ -130,7 +128,7 @@ public class AlignmentLabelArea extends TICComponent {
 			
 			// Paint labels:
 			Iterator<Integer> idIterator = getOwner().getContentArea().getSequenceOrder().getIdList().iterator();
-			int y = 0;
+			int y = getOwner().getContentArea().getDataAreas().getTopAreas().getVisibleHeight();
 			while (idIterator.hasNext()) {
 				int id = idIterator.next();
 				if (y > 0) {  // Do not draw a line at the top of the component.
