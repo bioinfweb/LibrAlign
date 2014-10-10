@@ -28,6 +28,7 @@ import info.bioinfweb.commons.bio.biojava3.alignment.SimpleAlignment;
 import info.bioinfweb.commons.bio.biojava3.alignment.template.Alignment;
 import info.bioinfweb.commons.bio.biojava3.core.sequence.compound.AlignmentAmbiguityNucleotideCompoundSet;
 import info.bioinfweb.libralign.AlignmentArea;
+import info.bioinfweb.libralign.AlignmentContentArea;
 import info.bioinfweb.libralign.dataarea.implementations.ConsensusSequenceArea;
 import info.bioinfweb.libralign.dataarea.implementations.SequenceIndexArea;
 import info.bioinfweb.libralign.dataarea.implementations.charset.CharSet;
@@ -50,7 +51,7 @@ import org.biojava3.core.sequence.compound.NucleotideCompound;
  * @author Ben St&ouml;ver
  */
 public class AbstractTestApplication {
-	private CharSetArea createCharSetArea(AlignmentArea owner) {
+	private CharSetArea createCharSetArea(AlignmentContentArea owner) {
 		List<CharSet> model = new ArrayList<CharSet>(3);
 		
 		CharSet charSet = new CharSet("A", Color.RED);
@@ -99,25 +100,25 @@ public class AbstractTestApplication {
 							alignment);
 			
 			AlignmentArea result = new AlignmentArea();
-			result.setSequenceProvider(sequenceProvider, false);
-			SequenceIndexArea sequenceIndexArea = new SequenceIndexArea(result);
+			result.getContentArea().setSequenceProvider(sequenceProvider, false);
+			SequenceIndexArea sequenceIndexArea = new SequenceIndexArea(result.getContentArea());
 			//sequenceIndexArea.setFirstIndex(5);
 			//sequenceIndexArea.setHeight(25);
-			result.getDataAreas().getTopAreas().add(sequenceIndexArea);
+			result.getContentArea().getDataAreas().getTopAreas().add(sequenceIndexArea);
 			
-			result.getDataAreas().getTopAreas().add(createCharSetArea(result));
+			result.getContentArea().getDataAreas().getTopAreas().add(createCharSetArea(result.getContentArea()));
 			
-			PherogramArea pherogramArea = new PherogramArea(result, pherogramProvider);
+			PherogramArea pherogramArea = new PherogramArea(result.getContentArea(), pherogramProvider);
 			pherogramArea.setFirstSeqPos(34 + 5);
 			pherogramArea.setLeftCutPosition(34);
 			pherogramArea.setRightCutPosition(820);
 			pherogramArea.getAlignmentModel().setShiftChange(38, -1);
 			pherogramArea.getAlignmentModel().setShiftChange(49, 2);
-			result.getDataAreas().getSequenceAreas(sequenceProvider.sequenceIDByName("Sequence 4")).add(pherogramArea);
+			result.getContentArea().getDataAreas().getSequenceAreas(sequenceProvider.sequenceIDByName("Sequence 4")).add(pherogramArea);
 			
-			result.getDataAreas().getBottomAreas().add(new ConsensusSequenceArea(result));
+			result.getContentArea().getDataAreas().getBottomAreas().add(new ConsensusSequenceArea(result.getContentArea()));
 			
-			result.getSelection().setType(SelectionType.COLUMN_ONLY);
+			result.getContentArea().getSelection().setType(SelectionType.COLUMN_ONLY);
 			
 			return result;
 		}

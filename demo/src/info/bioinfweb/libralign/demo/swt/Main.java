@@ -1,6 +1,6 @@
 /*
  * LibrAlign - A GUI library for displaying and editing multiple sequence alignments and attached data
- * Copyright (C) 2014  Ben Stöver
+ * Copyright (C) 2014  Ben Stï¿½ver
  * <http://bioinfweb.info/LibrAlign>
  * 
  * This program is free software: you can redistribute it and/or modify
@@ -64,7 +64,7 @@ public class Main extends AbstractTestApplication {
 		createContents();
 		shell.open();
 		shell.layout();
-		alignmentArea.getToolkitComponent().redistributeHeight();
+		//alignmentArea.getToolkitComponent().redistributeHeight();
 		while (!shell.isDisposed()) {
 			if (!display.readAndDispatch()) {
 				display.sleep();
