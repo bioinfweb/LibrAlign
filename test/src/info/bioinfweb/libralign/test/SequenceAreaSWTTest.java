@@ -1,6 +1,6 @@
 /*
  * LibrAlign - A GUI library for displaying and editing multiple sequence alignments and attached data
- * Copyright (C) 2014  Ben Stöver
+ * Copyright (C) 2014  Ben Stï¿½ver
  * <http://bioinfweb.info/LibrAlign>
  * 
  * This program is free software: you can redistribute it and/or modify
@@ -80,8 +80,8 @@ public class SequenceAreaSWTTest extends AbstractTestApplication {
 		scrolledComposite.setExpandVertical(true);
 		
 		AlignmentArea alignmentArea = createAlignmentArea();
-		SequenceArea sequenceArea = new SequenceArea(alignmentArea, 
-				alignmentArea.getSequenceProvider().sequenceIDByName("Sequence 1"));
+		SequenceArea sequenceArea = new SequenceArea(alignmentArea.getContentArea(), 
+				alignmentArea.getContentArea().getSequenceProvider().sequenceIDByName("Sequence 1"));
 		
 		Composite sequenceComposite = sequenceArea.createSWTWidget(scrolledComposite, SWT.NONE);
 		scrolledComposite.setContent(sequenceComposite);

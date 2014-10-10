@@ -1,6 +1,6 @@
 /*
  * LibrAlign - A GUI library for displaying and editing multiple sequence alignments and attached data
- * Copyright (C) 2014  Ben Stöver
+ * Copyright (C) 2014  Ben Stï¿½ver
  * <http://bioinfweb.info/LibrAlign>
  * 
  * This program is free software: you can redistribute it and/or modify
@@ -49,11 +49,11 @@ public class SequenceOrderTest {
 		alignment.add("Sequence B", new DNASequence("ATG--CT"));
 		
 		AlignmentArea alignmentArea = new AlignmentArea();
-		alignmentArea.setSequenceProvider(new BioJavaSequenceDataProvider<DNASequence, NucleotideCompound>(
+		alignmentArea.getContentArea().setSequenceProvider(new BioJavaSequenceDataProvider<DNASequence, NucleotideCompound>(
 				new BioJavaTokenSet<NucleotideCompound>(
 						AlignmentAmbiguityNucleotideCompoundSet.getAlignmentAmbiguityNucleotideCompoundSet()),
 				alignment), false);
-		return new SequenceOrder(alignmentArea);
+		return new SequenceOrder(alignmentArea.getContentArea());
 	}
 	
 	

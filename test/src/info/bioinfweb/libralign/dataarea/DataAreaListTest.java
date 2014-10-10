@@ -1,6 +1,6 @@
 /*
  * LibrAlign - A GUI library for displaying and editing multiple sequence alignments and attached data
- * Copyright (C) 2014  Ben Stöver
+ * Copyright (C) 2014  Ben Stï¿½ver
  * <http://bioinfweb.info/LibrAlign>
  * 
  * This program is free software: you can redistribute it and/or modify
@@ -24,6 +24,7 @@ import static org.junit.Assert.* ;
 
 import info.bioinfweb.commons.tic.TICPaintEvent;
 import info.bioinfweb.libralign.AlignmentArea;
+import info.bioinfweb.libralign.AlignmentContentArea;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -54,7 +55,7 @@ public class DataAreaListTest {
   }
   
   
-  private DataArea createDataArea(AlignmentArea alignmentArea) {
+  private DataArea createDataArea(AlignmentContentArea alignmentArea) {
   	return new DataArea(alignmentArea) {
 						@Override
 						public void paint(TICPaintEvent event) {}
@@ -95,15 +96,15 @@ public class DataAreaListTest {
   public void test_events() {
   	List<DataAreaChangeEvent> eventList = new ArrayList<DataAreaChangeEvent>();
   	DataAreaList areaList = createList(eventList, DataAreaListType.TOP);
-  	AlignmentArea alignmentArea = new AlignmentArea();
+  	AlignmentContentArea alignmentContentArea = new AlignmentArea().getContentArea();
   	
-  	areaList.add(createDataArea(alignmentArea));
+  	areaList.add(createDataArea(alignmentContentArea));
   	assertEquals(1, eventList.size());
   	eventList.clear();
   	
   	Collection<DataArea> severalAreas = new ArrayList<DataArea>(4);
   	for (int i = 0; i < 4; i++) {
-    	severalAreas.add(createDataArea(alignmentArea));
+    	severalAreas.add(createDataArea(alignmentContentArea));
 		}
   	areaList.addAll(severalAreas);
   	assertEquals(1, eventList.size());  // Checks if several events have been produced.
@@ -144,11 +145,11 @@ public class DataAreaListTest {
   	// Produces assertions as long as DataArea.subList() does not have a special implementation.
   	List<DataAreaChangeEvent> eventList = new ArrayList<DataAreaChangeEvent>();
   	DataAreaList areaList = createList(eventList, DataAreaListType.TOP);
-  	AlignmentArea alignmentArea = new AlignmentArea();
+  	AlignmentContentArea alignmentContentArea = new AlignmentArea().getContentArea();
   	
   	Collection<DataArea> severalAreas = new ArrayList<DataArea>(4);
   	for (int i = 0; i < 4; i++) {
-    	severalAreas.add(createDataArea(alignmentArea));
+    	severalAreas.add(createDataArea(alignmentContentArea));
 		}
   	areaList.addAll(severalAreas);
   	eventList.clear();
