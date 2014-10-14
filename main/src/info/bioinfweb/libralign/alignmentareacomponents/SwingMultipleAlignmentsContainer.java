@@ -19,25 +19,13 @@
 package info.bioinfweb.libralign.alignmentareacomponents;
 
 
-import java.awt.Rectangle;
-import java.awt.event.ActionEvent;
-import java.awt.event.AdjustmentEvent;
-import java.awt.event.AdjustmentListener;
-import java.awt.event.ComponentAdapter;
-import java.awt.event.ComponentEvent;
-import java.util.Iterator;
+import java.util.ArrayList;
+import java.util.List;
 
-import info.bioinfweb.libralign.AlignmentArea;
-import info.bioinfweb.libralign.AlignmentLabelArea;
-import info.bioinfweb.libralign.dataarea.DataAreaListType;
+import info.bioinfweb.libralign.MultipleAlignmentsContainer;
 
-import javax.swing.AbstractAction;
-import javax.swing.Action;
 import javax.swing.JComponent;
-import javax.swing.BoxLayout;
 import javax.swing.JScrollPane;
-import javax.swing.ScrollPaneConstants;
-import javax.swing.JSplitPane;
 
 
 
@@ -48,19 +36,9 @@ import javax.swing.JSplitPane;
  * @since 0.1.0
  */
 public class SwingMultipleAlignmentsContainer extends JComponent implements ToolkitSpecificMultipleAlignmentsContainer {
-	private AlignmentArea independentComponent;
+	private MultipleAlignmentsContainer independentComponent;
 	
-	private JScrollPane headScrollPane;
-	private JScrollPane contentScrollPane;
-	private JScrollPane bottomScrollPane;
-	private JSplitPane topSplitPane;
-	private JSplitPane bottomSplitPane;
-	private SwingAlignmentArea headArea;
-	private SwingAlignmentArea contentArea;
-	private SwingAlignmentArea bottomArea;
-	private AlignmentLabelArea headLabelArea;
-	private AlignmentLabelArea contentLabelArea;
-	private AlignmentLabelArea bottomLabelArea;
+	private List<JScrollPane> scrollPanes = new ArrayList<JScrollPane>();
 	
 	
 	/**
@@ -69,7 +47,7 @@ public class SwingMultipleAlignmentsContainer extends JComponent implements Tool
 	 * @param independentComponent - the alignment area class that uses this instance to display its contents 
 	 *        in a Swing GUI
 	 */
-	public SwingMultipleAlignmentsContainer(AlignmentArea independentComponent) {
+	public SwingMultipleAlignmentsContainer(MultipleAlignmentsContainer independentComponent) {
 		super();
 		this.independentComponent = independentComponent;
 		initGUI();
@@ -150,48 +128,8 @@ public class SwingMultipleAlignmentsContainer extends JComponent implements Tool
 	}
 	
 	
-	public JScrollPane getHeadScrollPane() {
-		return headScrollPane;
-	}
-	
-	
-	public JScrollPane getContentScrollPane() {
-		return contentScrollPane;
-	}
-	
-	
-	public JScrollPane getBottomScrollPane() {
-		return bottomScrollPane;
-	}
-	
-	
-	public JSplitPane getTopSplitPane() {
-		return topSplitPane;
-	}
-	
-	
-	public JSplitPane getBottomSplitPane() {
-		return bottomSplitPane;
-	}
-
-
-	public SwingAlignmentArea getHeadArea() {
-		return headArea;
-	}
-
-
-	public SwingAlignmentArea getContentArea() {
-		return contentArea;
-	}
-
-
-	public SwingAlignmentArea getBottomArea() {
-		return bottomArea;
-	}
-
-
 	@Override
-	public AlignmentArea getIndependentComponent() {
+	public MultipleAlignmentsContainer getIndependentComponent() {
 		return independentComponent;
 	}
 
@@ -222,50 +160,50 @@ public class SwingMultipleAlignmentsContainer extends JComponent implements Tool
 
   @Override
 	public void redistributeHeight() {
-  	int overallHeight = headScrollPane.getViewport().getHeight() + 
-  			contentScrollPane.getViewport().getHeight() + bottomScrollPane.getViewport().getHeight();
-  	int neededHeight = headArea.getHeight() + contentArea.getHeight() + bottomArea.getHeight();
-		double headHeight = headArea.getHeight();
-		double contentHeight = contentArea.getHeight();
-		double bottomHeight = bottomArea.getHeight();
-		if (bottomScrollPane.getHorizontalScrollBar().isVisible()) {
-			overallHeight += bottomScrollPane.getHorizontalScrollBar().getHeight();
-			neededHeight += bottomScrollPane.getHorizontalScrollBar().getHeight();
-			bottomHeight += bottomScrollPane.getHorizontalScrollBar().getHeight();
-		}
-		
-  	if (overallHeight < neededHeight) {
-//  		if (getIndependentComponent().isScrollHeadArea()) {
+//  	int overallHeight = headScrollPane.getViewport().getHeight() + 
+//  			contentScrollPane.getViewport().getHeight() + bottomScrollPane.getViewport().getHeight();
+//  	int neededHeight = headArea.getHeight() + contentArea.getHeight() + bottomArea.getHeight();
+//		double headHeight = headArea.getHeight();
+//		double contentHeight = contentArea.getHeight();
+//		double bottomHeight = bottomArea.getHeight();
+//		if (bottomScrollPane.getHorizontalScrollBar().isVisible()) {
+//			overallHeight += bottomScrollPane.getHorizontalScrollBar().getHeight();
+//			neededHeight += bottomScrollPane.getHorizontalScrollBar().getHeight();
+//			bottomHeight += bottomScrollPane.getHorizontalScrollBar().getHeight();
+//		}
+//		
+//  	if (overallHeight < neededHeight) {
+////  		if (getIndependentComponent().isScrollHeadArea()) {
+////  			headHeight = 0;
+////  		}
+////  		if (getIndependentComponent().isScrollBottomArea()) {
+////  			bottomHeight = 0;
+////  		}
+//  		
+//  		if (headHeight + bottomHeight + AlignmentArea.MIN_PART_AREA_HEIGHT > overallHeight) {
 //  			headHeight = 0;
-//  		}
-//  		if (getIndependentComponent().isScrollBottomArea()) {
 //  			bottomHeight = 0;
 //  		}
-  		
-  		if (headHeight + bottomHeight + AlignmentArea.MIN_PART_AREA_HEIGHT > overallHeight) {
-  			headHeight = 0;
-  			bottomHeight = 0;
-  		}
-  		else {
-  			neededHeight -= (headHeight + bottomHeight);
-  		}
-  		
-  		double availableHeight = overallHeight - (headHeight + bottomHeight);
-  		double reduceFactor = (double)availableHeight / (double)neededHeight;
-  		if (headHeight == 0) {
-  			headHeight = headArea.getHeight() * reduceFactor;
-  		}
- 			contentHeight = contentArea.getHeight() * reduceFactor;
-  		if (bottomHeight == 0) {
-  			bottomHeight = bottomArea.getHeight() * reduceFactor;
-  			if (bottomScrollPane.getHorizontalScrollBar().isVisible()) {
-  				bottomHeight += bottomScrollPane.getHorizontalScrollBar().getHeight();
-  			}
-  		}
-  	}
-
-  	topSplitPane.setDividerLocation(headHeight / (double)overallHeight);
-		bottomSplitPane.setDividerLocation(contentHeight / (double)(overallHeight - headHeight));
+//  		else {
+//  			neededHeight -= (headHeight + bottomHeight);
+//  		}
+//  		
+//  		double availableHeight = overallHeight - (headHeight + bottomHeight);
+//  		double reduceFactor = (double)availableHeight / (double)neededHeight;
+//  		if (headHeight == 0) {
+//  			headHeight = headArea.getHeight() * reduceFactor;
+//  		}
+// 			contentHeight = contentArea.getHeight() * reduceFactor;
+//  		if (bottomHeight == 0) {
+//  			bottomHeight = bottomArea.getHeight() * reduceFactor;
+//  			if (bottomScrollPane.getHorizontalScrollBar().isVisible()) {
+//  				bottomHeight += bottomScrollPane.getHorizontalScrollBar().getHeight();
+//  			}
+//  		}
+//  	}
+//
+//  	topSplitPane.setDividerLocation(headHeight / (double)overallHeight);
+//		bottomSplitPane.setDividerLocation(contentHeight / (double)(overallHeight - headHeight));
 	}
 
 

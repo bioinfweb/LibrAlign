@@ -110,6 +110,18 @@ public class AlignmentArea extends TICComponent {
 
 
 	@Override
+	public SWTAlignmentArea createSWTWidget(Composite parent, int style) {
+		return (SWTAlignmentArea)super.createSWTWidget(parent, style);
+	}
+
+
+	@Override
+	public SwingAlignmentArea createSwingComponent() {
+		return (SwingAlignmentArea)super.createSwingComponent();
+	}
+
+
+	@Override
 	public ToolkitSpecificAlignmentArea getToolkitComponent() {
 		return (ToolkitSpecificAlignmentArea)super.getToolkitComponent();
 	}

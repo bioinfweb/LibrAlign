@@ -31,10 +31,8 @@ import org.eclipse.swt.widgets.Composite;
 
 import info.bioinfweb.commons.tic.TICComponent;
 import info.bioinfweb.commons.tic.TICPaintEvent;
-import info.bioinfweb.libralign.alignmentareacomponents.SWTAlignmentArea;
 import info.bioinfweb.libralign.alignmentareacomponents.SWTAlignmentContentArea;
 import info.bioinfweb.libralign.alignmentareacomponents.SequenceArea;
-import info.bioinfweb.libralign.alignmentareacomponents.SwingAlignmentArea;
 import info.bioinfweb.libralign.alignmentareacomponents.SwingAlignmentContentArea;
 import info.bioinfweb.libralign.alignmentareacomponents.ToolkitSpecificAlignmentArea;
 import info.bioinfweb.libralign.alignmentareacomponents.ToolkitSpecificAlignmentContentArea;

@@ -22,6 +22,7 @@ package info.bioinfweb.libralign.alignmentareacomponents;
 import org.eclipse.swt.custom.ScrolledComposite;
 import org.eclipse.swt.events.ControlEvent;
 import org.eclipse.swt.events.ControlListener;
+import org.eclipse.swt.events.TypedEvent;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Event;
@@ -75,7 +76,7 @@ public class SWTScrolledCompositeResizeListener implements ControlListener {
 
 	public void setHideHorizontalBar(boolean hideHorizontalBar) {
 		this.hideHorizontalBar = hideHorizontalBar;
-		controlResized(new ControlEvent(new Event()));  // Resize child components. (Event object is currently not used in controlResized().) 
+		controlResized(null);  // Resize child components. (Event object is currently not used in controlResized().) 
 	}
 
 
@@ -87,10 +88,14 @@ public class SWTScrolledCompositeResizeListener implements ControlListener {
 	public void controlResized(ControlEvent e) {
 		Rectangle bounds = container.getBounds();		
 		int width = bounds.width;
+		System.out.println(width + " " + isHideVerticalBar());
 		if (isHideVerticalBar()) {
 			width += scrolledComposite.getVerticalBar().getSize().x + scrolledComposite.getBorderWidth();
-		}		
-		scrolledComposite.setBounds(0, 0, width, 
-				bounds.height + scrolledComposite.getVerticalBar().getSize().x + scrolledComposite.getBorderWidth()); 
+		}
+		int height = bounds.height;
+		if (isHideHorizontalBar()) {
+			height += scrolledComposite.getVerticalBar().getSize().x + scrolledComposite.getBorderWidth(); 
+		}
+		scrolledComposite.setBounds(0, 0, width, height);
 	}
 }

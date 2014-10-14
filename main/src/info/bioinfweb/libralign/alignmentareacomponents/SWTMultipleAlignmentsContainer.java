@@ -22,6 +22,7 @@ package info.bioinfweb.libralign.alignmentareacomponents;
 import info.bioinfweb.commons.Math2;
 import info.bioinfweb.commons.swt.ScrolledCompositeSyncListener;
 import info.bioinfweb.libralign.AlignmentArea;
+import info.bioinfweb.libralign.MultipleAlignmentsContainer;
 import info.bioinfweb.libralign.dataarea.DataAreaListType;
 import info.bioinfweb.libralign.selection.AlignmentCursor;
 
@@ -47,14 +48,11 @@ import org.eclipse.swt.layout.FillLayout;
  * @since 0.2.0
  */
 public class SWTMultipleAlignmentsContainer extends Composite implements ToolkitSpecificMultipleAlignmentsContainer {
-	private AlignmentArea independentComponent;
+	private MultipleAlignmentsContainer independentComponent;
 	private SashForm sashForm;
-	private SWTAlignmentArea headComponent;
-	private SWTAlignmentArea contentComponent;
-	private SWTAlignmentArea bottomComponent;
 	
 
-	public SWTMultipleAlignmentsContainer(Composite parent, int style, AlignmentArea independentComponent) {
+	public SWTMultipleAlignmentsContainer(Composite parent, int style, MultipleAlignmentsContainer independentComponent) {
 		super(parent, style);
 		this.independentComponent = independentComponent;		
 		init();
@@ -63,31 +61,67 @@ public class SWTMultipleAlignmentsContainer extends Composite implements Toolkit
 	
 	private void init() {
 		super.setLayout(new FillLayout(SWT.HORIZONTAL));
-//		addControlListener(new ControlAdapter() {
-//					@Override
-//					public void controlResized(ControlEvent e) {
-//						redistributeHeight();
-//					}
-//				});
-//
-//		// Create components:
-//		sashForm = new SashForm(this, SWT.VERTICAL);
-//		sashForm.setSashWidth(AlignmentArea.DIVIDER_WIDTH);
-//		headComponent = new SWTAlignmentArea(getIndependentComponent(), sashForm, DataAreaListType.TOP, true);
-//		contentComponent = new SWTAlignmentArea(getIndependentComponent(), sashForm, DataAreaListType.SEQUENCE, true);
-//		bottomComponent = new SWTAlignmentArea(getIndependentComponent(), sashForm, DataAreaListType.BOTTOM, false);
-//		sashForm.setWeights(new int[]{1, 2, 1});  //TODO Adjust
-//		
-//		// Synchronize horizontal scrolling:
-//		ScrolledCompositeSyncListener horizontalSyncListener = new ScrolledCompositeSyncListener(
-//				new ScrolledComposite[]{headComponent.getContentScroller(), contentComponent.getContentScroller(), 
-//						bottomComponent.getContentScroller()}, true);
-//		horizontalSyncListener.registerToAll();
+		addControlListener(new ControlAdapter() {
+					@Override
+					public void controlResized(ControlEvent e) {
+						redistributeHeight();
+					}
+				});
+
+		// Create components:
+		sashForm = new SashForm(this, SWT.VERTICAL);
+		sashForm.setSashWidth(AlignmentArea.DIVIDER_WIDTH);
+		
+		SWTAlignmentArea area = null;
+		Iterator<AlignmentArea> iterator = getIndependentComponent().iterator();
+		while (iterator.hasNext()) {
+			area = iterator.next().createSWTWidget(sashForm, SWT.NONE);
+			//area.setHideHorizontalScrollBar(iterator.hasNext());  // Show scroll bar only in the lowest area.
+			//TODO Warum wird die Breite der LabelArea auf 23 reduziert, wenn das hier einkommentiert wird und sonst nicht? Hat es was mit Aufrufreihenfolge zu tun, wann die Größe der Kindkomponenten übernommen wird?
+		}
+		//sashForm.setWeights(new int[]{1, 2, 1});  //TODO Adjust
+		
+		// Synchronize horizontal scrolling:
+		ScrolledCompositeSyncListener horizontalSyncListener = 
+				ScrolledCompositeSyncListener.newLinkedInstance(getScrolledCompositeIterable(), true); 
+		horizontalSyncListener.registerToAll();
+	}
+	
+	
+	private Iterable<ScrolledComposite> getScrolledCompositeIterable() {
+		return new Iterable<ScrolledComposite>() {
+					@Override
+					public Iterator<ScrolledComposite> iterator() {
+						final Iterator<AlignmentArea> iterator = getIndependentComponent().iterator();
+						return new Iterator<ScrolledComposite>() {
+							@Override
+							public boolean hasNext() {
+								return iterator.hasNext();
+							}
+
+							@Override
+							public ScrolledComposite next() {
+								ToolkitSpecificAlignmentArea area = iterator.next().getToolkitComponent();
+								if (area instanceof SWTAlignmentArea) {
+									return ((SWTAlignmentArea)area).getContentScroller();
+								}
+								else {
+									throw new IllegalStateException("The current alignment area does not have a SWT toolkit component.");
+								}
+							}
+
+							@Override
+							public void remove() {
+								throw new UnsupportedOperationException("This iterator does not support the remove method.");
+							}
+						};
+					}
+				};
 	}
 
 
 	@Override
-	public AlignmentArea getIndependentComponent() {
+	public MultipleAlignmentsContainer getIndependentComponent() {
 		return independentComponent;
 	}
 

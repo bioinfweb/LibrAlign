@@ -153,17 +153,6 @@ public class SWTAlignmentArea extends Composite implements ToolkitSpecificAlignm
 	}
 
 
-	public boolean isHideHorizontalScrollBars() {
-		return contentResizeListener.isHideHorizontalBar();
-	}
-	
-	
-	public void setHideHorizontalScrollBars(boolean hide) {
-		labelResizeListener.setHideHorizontalBar(hide);
-		contentResizeListener.setHideHorizontalBar(hide);
-	}
-
-
 	@Override
 	public AlignmentArea getIndependentComponent() {
 		return owner;
@@ -182,6 +171,11 @@ public class SWTAlignmentArea extends Composite implements ToolkitSpecificAlignm
 	}
 
 
+	public boolean isHideHorizontalScrollBar() {
+		return contentResizeListener.isHideHorizontalBar();
+	}
+	
+	
   @Override
 	public void setHideHorizontalScrollBar(boolean hideHorizontalScrollBar) {
   	labelResizeListener.setHideHorizontalBar(hideHorizontalScrollBar);

@@ -19,9 +19,22 @@
 package info.bioinfweb.libralign;
 
 
+import java.awt.Dimension;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Iterator;
 import java.util.List;
+import java.util.ListIterator;
 
+import javax.swing.JComponent;
+
+import org.eclipse.swt.graphics.Point;
+import org.eclipse.swt.widgets.Composite;
+
+import info.bioinfweb.commons.tic.TICComponent;
+import info.bioinfweb.commons.tic.TICPaintEvent;
+import info.bioinfweb.libralign.alignmentareacomponents.SWTMultipleAlignmentsContainer;
+import info.bioinfweb.libralign.alignmentareacomponents.SwingMultipleAlignmentsContainer;
 import info.bioinfweb.libralign.dataarea.implementations.SequenceIndexArea;
 
 
@@ -39,46 +52,199 @@ import info.bioinfweb.libralign.dataarea.implementations.SequenceIndexArea;
  * @author Ben St&ouml;ver
  * @since 0.3.0
  */
-public class MultipleAlignmentsContainer {
+public class MultipleAlignmentsContainer extends TICComponent implements List<AlignmentArea> {
+	//TODO React to changes of the underlying list
 	private List<AlignmentArea> alignmentAreas = new ArrayList<AlignmentArea>();
 
 	
-	public boolean addArea(AlignmentArea e) {
+	@Override
+	protected Composite doCreateSWTWidget(Composite parent, int style) {
+		return new SWTMultipleAlignmentsContainer(parent, style, this);
+	}
+
+
+	@Override
+	protected JComponent doCreateSwingComponent() {
+		return new SwingMultipleAlignmentsContainer(this);
+	}
+
+
+	@Override
+	public SWTMultipleAlignmentsContainer createSWTWidget(Composite parent, int style) {
+		return (SWTMultipleAlignmentsContainer)super.createSWTWidget(parent, style);
+	}
+
+
+	@Override
+	public SwingMultipleAlignmentsContainer createSwingComponent() {
+		return (SwingMultipleAlignmentsContainer)super.createSwingComponent();
+	}
+
+
+	@Override
+	public Dimension getSize() {
+		switch (getCurrentToolkit()) {
+			case SWING:
+				return ((JComponent)getToolkitComponent()).getPreferredSize();  //TODO correct size?
+			case SWT:
+				Point point = ((Composite)getToolkitComponent()).getSize();
+				return new Dimension(point.x, point.y);
+			default:
+			  return new Dimension(0, 0);
+		}
+	}
+
+
+	@Override
+	public void paint(TICPaintEvent event) {}  // Remains empty because toolkit specific components are provided.
+
+
+	@Override
+	public boolean add(AlignmentArea e) {
 		return alignmentAreas.add(e);
 	}
 	
 
-	public void addArea(int index, AlignmentArea element) {
+	@Override
+	public void add(int index, AlignmentArea element) {
 		alignmentAreas.add(index, element);
 	}
 
 	
-	public boolean containsArea(AlignmentArea area) {
+	@Override
+	public boolean contains(Object area) {
 		return alignmentAreas.contains(area);
 	}
 
 	
-	public AlignmentArea getArea(int index) {
+	@Override
+	public AlignmentArea get(int index) {
 		return alignmentAreas.get(index);
 	}
 
 	
-	public int indexOfArea(Object o) {
+	@Override
+	public int indexOf(Object o) {
 		return alignmentAreas.indexOf(o);
 	}
 
 	
-	public AlignmentArea removeArea(int index) {
+	@Override
+	public AlignmentArea remove(int index) {
 		return alignmentAreas.remove(index);
 	}
 
 	
-	public boolean removeArea(AlignmentArea area) {
+	@Override
+	public boolean remove(Object area) {
 		return alignmentAreas.remove(area);
 	}
 	
 
-	public int areaCount() {
+	@Override
+	public int size() {
 		return alignmentAreas.size();
+	}
+
+
+	@Override
+	public ListIterator<AlignmentArea> listIterator() {
+		return alignmentAreas.listIterator();
+	}
+
+
+	@Override
+	public boolean addAll(Collection<? extends AlignmentArea> arg0) {
+		return alignmentAreas.addAll(arg0);
+	}
+
+
+	@Override
+	public boolean addAll(int index, Collection<? extends AlignmentArea> c) {
+		return alignmentAreas.addAll(index, c);
+	}
+
+
+	@Override
+	public void clear() {
+		alignmentAreas.clear();
+	}
+
+
+	@Override
+	public boolean containsAll(Collection<?> c) {
+		return alignmentAreas.containsAll(c);
+	}
+
+
+	@Override
+	public boolean equals(Object other) {
+		return alignmentAreas.equals(other);
+	}
+
+
+	@Override
+	public int hashCode() {
+		return alignmentAreas.hashCode();
+	}
+
+
+	@Override
+	public boolean isEmpty() {
+		return alignmentAreas.isEmpty();
+	}
+
+
+	@Override
+	public Iterator<AlignmentArea> iterator() {
+		return alignmentAreas.iterator();
+	}
+
+
+	@Override
+	public int lastIndexOf(Object element) {
+		return alignmentAreas.lastIndexOf(element);
+	}
+
+
+	@Override
+	public ListIterator<AlignmentArea> listIterator(int index) {
+		return alignmentAreas.listIterator(index);
+	}
+
+
+	@Override
+	public boolean removeAll(Collection<?> c) {
+		return alignmentAreas.removeAll(c);
+	}
+
+
+	@Override
+	public boolean retainAll(Collection<?> c) {
+		return alignmentAreas.retainAll(c);
+	}
+
+
+	@Override
+	public AlignmentArea set(int index, AlignmentArea element) {
+		return alignmentAreas.set(index, element);
+	}
+
+
+	@Override
+	public List<AlignmentArea> subList(int fromIndex, int toIndex) {
+		return alignmentAreas.subList(fromIndex, toIndex);
+	}
+
+
+	@Override
+	public Object[] toArray() {
+		return alignmentAreas.toArray();
+	}
+
+
+	@Override
+	public <T> T[] toArray(T[] array) {
+		return alignmentAreas.toArray(array);
 	}
 }
