@@ -182,3 +182,6 @@ test/src/info/bioinfweb/libralign/test/SashFormAdvanced.java -text svneol=unset#
 test/src/info/bioinfweb/libralign/test/SequenceAreaSWTTest.java -text svneol=unset#text/plain
 test/src/info/bioinfweb/libralign/test/alignmentareacomponents/SWTTest.java -text svneol=unset#text/plain
 test/src/info/bioinfweb/libralign/test/alignmentareacomponents/SwingTest.java -text svneol=unset#text/plain
+test/src/info/bioinfweb/libralign/test/multiplealignmentscontainer/AbstractApplication.java -text svneol=unset#text/plain
+test/src/info/bioinfweb/libralign/test/multiplealignmentscontainer/SWTApplication.java -text svneol=unset#text/plain
+test/src/info/bioinfweb/libralign/test/multiplealignmentscontainer/SwingApplication.java -text svneol=unset#text/plain
