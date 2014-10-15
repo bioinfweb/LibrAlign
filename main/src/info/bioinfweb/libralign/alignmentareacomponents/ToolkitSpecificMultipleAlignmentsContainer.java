@@ -43,6 +43,12 @@ public interface ToolkitSpecificMultipleAlignmentsContainer extends ToolkitCompo
 	public ToolkitSpecificAlignmentArea getPartArea(int alignmentIndex);
 	
 	/**
+	 * This method is used internally by {@link MultipleAlignmentsContainer} of the order or set of contained
+	 * alignment areas changes and these changes shall be reflected by the underlying GUI component.
+	 */
+	public void adoptChildAreas();
+	
+	/**
 	 * Distributes the available height to the head, content, and bottom area. The previous distribution is not
 	 * considered.
 	 */

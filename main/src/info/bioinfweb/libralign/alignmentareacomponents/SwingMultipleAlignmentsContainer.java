@@ -19,13 +19,17 @@
 package info.bioinfweb.libralign.alignmentareacomponents;
 
 
+import java.awt.event.AdjustmentEvent;
+import java.awt.event.AdjustmentListener;
 import java.util.ArrayList;
 import java.util.List;
 
 import info.bioinfweb.libralign.MultipleAlignmentsContainer;
 
+import javax.swing.BoxLayout;
 import javax.swing.JComponent;
-import javax.swing.JScrollPane;
+import javax.swing.JScrollBar;
+import javax.swing.JSplitPane;
 
 
 
@@ -36,9 +40,23 @@ import javax.swing.JScrollPane;
  * @since 0.1.0
  */
 public class SwingMultipleAlignmentsContainer extends JComponent implements ToolkitSpecificMultipleAlignmentsContainer {
+	private final AdjustmentListener SCROLL_SYNC_LISTENER = new AdjustmentListener() {
+				@Override
+				public void adjustmentValueChanged(AdjustmentEvent e) {
+					for (int i = 0; i < getIndependentComponent().size(); i++) {
+						JScrollBar scrollBar = getIndependentComponent().get(i).createSwingComponent().getHorizontalScrollBar(); 
+						if (scrollBar != e.getSource()) {
+							scrollBar.getModel().setValue(e.getValue());
+						}
+					}
+					// If the operation would only be performed outside valueIsAdjusting the other scroll panes 
+					// would not be moved while the scroll bar is dragged. 
+				}
+			};
+
+			
 	private MultipleAlignmentsContainer independentComponent;
-	
-	private List<JScrollPane> scrollPanes = new ArrayList<JScrollPane>();
+	private List<JSplitPane> splitPanes = new ArrayList<JSplitPane>();
 	
 	
 	/**
@@ -55,7 +73,7 @@ public class SwingMultipleAlignmentsContainer extends JComponent implements Tool
 	
 	
 	private void initGUI() {
-//		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
+		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 //		addComponentListener(new ComponentAdapter() {
 //					@Override
 //					public void componentResized(ComponentEvent e) {
@@ -63,71 +81,82 @@ public class SwingMultipleAlignmentsContainer extends JComponent implements Tool
 //						//TODO Implement distributeNewHeight() in future versions to save user defined splitter positions during resize
 //					}
 //				});
-//		
-//		headScrollPane = createScrollPane();
-//		headArea = new SwingAlignmentArea();
-//		headScrollPane.setViewportView(headArea);
-//		headLabelArea = new AlignmentLabelArea(getIndependentComponent(), DataAreaListType.TOP); 
-//		headLabelArea.setAlignmentPartArea(headArea);
-//		headScrollPane.setRowHeaderView(headLabelArea.createSwingComponent());
-//
-//		contentScrollPane = createScrollPane();
-//		contentArea = new SwingAlignmentArea();
-//		contentScrollPane.setViewportView(contentArea);
-//		contentLabelArea = new AlignmentLabelArea(getIndependentComponent(), DataAreaListType.SEQUENCE);
-//		contentLabelArea.setAlignmentPartArea(contentArea);
-//		contentScrollPane.setRowHeaderView(contentLabelArea.createSwingComponent());
-//		
-//		bottomScrollPane = createScrollPane();
-//		bottomScrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
-//		bottomArea = new SwingAlignmentArea();
-//		bottomScrollPane.setViewportView(bottomArea);
-//		bottomLabelArea = new AlignmentLabelArea(getIndependentComponent(), DataAreaListType.BOTTOM); 
-//		bottomLabelArea.setAlignmentPartArea(bottomArea);
-//		bottomScrollPane.setRowHeaderView(bottomLabelArea.createSwingComponent());
-//		
-//		AdjustmentListener listener = new AdjustmentListener() {
-//					@Override
-//					public void adjustmentValueChanged(AdjustmentEvent e) {
-//						if (headScrollPane.getHorizontalScrollBar() != e.getSource()) {
-//							headScrollPane.getHorizontalScrollBar().getModel().setValue(e.getValue());
-//						}
-//						if (contentScrollPane.getHorizontalScrollBar() != e.getSource()) {
-//							contentScrollPane.getHorizontalScrollBar().getModel().setValue(e.getValue());
-//						}
-//						if (bottomScrollPane.getHorizontalScrollBar() != e.getSource()) {
-//							bottomScrollPane.getHorizontalScrollBar().getModel().setValue(e.getValue());
-//						}
-//						// If the operation would only be performed outside valueIsAdjusting the other scroll panes 
-//						// would not be moved while the scroll bar is dragged. 
-//					}
-//				};
-//		headScrollPane.getHorizontalScrollBar().addAdjustmentListener(listener);
-//		contentScrollPane.getHorizontalScrollBar().addAdjustmentListener(listener);
-//		bottomScrollPane.getHorizontalScrollBar().addAdjustmentListener(listener);
-//		// If one model for all scroll bars is set the scroll bar disappears after the first move. (TODO Why?)		
-//		
-//		topSplitPane = new JSplitPane();
-//		topSplitPane.setOrientation(JSplitPane.VERTICAL_SPLIT);
-//		
-//		bottomSplitPane = new JSplitPane();
-//		bottomSplitPane.setResizeWeight(1.0);
-//		bottomSplitPane.setOrientation(JSplitPane.VERTICAL_SPLIT);
-//		bottomSplitPane.setDividerSize(AlignmentArea.DIVIDER_WIDTH);
-//
-//		topSplitPane.setTopComponent(headScrollPane);
-//		topSplitPane.setBottomComponent(bottomSplitPane);
-//		topSplitPane.setDividerSize(AlignmentArea.DIVIDER_WIDTH);
-//		
-//		bottomSplitPane.setTopComponent(contentScrollPane);
-//		bottomSplitPane.setBottomComponent(bottomScrollPane);
-//
-//		
-//		reinsertSubelements();
-//		add(topSplitPane);
+		
+		adoptChildAreas();
 	}
 	
 	
+	/**
+	 * Creates the specified number of nested split panes. (If the list contains more split panes than {@code count}
+	 * the additional ones are removed.)
+	 * 
+	 * @param count - the number of split panes to be created
+	 */
+	private void createSplitPanes(int count) {
+		if (splitPanes.size() < count) {
+			count -= splitPanes.size();
+			for (int i = 0; i < count; i++) {
+				splitPanes.add(new JSplitPane(JSplitPane.VERTICAL_SPLIT));
+			}
+		}
+		else if (splitPanes.size() > count) {
+			count = splitPanes.size() - count;
+			for (int i = 0; i < count; i++) {
+				splitPanes.remove(splitPanes.size() - 1);
+			}
+		}
+		
+		for (int i = 0; i < splitPanes.size() - 1; i++) {
+			JSplitPane splitPane = splitPanes.get(i);
+			splitPane.setTopComponent(null);  //TODO necessary?
+			splitPane.setBottomComponent(splitPanes.get(i + 1));
+		}
+
+		JSplitPane splitPane = splitPanes.get(splitPanes.size() - 1);
+		splitPane.setTopComponent(null);  //TODO necessary?
+		splitPane.setBottomComponent(null);
+	}
+	
+	
+	@Override
+	public void adoptChildAreas() {
+		// Remove components and listeners:
+		removeAll();
+		for (int i = 0; i < getIndependentComponent().size(); i++) {
+			getIndependentComponent().get(i).createSwingComponent().getHorizontalScrollBar().removeAdjustmentListener(
+					SCROLL_SYNC_LISTENER); 
+		}		
+		
+		// Create split panes and add components:
+		if (getIndependentComponent().size() > 1) {
+		  createSplitPanes(getIndependentComponent().size() - 1);
+		  for (int i = 0; i < splitPanes.size() - 1; i++) {
+				splitPanes.get(i).setTopComponent(getIndependentComponent().get(i).createSwingComponent());
+			}
+		  
+		  JSplitPane lastSplitPane = splitPanes.get(splitPanes.size() - 1);
+		  lastSplitPane.setTopComponent(
+		  		getIndependentComponent().get(getIndependentComponent().size() - 2).createSwingComponent());
+		  lastSplitPane.setBottomComponent(
+		  		getIndependentComponent().get(getIndependentComponent().size() - 1).createSwingComponent());
+		  
+		  add(splitPanes.get(0));
+		}
+		else {
+			splitPanes.clear();
+			if (getIndependentComponent().size() == 1) {
+				add(getIndependentComponent().get(0).createSwingComponent());
+		  }
+		}
+
+		// Add scroll synchronize listeners:
+		for (int i = 0; i < getIndependentComponent().size(); i++) {
+			getIndependentComponent().get(i).createSwingComponent().getHorizontalScrollBar().addAdjustmentListener(
+					SCROLL_SYNC_LISTENER); 
+		}		
+	}
+
+
 	@Override
 	public MultipleAlignmentsContainer getIndependentComponent() {
 		return independentComponent;

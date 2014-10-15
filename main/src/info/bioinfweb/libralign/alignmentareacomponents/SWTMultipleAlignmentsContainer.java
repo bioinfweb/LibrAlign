@@ -67,7 +67,18 @@ public class SWTMultipleAlignmentsContainer extends Composite implements Toolkit
 						redistributeHeight();
 					}
 				});
+		
+		adoptChildAreas();
 
+		// Synchronize horizontal scrolling:
+		ScrolledCompositeSyncListener horizontalSyncListener = 
+				ScrolledCompositeSyncListener.newLinkedInstance(getScrolledCompositeIterable(), true); 
+		horizontalSyncListener.registerToAll();
+	}
+	
+	
+	@Override
+	public void adoptChildAreas() {
 		// Create components:
 		sashForm = new SashForm(this, SWT.VERTICAL);
 		sashForm.setSashWidth(AlignmentArea.DIVIDER_WIDTH);
@@ -80,14 +91,9 @@ public class SWTMultipleAlignmentsContainer extends Composite implements Toolkit
 			//TODO Warum wird die Breite der LabelArea auf 23 reduziert, wenn das hier einkommentiert wird und sonst nicht? Hat es was mit Aufrufreihenfolge zu tun, wann die Größe der Kindkomponenten übernommen wird?
 		}
 		//sashForm.setWeights(new int[]{1, 2, 1});  //TODO Adjust
-		
-		// Synchronize horizontal scrolling:
-		ScrolledCompositeSyncListener horizontalSyncListener = 
-				ScrolledCompositeSyncListener.newLinkedInstance(getScrolledCompositeIterable(), true); 
-		horizontalSyncListener.registerToAll();
 	}
-	
-	
+
+
 	private Iterable<ScrolledComposite> getScrolledCompositeIterable() {
 		return new Iterable<ScrolledComposite>() {
 					@Override
