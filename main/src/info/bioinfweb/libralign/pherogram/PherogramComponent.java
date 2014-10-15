@@ -37,11 +37,35 @@ public interface PherogramComponent {
 	 */
 	public PherogramProvider getProvider();
 	
-	/**
-	 * Returns the horizontal zoom factor that is currently used for displaying the trace curves.
-	 * 
-	 * @return a floating point value greater than zero
-	 */
+//	/**
+//	 * Returns if the vertical scale is calculated automatically depending on the currently visible part
+//	 * of the trace curve.
+//	 * 
+//	 * @return {@code true} if the scale is calculated automatically depending on the currently visible part,
+//	 *         {@code false} if a constant value independent from the current view is returned by 
+//	 *         {@link #getVerticalScale(int, int)}. 
+//	 */
+//	public boolean isAutoVerticalScale();
+//	
+//	/**
+//	 * Allows to specify if the vertical scale shall be calculated automatically depending on the currently 
+//	 * visible part of the trace curve or a constant value should be used.
+//	 * 
+//	 * @param value - Specify {@code true} here, if the scale shall be calculated view dependent, or {@code false}
+//	 *        to use a constant value.
+//	 */
+//	public void setAutoVerticalScale(boolean value);
+	
+//	/**
+//	 * Returns the horizontal zoom factor that is currently used for displaying the trace curves. The values
+//	 * of the parameters {@code firstBaseCallIndex} and {@code lastBaseCallIndex} are only used if
+//	 * {@link PherogramComponent#isAutoVerticalScale()} is {@code true}.
+//	 * 
+//	 * @param firstBaseCallIndex - the index of the first base call position that is currently displayed
+//	 * @param lastBaseCallIndex - the index of the first base call position that is currently displayed
+//	 * @return a floating point value greater than zero
+//	 */
+//	public double getVerticalScale(int firstBaseCallIndex, int lastBaseCallIndex);
 	public double getVerticalScale();
 	
 	/**
