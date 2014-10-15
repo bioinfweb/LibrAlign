@@ -55,6 +55,7 @@ main/src/info/bioinfweb/libralign/dataarea/implementations/CustomHeightFullWidth
 main/src/info/bioinfweb/libralign/dataarea/implementations/SequenceIndexArea.java -text svneol=unset#text/plain
 main/src/info/bioinfweb/libralign/dataarea/implementations/charset/CharSet.java -text svneol=unset#text/plain
 main/src/info/bioinfweb/libralign/dataarea/implementations/charset/CharSetArea.java -text svneol=unset#text/plain
+main/src/info/bioinfweb/libralign/dataarea/implementations/charset/CharSetNameArea.java -text svneol=unset#text/plain
 main/src/info/bioinfweb/libralign/dataarea/implementations/package-info.java -text svneol=unset#text/plain
 main/src/info/bioinfweb/libralign/dataarea/implementations/pherogram/PherogramAlignmentModel.java -text svneol=unset#text/plain
 main/src/info/bioinfweb/libralign/dataarea/implementations/pherogram/PherogramAlignmentRelation.java -text svneol=unset#text/plain
