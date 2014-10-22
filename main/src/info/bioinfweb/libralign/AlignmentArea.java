@@ -43,20 +43,53 @@ import info.bioinfweb.libralign.alignmentareacomponents.ToolkitSpecificAlignment
  */
 public class AlignmentArea extends TICComponent {
 	/** Defines the width of the divider of the GUI components for the head, content, and bottom area. */ 
-	public static int DIVIDER_WIDTH = 2;
+	public static final int DIVIDER_WIDTH = 2;
 	public static final int MIN_PART_AREA_HEIGHT = 5;
 	
 	
+	private MultipleAlignmentsContainer container = null;
 	private AlignmentContentArea alignmentContentArea;
 	private AlignmentLabelArea alignmentLabelArea;
 	private boolean allowVerticalScrolling = true;
 	private Rectangle lastCursorRectangle = null;
 	
 	
+	/**
+	 * Creates a new instance of this class that shall not part of a {@link MultipleAlignmentsContainer}.
+	 * <p>
+	 * If you want to create an alignment area that shall be inserted into a {@link MultipleAlignmentsContainer}
+	 * use {@link #AlignmentArea(MultipleAlignmentsContainer)} instead.
+	 */
 	public AlignmentArea() {
+		this(null);
+	}
+	
+	
+	/**
+	 * Creates a new instance of this class to be inserted into a {@link MultipleAlignmentsContainer}.
+	 * 
+	 * @param container - the container where the returned instance will be contained in
+	 */
+	public AlignmentArea(MultipleAlignmentsContainer container) {
 		super();
+		this.container = container;
 		alignmentContentArea = new AlignmentContentArea(this);
 		alignmentLabelArea = new AlignmentLabelArea(this);
+	}
+
+
+	/**
+	 * Returns the container this object is contained in.
+	 * 
+	 * @return the container instance or {@code null} if this instance is used as a stand-alone component.
+	 */
+	public MultipleAlignmentsContainer getContainer() {
+		return container;
+	}
+	
+	
+	public boolean hasContainer() {
+		return getContainer() != null;
 	}
 
 

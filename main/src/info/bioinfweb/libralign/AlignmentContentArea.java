@@ -42,6 +42,8 @@ import info.bioinfweb.libralign.dataarea.DataAreaListType;
 import info.bioinfweb.libralign.dataarea.DataAreaLocation;
 import info.bioinfweb.libralign.dataarea.DataAreaModel;
 import info.bioinfweb.libralign.dataarea.DataAreaModelListener;
+import info.bioinfweb.libralign.editsettings.EditSettings;
+import info.bioinfweb.libralign.editsettings.WorkingMode;
 import info.bioinfweb.libralign.selection.SelectionChangeEvent;
 import info.bioinfweb.libralign.selection.SelectionListener;
 import info.bioinfweb.libralign.selection.SelectionModel;
@@ -79,7 +81,7 @@ public class AlignmentContentArea extends TICComponent implements SequenceDataCh
 	private SequenceDataProvider<?> sequenceProvider = null;
 	private SequenceOrder sequenceOrder = new SequenceOrder(this);
 	private SequenceColorSchema colorSchema = new SequenceColorSchema();
-	private WorkingMode workingMode = WorkingMode.VIEW;  //TODO Should this better be part of the controller (key and mouse listener)?
+	private EditSettings editSettings;
 	private AlignmentDataViewMode viewMode = AlignmentDataViewMode.NUCLEOTIDE;  //TODO Initial value should be adjusted when the data type of the specified provider is known.
 	private SelectionModel selection = new SelectionModel(this);
 	private DataAreaModel dataAreas = new DataAreaModel();
@@ -90,9 +92,23 @@ public class AlignmentContentArea extends TICComponent implements SequenceDataCh
 	private Font compoundFont = new Font(Font.SANS_SERIF, Font.PLAIN, Math.round(COMPOUND_HEIGHT * 0.7f));
 	
 	
+	/**
+	 * Creates a new instance of this class.
+	 * <p>
+	 * If {@code code} is part of a {@link MultipleAlignmentsContainer} the shared edit settings of this container
+	 * will automatically be used by the returned instance.
+	 * 
+	 * @param owner - the alignment area component that will be containing the return instance
+	 */
 	public AlignmentContentArea(AlignmentArea owner) {
 		super();
 		this.owner = owner;
+		if (owner.hasContainer()) {
+			editSettings = owner.getContainer().getEditSettings();
+		}
+		else {
+			editSettings = new EditSettings();
+		}
 
 		dataAreas.addListener(new DataAreaModelListener() {
 			@Override
@@ -191,16 +207,11 @@ public class AlignmentContentArea extends TICComponent implements SequenceDataCh
 	}
 
 
-	public WorkingMode getWorkingMode() {
-		return workingMode;
+	public EditSettings getEditSettings() {
+		return editSettings;
 	}
-	
-	
-	public void setWorkingMode(WorkingMode workingMode) {
-		this.workingMode = workingMode;
-	}
-	
-	
+
+
 	public AlignmentDataViewMode getViewMode() {
 		return viewMode;
 	}

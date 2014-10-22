@@ -36,6 +36,7 @@ import info.bioinfweb.commons.tic.TICPaintEvent;
 import info.bioinfweb.libralign.alignmentareacomponents.SWTMultipleAlignmentsContainer;
 import info.bioinfweb.libralign.alignmentareacomponents.SwingMultipleAlignmentsContainer;
 import info.bioinfweb.libralign.dataarea.implementations.SequenceIndexArea;
+import info.bioinfweb.libralign.editsettings.EditSettings;
 
 
 
@@ -54,9 +55,21 @@ import info.bioinfweb.libralign.dataarea.implementations.SequenceIndexArea;
  */
 public class MultipleAlignmentsContainer extends TICComponent implements List<AlignmentArea> {
 	//TODO React to changes of the underlying list
+	//TODO Throw exceptions if an alignment area that is not linked to this container is inserted also in complex methods and iterators.
 	private List<AlignmentArea> alignmentAreas = new ArrayList<AlignmentArea>();
+	private EditSettings editSettings = new EditSettings();
 
 	
+	/**
+	 * Returns the edit settings that are shared among all contained alignment areas.
+	 * 
+	 * @return the edit settings object
+	 */
+	public EditSettings getEditSettings() {
+		return editSettings;
+	}
+
+
 	@Override
 	protected Composite doCreateSWTWidget(Composite parent, int style) {
 		return new SWTMultipleAlignmentsContainer(parent, style, this);
@@ -98,15 +111,24 @@ public class MultipleAlignmentsContainer extends TICComponent implements List<Al
 	@Override
 	public void paint(TICPaintEvent event) {}  // Remains empty because toolkit specific components are provided.
 
+	
+	private void checkContainer(AlignmentArea alignmentArea) {
+		if (alignmentArea.getContainer() != this) {
+			throw new IllegalArgumentException("The alignment area to be inserted does not reference this instance as its container.");
+		}
+	}
+	
 
 	@Override
 	public boolean add(AlignmentArea e) {
+		checkContainer(e);
 		return alignmentAreas.add(e);
 	}
 	
 
 	@Override
 	public void add(int index, AlignmentArea element) {
+		checkContainer(element);
 		alignmentAreas.add(index, element);
 	}
 

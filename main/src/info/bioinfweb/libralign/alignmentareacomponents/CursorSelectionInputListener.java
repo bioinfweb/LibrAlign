@@ -197,13 +197,13 @@ public class CursorSelectionInputListener extends TICMouseAdapter implements TIC
 					selection.setNewCursorColumn(provider.getMaxSequenceLength());
 				}
 				break;
-			case KeyEvent.VK_INSERT:
-				//TODO Ins-Flag setzen (Wie kann man das bei einer AlignmentArea und gleichzeitig global für einen MultipleAlignmentsContainer erreichen?)
+			case KeyEvent.VK_INSERT:  //TODO Allow to do something different on that key = unbind this event.
+				getOwner().getEditSettings().changeInsert();
 				break;
-			case KeyEvent.VK_DELETE:  //TODO Replace by non static KeyBindings in future versions (at least allow to do something different on that key = unbind this event).
+			case KeyEvent.VK_DELETE:  //TODO Allow to do something different on that key = unbind this event.
 				actionProvider.deleteForward();
 				break;
-			case KeyEvent.VK_BACK_SPACE:  //TODO Replace by non static KeyBindings in future versions (at least allow to do something different on that key = unbind this event).
+			case KeyEvent.VK_BACK_SPACE:  //TODO Allow to do something different on that key = unbind this event.
 				actionProvider.deleteBackwards();
 				break;
 			default:
@@ -214,11 +214,13 @@ public class CursorSelectionInputListener extends TICMouseAdapter implements TIC
 					Object token = provider.getTokenSet().tokenByKeyChar(event.getKeyCharacter());
 					//System.out.println(event.getKeyCharacter() + " " + token);
 					if (token != null) {
-						//actionProvider.overwriteWithToken(token);
-						actionProvider.insertToken(token);
+						if (getOwner().getEditSettings().isInsert()) {
+							actionProvider.insertToken(token);
+						}
+						else {
+							actionProvider.overwriteWithToken(token);
+						}
 					}
-					
-					//TODO Delegate to TokenSet for inserting new tokens here
 				}
 				break;
 		}
