@@ -51,7 +51,7 @@ public class SequenceOrderTest {
 		AlignmentArea alignmentArea = new AlignmentArea();
 		alignmentArea.getContentArea().setSequenceProvider(new BioJavaSequenceDataProvider<DNASequence, NucleotideCompound>(
 				new BioJavaTokenSet<NucleotideCompound>(
-						AlignmentAmbiguityNucleotideCompoundSet.getAlignmentAmbiguityNucleotideCompoundSet()),
+						AlignmentAmbiguityNucleotideCompoundSet.getAlignmentAmbiguityNucleotideCompoundSet(), true),
 				alignment), false);
 		return new SequenceOrder(alignmentArea.getContentArea());
 	}
