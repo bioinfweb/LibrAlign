@@ -367,7 +367,6 @@ public class SelectionModel {
 	 * Informs all listeners that the selection changed.
 	 */
 	protected void fireSelectionChanged() {
-		System.out.println("SelectionModel.fireSelectionChanged()");
 		Iterator<SelectionListener> iterator = selectionListeners.iterator();
 		SelectionChangeEvent e = new SelectionChangeEvent(this);
 		while (iterator.hasNext()) {
