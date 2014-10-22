@@ -37,6 +37,12 @@ import javax.swing.Scrollable;
 
 
 
+/**
+ * The Swing component displaying a {@link AlignmentContentArea}.
+ * 
+ * @author Ben St&ouml;ver
+ * @since 0.3.0
+ */
 public class SwingAlignmentContentArea extends JComponent implements Scrollable, ToolkitSpecificAlignmentContentArea {
   private AlignmentContentArea independentComponent;
 	private SequenceAreaMap sequenceAreaMap;

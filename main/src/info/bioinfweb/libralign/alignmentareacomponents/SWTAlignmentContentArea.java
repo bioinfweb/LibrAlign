@@ -22,7 +22,6 @@ package info.bioinfweb.libralign.alignmentareacomponents;
 import info.bioinfweb.commons.Math2;
 import info.bioinfweb.commons.tic.TICComponent;
 import info.bioinfweb.commons.tic.toolkit.ToolkitComponent;
-import info.bioinfweb.libralign.AlignmentArea;
 import info.bioinfweb.libralign.AlignmentContentArea;
 import info.bioinfweb.libralign.AlignmentSubArea;
 import info.bioinfweb.libralign.dataarea.DataArea;
@@ -43,10 +42,10 @@ import org.eclipse.swt.widgets.Control;
 
 
 /**
- * The SWT component rendering the top central or bottom part of an {@link AlignmentArea}.
+ * The SWT component displaying a {@link AlignmentContentArea}.
  * 
  * @author Ben St&ouml;ver
- * @since 0.2.0
+ * @since 0.3.0
  */
 public class SWTAlignmentContentArea extends Composite implements ToolkitSpecificAlignmentContentArea {
 	private AlignmentContentArea independentComponent;
@@ -109,7 +108,7 @@ public class SWTAlignmentContentArea extends Composite implements ToolkitSpecifi
 	}
 	
 	
-	public void assignSize() {
+	public void assignSize() {  //TODO The according method from AlignmentContentArea could also be used instead of this method. 
 		int width = 0;
 		int height = 0;
 		for (Control control : getChildren()) {

@@ -61,4 +61,9 @@ public abstract class AbstractTokenSet<T> extends HashSet<T> implements TokenSet
 	 */
 	@Override
 	public abstract AbstractTokenSet<T> clone();
+	
+	
+	protected void addSpaceKeyForGaps() {
+		getKeyMap().put(' ', tokenByKeyChar('-'));
+	}
 }

@@ -161,6 +161,10 @@ public class AlignmentContentArea extends TICComponent implements SequenceDataCh
 			
       // Fire events for listener move after the process finished
 			if (this.sequenceProvider != null) {
+				if (!this.sequenceProvider.getChangeListeners().contains(this)) {  // Add this object as a listener if it was not already moved from the previous provider.
+					this.sequenceProvider.getChangeListeners().add(this);
+				}
+				
 				if (moveListeners) {
 					Iterator<SequenceDataChangeListener> iterator = this.sequenceProvider.getChangeListeners().iterator();
 					while (iterator.hasNext()) {
@@ -172,6 +176,7 @@ public class AlignmentContentArea extends TICComponent implements SequenceDataCh
 				}
 			}
 		}
+		
 		return result;
 	}
 	
@@ -342,8 +347,10 @@ public class AlignmentContentArea extends TICComponent implements SequenceDataCh
 	
 	@Override
 	public Dimension getSize() {
-		// TODO Auto-generated method stub
-		return null;
+		Dimension result = new Dimension();
+		result.width = getDataAreas().getMaxLengthBeforeStart() + getSequenceProvider().getMaxSequenceLength() * getCompoundWidth();
+		result.height = getSequenceProvider().getSequenceCount() * getCompoundHeight() + getDataAreas().getVisibleAreaHeight();
+		return result;
 	}
 
 	
@@ -469,35 +476,38 @@ public class AlignmentContentArea extends TICComponent implements SequenceDataCh
 			case SWT:
 				return ((Composite)sequenceArea.getToolkitComponent()).getLocation().y + relativeY;
 			default:
-				throw new IllegalStateException("No Swing or SWT component of the specfied sequence area has already been created.");
+				throw new IllegalStateException("No Swing or SWT component of the specfied sequence area has yet been created.");
 		}
 	}
 	
 	
 	@Override
 	public <T> void afterSequenceChange(SequenceChangeEvent<T> e) {
-		// TODO Auto-generated method stub
-		
+		assignSize();
+		//repaint();  //TODO Does this have to be called?
+		//TODO Send message to all and/or remove some data areas? (Some might be data specific (e.g. pherograms), some not (e.g. consensus sequence).)
 	}
 
 
 	@Override
 	public <T> void afterSequenceRenamed(SequenceRenamedEvent<T> e) {
-		// TODO Auto-generated method stub
-		
+		System.out.println("afterSequenceRenamed");
+		// TODO Repaint label area and possibly change its width.
 	}
 
 
 	@Override
 	public <T> void afterTokenChange(TokenChangeEvent<T> e) {
-		// TODO Auto-generated method stub
-		
+		assignSize();
+		repaint();  // In some cases multiple paint events may be fired, because the selection or the component size were also changed.
+		//TODO Send message to all data areas?
 	}
 
 
 	@Override
 	public <T, U> void afterProviderChanged(SequenceDataProvider<T> previous,	SequenceDataProvider<U> current) {
-		//TODO repaint
+		assignSize();
+		repaint();
 		//TODO Send message to all and/or remove some data areas? (Some might be data specific (e.g. pherograms), some not (e.g. consensus sequence).)
 	}
 }

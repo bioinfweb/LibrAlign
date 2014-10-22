@@ -58,7 +58,7 @@ public class BioJavaTokenSet<C extends Compound> extends AbstractTokenSet<C> imp
 	 * 
 	 * @param compoundSet - the BioJava compound set containing the compounds to be copied into the new instance
 	 */
-	public BioJavaTokenSet(CompoundSet<C> compoundSet) {
+	public BioJavaTokenSet(CompoundSet<C> compoundSet, boolean spaceForGaps) {
 		super();
 		
 		addAll(compoundSet.getAllCompounds());
@@ -66,6 +66,9 @@ public class BioJavaTokenSet<C extends Compound> extends AbstractTokenSet<C> imp
 		while (iterator.hasNext()) {
 			C compound = iterator.next();
 			getKeyMap().put(representationByToken(compound).charAt(0), compound);
+		}
+		if (spaceForGaps) {
+			addSpaceKeyForGaps();
 		}
 	}
 

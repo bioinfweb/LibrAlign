@@ -26,7 +26,7 @@ import org.biojava3.core.sequence.compound.AminoAcidCompound;
 import org.biojava3.core.sequence.compound.CodonCompound;
 import org.biojava3.core.sequence.compound.NucleotideCompound;
 
-import info.bioinfweb.libralign.AlignmentArea;
+import info.bioinfweb.libralign.AlignmentContentArea;
 import info.bioinfweb.libralign.sequenceprovider.adapters.AbstractSequenceDataAdapter;
 import info.bioinfweb.libralign.sequenceprovider.exception.AlignmentSourceNotWritableException;
 import info.bioinfweb.libralign.sequenceprovider.exception.DuplicateSequenceNameException;
@@ -50,8 +50,8 @@ import info.bioinfweb.libralign.sequenceprovider.tokenset.TokenSet;
  * new sequence with the same ID is present.
  * <p>
  * The ID values do not have to match the order of the sequences, which is defined the 
- * {@link #sequenceNameIterator()}. The ordering of sequences in an {@link AlignmentArea} is anyway not
- * defined by the data provider but by the instance returned by {@link AlignmentArea#getSequenceOrder()}.
+ * {@link #sequenceNameIterator()}. The ordering of sequences in an {@link AlignmentContentArea} is anyway not
+ * defined by the data provider but by the instance returned by {@link AlignmentContentArea#getSequenceOrder()}.
  * <p>
  * Note that this interface leafs it up to the implementation if the alignment data is organized in objects
  * storing whole sequences (rows) or another storage pattern. If your implementation uses sequence objects

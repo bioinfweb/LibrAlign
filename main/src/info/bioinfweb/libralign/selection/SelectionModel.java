@@ -126,6 +126,12 @@ public class SelectionModel {
 	}
 	
 	
+	/**
+	 * Returns the current height of the alignment cursor (which is equal to the heigt of a possible selection).
+	 * 
+	 * @return a value greater 0
+	 * @see #getWidth()
+	 */
 	public int getCursorHeight() {
 		return cursor.getHeight();
 	}
@@ -141,16 +147,39 @@ public class SelectionModel {
 	}
 	
 	
+	/**
+	 * Moves the cursor to a new column, leaving its row and height unchanged. 
+	 * <p>
+	 * The selection will always be empty after calling this method.
+	 * 
+	 * @param column - the new column where the cursor shall be located
+	 */
 	public void setNewCursorColumn(int column) {
     setNewCursorPosition(column, cursor.getRow(), cursor.getHeight());
 	}
 	
 	
+	/**
+	 * Specifies a new row position of the cursor. Column and height remain unchanged.
+	 * <p>
+	 * The selection will always be empty after calling this method.
+	 * 
+	 * @param row - the new top most row of the cursor
+	 */
 	public void setNewCursorRow(int row) {
     setNewCursorPosition(cursor.getColumn(), row, cursor.getHeight());
 	}
 	
 	
+	/**
+	 * Specifies a new location of the cursor. The height will remain unchanged if there is enough space in the 
+	 * alignment.
+	 * <p>
+	 * The selection will always be empty after calling this method.
+	 * 
+	 * @param column - the column where the cursor shall be located
+	 * @param row - the new top most row of the cursor
+	 */
 	public void setNewCursorPosition(int column, int row) {
     setNewCursorPosition(column, row, cursor.getHeight());
 	}
@@ -166,6 +195,13 @@ public class SelectionModel {
 	}
 	
 	
+	/**
+	 * Specifies a new location and height for the cursor. The selection will always be empty after calling this method.
+	 * 
+	 * @param column - the column where the cursor shall be located
+	 * @param row - the new top most row of the cursor
+	 * @param height - the new height of the cursor (must be >= 1)
+	 */
 	public void setNewCursorPosition(int column, int row, int height) {
 		column = bringCursorColumnInRange(column);
 		row = bringRowInRange(row);
@@ -263,6 +299,37 @@ public class SelectionModel {
 	}
 	
 	
+	public int getFirstColumn() {
+		return columnSelection.getFirstPos();
+	}
+
+
+	public int getLastColumn() {
+		return columnSelection.getLastPos();
+	}
+
+
+	public int getFirstRow() {
+		return columnSelection.getFirstPos();
+	}
+
+
+	public int getLastRow() {
+		return columnSelection.getLastPos();
+	}
+
+
+	/**
+	 * Returns the number of columns that are currently part of the selection.
+	 * 
+	 * @return a value greater than 0 or 0 if the selection is empty
+	 * @see #getCursorHeight()
+	 */
+	public int getWidth() {
+		return columnSelection.getLength();
+	}
+	
+	
 	public void clear() {
 		columnSelection.clear();
 		rowSelection.clear();
@@ -300,13 +367,11 @@ public class SelectionModel {
 	 * Informs all listeners that the selection changed.
 	 */
 	protected void fireSelectionChanged() {
+		System.out.println("SelectionModel.fireSelectionChanged()");
 		Iterator<SelectionListener> iterator = selectionListeners.iterator();
 		SelectionChangeEvent e = new SelectionChangeEvent(this);
 		while (iterator.hasNext()) {
 			iterator.next().selectionChanged(e);
 		}
-
-		//TODO Check if the following has to be implemented here:
-		//Main.getInstance().getMainFrame().getActionManagement().refreshActionStatus();
 	}
 }

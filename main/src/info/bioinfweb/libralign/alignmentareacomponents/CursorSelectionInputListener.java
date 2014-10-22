@@ -30,8 +30,8 @@ import info.bioinfweb.commons.tic.input.TICKeyListener;
 import info.bioinfweb.commons.tic.input.TICMouseAdapter;
 import info.bioinfweb.commons.tic.input.TICMouseEvent;
 import info.bioinfweb.commons.tic.input.TICMouseListener;
-import info.bioinfweb.libralign.AlignmentArea;
 import info.bioinfweb.libralign.AlignmentContentArea;
+import info.bioinfweb.libralign.actions.AlignmentActionProvider;
 import info.bioinfweb.libralign.selection.SelectionModel;
 import info.bioinfweb.libralign.sequenceprovider.SequenceDataProvider;
 
@@ -45,11 +45,13 @@ import info.bioinfweb.libralign.sequenceprovider.SequenceDataProvider;
  */
 public class CursorSelectionInputListener extends TICMouseAdapter implements TICMouseListener, TICKeyListener {
 	private AlignmentContentArea owner;
+	private AlignmentActionProvider actionProvider;
 	
 	
 	public CursorSelectionInputListener(AlignmentContentArea owner) {
 		super();
 		this.owner = owner;
+		actionProvider = new AlignmentActionProvider(owner);
 	}
 
 
@@ -95,6 +97,7 @@ public class CursorSelectionInputListener extends TICMouseAdapter implements TIC
 	@Override
 	public void keyPressed(TICKeyEvent event) {
 		SelectionModel selection = getOwner().getSelection();
+		SequenceDataProvider provider = getOwner().getSequenceProvider();
 		switch (event.getKeyCode()) {
 			case KeyEvent.VK_LEFT:
 				if (event.isShiftDown()) {
@@ -173,7 +176,6 @@ public class CursorSelectionInputListener extends TICMouseAdapter implements TIC
 				}
 				break;
 			case KeyEvent.VK_END:
-				SequenceDataProvider provider = getOwner().getSequenceProvider();
 				if (event.isShiftDown()) {
 					if (event.isMenuShortcutKeyDown()) {
 						selection.setSelectionEnd(provider.getMaxSequenceLength(), provider.getSequenceCount() - 1);
@@ -194,11 +196,27 @@ public class CursorSelectionInputListener extends TICMouseAdapter implements TIC
 				else {
 					selection.setNewCursorColumn(provider.getMaxSequenceLength());
 				}
+				break;
+			case KeyEvent.VK_INSERT:
+				//TODO Ins-Flag setzen (Wie kann man das bei einer AlignmentArea und gleichzeitig global für einen MultipleAlignmentsContainer erreichen?)
+				break;
+			case KeyEvent.VK_DELETE:  //TODO Replace by non static KeyBindings in future versions (at least allow to do something different on that key = unbind this event).
+				actionProvider.deleteForward();
+				break;
+			case KeyEvent.VK_BACK_SPACE:  //TODO Replace by non static KeyBindings in future versions (at least allow to do something different on that key = unbind this event).
+				actionProvider.deleteBackwards();
+				break;
 			default:
 				if (event.isMenuShortcutKeyDown() && (event.getKeyCode() == KeyEvent.VK_A)) {  // Select all
 					selection.selectAll();
 				}
 				else {
+					Object token = provider.getTokenSet().tokenByKeyChar(event.getKeyCharacter());
+					//System.out.println(event.getKeyCharacter() + " " + token);
+					if (token != null) {
+						actionProvider.insertToken(token);
+					}
+					
 					//TODO Delegate to TokenSet for inserting new tokens here
 				}
 				break;
