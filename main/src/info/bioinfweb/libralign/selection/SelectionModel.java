@@ -300,22 +300,42 @@ public class SelectionModel {
 	
 	
 	public int getFirstColumn() {
-		return columnSelection.getFirstPos();
+		if (columnSelection.isEmpty()) {
+			return getCursorColumn();
+		}
+		else {
+			return columnSelection.getFirstPos();
+		}
 	}
 
 
 	public int getLastColumn() {
-		return columnSelection.getLastPos();
+		if (columnSelection.isEmpty()) {
+			return getCursorColumn();
+		}
+		else {
+			return columnSelection.getLastPos();
+		}
 	}
 
 
 	public int getFirstRow() {
-		return columnSelection.getFirstPos();
+		if (rowSelection.isEmpty()) {
+			return getCursorRow();
+		}
+		else {
+			return columnSelection.getFirstPos();
+		}
 	}
 
 
 	public int getLastRow() {
-		return columnSelection.getLastPos();
+		if (rowSelection.isEmpty()) {
+			return getCursorRow() + getCursorHeight() - 1;
+		}
+		else {
+			return columnSelection.getLastPos();
+		}
 	}
 
 

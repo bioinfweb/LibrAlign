@@ -19,6 +19,9 @@
 package info.bioinfweb.libralign.actions;
 
 
+import java.util.ArrayList;
+import java.util.Collection;
+
 import info.bioinfweb.libralign.AlignmentContentArea;
 import info.bioinfweb.libralign.selection.SelectionModel;
 import info.bioinfweb.libralign.sequenceprovider.SequenceDataProvider;
@@ -175,7 +178,38 @@ public class AlignmentActionProvider<T> {
 	public boolean insertToken(T token) {
 		SelectionModel selection = getView().getSelection();
 		try {
-			deleteSelection(selection);
+			// Create token list:
+			int tokenCount = Math.max(1, selection.getWidth());
+			Collection<T> tokens = new ArrayList<T>(tokenCount);
+			for (int i = 0; i < tokenCount; i++) {
+				tokens.add(token);
+			}
+			
+			for (int row = selection.getCursorRow(); row < selection.getCursorRow() + selection.getCursorHeight(); row++) {
+				getModel().insertTokensAt(getView().getSequenceOrder().idByIndex(row), 
+						selection.getFirstColumn(), tokens);
+			}
+			selection.setNewCursorColumn(selection.getFirstColumn() + tokenCount);  // Move cursor forward
+		}
+		catch (AlignmentSourceNotWritableException e) {
+			return false;
+		}
+		return true;
+	}
+
+
+	public boolean overwriteWithToken(T token) {
+		SelectionModel selection = getView().getSelection();
+		try {
+			// Delete tokens that are overwritten:
+			if (selection.isEmpty()) {
+				deleteForward();
+			}
+			else {
+				deleteSelection(selection);
+			}
+			
+			// Insert token:
 			for (int row = selection.getCursorRow(); row < selection.getCursorRow() + selection.getCursorHeight(); row++) {
 				getModel().insertTokenAt(getView().getSequenceOrder().idByIndex(row), 
 						selection.getCursorColumn(), token);
