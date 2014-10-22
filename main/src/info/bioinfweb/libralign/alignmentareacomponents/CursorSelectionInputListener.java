@@ -20,6 +20,7 @@ package info.bioinfweb.libralign.alignmentareacomponents;
 
 
 import java.awt.Point;
+import java.awt.Toolkit;
 import java.awt.event.KeyEvent;
 
 import javax.swing.JComponent;
@@ -201,10 +202,14 @@ public class CursorSelectionInputListener extends TICMouseAdapter implements TIC
 				getOwner().getEditSettings().changeInsert();
 				break;
 			case KeyEvent.VK_DELETE:  //TODO Allow to do something different on that key = unbind this event.
-				actionProvider.deleteForward();
+				if (!actionProvider.deleteForward()) {
+					Toolkit.getDefaultToolkit().beep();
+				}
 				break;
 			case KeyEvent.VK_BACK_SPACE:  //TODO Allow to do something different on that key = unbind this event.
-				actionProvider.deleteBackwards();
+				if (!actionProvider.deleteBackwards()) {
+					Toolkit.getDefaultToolkit().beep();
+				}
 				break;
 			default:
 				if (event.isMenuShortcutKeyDown() && (event.getKeyCode() == KeyEvent.VK_A)) {  // Select all
@@ -215,10 +220,14 @@ public class CursorSelectionInputListener extends TICMouseAdapter implements TIC
 					//System.out.println(event.getKeyCharacter() + " " + token);
 					if (token != null) {
 						if (getOwner().getEditSettings().isInsert()) {
-							actionProvider.insertToken(token);
+							if (!actionProvider.insertToken(token)) {
+								Toolkit.getDefaultToolkit().beep();
+							}
 						}
 						else {
-							actionProvider.overwriteWithToken(token);
+							if (!actionProvider.overwriteWithToken(token)) {
+								Toolkit.getDefaultToolkit().beep();
+							}
 						}
 					}
 				}
