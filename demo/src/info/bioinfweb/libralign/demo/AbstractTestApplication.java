@@ -96,7 +96,7 @@ public class AbstractTestApplication {
 			BioJavaSequenceDataProvider<DNASequence, NucleotideCompound> sequenceProvider = 
 					new BioJavaSequenceDataProvider<DNASequence, NucleotideCompound>(
 							new BioJavaTokenSet<NucleotideCompound>(
-									AlignmentAmbiguityNucleotideCompoundSet.getAlignmentAmbiguityNucleotideCompoundSet()),
+									AlignmentAmbiguityNucleotideCompoundSet.getAlignmentAmbiguityNucleotideCompoundSet(), false),
 							alignment);
 			
 			AlignmentArea result = new AlignmentArea();
