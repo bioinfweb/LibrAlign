@@ -161,8 +161,8 @@ public class AlignmentActionProvider<T> {
 	
 	/**
 	 * Inserts the specified token at the current cursor position specified by {@code selection}. If the cursor
-	 * spans over multiple rows the token is inserted into each row. If other tokens are currently selected they are
-	 * replaced by the new token.
+	 * spans over multiple rows the token is inserted into each row. If other tokens are currently selected the
+	 * specified token will be inserted as often as the length of the selection.
 	 * <p>
 	 * Note that no deep copy of the specified token will be used, if it is inserted into several rows. Generally
 	 * implementations of {@link SequenceDataProvider} do not necessarily store one object per position in a sequence,
@@ -198,23 +198,36 @@ public class AlignmentActionProvider<T> {
 	}
 
 
+	/**
+	 * Overwrites the currently selected token(s) in each selected sequence with the specified tokens.
+	 * If not token is selected the token(s) right of the cursor are replaced.
+	 * <p>
+	 * If more than one token in each sequence is selected, the first one will be replaced by 
+	 * {@link SequenceDataProvider#setTokenAt(int, int, Object)} and the other will be deleted using
+	 * {@link SequenceDataProvider#removeTokensAt(int, int, int)}.
+	 * <p>
+	 * Note that calling this method will have no effect if the underlying {@link SequenceDataProvider} is
+	 * not writable.
+	 * 
+	 * @param token - the new token to replace the other(s)
+	 * @return {@code true} if the underlying data source was changed as a result of this operation, 
+	 *         {@code false} otherwise
+	 */
 	public boolean overwriteWithToken(T token) {
 		SelectionModel selection = getView().getSelection();
 		try {
-			// Delete tokens that are overwritten:
-			if (selection.isEmpty()) {
-				deleteForward();
-			}
-			else {
-				deleteSelection(selection);
-			}
-			
-			// Insert token:
 			for (int row = selection.getCursorRow(); row < selection.getCursorRow() + selection.getCursorHeight(); row++) {
-				getModel().insertTokenAt(getView().getSequenceOrder().idByIndex(row), 
-						selection.getCursorColumn(), token);
+				// Remove possible additional tokens:
+				if (selection.getWidth() > 1) {
+					getModel().removeTokensAt(getView().getSequenceOrder().idByIndex(row), 
+							selection.getFirstColumn() + 1, selection.getFirstColumn() + selection.getWidth());
+				}
+				
+				// Overwrite first token:
+				getModel().setTokenAt(getView().getSequenceOrder().idByIndex(row), 
+						selection.getFirstColumn(), token);
 			}
-			selection.setNewCursorColumn(selection.getCursorColumn() + 1);  // Move cursor forward
+			selection.setNewCursorColumn(selection.getFirstColumn() + 1);  // Move cursor forward
 		}
 		catch (AlignmentSourceNotWritableException e) {
 			return false;
