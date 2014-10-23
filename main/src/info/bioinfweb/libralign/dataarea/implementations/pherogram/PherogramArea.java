@@ -29,6 +29,10 @@ import info.bioinfweb.libralign.pherogram.PherogramFormats;
 import info.bioinfweb.libralign.pherogram.PherogramPainter;
 import info.bioinfweb.libralign.pherogram.PherogramProvider;
 import info.bioinfweb.libralign.pherogram.distortion.ScaledPherogramDistortion;
+import info.bioinfweb.libralign.sequenceprovider.SequenceDataProvider;
+import info.bioinfweb.libralign.sequenceprovider.events.SequenceChangeEvent;
+import info.bioinfweb.libralign.sequenceprovider.events.SequenceRenamedEvent;
+import info.bioinfweb.libralign.sequenceprovider.events.TokenChangeEvent;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
@@ -277,4 +281,39 @@ public class PherogramArea extends CustomHeightFullWidthArea implements Pherogra
 //		return (int)Math2.roundUp(painter.calculateTraceCurvesHeight() + getFormats().qualityOutputHeight() +
 //				(getFormats().getIndexFont().getSize() + getFormats().getBaseCallFont().getSize()) * PherogramFormats.FONT_HEIGHT_FACTOR);
 //	}
+
+
+	@Override
+	public <T> void afterSequenceChange(SequenceChangeEvent<T> e) {
+		// TODO React if the associates sequence was removed? (AlignmentContentArea should probably better implement this behavior.)
+	}
+
+
+	@Override
+	public <T> void afterSequenceRenamed(SequenceRenamedEvent<T> e) {}  // Nothing to do.
+
+
+	@Override
+	public <T> void afterTokenChange(TokenChangeEvent<T> e) {
+		if (e.getSequenceID() == getList().getLocation().getSequenceID()) {
+			switch (e.getType()) {
+				case INSERTION:
+					getAlignmentModel().addShiftChange(getAlignmentModel().baseCallIndexByEditableIndex(e.getStartIndex()).getBefore(),  //TODO is getBefore immer sinnvoll? 
+							e.getAffectedTokens().size());
+					break;
+				case DELETION:
+					System.out.println("Deletion: " + e.getStartIndex() + " " + getAlignmentModel().baseCallIndexByEditableIndex(e.getStartIndex()).getBefore());
+					getAlignmentModel().addShiftChange(getAlignmentModel().baseCallIndexByEditableIndex(e.getStartIndex()).getBefore(),  //TODO is getBefore immer sinnvoll? 
+							-e.getAffectedTokens().size());
+					break;
+				case REPLACEMENT:  // Nothing to do
+					break;
+			}
+		}
+	}
+
+
+	@Override
+	public <T, U> void afterProviderChanged(SequenceDataProvider<T> previous,	SequenceDataProvider<U> current) {}  
+	// This event is currently not passed to sequence attached areas.
 }

@@ -84,7 +84,7 @@ public class AlignmentContentArea extends TICComponent implements SequenceDataCh
 	private EditSettings editSettings;
 	private AlignmentDataViewMode viewMode = AlignmentDataViewMode.NUCLEOTIDE;  //TODO Initial value should be adjusted when the data type of the specified provider is known.
 	private SelectionModel selection = new SelectionModel(this);
-	private DataAreaModel dataAreas = new DataAreaModel();
+	private DataAreaModel dataAreas = new DataAreaModel(this);
 	private float zoomX = 1f;
 	private float zoomY = 1f;
 	private int compoundWidth = COMPOUND_WIDTH;
@@ -497,6 +497,7 @@ public class AlignmentContentArea extends TICComponent implements SequenceDataCh
 		assignSize();
 		//repaint();  //TODO Does this have to be called?
 		//TODO Send message to all and/or remove some data areas? (Some might be data specific (e.g. pherograms), some not (e.g. consensus sequence).)
+		getDataAreas().getSequenceDataChangeListener().afterSequenceChange(e);
 	}
 
 
@@ -504,6 +505,7 @@ public class AlignmentContentArea extends TICComponent implements SequenceDataCh
 	public <T> void afterSequenceRenamed(SequenceRenamedEvent<T> e) {
 		System.out.println("afterSequenceRenamed");
 		// TODO Repaint label area and possibly change its width.
+		getDataAreas().getSequenceDataChangeListener().afterSequenceRenamed(e);
 	}
 
 
@@ -511,7 +513,7 @@ public class AlignmentContentArea extends TICComponent implements SequenceDataCh
 	public <T> void afterTokenChange(TokenChangeEvent<T> e) {
 		assignSize();
 		repaint();  // In some cases multiple paint events may be fired, because the selection or the component size were also changed.
-		//TODO Send message to all data areas?
+		getDataAreas().getSequenceDataChangeListener().afterTokenChange(e);
 	}
 
 
@@ -519,6 +521,7 @@ public class AlignmentContentArea extends TICComponent implements SequenceDataCh
 	public <T, U> void afterProviderChanged(SequenceDataProvider<T> previous,	SequenceDataProvider<U> current) {
 		assignSize();
 		repaint();
-		//TODO Send message to all and/or remove some data areas? (Some might be data specific (e.g. pherograms), some not (e.g. consensus sequence).)
+		//TODO Remove some data areas? (Some might be data specific (e.g. pherograms), some not (e.g. consensus sequence).)
+		getDataAreas().getSequenceDataChangeListener().afterProviderChanged(previous, current);
 	}
 }

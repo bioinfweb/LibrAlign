@@ -134,11 +134,13 @@ public abstract class AbstractListSequenceDataProvider<T>
 		fireAfterTokenChange(TokenChangeEvent.newInsertInstance(this, sequenceID, beginIndex, tokens));
 	}
 
+	
 	@Override
 	public void removeTokenAt(int sequenceID, int index) throws AlignmentSourceNotWritableException {
 		List<T> sequence = getSequence(sequenceID);
 		T removedToken = sequence.get(index);
 		sequence.remove(index);
+		System.out.println("removeTokenAt(): " + index);
 		fireAfterTokenChange(TokenChangeEvent.newRemoveInstance(this, sequenceID, index, removedToken));
 	}
 

@@ -52,7 +52,7 @@ public class SelectionModel {
 	/**
 	 * Creates a new instance of this class.
 	 * 
-	 * @param owner - the alignment area that will be using this selection object
+	 * @param owner - the alignment content area that will be using this selection object
 	 */
 	public SelectionModel(AlignmentContentArea owner) {
 		super();
@@ -62,7 +62,7 @@ public class SelectionModel {
 
 
 	/**
-	 * Returns the alignment area that uses this selection object.
+	 * Returns the alignment content area that uses this selection object.
 	 */
 	public AlignmentContentArea getOwner() {
 		return owner;

@@ -38,7 +38,6 @@ import info.bioinfweb.commons.tic.TICPaintEvent;
 import info.bioinfweb.libralign.AlignmentContentArea;
 import info.bioinfweb.libralign.alignmentareacomponents.SequenceArea;
 import info.bioinfweb.libralign.dataarea.DataAreaListType;
-import info.bioinfweb.libralign.sequenceprovider.SequenceDataChangeListener;
 import info.bioinfweb.libralign.sequenceprovider.SequenceDataProvider;
 import info.bioinfweb.libralign.sequenceprovider.events.SequenceChangeEvent;
 import info.bioinfweb.libralign.sequenceprovider.events.SequenceRenamedEvent;
@@ -69,29 +68,6 @@ public class ConsensusSequenceArea extends CustomHeightFullWidthArea {
 		super(owner, Math.round(DEFAULT_HEIGHT_FACTOR * owner.getCompoundHeight()));
 		createMap();
 		scores = new TreeMap<Integer, AmbiguityBaseScore>();  // Saves scores between change events of the provider.
-		owner.getSequenceProvider().getChangeListeners().add(new SequenceDataChangeListener() {
-					@Override
-					public void afterTokenChange(TokenChangeEvent e) {
-						scores.clear();  // Each scores is recalculated the next time it is requested. 
-						assignSize();
-					}
-					
-					@Override
-					public void afterSequenceRenamed(SequenceRenamedEvent e) {}
-					
-					@Override
-					public void afterSequenceChange(SequenceChangeEvent e) {
-						scores.clear();
-						assignSize();
-					}
-					
-					@Override
-					public void afterProviderChanged(SequenceDataProvider previous,	SequenceDataProvider current) {
-						scores.clear();
-						assignSize();
-					}
-				});
-		
 		assignSize();
 	}
 
@@ -192,5 +168,30 @@ public class ConsensusSequenceArea extends CustomHeightFullWidthArea {
 	@Override
 	public Set<DataAreaListType> validLocations() {
 		return EnumSet.of(DataAreaListType.TOP, DataAreaListType.BOTTOM);
+	}
+
+	
+	@Override
+	public void afterTokenChange(TokenChangeEvent e) {
+		scores.clear();  // Each scores is recalculated the next time it is requested. 
+		assignSize();
+	}
+	
+	
+	@Override
+	public void afterSequenceRenamed(SequenceRenamedEvent e) {}
+	
+	
+	@Override
+	public void afterSequenceChange(SequenceChangeEvent e) {
+		scores.clear();
+		assignSize();
+	}
+	
+	
+	@Override
+	public void afterProviderChanged(SequenceDataProvider previous,	SequenceDataProvider current) {
+		scores.clear();
+		assignSize();
 	}
 }

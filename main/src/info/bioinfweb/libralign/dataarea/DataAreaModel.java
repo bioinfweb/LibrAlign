@@ -21,6 +21,8 @@ package info.bioinfweb.libralign.dataarea;
 
 import info.bioinfweb.commons.collections.ListChangeType;
 import info.bioinfweb.libralign.AlignmentArea;
+import info.bioinfweb.libralign.AlignmentContentArea;
+import info.bioinfweb.libralign.sequenceprovider.SequenceDataChangeListener;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -37,13 +39,34 @@ import java.util.TreeMap;
  * @author Ben St&ouml;ver
  */
 public class DataAreaModel {
+	private AlignmentContentArea owner;
   private DataAreaList topAreas = new DataAreaList(this, DataAreaListType.TOP);	
   private DataAreaList bottomAreas = new DataAreaList(this, DataAreaListType.BOTTOM);	
   private Map<Integer, DataAreaList> sequenceAreaLists = new TreeMap<Integer, DataAreaList>();
   private List<DataAreaModelListener> listeners = new ArrayList<DataAreaModelListener>(8);
   private boolean visibilityUpdateInProgress = false;
+  private DataAreaSequenceChangeListener sequenceChangeListener = new DataAreaSequenceChangeListener(this);
+
   
-  
+	/**
+	 * Creates a new instance of this class.
+	 * 
+	 * @param owner - the alignment content area that will be using this instance
+	 */
+  public DataAreaModel(AlignmentContentArea owner) {
+		super();
+		this.owner = owner;
+	}
+
+
+	/**
+	 * Returns the alignment content area that uses this instance.
+	 */
+	public AlignmentContentArea getOwner() {
+		return owner;
+	}
+
+
 	/**
 	 * Returns a list of data areas to be displayed on the top of the alignment.
 	 * 
@@ -180,6 +203,11 @@ public class DataAreaModel {
 		return listeners.remove(listener);
 	}
 
+	
+	public DataAreaSequenceChangeListener getSequenceDataChangeListener() {
+		return sequenceChangeListener;
+	}
+	
 
 	/**
 	 * Informs all listeners that a data area has been added or removed.

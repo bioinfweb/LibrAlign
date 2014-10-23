@@ -31,6 +31,10 @@ import info.bioinfweb.commons.tic.TICPaintEvent;
 import info.bioinfweb.libralign.AlignmentContentArea;
 import info.bioinfweb.libralign.dataarea.DataArea;
 import info.bioinfweb.libralign.dataarea.DataAreaListType;
+import info.bioinfweb.libralign.sequenceprovider.SequenceDataProvider;
+import info.bioinfweb.libralign.sequenceprovider.events.SequenceChangeEvent;
+import info.bioinfweb.libralign.sequenceprovider.events.SequenceRenamedEvent;
+import info.bioinfweb.libralign.sequenceprovider.events.TokenChangeEvent;
 
 
 
@@ -126,5 +130,34 @@ public class CharSetArea extends DataArea {
 	@Override
 	public Set<DataAreaListType> validLocations() {
 		return EnumSet.of(DataAreaListType.TOP, DataAreaListType.BOTTOM, DataAreaListType.SEQUENCE);
+	}
+
+
+	@Override
+	public <T> void afterSequenceChange(SequenceChangeEvent<T> e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+
+	@Override
+	public <T> void afterSequenceRenamed(SequenceRenamedEvent<T> e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+
+	@Override
+	public <T> void afterTokenChange(TokenChangeEvent<T> e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+
+	@Override
+	public <T, U> void afterProviderChanged(SequenceDataProvider<T> previous,
+			SequenceDataProvider<U> current) {
+		// TODO Auto-generated method stub
+		
 	}
 }

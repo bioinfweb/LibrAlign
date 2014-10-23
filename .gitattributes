@@ -49,6 +49,7 @@ main/src/info/bioinfweb/libralign/dataarea/DataAreaListType.java -text svneol=un
 main/src/info/bioinfweb/libralign/dataarea/DataAreaLocation.java -text svneol=unset#text/plain
 main/src/info/bioinfweb/libralign/dataarea/DataAreaModel.java -text svneol=unset#text/plain
 main/src/info/bioinfweb/libralign/dataarea/DataAreaModelListener.java -text svneol=unset#text/plain
+main/src/info/bioinfweb/libralign/dataarea/DataAreaSequenceChangeListener.java -text svneol=unset#text/plain
 main/src/info/bioinfweb/libralign/dataarea/DataAreaVisibleIterator.java -text svneol=unset#text/plain
 main/src/info/bioinfweb/libralign/dataarea/implementations/ConsensusSequenceArea.java -text svneol=unset#text/plain
 main/src/info/bioinfweb/libralign/dataarea/implementations/CustomHeightFullWidthArea.java -text svneol=unset#text/plain

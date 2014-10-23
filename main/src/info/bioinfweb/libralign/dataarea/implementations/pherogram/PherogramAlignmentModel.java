@@ -184,19 +184,31 @@ public class PherogramAlignmentModel {
    * If a {@code shiftChange} of 0 is specified the entry in the underlying shift list will be deleted.
    * 
    * @param baseCallIndex - the first position in the base call sequence where the shift change shall be valid
-   * @param shiftChange - A positive of negative for the the shift change (number of positions in the editable sequence)
+   * @param shiftChange - a positive of negative for the the shift change (number of positions in the editable sequence)
    */
   public void setShiftChange(int baseCallIndex, int shiftChange) {
   	int listIndex = shiftChangeListIndexByBaseCallIndex(baseCallIndex);
-  	if (shiftChange == 0) {
-  		
+  	if (listIndex < shiftChangeList.size() && (shiftChangeList.get(listIndex).baseCallIndex == baseCallIndex)) {
+    	if (shiftChange == 0) {
+    		shiftChangeList.remove(listIndex);
+    	}
+    	else {
+    		shiftChangeList.get(listIndex).shiftChange = shiftChange;
+    	}
   	}
-  	else {
-	  	if (listIndex < shiftChangeList.size() &&  (shiftChangeList.get(listIndex).baseCallIndex == baseCallIndex)) {
-	  		shiftChangeList.get(listIndex).shiftChange = shiftChange;
-	  	}
-	  	shiftChangeList.add(listIndex, new ShiftChange(baseCallIndex, shiftChange));
+  	else if (shiftChange != 0) {
+  		shiftChangeList.add(listIndex, new ShiftChange(baseCallIndex, shiftChange));
   	}
+  }
+  
+  
+  public void addShiftChange(int baseCallIndex, int shiftChangeAddend) {
+  	int listIndex = shiftChangeListIndexByBaseCallIndex(baseCallIndex);
+  	int shiftChange = shiftChangeAddend;
+  	if (listIndex < shiftChangeList.size() && (shiftChangeList.get(listIndex).baseCallIndex == baseCallIndex)) {
+  		shiftChange += shiftChangeList.get(listIndex).shiftChange;
+  	}
+  	setShiftChange(baseCallIndex, shiftChange);
   }
   
   

@@ -25,6 +25,7 @@ import java.util.Set;
 import info.bioinfweb.libralign.AlignmentArea;
 import info.bioinfweb.libralign.AlignmentContentArea;
 import info.bioinfweb.libralign.AlignmentSubArea;
+import info.bioinfweb.libralign.sequenceprovider.SequenceDataChangeListener;
 
 
 
@@ -34,7 +35,7 @@ import info.bioinfweb.libralign.AlignmentSubArea;
  * @author Ben St&ouml;ver
  * @since 0.0.0
  */
-public abstract class DataArea extends AlignmentSubArea {
+public abstract class DataArea extends AlignmentSubArea implements SequenceDataChangeListener {
 	private DataAreaList list = null;
 	private boolean visible = true;
 	
