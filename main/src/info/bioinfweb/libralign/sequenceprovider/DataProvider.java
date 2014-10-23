@@ -19,7 +19,14 @@
 package info.bioinfweb.libralign.sequenceprovider;
 
 
+import info.bioinfweb.libralign.dataarea.DataArea;
 
-public interface DataProvider {
-	
-}
+
+
+/**
+ * A tagging interface that all classes providing data for {@link DataArea} implementations should implement.
+ * 
+ * @author Ben St&ouml;ver
+ * @since 0.1.0
+ */
+public interface DataProvider {}
