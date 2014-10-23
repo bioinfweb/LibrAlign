@@ -21,6 +21,7 @@ package info.bioinfweb.libralign.test.editAlignment;
 
 import info.bioinfweb.libralign.AlignmentArea;
 import info.bioinfweb.libralign.AlignmentContentArea;
+import info.bioinfweb.libralign.dataarea.implementations.SequenceIndexArea;
 import info.bioinfweb.libralign.dataarea.implementations.pherogram.PherogramArea;
 import info.bioinfweb.libralign.pherogram.BioJavaPherogramProvider;
 import info.bioinfweb.libralign.sequenceprovider.SequenceDataProvider;
@@ -81,6 +82,9 @@ public class EditableAlignmentTest {
 		
 		TokenSet<NucleotideCompound> tokenSet = new BioJavaTokenSet<NucleotideCompound>(new DNACompoundSet(), true);
 		SequenceDataProvider<NucleotideCompound> provider = new PackedSequenceDataProvider<NucleotideCompound>(tokenSet);
+		
+		// Add index area:
+		contentArea.getDataAreas().getTopAreas().add(new SequenceIndexArea(contentArea));
 		
 		// Test sequence:
 		provider.addSequence("A");

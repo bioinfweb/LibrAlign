@@ -20,11 +20,13 @@ package info.bioinfweb.libralign.dataarea;
 
 
 import static org.junit.Assert.* ;
-
-
 import info.bioinfweb.commons.tic.TICPaintEvent;
 import info.bioinfweb.libralign.AlignmentArea;
 import info.bioinfweb.libralign.AlignmentContentArea;
+import info.bioinfweb.libralign.sequenceprovider.SequenceDataProvider;
+import info.bioinfweb.libralign.sequenceprovider.events.SequenceChangeEvent;
+import info.bioinfweb.libralign.sequenceprovider.events.SequenceRenamedEvent;
+import info.bioinfweb.libralign.sequenceprovider.events.TokenChangeEvent;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -38,8 +40,8 @@ import org.junit.* ;
 
 
 public class DataAreaListTest {
-  private DataAreaList createList(final List<DataAreaChangeEvent> eventList, DataAreaListType type) {
-  	DataAreaModel owner = new DataAreaModel();
+  private DataAreaList createList(AlignmentContentArea alignmentContentArea, final List<DataAreaChangeEvent> eventList, DataAreaListType type) {
+  	DataAreaModel owner = new DataAreaModel(alignmentContentArea);
   	owner.addListener(new DataAreaModelListener() {
 					@Override
 					public void dataAreaVisibilityChanged(DataAreaChangeEvent e) {
@@ -74,6 +76,18 @@ public class DataAreaListTest {
 						public Set<DataAreaListType> validLocations() {
 							return EnumSet.of(DataAreaListType.TOP, DataAreaListType.BOTTOM, DataAreaListType.SEQUENCE);
 						}
+
+						@Override
+						public <T> void afterSequenceChange(SequenceChangeEvent<T> e) {}
+
+						@Override
+						public <T> void afterSequenceRenamed(SequenceRenamedEvent<T> e) {}
+
+						@Override
+						public <T> void afterTokenChange(TokenChangeEvent<T> e) {}
+
+						@Override
+						public <T, U> void afterProviderChanged(SequenceDataProvider<T> previous,	SequenceDataProvider<U> current) {}
 					};
 		}
   
@@ -94,9 +108,9 @@ public class DataAreaListTest {
   
   @Test
   public void test_events() {
-  	List<DataAreaChangeEvent> eventList = new ArrayList<DataAreaChangeEvent>();
-  	DataAreaList areaList = createList(eventList, DataAreaListType.TOP);
   	AlignmentContentArea alignmentContentArea = new AlignmentArea().getContentArea();
+  	List<DataAreaChangeEvent> eventList = new ArrayList<DataAreaChangeEvent>();
+  	DataAreaList areaList = createList(alignmentContentArea, eventList, DataAreaListType.TOP);
   	
   	areaList.add(createDataArea(alignmentContentArea));
   	assertEquals(1, eventList.size());
@@ -143,9 +157,9 @@ public class DataAreaListTest {
   @Test
   public void test_events_sublist() {
   	// Produces assertions as long as DataArea.subList() does not have a special implementation.
-  	List<DataAreaChangeEvent> eventList = new ArrayList<DataAreaChangeEvent>();
-  	DataAreaList areaList = createList(eventList, DataAreaListType.TOP);
   	AlignmentContentArea alignmentContentArea = new AlignmentArea().getContentArea();
+  	List<DataAreaChangeEvent> eventList = new ArrayList<DataAreaChangeEvent>();
+  	DataAreaList areaList = createList(alignmentContentArea, eventList, DataAreaListType.TOP);
   	
   	Collection<DataArea> severalAreas = new ArrayList<DataArea>(4);
   	for (int i = 0; i < 4; i++) {
