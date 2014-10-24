@@ -112,8 +112,8 @@ public class EditableAlignmentTest {
 	      	new File("data/pherograms/Test_qualityScore.scf")));
 
 			// Copy base call sequence into alignment:
-			for (int i = 1; i <= pherogramProvider.getSequenceLength(); i++) {
-				provider.insertTokenAt(id, i - 1, tokenSet.tokenByKeyChar(pherogramProvider.getBaseCall(i).getUpperedBase().charAt(0)));
+			for (int i = 0; i < pherogramProvider.getSequenceLength(); i++) {
+				provider.insertTokenAt(id, i, tokenSet.tokenByKeyChar(pherogramProvider.getBaseCall(i).getUpperedBase().charAt(0)));
 			}
 			
 			// Add data area:
