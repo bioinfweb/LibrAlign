@@ -86,7 +86,7 @@ public class PherogramArea extends CustomHeightFullWidthArea implements Pherogra
 			lowerBorder = lowerBorderRelation.getBefore();
 		}
 		else {  // OUT_OF_RANGE or valid index
-			lowerBorder = 1;  // BioJava indices start with 1.
+			lowerBorder = 0;
 		}
 
 		PherogramAlignmentRelation upperBorderRelation = getAlignmentModel().baseCallIndexByEditableIndex(
@@ -96,7 +96,7 @@ public class PherogramArea extends CustomHeightFullWidthArea implements Pherogra
 			upperBorder = upperBorderRelation.getAfter();
 		}
 		else {  // OUT_OF_RANGE or valid index
-			upperBorder = getProvider().getSequenceLength(); 
+			upperBorder = getProvider().getSequenceLength() - 1; 
 		}
 
 		return new SimpleSequenceInterval(lowerBorder, upperBorder);

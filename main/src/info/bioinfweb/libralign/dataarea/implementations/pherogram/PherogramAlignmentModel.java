@@ -132,12 +132,12 @@ public class PherogramAlignmentModel {
     		}
     	}
   	}
-  	if (resultPos < 1) {
-  		return new PherogramAlignmentRelation(PherogramAlignmentRelation.OUT_OF_RANGE, PherogramAlignmentRelation.OUT_OF_RANGE, 1, 
+  	if (resultPos < 0) {
+  		return new PherogramAlignmentRelation(PherogramAlignmentRelation.OUT_OF_RANGE, PherogramAlignmentRelation.OUT_OF_RANGE, 0, 
   				iterator);
   	}
-  	else if (resultPos > getOwner().getProvider().getSequenceLength()) {
-  		return new PherogramAlignmentRelation(getOwner().getProvider().getSequenceLength(), 
+  	else if (resultPos >= getOwner().getProvider().getSequenceLength()) {
+  		return new PherogramAlignmentRelation(getOwner().getProvider().getSequenceLength() - 1, 
   				PherogramAlignmentRelation.OUT_OF_RANGE, PherogramAlignmentRelation.OUT_OF_RANGE, iterator);
   	}
   	else {
@@ -300,7 +300,7 @@ public class PherogramAlignmentModel {
   public ScaledPherogramDistortion createPherogramDistortion() {
   	ScaledPherogramDistortion result = new ScaledPherogramDistortion(getOwner().getProvider().getSequenceLength());
   	
-		int startTraceIndex = 1;  //getTracePosition(startBaseCallIndex);
+		int startTraceIndex = 0;  //getTracePosition(startBaseCallIndex);
 		Iterator<ShiftChange> shiftChangeIterator = shiftChangeIterator();
 		ShiftChange shiftChange = null;
 		if (shiftChangeIterator.hasNext()) {
@@ -311,7 +311,7 @@ public class PherogramAlignmentModel {
 		int stepWidth = 1;
 		int editPosPerBaseCallPos = 1;
 		double baseCallPaintX = 0; //0.5 * compoundWidth;
-		for (int baseCallIndex = 1; baseCallIndex <= getOwner().getProvider().getSequenceLength(); baseCallIndex += stepWidth) {
+		for (int baseCallIndex = 0; baseCallIndex < getOwner().getProvider().getSequenceLength(); baseCallIndex += stepWidth) {
 			// Treat possible gaps:
 			if ((shiftChange != null) && (baseCallIndex == shiftChange.getBaseCallIndex())) {
 				if (shiftChange.getShiftChange() < 0) {  // Deletion in editable sequence

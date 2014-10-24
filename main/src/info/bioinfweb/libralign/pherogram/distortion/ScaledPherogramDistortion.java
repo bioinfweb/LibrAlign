@@ -57,45 +57,45 @@ public class ScaledPherogramDistortion implements PherogramDistortion {
 
 
 	public void setHorizontalScale(int baseCallIndex, double scale) {
-		baseCallInfos[baseCallIndex - 1].horizontalScale = scale; 
+		baseCallInfos[baseCallIndex].horizontalScale = scale; 
 	}
 
 
 	@Override
 	public double getHorizontalScale(int baseCallIndex) {
-		return baseCallInfos[baseCallIndex - 1].horizontalScale;
+		return baseCallInfos[baseCallIndex].horizontalScale;
 	}
 
 	
 	public void setPaintStartX(int baseCallIndex, double paintX) {
-		baseCallInfos[baseCallIndex - 1].paintStartX = paintX;
+		baseCallInfos[baseCallIndex].paintStartX = paintX;
 	}
 
 
 	@Override
 	public double getPaintStartX(int baseCallIndex) {
-		return baseCallInfos[baseCallIndex - 1].paintStartX;
+		return baseCallInfos[baseCallIndex].paintStartX;
 	}
 
 
 	public void setPaintCenterX(int baseCallIndex, double paintX) {
-		baseCallInfos[baseCallIndex - 1].paintCenterX = paintX;
+		baseCallInfos[baseCallIndex].paintCenterX = paintX;
 	}
 
 
 	@Override
 	public double getPaintCenterX(int baseCallIndex) {
-		return baseCallInfos[baseCallIndex - 1].paintCenterX;
+		return baseCallInfos[baseCallIndex].paintCenterX;
 	}
 
 
 	public void setGapPattern(int baseCallIndex, GapPattern pattern) {
-		baseCallInfos[baseCallIndex - 1].gapPattern = pattern;
+		baseCallInfos[baseCallIndex].gapPattern = pattern;
 	}
 
 	
 	@Override
 	public GapPattern getGapPattern(int baseCallIndex) {
-		return baseCallInfos[baseCallIndex - 1].gapPattern;
+		return baseCallInfos[baseCallIndex].gapPattern;
 	}
 }

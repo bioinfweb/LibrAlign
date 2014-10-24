@@ -40,7 +40,11 @@ import org.biojava3.core.sequence.compound.NucleotideCompound;
  * Adapter class that provides the contents of any implementation of {@link Chromatogram} from BioJava 1
  * as a {@link PherogramProvider}.
  * <p>
- * You can use this class together with {@link ChromatogramFactory} to load ABI or SCF filed into LibrAlign.
+ * You can use this class together with {@link ChromatogramFactory} to load ABI or SCF files into LibrAlign.
+ * Note that base call indices in LibrAlign start with 0 whereas the BioJava indices in the underlying
+ * {@link Chromatogram} instance start with 1. (This class converts the indices accordingly.)
+ * <p>
+ * Trace indices (x-values) start with 0 in LibrAlign and in BioJava.
  * 
  * @author Ben St&ouml;ver
  */
@@ -120,7 +124,7 @@ public class BioJavaPherogramProvider implements PherogramProvider {
 	public NucleotideCompound getBaseCall(int baseIndex) {
 		try {
 			return BioJava1SymbolTranslator.symbolToNucleotideCompound(				
-					chromatogram.getBaseCalls().symbolAt(Chromatogram.DNA, baseIndex));
+					chromatogram.getBaseCalls().symbolAt(Chromatogram.DNA, baseIndex + 1));
 		}
 		catch (IllegalSymbolException e) {
 			throw new InternalError("An unexpected internal error occurred. No trace data for the symbol " + 
@@ -132,7 +136,7 @@ public class BioJavaPherogramProvider implements PherogramProvider {
 	@Override
 	public int getBaseCallPosition(int baseIndex) {
 		return ((IntegerAlphabet.IntegerSymbol)chromatogram.getBaseCalls().symbolAt(
-				Chromatogram.OFFSETS, baseIndex)).intValue();
+				Chromatogram.OFFSETS, baseIndex + 1)).intValue();
 	}
 
 
@@ -146,7 +150,7 @@ public class BioJavaPherogramProvider implements PherogramProvider {
 	public int getAnnotation(String label, int baseIndex) {
 		try {
 			return ((IntegerAlphabet.IntegerSymbol)chromatogram.getBaseCalls().symbolAt(
-					label, baseIndex)).intValue();
+					label, baseIndex + 1)).intValue();
 		}
 		catch (NoSuchElementException e) {
 			return -1;

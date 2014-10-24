@@ -18,6 +18,7 @@
  */
 package info.bioinfweb.libralign.pherogram;
 
+
 import org.biojava3.core.sequence.compound.NucleotideCompound;
 
 
@@ -51,7 +52,7 @@ public class ReverseComplementPherogramProvider implements PherogramProvider {
 
 	
 	private int convertBaseIndex(int baseIndex) {
-		return source.getSequenceLength() - baseIndex + 1;
+		return source.getSequenceLength() - baseIndex - 1;
 	}
 	
 

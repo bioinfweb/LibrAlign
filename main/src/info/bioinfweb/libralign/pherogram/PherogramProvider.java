@@ -81,8 +81,8 @@ public interface PherogramProvider extends DataProvider {
   /**
    * Returns a base from the DNA sequence associated with the stored trace. 
    * 
-   * @param baseIndex - the index of the base in the pherogram sequence (This might differ from the 
-   *        index of the base in the associated sequence in the alignment.)
+   * @param baseIndex - the index of the base in the pherogram (base call) sequence (This might differ 
+   *        from the index of the base in the associated sequence in the alignment. Indices start with 0.)
    * @return a DNA base or an ambiguity code
    */
   public NucleotideCompound getBaseCall(int baseIndex);
@@ -90,8 +90,8 @@ public interface PherogramProvider extends DataProvider {
   /**
    * Returns the position in the trace where the base at the specified index was observed.
    * 
-   * @param baseIndex - the index of the base in the pherogram sequence (This might differ from the 
-   *        index of the base in the associated sequence in the alignment.)
+   * @param baseIndex - the index of the base in the pherogram (base call) sequence (This might differ 
+   *        from the index of the base in the associated sequence in the alignment. Indices start with 0.)
    * @return an integer value between 0 and {@link #getTraceLength()}{@code - 1}
    */
   public int getBaseCallPosition(int baseIndex);
@@ -100,7 +100,7 @@ public interface PherogramProvider extends DataProvider {
    * Returns the quality score associated with the specified nucleotide.
    * 
    * @param nucleotide - the nucleotide identifying the trace curve for the quality score
-   * @param baseIndex - the index of the base call position to which the quality score belongs
+   * @param baseIndex - the index of the base call position to which the quality score belongs (Indices start with 0.)
    * @return the quality score or -1 if no value is stored at the specified position for the specified nucleotide
    */
   public int getQuality(NucleotideCompound nucleotide, int baseIndex);
@@ -110,7 +110,7 @@ public interface PherogramProvider extends DataProvider {
    * the specified position.
    * 
    * @param label - the name of the attachment to be returned
-   * @param baseIndex - the index of base call to which the returned attachment score belongs
+   * @param baseIndex - the index of base call to which the returned attachment score belongs (Indices start with 0.)
    * @return the attached value or -1 if no value is stored at the specified position under the specified label
    */
   public int getAnnotation(String label, int baseIndex);  

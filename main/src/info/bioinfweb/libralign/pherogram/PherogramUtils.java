@@ -42,11 +42,11 @@ public class PherogramUtils {
 	 * @return a valid trace value index
 	 */
 	public static int getFirstTracePosition(PherogramProvider provider, int baseCallIndex) {
-		if (baseCallIndex <= 1) {  // BioJava indices start with 1
-			return 1;
+		if (baseCallIndex <= 0) {  // BioJava indices start with 1
+			return 0;
 		}
-		else if (baseCallIndex > provider.getSequenceLength()) {
-			return provider.getTraceLength();
+		else if (baseCallIndex >= provider.getSequenceLength()) {
+			return provider.getTraceLength() - 1;
 		}
 		else {
 			return (provider.getBaseCallPosition(baseCallIndex - 1) + 
