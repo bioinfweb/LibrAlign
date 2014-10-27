@@ -38,8 +38,6 @@ import org.biojava.bio.chromatogram.UnsupportedChromatogramFormatException;
 import org.biojava3.core.sequence.compound.DNACompoundSet;
 import org.biojava3.core.sequence.compound.NucleotideCompound;
 
-import javax.swing.JPanel;
-
 import java.awt.BorderLayout;
 import java.io.File;
 import java.io.IOException;
