@@ -19,7 +19,6 @@
 package info.bioinfweb.libralign.dataarea.implementations.pherogram;
 
 
-import java.awt.geom.Path2D;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -29,8 +28,6 @@ import org.biojava3.core.sequence.compound.NucleotideCompound;
 
 import info.bioinfweb.commons.Math2;
 import info.bioinfweb.commons.bio.biojava3.core.sequence.compound.AlignmentAmbiguityNucleotideCompoundSet;
-import info.bioinfweb.libralign.pherogram.PherogramPainter;
-import info.bioinfweb.libralign.pherogram.PherogramProvider;
 import info.bioinfweb.libralign.pherogram.PherogramUtils;
 import info.bioinfweb.libralign.pherogram.distortion.GapPattern;
 import info.bioinfweb.libralign.pherogram.distortion.ScaledPherogramDistortion;
@@ -177,6 +174,46 @@ public class PherogramAlignmentModel {
   }
   
   
+//  private void printShiftChangeList() {
+//  	Iterator<ShiftChange> iterator = shiftChangeIterator();
+//  	while (iterator.hasNext()) {
+//  		ShiftChange shiftChange = iterator.next();
+//  		System.out.print("(" + shiftChange.baseCallIndex + ": " + shiftChange.shiftChange + "), ");
+//  	}
+//  	System.out.println();
+//  }
+
+  
+  private int combineTwoShiftChanges(int firstIndex) {
+  	if (Math2.isBetween(firstIndex, 0, shiftChangeList.size() - 2)) {
+      ShiftChange firstChange = shiftChangeList.get(firstIndex);
+      ShiftChange secondChange = shiftChangeList.get(firstIndex + 1);
+      if ((secondChange.baseCallIndex <= firstChange.baseCallIndex - firstChange.shiftChange) || 
+      		(firstChange.baseCallIndex >= secondChange.baseCallIndex - secondChange.shiftChange)) {
+      	
+  			firstChange.shiftChange += secondChange.shiftChange;
+      	shiftChangeList.remove(secondChange);
+      	if (firstChange.shiftChange == 0) {
+      		shiftChangeList.remove(firstChange);
+      		return 2;
+      	}
+      	else {
+      		return 1;
+      	}
+      }
+  	}
+  	return 0;
+  }
+  
+  
+  private void combineThreeShiftChanges(int index) {
+  	int removedElements = combineTwoShiftChanges(index - 1); 
+  	if (removedElements < 2) {  // No further combination possible of both elements have been removed.
+  		combineTwoShiftChanges(index - removedElements);  // Indices have been shifted because of the removal.
+  	}
+  }
+  
+  
   /**
    * Adds or replaces a change in the shift between the editable sequence in the alignment and the base call
    * sequence.
@@ -187,6 +224,9 @@ public class PherogramAlignmentModel {
    * @param shiftChange - a positive of negative for the the shift change (number of positions in the editable sequence)
    */
   public void setShiftChange(int baseCallIndex, int shiftChange) {
+  	//System.out.print("Before (" + baseCallIndex + "): ");
+  	//printShiftChangeList();
+  	
   	int listIndex = shiftChangeListIndexByBaseCallIndex(baseCallIndex);
   	if (listIndex < shiftChangeList.size() && (shiftChangeList.get(listIndex).baseCallIndex == baseCallIndex)) {
     	if (shiftChange == 0) {
@@ -197,8 +237,13 @@ public class PherogramAlignmentModel {
     	}
   	}
   	else if (shiftChange != 0) {
+  		//System.out.println("  adding at " + listIndex + " " + baseCallIndex + " " + shiftChange);
   		shiftChangeList.add(listIndex, new ShiftChange(baseCallIndex, shiftChange));
+  		combineThreeShiftChanges(listIndex);
   	}
+
+  	//System.out.print("After (" + baseCallIndex + "): ");
+  	//printShiftChangeList();
   }
   
   
@@ -287,7 +332,7 @@ public class PherogramAlignmentModel {
 	private GapPattern getGapPattern(ShiftChange shiftChange) {
 		GapPattern result = new GapPattern(shiftChange.getShiftChange() + 1);
 		int firstEditableIndex = editableIndexByBaseCallIndex(shiftChange.getBaseCallIndex()).getCorresponding() - 
-				shiftChange.getShiftChange() - 1;
+				shiftChange.getShiftChange()/* - 1*/;
 		for (int i = 0; i < result.size(); i++) {
 			result.setGap(i, ((NucleotideCompound)getOwner().getOwner().getSequenceProvider().getTokenAt(
 					getOwner().getList().getLocation().getSequenceID(), firstEditableIndex + i)).getBase().equals(

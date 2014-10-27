@@ -140,7 +140,6 @@ public abstract class AbstractListSequenceDataProvider<T>
 		List<T> sequence = getSequence(sequenceID);
 		T removedToken = sequence.get(index);
 		sequence.remove(index);
-		System.out.println("removeTokenAt(): " + index);
 		fireAfterTokenChange(TokenChangeEvent.newRemoveInstance(this, sequenceID, index, removedToken));
 	}
 

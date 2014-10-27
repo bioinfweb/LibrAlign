@@ -80,7 +80,7 @@ public class PherogramArea extends CustomHeightFullWidthArea implements Pherogra
 	
 	protected SimpleSequenceInterval calculatePaintRange(TICPaintEvent e) {
 		PherogramAlignmentRelation lowerBorderRelation = getAlignmentModel().baseCallIndexByEditableIndex(
-				getOwner().columnByPaintX(e.getRectangle().x) - 1);  // + 1 - 2 because BioJava indices start with 1 and two (experimetally obtained) half visible column should be painted. (Why are this two?) 
+				getOwner().columnByPaintX(e.getRectangle().x) - 2);  // - 2 because two (expiremetally obtained) half visible column should be painted. (Why are this two?) 
 		int lowerBorder;
 		if (lowerBorderRelation.getCorresponding() == PherogramAlignmentRelation.GAP) {
 			lowerBorder = lowerBorderRelation.getBefore();
@@ -298,15 +298,15 @@ public class PherogramArea extends CustomHeightFullWidthArea implements Pherogra
 		if (e.getSequenceID() == getList().getLocation().getSequenceID()) {
 			switch (e.getType()) {
 				case INSERTION:
-					getAlignmentModel().addShiftChange(getAlignmentModel().baseCallIndexByEditableIndex(e.getStartIndex()).getBefore(),  //TODO is getBefore immer sinnvoll? 
+					getAlignmentModel().addShiftChange(
+							getAlignmentModel().baseCallIndexByEditableIndex(Math.max(0, e.getStartIndex() - 1)).getBefore(),  //TODO is getBefore immer sinnvoll? 
 							e.getAffectedTokens().size());
 					break;
 				case DELETION:
-					System.out.println("Deletion: " + e.getStartIndex() + " " + getAlignmentModel().baseCallIndexByEditableIndex(e.getStartIndex()).getBefore());
-					getAlignmentModel().addShiftChange(getAlignmentModel().baseCallIndexByEditableIndex(e.getStartIndex()).getBefore(),  //TODO is getBefore immer sinnvoll? 
+					getAlignmentModel().addShiftChange(getAlignmentModel().baseCallIndexByEditableIndex(e.getStartIndex()).getAfter()/*getBefore()*/,  //TODO is getBefore immer sinnvoll? 
 							-e.getAffectedTokens().size());
 					break;
-				case REPLACEMENT:  // Nothing to do
+				case REPLACEMENT:  // Nothing to do (Replacements differing in length are not allowed.)
 					break;
 			}
 		}
