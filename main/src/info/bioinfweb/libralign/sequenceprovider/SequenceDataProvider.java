@@ -68,6 +68,9 @@ import info.bioinfweb.libralign.sequenceprovider.tokenset.TokenSet;
  * @param <T> - the type of sequence elements (tokens) the implementing provider object works with
  */
 public interface SequenceDataProvider<T> {
+	public static final int NO_SEQUENCE_FOUND = -1;
+	
+	
 	/**
 	 * Returns the token set which is supported by the implementation.
 	 * 

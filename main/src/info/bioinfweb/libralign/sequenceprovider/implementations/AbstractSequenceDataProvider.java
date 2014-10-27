@@ -127,7 +127,13 @@ public abstract class AbstractSequenceDataProvider<T> implements SequenceDataPro
 	 */
 	@Override
 	public int sequenceIDByName(String sequenceName) {
-		return idByNameMap.get(sequenceName);
+		Integer result = idByNameMap.get(sequenceName);
+		if (result == null) {
+			return NO_SEQUENCE_FOUND;
+		}
+		else {
+			return result;
+		}
 	}
 
 
