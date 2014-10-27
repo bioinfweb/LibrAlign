@@ -90,7 +90,7 @@ public class AlignmentLabelArea extends TICComponent {
 	 */
 	private float calculateWidth() {
 		Font font = getOwner().getContentArea().getCompoundFont();
-		Iterator<Integer> idIterator = getOwner().getContentArea().getSequenceOrder().getIdList().iterator();
+		Iterator<Integer> idIterator = getOwner().getContentArea().getSequenceOrder().getIDList().iterator();
 		float maxLength = 0;
 		while (idIterator.hasNext()) {
 			maxLength = Math.max(maxLength, FontCalculator.getInstance().getWidth(font, 
@@ -127,7 +127,7 @@ public class AlignmentLabelArea extends TICComponent {
 			FontMetrics fm = g.getFontMetrics();
 			
 			// Paint labels:
-			Iterator<Integer> idIterator = getOwner().getContentArea().getSequenceOrder().getIdList().iterator();
+			Iterator<Integer> idIterator = getOwner().getContentArea().getSequenceOrder().getIDList().iterator();
 			int y = getOwner().getContentArea().getDataAreas().getTopAreas().getVisibleHeight();
 			while (idIterator.hasNext()) {
 				int id = idIterator.next();

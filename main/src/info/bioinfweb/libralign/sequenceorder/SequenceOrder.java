@@ -16,8 +16,11 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package info.bioinfweb.libralign;
+package info.bioinfweb.libralign.sequenceorder;
 
+
+import info.bioinfweb.libralign.AlignmentArea;
+import info.bioinfweb.libralign.AlignmentContentArea;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -54,6 +57,7 @@ public class SequenceOrder {
 
 	private AlignmentContentArea owner;
 	private List<Integer> idList = new ArrayList<Integer>();
+	private SequenceOrderType orderType = SequenceOrderType.SOURCE;
 
 	
 	/**
@@ -73,6 +77,11 @@ public class SequenceOrder {
 
 	public AlignmentContentArea getOwner() {
 		return owner;
+	}
+
+
+	public SequenceOrderType getOrderType() {
+		return orderType;
 	}
 
 
@@ -98,12 +107,29 @@ public class SequenceOrder {
 	}
 	
 	
+	public void refreshFromSource() {
+		SequenceOrderType orderType = getOrderType();
+		setSourceSequenceOrder();
+		switch (orderType) {
+			case ALPHABETICAL_ASCENDENT:
+				setAlphabeticalSequenceOrder(true);
+				break;
+			case ALPHABETICAL_DESCENDENT:
+				setAlphabeticalSequenceOrder(false);
+				break;
+			default:
+				break;  // Nothing to do.
+		}
+	}
+	
+	
 	/**
 	 * Sorts the sequences by their occurrence in the source data.
 	 * <p>
 	 * This method can also be used to refresh the sequence names if the data source changed.
 	 */
 	public void setSourceSequenceOrder() {
+		orderType = SequenceOrderType.SOURCE;
 		idList.clear();
 		if (getOwner().hasSequenceProvider()) {
 			Iterator<Integer> iterator = getOwner().getSequenceProvider().sequenceIDIterator();
@@ -122,9 +148,11 @@ public class SequenceOrder {
 	 */
 	public void setAlphabeticalSequenceOrder(boolean ascending) {
 		if (ascending) {
+			orderType = SequenceOrderType.ALPHABETICAL_ASCENDENT;
 			Collections.sort(idList, ASCENDING_ALPHABETICAL_COMPARATOR);
 		}
 		else {
+			orderType = SequenceOrderType.ALPHABETICAL_DESCENDENT;
 			Collections.sort(idList, DESCENDING_ALPHABETICAL_COMPARATOR);
 		}
 	}
@@ -176,7 +204,7 @@ public class SequenceOrder {
 	 * 
 	 * @return a reference to the name list this object uses to determine the order of the sequences.
 	 */
-	public List<Integer> getIdList() {
+	public List<Integer> getIDList() {
 		return idList;
 	}
 }

@@ -47,6 +47,7 @@ import info.bioinfweb.libralign.editsettings.WorkingMode;
 import info.bioinfweb.libralign.selection.SelectionChangeEvent;
 import info.bioinfweb.libralign.selection.SelectionListener;
 import info.bioinfweb.libralign.selection.SelectionModel;
+import info.bioinfweb.libralign.sequenceorder.SequenceOrder;
 import info.bioinfweb.libralign.sequenceprovider.SequenceDataChangeListener;
 import info.bioinfweb.libralign.sequenceprovider.SequenceDataProvider;
 import info.bioinfweb.libralign.sequenceprovider.events.SequenceChangeEvent;
@@ -494,6 +495,10 @@ public class AlignmentContentArea extends TICComponent implements SequenceDataCh
 	
 	@Override
 	public <T> void afterSequenceChange(SequenceChangeEvent<T> e) {
+		getSequenceOrder().refreshFromSource();
+		if (hasToolkitComponent()) {
+			getToolkitComponent().reinsertSubelements();
+		}
 		assignSize();
 		//repaint();  //TODO Does this have to be called?
 		//TODO Send message to all and/or remove some data areas? (Some might be data specific (e.g. pherograms), some not (e.g. consensus sequence).)

@@ -195,20 +195,20 @@ public abstract class AbstractListSequenceDataProvider<T>
 	}
 	
 	
-  /**
-   * This method is called by {@link #createNewSequence(int, String)} and must be implemented by inherited classes.
-   * In contrast to {@link #createNewSequence(int, String)} it provides an additional parameter specifying the
-   * initial capacity the returned list object shall have. This parameter value if set depending on the return 
-   * values of {@link #isUseMaxLength()} either to a fixed value as specified by {@link #getInitialCapacity()}
-   * or by the maximum length of other sequences in this provider if any of these contain more elements than
-   * {@link #getInitialCapacity()}. 
-   * 
+	/**
+	 * This method is called by {@link #createNewSequence(int, String)} and must be implemented by inherited classes.
+	 * In contrast to {@link #createNewSequence(int, String)} it provides an additional parameter specifying the
+	 * initial capacity the returned list object shall have. This parameter value if set depending on the return 
+	 * values of {@link #isUseMaxLength()} either to a fixed value as specified by {@link #getInitialCapacity()}
+	 * or by the maximum length of other sequences in this provider if any of these contain more elements than
+	 * {@link #getInitialCapacity()}. 
+	 * 
 	 * @param sequenceID - the ID the new sequence must have
 	 * @param sequenceName - the name the new sequence will have
-   * @param initialCapacity - the initial capicity the returned list object shall have
+	 * @param initialCapacity - the initial capacity the returned list object shall have
 	 * @return the new sequence object
-   */
-  protected abstract List<T> createNewSequence(int sequenceID, String sequenceName, int initialCapacity);
+	 */
+	protected abstract List<T> createNewSequence(int sequenceID, String sequenceName, int initialCapacity);
 	
 
 	@Override

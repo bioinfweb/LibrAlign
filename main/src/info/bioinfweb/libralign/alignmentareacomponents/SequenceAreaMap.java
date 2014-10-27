@@ -19,14 +19,13 @@
 package info.bioinfweb.libralign.alignmentareacomponents;
 
 
-import info.bioinfweb.libralign.AlignmentArea;
 import info.bioinfweb.libralign.AlignmentContentArea;
-import info.bioinfweb.libralign.selection.OneDimensionalSelection;
 import info.bioinfweb.libralign.selection.SelectionChangeEvent;
 import info.bioinfweb.libralign.selection.SelectionListener;
 import info.bioinfweb.libralign.sequenceprovider.SequenceDataProvider;
 
 import java.util.Iterator;
+import java.util.Map;
 import java.util.TreeMap;
 
 
@@ -48,7 +47,7 @@ public class SequenceAreaMap extends TreeMap<Integer, SequenceArea> implements S
 		this.owner = owner;
 		selectionInputListener = new CursorSelectionInputListener(owner);
 		owner.getSelection().addSelectionListener(this);
-		recreateElements();
+		updateElements();
 	}
 
 
@@ -58,24 +57,46 @@ public class SequenceAreaMap extends TreeMap<Integer, SequenceArea> implements S
 	
 	
 	/**
-	 * Clears the current contents of the map and creates a new instance for each sequence currently 
-	 * contained in the associated {@link SequenceDataProvider} (defined by {@link #getOwner()}) object.
+	 * Removes sequence areas for sequences that are not present anymore in the linked {@link SequenceDataProvider}
+	 * and adds new sequence areas for new sequences in the provider which were not present at the last call of this
+	 * method.
+	 * 
+	 * @since 0.3.0
 	 */
-	public void recreateElements() {
-		clear();
+	public void updateElements() {
 		if (getOwner().hasSequenceProvider()) {
-			SequenceDataProvider provider = getOwner().getSequenceProvider();
-			Iterator<Integer> iterator = provider.sequenceIDIterator();
+			// Backup this map and clear it: (Necessary to remove sequences that are not present in the source anymore.)
+			Map<Integer, SequenceArea> saveMap = new TreeMap<Integer, SequenceArea>(this);
+			clear();
+			
+			// (Re)insert sequence areas: 
+			Iterator<Integer> iterator = getOwner().getSequenceProvider().sequenceIDIterator();
 			while (iterator.hasNext()) {
 				Integer id = iterator.next();
-				SequenceArea sequenceArea = new SequenceArea(getOwner(), id);
-				sequenceArea.addMouseListener(selectionInputListener);
-				sequenceArea.addKeyListener(selectionInputListener);
+				SequenceArea sequenceArea = saveMap.get(id);
+				if (sequenceArea == null) {
+					sequenceArea = new SequenceArea(getOwner(), id);
+					sequenceArea.addMouseListener(selectionInputListener);
+					sequenceArea.addKeyListener(selectionInputListener);
+				}
+				else {
+					saveMap.remove(id);
+				}
 				put(id, sequenceArea);
 			}
+			
+			// Unregister listeners from removed sequence areas: (Would probably also work without this.)
+			for (Integer id: saveMap.keySet()) {
+				SequenceArea sequenceArea = saveMap.get(id);
+				sequenceArea.removeMouseListener(selectionInputListener);
+				sequenceArea.removeKeyListener(selectionInputListener);
+			}
+		}
+		else {
+			clear();
 		}
 	}
-
+	
 
 	public void repaintSequenceAreas() {
 		for (SequenceArea sequenceArea: values()) {

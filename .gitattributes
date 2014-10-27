@@ -24,7 +24,6 @@ main/src/info/bioinfweb/libralign/AlignmentSubArea.java -text svneol=unset#text/
 main/src/info/bioinfweb/libralign/GeneticCode.java -text svneol=unset#text/plain
 main/src/info/bioinfweb/libralign/MultipleAlignmentsContainer.java -text svneol=unset#text/plain
 main/src/info/bioinfweb/libralign/SequenceColorSchema.java -text svneol=unset#text/plain
-main/src/info/bioinfweb/libralign/SequenceOrder.java -text svneol=unset#text/plain
 main/src/info/bioinfweb/libralign/actions/AlignmentActionProvider.java -text svneol=unset#text/plain
 main/src/info/bioinfweb/libralign/alignmentareacomponents/CursorSelectionInputListener.java -text svneol=unset#text/plain
 main/src/info/bioinfweb/libralign/alignmentareacomponents/SWTAlignmentArea.java -text svneol=unset#text/plain
@@ -94,6 +93,8 @@ main/src/info/bioinfweb/libralign/selection/SelectionListener.java -text svneol=
 main/src/info/bioinfweb/libralign/selection/SelectionModel.java -text svneol=unset#text/plain
 main/src/info/bioinfweb/libralign/selection/SelectionType.java -text svneol=unset#text/plain
 main/src/info/bioinfweb/libralign/selection/package-info.java -text svneol=unset#text/plain
+main/src/info/bioinfweb/libralign/sequenceorder/SequenceOrder.java -text svneol=unset#text/plain
+main/src/info/bioinfweb/libralign/sequenceorder/SequenceOrderType.java -text
 main/src/info/bioinfweb/libralign/sequenceprovider/BasicSequenceDataView.java -text svneol=unset#text/plain
 main/src/info/bioinfweb/libralign/sequenceprovider/DataProvider.java -text svneol=unset#text/plain
 main/src/info/bioinfweb/libralign/sequenceprovider/SequenceAccess.java -text svneol=unset#text/plain

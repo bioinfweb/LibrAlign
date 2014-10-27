@@ -103,8 +103,8 @@ public class SWTAlignmentContentArea extends Composite implements ToolkitSpecifi
 	
 	public void removeAll() {
 		for (Control control : getChildren()) {  // Temporary implementation for removeAll() in Swing
-      control.dispose();                     //TODO Implement an alternative that keeps the instances that can be reused.
-    }
+			control.dispose();                     //TODO Implement an alternative that keeps the instances that can be reused.
+		}
 	}
 	
 	
@@ -116,7 +116,7 @@ public class SWTAlignmentContentArea extends Composite implements ToolkitSpecifi
 			control.setLayoutData(new RowData(size));
 			width = Math.max(width, size.x);
 			height += size.y;
-    }
+		}
 		setSize(width, height);
 	}
 
@@ -140,13 +140,15 @@ public class SWTAlignmentContentArea extends Composite implements ToolkitSpecifi
 	@Override
 	public void reinsertSubelements() {
 		DataAreaModel dataAreaModel = getIndependentComponent().getDataAreas();
-    removeAll();
+		removeAll();
+		sequenceAreaMap.updateElements();
 
 		addDataAreaList(dataAreaModel.getTopAreas());
 
-		Iterator<Integer> idIterator = getIndependentComponent().getSequenceOrder().getIdList().iterator();
+		Iterator<Integer> idIterator = getIndependentComponent().getSequenceOrder().getIDList().iterator();
 		while (idIterator.hasNext()) {
 			Integer id = idIterator.next();
+			System.out.println("Adding " + id);
 			sequenceAreaMap.get(id).createSWTWidget(this, SWT.NONE);
 			sequenceAreaMap.get(id).assignSize();
 			addDataAreaList(dataAreaModel.getSequenceAreas(id));
@@ -154,7 +156,7 @@ public class SWTAlignmentContentArea extends Composite implements ToolkitSpecifi
 
 		addDataAreaList(dataAreaModel.getBottomAreas());
 
-    assignSize();
+		assignSize();
 		//layout(true, true);  //TODO Necessary?
 	}
 

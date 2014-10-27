@@ -77,10 +77,11 @@ public class SwingAlignmentContentArea extends JComponent implements Scrollable,
 	@Override
 	public void reinsertSubelements() {
 		removeAll();
+		sequenceAreaMap.updateElements();
 
 		addDataAreaList(getIndependentComponent().getDataAreas().getTopAreas());
 		
-		Iterator<Integer> idIterator = getIndependentComponent().getSequenceOrder().getIdList().iterator();
+		Iterator<Integer> idIterator = getIndependentComponent().getSequenceOrder().getIDList().iterator();
 		while (idIterator.hasNext()) {
 			Integer id = idIterator.next();
 			add(sequenceAreaMap.get(id).createSwingComponent());
