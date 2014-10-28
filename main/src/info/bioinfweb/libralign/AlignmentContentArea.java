@@ -69,7 +69,7 @@ import info.bioinfweb.libralign.sequenceprovider.events.TokenChangeEvent;
  * @see AlignmentArea
  * @see AlignmentLabelArea
  */
-public class AlignmentContentArea extends TICComponent implements SequenceDataChangeListener {
+public class AlignmentContentArea extends TICComponent implements SequenceDataChangeListener, DataAreaModelListener {
 	public static final int COMPOUND_WIDTH = 10;
 	public static final int COMPOUND_HEIGHT = 14;
 	public static final String FONT_NAME = Font.SANS_SERIF;
@@ -111,19 +111,7 @@ public class AlignmentContentArea extends TICComponent implements SequenceDataCh
 			editSettings = new EditSettings();
 		}
 
-		dataAreas.addListener(new DataAreaModelListener() {
-			@Override
-			public void dataAreaVisibilityChanged(DataAreaChangeEvent e) {
-				// TODO Auto-generated method stub
-				
-			}
-			
-			@Override
-			public void dataAreaInsertedRemoved(DataAreaChangeEvent e) {
-				// TODO Auto-generated method stub
-				
-			}
-		});
+		dataAreas.addListener(this);
   }
 
 
@@ -529,5 +517,19 @@ public class AlignmentContentArea extends TICComponent implements SequenceDataCh
 		repaint();
 		//TODO Remove some data areas? (Some might be data specific (e.g. pherograms), some not (e.g. consensus sequence).)
 		getDataAreas().getSequenceDataChangeListener().afterProviderChanged(previous, current);
+	}
+
+
+	@Override
+	public void dataAreaInsertedRemoved(DataAreaChangeEvent e) {
+		if (hasToolkitComponent()) {
+			getToolkitComponent().reinsertSubelements();
+		}
+	}
+
+
+	@Override
+	public void dataAreaVisibilityChanged(DataAreaChangeEvent e) {
+		//TODO implement
 	}
 }
