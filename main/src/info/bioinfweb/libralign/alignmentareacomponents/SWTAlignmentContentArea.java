@@ -148,7 +148,6 @@ public class SWTAlignmentContentArea extends Composite implements ToolkitSpecifi
 		Iterator<Integer> idIterator = getIndependentComponent().getSequenceOrder().getIDList().iterator();
 		while (idIterator.hasNext()) {
 			Integer id = idIterator.next();
-			System.out.println("Adding " + id);
 			sequenceAreaMap.get(id).createSWTWidget(this, SWT.NONE);
 			sequenceAreaMap.get(id).assignSize();
 			addDataAreaList(dataAreaModel.getSequenceAreas(id));
