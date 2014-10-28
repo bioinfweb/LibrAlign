@@ -272,7 +272,8 @@ public class PherogramArea extends CustomHeightFullWidthArea implements Pherogra
 
 	@Override
 	public int getLength() {
-		return (getFirstSeqPos() + getProvider().getSequenceLength() - getLeftCutPosition()) * getOwner().getCompoundWidth();
+		return (getAlignmentModel().editableIndexByBaseCallIndex(getRightCutPosition()).getAfter() + 
+				(getProvider().getSequenceLength() - getRightCutPosition())) * getOwner().getCompoundWidth();
 	}
 
 
@@ -301,10 +302,12 @@ public class PherogramArea extends CustomHeightFullWidthArea implements Pherogra
 					getAlignmentModel().addShiftChange(
 							getAlignmentModel().baseCallIndexByEditableIndex(Math.max(0, e.getStartIndex() - 1)).getBefore(),  //TODO is getBefore immer sinnvoll? 
 							e.getAffectedTokens().size());
+					assignSize();
 					break;
 				case DELETION:
 					getAlignmentModel().addShiftChange(getAlignmentModel().baseCallIndexByEditableIndex(e.getStartIndex()).getAfter()/*getBefore()*/,  //TODO is getBefore immer sinnvoll? 
 							-e.getAffectedTokens().size());
+					assignSize();
 					break;
 				case REPLACEMENT:  // Nothing to do (Replacements differing in length are not allowed.)
 					break;
