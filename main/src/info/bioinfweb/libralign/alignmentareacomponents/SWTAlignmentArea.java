@@ -137,7 +137,7 @@ public class SWTAlignmentArea extends Composite implements ToolkitSpecificAlignm
 					@Override
 					public void controlResized(ControlEvent e) {
 						Dimension size = getIndependentComponent().getLabelArea().getSize();
-  					int borderWidth = 2 * (labelContainer.getBorderWidth() + labelScroller.getBorderWidth());
+						int borderWidth = 2 * (labelContainer.getBorderWidth() + labelScroller.getBorderWidth());
 						GridData data = (GridData)labelContainer.getLayoutData();
 						data.widthHint = size.width + borderWidth;
 						data.heightHint = size.height + borderWidth;
@@ -176,11 +176,11 @@ public class SWTAlignmentArea extends Composite implements ToolkitSpecificAlignm
 	}
 	
 	
-  @Override
+	@Override
 	public void setHideHorizontalScrollBar(boolean hideHorizontalScrollBar) {
-  	labelResizeListener.setHideHorizontalBar(hideHorizontalScrollBar);
-  	contentResizeListener.setHideHorizontalBar(hideHorizontalScrollBar);
-  }
+		labelResizeListener.setHideHorizontalBar(hideHorizontalScrollBar);
+		contentResizeListener.setHideHorizontalBar(hideHorizontalScrollBar);
+ 	}
 
 
 	@Override

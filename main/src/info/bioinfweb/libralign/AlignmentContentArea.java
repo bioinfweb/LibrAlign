@@ -523,7 +523,7 @@ public class AlignmentContentArea extends TICComponent implements SequenceDataCh
 
 
 	@Override
-	public <T, U> void afterProviderChanged(SequenceDataProvider<T> previous,	SequenceDataProvider<U> current) {
+	public <T, U> void afterProviderChanged(SequenceDataProvider<T> previous, SequenceDataProvider<U> current) {
 		assignSize();
 		repaint();
 		//TODO Remove some data areas? (Some might be data specific (e.g. pherograms), some not (e.g. consensus sequence).)
