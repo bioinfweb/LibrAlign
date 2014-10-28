@@ -117,6 +117,12 @@ public class SwingAlignmentContentArea extends JComponent implements Scrollable,
 
 	
 	@Override
+	public void assignSequenceAreaSize(int sequenceID) throws IllegalArgumentException {
+		AlignmentContentAreaTools.assignSequenceAreaSize(sequenceAreaMap, sequenceID);
+	}
+
+
+	@Override
 	public Dimension getPreferredScrollableViewportSize() {
 		// TODO Auto-generated method stub
 		return getPreferredSize();

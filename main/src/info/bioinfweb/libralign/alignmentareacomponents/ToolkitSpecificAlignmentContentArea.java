@@ -57,4 +57,12 @@ public interface ToolkitSpecificAlignmentContentArea extends ToolkitComponent {
    * @return the height in pixels
    */
   public int getHeight();
+  
+  /**
+   * Delegates to the {@link SequenceArea} contained in this component to assign its current size.
+   * 
+   * @param sequenceID - the ID of the sequence displayed in the sequence area to be resized
+   * @throws IllegalArgumentException if no sequence area for the specified sequence ID was found
+   */
+  public void assignSequenceAreaSize(int sequenceID) throws IllegalArgumentException;
 }

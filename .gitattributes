@@ -25,6 +25,7 @@ main/src/info/bioinfweb/libralign/GeneticCode.java -text svneol=unset#text/plain
 main/src/info/bioinfweb/libralign/MultipleAlignmentsContainer.java -text svneol=unset#text/plain
 main/src/info/bioinfweb/libralign/SequenceColorSchema.java -text svneol=unset#text/plain
 main/src/info/bioinfweb/libralign/actions/AlignmentActionProvider.java -text svneol=unset#text/plain
+main/src/info/bioinfweb/libralign/alignmentareacomponents/AlignmentContentAreaTools.java -text svneol=unset#text/plain
 main/src/info/bioinfweb/libralign/alignmentareacomponents/CursorSelectionInputListener.java -text svneol=unset#text/plain
 main/src/info/bioinfweb/libralign/alignmentareacomponents/SWTAlignmentArea.java -text svneol=unset#text/plain
 main/src/info/bioinfweb/libralign/alignmentareacomponents/SWTAlignmentContentArea.java -text svneol=unset#text/plain

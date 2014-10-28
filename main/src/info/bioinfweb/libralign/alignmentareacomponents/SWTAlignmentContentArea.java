@@ -171,4 +171,10 @@ public class SWTAlignmentContentArea extends Composite implements ToolkitSpecifi
 	public int getHeight() {
 		return getSize().y;
 	}
+
+
+	@Override
+	public void assignSequenceAreaSize(int sequenceID) throws IllegalArgumentException {
+		AlignmentContentAreaTools.assignSequenceAreaSize(sequenceAreaMap, sequenceID);
+	}
 }

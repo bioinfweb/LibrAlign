@@ -516,6 +516,7 @@ public class AlignmentContentArea extends TICComponent implements SequenceDataCh
 
 	@Override
 	public <T> void afterTokenChange(TokenChangeEvent<T> e) {
+		getToolkitComponent().assignSequenceAreaSize(e.getSequenceID());  // Needs to happen before assignSize().	
 		assignSize();
 		repaint();  // In some cases multiple paint events may be fired, because the selection or the component size were also changed.
 		getDataAreas().getSequenceDataChangeListener().afterTokenChange(e);
