@@ -29,52 +29,18 @@ import info.bioinfweb.libralign.sequenceprovider.implementations.PackedSequenceD
 import info.bioinfweb.libralign.sequenceprovider.tokenset.BioJavaTokenSet;
 import info.bioinfweb.libralign.sequenceprovider.tokenset.TokenSet;
 
-import java.awt.EventQueue;
-
-import javax.swing.JFrame;
+import java.io.File;
+import java.io.IOException;
 
 import org.biojava.bio.chromatogram.ChromatogramFactory;
 import org.biojava.bio.chromatogram.UnsupportedChromatogramFormatException;
 import org.biojava3.core.sequence.compound.DNACompoundSet;
 import org.biojava3.core.sequence.compound.NucleotideCompound;
 
-import java.awt.BorderLayout;
-import java.io.File;
-import java.io.IOException;
-
 
 
 public class EditableAlignmentTest {
-	private JFrame frame;
-	
-	
-	/**
-	 * Launch the application.
-	 */
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					EditableAlignmentTest window = new EditableAlignmentTest();
-					window.frame.setVisible(true);
-				} 
-				catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
-	
-	
-	/**
-	 * Create the application.
-	 */
-	public EditableAlignmentTest() {
-		initialize();
-	}
-	
-	
-	private AlignmentArea createAlignmentArea() {
+	protected static AlignmentArea createAlignmentArea() {
 		AlignmentArea result = new AlignmentArea();
 		AlignmentContentArea contentArea = result.getContentArea();
 		
@@ -125,17 +91,5 @@ public class EditableAlignmentTest {
 		contentArea.setSequenceProvider(provider, false);
 		
 		return result;
-	}
-	
-	
-	/**
-	 * Initialize the contents of the frame.
-	 */
-	private void initialize() {
-		frame = new JFrame();
-		frame.setBounds(100, 100, 450, 300);
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		
-		frame.getContentPane().add(createAlignmentArea().createSwingComponent(), BorderLayout.CENTER);
-	}
+	}	
 }
