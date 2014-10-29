@@ -31,6 +31,7 @@ import java.util.EnumSet;
 import java.util.Set;
 
 import info.bioinfweb.commons.Math2;
+import info.bioinfweb.commons.collections.ListChangeType;
 import info.bioinfweb.commons.tic.TICPaintEvent;
 import info.bioinfweb.libralign.AlignmentArea;
 import info.bioinfweb.libralign.AlignmentContentArea;
@@ -196,7 +197,9 @@ public class SequenceIndexArea extends CustomHeightFullWidthArea {
 
 
 	@Override
-	public <T> void afterSequenceChange(SequenceChangeEvent<T> e) {}
+	public <T> void afterSequenceChange(SequenceChangeEvent<T> e) {
+		assignSize();  // Longest sequence could have been deleted or a longer sequence could have been added.
+	}
 
 
 	@Override
@@ -204,9 +207,15 @@ public class SequenceIndexArea extends CustomHeightFullWidthArea {
 
 
 	@Override
-	public <T> void afterTokenChange(TokenChangeEvent<T> e) {}
+	public <T> void afterTokenChange(TokenChangeEvent<T> e) {
+		if (!e.getType().equals(ListChangeType.REPLACEMENT)) {
+			assignSize();  // Length of the longest sequence could have changed.
+		}
+	}
 
 
 	@Override
-	public <T, U> void afterProviderChanged(SequenceDataProvider<T> previous,	SequenceDataProvider<U> current) {}
+	public <T, U> void afterProviderChanged(SequenceDataProvider<T> previous,	SequenceDataProvider<U> current) {
+		assignSize();
+	}
 }
