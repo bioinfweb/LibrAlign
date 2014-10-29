@@ -310,7 +310,7 @@ public class PherogramArea extends CustomHeightFullWidthArea implements Pherogra
 					assignSize();
 					break;
 				case REPLACEMENT:  // Nothing to do (Replacements differing in length are not allowed.)
-					break;
+					break;  //TODO If a token is replaced by a gap a shift change would have to be added. (Solve this problem when gap displaying is generally implemented for all data areas.)
 			}
 		}
 	}

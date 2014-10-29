@@ -504,9 +504,8 @@ public class AlignmentContentArea extends TICComponent implements SequenceDataCh
 
 	@Override
 	public <T> void afterTokenChange(TokenChangeEvent<T> e) {
-		getToolkitComponent().assignSequenceAreaSize(e.getSequenceID());  // Needs to happen before assignSize().	
-		assignSize();
-		repaint();  // In some cases multiple paint events may be fired, because the selection or the component size were also changed.
+		assignSize();  // Needs to happen first (otherwise the child elements get cut off). (Unclear why this is the case.)
+		getToolkitComponent().assignSequenceAreaSize(e.getSequenceID());
 		getDataAreas().getSequenceDataChangeListener().afterTokenChange(e);
 	}
 
@@ -514,7 +513,7 @@ public class AlignmentContentArea extends TICComponent implements SequenceDataCh
 	@Override
 	public <T, U> void afterProviderChanged(SequenceDataProvider<T> previous, SequenceDataProvider<U> current) {
 		assignSize();
-		repaint();
+		repaint();  //TODO Needed?
 		//TODO Remove some data areas? (Some might be data specific (e.g. pherograms), some not (e.g. consensus sequence).)
 		getDataAreas().getSequenceDataChangeListener().afterProviderChanged(previous, current);
 	}
