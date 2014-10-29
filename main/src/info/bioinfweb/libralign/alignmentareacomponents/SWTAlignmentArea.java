@@ -50,10 +50,10 @@ public class SWTAlignmentArea extends Composite implements ToolkitSpecificAlignm
 	
 	private Composite labelContainer;
 	private ScrolledComposite labelScroller;
-  private SWTScrolledCompositeResizeListener labelResizeListener;
-  private Composite contentContainer;
-  private ScrolledComposite contentScroller;
-  private SWTScrolledCompositeResizeListener contentResizeListener;
+	private SWTScrolledCompositeResizeListener labelResizeListener;
+	private Composite contentContainer;
+	private ScrolledComposite contentScroller;
+	private SWTScrolledCompositeResizeListener contentResizeListener;
   
   
 	/**

@@ -23,11 +23,8 @@ import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
-import java.util.Iterator;
 
 import info.bioinfweb.libralign.AlignmentArea;
-import info.bioinfweb.libralign.dataarea.DataArea;
-import info.bioinfweb.libralign.dataarea.DataAreaList;
 
 import javax.swing.AbstractAction;
 import javax.swing.Action;
