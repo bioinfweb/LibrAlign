@@ -504,7 +504,7 @@ public class AlignmentContentArea extends TICComponent implements SequenceDataCh
 
 	@Override
 	public <T> void afterTokenChange(TokenChangeEvent<T> e) {
-		assignSize();  // Needs to happen first (otherwise the child elements get cut off). (Unclear why this is the case.)
+		assignSize();  // Needs to happen first (otherwise the child elements get cut off in SWT probably because they are only painted as far as they are visible in the parent component even if the parent will be resized later on).
 		getToolkitComponent().assignSequenceAreaSize(e.getSequenceID());
 		getDataAreas().getSequenceDataChangeListener().afterTokenChange(e);
 	}
