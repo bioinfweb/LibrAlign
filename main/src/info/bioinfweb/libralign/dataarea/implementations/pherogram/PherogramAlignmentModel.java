@@ -390,7 +390,7 @@ public class PherogramAlignmentModel {
 			double baseCallPaintDistance = compoundWidth * editPosPerBaseCallPos / stepWidth;
 			result.setPaintStartX(baseCallIndex, baseCallPaintX);
 			baseCallPaintX += 0.5 * baseCallPaintDistance;
-  		if (result.getGapPattern(baseCallIndex) == null) {
+			if (result.getGapPattern(baseCallIndex) == null) {
 				result.setPaintCenterX(baseCallIndex, baseCallPaintX);
 				for (int i = 1; i < stepWidth; i++) {
 					result.setHorizontalScale(baseCallIndex + i, result.getHorizontalScale(baseCallIndex));  // Scale remains constant.
@@ -400,12 +400,12 @@ public class PherogramAlignmentModel {
 					result.setPaintCenterX(baseCallIndex + i, baseCallPaintX);
 					// GapPattern does not need to be set, because it must be null in this case.
 				}
-  		}
-  		else {	// Treat gaps (in this case stepWidth should always be 1):
-  			GapPattern gapPattern = result.getGapPattern(baseCallIndex);
-  			result.setPaintCenterX(baseCallIndex, baseCallPaintX + compoundWidth * gapPattern.countGapsBeforeCurveCenter());
-  			baseCallPaintX += compoundWidth * gapPattern.getGapCount();
-  		}
+			}
+			else {	// Treat gaps (in this case stepWidth should always be 1):
+				GapPattern gapPattern = result.getGapPattern(baseCallIndex);
+				result.setPaintCenterX(baseCallIndex, baseCallPaintX + compoundWidth * gapPattern.countGapsBeforeCurveCenter());
+				baseCallPaintX += compoundWidth * gapPattern.getGapCount();
+			}
 			baseCallPaintX += 0.5 * baseCallPaintDistance;
 			startTraceIndex = endTraceIndex;
 		}
