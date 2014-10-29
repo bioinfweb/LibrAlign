@@ -27,19 +27,30 @@ import org.eclipse.swt.SWT;
 
 
 public class SWTTest extends EditableAlignmentTest {
+	protected Shell shell;
+
+	
 	/**
 	 * Launch the application.
 	 * @param args
 	 */
 	public static void main(String[] args) {
+		try {
+			SWTTest window = new SWTTest();
+			window.open();
+		} 
+		catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
+	
+	/**
+	 * Open the window.
+	 */
+	public void open() {
 		Display display = Display.getDefault();
-		Shell shell = new Shell();
-		shell.setSize(450, 300);
-		shell.setText("SWT editable alignment test");
-		shell.setLayout(new FillLayout(SWT.VERTICAL));
-		
-		createAlignmentArea().createSWTWidget(shell, SWT.NONE);
-		
+		createContents();
 		shell.open();
 		shell.layout();
 		while (!shell.isDisposed()) {
@@ -47,5 +58,41 @@ public class SWTTest extends EditableAlignmentTest {
 				display.sleep();
 			}
 		}
-	}	
+	}
+	
+	
+	/**
+	 * Create contents of the window.
+	 */
+	protected void createContents() {
+		shell = new Shell();
+		shell.setSize(450, 300);
+		shell.setText("SWT editable alignment test");
+		shell.setLayout(new FillLayout(SWT.VERTICAL));
+		
+		getAlignmentArea().createSWTWidget(shell, SWT.NONE);
+	}
+	
+	
+//	/**
+//	 * Launch the application.
+//	 * @param args
+//	 */
+//	public static void main(String[] args) {
+//		Display display = Display.getDefault();
+//		Shell shell = new Shell();
+//		shell.setSize(450, 300);
+//		shell.setText("SWT editable alignment test");
+//		shell.setLayout(new FillLayout(SWT.VERTICAL));
+//		
+//		createAlignmentArea().createSWTWidget(shell, SWT.NONE);
+//		
+//		shell.open();
+//		shell.layout();
+//		while (!shell.isDisposed()) {
+//			if (!display.readAndDispatch()) {
+//				display.sleep();
+//			}
+//		}
+//	}	
 }

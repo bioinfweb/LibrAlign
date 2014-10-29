@@ -40,56 +40,64 @@ import org.biojava3.core.sequence.compound.NucleotideCompound;
 
 
 public class EditableAlignmentTest {
-	protected static AlignmentArea createAlignmentArea() {
-		AlignmentArea result = new AlignmentArea();
-		AlignmentContentArea contentArea = result.getContentArea();
-		
-		TokenSet<NucleotideCompound> tokenSet = new BioJavaTokenSet<NucleotideCompound>(new DNACompoundSet(), true);
-		SequenceDataProvider<NucleotideCompound> provider = new PackedSequenceDataProvider<NucleotideCompound>(tokenSet);
-		
-		// Add index area:
-		contentArea.getDataAreas().getTopAreas().add(new SequenceIndexArea(contentArea));
-		
-		// Test sequence:
-		provider.addSequence("A");
-		int id = provider.sequenceIDByName("A");
-		provider.insertTokenAt(id, 0, tokenSet.tokenByKeyChar('A'));
-		provider.insertTokenAt(id, 1, tokenSet.tokenByKeyChar('C'));
-		provider.insertTokenAt(id, 2, tokenSet.tokenByKeyChar('G'));
-		provider.insertTokenAt(id, 3, tokenSet.tokenByKeyChar('-'));
-		provider.insertTokenAt(id, 4, tokenSet.tokenByKeyChar('T'));
-		
-		// Another test sequence:
-		provider.addSequence("B");
-		id = provider.sequenceIDByName("B");
-		provider.insertTokenAt(id, 0, tokenSet.tokenByKeyChar('A'));
-		provider.insertTokenAt(id, 1, tokenSet.tokenByKeyChar('C'));
-		provider.insertTokenAt(id, 2, tokenSet.tokenByKeyChar('G'));
-		provider.insertTokenAt(id, 3, tokenSet.tokenByKeyChar('G'));
-		provider.insertTokenAt(id, 4, tokenSet.tokenByKeyChar('T'));
-		
-		// Test sequence with pherogram:
-		try {
-			provider.addSequence("C");
-			id = provider.sequenceIDByName("C");
-			BioJavaPherogramProvider pherogramProvider = new BioJavaPherogramProvider(ChromatogramFactory.create(
-	      	new File("data/pherograms/Test_qualityScore.scf")));
-
-			// Copy base call sequence into alignment:
-			for (int i = 0; i < pherogramProvider.getSequenceLength(); i++) {
-				provider.insertTokenAt(id, i, tokenSet.tokenByKeyChar(pherogramProvider.getBaseCall(i).getUpperedBase().charAt(0)));
+	private AlignmentArea alignmentArea = null;
+	
+	
+	protected  AlignmentArea getAlignmentArea() {
+		if (alignmentArea == null) {
+			alignmentArea = new AlignmentArea();
+			AlignmentContentArea contentArea = alignmentArea.getContentArea();
+			
+			TokenSet<NucleotideCompound> tokenSet = new BioJavaTokenSet<NucleotideCompound>(new DNACompoundSet(), true);
+			SequenceDataProvider<NucleotideCompound> provider = new PackedSequenceDataProvider<NucleotideCompound>(tokenSet);
+			
+			// Add index area:
+			contentArea.getDataAreas().getTopAreas().add(new SequenceIndexArea(contentArea));
+			
+			// Test sequence:
+			provider.addSequence("A");
+			int id = provider.sequenceIDByName("A");
+			provider.insertTokenAt(id, 0, tokenSet.tokenByKeyChar('A'));
+			provider.insertTokenAt(id, 1, tokenSet.tokenByKeyChar('C'));
+			provider.insertTokenAt(id, 2, tokenSet.tokenByKeyChar('G'));
+			provider.insertTokenAt(id, 3, tokenSet.tokenByKeyChar('-'));
+			provider.insertTokenAt(id, 4, tokenSet.tokenByKeyChar('T'));
+			
+			// Another test sequence:
+			provider.addSequence("B");
+			id = provider.sequenceIDByName("B");
+			provider.insertTokenAt(id, 0, tokenSet.tokenByKeyChar('A'));
+			provider.insertTokenAt(id, 1, tokenSet.tokenByKeyChar('C'));
+			provider.insertTokenAt(id, 2, tokenSet.tokenByKeyChar('G'));
+			provider.insertTokenAt(id, 3, tokenSet.tokenByKeyChar('G'));
+			provider.insertTokenAt(id, 4, tokenSet.tokenByKeyChar('T'));
+			
+			// Test sequence with pherogram:
+			try {
+				provider.addSequence("C");
+				id = provider.sequenceIDByName("C");
+				BioJavaPherogramProvider pherogramProvider = new BioJavaPherogramProvider(ChromatogramFactory.create(
+		      	new File("data/pherograms/Test_qualityScore.scf")));
+	
+				// Copy base call sequence into alignment:
+				for (int i = 0; i < pherogramProvider.getSequenceLength(); i++) {
+					provider.insertTokenAt(id, i, tokenSet.tokenByKeyChar(pherogramProvider.getBaseCall(i).getUpperedBase().charAt(0)));
+				}
+				
+				// Add data area:
+				PherogramArea pherogramArea = new PherogramArea(alignmentArea.getContentArea(), pherogramProvider);
+				alignmentArea.getContentArea().getDataAreas().getSequenceAreas(id).add(pherogramArea);
+			}
+			catch (UnsupportedChromatogramFormatException | IOException e) {
+				e.printStackTrace();
 			}
 			
-			// Add data area:
-			PherogramArea pherogramArea = new PherogramArea(result.getContentArea(), pherogramProvider);
-			result.getContentArea().getDataAreas().getSequenceAreas(id).add(pherogramArea);
-		}
-		catch (UnsupportedChromatogramFormatException | IOException e) {
-			e.printStackTrace();
+			contentArea.setSequenceProvider(provider, false);
 		}
 		
-		contentArea.setSequenceProvider(provider, false);
-		
-		return result;
-	}	
+		return alignmentArea;
+	}
+	
+	
+	
 }

@@ -65,6 +65,6 @@ public class SwingTest extends EditableAlignmentTest {
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.setTitle("Swing editable alignment test");
 		
-		frame.getContentPane().add(createAlignmentArea().createSwingComponent(), BorderLayout.CENTER);
+		frame.getContentPane().add(getAlignmentArea().createSwingComponent(), BorderLayout.CENTER);
 	}
 }
