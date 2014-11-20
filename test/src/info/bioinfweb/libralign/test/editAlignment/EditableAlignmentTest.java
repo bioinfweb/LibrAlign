@@ -99,5 +99,37 @@ public class EditableAlignmentTest {
 	}
 	
 	
+	private String newSequenceName() {
+		int index = 1;
+		while (getAlignmentArea().getContentArea().getSequenceProvider().sequenceIDByName(
+				"Sequence" + index) != SequenceDataProvider.NO_SEQUENCE_FOUND) {
+			index++;
+		}
+		return "Sequence" + index;
+	}
 	
+	
+	protected void addPherogramSequence() {
+		try {
+			SequenceDataProvider provider = getAlignmentArea().getContentArea().getSequenceProvider();
+			String name = newSequenceName();
+			provider.addSequence(name);
+			int id = provider.sequenceIDByName(name);
+			BioJavaPherogramProvider pherogramProvider = new BioJavaPherogramProvider(ChromatogramFactory.create(
+	      	new File("data/pherograms/Test_qualityScore.scf")));
+
+			// Copy base call sequence into alignment:
+			for (int i = 0; i < pherogramProvider.getSequenceLength(); i++) {
+				provider.insertTokenAt(id, i, provider.getTokenSet().tokenByKeyChar(
+						pherogramProvider.getBaseCall(i).getUpperedBase().charAt(0)));
+			}
+			
+			// Add data area:
+			PherogramArea pherogramArea = new PherogramArea(alignmentArea.getContentArea(), pherogramProvider);
+			alignmentArea.getContentArea().getDataAreas().getSequenceAreas(id).add(pherogramArea);
+		}
+		catch (UnsupportedChromatogramFormatException | IOException e) {
+			e.printStackTrace();
+		}
+	}
 }

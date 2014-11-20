@@ -23,6 +23,13 @@ import java.awt.BorderLayout;
 import java.awt.EventQueue;
 
 import javax.swing.JFrame;
+import javax.swing.JMenuBar;
+import javax.swing.JMenu;
+import javax.swing.JMenuItem;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
 
 
 
@@ -66,5 +73,19 @@ public class SwingTest extends EditableAlignmentTest {
 		frame.setTitle("Swing editable alignment test");
 		
 		frame.getContentPane().add(getAlignmentArea().createSwingComponent(), BorderLayout.CENTER);
+		
+		JMenuBar mainMenu = new JMenuBar();
+		frame.setJMenuBar(mainMenu);
+		
+		JMenu testMenu = new JMenu("Test");
+		mainMenu.add(testMenu);
+		
+		JMenuItem addPherogramMenuItem = new JMenuItem("Add Pherogram");
+		addPherogramMenuItem.addActionListener(new ActionListener() {
+					public void actionPerformed(ActionEvent arg0) {
+						addPherogramSequence();
+					}
+				});
+		testMenu.add(addPherogramMenuItem);
 	}
 }
