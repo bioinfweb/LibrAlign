@@ -31,7 +31,9 @@ import java.util.List;
 
 /**
  * Object that stores the working mode and the edit mode (insert or overwrite) of an {@link AlignmentContentArea}
- * or a {@link MultipleAlignmentsContainer}.
+ * or a {@link MultipleAlignmentsContainer}. Additionally the <i>insertLeftInDataArea</i> property is stored which
+ * defines how additional space shall be positioned in data areas, if a new token is inserted into the sequence they
+ * are attached to.
  * 
  * @author BenStoever
  * @since 0.3.0
