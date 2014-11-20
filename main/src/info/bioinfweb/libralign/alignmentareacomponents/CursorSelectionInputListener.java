@@ -199,7 +199,7 @@ public class CursorSelectionInputListener extends TICMouseAdapter implements TIC
 				}
 				break;
 			case KeyEvent.VK_INSERT:  //TODO Allow to do something different on that key = unbind this event.
-				getOwner().getEditSettings().changeInsert();
+				getOwner().getEditSettings().toggleInsert();
 				break;
 			case KeyEvent.VK_DELETE:  //TODO Allow to do something different on that key = unbind this event.
 				if (!actionProvider.deleteForward()) {

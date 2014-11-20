@@ -21,6 +21,7 @@ package info.bioinfweb.libralign.editsettings;
 
 import info.bioinfweb.libralign.AlignmentContentArea;
 import info.bioinfweb.libralign.MultipleAlignmentsContainer;
+import info.bioinfweb.libralign.dataarea.implementations.pherogram.PherogramArea;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -38,6 +39,7 @@ import java.util.List;
 public class EditSettings {
 	private boolean insert = true; 
   private WorkingMode workingMode = WorkingMode.VIEW;
+  private boolean insertLeftInDataArea = true;
   private List<EditSettingsListener> listeners = new ArrayList<EditSettingsListener>();
   
   
@@ -54,7 +56,7 @@ public class EditSettings {
 	}
 	
 	
-	public void changeInsert() {
+	public void toggleInsert() {
 		insert = !insert;
 		fireInsertChanged();
 	}
@@ -73,6 +75,35 @@ public class EditSettings {
 		}
 	}	
 
+	
+	/**
+	 * Determines whether data areas displaying content that is aligned to the sequence they are attached to shall insert
+	 * additional space on the left or the right if a new token is inserted into the sequence that carries the data area.
+	 * <p>
+	 * {@link PherogramArea} would be an example for a data area using this flag. It determines if the pherogram shall be
+	 * stretched left or right of a newly inserted token which is not a gap.
+	 * 
+	 * @return {@code true} if new space shall be inserted left of the edit and {@code false} if new space shall be inserted 
+	 *         on the right.
+	 */
+	public boolean isInsertLeftInDataArea() {
+		return insertLeftInDataArea;
+	}
+
+
+	public void setInsertLeftInDataArea(boolean insertLeftInDataArea) {
+		if (this.insertLeftInDataArea != insertLeftInDataArea) {
+			this.insertLeftInDataArea = insertLeftInDataArea;
+			fireInsertLeftInDataAreaChanged();
+		}
+	}
+
+
+	public void toggleInsertLeftInDataArea() {
+		insertLeftInDataArea = !insertLeftInDataArea;
+		fireInsertLeftInDataAreaChanged();
+	}
+	
 	
 	public boolean addListener(EditSettingsListener listener) {
 		return listeners.add(listener);
@@ -94,6 +125,13 @@ public class EditSettings {
 	protected void fireWorkingModeChanged(WorkingMode previousWorkingMode) {
 		for (Iterator<EditSettingsListener> iterator = listeners.iterator(); iterator.hasNext();) {
 			iterator.next().workingModeChanged(new EditSettingsChangeEvent(this, previousWorkingMode));
+		}
+	}
+	
+	
+	protected void fireInsertLeftInDataAreaChanged() {
+		for (Iterator<EditSettingsListener> iterator = listeners.iterator(); iterator.hasNext();) {
+			iterator.next().insertLeftInDataAreaChanged(new EditSettingsChangeEvent(this));
 		}
 	}
 }

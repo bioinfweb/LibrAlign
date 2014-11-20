@@ -30,7 +30,7 @@ import java.util.EventListener;
  */
 public interface EditSettingsListener extends EventListener {
 	/**
-	 * Called if the insert flag of {@link EditSettings} was changed.
+	 * Called if the <i>insert</i> flag of {@link EditSettings} was changed.
 	 * 
 	 * @param event - the event object describing the change
 	 */
@@ -42,4 +42,11 @@ public interface EditSettingsListener extends EventListener {
 	 * @param event - the event object describing the change
 	 */
 	public void workingModeChanged(EditSettingsChangeEvent event);
+
+	/**
+	 * Called if the <i>insertLeftInDataArea</i> flag of {@link EditSettings} was changed.
+	 * 
+	 * @param event - the event object describing the change
+	 */
+	public void insertLeftInDataAreaChanged(EditSettingsChangeEvent event);
 }

@@ -299,8 +299,9 @@ public class PherogramArea extends CustomHeightFullWidthArea implements Pherogra
 		if (e.getSequenceID() == getList().getLocation().getSequenceID()) {
 			switch (e.getType()) {
 				case INSERTION:
+					int addend = getOwner().getEditSettings().isInsertLeftInDataArea() ? -1 : 0;
 					getAlignmentModel().addShiftChange(
-							getAlignmentModel().baseCallIndexByEditableIndex(Math.max(0, e.getStartIndex() - 1)).getBefore(),  //TODO is getBefore immer sinnvoll? 
+							getAlignmentModel().baseCallIndexByEditableIndex(Math.max(0, e.getStartIndex() + addend)).getBefore(),  //TODO is getBefore immer sinnvoll? 
 							e.getAffectedTokens().size());
 					assignSize();
 					break;

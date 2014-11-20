@@ -44,6 +44,7 @@ import info.bioinfweb.libralign.alignmentareacomponents.ToolkitSpecificAlignment
 public class AlignmentArea extends TICComponent {
 	/** Defines the width of the divider of the GUI components for the head, content, and bottom area. */ 
 	public static final int DIVIDER_WIDTH = 2;
+	
 	public static final int MIN_PART_AREA_HEIGHT = 5;
 	
 	
