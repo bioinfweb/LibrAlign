@@ -124,7 +124,6 @@ public class SWTAlignmentArea extends Composite implements ToolkitSpecificAlignm
 		verticalSyncListener.registerToAll();		
 
 		// Link label area:
-		labelArea.setAlignmentContentArea(contentArea);
 		contentArea.addControlListener(new ControlAdapter() {
 					@Override
 					public void controlResized(ControlEvent e) {

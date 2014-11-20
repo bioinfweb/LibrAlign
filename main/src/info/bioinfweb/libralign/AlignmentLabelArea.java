@@ -47,7 +47,6 @@ public class AlignmentLabelArea extends TICComponent {
 	
 	
   private AlignmentArea owner;
-  private ToolkitSpecificAlignmentContentArea alignmentContentArea;
 	
 	
 	/**
@@ -60,18 +59,6 @@ public class AlignmentLabelArea extends TICComponent {
 	public AlignmentLabelArea(AlignmentArea owner) {
 		super();
 		this.owner = owner;
-		this.alignmentContentArea = null;
-	}
-
-
-	public ToolkitSpecificAlignmentContentArea getAlignmentContentArea() {
-		return alignmentContentArea;
-	}
-
-
-	public void setAlignmentContentArea(ToolkitSpecificAlignmentContentArea alignmentContentArea) {
-		this.alignmentContentArea = alignmentContentArea;
-		assignSize();
 	}
 
 
@@ -102,11 +89,7 @@ public class AlignmentLabelArea extends TICComponent {
 	
 	@Override
 	public Dimension getSize() {
-		int height = 0;
-		if (getAlignmentContentArea() != null) {
-			height = getAlignmentContentArea().getHeight();
-		}
-		return new Dimension(Math2.roundUp(calculateWidth()),	height);  // If references starting from owner would be used here, there would be problems in initialization order.
+		return new Dimension(Math2.roundUp(calculateWidth()),	getOwner().getContentArea().getSize().height);  // If references starting from owner would be used here, there would be problems in initialization order.
 	}
 
 	

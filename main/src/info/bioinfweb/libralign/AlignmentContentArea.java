@@ -481,13 +481,23 @@ public class AlignmentContentArea extends TICComponent implements SequenceDataCh
 	}
 	
 	
+	/**
+	 * Calls {@link #assignSize()} on this object and afterwards the {@code assignSize()} method of the 
+	 * {@link AlignmentLabelArea} associated with {@link #getOwner()}.
+	 */
+	public void assignSizeToThisAndLabelArea() {
+		assignSize();
+		getOwner().getLabelArea().assignSize();
+	}
+	
+
 	@Override
 	public <T> void afterSequenceChange(SequenceChangeEvent<T> e) {
 		getSequenceOrder().refreshFromSource();
 		if (hasToolkitComponent()) {
 			getToolkitComponent().reinsertSubelements();
 		}
-		assignSize();
+		assignSizeToThisAndLabelArea();
 		//repaint();  //TODO Does this have to be called?
 		//TODO Send message to all and/or remove some data areas? (Some might be data specific (e.g. pherograms), some not (e.g. consensus sequence).)
 		getDataAreas().getSequenceDataChangeListener().afterSequenceChange(e);
@@ -496,8 +506,8 @@ public class AlignmentContentArea extends TICComponent implements SequenceDataCh
 
 	@Override
 	public <T> void afterSequenceRenamed(SequenceRenamedEvent<T> e) {
-		System.out.println("afterSequenceRenamed");
-		// TODO Repaint label area and possibly change its width.
+		//TODO Anything else to do?
+		getOwner().getLabelArea().assignSize();
 		getDataAreas().getSequenceDataChangeListener().afterSequenceRenamed(e);
 	}
 
@@ -512,7 +522,7 @@ public class AlignmentContentArea extends TICComponent implements SequenceDataCh
 
 	@Override
 	public <T, U> void afterProviderChanged(SequenceDataProvider<T> previous, SequenceDataProvider<U> current) {
-		assignSize();
+		assignSizeToThisAndLabelArea();
 		repaint();  //TODO Needed?
 		//TODO Remove some data areas? (Some might be data specific (e.g. pherograms), some not (e.g. consensus sequence).)
 		getDataAreas().getSequenceDataChangeListener().afterProviderChanged(previous, current);
@@ -523,12 +533,13 @@ public class AlignmentContentArea extends TICComponent implements SequenceDataCh
 	public void dataAreaInsertedRemoved(DataAreaChangeEvent e) {
 		if (hasToolkitComponent()) {
 			getToolkitComponent().reinsertSubelements();
+			assignSizeToThisAndLabelArea();
 		}
 	}
 
 
 	@Override
 	public void dataAreaVisibilityChanged(DataAreaChangeEvent e) {
-		//TODO implement
+		//TODO implement (Possibly delegate to dataAreaInsertedRemoved()?)
 	}
 }
