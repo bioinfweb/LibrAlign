@@ -27,7 +27,7 @@ import info.bioinfweb.libralign.dataarea.DataAreaList;
 
 /**
  * Interface for all toolkit specific components displaying the contents of an alignment area (not including
- * the parent scroll container which is part of implementations of {@link ToolkitSpecificAlignmentArea}.
+ * the parent scroll container which is part of implementations of {@link ToolkitSpecificAlignmentArea}).
  * 
  * @author Ben St&ouml;ver
  * @since 0.3.0
@@ -39,8 +39,19 @@ public interface ToolkitSpecificAlignmentContentArea extends ToolkitComponent {
    */
   public void reinsertSubelements();
   
+	/**
+	 * Adds a list of data areas as children of this component.
+	 * 
+	 * @param list - the data areas to be added
+	 */
 	public void addDataAreaList(DataAreaList list);
 	
+	/**
+	 * Returns the child component containing the specified y-coordinate.
+	 * 
+	 * @param y - the y-coordinate relative to this alignment content area
+	 * @return the sequence or data area at the specified position
+	 */
 	public AlignmentSubArea getAreaByY(int y);
 	
   /**
