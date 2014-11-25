@@ -191,6 +191,7 @@ test/lib/junit-4.11.jar -text
 test/src/info/bioinfweb/libralign/alignmentarea/order/SequenceOrderTest.java -text svneol=unset#text/plain
 test/src/info/bioinfweb/libralign/dataarea/DataAreaListTest.java -text svneol=unset#text/plain
 test/src/info/bioinfweb/libralign/dataarea/implementations/pherogram/PherogramAlignmentModelTest.java -text svneol=unset#text/plain
+test/src/info/bioinfweb/libralign/pherogram/AbstractPherogramComponentApplication.java -text svneol=unset#text/plain
 test/src/info/bioinfweb/libralign/pherogram/DefaultPherogramAlignmentModelTest.java -text svneol=unset#text/plain
 test/src/info/bioinfweb/libralign/pherogram/SWTPherogramComponentApplication.java -text svneol=unset#text/plain
 test/src/info/bioinfweb/libralign/pherogram/SwingPherogramComponentApplication.java -text svneol=unset#text/plain

@@ -1,6 +1,6 @@
 /*
  * LibrAlign - A GUI library for displaying and editing multiple sequence alignments and attached data
- * Copyright (C) 2014  Ben Stöver
+ * Copyright (C) 2014  Ben Stï¿½ver
  * <http://bioinfweb.info/LibrAlign>
  * 
  * This file is free software: you can redistribute it and/or modify
@@ -19,25 +19,17 @@
 package info.bioinfweb.libralign.pherogram;
 
 
-import info.bioinfweb.libralign.pherogram.PherogramFormats.QualityOutputType;
-
 import java.awt.EventQueue;
 
 import javax.swing.JFrame;
 
-import org.biojava.bio.chromatogram.ChromatogramFactory;
-import org.biojava.bio.chromatogram.UnsupportedChromatogramFormatException;
-
 import java.awt.BorderLayout;
-import java.io.File;
-import java.io.IOException;
 import javax.swing.JScrollPane;
 
 
 
-public class SwingPherogramComponentApplication {
+public class SwingPherogramComponentApplication extends AbstractPherogramComponentApplication {
 	private JFrame frame;
-	private PherogramTraceCurveView pherogramView = null;
 	
 	
 	/**
@@ -65,22 +57,6 @@ public class SwingPherogramComponentApplication {
 	}
 	
 	
-	public PherogramTraceCurveView getPherogramComponent() throws UnsupportedChromatogramFormatException, IOException {
-		if (pherogramView == null) {
-			pherogramView = new PherogramTraceCurveView();
-//		pherogramView.setProvider(new BioJavaPherogramProvider(ChromatogramFactory.create(
-//		new File("data\\pherograms\\Test_pel1PCR_Pel2Wdhg_PCR-7-A_1.ab1"))));
-  		pherogramView.setProvider(new BioJavaPherogramProvider(ChromatogramFactory.create(
-	      	new File("data\\pherograms\\Test_qualityScore.scf"))));
-			pherogramView.setHorizontalScale(1);			
-			pherogramView.setVerticalScale(100);
-			pherogramView.getFormats().setQualityOutputType(QualityOutputType.ALL);
-			pherogramView.getFormats().setShowProbabilityValues(true);
-		}
-		return pherogramView;
-	}
-
-
 	/**
 	 * Initialize the contents of the frame.
 	 */
