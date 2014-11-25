@@ -22,16 +22,17 @@ package info.bioinfweb.libralign.alignmentarea.content;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Rectangle;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.Iterator;
 
 import info.bioinfweb.commons.tic.TICComponent;
 import info.bioinfweb.commons.tic.toolkit.ToolkitComponent;
-import info.bioinfweb.libralign.alignmentarea.AlignmentSubArea;
+import info.bioinfweb.libralign.alignmentarea.rowsarea.SwingAlignmentRowsArea;
 import info.bioinfweb.libralign.dataarea.DataArea;
 import info.bioinfweb.libralign.dataarea.DataAreaList;
 
-import javax.swing.BoxLayout;
-import javax.swing.JComponent;
 import javax.swing.Scrollable;
 
 
@@ -42,7 +43,7 @@ import javax.swing.Scrollable;
  * @author Ben St&ouml;ver
  * @since 0.3.0
  */
-public class SwingAlignmentContentArea extends JComponent implements Scrollable, ToolkitSpecificAlignmentContentArea {
+public class SwingAlignmentContentArea extends SwingAlignmentRowsArea implements Scrollable, ToolkitSpecificAlignmentContentArea {
   private AlignmentContentArea independentComponent;
 	private SequenceAreaMap sequenceAreaMap;
 	
@@ -51,16 +52,10 @@ public class SwingAlignmentContentArea extends JComponent implements Scrollable,
 		super();
 		this.independentComponent = independentComponent;
 		sequenceAreaMap = new SequenceAreaMap(independentComponent);
-		init();
-	}
-
-	
-	private void init() {
-		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 		reinsertSubelements();
 	}
 
-
+	
 	@Override
 	public AlignmentContentArea getIndependentComponent() {
 		return independentComponent;
@@ -77,7 +72,7 @@ public class SwingAlignmentContentArea extends JComponent implements Scrollable,
 	public void reinsertSubelements() {
 		removeAll();
 		sequenceAreaMap.updateElements();
-
+		
 		addDataAreaList(getIndependentComponent().getDataAreas().getTopAreas());
 		
 		Iterator<Integer> idIterator = getIndependentComponent().getSequenceOrder().getIDList().iterator();
@@ -86,11 +81,12 @@ public class SwingAlignmentContentArea extends JComponent implements Scrollable,
 			add(sequenceAreaMap.get(id).createSwingComponent());
 			addDataAreaList(getIndependentComponent().getDataAreas().getSequenceAreas(id));
 		}
-
+		
 		addDataAreaList(getIndependentComponent().getDataAreas().getBottomAreas());
 	}
 	
 	
+	@Override
 	public void addDataAreaList(DataAreaList list) {
 		Iterator<DataArea> iterator = list.iterator();
 		while (iterator.hasNext()) {
@@ -101,6 +97,12 @@ public class SwingAlignmentContentArea extends JComponent implements Scrollable,
 		}
 	}
 	
+
+	@Override
+	public Iterator<AlignmentSubArea> subAreaIterator() {
+		return new AlignmentSubAreaIterator(Arrays.asList(getComponents()).iterator()); 
+	}
+
 
 	@Override
 	public AlignmentSubArea getAreaByY(int y) {

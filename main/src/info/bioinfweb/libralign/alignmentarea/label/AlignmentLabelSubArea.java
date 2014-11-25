@@ -23,7 +23,7 @@ import java.awt.Dimension;
 
 import info.bioinfweb.commons.tic.TICComponent;
 import info.bioinfweb.libralign.alignmentarea.AlignmentArea;
-import info.bioinfweb.libralign.alignmentarea.AlignmentSubArea;
+import info.bioinfweb.libralign.alignmentarea.content.AlignmentSubArea;
 
 
 

@@ -16,23 +16,25 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package info.bioinfweb.libralign.alignmentarea.label;
+package info.bioinfweb.libralign.alignmentarea.rowsarea;
 
 
-import info.bioinfweb.libralign.alignmentarea.rowsarea.SwingAlignmentRowsArea;
-import info.bioinfweb.libralign.dataarea.DataArea;
-import info.bioinfweb.libralign.dataarea.DataAreaList;
+import info.bioinfweb.libralign.alignmentarea.content.SWTAlignmentContentArea;
+import info.bioinfweb.libralign.alignmentarea.label.SWTAlignmentLabelArea;
 
-import javax.swing.JComponent;
-import javax.swing.JPanel;
+import org.eclipse.swt.widgets.Composite;
 
 
 
 /**
- * The Swing component displaying the label components for an alignment.
+ * Abstract base class for {@link SWTAlignmentContentArea} and {@link SWTAlignmentLabelArea}.
  * 
  * @author Ben St&ouml;ver
  * @since 0.3.0
  */
-public class SwingAlignmentLabelArea extends SwingAlignmentRowsArea implements ToolkitSpecificAlignmentLabelArea {
+public abstract class SWTAlignmentRowsArea extends Composite implements ToolkitSpecificAlignmentRowsArea {
+	public SWTAlignmentRowsArea(Composite parent, int hints) {
+		super(parent, hints);
+		// TODO Auto-generated constructor stub
+	}	
 }

@@ -18,6 +18,17 @@
  */
 package info.bioinfweb.libralign.alignmentarea.label;
 
-public class SWTAlignmentLabelArea {
+
+import info.bioinfweb.libralign.alignmentarea.rowsarea.SWTAlignmentRowsArea;
+
+
+
+/**
+ * The SWT component displaying the label components for an alignment.
+ * 
+ * @author Ben St&ouml;ver
+ * @since 0.3.0
+ */
+public class SWTAlignmentLabelArea extends SWTAlignmentRowsArea implements ToolkitSpecificAlignmentLabelArea {
 	
 }

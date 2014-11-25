@@ -16,11 +16,10 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package info.bioinfweb.libralign.alignmentarea;
+package info.bioinfweb.libralign.alignmentarea.content;
 
 
 import info.bioinfweb.commons.tic.TICComponent;
-import info.bioinfweb.libralign.alignmentarea.content.AlignmentContentArea;
 import info.bioinfweb.libralign.alignmentarea.label.AlignmentLabelArea;
 import info.bioinfweb.libralign.alignmentarea.label.AlignmentLabelSubArea;
 import info.bioinfweb.libralign.alignmentarea.label.DefaultLabelSubArea;

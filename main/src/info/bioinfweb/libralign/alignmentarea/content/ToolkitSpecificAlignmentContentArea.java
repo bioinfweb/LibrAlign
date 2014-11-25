@@ -19,10 +19,10 @@
 package info.bioinfweb.libralign.alignmentarea.content;
 
 
-import info.bioinfweb.commons.tic.toolkit.ToolkitComponent;
-import info.bioinfweb.libralign.alignmentarea.AlignmentSubArea;
+import java.util.Iterator;
+
 import info.bioinfweb.libralign.alignmentarea.ToolkitSpecificAlignmentArea;
-import info.bioinfweb.libralign.dataarea.DataAreaList;
+import info.bioinfweb.libralign.alignmentarea.rowsarea.ToolkitSpecificAlignmentRowsArea;
 
 
 
@@ -33,19 +33,8 @@ import info.bioinfweb.libralign.dataarea.DataAreaList;
  * @author Ben St&ouml;ver
  * @since 0.3.0
  */
-public interface ToolkitSpecificAlignmentContentArea extends ToolkitComponent {
-  /**
-   * Recreates the components displaying sequences and data areas in the alignment according to
-   * the current model information. 
-   */
-  public void reinsertSubelements();
-  
-	/**
-	 * Adds a list of data areas as children of this component.
-	 * 
-	 * @param list - the data areas to be added
-	 */
-	public void addDataAreaList(DataAreaList list);
+public interface ToolkitSpecificAlignmentContentArea extends ToolkitSpecificAlignmentRowsArea {
+	public Iterator<AlignmentSubArea> subAreaIterator();
 	
 	/**
 	 * Returns the child component containing the specified y-coordinate.

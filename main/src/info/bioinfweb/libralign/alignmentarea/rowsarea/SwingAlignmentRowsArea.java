@@ -16,23 +16,28 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package info.bioinfweb.libralign.alignmentarea.label;
+package info.bioinfweb.libralign.alignmentarea.rowsarea;
 
 
-import info.bioinfweb.libralign.alignmentarea.rowsarea.SwingAlignmentRowsArea;
-import info.bioinfweb.libralign.dataarea.DataArea;
-import info.bioinfweb.libralign.dataarea.DataAreaList;
+import info.bioinfweb.libralign.alignmentarea.content.SwingAlignmentContentArea;
+import info.bioinfweb.libralign.alignmentarea.label.SwingAlignmentLabelArea;
 
+import javax.swing.BoxLayout;
 import javax.swing.JComponent;
-import javax.swing.JPanel;
+import javax.swing.Scrollable;
 
 
 
 /**
- * The Swing component displaying the label components for an alignment.
+ * Abstract base class for {@link SwingAlignmentContentArea} and {@link SwingAlignmentLabelArea}.
  * 
  * @author Ben St&ouml;ver
  * @since 0.3.0
  */
-public class SwingAlignmentLabelArea extends SwingAlignmentRowsArea implements ToolkitSpecificAlignmentLabelArea {
+public abstract class SwingAlignmentRowsArea extends JComponent implements Scrollable, ToolkitSpecificAlignmentRowsArea {
+	public SwingAlignmentRowsArea() {
+		super();
+		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
+		// reinsertSubelements() cannot be called here, because necessary fields need to be initialized by the implementing class first.
+	}
 }

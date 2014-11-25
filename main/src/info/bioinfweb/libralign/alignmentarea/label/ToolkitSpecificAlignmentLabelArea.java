@@ -19,6 +19,9 @@
 package info.bioinfweb.libralign.alignmentarea.label;
 
 
+import info.bioinfweb.libralign.alignmentarea.rowsarea.ToolkitSpecificAlignmentRowsArea;
+
+
 
 /**
  * Interface that defines common methods by toolkit specific implementations of an {@link AlignmentLabelArea}.
@@ -26,6 +29,6 @@ package info.bioinfweb.libralign.alignmentarea.label;
  * @author Ben St&ouml;ver
  * @since 0.3.0
  */
-public interface ToolkitSpecificAlignmentLabelArea {
+public interface ToolkitSpecificAlignmentLabelArea extends ToolkitSpecificAlignmentRowsArea {
 	
 }

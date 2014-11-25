@@ -25,7 +25,7 @@ import java.awt.RenderingHints;
 import java.awt.SystemColor;
 
 import info.bioinfweb.commons.tic.TICPaintEvent;
-import info.bioinfweb.libralign.alignmentarea.AlignmentSubArea;
+import info.bioinfweb.libralign.alignmentarea.content.AlignmentSubArea;
 
 
 

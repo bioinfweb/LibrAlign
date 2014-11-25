@@ -22,12 +22,12 @@ package info.bioinfweb.libralign.alignmentarea.content;
 import info.bioinfweb.commons.Math2;
 import info.bioinfweb.commons.tic.TICComponent;
 import info.bioinfweb.commons.tic.toolkit.ToolkitComponent;
-import info.bioinfweb.libralign.alignmentarea.AlignmentSubArea;
 import info.bioinfweb.libralign.dataarea.DataArea;
 import info.bioinfweb.libralign.dataarea.DataAreaList;
 import info.bioinfweb.libralign.dataarea.DataAreaModel;
 
 import java.awt.geom.Dimension2D;
+import java.util.Arrays;
 import java.util.Iterator;
 
 import org.eclipse.swt.SWT;
@@ -117,6 +117,12 @@ public class SWTAlignmentContentArea extends Composite implements ToolkitSpecifi
 			height += size.y;
 		}
 		setSize(width, height);
+	}
+
+
+	@Override
+	public Iterator<AlignmentSubArea> subAreaIterator() {
+		return new AlignmentSubAreaIterator(Arrays.asList(getChildren()).iterator()); 
 	}
 
 

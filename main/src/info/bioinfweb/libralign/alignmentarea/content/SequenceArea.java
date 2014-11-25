@@ -38,7 +38,6 @@ import info.bioinfweb.commons.graphics.GraphicsUtils;
 import info.bioinfweb.commons.tic.TICPaintEvent;
 import info.bioinfweb.libralign.AlignmentDataViewMode;
 import info.bioinfweb.libralign.alignmentarea.AlignmentArea;
-import info.bioinfweb.libralign.alignmentarea.AlignmentSubArea;
 import info.bioinfweb.libralign.alignmentarea.label.AlignmentLabelArea;
 import info.bioinfweb.libralign.alignmentarea.label.AlignmentLabelSubArea;
 import info.bioinfweb.libralign.alignmentarea.label.SequenceLabelArea;

@@ -20,13 +20,14 @@ main/src/info/bioinfweb/libralign/AlignmentDataViewMode.java -text svneol=unset#
 main/src/info/bioinfweb/libralign/GeneticCode.java -text svneol=unset#text/plain
 main/src/info/bioinfweb/libralign/actions/AlignmentActionProvider.java -text svneol=unset#text/plain
 main/src/info/bioinfweb/libralign/alignmentarea/AlignmentArea.java -text svneol=unset#text/plain
-main/src/info/bioinfweb/libralign/alignmentarea/AlignmentSubArea.java -text svneol=unset#text/plain
 main/src/info/bioinfweb/libralign/alignmentarea/SWTAlignmentArea.java -text svneol=unset#text/plain
 main/src/info/bioinfweb/libralign/alignmentarea/SWTScrolledCompositeResizeListener.java -text svneol=unset#text/plain
 main/src/info/bioinfweb/libralign/alignmentarea/SwingAlignmentArea.java -text svneol=unset#text/plain
 main/src/info/bioinfweb/libralign/alignmentarea/ToolkitSpecificAlignmentArea.java -text svneol=unset#text/plain
 main/src/info/bioinfweb/libralign/alignmentarea/content/AlignmentContentArea.java -text svneol=unset#text/plain
 main/src/info/bioinfweb/libralign/alignmentarea/content/AlignmentContentAreaTools.java -text svneol=unset#text/plain
+main/src/info/bioinfweb/libralign/alignmentarea/content/AlignmentSubArea.java -text svneol=unset#text/plain
+main/src/info/bioinfweb/libralign/alignmentarea/content/AlignmentSubAreaIterator.java -text svneol=unset#text/plain
 main/src/info/bioinfweb/libralign/alignmentarea/content/CursorSelectionInputListener.java -text svneol=unset#text/plain
 main/src/info/bioinfweb/libralign/alignmentarea/content/SWTAlignmentContentArea.java -text svneol=unset#text/plain
 main/src/info/bioinfweb/libralign/alignmentarea/content/SequenceArea.java -text svneol=unset#text/plain
@@ -47,6 +48,10 @@ main/src/info/bioinfweb/libralign/alignmentarea/label/package-info.java -text sv
 main/src/info/bioinfweb/libralign/alignmentarea/order/SequenceOrder.java -text svneol=unset#text/plain
 main/src/info/bioinfweb/libralign/alignmentarea/order/SequenceOrderType.java -text
 main/src/info/bioinfweb/libralign/alignmentarea/package-info.java -text svneol=unset#text/plain
+main/src/info/bioinfweb/libralign/alignmentarea/rowsarea/SWTAlignmentRowsArea.java -text svneol=unset#text/plain
+main/src/info/bioinfweb/libralign/alignmentarea/rowsarea/SwingAlignmentRowsArea.java -text svneol=unset#text/plain
+main/src/info/bioinfweb/libralign/alignmentarea/rowsarea/ToolkitSpecificAlignmentRowsArea.java -text svneol=unset#text/plain
+main/src/info/bioinfweb/libralign/alignmentarea/rowsarea/package-info.java -text svneol=unset#text/plain
 main/src/info/bioinfweb/libralign/alignmentarea/selection/AlignmentCursor.java -text svneol=unset#text/plain
 main/src/info/bioinfweb/libralign/alignmentarea/selection/OneDimensionalSelection.java -text svneol=unset#text/plain
 main/src/info/bioinfweb/libralign/alignmentarea/selection/SelectionChangeEvent.java -text svneol=unset#text/plain
