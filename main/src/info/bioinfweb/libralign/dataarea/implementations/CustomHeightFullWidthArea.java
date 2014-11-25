@@ -19,7 +19,7 @@
 package info.bioinfweb.libralign.dataarea.implementations;
 
 
-import info.bioinfweb.libralign.AlignmentContentArea;
+import info.bioinfweb.libralign.alignmentarea.content.AlignmentContentArea;
 import info.bioinfweb.libralign.dataarea.DataArea;
 
 

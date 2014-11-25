@@ -21,7 +21,7 @@ package info.bioinfweb.libralign.dataarea.implementations.pherogram;
 
 import info.bioinfweb.commons.collections.SimpleSequenceInterval;
 import info.bioinfweb.commons.tic.TICPaintEvent;
-import info.bioinfweb.libralign.AlignmentContentArea;
+import info.bioinfweb.libralign.alignmentarea.content.AlignmentContentArea;
 import info.bioinfweb.libralign.dataarea.DataAreaListType;
 import info.bioinfweb.libralign.dataarea.implementations.CustomHeightFullWidthArea;
 import info.bioinfweb.libralign.pherogram.PherogramComponent;

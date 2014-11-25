@@ -20,7 +20,7 @@ package info.bioinfweb.libralign.dataarea;
 
 
 import info.bioinfweb.commons.collections.ListChangeType;
-import info.bioinfweb.libralign.AlignmentArea;
+import info.bioinfweb.libralign.alignmentarea.AlignmentArea;
 
 import java.util.ArrayList;
 import java.util.Collection;

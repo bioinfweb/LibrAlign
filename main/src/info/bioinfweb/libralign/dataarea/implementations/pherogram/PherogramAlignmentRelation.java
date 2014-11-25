@@ -21,7 +21,7 @@ package info.bioinfweb.libralign.dataarea.implementations.pherogram;
 
 import java.util.ListIterator;
 
-import info.bioinfweb.libralign.AlignmentArea;
+import info.bioinfweb.libralign.alignmentarea.AlignmentArea;
 
 
 

@@ -22,10 +22,10 @@ package info.bioinfweb.libralign.dataarea;
 import java.awt.Dimension;
 import java.util.Set;
 
-import info.bioinfweb.libralign.AlignmentArea;
-import info.bioinfweb.libralign.AlignmentContentArea;
-import info.bioinfweb.libralign.AlignmentSubArea;
-import info.bioinfweb.libralign.label.AlignmentLabelSubArea;
+import info.bioinfweb.libralign.alignmentarea.AlignmentArea;
+import info.bioinfweb.libralign.alignmentarea.AlignmentSubArea;
+import info.bioinfweb.libralign.alignmentarea.content.AlignmentContentArea;
+import info.bioinfweb.libralign.alignmentarea.label.AlignmentLabelSubArea;
 import info.bioinfweb.libralign.sequenceprovider.SequenceDataChangeListener;
 
 

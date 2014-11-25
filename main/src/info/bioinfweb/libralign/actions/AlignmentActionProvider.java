@@ -22,8 +22,8 @@ package info.bioinfweb.libralign.actions;
 import java.util.ArrayList;
 import java.util.Collection;
 
-import info.bioinfweb.libralign.AlignmentContentArea;
-import info.bioinfweb.libralign.selection.SelectionModel;
+import info.bioinfweb.libralign.alignmentarea.content.AlignmentContentArea;
+import info.bioinfweb.libralign.alignmentarea.selection.SelectionModel;
 import info.bioinfweb.libralign.sequenceprovider.SequenceDataProvider;
 import info.bioinfweb.libralign.sequenceprovider.exception.AlignmentSourceNotWritableException;
 

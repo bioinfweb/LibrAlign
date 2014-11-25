@@ -21,8 +21,8 @@ package info.bioinfweb.libralign.sequenceprovider.adapters;
 
 import java.util.Iterator;
 
-import info.bioinfweb.libralign.AlignmentArea;
-import info.bioinfweb.libralign.sequenceorder.SequenceOrder;
+import info.bioinfweb.libralign.alignmentarea.AlignmentArea;
+import info.bioinfweb.libralign.alignmentarea.order.SequenceOrder;
 import info.bioinfweb.libralign.sequenceprovider.SequenceDataProvider;
 
 import org.biojava3.core.sequence.MultipleSequenceAlignment;

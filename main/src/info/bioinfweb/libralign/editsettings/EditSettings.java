@@ -19,9 +19,9 @@
 package info.bioinfweb.libralign.editsettings;
 
 
-import info.bioinfweb.libralign.AlignmentContentArea;
-import info.bioinfweb.libralign.MultipleAlignmentsContainer;
+import info.bioinfweb.libralign.alignmentarea.content.AlignmentContentArea;
 import info.bioinfweb.libralign.dataarea.implementations.pherogram.PherogramArea;
+import info.bioinfweb.libralign.multiplealignments.MultipleAlignmentsContainer;
 
 import java.util.ArrayList;
 import java.util.Iterator;

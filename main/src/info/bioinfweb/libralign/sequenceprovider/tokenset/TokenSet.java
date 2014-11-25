@@ -19,7 +19,7 @@
 package info.bioinfweb.libralign.sequenceprovider.tokenset;
 
 
-import info.bioinfweb.libralign.AlignmentArea;
+import info.bioinfweb.libralign.alignmentarea.AlignmentArea;
 import info.bioinfweb.libralign.sequenceprovider.SequenceDataProvider;
 import info.bioinfweb.libralign.sequenceprovider.adapters.CharSequenceAdapter;
 import info.bioinfweb.libralign.sequenceprovider.adapters.StringAdapter;
