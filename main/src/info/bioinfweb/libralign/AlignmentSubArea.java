@@ -20,16 +20,20 @@ package info.bioinfweb.libralign;
 
 
 import info.bioinfweb.commons.tic.TICComponent;
+import info.bioinfweb.libralign.label.AlignmentLabelArea;
+import info.bioinfweb.libralign.label.AlignmentLabelSubArea;
+import info.bioinfweb.libralign.label.DefaultLabelSubArea;
 
 
 
 /**
- * All GUI components that are part of an {@link AlignmentArea} should inherit from this class.
+ * All GUI components that are part of an {@link AlignmentContentArea} should inherit from this class.
  * 
  * @author Ben St&ouml;ver
  * @since 0.0.0
  */
 public abstract class AlignmentSubArea extends TICComponent {
+	private AlignmentLabelSubArea labelSubArea = null;
 	private AlignmentContentArea owner = null;
 
 	
@@ -49,5 +53,31 @@ public abstract class AlignmentSubArea extends TICComponent {
 	 */
 	public AlignmentContentArea getOwner() {
 		return owner;
+	}
+	
+	
+	/**
+	 * This method can be overwritten to provide a specific implementation for labeling the implementing data area.
+	 * <p>
+	 * This default implementation always returns an instance of {@link DefaultLabelSubArea}.
+	 * 
+	 * @param owner - the alignment label area that can be set as the owner of the returned component.
+	 * @return a new instance of {@link DefaultLabelSubArea} linked to this instance
+	 */
+	protected AlignmentLabelSubArea createLabelSubArea(AlignmentLabelArea owner) {
+		return new DefaultLabelSubArea(owner, this);
+	}
+	
+	
+	/**
+	 * Returns the GUI component that displays the row label for this part of the alignment.
+	 * 
+	 * @return a GUI component displaying the according label information
+	 */
+	public AlignmentLabelSubArea getLabelSubArea() {
+		if (labelSubArea == null) {
+			labelSubArea = createLabelSubArea(getOwner().getOwner().getLabelArea());
+		}
+		return labelSubArea;
 	}
 }

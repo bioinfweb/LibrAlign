@@ -41,6 +41,9 @@ import info.bioinfweb.libralign.AlignmentContentArea;
 import info.bioinfweb.libralign.AlignmentDataViewMode;
 import info.bioinfweb.libralign.AlignmentSubArea;
 import info.bioinfweb.libralign.SequenceColorSchema;
+import info.bioinfweb.libralign.label.AlignmentLabelArea;
+import info.bioinfweb.libralign.label.AlignmentLabelSubArea;
+import info.bioinfweb.libralign.label.SequenceLabelArea;
 import info.bioinfweb.libralign.selection.SelectionModel;
 import info.bioinfweb.libralign.selection.SelectionType;
 import info.bioinfweb.libralign.sequenceprovider.SequenceDataProvider;
@@ -223,5 +226,11 @@ public class SequenceArea extends AlignmentSubArea {
 				getOwner().getDataAreas().getMaxLengthBeforeStart() + 
 				getOwner().getCompoundWidth() * getOwner().getSequenceProvider().getSequenceLength(getSeqenceID()),  //TODO Elongate to the length of the longest sequence and paint empty/special tokens on the right end? 
 				getOwner().getCompoundHeight());
+	}
+
+
+	@Override
+	protected AlignmentLabelSubArea createLabelSubArea(AlignmentLabelArea owner) {
+		return new SequenceLabelArea(owner, this);
 	}
 }

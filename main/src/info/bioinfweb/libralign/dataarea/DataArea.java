@@ -25,6 +25,7 @@ import java.util.Set;
 import info.bioinfweb.libralign.AlignmentArea;
 import info.bioinfweb.libralign.AlignmentContentArea;
 import info.bioinfweb.libralign.AlignmentSubArea;
+import info.bioinfweb.libralign.label.AlignmentLabelSubArea;
 import info.bioinfweb.libralign.sequenceprovider.SequenceDataChangeListener;
 
 

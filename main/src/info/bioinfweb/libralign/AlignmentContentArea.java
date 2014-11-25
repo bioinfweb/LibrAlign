@@ -43,7 +43,7 @@ import info.bioinfweb.libralign.dataarea.DataAreaLocation;
 import info.bioinfweb.libralign.dataarea.DataAreaModel;
 import info.bioinfweb.libralign.dataarea.DataAreaModelListener;
 import info.bioinfweb.libralign.editsettings.EditSettings;
-import info.bioinfweb.libralign.editsettings.WorkingMode;
+import info.bioinfweb.libralign.label.AlignmentLabelArea;
 import info.bioinfweb.libralign.selection.SelectionChangeEvent;
 import info.bioinfweb.libralign.selection.SelectionListener;
 import info.bioinfweb.libralign.selection.SelectionModel;

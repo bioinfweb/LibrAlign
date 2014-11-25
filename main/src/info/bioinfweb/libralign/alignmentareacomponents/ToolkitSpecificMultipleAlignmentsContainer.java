@@ -19,8 +19,6 @@
 package info.bioinfweb.libralign.alignmentareacomponents;
 
 
-import java.awt.Rectangle;
-
 import info.bioinfweb.commons.tic.toolkit.ToolkitComponent;
 import info.bioinfweb.libralign.MultipleAlignmentsContainer;
 

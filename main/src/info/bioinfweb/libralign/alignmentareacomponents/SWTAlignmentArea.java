@@ -24,7 +24,7 @@ import java.awt.Rectangle;
 
 import info.bioinfweb.commons.swt.ScrolledCompositeSyncListener;
 import info.bioinfweb.libralign.AlignmentArea;
-import info.bioinfweb.libralign.AlignmentLabelArea;
+import info.bioinfweb.libralign.label.AlignmentLabelArea;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.ScrolledComposite;

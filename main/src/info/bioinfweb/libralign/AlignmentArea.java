@@ -32,6 +32,7 @@ import info.bioinfweb.commons.tic.TICPaintEvent;
 import info.bioinfweb.libralign.alignmentareacomponents.SWTAlignmentArea;
 import info.bioinfweb.libralign.alignmentareacomponents.SwingAlignmentArea;
 import info.bioinfweb.libralign.alignmentareacomponents.ToolkitSpecificAlignmentArea;
+import info.bioinfweb.libralign.label.AlignmentLabelArea;
 
 
 

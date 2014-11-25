@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package info.bioinfweb.libralign;
+package info.bioinfweb.libralign.label;
 
 
 import java.awt.Dimension;
@@ -32,7 +32,7 @@ import info.bioinfweb.commons.Math2;
 import info.bioinfweb.commons.graphics.FontCalculator;
 import info.bioinfweb.commons.tic.TICComponent;
 import info.bioinfweb.commons.tic.TICPaintEvent;
-import info.bioinfweb.libralign.alignmentareacomponents.ToolkitSpecificAlignmentContentArea;
+import info.bioinfweb.libralign.AlignmentArea;
 
 
 
@@ -86,6 +86,12 @@ public class AlignmentLabelArea extends TICComponent {
 		return maxLength + 2 * BORDER_WIDTH;  //TODO Is the font for the correct zoom already set before this method is called?
   }
 
+	
+	public int getMaximumNeededWidth() {
+		//TODO Implement and save value between calls
+		return -1;
+	}
+	
 	
 	@Override
 	public Dimension getSize() {

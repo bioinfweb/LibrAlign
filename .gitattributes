@@ -19,7 +19,6 @@ main/lib/swt.jar -text
 main/src/info/bioinfweb/libralign/AlignmentArea.java -text svneol=unset#text/plain
 main/src/info/bioinfweb/libralign/AlignmentContentArea.java -text svneol=unset#text/plain
 main/src/info/bioinfweb/libralign/AlignmentDataViewMode.java -text svneol=unset#text/plain
-main/src/info/bioinfweb/libralign/AlignmentLabelArea.java -text svneol=unset#text/plain
 main/src/info/bioinfweb/libralign/AlignmentSubArea.java -text svneol=unset#text/plain
 main/src/info/bioinfweb/libralign/GeneticCode.java -text svneol=unset#text/plain
 main/src/info/bioinfweb/libralign/MultipleAlignmentsContainer.java -text svneol=unset#text/plain
@@ -70,6 +69,14 @@ main/src/info/bioinfweb/libralign/editsettings/EditSettingsListener.java -text s
 main/src/info/bioinfweb/libralign/editsettings/WorkingMode.java -text svneol=unset#text/plain
 main/src/info/bioinfweb/libralign/editsettings/package-info.java -text svneol=unset#text/plain
 main/src/info/bioinfweb/libralign/io/package-info.java -text svneol=unset#text/plain
+main/src/info/bioinfweb/libralign/label/AlignmentLabelArea.java -text svneol=unset#text/plain
+main/src/info/bioinfweb/libralign/label/AlignmentLabelSubArea.java -text svneol=unset#text/plain
+main/src/info/bioinfweb/libralign/label/DefaultLabelSubArea.java -text svneol=unset#text/plain
+main/src/info/bioinfweb/libralign/label/SWTAlignmentLabelArea.java -text svneol=unset#text/plain
+main/src/info/bioinfweb/libralign/label/SequenceLabelArea.java -text svneol=unset#text/plain
+main/src/info/bioinfweb/libralign/label/SwingAlignmentLabelArea.java -text svneol=unset#text/plain
+main/src/info/bioinfweb/libralign/label/ToolkitSpecificAlignmentLabelArea.java -text svneol=unset#text/plain
+main/src/info/bioinfweb/libralign/label/package-info.java -text svneol=unset#text/plain
 main/src/info/bioinfweb/libralign/package-info.java -text svneol=unset#text/plain
 main/src/info/bioinfweb/libralign/pherogram/BioJavaPherogramProvider.java -text svneol=unset#text/plain
 main/src/info/bioinfweb/libralign/pherogram/PherogramComponent.java -text svneol=unset#text/plain
