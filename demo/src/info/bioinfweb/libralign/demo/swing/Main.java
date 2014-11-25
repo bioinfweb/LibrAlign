@@ -19,7 +19,7 @@
 package info.bioinfweb.libralign.demo.swing;
 
 
-import info.bioinfweb.libralign.AlignmentArea;
+import info.bioinfweb.libralign.alignmentarea.AlignmentArea;
 import info.bioinfweb.libralign.demo.AbstractTestApplication;
 
 import java.awt.EventQueue;
