@@ -101,7 +101,7 @@ public class SWTAlignmentArea extends Composite implements ToolkitSpecificAlignm
 		labelScroller = new ScrolledComposite(labelContainer,	SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL);
 		labelScroller.setAlwaysShowScrollBars(true);
 		AlignmentLabelArea labelArea = getIndependentComponent().getLabelArea();
-		labelScroller.setContent(labelArea.createSWTWidget(labelScroller, SWT.NONE));
+		labelScroller.setContent(labelArea.createSWTWidget(labelScroller, SWT.NONE));  // Will not create any subelements of labelArea because the content area has not yet been created.
 		labelResizeListener = new SWTScrolledCompositeResizeListener(labelContainer, labelScroller, true, 
 				hideHorizontalScrollBar);
 		labelContainer.addControlListener(labelResizeListener);  // Must not be called before both fields are initialized.
@@ -117,6 +117,9 @@ public class SWTAlignmentArea extends Composite implements ToolkitSpecificAlignm
 		contentResizeListener = new SWTScrolledCompositeResizeListener(contentContainer, contentScroller, false, 
 				hideHorizontalScrollBar); 
 		contentContainer.addControlListener(contentResizeListener);  // Must not be called before both fields are initialized.
+		
+		// Update label area:
+		labelArea.getToolkitComponent().reinsertSubelements();
 		
 		// Synchronize vertical scrolling:
 		ScrolledCompositeSyncListener verticalSyncListener = new ScrolledCompositeSyncListener(

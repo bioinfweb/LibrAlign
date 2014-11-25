@@ -20,7 +20,6 @@ package info.bioinfweb.libralign.alignmentarea.rowsarea;
 
 
 import info.bioinfweb.commons.tic.toolkit.ToolkitComponent;
-import info.bioinfweb.libralign.dataarea.DataAreaList;
 
 
 

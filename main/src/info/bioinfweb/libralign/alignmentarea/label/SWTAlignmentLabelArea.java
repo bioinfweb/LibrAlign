@@ -25,6 +25,7 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 
 import info.bioinfweb.libralign.alignmentarea.content.AlignmentSubArea;
+import info.bioinfweb.libralign.alignmentarea.content.SWTAlignmentContentArea;
 import info.bioinfweb.libralign.alignmentarea.rowsarea.SWTAlignmentRowsArea;
 
 
@@ -39,6 +40,17 @@ public class SWTAlignmentLabelArea extends SWTAlignmentRowsArea implements Toolk
 	private AlignmentLabelArea independentComponent;
 
 	
+	/**
+	 * Creates a new instance of this class.
+   * <p>
+   * Note that this method will only add subelements if the subelements of the associated {@link SWTAlignmentContentArea}
+   * are already present. Otherwise the component will be empty after calling this method and you need to call 
+   * {@link #reinsertSubelements()} again after the associated alignment content area has been created. 
+	 * 
+	 * @param parent - the parent component
+	 * @param style - the SWT style value
+	 * @param independentComponent - the toolkit independent component that uses this instance
+	 */
 	public SWTAlignmentLabelArea(Composite parent, int style,	AlignmentLabelArea independentComponent) {
 		super(parent, style);
 		this.independentComponent = independentComponent;
@@ -52,6 +64,13 @@ public class SWTAlignmentLabelArea extends SWTAlignmentRowsArea implements Toolk
 	}
 
 
+	/**
+   * Recreates the components displaying sequences and data areas in the alignment according to
+   * the current model information.
+   * <p>
+   * Note that this method will only add elements if the subelements of the associated {@link SWTAlignmentContentArea}
+   * are already present. Otherwise the component will be empty after calling this method. 
+	 */
 	@Override
 	public void reinsertSubelements() {
 		if (getIndependentComponent().getOwner().getContentArea().hasToolkitComponent()) {
@@ -63,10 +82,6 @@ public class SWTAlignmentLabelArea extends SWTAlignmentRowsArea implements Toolk
 				subArea.createSWTWidget(this, SWT.NONE);
 				subArea.assignSize();
 			}
-		}
-		else {
-			throw new IllegalStateException(
-					"The SWT component of the associated alignment content area must already exist before this method can be called.");
 		}
 	}
 }
