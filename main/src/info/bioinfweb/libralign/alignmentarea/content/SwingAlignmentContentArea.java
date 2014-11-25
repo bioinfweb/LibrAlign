@@ -20,11 +20,7 @@ package info.bioinfweb.libralign.alignmentarea.content;
 
 
 import java.awt.Component;
-import java.awt.Dimension;
-import java.awt.Rectangle;
 import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
 import java.util.Iterator;
 
 import info.bioinfweb.commons.tic.TICComponent;

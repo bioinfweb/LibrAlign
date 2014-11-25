@@ -19,9 +19,12 @@
 package info.bioinfweb.libralign.alignmentarea.label;
 
 
+import java.util.Iterator;
+
+import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 
-import info.bioinfweb.commons.tic.TICComponent;
+import info.bioinfweb.libralign.alignmentarea.content.AlignmentSubArea;
 import info.bioinfweb.libralign.alignmentarea.rowsarea.SWTAlignmentRowsArea;
 
 
@@ -43,14 +46,20 @@ public class SWTAlignmentLabelArea extends SWTAlignmentRowsArea implements Toolk
 
 
 	@Override
-	public TICComponent getIndependentComponent() {
+	public AlignmentLabelArea getIndependentComponent() {
 		return independentComponent;
 	}
 
 
 	@Override
 	public void reinsertSubelements() {
-		// TODO Auto-generated method stub
-		
+		removeAll();
+		Iterator<AlignmentSubArea> iterator = 
+				getIndependentComponent().getOwner().getContentArea().getToolkitComponent().subAreaIterator();
+		while (iterator.hasNext()) {
+			AlignmentLabelSubArea subArea = iterator.next().getLabelSubArea(); 
+			subArea.createSWTWidget(this, SWT.NONE);
+			subArea.assignSize();
+		}
 	}
 }

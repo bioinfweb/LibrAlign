@@ -19,6 +19,9 @@
 package info.bioinfweb.libralign.alignmentarea.label;
 
 
+import java.util.Iterator;
+
+import info.bioinfweb.libralign.alignmentarea.content.AlignmentSubArea;
 import info.bioinfweb.libralign.alignmentarea.rowsarea.SwingAlignmentRowsArea;
 
 
@@ -33,6 +36,11 @@ public class SwingAlignmentLabelArea extends SwingAlignmentRowsArea implements T
 	private AlignmentLabelArea independentComponent;
 	
 	
+	/**
+	 * Creates a new instance of this class.
+	 * 
+	 * @param independentComponent - the toolkit independent component associated with the new instance
+	 */
 	public SwingAlignmentLabelArea(AlignmentLabelArea independentComponent) {
 		super();
 		this.independentComponent = independentComponent;
@@ -47,7 +55,11 @@ public class SwingAlignmentLabelArea extends SwingAlignmentRowsArea implements T
 
 	@Override
 	public void reinsertSubelements() {
-		// TODO Auto-generated method stub
-		
+		removeAll();
+		Iterator<AlignmentSubArea> iterator = 
+				getIndependentComponent().getOwner().getContentArea().getToolkitComponent().subAreaIterator();
+		while (iterator.hasNext()) {
+			add(iterator.next().getLabelSubArea().createSwingComponent());
+		}
 	}
 }

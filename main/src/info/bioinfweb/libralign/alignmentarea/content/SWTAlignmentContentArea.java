@@ -83,13 +83,6 @@ public class SWTAlignmentContentArea extends SWTAlignmentRowsArea implements Too
 	}
 	
 	
-	public void removeAll() {
-		for (Control control : getChildren()) {  // Temporary implementation for removeAll() in Swing
-			control.dispose();                     //TODO Implement an alternative that keeps the instances that can be reused.
-		}
-	}
-	
-	
 	public void assignSize() {  //TODO The according method from AlignmentContentArea could also be used instead of this method. 
 		int width = 0;
 		int height = 0;

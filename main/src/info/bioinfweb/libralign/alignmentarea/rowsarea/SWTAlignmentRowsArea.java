@@ -25,6 +25,7 @@ import info.bioinfweb.libralign.alignmentarea.label.SWTAlignmentLabelArea;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.RowLayout;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
 
 
 
@@ -61,5 +62,12 @@ public abstract class SWTAlignmentRowsArea extends Composite implements ToolkitS
 	@Override
 	public void repaint() {
 		redraw();
+	}
+	
+	
+	public void removeAll() {
+		for (Control control : getChildren()) {  // Temporary implementation for removeAll() in Swing
+			control.dispose();                     //TODO Implement an alternative that keeps the instances that can be reused.
+		}
 	}
 }
