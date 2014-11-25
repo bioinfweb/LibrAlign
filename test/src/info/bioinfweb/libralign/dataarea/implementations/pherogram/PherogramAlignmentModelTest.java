@@ -20,8 +20,8 @@ package info.bioinfweb.libralign.dataarea.implementations.pherogram;
 
 
 import static org.junit.Assert.* ;
-import info.bioinfweb.libralign.AlignmentArea;
-import info.bioinfweb.libralign.AlignmentContentArea;
+import info.bioinfweb.libralign.alignmentarea.AlignmentArea;
+import info.bioinfweb.libralign.alignmentarea.content.AlignmentContentArea;
 import info.bioinfweb.libralign.pherogram.BioJavaPherogramProvider;
 
 import java.io.File;

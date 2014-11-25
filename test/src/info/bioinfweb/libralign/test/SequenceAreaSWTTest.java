@@ -19,8 +19,8 @@
 package info.bioinfweb.libralign.test;
 
 
-import info.bioinfweb.libralign.AlignmentArea;
-import info.bioinfweb.libralign.alignmentareacomponents.SequenceArea;
+import info.bioinfweb.libralign.alignmentarea.AlignmentArea;
+import info.bioinfweb.libralign.alignmentarea.content.SequenceArea;
 import info.bioinfweb.libralign.demo.AbstractTestApplication;
 
 import org.eclipse.swt.SWT;

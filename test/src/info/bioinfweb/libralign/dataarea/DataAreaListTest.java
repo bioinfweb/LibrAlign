@@ -21,8 +21,8 @@ package info.bioinfweb.libralign.dataarea;
 
 import static org.junit.Assert.* ;
 import info.bioinfweb.commons.tic.TICPaintEvent;
-import info.bioinfweb.libralign.AlignmentArea;
-import info.bioinfweb.libralign.AlignmentContentArea;
+import info.bioinfweb.libralign.alignmentarea.AlignmentArea;
+import info.bioinfweb.libralign.alignmentarea.content.AlignmentContentArea;
 import info.bioinfweb.libralign.sequenceprovider.SequenceDataProvider;
 import info.bioinfweb.libralign.sequenceprovider.events.SequenceChangeEvent;
 import info.bioinfweb.libralign.sequenceprovider.events.SequenceRenamedEvent;

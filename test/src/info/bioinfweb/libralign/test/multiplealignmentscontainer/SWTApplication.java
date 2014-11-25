@@ -19,8 +19,7 @@
 package info.bioinfweb.libralign.test.multiplealignmentscontainer;
 
 
-import info.bioinfweb.libralign.AlignmentArea;
-import info.bioinfweb.libralign.MultipleAlignmentsContainer;
+import info.bioinfweb.libralign.multiplealignments.MultipleAlignmentsContainer;
 
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;

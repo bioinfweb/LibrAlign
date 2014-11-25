@@ -19,8 +19,8 @@
 package info.bioinfweb.libralign.test.editAlignment;
 
 
-import info.bioinfweb.libralign.AlignmentArea;
-import info.bioinfweb.libralign.AlignmentContentArea;
+import info.bioinfweb.libralign.alignmentarea.AlignmentArea;
+import info.bioinfweb.libralign.alignmentarea.content.AlignmentContentArea;
 import info.bioinfweb.libralign.dataarea.implementations.SequenceIndexArea;
 import info.bioinfweb.libralign.dataarea.implementations.pherogram.PherogramArea;
 import info.bioinfweb.libralign.pherogram.BioJavaPherogramProvider;
