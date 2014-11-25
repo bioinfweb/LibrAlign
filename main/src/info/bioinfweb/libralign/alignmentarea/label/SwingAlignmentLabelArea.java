@@ -44,6 +44,7 @@ public class SwingAlignmentLabelArea extends SwingAlignmentRowsArea implements T
 	public SwingAlignmentLabelArea(AlignmentLabelArea independentComponent) {
 		super();
 		this.independentComponent = independentComponent;
+		reinsertSubelements();
 	}
 
 
@@ -55,11 +56,17 @@ public class SwingAlignmentLabelArea extends SwingAlignmentRowsArea implements T
 
 	@Override
 	public void reinsertSubelements() {
-		removeAll();
-		Iterator<AlignmentSubArea> iterator = 
-				getIndependentComponent().getOwner().getContentArea().getToolkitComponent().subAreaIterator();
-		while (iterator.hasNext()) {
-			add(iterator.next().getLabelSubArea().createSwingComponent());
+		if (getIndependentComponent().getOwner().getContentArea().hasToolkitComponent()) {
+			removeAll();
+			Iterator<AlignmentSubArea> iterator = 
+					getIndependentComponent().getOwner().getContentArea().getToolkitComponent().subAreaIterator();
+			while (iterator.hasNext()) {
+				add(iterator.next().getLabelSubArea().createSwingComponent());
+			}
+		}
+		else {
+			throw new IllegalStateException(
+					"The Swing component of the associated alignment content area must already exist before this method can be called.");
 		}
 	}
 }

@@ -21,18 +21,18 @@ package info.bioinfweb.libralign.alignmentarea.label;
 
 import java.awt.Dimension;
 import java.awt.Font;
-import java.awt.FontMetrics;
-import java.awt.Graphics2D;
-import java.awt.RenderingHints;
-import java.awt.SystemColor;
-import java.awt.geom.Line2D;
 import java.util.Iterator;
+
+import javax.swing.JComponent;
+
+import org.eclipse.swt.widgets.Composite;
 
 import info.bioinfweb.commons.Math2;
 import info.bioinfweb.commons.graphics.FontCalculator;
 import info.bioinfweb.commons.tic.TICComponent;
 import info.bioinfweb.commons.tic.TICPaintEvent;
 import info.bioinfweb.libralign.alignmentarea.AlignmentArea;
+import info.bioinfweb.libralign.alignmentarea.content.AlignmentSubArea;
 
 
 
@@ -72,62 +72,43 @@ public class AlignmentLabelArea extends TICComponent {
 	}
 
 
-	/**
-	 * Calculates the necessary with of the component depending on the maximal label length.
-	 */
-	private float calculateWidth() {
-		Font font = getOwner().getContentArea().getCompoundFont();
-		Iterator<Integer> idIterator = getOwner().getContentArea().getSequenceOrder().getIDList().iterator();
-		float maxLength = 0;
-		while (idIterator.hasNext()) {
-			maxLength = Math.max(maxLength, FontCalculator.getInstance().getWidth(font, 
-					getOwner().getContentArea().getSequenceProvider().sequenceNameByID(idIterator.next()))); 			
-		}
-		return maxLength + 2 * BORDER_WIDTH;  //TODO Is the font for the correct zoom already set before this method is called?
-  }
-
-	
 	public int getMaximumNeededWidth() {
-		//TODO Implement and save value between calls
-		return -1;
+		int result = 0;
+		if (getOwner().getContentArea().hasToolkitComponent()) {
+			Iterator<AlignmentSubArea> iterator = getOwner().getContentArea().getToolkitComponent().subAreaIterator();
+			while (iterator.hasNext()) {
+				result = Math.max(result, iterator.next().getLabelSubArea().getNeededWidth());
+			}
+		}
+		return result;
+		//TODO Save value between calls
 	}
 	
 	
 	@Override
 	public Dimension getSize() {
-		return new Dimension(Math2.roundUp(calculateWidth()),	getOwner().getContentArea().getSize().height);  // If references starting from owner would be used here, there would be problems in initialization order.
+		return new Dimension(getMaximumNeededWidth(),	getOwner().getContentArea().getSize().height);  // If references starting from owner would be used here, there would be problems in initialization order.
 	}
 
 	
 	@Override
-	public void paint(TICPaintEvent e) {
-		Graphics2D g  = e.getGraphics();
-  	g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, 
-  			RenderingHints.VALUE_ANTIALIAS_ON);
+	public void paint(TICPaintEvent event) {}  // Remains empty because toolkit specific components are provided.	
 
-  	// Paint background:
-		g.setColor(SystemColor.menu);
-		g.fill(e.getRectangle());
-		
-		if (getOwner().getContentArea().hasSequenceProvider()) {
-			// Set font:
-			g.setColor(SystemColor.menuText);
-			g.setFont(getOwner().getContentArea().getCompoundFont());
-			FontMetrics fm = g.getFontMetrics();
-			
-			// Paint labels:
-			Iterator<Integer> idIterator = getOwner().getContentArea().getSequenceOrder().getIDList().iterator();
-			int y = getOwner().getContentArea().getDataAreas().getTopAreas().getVisibleHeight();
-			while (idIterator.hasNext()) {
-				int id = idIterator.next();
-				if (y > 0) {  // Do not draw a line at the top of the component.
-					g.draw(new Line2D.Float(0, y, getSize().width, y));
-				}
-		  	g.drawString(getOwner().getContentArea().getSequenceProvider().sequenceNameByID(id), BORDER_WIDTH, 
-		  			y + fm.getAscent());
-		  	y += getOwner().getContentArea().getCompoundHeight() + 
-		  			getOwner().getContentArea().getDataAreas().getSequenceAreas(id).getVisibleHeight();
-			}
-		}
-	}	
+
+	@Override
+	protected JComponent doCreateSwingComponent() {
+		return new SwingAlignmentLabelArea(this);
+	}
+
+
+	@Override
+	protected Composite doCreateSWTWidget(Composite parent, int style) {
+		return new SWTAlignmentLabelArea(parent, style, this);
+	}
+
+
+	@Override
+	public ToolkitSpecificAlignmentLabelArea getToolkitComponent() {
+		return (ToolkitSpecificAlignmentLabelArea)super.getToolkitComponent();
+	}
 }

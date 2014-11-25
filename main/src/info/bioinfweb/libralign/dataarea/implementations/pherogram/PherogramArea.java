@@ -27,8 +27,8 @@ import info.bioinfweb.libralign.dataarea.implementations.CustomHeightFullWidthAr
 import info.bioinfweb.libralign.pherogram.PherogramComponent;
 import info.bioinfweb.libralign.pherogram.PherogramFormats;
 import info.bioinfweb.libralign.pherogram.PherogramPainter;
-import info.bioinfweb.libralign.pherogram.PherogramProvider;
 import info.bioinfweb.libralign.pherogram.distortion.ScaledPherogramDistortion;
+import info.bioinfweb.libralign.pherogram.provider.PherogramProvider;
 import info.bioinfweb.libralign.sequenceprovider.SequenceDataProvider;
 import info.bioinfweb.libralign.sequenceprovider.events.SequenceChangeEvent;
 import info.bioinfweb.libralign.sequenceprovider.events.SequenceRenamedEvent;

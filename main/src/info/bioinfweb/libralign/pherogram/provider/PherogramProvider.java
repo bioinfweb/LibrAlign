@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package info.bioinfweb.libralign.pherogram;
+package info.bioinfweb.libralign.pherogram.provider;
 
 
 import java.util.List;
@@ -24,6 +24,7 @@ import java.util.List;
 import org.biojava3.core.sequence.compound.NucleotideCompound;
 
 import info.bioinfweb.libralign.dataarea.implementations.pherogram.PherogramArea;
+import info.bioinfweb.libralign.pherogram.PherogramUtils;
 import info.bioinfweb.libralign.sequenceprovider.DataProvider;
 
 

@@ -19,6 +19,8 @@
 package info.bioinfweb.libralign.pherogram;
 
 
+import info.bioinfweb.libralign.pherogram.provider.PherogramProvider;
+
 import java.awt.Color;
 
 

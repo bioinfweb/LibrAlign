@@ -42,6 +42,7 @@ public class SWTAlignmentLabelArea extends SWTAlignmentRowsArea implements Toolk
 	public SWTAlignmentLabelArea(Composite parent, int style,	AlignmentLabelArea independentComponent) {
 		super(parent, style);
 		this.independentComponent = independentComponent;
+		reinsertSubelements();
 	}
 
 
@@ -53,13 +54,19 @@ public class SWTAlignmentLabelArea extends SWTAlignmentRowsArea implements Toolk
 
 	@Override
 	public void reinsertSubelements() {
-		removeAll();
-		Iterator<AlignmentSubArea> iterator = 
-				getIndependentComponent().getOwner().getContentArea().getToolkitComponent().subAreaIterator();
-		while (iterator.hasNext()) {
-			AlignmentLabelSubArea subArea = iterator.next().getLabelSubArea(); 
-			subArea.createSWTWidget(this, SWT.NONE);
-			subArea.assignSize();
+		if (getIndependentComponent().getOwner().getContentArea().hasToolkitComponent()) {
+			removeAll();
+			Iterator<AlignmentSubArea> iterator = 
+					getIndependentComponent().getOwner().getContentArea().getToolkitComponent().subAreaIterator();
+			while (iterator.hasNext()) {
+				AlignmentLabelSubArea subArea = iterator.next().getLabelSubArea(); 
+				subArea.createSWTWidget(this, SWT.NONE);
+				subArea.assignSize();
+			}
+		}
+		else {
+			throw new IllegalStateException(
+					"The SWT component of the associated alignment content area must already exist before this method can be called.");
 		}
 	}
 }

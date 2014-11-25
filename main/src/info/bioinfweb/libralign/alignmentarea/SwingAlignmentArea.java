@@ -69,7 +69,7 @@ public class SwingAlignmentArea extends JScrollPane implements ToolkitSpecificAl
 		removeArrowKeyBindings();
 		
 		setViewportView(getIndependentComponent().getContentArea().createSwingComponent());
-		setRowHeaderView(getIndependentComponent().getLabelArea().createSwingComponent());
+		setRowHeaderView(getIndependentComponent().getLabelArea().createSwingComponent());  // Swing component of content area must already exist when this is called.
 	}
 
 

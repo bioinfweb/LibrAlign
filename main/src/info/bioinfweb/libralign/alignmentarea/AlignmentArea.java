@@ -75,7 +75,7 @@ public class AlignmentArea extends TICComponent {
 		super();
 		this.container = container;
 		alignmentContentArea = new AlignmentContentArea(this);
-		alignmentLabelArea = new AlignmentLabelArea(this);
+		alignmentLabelArea = new AlignmentLabelArea(this);  // Must be called after alignmentContentArea has been created.
 	}
 
 
