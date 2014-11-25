@@ -16,14 +16,17 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package info.bioinfweb.libralign.pherogram;
+package info.bioinfweb.libralign.test.pherogramview;
 
+
+import info.bioinfweb.libralign.pherogram.PherogramHeadingView;
 
 import java.awt.EventQueue;
 
 import javax.swing.JFrame;
 
 import java.awt.BorderLayout;
+
 import javax.swing.JScrollPane;
 
 

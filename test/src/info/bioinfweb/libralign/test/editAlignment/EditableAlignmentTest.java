@@ -23,7 +23,7 @@ import info.bioinfweb.libralign.alignmentarea.AlignmentArea;
 import info.bioinfweb.libralign.alignmentarea.content.AlignmentContentArea;
 import info.bioinfweb.libralign.dataarea.implementations.SequenceIndexArea;
 import info.bioinfweb.libralign.dataarea.implementations.pherogram.PherogramArea;
-import info.bioinfweb.libralign.pherogram.BioJavaPherogramProvider;
+import info.bioinfweb.libralign.pherogram.provider.BioJavaPherogramProvider;
 import info.bioinfweb.libralign.sequenceprovider.SequenceDataProvider;
 import info.bioinfweb.libralign.sequenceprovider.implementations.PackedSequenceDataProvider;
 import info.bioinfweb.libralign.sequenceprovider.tokenset.BioJavaTokenSet;

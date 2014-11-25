@@ -16,10 +16,12 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package info.bioinfweb.libralign.pherogram;
+package info.bioinfweb.libralign.test.pherogramview;
 
 
+import info.bioinfweb.libralign.pherogram.PherogramTraceCurveView;
 import info.bioinfweb.libralign.pherogram.PherogramFormats.QualityOutputType;
+import info.bioinfweb.libralign.pherogram.provider.BioJavaPherogramProvider;
 
 import java.io.File;
 import java.io.IOException;
