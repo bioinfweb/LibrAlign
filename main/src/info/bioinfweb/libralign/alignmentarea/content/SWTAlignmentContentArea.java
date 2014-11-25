@@ -22,6 +22,7 @@ package info.bioinfweb.libralign.alignmentarea.content;
 import info.bioinfweb.commons.Math2;
 import info.bioinfweb.commons.tic.TICComponent;
 import info.bioinfweb.commons.tic.toolkit.ToolkitComponent;
+import info.bioinfweb.libralign.alignmentarea.rowsarea.SWTAlignmentRowsArea;
 import info.bioinfweb.libralign.dataarea.DataArea;
 import info.bioinfweb.libralign.dataarea.DataAreaList;
 import info.bioinfweb.libralign.dataarea.DataAreaModel;
@@ -34,7 +35,6 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.layout.RowData;
-import org.eclipse.swt.layout.RowLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 
@@ -46,7 +46,7 @@ import org.eclipse.swt.widgets.Control;
  * @author Ben St&ouml;ver
  * @since 0.3.0
  */
-public class SWTAlignmentContentArea extends Composite implements ToolkitSpecificAlignmentContentArea {
+public class SWTAlignmentContentArea extends SWTAlignmentRowsArea implements ToolkitSpecificAlignmentContentArea {
 	private AlignmentContentArea independentComponent;
 	private SequenceAreaMap sequenceAreaMap;
 
@@ -55,18 +55,6 @@ public class SWTAlignmentContentArea extends Composite implements ToolkitSpecifi
 		super(parentComposite, style);
 		this.independentComponent = independentComponent;
 		
-		RowLayout rowLayout = new RowLayout();
-		rowLayout.wrap = false;
-		rowLayout.pack = true;
-		rowLayout.justify = false;
-		rowLayout.type = SWT.VERTICAL;
-		rowLayout.marginLeft = 0;
-		rowLayout.marginTop = 0;
-		rowLayout.marginRight = 0;
-		rowLayout.marginBottom = 0;
-		rowLayout.spacing = 0;
-		setLayout(rowLayout);
-
 		sequenceAreaMap = new SequenceAreaMap(getIndependentComponent());
 		reinsertSubelements();
   }
@@ -79,11 +67,6 @@ public class SWTAlignmentContentArea extends Composite implements ToolkitSpecifi
 
 
 	@Override
-	public void repaint() {
-		redraw();
-	}
-
-
 	public void addDataAreaList(DataAreaList list) {
 		int width = 0;
 		Iterator<DataArea> iterator = list.iterator();

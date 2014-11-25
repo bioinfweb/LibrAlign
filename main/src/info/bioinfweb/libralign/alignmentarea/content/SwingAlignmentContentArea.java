@@ -121,39 +121,4 @@ public class SwingAlignmentContentArea extends SwingAlignmentRowsArea implements
 	public void assignSequenceAreaSize(int sequenceID) throws IllegalArgumentException {
 		AlignmentContentAreaTools.assignSequenceAreaSize(sequenceAreaMap, sequenceID);
 	}
-
-
-	@Override
-	public Dimension getPreferredScrollableViewportSize() {
-		// TODO Auto-generated method stub
-		return getPreferredSize();
-	}
-
-
-	@Override
-	public int getScrollableBlockIncrement(Rectangle arg0, int arg1, int arg2) {
-		// TODO Auto-generated method stub
-		return 10;
-	}
-
-
-	@Override
-	public boolean getScrollableTracksViewportHeight() {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-
-	@Override
-	public boolean getScrollableTracksViewportWidth() {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-
-	@Override
-	public int getScrollableUnitIncrement(Rectangle arg0, int arg1, int arg2) {
-		// TODO Auto-generated method stub
-		return 10;
-	}
 }

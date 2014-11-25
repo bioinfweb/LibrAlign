@@ -23,6 +23,7 @@ import java.util.Iterator;
 
 import info.bioinfweb.libralign.alignmentarea.ToolkitSpecificAlignmentArea;
 import info.bioinfweb.libralign.alignmentarea.rowsarea.ToolkitSpecificAlignmentRowsArea;
+import info.bioinfweb.libralign.dataarea.DataAreaList;
 
 
 
@@ -66,4 +67,11 @@ public interface ToolkitSpecificAlignmentContentArea extends ToolkitSpecificAlig
    * @throws IllegalArgumentException if no sequence area for the specified sequence ID was found
    */
   public void assignSequenceAreaSize(int sequenceID) throws IllegalArgumentException;
+
+  /**
+   * Adds a list of data areas as children of this component.
+   * 
+   * @param list - the data areas to be added
+   */
+  public void addDataAreaList(DataAreaList list);
 }

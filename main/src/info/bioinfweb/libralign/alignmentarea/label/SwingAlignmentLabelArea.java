@@ -20,11 +20,6 @@ package info.bioinfweb.libralign.alignmentarea.label;
 
 
 import info.bioinfweb.libralign.alignmentarea.rowsarea.SwingAlignmentRowsArea;
-import info.bioinfweb.libralign.dataarea.DataArea;
-import info.bioinfweb.libralign.dataarea.DataAreaList;
-
-import javax.swing.JComponent;
-import javax.swing.JPanel;
 
 
 
@@ -35,4 +30,24 @@ import javax.swing.JPanel;
  * @since 0.3.0
  */
 public class SwingAlignmentLabelArea extends SwingAlignmentRowsArea implements ToolkitSpecificAlignmentLabelArea {
+	private AlignmentLabelArea independentComponent;
+	
+	
+	public SwingAlignmentLabelArea(AlignmentLabelArea independentComponent) {
+		super();
+		this.independentComponent = independentComponent;
+	}
+
+
+	@Override
+	public AlignmentLabelArea getIndependentComponent() {
+		return independentComponent;
+	}
+	
+
+	@Override
+	public void reinsertSubelements() {
+		// TODO Auto-generated method stub
+		
+	}
 }

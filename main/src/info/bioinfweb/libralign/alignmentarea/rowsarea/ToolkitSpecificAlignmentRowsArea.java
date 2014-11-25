@@ -37,11 +37,4 @@ public interface ToolkitSpecificAlignmentRowsArea extends ToolkitComponent {
    * the current model information. 
    */
   public void reinsertSubelements();
-
-  /**
-	 * Adds a list of data areas as children of this component.
-	 * 
-	 * @param list - the data areas to be added
-	 */
-	public void addDataAreaList(DataAreaList list);
 }

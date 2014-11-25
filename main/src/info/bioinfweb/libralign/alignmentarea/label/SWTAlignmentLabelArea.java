@@ -19,6 +19,9 @@
 package info.bioinfweb.libralign.alignmentarea.label;
 
 
+import org.eclipse.swt.widgets.Composite;
+
+import info.bioinfweb.commons.tic.TICComponent;
 import info.bioinfweb.libralign.alignmentarea.rowsarea.SWTAlignmentRowsArea;
 
 
@@ -30,5 +33,24 @@ import info.bioinfweb.libralign.alignmentarea.rowsarea.SWTAlignmentRowsArea;
  * @since 0.3.0
  */
 public class SWTAlignmentLabelArea extends SWTAlignmentRowsArea implements ToolkitSpecificAlignmentLabelArea {
+	private AlignmentLabelArea independentComponent;
+
 	
+	public SWTAlignmentLabelArea(Composite parent, int style,	AlignmentLabelArea independentComponent) {
+		super(parent, style);
+		this.independentComponent = independentComponent;
+	}
+
+
+	@Override
+	public TICComponent getIndependentComponent() {
+		return independentComponent;
+	}
+
+
+	@Override
+	public void reinsertSubelements() {
+		// TODO Auto-generated method stub
+		
+	}
 }

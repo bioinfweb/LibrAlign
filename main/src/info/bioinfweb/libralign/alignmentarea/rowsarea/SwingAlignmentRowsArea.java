@@ -19,6 +19,9 @@
 package info.bioinfweb.libralign.alignmentarea.rowsarea;
 
 
+import java.awt.Dimension;
+import java.awt.Rectangle;
+
 import info.bioinfweb.libralign.alignmentarea.content.SwingAlignmentContentArea;
 import info.bioinfweb.libralign.alignmentarea.label.SwingAlignmentLabelArea;
 
@@ -39,5 +42,40 @@ public abstract class SwingAlignmentRowsArea extends JComponent implements Scrol
 		super();
 		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 		// reinsertSubelements() cannot be called here, because necessary fields need to be initialized by the implementing class first.
+	}
+
+
+	@Override
+	public Dimension getPreferredScrollableViewportSize() {
+		// TODO Auto-generated method stub
+		return getPreferredSize();
+	}
+
+
+	@Override
+	public int getScrollableBlockIncrement(Rectangle arg0, int arg1, int arg2) {
+		// TODO Auto-generated method stub
+		return 10;
+	}
+
+
+	@Override
+	public boolean getScrollableTracksViewportHeight() {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+
+	@Override
+	public boolean getScrollableTracksViewportWidth() {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+
+	@Override
+	public int getScrollableUnitIncrement(Rectangle arg0, int arg1, int arg2) {
+		// TODO Auto-generated method stub
+		return 10;
 	}
 }

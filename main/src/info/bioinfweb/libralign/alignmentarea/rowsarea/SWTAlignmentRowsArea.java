@@ -22,6 +22,8 @@ package info.bioinfweb.libralign.alignmentarea.rowsarea;
 import info.bioinfweb.libralign.alignmentarea.content.SWTAlignmentContentArea;
 import info.bioinfweb.libralign.alignmentarea.label.SWTAlignmentLabelArea;
 
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.layout.RowLayout;
 import org.eclipse.swt.widgets.Composite;
 
 
@@ -33,8 +35,31 @@ import org.eclipse.swt.widgets.Composite;
  * @since 0.3.0
  */
 public abstract class SWTAlignmentRowsArea extends Composite implements ToolkitSpecificAlignmentRowsArea {
-	public SWTAlignmentRowsArea(Composite parent, int hints) {
-		super(parent, hints);
-		// TODO Auto-generated constructor stub
+	/**
+	 * Creates a new instance of this class with {@link RowLayout}.
+	 * 
+	 * @param parent - the parent composite
+	 * @param style - the SWT component style
+	 */
+	public SWTAlignmentRowsArea(Composite parent, int style) {
+		super(parent, style);
+		
+		RowLayout rowLayout = new RowLayout();
+		rowLayout.wrap = false;
+		rowLayout.pack = true;
+		rowLayout.justify = false;
+		rowLayout.type = SWT.VERTICAL;
+		rowLayout.marginLeft = 0;
+		rowLayout.marginTop = 0;
+		rowLayout.marginRight = 0;
+		rowLayout.marginBottom = 0;
+		rowLayout.spacing = 0;
+		setLayout(rowLayout);		
 	}	
+
+	
+	@Override
+	public void repaint() {
+		redraw();
+	}
 }
