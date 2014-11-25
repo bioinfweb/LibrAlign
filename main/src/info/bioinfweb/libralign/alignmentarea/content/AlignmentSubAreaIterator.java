@@ -59,4 +59,10 @@ public class AlignmentSubAreaIterator implements Iterator<AlignmentSubArea> {
 		}
 		throw new ClassCastException("A child component of an invalid type was found.");
 	}
+
+
+	@Override
+	public void remove() {
+		throw new UnsupportedOperationException();
+	}
 }
