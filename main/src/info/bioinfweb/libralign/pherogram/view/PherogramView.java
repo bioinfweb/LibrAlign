@@ -59,6 +59,7 @@ public class PherogramView extends TICComponent {
 
 		traceCurveView = new PherogramTraceCurveView();
 		headingView = new PherogramHeadingView(traceCurveView);
+		traceCurveView.setHeadingView(headingView);
 	}
 
 
