@@ -215,6 +215,7 @@ test/src/info/bioinfweb/libralign/test/editAlignment/SwingTest.java -text svneol
 test/src/info/bioinfweb/libralign/test/multiplealignmentscontainer/AbstractApplication.java -text svneol=unset#text/plain
 test/src/info/bioinfweb/libralign/test/multiplealignmentscontainer/SWTApplication.java -text svneol=unset#text/plain
 test/src/info/bioinfweb/libralign/test/multiplealignmentscontainer/SwingApplication.java -text svneol=unset#text/plain
-test/src/info/bioinfweb/libralign/test/pherogramview/AbstractPherogramComponentApplication.java -text svneol=unset#text/plain
-test/src/info/bioinfweb/libralign/test/pherogramview/SWTPherogramComponentApplication.java -text svneol=unset#text/plain
-test/src/info/bioinfweb/libralign/test/pherogramview/SwingPherogramComponentApplication.java -text svneol=unset#text/plain
+test/src/info/bioinfweb/libralign/test/pherogramview/AbstractPherogramViewTest.java -text svneol=unset#text/plain
+test/src/info/bioinfweb/libralign/test/pherogramview/SWTPherogramViewTest.java -text svneol=unset#text/plain
+test/src/info/bioinfweb/libralign/test/pherogramview/SwingPherogramHeadingViewTraceCurveTest.java -text svneol=unset#text/plain
+test/src/info/bioinfweb/libralign/test/pherogramview/SwingPherogramViewTest.java -text svneol=unset#text/plain

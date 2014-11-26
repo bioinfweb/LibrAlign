@@ -23,12 +23,13 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.custom.ScrolledComposite;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.layout.GridData;
 
 
 
-public class SWTPherogramComponentApplication extends AbstractPherogramComponentApplication {	
+public class SWTPherogramViewTest extends AbstractPherogramViewTest {	
 	protected Shell shell;
 	
 	
@@ -38,7 +39,7 @@ public class SWTPherogramComponentApplication extends AbstractPherogramComponent
 	 */
 	public static void main(String[] args) {
 		try {
-			SWTPherogramComponentApplication window = new SWTPherogramComponentApplication();
+			SWTPherogramViewTest window = new SWTPherogramViewTest();
 			window.open();
 		} 
 		catch (Exception e) {
@@ -53,6 +54,8 @@ public class SWTPherogramComponentApplication extends AbstractPherogramComponent
 	public void open() {
 		Display display = Display.getDefault();
 		createContents();
+		//getPherogramView().getTraceCurveView().assignSize();
+		//getPherogramView().getHeadingView().assignSize();
 		shell.open();
 		shell.layout();
 		while (!shell.isDisposed()) {
@@ -69,19 +72,9 @@ public class SWTPherogramComponentApplication extends AbstractPherogramComponent
 	protected void createContents() {
 		shell = new Shell();
 		shell.setSize(450, 300);
-		shell.setText("SWT Application");
-		shell.setLayout(new GridLayout(1, false));
+		shell.setText("SWT PherogramView Test");
+		shell.setLayout(new FillLayout(SWT.VERTICAL));
 		
-		ScrolledComposite scrolledComposite = new ScrolledComposite(shell, SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL);
-		scrolledComposite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, false, false, 1, 1));
-		scrolledComposite.setExpandHorizontal(true);
-		scrolledComposite.setExpandVertical(true);
-		
-		try {
-			scrolledComposite.setContent(getPherogramComponent().createSWTWidget(scrolledComposite, SWT.NONE));
-		}
-		catch (Exception e) {
-			e.printStackTrace();
-		}
+		getPherogramView().createSWTWidget(shell, SWT.NONE);
 	}
 }

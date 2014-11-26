@@ -1,6 +1,6 @@
 /*
  * LibrAlign - A GUI library for displaying and editing multiple sequence alignments and attached data
- * Copyright (C) 2014  Ben Stöver
+ * Copyright (C) 2014  Ben St�ver
  * <http://bioinfweb.info/LibrAlign>
  * 
  * This file is free software: you can redistribute it and/or modify
@@ -19,21 +19,28 @@
 package info.bioinfweb.libralign.test.pherogramview;
 
 
-import info.bioinfweb.libralign.pherogram.PherogramTraceCurveView;
 import info.bioinfweb.libralign.pherogram.PherogramFormats.QualityOutputType;
 import info.bioinfweb.libralign.pherogram.provider.BioJavaPherogramProvider;
+import info.bioinfweb.libralign.pherogram.view.PherogramHeadingView;
+import info.bioinfweb.libralign.pherogram.view.PherogramTraceCurveView;
 
+import java.awt.BorderLayout;
+import java.awt.EventQueue;
 import java.io.File;
 import java.io.IOException;
+
+import javax.swing.JFrame;
+import javax.swing.JScrollPane;
 
 import org.biojava.bio.chromatogram.ChromatogramFactory;
 import org.biojava.bio.chromatogram.UnsupportedChromatogramFormatException;
 
 
 
-public class AbstractPherogramComponentApplication {
+public class SwingPherogramHeadingViewTraceCurveTest extends AbstractPherogramViewTest {
 	private PherogramTraceCurveView pherogramView = null;
-
+	private JFrame frame;
+	
 	
 	protected PherogramTraceCurveView getPherogramComponent() throws UnsupportedChromatogramFormatException, IOException {
 		if (pherogramView == null) {
@@ -48,5 +55,53 @@ public class AbstractPherogramComponentApplication {
 			pherogramView.getFormats().setShowProbabilityValues(true);
 		}
 		return pherogramView;
+	}
+
+	
+	/**
+	 * Launch the application.
+	 */
+	public static void main(String[] args) {
+		EventQueue.invokeLater(new Runnable() {
+			public void run() {
+				try {
+					SwingPherogramHeadingViewTraceCurveTest window = new SwingPherogramHeadingViewTraceCurveTest();
+					window.frame.setVisible(true);
+				} 
+				catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		});
+	}
+	
+	
+	/**
+	 * Create the application.
+	 */
+	public SwingPherogramHeadingViewTraceCurveTest() {
+		initialize();
+	}
+	
+	
+	/**
+	 * Initialize the contents of the frame.
+	 */
+	private void initialize() {
+		frame = new JFrame();
+		frame.setBounds(100, 100, 450, 300);
+		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frame.setTitle("Swing PherogramTraceCurveView and PherogramHeadingView Test");
+		
+		try {
+			JScrollPane scrollPane = new JScrollPane();
+			scrollPane.setViewportView(getPherogramComponent().createSwingComponent());
+			scrollPane.setColumnHeaderView(new PherogramHeadingView(getPherogramComponent()).createSwingComponent());
+
+			frame.getContentPane().add(scrollPane, BorderLayout.CENTER);
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 }

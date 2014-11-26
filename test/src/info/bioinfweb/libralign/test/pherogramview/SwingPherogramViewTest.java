@@ -1,6 +1,6 @@
 /*
  * LibrAlign - A GUI library for displaying and editing multiple sequence alignments and attached data
- * Copyright (C) 2014  Ben St�ver
+ * Copyright (C) 2014  Ben Stöver
  * <http://bioinfweb.info/LibrAlign>
  * 
  * This file is free software: you can redistribute it and/or modify
@@ -19,19 +19,14 @@
 package info.bioinfweb.libralign.test.pherogramview;
 
 
-import info.bioinfweb.libralign.pherogram.PherogramHeadingView;
-
+import java.awt.BorderLayout;
 import java.awt.EventQueue;
 
 import javax.swing.JFrame;
 
-import java.awt.BorderLayout;
-
-import javax.swing.JScrollPane;
 
 
-
-public class SwingPherogramComponentApplication extends AbstractPherogramComponentApplication {
+public class SwingPherogramViewTest extends AbstractPherogramViewTest {
 	private JFrame frame;
 	
 	
@@ -42,9 +37,10 @@ public class SwingPherogramComponentApplication extends AbstractPherogramCompone
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					SwingPherogramComponentApplication window = new SwingPherogramComponentApplication();
+					SwingPherogramViewTest window = new SwingPherogramViewTest();
 					window.frame.setVisible(true);
-				} catch (Exception e) {
+				} 
+				catch (Exception e) {
 					e.printStackTrace();
 				}
 			}
@@ -55,7 +51,7 @@ public class SwingPherogramComponentApplication extends AbstractPherogramCompone
 	/**
 	 * Create the application.
 	 */
-	public SwingPherogramComponentApplication() {
+	public SwingPherogramViewTest() {
 		initialize();
 	}
 	
@@ -67,13 +63,10 @@ public class SwingPherogramComponentApplication extends AbstractPherogramCompone
 		frame = new JFrame();
 		frame.setBounds(100, 100, 450, 300);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frame.setTitle("Swing PherogramView Test");
 		
 		try {
-			JScrollPane scrollPane = new JScrollPane();
-			frame.getContentPane().add(scrollPane, BorderLayout.CENTER);
-			
-			scrollPane.setViewportView(getPherogramComponent().createSwingComponent());
-			scrollPane.setColumnHeaderView(new PherogramHeadingView(getPherogramComponent()).createSwingComponent());
+			frame.getContentPane().add(getPherogramView().createSwingComponent(), BorderLayout.CENTER);
 		}
 		catch (Exception e) {
 			e.printStackTrace();
