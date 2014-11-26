@@ -158,7 +158,7 @@ public class PherogramPainter {
 
 			if (index < owner.getProvider().getSequenceLength()) {
 				paintBaseCallData(g, index, paintStartX + (owner.getProvider().getBaseCallPosition(index) - startX) * horizontalScale, 
-						paintY + g.getFont().getSize());  // Also paint last possible partly visible character
+						paintY);  // Also paint last possible partly visible character
 			}
     }
 	}
@@ -193,12 +193,14 @@ public class PherogramPainter {
 			double horizontalScale) {
 		
 		double height = calculateTraceCurvesHeight();
+		endX = Math.min(endX + 1, owner.getProvider().getTraceLength());
 		
 		for (NucleotideCompound nucleotide: PherogramProvider.TRACE_CURVE_NUCLEOTIDES) {
 			Path2D path = new Path2D.Double();
 			double x = paintX;
 			path.moveTo(x, paintY + height - 
 					owner.getProvider().getTraceValue(nucleotide, startX) * owner.getVerticalScale());
+			
 			for (int traceX = startX + 1; traceX < endX; traceX++) {
 				x += horizontalScale;
 				path.lineTo(x, paintY + height - 
@@ -286,6 +288,16 @@ public class PherogramPainter {
 				
 				leftMostLabelStart = labelX + labelWidth;
 				index += INDEX_LABEL_INTERVAL;			
+			}
+			
+			if (index < owner.getProvider().getSequenceLength()) {  // Draw possibly partly visible label
+				String label = "" + index;
+				int labelWidth = g.getFontMetrics().stringWidth(label);
+				float labelX = (float)(paintX + (owner.getProvider().getBaseCallPosition(index) - startX) * horizontalScale - 
+						0.5 * labelWidth);
+				if (labelX > leftMostLabelStart) {  // Draw label only if it does not overlap with its left neighbor.
+					g.drawString(label, labelX,	(float)paintY + g.getFont().getSize());
+				}
 			}
     }
 	}
