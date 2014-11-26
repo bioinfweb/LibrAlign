@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package info.bioinfweb.libralign.pherogram;
+package info.bioinfweb.libralign.pherogram.view;
 
 
 import java.awt.Color;
@@ -27,6 +27,8 @@ import info.bioinfweb.commons.Math2;
 import info.bioinfweb.commons.collections.SimpleSequenceInterval;
 import info.bioinfweb.commons.tic.TICComponent;
 import info.bioinfweb.commons.tic.TICPaintEvent;
+import info.bioinfweb.libralign.pherogram.PherogramFormats;
+import info.bioinfweb.libralign.pherogram.PherogramPainter;
 
 
 
@@ -36,6 +38,7 @@ import info.bioinfweb.commons.tic.TICPaintEvent;
  * 
  * @author Ben St&ouml;ver
  * @since 0.1.0
+ * @see PherogramView
  */
 public class PherogramHeadingView extends TICComponent {
 	private PherogramTraceCurveView traceCurveView;

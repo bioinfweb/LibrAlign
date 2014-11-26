@@ -19,9 +19,9 @@
 package info.bioinfweb.libralign.pherogram.distortion;
 
 
-import info.bioinfweb.libralign.pherogram.PherogramTraceCurveView;
 import info.bioinfweb.libralign.pherogram.PherogramUtils;
 import info.bioinfweb.libralign.pherogram.provider.PherogramProvider;
+import info.bioinfweb.libralign.pherogram.view.PherogramTraceCurveView;
 
 
 

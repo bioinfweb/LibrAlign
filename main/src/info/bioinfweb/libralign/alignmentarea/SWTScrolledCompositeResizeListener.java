@@ -86,14 +86,15 @@ public class SWTScrolledCompositeResizeListener implements ControlListener {
 	public void controlResized(ControlEvent e) {
 		Rectangle bounds = container.getBounds();		
 		int width = bounds.width;
-		//System.out.println(width + " " + isHideVerticalBar());
 		if (isHideVerticalBar()) {
 			width += scrolledComposite.getVerticalBar().getSize().x + scrolledComposite.getBorderWidth();
 		}
 		int height = bounds.height;
 		if (isHideHorizontalBar()) {
-			height += scrolledComposite.getVerticalBar().getSize().x + scrolledComposite.getBorderWidth(); 
+			height += scrolledComposite.getHorizontalBar().getSize().y + scrolledComposite.getBorderWidth(); 
 		}
+		//System.out.println(width + " " + isHideVerticalBar() + " " + height + " " + bounds.height + " " + isHideHorizontalBar());
 		scrolledComposite.setBounds(0, 0, width, height);
+		//System.out.println("  " + container.getBounds() + " " + scrolledComposite.getContent().getSize());
 	}
 }

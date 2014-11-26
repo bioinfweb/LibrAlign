@@ -130,7 +130,7 @@ public class SWTAlignmentArea extends Composite implements ToolkitSpecificAlignm
 		contentArea.addControlListener(new ControlAdapter() {
 					@Override
 					public void controlResized(ControlEvent e) {
-						getIndependentComponent().getLabelArea().assignSize();
+						getIndependentComponent().getLabelArea().assignSize();  //TODO reinsertSubelements()?
 					}
 				});
 		
@@ -147,6 +147,10 @@ public class SWTAlignmentArea extends Composite implements ToolkitSpecificAlignm
 						labelContainer.setSize(data.widthHint, data.heightHint);
 					}
 				});
+		
+		// Set correct size to recently created SWT components:
+		getIndependentComponent().getContentArea().assignSize();
+		getIndependentComponent().getLabelArea().assignSize();
 	}
 
 

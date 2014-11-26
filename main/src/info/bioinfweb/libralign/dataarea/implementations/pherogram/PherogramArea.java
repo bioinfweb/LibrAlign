@@ -29,6 +29,7 @@ import info.bioinfweb.libralign.pherogram.PherogramFormats;
 import info.bioinfweb.libralign.pherogram.PherogramPainter;
 import info.bioinfweb.libralign.pherogram.distortion.ScaledPherogramDistortion;
 import info.bioinfweb.libralign.pherogram.provider.PherogramProvider;
+import info.bioinfweb.libralign.pherogram.view.PherogramView;
 import info.bioinfweb.libralign.sequenceprovider.SequenceDataProvider;
 import info.bioinfweb.libralign.sequenceprovider.events.SequenceChangeEvent;
 import info.bioinfweb.libralign.sequenceprovider.events.SequenceRenamedEvent;
@@ -48,6 +49,7 @@ import java.util.Set;
  * 
  * @author Ben St&ouml;ver
  * @since 0.1.0
+ * @see PherogramView
  */
 public class PherogramArea extends CustomHeightFullWidthArea implements PherogramComponent {
 	public static final int DEFAULT_HEIGHT_FACTOR = 5;

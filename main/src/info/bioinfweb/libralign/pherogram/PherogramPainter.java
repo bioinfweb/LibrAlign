@@ -32,6 +32,7 @@ import info.bioinfweb.libralign.pherogram.PherogramFormats.QualityOutputType;
 import info.bioinfweb.libralign.pherogram.distortion.GapPattern;
 import info.bioinfweb.libralign.pherogram.distortion.PherogramDistortion;
 import info.bioinfweb.libralign.pherogram.provider.PherogramProvider;
+import info.bioinfweb.libralign.pherogram.view.PherogramTraceCurveView;
 
 
 
@@ -135,19 +136,19 @@ public class PherogramPainter {
 	public void paintUnscaledBaseCalls(int startX, int endX, Graphics2D g, double paintStartX, double paintY, 
 			double horizontalScale) {
 		
-		int index = 1;  // BioJava indices start with 1.
-		while ((index <= owner.getProvider().getSequenceLength()) && 
+		int index = 0;
+		while ((index < owner.getProvider().getSequenceLength()) && 
 				(owner.getProvider().getBaseCallPosition(index) < startX)) {
 			
 			index++;
 		}
 		
-		if (index <= owner.getProvider().getSequenceLength()) {
-			if (index > 1) {
+		if (index < owner.getProvider().getSequenceLength()) {
+			if (index > 0) {
 				index--;  // Also paint first possible partly visible character
 			}
 			
-			while ((index <= owner.getProvider().getSequenceLength()) && 
+			while ((index < owner.getProvider().getSequenceLength()) && 
 					(owner.getProvider().getBaseCallPosition(index) < endX)) {
 				
     		paintBaseCallData(g, index, paintStartX + (owner.getProvider().getBaseCallPosition(index) - startX) * horizontalScale, 
@@ -155,7 +156,7 @@ public class PherogramPainter {
 				index++;
 			}
 
-			if (index <= owner.getProvider().getSequenceLength()) {
+			if (index < owner.getProvider().getSequenceLength()) {
 				paintBaseCallData(g, index, paintStartX + (owner.getProvider().getBaseCallPosition(index) - startX) * horizontalScale, 
 						paintY + g.getFont().getSize());  // Also paint last possible partly visible character
 			}
@@ -215,16 +216,16 @@ public class PherogramPainter {
 	public void paintUnscaledBaseCallLines(int startX, int endX, Graphics2D g, double paintX, double paintY, double height,
 			double horizontalScale) {
 		
-		int index = 1;  // BioJava indices start with 1.
-		while ((index <= owner.getProvider().getSequenceLength()) && 
+		int index = 0;
+		while ((index < owner.getProvider().getSequenceLength()) && 
 				(owner.getProvider().getBaseCallPosition(index) < startX)) {
 			
 			index++;			
 		}
 		
-		if (index <= owner.getProvider().getSequenceLength()) {
-			while ((index <= owner.getProvider().getSequenceLength()) && 
-					(owner.getProvider().getBaseCallPosition(index) < endX)) {
+		if (index < owner.getProvider().getSequenceLength()) {
+			while ((index < owner.getProvider().getSequenceLength()) && 
+					(owner.getProvider().getBaseCallPosition(index) <= endX)) {
 				
 	  		double x = paintX + (owner.getProvider().getBaseCallPosition(index) - startX) * horizontalScale;
 	  		Path2D path = new  Path2D.Double();
@@ -242,8 +243,8 @@ public class PherogramPainter {
 			double height, PherogramDistortion distortion) {
 		
 		int baseCallIndex = firstBaseCallIndex;
-		if (baseCallIndex <= owner.getProvider().getSequenceLength()) {
-			while ((baseCallIndex <= owner.getProvider().getSequenceLength()) && 
+		if (baseCallIndex < owner.getProvider().getSequenceLength()) {
+			while ((baseCallIndex < owner.getProvider().getSequenceLength()) && 
 					(baseCallIndex <= lastBaseCallIndex)) {
 				
 	  		double x = startX + distortion.getPaintCenterX(baseCallIndex);
@@ -261,18 +262,18 @@ public class PherogramPainter {
 	public void paintUnscaledBaseCallIndices(int startX, int endX, Graphics2D g, double paintX, double paintY, 
 			double horizontalScale) {
 		
-		int index = 1;  // BioJava indices start with 1.
-		while ((index <= owner.getProvider().getSequenceLength()) && 
+		int index = 0;
+		while ((index < owner.getProvider().getSequenceLength()) && 
 				(owner.getProvider().getBaseCallPosition(index) < startX)) {
 			
 			index++;			
 		}
 		
 		float leftMostLabelStart = 0;  // Make sure the first label is always painted
-		if (index <= owner.getProvider().getSequenceLength()) {
+		if (index < owner.getProvider().getSequenceLength()) {
 			index = Math.max(INDEX_LABEL_INTERVAL, index - index % INDEX_LABEL_INTERVAL - INDEX_LABEL_INTERVAL);
 			
-			while ((index <= owner.getProvider().getSequenceLength()) && 
+			while ((index < owner.getProvider().getSequenceLength()) && 
 					(owner.getProvider().getBaseCallPosition(index) < endX)) {
 				
 				String label = "" + index;
@@ -295,10 +296,10 @@ public class PherogramPainter {
 		
 		int baseCallIndex = firstBaseCallIndex;
 		float leftMostLabelStart = 0;  // Make sure the first label is always painted
-		if (baseCallIndex <= owner.getProvider().getSequenceLength()) {
+		if (baseCallIndex < owner.getProvider().getSequenceLength()) {
 			baseCallIndex = Math.max(INDEX_LABEL_INTERVAL, baseCallIndex - baseCallIndex % INDEX_LABEL_INTERVAL - INDEX_LABEL_INTERVAL);
 			
-			while ((baseCallIndex <= owner.getProvider().getSequenceLength()) && 
+			while ((baseCallIndex < owner.getProvider().getSequenceLength()) && 
 					(baseCallIndex <= lastBaseCallIndex)) {
 				
 				String label = "" + baseCallIndex;

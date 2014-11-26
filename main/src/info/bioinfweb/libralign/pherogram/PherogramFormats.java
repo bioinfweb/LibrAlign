@@ -21,6 +21,7 @@ package info.bioinfweb.libralign.pherogram;
 
 import info.bioinfweb.commons.graphics.GraphicsUtils;
 import info.bioinfweb.libralign.alignmentarea.content.SequenceColorSchema;
+import info.bioinfweb.libralign.pherogram.view.PherogramHeadingView;
 
 import java.awt.Color;
 import java.awt.Font;

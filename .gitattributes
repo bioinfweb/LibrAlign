@@ -97,9 +97,7 @@ main/src/info/bioinfweb/libralign/multiplealignments/package-info.java -text svn
 main/src/info/bioinfweb/libralign/package-info.java -text svneol=unset#text/plain
 main/src/info/bioinfweb/libralign/pherogram/PherogramComponent.java -text svneol=unset#text/plain
 main/src/info/bioinfweb/libralign/pherogram/PherogramFormats.java -text svneol=unset#text/plain
-main/src/info/bioinfweb/libralign/pherogram/PherogramHeadingView.java -text svneol=unset#text/plain
 main/src/info/bioinfweb/libralign/pherogram/PherogramPainter.java -text svneol=unset#text/plain
-main/src/info/bioinfweb/libralign/pherogram/PherogramTraceCurveView.java -text svneol=unset#text/plain
 main/src/info/bioinfweb/libralign/pherogram/PherogramUtils.java -text svneol=unset#text/plain
 main/src/info/bioinfweb/libralign/pherogram/distortion/GapPattern.java -text svneol=unset#text/plain
 main/src/info/bioinfweb/libralign/pherogram/distortion/PherogramDistortion.java -text svneol=unset#text/plain
@@ -111,6 +109,13 @@ main/src/info/bioinfweb/libralign/pherogram/provider/BioJavaPherogramProvider.ja
 main/src/info/bioinfweb/libralign/pherogram/provider/PherogramProvider.java -text svneol=unset#text/plain
 main/src/info/bioinfweb/libralign/pherogram/provider/ReverseComplementPherogramProvider.java -text svneol=unset#text/plain
 main/src/info/bioinfweb/libralign/pherogram/provider/package-info.java -text svneol=unset#text/plain
+main/src/info/bioinfweb/libralign/pherogram/view/PherogramHeadingView.java -text svneol=unset#text/plain
+main/src/info/bioinfweb/libralign/pherogram/view/PherogramTraceCurveView.java -text svneol=unset#text/plain
+main/src/info/bioinfweb/libralign/pherogram/view/PherogramView.java -text svneol=unset#text/plain
+main/src/info/bioinfweb/libralign/pherogram/view/SWTPhergramView.java -text svneol=unset#text/plain
+main/src/info/bioinfweb/libralign/pherogram/view/SwingPhergramView.java -text svneol=unset#text/plain
+main/src/info/bioinfweb/libralign/pherogram/view/ToolkitIndependentPhergramView.java -text svneol=unset#text/plain
+main/src/info/bioinfweb/libralign/pherogram/view/package-info.java -text svneol=unset#text/plain
 main/src/info/bioinfweb/libralign/sequenceprovider/BasicSequenceDataView.java -text svneol=unset#text/plain
 main/src/info/bioinfweb/libralign/sequenceprovider/DataProvider.java -text svneol=unset#text/plain
 main/src/info/bioinfweb/libralign/sequenceprovider/SequenceAccess.java -text svneol=unset#text/plain

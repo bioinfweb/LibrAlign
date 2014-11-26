@@ -19,8 +19,6 @@
 package info.bioinfweb.libralign.alignmentarea;
 
 
-import java.awt.Component;
-import java.awt.Dimension;
 import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 
@@ -85,21 +83,6 @@ public class SwingAlignmentArea extends JScrollPane implements ToolkitSpecificAl
 	}
 	
 	
-	@Override
-	//@Transient
-	public Dimension getPreferredSize() {
-		//TODO AWT tree lock?;
-		Dimension result = new Dimension(0, 0);
-		Component[] components = getComponents();
-		for (int i = 0; i < components.length; i++) {
-			Dimension componentSize = components[i].getPreferredSize();
-			result.width = Math.max(result.width, componentSize.width);
-			result.height += componentSize.height;
-		}
-		return result;
-	}
-
-
 	@Override
 	public void scrollAlignmentRectToVisible(Rectangle rectangle) {
 		((SwingAlignmentContentArea)

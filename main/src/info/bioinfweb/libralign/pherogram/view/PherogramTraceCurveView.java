@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package info.bioinfweb.libralign.pherogram;
+package info.bioinfweb.libralign.pherogram.view;
 
 
 import java.awt.Dimension;
@@ -28,6 +28,9 @@ import info.bioinfweb.commons.tic.TICComponent;
 import info.bioinfweb.commons.tic.TICPaintEvent;
 import info.bioinfweb.libralign.alignmentarea.AlignmentArea;
 import info.bioinfweb.libralign.dataarea.implementations.pherogram.PherogramArea;
+import info.bioinfweb.libralign.pherogram.PherogramComponent;
+import info.bioinfweb.libralign.pherogram.PherogramFormats;
+import info.bioinfweb.libralign.pherogram.PherogramPainter;
 import info.bioinfweb.libralign.pherogram.provider.PherogramProvider;
 
 
@@ -40,6 +43,7 @@ import info.bioinfweb.libralign.pherogram.provider.PherogramProvider;
  * {@link #createSWTWidget(org.eclipse.swt.widgets.Composite, int)} as this class is a TIC component.
  * 
  * @author Ben St&ouml;ver
+ * @see PherogramView
  * @see PherogramArea
  */
 public class PherogramTraceCurveView extends TICComponent implements PherogramComponent {
