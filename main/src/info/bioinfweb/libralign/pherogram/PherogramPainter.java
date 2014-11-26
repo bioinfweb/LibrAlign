@@ -193,6 +193,7 @@ public class PherogramPainter {
 			double horizontalScale) {
 		
 		double height = calculateTraceCurvesHeight();
+		startX = Math.max(startX, 0);
 		endX = Math.min(endX + 1, owner.getProvider().getTraceLength());
 		
 		for (NucleotideCompound nucleotide: PherogramProvider.TRACE_CURVE_NUCLEOTIDES) {
