@@ -489,12 +489,18 @@ public class AlignmentContentArea extends TICComponent implements SequenceDataCh
 		getOwner().getLabelArea().assignSize();
 	}
 	
+	
+	public void reinsertSubelementsInThisAndLabelArea() {
+		getToolkitComponent().reinsertSubelements();
+		getOwner().getLabelArea().getToolkitComponent().reinsertSubelements();
+	}
+	
 
 	@Override
 	public <T> void afterSequenceChange(SequenceChangeEvent<T> e) {
 		getSequenceOrder().refreshFromSource();
 		if (hasToolkitComponent()) {
-			getToolkitComponent().reinsertSubelements();
+			reinsertSubelementsInThisAndLabelArea();
 		}
 		assignSizeToThisAndLabelArea();
 		//repaint();  //TODO Does this have to be called?
@@ -521,7 +527,7 @@ public class AlignmentContentArea extends TICComponent implements SequenceDataCh
 
 	@Override
 	public <T, U> void afterProviderChanged(SequenceDataProvider<T> previous, SequenceDataProvider<U> current) {
-		assignSizeToThisAndLabelArea();
+		assignSizeToThisAndLabelArea();  //TODO reinsertSubements()?
 		repaint();  //TODO Needed?
 		//TODO Remove some data areas? (Some might be data specific (e.g. pherograms), some not (e.g. consensus sequence).)
 		getDataAreas().getSequenceDataChangeListener().afterProviderChanged(previous, current);
@@ -531,7 +537,7 @@ public class AlignmentContentArea extends TICComponent implements SequenceDataCh
 	@Override
 	public void dataAreaInsertedRemoved(DataAreaChangeEvent e) {
 		if (hasToolkitComponent()) {
-			getToolkitComponent().reinsertSubelements();
+			reinsertSubelementsInThisAndLabelArea();
 			assignSizeToThisAndLabelArea();
 		}
 	}
