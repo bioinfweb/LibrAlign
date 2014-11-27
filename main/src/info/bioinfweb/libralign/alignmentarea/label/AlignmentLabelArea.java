@@ -20,17 +20,15 @@ package info.bioinfweb.libralign.alignmentarea.label;
 
 
 import java.awt.Dimension;
-import java.awt.Font;
 import java.util.Iterator;
 
 import javax.swing.JComponent;
 
 import org.eclipse.swt.widgets.Composite;
 
-import info.bioinfweb.commons.Math2;
-import info.bioinfweb.commons.graphics.FontCalculator;
 import info.bioinfweb.commons.tic.TICComponent;
 import info.bioinfweb.commons.tic.TICPaintEvent;
+import info.bioinfweb.commons.tic.TargetToolkit;
 import info.bioinfweb.libralign.alignmentarea.AlignmentArea;
 import info.bioinfweb.libralign.alignmentarea.content.AlignmentSubArea;
 
@@ -90,7 +88,7 @@ public class AlignmentLabelArea extends TICComponent {
 		return new Dimension(getMaximumNeededWidth(),	getOwner().getContentArea().getSize().height);  // If references starting from owner would be used here, there would be problems in initialization order.
 	}
 
-	
+
 	@Override
 	public void paint(TICPaintEvent event) {}  // Remains empty because toolkit specific components are provided.	
 

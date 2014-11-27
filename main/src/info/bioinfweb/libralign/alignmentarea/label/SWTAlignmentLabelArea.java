@@ -19,11 +19,18 @@
 package info.bioinfweb.libralign.alignmentarea.label;
 
 
+import java.awt.Dimension;
 import java.util.Iterator;
 
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.ControlAdapter;
+import org.eclipse.swt.events.ControlEvent;
+import org.eclipse.swt.events.ControlListener;
+import org.eclipse.swt.layout.RowData;
 import org.eclipse.swt.widgets.Composite;
 
+import info.bioinfweb.commons.tic.input.TICMouseAdapter;
+import info.bioinfweb.commons.tic.input.TICMouseEvent;
 import info.bioinfweb.libralign.alignmentarea.content.AlignmentSubArea;
 import info.bioinfweb.libralign.alignmentarea.content.SWTAlignmentContentArea;
 import info.bioinfweb.libralign.alignmentarea.rowsarea.SWTAlignmentRowsArea;
@@ -79,8 +86,9 @@ public class SWTAlignmentLabelArea extends SWTAlignmentRowsArea implements Toolk
 					getIndependentComponent().getOwner().getContentArea().getToolkitComponent().subAreaIterator();
 			while (iterator.hasNext()) {
 				AlignmentLabelSubArea subArea = iterator.next().getLabelSubArea(); 
-				subArea.createSWTWidget(this, SWT.NONE);
+				Composite composite = subArea.createSWTWidget(this, SWT.NONE);
 				subArea.assignSize();
+				composite.setLayoutData(new RowData(composite.getSize()));  // Otherwise Control.setSize() of the parent which is called in TICComponent.assignSize() will overwrite the size set here.  //TODO How can that be done in a more general way?
 			}
 		}
 	}
