@@ -142,7 +142,7 @@ public class SWTAlignmentArea extends Composite implements ToolkitSpecificAlignm
 						int borderWidth = 2 * (labelContainer.getBorderWidth() + labelScroller.getBorderWidth());
 						GridData data = (GridData)labelContainer.getLayoutData();
 						data.widthHint = size.width + borderWidth;
-						data.heightHint = size.height + borderWidth;
+						data.heightHint = size.height + borderWidth;  // If the label area would scroll the height must not be changed in here.
 						labelContainer.setLayoutData(data);
 						labelContainer.setSize(data.widthHint, data.heightHint);
 					}

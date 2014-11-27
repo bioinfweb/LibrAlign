@@ -102,17 +102,16 @@ public class SWTPhergramView extends AbstractSWTComposite implements ToolkitInde
 				new ScrolledComposite[]{headingScroller, traceCurveScroller}, true);
 		horizontalSyncListener.registerToAll();		
 
-		// Ensure correct width of heading components:  //TODO Is that needed?
+		// Ensure correct height of heading components:
 		((Composite)getIndependentComponent().getHeadingView().getToolkitComponent()).addControlListener(new ControlAdapter() {
 					@Override
 					public void controlResized(ControlEvent e) {
 						Dimension size = getIndependentComponent().getHeadingView().getSize();
 						int borderWidth = 2 * (headingContainer.getBorderWidth() + headingScroller.getBorderWidth());
 						GridData data = (GridData)headingContainer.getLayoutData();
-						data.widthHint = size.width + borderWidth;
 						data.heightHint = size.height + borderWidth;
-						headingContainer.setLayoutData(data);
 						headingContainer.setSize(data.widthHint, data.heightHint);
+						layout();  //TODO Can this become an endless recursion? => Should only happen if no data for the layout manager is set in here. Otherwise the recursion should terminate once the component has its desired size. 
 					}
 				});
 
