@@ -86,6 +86,8 @@ public class EditableAlignmentTest {
 				
 				// Add data area:
 				PherogramArea pherogramArea = new PherogramArea(alignmentArea.getContentArea(), pherogramProvider);
+				//pherogramArea.setFirstSeqPos(1);
+				//pherogramArea.setLeftCutPosition(1);
 				alignmentArea.getContentArea().getDataAreas().getSequenceAreas(id).add(pherogramArea);
 			}
 			catch (UnsupportedChromatogramFormatException | IOException e) {
