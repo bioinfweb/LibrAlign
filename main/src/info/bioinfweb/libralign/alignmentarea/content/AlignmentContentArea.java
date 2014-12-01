@@ -348,7 +348,10 @@ public class AlignmentContentArea extends TICComponent implements SequenceDataCh
 	public Dimension getSize() {
 		Dimension result = new Dimension();
 		result.width = getDataAreas().getGlobalMaxLengthBeforeStart() + getGlobalMaxSequenceLength() * getCompoundWidth();
-		result.height = getSequenceProvider().getSequenceCount() * getCompoundHeight() + getDataAreas().getVisibleAreaHeight();
+		result.height = getDataAreas().getVisibleAreaHeight();
+		if (hasSequenceProvider()) {
+			result.height += getSequenceProvider().getSequenceCount() * getCompoundHeight();
+		}
 		return result;
 	}
 
