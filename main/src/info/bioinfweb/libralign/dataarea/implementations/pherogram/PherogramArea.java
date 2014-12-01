@@ -274,7 +274,7 @@ public class PherogramArea extends CustomHeightFullWidthArea implements Pherogra
 
 	@Override
 	public int getLength() {
-		return (getAlignmentModel().editableIndexByBaseCallIndex(getRightCutPosition()).getAfter() +  // space until the end of the aligned part
+		return (getAlignmentModel().editableIndexByBaseCallIndex(getRightCutPosition() - 1).getAfter() + 1 + // space until the end of the aligned part
 				(getProvider().getSequenceLength() - getRightCutPosition()))  // possible unaligned part at the right end 
 				* getOwner().getCompoundWidth();
 	}
