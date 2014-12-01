@@ -81,6 +81,6 @@ public abstract class AlignmentLabelSubArea extends TICComponent {
 	
 	@Override
 	public Dimension getSize() {
-		return new Dimension(getOwner().getMaximumNeededWidth(), getLabeledArea().getSize().height);
+		return new Dimension(getOwner().getGlobalMaximumNeededWidth(), getLabeledArea().getSize().height);
 	}
 }

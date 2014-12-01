@@ -118,7 +118,7 @@ public class ConsensusSequenceArea extends CustomHeightFullWidthArea {
 	
 	@Override
 	public int getLength() {
-		return getOwner().getCompoundWidth() * getOwner().getSequenceProvider().getMaxSequenceLength();
+		return getOwner().getCompoundWidth() * getOwner().getGlobalMaxSequenceLength();
 	}
 
 	
@@ -133,7 +133,7 @@ public class ConsensusSequenceArea extends CustomHeightFullWidthArea {
 		// Determine area to be painted:
 		int firstIndex = Math.max(0, getOwner().columnByPaintX((int)event.getRectangle().getMinX()));
 		int lastIndex = getOwner().columnByPaintX((int)event.getRectangle().getMaxX());
-		int lastColumn = getOwner().getSequenceProvider().getMaxSequenceLength() - 1;
+		int lastColumn = getOwner().getGlobalMaxSequenceLength() - 1;
 		if ((lastIndex == -1) || (lastIndex > lastColumn)) {  //TODO Elongate to the length of the longest sequence and paint empty/special tokens on the right end?
 			lastIndex = lastColumn;
 		}
@@ -145,7 +145,7 @@ public class ConsensusSequenceArea extends CustomHeightFullWidthArea {
 		AlignmentAmbiguityNucleotideCompoundSet compoundSet =  
 				AlignmentAmbiguityNucleotideCompoundSet.getAlignmentAmbiguityNucleotideCompoundSet();
 		g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-  	float x = firstIndex * getOwner().getCompoundWidth() + getOwner().getDataAreas().getMaxLengthBeforeStart();
+  	float x = firstIndex * getOwner().getCompoundWidth() + getOwner().getDataAreas().getGlobalMaxLengthBeforeStart();
 		float sequenceY = 2 * getOwner().getCompoundHeight();
 		final float barWidth = getOwner().getCompoundWidth() / 4; 
 		for (int i = firstIndex; i <= lastIndex; i++) {

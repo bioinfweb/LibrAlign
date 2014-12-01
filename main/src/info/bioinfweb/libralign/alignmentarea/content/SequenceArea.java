@@ -203,7 +203,7 @@ public class SequenceArea extends AlignmentSubArea {
 		}
 		
 		event.getGraphics().setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-		float x = firstIndex * getOwner().getCompoundWidth() + getOwner().getDataAreas().getMaxLengthBeforeStart(); 
+		float x = firstIndex * getOwner().getCompoundWidth() + getOwner().getDataAreas().getGlobalMaxLengthBeforeStart(); 
 		for (int i = firstIndex; i <= lastIndex; i++) {			
     	paintCompound(getOwner(), event.getGraphics(), 
     			getOwner().getSequenceProvider().getTokenAt(getSeqenceID(), i), x, 0f,	
@@ -212,7 +212,7 @@ public class SequenceArea extends AlignmentSubArea {
     }
 		
 		if (getOwner().getSelection().getType().equals(SelectionType.CELLS)) {
-			paintCursor(event.getGraphics(), getOwner().getDataAreas().getMaxLengthBeforeStart(), 0);
+			paintCursor(event.getGraphics(), getOwner().getDataAreas().getGlobalMaxLengthBeforeStart(), 0);
 		}
 	}
 
@@ -220,7 +220,7 @@ public class SequenceArea extends AlignmentSubArea {
 	@Override
 	public Dimension getSize() {
 		return new Dimension(
-				getOwner().getDataAreas().getMaxLengthBeforeStart() + 
+				getOwner().getDataAreas().getGlobalMaxLengthBeforeStart() + 
 				getOwner().getCompoundWidth() * getOwner().getSequenceProvider().getSequenceLength(getSeqenceID()),  //TODO Elongate to the length of the longest sequence and paint empty/special tokens on the right end? 
 				getOwner().getCompoundHeight());
 	}

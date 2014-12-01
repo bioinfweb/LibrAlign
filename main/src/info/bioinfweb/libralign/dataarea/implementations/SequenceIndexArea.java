@@ -119,7 +119,7 @@ public class SequenceIndexArea extends CustomHeightFullWidthArea {
     g.draw(new Line2D.Float(visibleRect.x, getHeight() - 1, visibleRect.x + visibleRect.width, getHeight() - 1));  // base line
     
     // Paint text data and dashes:
-    final int maxLengthBeforeStart = getOwner().getDataAreas().getMaxLengthBeforeStart(); 
+    final int maxLengthBeforeStart = getOwner().getDataAreas().getGlobalMaxLengthBeforeStart(); 
     float labelLeftDistance = LABEL_LEFT_DISTANCE_FACTOR * getOwner().getCompoundWidth();
     g.setFont(getOwner().getCompoundFont());
     int labelInterval = Math2.roundUp(
@@ -165,7 +165,7 @@ public class SequenceIndexArea extends CustomHeightFullWidthArea {
 
 	@Override
 	public int getLength() {
-		return getOwner().getCompoundWidth() * getOwner().getSequenceProvider().getMaxSequenceLength();
+		return getOwner().getCompoundWidth() * getOwner().getGlobalMaxSequenceLength();
 	}
 
 

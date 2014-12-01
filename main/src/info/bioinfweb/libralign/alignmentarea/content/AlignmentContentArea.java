@@ -347,7 +347,7 @@ public class AlignmentContentArea extends TICComponent implements SequenceDataCh
 	@Override
 	public Dimension getSize() {
 		Dimension result = new Dimension();
-		result.width = getDataAreas().getMaxLengthBeforeStart() + getSequenceProvider().getMaxSequenceLength() * getCompoundWidth();
+		result.width = getDataAreas().getGlobalMaxLengthBeforeStart() + getGlobalMaxSequenceLength() * getCompoundWidth();
 		result.height = getSequenceProvider().getSequenceCount() * getCompoundHeight() + getDataAreas().getVisibleAreaHeight();
 		return result;
 	}
@@ -390,14 +390,39 @@ public class AlignmentContentArea extends TICComponent implements SequenceDataCh
 	
 	
 	/**
+	 * If this area is part of an alignment area that is contained in a {@link MultipleAlignmentsContainer}
+	 * than this methods calculates the maximum length of all sequences in all alignment areas contained in
+	 * this container. Otherwise the return value is identical with {@code getSequenceProvider.getMaxSequenceLength()}.
+	 * 
+	 * @return a value >= 0
+	 * @see SequenceDataProvider#getMaxSequenceLength()
+	 */
+	public int getGlobalMaxSequenceLength() {
+		if (getOwner().hasContainer()) {
+			int result = 0;
+			for (AlignmentArea alignmentArea : getOwner().getContainer()) {
+				SequenceDataProvider<?> provider = alignmentArea.getContentArea().getSequenceProvider();
+				if (provider != null) {
+					result = Math.max(result, provider.getMaxSequenceLength());
+				}
+			}
+			return result;
+		}
+		else {
+			return getSequenceProvider().getMaxSequenceLength();
+		}
+	}
+	
+	
+	/**
 	 * Returns the column containing the specified x coordinate.
 	 *  
 	 * @param x - the paint coordinate
 	 * @return the alignment column
 	 */
 	public int columnByPaintX(int x) {
-		return Math.max(0, Math.min(getSequenceProvider().getMaxSequenceLength() - 1, 
-				(int)((x - getDataAreas().getMaxLengthBeforeStart()) / getCompoundWidth())));
+		return Math.max(0, Math.min(getSequenceProvider().getMaxSequenceLength() - 1,  //TODO Does getGlobalMaxSequenceLength() have to used here?
+				(int)((x - getDataAreas().getGlobalMaxLengthBeforeStart()) / getCompoundWidth())));
 	}
 
 
@@ -410,7 +435,7 @@ public class AlignmentContentArea extends TICComponent implements SequenceDataCh
 	 * @return a value >= 0
 	 */
 	public int paintXByColumn(int column) {
-		return (int)((column - 1) * getCompoundWidth()) + getDataAreas().getMaxLengthBeforeStart();
+		return (int)((column - 1) * getCompoundWidth()) + getDataAreas().getGlobalMaxLengthBeforeStart();
 	}
 
 

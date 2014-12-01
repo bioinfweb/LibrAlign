@@ -112,9 +112,9 @@ public class PherogramArea extends CustomHeightFullWidthArea implements Pherogra
 		g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 		
 		double leftX = getAlignmentModel().editableIndexByBaseCallIndex(getLeftCutPosition()).getAfter() * 
-				getOwner().getCompoundWidth() + getOwner().getDataAreas().getMaxLengthBeforeStart();
+				getOwner().getCompoundWidth() + getOwner().getDataAreas().getGlobalMaxLengthBeforeStart();
 		double rightX = (getAlignmentModel().editableIndexByBaseCallIndex(getRightCutPosition()).getBefore() + 1) * 
-				getOwner().getCompoundWidth() + getOwner().getDataAreas().getMaxLengthBeforeStart();
+				getOwner().getCompoundWidth() + getOwner().getDataAreas().getGlobalMaxLengthBeforeStart();
 		
 		// Draw cut off background:
 		g.setColor(getFormats().getCutBackgroundColor());
@@ -139,7 +139,7 @@ public class PherogramArea extends CustomHeightFullWidthArea implements Pherogra
 
 		SimpleSequenceInterval paintRange = calculatePaintRange(e);
 		double x = (getFirstSeqPos() - getLeftCutPosition()) * getOwner().getCompoundWidth() + 
-				getOwner().getDataAreas().getMaxLengthBeforeStart();
+				getOwner().getDataAreas().getGlobalMaxLengthBeforeStart();
 		double y = 0; 
 		double height = getHeight();
 		ScaledPherogramDistortion distortion = getAlignmentModel().createPherogramDistortion();

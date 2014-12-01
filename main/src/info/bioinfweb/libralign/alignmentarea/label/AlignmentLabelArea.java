@@ -31,6 +31,8 @@ import info.bioinfweb.commons.tic.TICPaintEvent;
 import info.bioinfweb.commons.tic.TargetToolkit;
 import info.bioinfweb.libralign.alignmentarea.AlignmentArea;
 import info.bioinfweb.libralign.alignmentarea.content.AlignmentSubArea;
+import info.bioinfweb.libralign.multiplealignments.MultipleAlignmentsContainer;
+import info.bioinfweb.libralign.sequenceprovider.SequenceDataProvider;
 
 
 
@@ -70,7 +72,13 @@ public class AlignmentLabelArea extends TICComponent {
 	}
 
 
-	public int getMaximumNeededWidth() {
+	/**
+	 * Calculates the needed with to label the associated alignment. Note that the actual width of this
+	 * component is calculated using {@link #getGlobalMaximumNeededWidth()}.
+	 * 
+	 * @return a value >= 0
+	 */
+	public int getLocalMaximumNeededWidth() {
 		int result = 0;
 		if (getOwner().getContentArea().hasToolkitComponent()) {
 			Iterator<AlignmentSubArea> iterator = getOwner().getContentArea().getToolkitComponent().subAreaIterator();
@@ -83,9 +91,30 @@ public class AlignmentLabelArea extends TICComponent {
 	}
 	
 	
+	/**
+	 * Returns the maximum needed to label the alignment calculated over all alignments contained in the parent
+	 * {@link MultipleAlignmentsContainer}. If the parent alignment area is not contained in such a container, the
+	 * return value is equal to {@link #getLocalMaximumNeededWidth()}.
+	 * 
+	 * @return a value >= 0
+	 */
+	public int getGlobalMaximumNeededWidth() {
+		if (getOwner().hasContainer()) {
+			int result = 0;
+			for (AlignmentArea alignmentArea : getOwner().getContainer()) {
+				result = Math.max(result, alignmentArea.getLabelArea().getLocalMaximumNeededWidth());
+			}
+			return result;
+		}
+		else {
+			return getLocalMaximumNeededWidth();
+		}
+	}
+	
+	
 	@Override
 	public Dimension getSize() {
-		return new Dimension(getMaximumNeededWidth(),	getOwner().getContentArea().getSize().height);  // If references starting from owner would be used here, there would be problems in initialization order.
+		return new Dimension(getGlobalMaximumNeededWidth(),	getOwner().getContentArea().getSize().height);  // If references starting from owner would be used here, there would be problems in initialization order.
 	}
 
 

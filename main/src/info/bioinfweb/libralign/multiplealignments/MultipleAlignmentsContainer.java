@@ -47,7 +47,7 @@ import info.bioinfweb.libralign.editsettings.EditSettings;
  * containing the alignment.)
  * <p>
  * Note that it makes only sense to combine alignment areas that display related information and therefore have an
- * equal number of according columns.
+ * equal number of according columns (except the area containing only data areas).
  * 
  * @author Ben St&ouml;ver
  * @since 0.3.0

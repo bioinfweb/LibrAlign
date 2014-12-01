@@ -22,6 +22,7 @@ package info.bioinfweb.libralign.dataarea;
 import info.bioinfweb.commons.collections.ListChangeType;
 import info.bioinfweb.libralign.alignmentarea.AlignmentArea;
 import info.bioinfweb.libralign.alignmentarea.content.AlignmentContentArea;
+import info.bioinfweb.libralign.multiplealignments.MultipleAlignmentsContainer;
 import info.bioinfweb.libralign.sequenceprovider.SequenceDataChangeListener;
 import info.bioinfweb.libralign.sequenceprovider.SequenceDataProvider;
 
@@ -168,15 +169,38 @@ public class DataAreaModel {
 	
 	/**
 	 * Returns maximum space left of the alignment start that is needed by any currently visible data area in
-	 * any list contained in this model.
+	 * any list contained in this model. Note the space that is actually present will be determined using
+	 * {@link #getGlobalMaxLengthBeforeStart()}.
 	 * 
 	 * @return an integer >= 0
 	 */
-	public int getMaxLengthBeforeStart() {
+	public int getLocalMaxLengthBeforeStart() {
 		int result = Math.max(getTopAreas().getMaxLengthBeforeStart(), getBottomAreas().getMaxLengthBeforeStart());
 		Iterator<Integer> iterator = sequenceAreaLists.keySet().iterator(); 
 		while (iterator.hasNext()) {
 			result = Math.max(result, getSequenceAreas(iterator.next()).getMaxLengthBeforeStart());
+		}
+		return result;
+	}
+	
+	
+	/**
+	 * Returns maximum space left of the alignment calculated over all alignment areas in the parent 
+	 * {@link MultipleAlignmentsContainer} of the alignment area using this model. If that alignment area 
+	 * is not contained in such a container the return value is equivalent to {@link #getLocalMaxLengthBeforeStart()}.
+	 * 
+	 * @return an integer >= 0
+	 */
+	public int getGlobalMaxLengthBeforeStart() {
+		AlignmentArea alignmentArea = getOwner().getOwner();
+		int result = 0;
+		if (alignmentArea.hasContainer()) {
+			for (AlignmentArea containerAlignmentArea : alignmentArea.getContainer()) {
+				result = Math.max(result, containerAlignmentArea.getContentArea().getDataAreas().getLocalMaxLengthBeforeStart());
+			}
+		}
+		else {
+			result = getLocalMaxLengthBeforeStart();
 		}
 		return result;
 	}
