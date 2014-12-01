@@ -85,7 +85,7 @@ public class AbstractApplication {
 //			result.add(area);
       
 			// Alignment with pherograms:
-			AlignmentArea area = new AlignmentArea();
+			AlignmentArea area = new AlignmentArea(result);
       
 			BioJavaPherogramProvider pherogramProvider = new BioJavaPherogramProvider(ChromatogramFactory.create(
 	      	new File("data\\pherograms\\Test_qualityScore.scf")));
@@ -97,7 +97,7 @@ public class AbstractApplication {
 			alignment.add("Sequence 3", new DNASequence("AT-GTAG"));
 			
 			StringBuffer seqBuffer = new StringBuffer(pherogramProvider.getSequenceLength());
-			for (int i = 1; i <= pherogramProvider.getSequenceLength(); i++) {
+			for (int i = 0; i < pherogramProvider.getSequenceLength(); i++) {
 				seqBuffer.append(pherogramProvider.getBaseCall(i).getUpperedBase());
 			}
 			alignment.add("Sequence 4", new DNASequence("-----" + seqBuffer.substring(0, 38) + 
