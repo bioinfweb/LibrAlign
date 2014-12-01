@@ -66,13 +66,13 @@ public class PherogramAlignmentModel {
    *         lies outside the range of the pherogram
    */
   public PherogramAlignmentRelation editableIndexByBaseCallIndex(int baseCallIndex) {
-  	if (baseCallIndex < 1) {  // BioJava indices start with 1
+  	if (baseCallIndex < 0) {
   		return new PherogramAlignmentRelation(PherogramAlignmentRelation.OUT_OF_RANGE, PherogramAlignmentRelation.OUT_OF_RANGE, 
   				1 - getOwner().getLeftCutPosition() + getOwner().getFirstSeqPos(), shiftChangeList.listIterator());
   	}
-  	else if (baseCallIndex > getOwner().getProvider().getSequenceLength()) {
+  	else if (baseCallIndex >= getOwner().getProvider().getSequenceLength()) {
   		return new PherogramAlignmentRelation(
-  				editableIndexByBaseCallIndex(getOwner().getProvider().getSequenceLength()).getCorresponding(), 
+  				editableIndexByBaseCallIndex(getOwner().getProvider().getSequenceLength() - 1).getCorresponding(), 
   				PherogramAlignmentRelation.OUT_OF_RANGE, PherogramAlignmentRelation.OUT_OF_RANGE, 
   				shiftChangeList.listIterator(shiftChangeList.size()));  // Iterator positioned behind the last element of the list.
   	}

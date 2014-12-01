@@ -111,9 +111,9 @@ public class PherogramArea extends CustomHeightFullWidthArea implements Pherogra
 		
 		g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 		
-		double leftX = (getAlignmentModel().editableIndexByBaseCallIndex(getLeftCutPosition()).getAfter() - 1) * 
+		double leftX = getAlignmentModel().editableIndexByBaseCallIndex(getLeftCutPosition()).getAfter() * 
 				getOwner().getCompoundWidth() + getOwner().getDataAreas().getMaxLengthBeforeStart();
-		double rightX = getAlignmentModel().editableIndexByBaseCallIndex(getRightCutPosition()).getBefore() * 
+		double rightX = (getAlignmentModel().editableIndexByBaseCallIndex(getRightCutPosition()).getBefore() + 1) * 
 				getOwner().getCompoundWidth() + getOwner().getDataAreas().getMaxLengthBeforeStart();
 		
 		// Draw cut off background:
@@ -268,14 +268,15 @@ public class PherogramArea extends CustomHeightFullWidthArea implements Pherogra
 
 	@Override
 	public int getLengthBeforeStart() {
-		return Math.max(0, getProvider().getSequenceLength() * getOwner().getCompoundWidth() - getLength());
+		return Math.max(0, getAlignmentModel().baseCallIndexByEditableIndex(0).getAfter() * getOwner().getCompoundWidth());
 	}
 
 
 	@Override
 	public int getLength() {
-		return (getAlignmentModel().editableIndexByBaseCallIndex(getRightCutPosition()).getAfter() + 
-				(getProvider().getSequenceLength() - getRightCutPosition())) * getOwner().getCompoundWidth();
+		return (getAlignmentModel().editableIndexByBaseCallIndex(getRightCutPosition()).getAfter() +  // space until the end of the aligned part
+				(getProvider().getSequenceLength() - getRightCutPosition()))  // possible unaligned part at the right end 
+				* getOwner().getCompoundWidth();
 	}
 
 
@@ -288,7 +289,7 @@ public class PherogramArea extends CustomHeightFullWidthArea implements Pherogra
 
 	@Override
 	public <T> void afterSequenceChange(SequenceChangeEvent<T> e) {
-		// TODO React if the associates sequence was removed? (AlignmentContentArea should probably better implement this behavior.)
+		//TODO React if the associates sequence was removed? (AlignmentContentArea should probably better implement this behavior.)
 	}
 
 
