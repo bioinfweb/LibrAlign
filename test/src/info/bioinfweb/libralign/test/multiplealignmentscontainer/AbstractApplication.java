@@ -29,6 +29,7 @@ import info.bioinfweb.commons.bio.biojava3.alignment.template.Alignment;
 import info.bioinfweb.commons.bio.biojava3.core.sequence.compound.AlignmentAmbiguityNucleotideCompoundSet;
 import info.bioinfweb.libralign.alignmentarea.AlignmentArea;
 import info.bioinfweb.libralign.alignmentarea.content.AlignmentContentArea;
+import info.bioinfweb.libralign.dataarea.implementations.ConsensusSequenceArea;
 import info.bioinfweb.libralign.dataarea.implementations.SequenceIndexArea;
 import info.bioinfweb.libralign.dataarea.implementations.charset.CharSet;
 import info.bioinfweb.libralign.dataarea.implementations.charset.CharSetArea;
@@ -75,19 +76,7 @@ public class AbstractApplication {
 		try {
 			MultipleAlignmentsContainer result = new MultipleAlignmentsContainer();
 			
-			// Index:
-			AlignmentArea area = new AlignmentArea(result);
-			area.getContentArea().getDataAreas().getTopAreas().add(new SequenceIndexArea(area.getContentArea()));
-			result.add(area);
-			
-			// Char sets:    //TODO CharSetArea now needs a sequenceProvider parameter, because in could be in another alignment.
-//			area = new AlignmentArea(result);
-//			area.getContentArea().getDataAreas().getTopAreas().add(createCharSetArea(area.getContentArea()));
-//			result.add(area);
-      
-			// Alignment with pherograms:
-			area = new AlignmentArea(result);
-      
+			// Create models:
 			BioJavaPherogramProvider pherogramProvider = new BioJavaPherogramProvider(ChromatogramFactory.create(
 	      	new File("data\\pherograms\\Test_qualityScore.scf")));
 			
@@ -113,6 +102,22 @@ public class AbstractApplication {
 									AlignmentAmbiguityNucleotideCompoundSet.getAlignmentAmbiguityNucleotideCompoundSet(), false),
 							alignment);
 			
+			
+			// Create alignment areas:
+			
+			// Index:
+			AlignmentArea area = new AlignmentArea(result);
+			area.getContentArea().getDataAreas().getTopAreas().add(new SequenceIndexArea(area.getContentArea()));
+			result.add(area);
+			
+			// Char sets:    //TODO CharSetArea now needs a sequenceProvider parameter, because in could be in another alignment.
+//			area = new AlignmentArea(result);
+//			area.getContentArea().getDataAreas().getTopAreas().add(createCharSetArea(area.getContentArea()));
+//			result.add(area);
+      
+			// Alignment with pherograms:
+			area = new AlignmentArea(result);
+      			
 			area.getContentArea().setSequenceProvider(sequenceProvider, false);
 			
 			PherogramArea pherogramArea = new PherogramArea(area.getContentArea(), pherogramProvider);
@@ -126,9 +131,9 @@ public class AbstractApplication {
 			result.add(area);
 			
 			// Consensus sequence:
-//      area = new AlignmentArea();  //TODO ConsensusSequenceArea now needs a sequenceProvider parameter, because in could be in another alignment.
-//			area.getContentArea().getDataAreas().getBottomAreas().add(new ConsensusSequenceArea(area.getContentArea()));
-//      result.add(area);
+      area = new AlignmentArea(result);  //TODO ConsensusSequenceArea now needs a sequenceProvider parameter, because in could be in another alignment.
+			area.getContentArea().getDataAreas().getBottomAreas().add(new ConsensusSequenceArea(area.getContentArea(), sequenceProvider));
+      result.add(area);
 			
 			return result;
 		}
