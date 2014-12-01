@@ -421,7 +421,7 @@ public class AlignmentContentArea extends TICComponent implements SequenceDataCh
 	 * @return the alignment column
 	 */
 	public int columnByPaintX(int x) {
-		return Math.max(0, Math.min(getSequenceProvider().getMaxSequenceLength() - 1,  //TODO Does getGlobalMaxSequenceLength() have to used here?
+		return Math.max(0, Math.min(getGlobalMaxSequenceLength() - 1,
 				(int)((x - getDataAreas().getGlobalMaxLengthBeforeStart()) / getCompoundWidth())));
 	}
 
