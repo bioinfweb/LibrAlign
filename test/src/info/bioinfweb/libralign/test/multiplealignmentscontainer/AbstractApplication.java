@@ -29,6 +29,7 @@ import info.bioinfweb.commons.bio.biojava3.alignment.template.Alignment;
 import info.bioinfweb.commons.bio.biojava3.core.sequence.compound.AlignmentAmbiguityNucleotideCompoundSet;
 import info.bioinfweb.libralign.alignmentarea.AlignmentArea;
 import info.bioinfweb.libralign.alignmentarea.content.AlignmentContentArea;
+import info.bioinfweb.libralign.dataarea.implementations.SequenceIndexArea;
 import info.bioinfweb.libralign.dataarea.implementations.charset.CharSet;
 import info.bioinfweb.libralign.dataarea.implementations.charset.CharSetArea;
 import info.bioinfweb.libralign.dataarea.implementations.pherogram.PherogramArea;
@@ -74,18 +75,18 @@ public class AbstractApplication {
 		try {
 			MultipleAlignmentsContainer result = new MultipleAlignmentsContainer();
 			
-			// Index:    //TODO SequenceIndexArea now needs a sequenceProvider parameter, because in could be in another alignment.
-//			AlignmentArea area = new AlignmentArea();
-//			area.getContentArea().getDataAreas().getTopAreas().add(new SequenceIndexArea(area.getContentArea()));
-//			result.add(area);
+			// Index:
+			AlignmentArea area = new AlignmentArea(result);
+			area.getContentArea().getDataAreas().getTopAreas().add(new SequenceIndexArea(area.getContentArea()));
+			result.add(area);
 			
 			// Char sets:    //TODO CharSetArea now needs a sequenceProvider parameter, because in could be in another alignment.
-//			area = new AlignmentArea();
+//			area = new AlignmentArea(result);
 //			area.getContentArea().getDataAreas().getTopAreas().add(createCharSetArea(area.getContentArea()));
 //			result.add(area);
       
 			// Alignment with pherograms:
-			AlignmentArea area = new AlignmentArea(result);
+			area = new AlignmentArea(result);
       
 			BioJavaPherogramProvider pherogramProvider = new BioJavaPherogramProvider(ChromatogramFactory.create(
 	      	new File("data\\pherograms\\Test_qualityScore.scf")));
