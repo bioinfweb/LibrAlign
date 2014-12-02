@@ -310,16 +310,22 @@ public class MultipleAlignmentsContainer extends TICComponent implements List<Al
 	  	}
 	  	
 	  	// Set divider locations:
+	  	int usedHeight = 0;
+	  	//int noOfScrollableComponents = 0;
 	  	int[] heights = new int[size()];
-	  	for (int i = 0; i < size(); i++) {
+	  	for (int i = 0; i < size() - 1; i++) {
 	  		heights[i] = getToolkitComponent().getNeededHeight(i);
 	  		if (get(i).isAllowVerticalScrolling()) {
 	  			heights[i] = Math.round(heights[i] * visibleFractionForScrolling);
+	  			//noOfScrollableComponents++;
 	  		}
 	  		else {
 	  			heights[i] = Math.round(heights[i] * visibleFractionForNoScrolling);
 	  		}
+	  		usedHeight += heights[i];
 			}
+	  	heights[heights.length - 1] = availableHeight - usedHeight;  // Add Remaining space to last alignment. //TODO Distribute along the scrollables.
+	  	
 	  	getToolkitComponent().setDividerLocations(heights);
   	}
 	}

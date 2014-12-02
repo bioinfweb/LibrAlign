@@ -19,16 +19,11 @@
 package info.bioinfweb.libralign.multiplealignments;
 
 
-import info.bioinfweb.commons.Math2;
 import info.bioinfweb.commons.swt.ScrolledCompositeSyncListener;
 import info.bioinfweb.libralign.alignmentarea.AlignmentArea;
 import info.bioinfweb.libralign.alignmentarea.SWTAlignmentArea;
 import info.bioinfweb.libralign.alignmentarea.ToolkitSpecificAlignmentArea;
-import info.bioinfweb.libralign.alignmentarea.selection.AlignmentCursor;
-import info.bioinfweb.libralign.dataarea.DataAreaListType;
 
-import java.awt.Point;
-import java.awt.Rectangle;
 import java.util.Iterator;
 
 import org.eclipse.swt.SWT;
@@ -49,6 +44,9 @@ import org.eclipse.swt.layout.FillLayout;
  * @since 0.2.0
  */
 public class SWTMultipleAlignmentsContainer extends Composite implements ToolkitSpecificMultipleAlignmentsContainer {
+	public static final int NEEDED_BORDER_WIDTH = 3;
+	
+	
 	private MultipleAlignmentsContainer independentComponent;
 	private SashForm sashForm;
 	
@@ -156,35 +154,25 @@ public class SWTMultipleAlignmentsContainer extends Composite implements Toolkit
 
 	@Override
 	public int getAvailableHeight() {
-		return getSashForm().getSize().y;
+		return getSashForm().getSize().y - 
+				((SWTAlignmentArea)getIndependentComponent().get(getIndependentComponent().size() - 1).
+						getToolkitComponent()).getHorizontalScrollbarHeight();  // Subtract height reserved for horizontal scroll bar.
 	}
 
 
 	@Override
 	public int getNeededHeight(int alignmentIndex) {
-		int result = getIndependentComponent().get(alignmentIndex).getContentArea().getSize().height + 3;
-		if (alignmentIndex == getIndependentComponent().size() - 1) {
-			result += 
-					((SWTAlignmentArea)getIndependentComponent().get(alignmentIndex).getToolkitComponent()).getHorizontalScrollbarHeight();
-		}
-		return result;
+		return getIndependentComponent().get(alignmentIndex).getContentArea().getSize().height + NEEDED_BORDER_WIDTH;
 	}
 
 
 	@Override
 	public void setDividerLocations(int[] heights) {
-		for (int i = 0; i < heights.length; i++) {
-			System.out.print(heights[i] + " ");
-		}
-		System.out.println();
+		// Add height of scroll bar to last height:
+		int index = heights.length - 1;
+		heights[index] += ((SWTAlignmentArea)getIndependentComponent().get(index).getToolkitComponent()).getHorizontalScrollbarHeight();
 		
 		getSashForm().setWeights(heights);
-		
-		System.out.print("  ");
-		for (int i = 0; i < heights.length; i++) {
-			System.out.print(getSashForm().getWeights()[i] + " " + (getSashForm().getWeights()[i] / (float)heights[i]) + " ");
-		}
-		System.out.println();
 	}
 
 
