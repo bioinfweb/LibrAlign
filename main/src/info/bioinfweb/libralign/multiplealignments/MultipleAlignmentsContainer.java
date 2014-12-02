@@ -30,6 +30,7 @@ import javax.swing.JComponent;
 
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Shell;
 
 import info.bioinfweb.commons.tic.TICComponent;
 import info.bioinfweb.commons.tic.TICPaintEvent;
@@ -50,7 +51,8 @@ import info.bioinfweb.libralign.editsettings.EditSettings;
  * equal number of according columns (except the area containing only data areas).
  * <p>
  * If you are using this component in a SWT GUI you need to call {@link #redistributeHeight()} after the creation of
- * the GUI component containing this instance is finished. In Swing GUIs that is not necessary.
+ * the GUI component containing this instance is finished (e.g. after the call of {@link Shell#layout()}). In Swing GUIs 
+ * that is not necessary.
  * 
  * @author Ben St&ouml;ver
  * @since 0.3.0
@@ -58,6 +60,7 @@ import info.bioinfweb.libralign.editsettings.EditSettings;
 public class MultipleAlignmentsContainer extends TICComponent implements List<AlignmentArea> {
 	//TODO React to changes of the underlying list
 	//TODO Throw exceptions if an alignment area that is not linked to this container is inserted also in complex methods and iterators.
+	//TODO Ensure that components in all alignment areas are informed about size changes of one area (e.g. sequence length or label length).
 	private List<AlignmentArea> alignmentAreas = new ArrayList<AlignmentArea>();
 	private EditSettings editSettings = new EditSettings();
 	private boolean distributeRemainingSpace = true;
