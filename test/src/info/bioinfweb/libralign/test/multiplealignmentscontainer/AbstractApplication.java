@@ -107,16 +107,19 @@ public class AbstractApplication {
 			
 			// Index:
 			AlignmentArea area = new AlignmentArea(result);
+			area.setAllowVerticalScrolling(false);
 			area.getContentArea().getDataAreas().getTopAreas().add(new SequenceIndexArea(area.getContentArea()));
 			result.add(area);
 			
 			// Char sets:    //TODO CharSetArea now needs a sequenceProvider parameter, because in could be in another alignment.
 //			area = new AlignmentArea(result);
+//			area.setAllowVerticalScrolling(true);
 //			area.getContentArea().getDataAreas().getTopAreas().add(createCharSetArea(area.getContentArea()));
 //			result.add(area);
       
 			// Alignment with pherograms:
 			area = new AlignmentArea(result);
+			area.setAllowVerticalScrolling(true);
       			
 			area.getContentArea().setSequenceProvider(sequenceProvider, false);
 			
@@ -132,6 +135,7 @@ public class AbstractApplication {
 			
 			// Consensus sequence:
       area = new AlignmentArea(result);  //TODO ConsensusSequenceArea now needs a sequenceProvider parameter, because in could be in another alignment.
+			area.setAllowVerticalScrolling(false);
 			area.getContentArea().getDataAreas().getBottomAreas().add(new ConsensusSequenceArea(area.getContentArea(), sequenceProvider));
       result.add(area);
 			
