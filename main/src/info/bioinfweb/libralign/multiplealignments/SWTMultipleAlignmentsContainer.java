@@ -84,13 +84,21 @@ public class SWTMultipleAlignmentsContainer extends Composite implements Toolkit
 		sashForm = new SashForm(this, SWT.VERTICAL);
 		sashForm.setSashWidth(AlignmentArea.DIVIDER_WIDTH);
 		
-		SWTAlignmentArea area = null;
+		// Create areas:
 		Iterator<AlignmentArea> iterator = getIndependentComponent().iterator();
 		while (iterator.hasNext()) {
-			area = iterator.next().createSWTWidget(sashForm, SWT.NONE);
-			//area.setHideHorizontalScrollBar(iterator.hasNext());  // Show scroll bar only in the lowest area.
-			//TODO Warum wird die Breite der LabelArea auf 23 reduziert, wenn das hier einkommentiert wird und sonst nicht? Hat es was mit Aufrufreihenfolge zu tun, wann die Größe der Kindkomponenten übernommen wird?
+			SWTAlignmentArea area = iterator.next().createSWTWidget(sashForm, SWT.NONE);
+			area.setHideHorizontalScrollBar(iterator.hasNext());  // Show scroll bar only in the lowest area.
 		}
+		
+		// Set size of areas (Widths of one area can depend on a lower area which is not known at creation time.):
+		for (AlignmentArea area : independentComponent) {
+			area.getContentArea().assignSize();
+			area.getLabelArea().assignSize();
+			area.assignSize();  //TODO Create method that calls assignSize() on all child components?
+		}
+		
+		//TODO Distribute height (possible in independentComponent?)
 		//sashForm.setWeights(new int[]{1, 2, 1});  //TODO Adjust
 	}
 
