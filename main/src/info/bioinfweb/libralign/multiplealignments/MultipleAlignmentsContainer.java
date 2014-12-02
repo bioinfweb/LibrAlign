@@ -33,7 +33,6 @@ import org.eclipse.swt.widgets.Composite;
 
 import info.bioinfweb.commons.tic.TICComponent;
 import info.bioinfweb.commons.tic.TICPaintEvent;
-import info.bioinfweb.commons.tic.toolkit.ToolkitComponent;
 import info.bioinfweb.libralign.alignmentarea.AlignmentArea;
 import info.bioinfweb.libralign.dataarea.implementations.SequenceIndexArea;
 import info.bioinfweb.libralign.editsettings.EditSettings;
@@ -49,6 +48,9 @@ import info.bioinfweb.libralign.editsettings.EditSettings;
  * <p>
  * Note that it makes only sense to combine alignment areas that display related information and therefore have an
  * equal number of according columns (except the area containing only data areas).
+ * <p>
+ * If you are using this component in a SWT GUI you need to call {@link #redistributeHeight()} after the creation of
+ * the GUI component containing this instance is finished. In Swing GUIs that is not necessary.
  * 
  * @author Ben St&ouml;ver
  * @since 0.3.0
@@ -58,6 +60,7 @@ public class MultipleAlignmentsContainer extends TICComponent implements List<Al
 	//TODO Throw exceptions if an alignment area that is not linked to this container is inserted also in complex methods and iterators.
 	private List<AlignmentArea> alignmentAreas = new ArrayList<AlignmentArea>();
 	private EditSettings editSettings = new EditSettings();
+	private boolean distributeRemainingSpace = true;
 
 	
 	/**
@@ -67,6 +70,32 @@ public class MultipleAlignmentsContainer extends TICComponent implements List<Al
 	 */
 	public EditSettings getEditSettings() {
 		return editSettings;
+	}
+
+
+	/**
+	 * Returns whether remaining space shall be distributed among all scrollable alignments. (See 
+	 * {@link #setDistributeRemainingSpace(boolean)} for further details.) 
+	 * 
+	 * @return {@code true} is the height shall be distributed, {@code false} if the bottom most alignment
+	 *         shall get all the space
+	 */
+	public boolean isDistributeRemainingSpace() {
+		return distributeRemainingSpace;
+	}
+
+
+	/**
+	 * If the height of this container is higher than the height that is needed to display all alignments without 
+	 * scrolling, you can specify here how the remaining space shall be distributed among the alignments.
+	 * 
+	 * @param distributeRemainingSpace - Specify {@code true} here if you want the additional height to be distributed
+	 *        equally among all alignments that are marked as vertically scrollable. If you specify {@code false} the
+	 *        whole space is provided to the bottom most alignment (no matter if it is scrollable or not).
+	 */
+	public void setDistributeRemainingSpace(boolean distributeRemainingSpace) {
+		this.distributeRemainingSpace = distributeRemainingSpace;
+		redistributeHeight();
 	}
 
 
@@ -293,13 +322,14 @@ public class MultipleAlignmentsContainer extends TICComponent implements List<Al
 	  	//TODO subtract scroll bar height from availableHeight?
 	  	
 	  	// Calculate the visible fraction of the two types of areas:
+	  	boolean scrollAllComponents = (minNeededHeight > availableHeight);
 	  	float visibleFractionForNoScrolling;
 	  	float visibleFractionForScrolling;
 	  	if (maxNeededHeight <= availableHeight) {  // No area has to be scrolled.
 	  		visibleFractionForNoScrolling = 1.0f;
 	  		visibleFractionForScrolling = 1.0f;
 	  	}
-	  	else if (minNeededHeight <= availableHeight) {  // Only the areas that allow scrolling have to be scrolled.
+	  	else if (!scrollAllComponents) {  // Only the areas that allow scrolling have to be scrolled.
 	  		visibleFractionForNoScrolling = 1.0f;
 	  		visibleFractionForScrolling = (float)(availableHeight - minNeededHeight)  // remaining available height for areas that allow scrolling 
 	  				/ (float)(maxNeededHeight - minNeededHeight);  // needed height for areas that allow scrolling
@@ -311,20 +341,37 @@ public class MultipleAlignmentsContainer extends TICComponent implements List<Al
 	  	
 	  	// Set divider locations:
 	  	int usedHeight = 0;
-	  	//int noOfScrollableComponents = 0;
+	  	int noOfScrollableComponents = 0;
 	  	int[] heights = new int[size()];
-	  	for (int i = 0; i < size() - 1; i++) {
+	  	for (int i = 0; i < size(); i++) {
 	  		heights[i] = getToolkitComponent().getNeededHeight(i);
 	  		if (get(i).isAllowVerticalScrolling()) {
 	  			heights[i] = Math.round(heights[i] * visibleFractionForScrolling);
-	  			//noOfScrollableComponents++;
+	  			noOfScrollableComponents++;
 	  		}
 	  		else {
 	  			heights[i] = Math.round(heights[i] * visibleFractionForNoScrolling);
 	  		}
 	  		usedHeight += heights[i];
 			}
-	  	heights[heights.length - 1] = availableHeight - usedHeight;  // Add Remaining space to last alignment. //TODO Distribute along the scrollables.
+	  	
+	  	// Distribute remaining height:
+	  	if (minNeededHeight > availableHeight) {  // All areas have to be scrolled.
+	  		noOfScrollableComponents = size();
+	  	}
+	  	availableHeight -= usedHeight; 
+	  	int lastIndex = heights.length - 1;
+	  	if (isDistributeRemainingSpace()) {
+		  	int availableHeightPerComponent = availableHeight / noOfScrollableComponents;
+		  	for (int i = 0; i < size(); i++) {
+		  		if (scrollAllComponents || get(i).isAllowVerticalScrolling()) {
+		  			heights[i] += availableHeightPerComponent;
+		  			availableHeight -= availableHeightPerComponent;
+		  			lastIndex = i;
+		  		}
+		  	}
+	  	}
+	  	heights[lastIndex] += availableHeight;  // Last area might get more space due to rounding issues.
 	  	
 	  	getToolkitComponent().setDividerLocations(heights);
   	}
