@@ -94,7 +94,7 @@ public class ConsensusSequenceArea extends CustomHeightFullWidthArea {
 	private ConsensusSequenceArea(AlignmentContentArea owner, SequenceDataProvider<?> sequenceDataProvider, 
 			boolean useSequenceDataProviderFromOwner) {
 			
-		super(owner, Math.round(DEFAULT_HEIGHT_FACTOR * owner.getCompoundHeight()));
+		super(owner, Math.round(DEFAULT_HEIGHT_FACTOR * owner.getCompoundHeight()));  //TODO Add listener for compoundHeight that updates the height.
 		if (sequenceDataProvider == null) {
 			throw new IllegalArgumentException("The sequence data provider must not be null.");
 		}
@@ -215,9 +215,10 @@ public class ConsensusSequenceArea extends CustomHeightFullWidthArea {
 				AlignmentAmbiguityNucleotideCompoundSet.getAlignmentAmbiguityNucleotideCompoundSet();
 		g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
   	float x = firstIndex * getOwner().getCompoundWidth() + getOwner().getDataAreas().getGlobalMaxLengthBeforeStart();
-		float sequenceY = 2 * getOwner().getCompoundHeight();
+		float sequenceY = getHeight() - getOwner().getCompoundHeight();
 		final float barWidth = getOwner().getCompoundWidth() / 4; 
 		for (int i = firstIndex; i <= lastIndex; i++) {
+			// Paint bars:
 			float barX = x;
 			AmbiguityBaseScore score = getScore(i);
 			for (int j = 0; j < 4; j++) {
@@ -227,8 +228,10 @@ public class ConsensusSequenceArea extends CustomHeightFullWidthArea {
 				barX += barWidth;
 			}
 			
+			// Paint token:
 			SequenceArea.paintCompound(getOwner(), event.getGraphics(), 
-					compoundSet.getCompoundForString("" + score.getConsensusBase()), x, sequenceY, false);	
+					compoundSet.getCompoundForString("" + score.getConsensusBase()), x, sequenceY, false);
+			
 	    x += getOwner().getCompoundWidth();
     }
 	}
