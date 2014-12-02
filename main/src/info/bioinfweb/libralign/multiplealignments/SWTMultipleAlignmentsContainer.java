@@ -65,7 +65,7 @@ public class SWTMultipleAlignmentsContainer extends Composite implements Toolkit
 		addControlListener(new ControlAdapter() {
 					@Override
 					public void controlResized(ControlEvent e) {
-						redistributeHeight();
+						getIndependentComponent().redistributeHeight();
 					}
 				});
 		
@@ -155,7 +155,41 @@ public class SWTMultipleAlignmentsContainer extends Composite implements Toolkit
 
 
 	@Override
-	public void redistributeHeight() {
+	public int getAvailableHeight() {
+		return getSashForm().getSize().y;
+	}
+
+
+	@Override
+	public int getNeededHeight(int alignmentIndex) {
+		int result = getIndependentComponent().get(alignmentIndex).getContentArea().getSize().height + 3;
+		if (alignmentIndex == getIndependentComponent().size() - 1) {
+			result += 
+					((SWTAlignmentArea)getIndependentComponent().get(alignmentIndex).getToolkitComponent()).getHorizontalScrollbarHeight();
+		}
+		return result;
+	}
+
+
+	@Override
+	public void setDividerLocations(int[] heights) {
+		for (int i = 0; i < heights.length; i++) {
+			System.out.print(heights[i] + " ");
+		}
+		System.out.println();
+		
+		getSashForm().setWeights(heights);
+		
+		System.out.print("  ");
+		for (int i = 0; i < heights.length; i++) {
+			System.out.print(getSashForm().getWeights()[i] + " " + (getSashForm().getWeights()[i] / (float)heights[i]) + " ");
+		}
+		System.out.println();
+	}
+
+
+//	@Override
+//	public void redistributeHeight() {
 //		// Horizontal scroll bar in SWT is always visible (difference to Swing implementation).
 //		int horzScrollBarHeight = bottomComponent.getContentScroller().getHorizontalBar().getSize().y;
 //  	int overallHeight = getSashForm().getSize().y;  //headComponent.getPartScroller().getSize().y +	contentComponent.getPartScroller().getSize().y + bottomComponent.getPartScroller().getSize().y + horzScrollBarHeight;
@@ -199,7 +233,7 @@ public class SWTMultipleAlignmentsContainer extends Composite implements Toolkit
 //  		bottomHeight = Math.max(1, overallHeight - headHeight - contentHeight);  // Assign remaining space to bottom part.
 //  	}
 //  	getSashForm().setWeights(new int[]{headHeight, contentHeight , bottomHeight});
-	}
+//	}
 
 
 	//TODO Overwriting this methods is probably not necessary.

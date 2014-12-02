@@ -48,9 +48,25 @@ public interface ToolkitSpecificMultipleAlignmentsContainer extends ToolkitCompo
 	 */
 	public void adoptChildAreas();
 	
-	/**
-	 * Distributes the available height to the head, content, and bottom area. The previous distribution is not
-	 * considered.
-	 */
-  public void redistributeHeight();
+  /**
+   * Returns the height that is currently available to be distributed among all contained alignment areas.
+   * 
+   * @return the sum of the heights of all visible rectangles of the contained scrolled components
+   */
+  public int getAvailableHeight();
+    
+  /**
+   * Return the height needed for the specified alignment to be displayed without scroll bars.
+   * 
+   * @param alignmentIndex - the current index of the alignment in the container
+   * @return the height in pixels
+   */
+  public int getNeededHeight(int alignmentIndex);
+  
+  /**
+   * Sets the divider locations to distribute the available height among the contained alignment areas.
+   * 
+   * @param heights - an array containing the heights for all alignment areas
+   */
+  public void setDividerLocations(int[] heights);
 }

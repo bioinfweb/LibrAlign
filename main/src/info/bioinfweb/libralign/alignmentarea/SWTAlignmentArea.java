@@ -25,6 +25,7 @@ import java.awt.Rectangle;
 import info.bioinfweb.commons.swt.ScrolledCompositeSyncListener;
 import info.bioinfweb.libralign.alignmentarea.content.SWTAlignmentContentArea;
 import info.bioinfweb.libralign.alignmentarea.label.AlignmentLabelArea;
+import info.bioinfweb.libralign.multiplealignments.SWTMultipleAlignmentsContainer;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.ScrolledComposite;
@@ -219,5 +220,17 @@ public class SWTAlignmentArea extends Composite implements ToolkitSpecificAlignm
 		org.eclipse.swt.graphics.Rectangle clientArea = getContentScroller().getClientArea();
 		org.eclipse.swt.graphics.Point origin = getContentScroller().getOrigin();
 		return new Rectangle(origin.x, origin.y, clientArea.width, clientArea.height);
+	}
+	
+	
+	/**
+	 * Returns the height of the horizontal content scroll bar.
+	 * <p>
+	 * This method is used internally by {@link SWTMultipleAlignmentsContainer#getNeededHeight(int)}.
+	 * 
+	 * @return the height in pixels
+	 */
+	public int getHorizontalScrollbarHeight() {
+		return getContentScroller().getHorizontalBar().getSize().y;
 	}
 }

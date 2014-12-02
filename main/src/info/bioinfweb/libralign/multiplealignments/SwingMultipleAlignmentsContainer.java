@@ -21,12 +21,15 @@ package info.bioinfweb.libralign.multiplealignments;
 
 import java.awt.event.AdjustmentEvent;
 import java.awt.event.AdjustmentListener;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
 import java.util.ArrayList;
 import java.util.List;
 
 import info.bioinfweb.libralign.alignmentarea.AlignmentArea;
 import info.bioinfweb.libralign.alignmentarea.SwingAlignmentArea;
 import info.bioinfweb.libralign.alignmentarea.ToolkitSpecificAlignmentArea;
+import info.bioinfweb.libralign.alignmentarea.content.SwingAlignmentContentArea;
 
 import javax.swing.BoxLayout;
 import javax.swing.JComponent;
@@ -76,13 +79,13 @@ public class SwingMultipleAlignmentsContainer extends JComponent implements Tool
 	
 	private void initGUI() {
 		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
-//		addComponentListener(new ComponentAdapter() {
-//					@Override
-//					public void componentResized(ComponentEvent e) {
-//						redistributeHeight();
-//						//TODO Implement distributeNewHeight() in future versions to save user defined splitter positions during resize
-//					}
-//				});
+		addComponentListener(new ComponentAdapter() {
+					@Override
+					public void componentResized(ComponentEvent e) {
+						getIndependentComponent().redistributeHeight();
+						//TODO Implement distributeNewHeight() in future versions to save user defined splitter positions during resize
+					}
+				});
 		
 		adoptChildAreas();
 	}
@@ -198,51 +201,29 @@ public class SwingMultipleAlignmentsContainer extends JComponent implements Tool
 
 
   @Override
-	public void redistributeHeight() {
-//  	int overallHeight = headScrollPane.getViewport().getHeight() + 
-//  			contentScrollPane.getViewport().getHeight() + bottomScrollPane.getViewport().getHeight();
-//  	int neededHeight = headArea.getHeight() + contentArea.getHeight() + bottomArea.getHeight();
-//		double headHeight = headArea.getHeight();
-//		double contentHeight = contentArea.getHeight();
-//		double bottomHeight = bottomArea.getHeight();
-//		if (bottomScrollPane.getHorizontalScrollBar().isVisible()) {
-//			overallHeight += bottomScrollPane.getHorizontalScrollBar().getHeight();
-//			neededHeight += bottomScrollPane.getHorizontalScrollBar().getHeight();
-//			bottomHeight += bottomScrollPane.getHorizontalScrollBar().getHeight();
-//		}
-//		
-//  	if (overallHeight < neededHeight) {
-////  		if (getIndependentComponent().isScrollHeadArea()) {
-////  			headHeight = 0;
-////  		}
-////  		if (getIndependentComponent().isScrollBottomArea()) {
-////  			bottomHeight = 0;
-////  		}
-//  		
-//  		if (headHeight + bottomHeight + AlignmentArea.MIN_PART_AREA_HEIGHT > overallHeight) {
-//  			headHeight = 0;
-//  			bottomHeight = 0;
-//  		}
-//  		else {
-//  			neededHeight -= (headHeight + bottomHeight);
-//  		}
-//  		
-//  		double availableHeight = overallHeight - (headHeight + bottomHeight);
-//  		double reduceFactor = (double)availableHeight / (double)neededHeight;
-//  		if (headHeight == 0) {
-//  			headHeight = headArea.getHeight() * reduceFactor;
-//  		}
-// 			contentHeight = contentArea.getHeight() * reduceFactor;
-//  		if (bottomHeight == 0) {
-//  			bottomHeight = bottomArea.getHeight() * reduceFactor;
-//  			if (bottomScrollPane.getHorizontalScrollBar().isVisible()) {
-//  				bottomHeight += bottomScrollPane.getHorizontalScrollBar().getHeight();
-//  			}
-//  		}
-//  	}
-//
-//  	topSplitPane.setDividerLocation(headHeight / (double)overallHeight);
-//		bottomSplitPane.setDividerLocation(contentHeight / (double)(overallHeight - headHeight));
+	public int getAvailableHeight() {
+  	int result = 0;
+  	for (AlignmentArea alignmentArea : getIndependentComponent()) {
+			result += ((SwingAlignmentArea)alignmentArea.getToolkitComponent()).getViewport().getHeight();
+		}
+  	return result;
+	}
+
+
+	@Override
+	public int getNeededHeight(int alignmentIndex) {
+		return getIndependentComponent().get(alignmentIndex).getContentArea().getSize().height;
+	}
+
+
+	@Override
+	public void setDividerLocations(int[] heights) {
+  	for (int i = 0; i < splitPanes.size(); i++) {
+  		JSplitPane splitPane = splitPanes.get(i);
+  		splitPane.setDividerLocation(heights[i]);
+			splitPane.validate();  // If this is not called, splitPanes contained in other split panes that shrink the area they are contained in, ignore the new divider location.
+		}
+  	// The last value in heights is not used by this method.
 	}
 
 

@@ -33,6 +33,7 @@ import org.eclipse.swt.widgets.Composite;
 
 import info.bioinfweb.commons.tic.TICComponent;
 import info.bioinfweb.commons.tic.TICPaintEvent;
+import info.bioinfweb.commons.tic.toolkit.ToolkitComponent;
 import info.bioinfweb.libralign.alignmentarea.AlignmentArea;
 import info.bioinfweb.libralign.dataarea.implementations.SequenceIndexArea;
 import info.bioinfweb.libralign.editsettings.EditSettings;
@@ -267,5 +268,59 @@ public class MultipleAlignmentsContainer extends TICComponent implements List<Al
 	@Override
 	public <T> T[] toArray(T[] array) {
 		return alignmentAreas.toArray(array);
+	}
+
+
+	@Override
+	public ToolkitSpecificMultipleAlignmentsContainer getToolkitComponent() {
+		return (ToolkitSpecificMultipleAlignmentsContainer)super.getToolkitComponent();
+	}
+
+
+	public void redistributeHeight() {
+  	// Calculate available and needed heights:
+  	int availableHeight = getToolkitComponent().getAvailableHeight();  // Height that can be distributed among the scroll panes.
+  	if (availableHeight > 0) {  // availableHeight 0 in the first call from SWT.
+	  	int maxNeededHeight = 0;  // Height needed for all areas to be fully visible.
+	  	int minNeededHeight = 0;  // Height needed only for the areas that do not allows scrolling to be fully visible.
+	  	for (int i = 0; i < size(); i++) {
+				int neededHeight = getToolkitComponent().getNeededHeight(i);
+				maxNeededHeight += neededHeight;
+				if (!get(i).isAllowVerticalScrolling()) {
+					minNeededHeight += neededHeight;
+				}
+			}
+	  	//TODO subtract scroll bar height from availableHeight?
+	  	
+	  	// Calculate the visible fraction of the two types of areas:
+	  	float visibleFractionForNoScrolling;
+	  	float visibleFractionForScrolling;
+	  	if (maxNeededHeight <= availableHeight) {  // No area has to be scrolled.
+	  		visibleFractionForNoScrolling = 1.0f;
+	  		visibleFractionForScrolling = 1.0f;
+	  	}
+	  	else if (minNeededHeight <= availableHeight) {  // Only the areas that allow scrolling have to be scrolled.
+	  		visibleFractionForNoScrolling = 1.0f;
+	  		visibleFractionForScrolling = (float)(availableHeight - minNeededHeight)  // remaining available height for areas that allow scrolling 
+	  				/ (float)(maxNeededHeight - minNeededHeight);  // needed height for areas that allow scrolling
+	  	}
+	  	else {  // All areas have to be scrolled.
+	  		visibleFractionForNoScrolling = (float)availableHeight / (float)maxNeededHeight;
+	  		visibleFractionForScrolling = visibleFractionForNoScrolling;
+	  	}
+	  	
+	  	// Set divider locations:
+	  	int[] heights = new int[size()];
+	  	for (int i = 0; i < size(); i++) {
+	  		heights[i] = getToolkitComponent().getNeededHeight(i);
+	  		if (get(i).isAllowVerticalScrolling()) {
+	  			heights[i] = Math.round(heights[i] * visibleFractionForScrolling);
+	  		}
+	  		else {
+	  			heights[i] = Math.round(heights[i] * visibleFractionForNoScrolling);
+	  		}
+			}
+	  	getToolkitComponent().setDividerLocations(heights);
+  	}
 	}
 }
