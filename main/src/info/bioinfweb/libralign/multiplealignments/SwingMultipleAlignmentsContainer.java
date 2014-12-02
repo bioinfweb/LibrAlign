@@ -24,6 +24,8 @@ import java.awt.event.AdjustmentListener;
 import java.util.ArrayList;
 import java.util.List;
 
+import info.bioinfweb.libralign.alignmentarea.AlignmentArea;
+import info.bioinfweb.libralign.alignmentarea.SwingAlignmentArea;
 import info.bioinfweb.libralign.alignmentarea.ToolkitSpecificAlignmentArea;
 
 import javax.swing.BoxLayout;
@@ -96,7 +98,9 @@ public class SwingMultipleAlignmentsContainer extends JComponent implements Tool
 		if (splitPanes.size() < count) {
 			count -= splitPanes.size();
 			for (int i = 0; i < count; i++) {
-				splitPanes.add(new JSplitPane(JSplitPane.VERTICAL_SPLIT));
+				JSplitPane splitPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT);
+				splitPane.setDividerSize(AlignmentArea.DIVIDER_WIDTH);
+				splitPanes.add(splitPane);
 			}
 		}
 		else if (splitPanes.size() > count) {
@@ -116,6 +120,13 @@ public class SwingMultipleAlignmentsContainer extends JComponent implements Tool
 		splitPane.setTopComponent(null);  //TODO necessary?
 		splitPane.setBottomComponent(null);
 	}
+
+
+	private SwingAlignmentArea createAlignmentArea(int index, boolean hideHorizintalScrollBar) {
+  	SwingAlignmentArea result = getIndependentComponent().get(index).createSwingComponent();
+  	result.setHideHorizontalScrollBar(hideHorizintalScrollBar);
+  	return result;
+	}
 	
 	
 	@Override
@@ -130,15 +141,14 @@ public class SwingMultipleAlignmentsContainer extends JComponent implements Tool
 		// Create split panes and add components:
 		if (getIndependentComponent().size() > 1) {
 		  createSplitPanes(getIndependentComponent().size() - 1);
+
 		  for (int i = 0; i < splitPanes.size() - 1; i++) {
-				splitPanes.get(i).setTopComponent(getIndependentComponent().get(i).createSwingComponent());
+				splitPanes.get(i).setTopComponent(createAlignmentArea(i, true));
 			}
 		  
 		  JSplitPane lastSplitPane = splitPanes.get(splitPanes.size() - 1);
-		  lastSplitPane.setTopComponent(
-		  		getIndependentComponent().get(getIndependentComponent().size() - 2).createSwingComponent());
-		  lastSplitPane.setBottomComponent(
-		  		getIndependentComponent().get(getIndependentComponent().size() - 1).createSwingComponent());
+		  lastSplitPane.setTopComponent(createAlignmentArea(getIndependentComponent().size() - 2, true));
+		  lastSplitPane.setBottomComponent(createAlignmentArea(getIndependentComponent().size() - 1, false));
 		  
 		  add(splitPanes.get(0));
 		}
