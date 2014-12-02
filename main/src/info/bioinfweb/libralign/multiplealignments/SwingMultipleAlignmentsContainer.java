@@ -48,8 +48,8 @@ public class SwingMultipleAlignmentsContainer extends JComponent implements Tool
 	private final AdjustmentListener SCROLL_SYNC_LISTENER = new AdjustmentListener() {
 				@Override
 				public void adjustmentValueChanged(AdjustmentEvent e) {
-					for (int i = 0; i < getIndependentComponent().size(); i++) {
-						JScrollBar scrollBar = getIndependentComponent().get(i).createSwingComponent().getHorizontalScrollBar(); 
+					for (int i = 0; i < getIndependentComponent().getAlignmentAreas().size(); i++) {
+						JScrollBar scrollBar = getIndependentComponent().getAlignmentAreas().get(i).createSwingComponent().getHorizontalScrollBar(); 
 						if (scrollBar != e.getSource()) {
 							scrollBar.getModel().setValue(e.getValue());
 						}
@@ -126,7 +126,7 @@ public class SwingMultipleAlignmentsContainer extends JComponent implements Tool
 
 
 	private SwingAlignmentArea createAlignmentArea(int index, boolean hideHorizintalScrollBar) {
-  	SwingAlignmentArea result = getIndependentComponent().get(index).createSwingComponent();
+  	SwingAlignmentArea result = getIndependentComponent().getAlignmentAreas().get(index).createSwingComponent();
   	result.setHideHorizontalScrollBar(hideHorizintalScrollBar);
   	return result;
 	}
@@ -136,35 +136,35 @@ public class SwingMultipleAlignmentsContainer extends JComponent implements Tool
 	public void adoptChildAreas() {
 		// Remove components and listeners:
 		removeAll();
-		for (int i = 0; i < getIndependentComponent().size(); i++) {
-			getIndependentComponent().get(i).createSwingComponent().getHorizontalScrollBar().removeAdjustmentListener(
-					SCROLL_SYNC_LISTENER); 
+		for (int i = 0; i < getIndependentComponent().getAlignmentAreas().size(); i++) {
+			getIndependentComponent().getAlignmentAreas().get(i).createSwingComponent().getHorizontalScrollBar().
+					removeAdjustmentListener(SCROLL_SYNC_LISTENER); 
 		}		
 		
 		// Create split panes and add components:
-		if (getIndependentComponent().size() > 1) {
-		  createSplitPanes(getIndependentComponent().size() - 1);
+		if (getIndependentComponent().getAlignmentAreas().size() > 1) {
+		  createSplitPanes(getIndependentComponent().getAlignmentAreas().size() - 1);
 
 		  for (int i = 0; i < splitPanes.size() - 1; i++) {
 				splitPanes.get(i).setTopComponent(createAlignmentArea(i, true));
 			}
 		  
 		  JSplitPane lastSplitPane = splitPanes.get(splitPanes.size() - 1);
-		  lastSplitPane.setTopComponent(createAlignmentArea(getIndependentComponent().size() - 2, true));
-		  lastSplitPane.setBottomComponent(createAlignmentArea(getIndependentComponent().size() - 1, false));
+		  lastSplitPane.setTopComponent(createAlignmentArea(getIndependentComponent().getAlignmentAreas().size() - 2, true));
+		  lastSplitPane.setBottomComponent(createAlignmentArea(getIndependentComponent().getAlignmentAreas().size() - 1, false));
 		  
 		  add(splitPanes.get(0));
 		}
 		else {
 			splitPanes.clear();
-			if (getIndependentComponent().size() == 1) {
-				add(getIndependentComponent().get(0).createSwingComponent());
+			if (getIndependentComponent().getAlignmentAreas().size() == 1) {
+				add(getIndependentComponent().getAlignmentAreas().get(0).createSwingComponent());
 		  }
 		}
 
 		// Add scroll synchronize listeners:
-		for (int i = 0; i < getIndependentComponent().size(); i++) {
-			getIndependentComponent().get(i).createSwingComponent().getHorizontalScrollBar().addAdjustmentListener(
+		for (int i = 0; i < getIndependentComponent().getAlignmentAreas().size(); i++) {
+			getIndependentComponent().getAlignmentAreas().get(i).createSwingComponent().getHorizontalScrollBar().addAdjustmentListener(
 					SCROLL_SYNC_LISTENER); 
 		}		
 	}
@@ -203,7 +203,7 @@ public class SwingMultipleAlignmentsContainer extends JComponent implements Tool
   @Override
 	public int getAvailableHeight() {
   	int result = 0;
-  	for (AlignmentArea alignmentArea : getIndependentComponent()) {
+  	for (AlignmentArea alignmentArea : getIndependentComponent().getAlignmentAreas()) {
 			result += ((SwingAlignmentArea)alignmentArea.getToolkitComponent()).getViewport().getHeight();
 		}
   	return result;
@@ -212,7 +212,7 @@ public class SwingMultipleAlignmentsContainer extends JComponent implements Tool
 
 	@Override
 	public int getNeededHeight(int alignmentIndex) {
-		return getIndependentComponent().get(alignmentIndex).getContentArea().getSize().height;
+		return getIndependentComponent().getAlignmentAreas().get(alignmentIndex).getContentArea().getSize().height;
 	}
 
 

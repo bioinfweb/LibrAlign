@@ -101,7 +101,7 @@ public class AlignmentLabelArea extends TICComponent {
 	public int getGlobalMaximumNeededWidth() {
 		if (getOwner().hasContainer()) {
 			int result = 0;
-			for (AlignmentArea alignmentArea : getOwner().getContainer()) {
+			for (AlignmentArea alignmentArea : getOwner().getContainer().getAlignmentAreas()) {
 				result = Math.max(result, alignmentArea.getLabelArea().getLocalMaximumNeededWidth());
 			}
 			return result;

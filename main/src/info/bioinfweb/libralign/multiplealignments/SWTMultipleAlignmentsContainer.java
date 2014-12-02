@@ -83,14 +83,14 @@ public class SWTMultipleAlignmentsContainer extends Composite implements Toolkit
 		sashForm.setSashWidth(AlignmentArea.DIVIDER_WIDTH);
 		
 		// Create areas:
-		Iterator<AlignmentArea> iterator = getIndependentComponent().iterator();
+		Iterator<AlignmentArea> iterator = getIndependentComponent().getAlignmentAreas().iterator();
 		while (iterator.hasNext()) {
 			SWTAlignmentArea area = iterator.next().createSWTWidget(sashForm, SWT.NONE);
 			area.setHideHorizontalScrollBar(iterator.hasNext());  // Show scroll bar only in the lowest area.
 		}
 		
 		// Set size of areas (Widths of one area can depend on a lower area which is not known at creation time.):
-		for (AlignmentArea area : independentComponent) {
+		for (AlignmentArea area : getIndependentComponent().getAlignmentAreas()) {
 			area.getContentArea().assignSize();
 			area.getLabelArea().assignSize();
 			area.assignSize();  //TODO Create method that calls assignSize() on all child components?
@@ -105,7 +105,7 @@ public class SWTMultipleAlignmentsContainer extends Composite implements Toolkit
 		return new Iterable<ScrolledComposite>() {
 					@Override
 					public Iterator<ScrolledComposite> iterator() {
-						final Iterator<AlignmentArea> iterator = getIndependentComponent().iterator();
+						final Iterator<AlignmentArea> iterator = getIndependentComponent().getAlignmentAreas().iterator();
 						return new Iterator<ScrolledComposite>() {
 							@Override
 							public boolean hasNext() {
@@ -155,14 +155,15 @@ public class SWTMultipleAlignmentsContainer extends Composite implements Toolkit
 	@Override
 	public int getAvailableHeight() {
 		return getSashForm().getSize().y - 
-				((SWTAlignmentArea)getIndependentComponent().get(getIndependentComponent().size() - 1).
-						getToolkitComponent()).getHorizontalScrollbarHeight();  // Subtract height reserved for horizontal scroll bar.
+				((SWTAlignmentArea)getIndependentComponent().getAlignmentAreas().get(  // Subtract height reserved for horizontal scroll bar.
+						getIndependentComponent().getAlignmentAreas().size() - 1).getToolkitComponent()).getHorizontalScrollbarHeight();
 	}
 
 
 	@Override
 	public int getNeededHeight(int alignmentIndex) {
-		return getIndependentComponent().get(alignmentIndex).getContentArea().getSize().height + NEEDED_BORDER_WIDTH;
+		return getIndependentComponent().getAlignmentAreas().get(alignmentIndex).getContentArea().getSize().height + 
+				NEEDED_BORDER_WIDTH;
 	}
 
 
@@ -170,58 +171,11 @@ public class SWTMultipleAlignmentsContainer extends Composite implements Toolkit
 	public void setDividerLocations(int[] heights) {
 		// Add height of scroll bar to last height:
 		int index = heights.length - 1;
-		heights[index] += ((SWTAlignmentArea)getIndependentComponent().get(index).getToolkitComponent()).getHorizontalScrollbarHeight();
+		heights[index] += ((SWTAlignmentArea)getIndependentComponent().getAlignmentAreas().get(index).getToolkitComponent()).
+				getHorizontalScrollbarHeight();
 		
 		getSashForm().setWeights(heights);
 	}
-
-
-//	@Override
-//	public void redistributeHeight() {
-//		// Horizontal scroll bar in SWT is always visible (difference to Swing implementation).
-//		int horzScrollBarHeight = bottomComponent.getContentScroller().getHorizontalBar().getSize().y;
-//  	int overallHeight = getSashForm().getSize().y;  //headComponent.getPartScroller().getSize().y +	contentComponent.getPartScroller().getSize().y + bottomComponent.getPartScroller().getSize().y + horzScrollBarHeight;
-//  	final int verticalBorderWidth = 3;  // The additional width used up by component borders in each part of the SashForm.  //TODO Can this be reduced?
-//		int headHeight = headComponent.getContentArea().getHeight() + verticalBorderWidth;
-//		int contentHeight = contentComponent.getContentArea().getHeight() + verticalBorderWidth;
-//		int bottomHeight = bottomComponent.getContentArea().getHeight() + verticalBorderWidth + horzScrollBarHeight;
-//  	int neededHeight = headHeight + contentHeight + bottomHeight;
-//		
-//  	if (overallHeight < neededHeight) {
-////  		if (getIndependentComponent().isScrollHeadArea()) {
-////  			headHeight = 0;
-////  		}
-////  		if (getIndependentComponent().isScrollBottomArea()) {
-////  			bottomHeight = 0;
-////  		}
-//  		
-//  		if (headHeight + bottomHeight + AlignmentArea.MIN_PART_AREA_HEIGHT > overallHeight) {
-//  			headHeight = 0;
-//  			bottomHeight = 0;
-//  		}
-//  		else {
-//  			neededHeight -= (headHeight + bottomHeight);
-//  		}
-//  		
-//  		double availableHeight = overallHeight - (headHeight + bottomHeight);
-//  		double reduceFactor = (double)availableHeight / (double)neededHeight;
-//  		if (headHeight == 0) {
-//  			headHeight = (int)Math.round(headComponent.getContentArea().getHeight() * reduceFactor);
-//  		}
-// 			contentHeight = (int)Math.round(contentComponent.getContentArea().getHeight() * reduceFactor);
-//  		if (bottomHeight == 0) {
-//  			bottomHeight = (int)Math.round((bottomComponent.getContentArea().getHeight() + horzScrollBarHeight) * reduceFactor);
-//  		}
-//  		
-//  		headHeight = Math.max(1, headHeight);
-//  		contentHeight = Math.max(1, contentHeight);
-//  		bottomHeight = Math.max(1, bottomHeight);
-//  	}
-//  	else {
-//  		bottomHeight = Math.max(1, overallHeight - headHeight - contentHeight);  // Assign remaining space to bottom part.
-//  	}
-//  	getSashForm().setWeights(new int[]{headHeight, contentHeight , bottomHeight});
-//	}
 
 
 	//TODO Overwriting this methods is probably not necessary.

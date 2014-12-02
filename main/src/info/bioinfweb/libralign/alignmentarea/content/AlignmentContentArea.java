@@ -403,7 +403,7 @@ public class AlignmentContentArea extends TICComponent implements SequenceDataCh
 	public int getGlobalMaxSequenceLength() {
 		if (getOwner().hasContainer()) {
 			int result = 0;
-			for (AlignmentArea alignmentArea : getOwner().getContainer()) {
+			for (AlignmentArea alignmentArea : getOwner().getContainer().getAlignmentAreas()) {
 				SequenceDataProvider<?> provider = alignmentArea.getContentArea().getSequenceProvider();
 				if (provider != null) {
 					result = Math.max(result, provider.getMaxSequenceLength());

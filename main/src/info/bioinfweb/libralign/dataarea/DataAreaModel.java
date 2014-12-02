@@ -195,7 +195,7 @@ public class DataAreaModel {
 		AlignmentArea alignmentArea = getOwner().getOwner();
 		int result = 0;
 		if (alignmentArea.hasContainer()) {
-			for (AlignmentArea containerAlignmentArea : alignmentArea.getContainer()) {
+			for (AlignmentArea containerAlignmentArea : alignmentArea.getContainer().getAlignmentAreas()) {
 				result = Math.max(result, containerAlignmentArea.getContentArea().getDataAreas().getLocalMaxLengthBeforeStart());
 			}
 		}

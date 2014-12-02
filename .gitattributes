@@ -89,6 +89,7 @@ main/src/info/bioinfweb/libralign/editsettings/EditSettingsListener.java -text s
 main/src/info/bioinfweb/libralign/editsettings/WorkingMode.java -text svneol=unset#text/plain
 main/src/info/bioinfweb/libralign/editsettings/package-info.java -text svneol=unset#text/plain
 main/src/info/bioinfweb/libralign/io/package-info.java -text svneol=unset#text/plain
+main/src/info/bioinfweb/libralign/multiplealignments/AlignmentAreaList.java -text svneol=unset#text/plain
 main/src/info/bioinfweb/libralign/multiplealignments/MultipleAlignmentsContainer.java -text svneol=unset#text/plain
 main/src/info/bioinfweb/libralign/multiplealignments/SWTMultipleAlignmentsContainer.java -text svneol=unset#text/plain
 main/src/info/bioinfweb/libralign/multiplealignments/SwingMultipleAlignmentsContainer.java -text svneol=unset#text/plain

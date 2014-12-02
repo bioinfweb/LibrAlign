@@ -57,15 +57,25 @@ import info.bioinfweb.libralign.editsettings.EditSettings;
  * @author Ben St&ouml;ver
  * @since 0.3.0
  */
-public class MultipleAlignmentsContainer extends TICComponent implements List<AlignmentArea> {
+public class MultipleAlignmentsContainer extends TICComponent {
 	//TODO React to changes of the underlying list
 	//TODO Throw exceptions if an alignment area that is not linked to this container is inserted also in complex methods and iterators.
 	//TODO Ensure that components in all alignment areas are informed about size changes of one area (e.g. sequence length or label length).
-	private List<AlignmentArea> alignmentAreas = new ArrayList<AlignmentArea>();
+	private AlignmentAreaList alignmentAreas = new AlignmentAreaList(this);
 	private EditSettings editSettings = new EditSettings();
-	private boolean distributeRemainingSpace = true;
+	private boolean distributeRemainingSpace = false;
 
 	
+	/**
+	 * Use the returned instance to change the alignment areas contained in this container.
+	 * 
+	 * @return a reference to the list with the alignment areas currently contained in this container
+	 */
+	public AlignmentAreaList getAlignmentAreas() {
+		return alignmentAreas;
+	}
+
+
 	/**
 	 * Returns the edit settings that are shared among all contained alignment areas.
 	 * 
@@ -152,158 +162,6 @@ public class MultipleAlignmentsContainer extends TICComponent implements List<Al
 	
 
 	@Override
-	public boolean add(AlignmentArea e) {
-		checkContainer(e);
-		return alignmentAreas.add(e);
-	}
-	
-
-	@Override
-	public void add(int index, AlignmentArea element) {
-		checkContainer(element);
-		alignmentAreas.add(index, element);
-	}
-
-	
-	@Override
-	public boolean contains(Object area) {
-		return alignmentAreas.contains(area);
-	}
-
-	
-	@Override
-	public AlignmentArea get(int index) {
-		return alignmentAreas.get(index);
-	}
-
-	
-	@Override
-	public int indexOf(Object o) {
-		return alignmentAreas.indexOf(o);
-	}
-
-	
-	@Override
-	public AlignmentArea remove(int index) {
-		return alignmentAreas.remove(index);
-	}
-
-	
-	@Override
-	public boolean remove(Object area) {
-		return alignmentAreas.remove(area);
-	}
-	
-
-	@Override
-	public int size() {
-		return alignmentAreas.size();
-	}
-
-
-	@Override
-	public ListIterator<AlignmentArea> listIterator() {
-		return alignmentAreas.listIterator();
-	}
-
-
-	@Override
-	public boolean addAll(Collection<? extends AlignmentArea> arg0) {
-		return alignmentAreas.addAll(arg0);
-	}
-
-
-	@Override
-	public boolean addAll(int index, Collection<? extends AlignmentArea> c) {
-		return alignmentAreas.addAll(index, c);
-	}
-
-
-	@Override
-	public void clear() {
-		alignmentAreas.clear();
-	}
-
-
-	@Override
-	public boolean containsAll(Collection<?> c) {
-		return alignmentAreas.containsAll(c);
-	}
-
-
-	@Override
-	public boolean equals(Object other) {
-		return alignmentAreas.equals(other);
-	}
-
-
-	@Override
-	public int hashCode() {
-		return alignmentAreas.hashCode();
-	}
-
-
-	@Override
-	public boolean isEmpty() {
-		return alignmentAreas.isEmpty();
-	}
-
-
-	@Override
-	public Iterator<AlignmentArea> iterator() {
-		return alignmentAreas.iterator();
-	}
-
-
-	@Override
-	public int lastIndexOf(Object element) {
-		return alignmentAreas.lastIndexOf(element);
-	}
-
-
-	@Override
-	public ListIterator<AlignmentArea> listIterator(int index) {
-		return alignmentAreas.listIterator(index);
-	}
-
-
-	@Override
-	public boolean removeAll(Collection<?> c) {
-		return alignmentAreas.removeAll(c);
-	}
-
-
-	@Override
-	public boolean retainAll(Collection<?> c) {
-		return alignmentAreas.retainAll(c);
-	}
-
-
-	@Override
-	public AlignmentArea set(int index, AlignmentArea element) {
-		return alignmentAreas.set(index, element);
-	}
-
-
-	@Override
-	public List<AlignmentArea> subList(int fromIndex, int toIndex) {
-		return alignmentAreas.subList(fromIndex, toIndex);
-	}
-
-
-	@Override
-	public Object[] toArray() {
-		return alignmentAreas.toArray();
-	}
-
-
-	@Override
-	public <T> T[] toArray(T[] array) {
-		return alignmentAreas.toArray(array);
-	}
-
-
-	@Override
 	public ToolkitSpecificMultipleAlignmentsContainer getToolkitComponent() {
 		return (ToolkitSpecificMultipleAlignmentsContainer)super.getToolkitComponent();
 	}
@@ -315,10 +173,10 @@ public class MultipleAlignmentsContainer extends TICComponent implements List<Al
   	if (availableHeight > 0) {  // availableHeight 0 in the first call from SWT.
 	  	int maxNeededHeight = 0;  // Height needed for all areas to be fully visible.
 	  	int minNeededHeight = 0;  // Height needed only for the areas that do not allows scrolling to be fully visible.
-	  	for (int i = 0; i < size(); i++) {
+	  	for (int i = 0; i < getAlignmentAreas().size(); i++) {
 				int neededHeight = getToolkitComponent().getNeededHeight(i);
 				maxNeededHeight += neededHeight;
-				if (!get(i).isAllowVerticalScrolling()) {
+				if (!getAlignmentAreas().get(i).isAllowVerticalScrolling()) {
 					minNeededHeight += neededHeight;
 				}
 			}
@@ -345,10 +203,10 @@ public class MultipleAlignmentsContainer extends TICComponent implements List<Al
 	  	// Set divider locations:
 	  	int usedHeight = 0;
 	  	int noOfScrollableComponents = 0;
-	  	int[] heights = new int[size()];
-	  	for (int i = 0; i < size(); i++) {
+	  	int[] heights = new int[getAlignmentAreas().size()];
+	  	for (int i = 0; i < getAlignmentAreas().size(); i++) {
 	  		heights[i] = getToolkitComponent().getNeededHeight(i);
-	  		if (get(i).isAllowVerticalScrolling()) {
+	  		if (getAlignmentAreas().get(i).isAllowVerticalScrolling()) {
 	  			heights[i] = Math.round(heights[i] * visibleFractionForScrolling);
 	  			noOfScrollableComponents++;
 	  		}
@@ -360,21 +218,21 @@ public class MultipleAlignmentsContainer extends TICComponent implements List<Al
 	  	
 	  	// Distribute remaining height:
 	  	if (minNeededHeight > availableHeight) {  // All areas have to be scrolled.
-	  		noOfScrollableComponents = size();
+	  		noOfScrollableComponents = getAlignmentAreas().size();
 	  	}
 	  	availableHeight -= usedHeight; 
 	  	int lastIndex = heights.length - 1;
 	  	if (isDistributeRemainingSpace()) {
 		  	int availableHeightPerComponent = availableHeight / noOfScrollableComponents;
-		  	for (int i = 0; i < size(); i++) {
-		  		if (scrollAllComponents || get(i).isAllowVerticalScrolling()) {
+		  	for (int i = 0; i < getAlignmentAreas().size(); i++) {
+		  		if (scrollAllComponents || getAlignmentAreas().get(i).isAllowVerticalScrolling()) {
 		  			heights[i] += availableHeightPerComponent;
 		  			availableHeight -= availableHeightPerComponent;
 		  			lastIndex = i;
 		  		}
 		  	}
 	  	}
-	  	heights[lastIndex] += availableHeight;  // Last area might get more space due to rounding issues.
+	  	heights[lastIndex] += availableHeight;  // Last area might get more space due to rounding issues even if isDistributeRemainingSpace() returned true.
 	  	
 	  	getToolkitComponent().setDividerLocations(heights);
   	}
