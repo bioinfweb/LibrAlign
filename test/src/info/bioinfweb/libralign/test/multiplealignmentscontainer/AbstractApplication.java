@@ -109,7 +109,7 @@ public class AbstractApplication {
 			AlignmentArea area = new AlignmentArea(result);
 			area.setAllowVerticalScrolling(false);
 			area.getContentArea().getDataAreas().getTopAreas().add(new SequenceIndexArea(area.getContentArea()));
-			result.add(area);
+			result.getAlignmentAreas().add(area);
 			
 			// Char sets:    //TODO CharSetArea now needs a sequenceProvider parameter, because in could be in another alignment.
 //			area = new AlignmentArea(result);
@@ -131,13 +131,13 @@ public class AbstractApplication {
 			pherogramArea.getAlignmentModel().setShiftChange(49, 2);
 			area.getContentArea().getDataAreas().getSequenceAreas(sequenceProvider.sequenceIDByName("Sequence 4")).add(pherogramArea);
 			
-			result.add(area);
+			result.getAlignmentAreas().add(area);
 			
 			// Consensus sequence:
       area = new AlignmentArea(result);  //TODO ConsensusSequenceArea now needs a sequenceProvider parameter, because in could be in another alignment.
 			area.setAllowVerticalScrolling(false);
 			area.getContentArea().getDataAreas().getBottomAreas().add(new ConsensusSequenceArea(area.getContentArea(), sequenceProvider));
-      result.add(area);
+      result.getAlignmentAreas().add(area);
 			
 			return result;
 		}
