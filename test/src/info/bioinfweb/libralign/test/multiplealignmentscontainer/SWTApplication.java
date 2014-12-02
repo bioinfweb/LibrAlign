@@ -62,7 +62,7 @@ public class SWTApplication extends AbstractApplication {
 		createContents();
 		shell.open();
 		shell.layout();
-		//alignmentArea.getToolkitComponent().redistributeHeight();
+		alignmentsContainer.redistributeHeight();
 		while (!shell.isDisposed()) {
 			if (!display.readAndDispatch()) {
 				display.sleep();
@@ -81,9 +81,6 @@ public class SWTApplication extends AbstractApplication {
 		shell.setLayout(new FillLayout(SWT.HORIZONTAL));
 		
 		alignmentsContainer = createAlignmentsContainer();
-		//alignmentArea.setScrollBottomArea(true);
-		//alignmentArea.setScrollHeadArea(true);
 		alignmentsContainer.createSWTWidget(shell, SWT.NONE);
-		//alignmentArea.getToolkitComponent().redistributeHeight();
 	}
 }
