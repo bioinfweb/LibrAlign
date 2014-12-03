@@ -19,24 +19,34 @@
 package info.bioinfweb.libralign.multiplealignments;
 
 
+import info.bioinfweb.commons.collections.observable.ObservableList;
 import info.bioinfweb.libralign.alignmentarea.AlignmentArea;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Comparator;
+import java.util.Iterator;
+import java.util.List;
+import java.util.ListIterator;
+import java.util.function.Consumer;
 
 
 
 /**
  * A list implementation {@link MultipleAlignmentsContainer} uses to manage its contained alignment areas.
+ * <p>
+ * Note that this list is not thread safe and should only be modified from the GUI thread (e.g. the Swing thread)
+ * since made modifications might trigger GUI updates.
  * 
  * @author Ben St&ouml;ver
  * @since 0.3.0
  */
-public class AlignmentAreaList extends ArrayList<AlignmentArea>{
+public class AlignmentAreaList extends ObservableList<AlignmentArea> {
 	private MultipleAlignmentsContainer owner;
 
 	
 	public AlignmentAreaList(MultipleAlignmentsContainer owner) {
-		super();
+		super(new ArrayList<AlignmentArea>());
 		this.owner = owner;
 	}
 
@@ -52,20 +62,51 @@ public class AlignmentAreaList extends ArrayList<AlignmentArea>{
 		}
 	}
 	
-
-	@Override
-	public boolean add(AlignmentArea e) {
-		checkContainer(e);
-		return super.add(e);
-	}
 	
-
-	@Override
-	public void add(int index, AlignmentArea element) {
-		checkContainer(element);
-		super.add(index, element);
+	private void checkContainers(Collection<? extends AlignmentArea> c) {
+		for (AlignmentArea alignmentArea : c) {
+			checkContainer(alignmentArea);
+		}
 	}
 
-	
 
+	@Override
+	protected void beforeAdd(int index,	Collection<? extends AlignmentArea> addedElements) {
+		checkContainers(addedElements);  // Prevents the insertion by throwing an exception if one or more elements do not specify the correct container.
+	}
+	
+	
+	private void adoptToListChanges() {  //TODO Should this method better be in the owner?
+		if (getOwner().hasToolkitComponent()) {
+			getOwner().getToolkitComponent().adoptChildAreas();
+			getOwner().redistributeHeight();  //TODO Will this be to early for SWT or does layout() have to be called before?
+		}
+	}
+
+	
+	@Override
+	protected void afterAdd(int index, Collection<? extends AlignmentArea> addedElements) {
+		adoptToListChanges();
+	}
+
+
+	@Override
+	protected void afterRemove(Collection<? extends AlignmentArea> removedElements) {
+		adoptToListChanges();
+	}
+
+
+	@Override
+	protected void afterReplace(int index, AlignmentArea previousElement,	AlignmentArea currentElement) {
+		adoptToListChanges();
+	}
+
+
+	public static void main(String[] args) {
+		MultipleAlignmentsContainer container = new MultipleAlignmentsContainer();
+		List<AlignmentArea> collection = new ArrayList<AlignmentArea>();
+		collection.add(new AlignmentArea(container));
+		collection.add(new AlignmentArea(container));
+		container.getAlignmentAreas().addAll(collection);
+	}
 }

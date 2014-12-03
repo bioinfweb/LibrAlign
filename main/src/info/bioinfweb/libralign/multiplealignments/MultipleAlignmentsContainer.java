@@ -154,13 +154,6 @@ public class MultipleAlignmentsContainer extends TICComponent {
 	public void paint(TICPaintEvent event) {}  // Remains empty because toolkit specific components are provided.
 
 	
-	private void checkContainer(AlignmentArea alignmentArea) {
-		if (alignmentArea.getContainer() != this) {
-			throw new IllegalArgumentException("The alignment area to be inserted does not reference this instance as its container.");
-		}
-	}
-	
-
 	@Override
 	public ToolkitSpecificMultipleAlignmentsContainer getToolkitComponent() {
 		return (ToolkitSpecificMultipleAlignmentsContainer)super.getToolkitComponent();

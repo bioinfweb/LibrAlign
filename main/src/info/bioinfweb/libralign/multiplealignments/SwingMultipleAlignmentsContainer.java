@@ -29,7 +29,6 @@ import java.util.List;
 import info.bioinfweb.libralign.alignmentarea.AlignmentArea;
 import info.bioinfweb.libralign.alignmentarea.SwingAlignmentArea;
 import info.bioinfweb.libralign.alignmentarea.ToolkitSpecificAlignmentArea;
-import info.bioinfweb.libralign.alignmentarea.content.SwingAlignmentContentArea;
 
 import javax.swing.BoxLayout;
 import javax.swing.JComponent;

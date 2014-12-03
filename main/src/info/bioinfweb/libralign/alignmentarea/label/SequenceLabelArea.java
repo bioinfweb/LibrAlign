@@ -19,14 +19,11 @@
 package info.bioinfweb.libralign.alignmentarea.label;
 
 
-import java.awt.Dimension;
-import java.awt.Font;
 import java.awt.FontMetrics;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
 import java.awt.SystemColor;
 import java.awt.geom.Line2D;
-import java.util.Iterator;
 
 import info.bioinfweb.commons.Math2;
 import info.bioinfweb.commons.graphics.FontCalculator;
@@ -46,7 +43,6 @@ import info.bioinfweb.libralign.alignmentarea.content.SequenceArea;
 public class SequenceLabelArea extends AlignmentLabelSubArea {
 	public SequenceLabelArea(AlignmentLabelArea owner, AlignmentSubArea labeledSubArea) {
 		super(owner, labeledSubArea);
-		// TODO Auto-generated constructor stub
 	}
 
 
@@ -72,7 +68,9 @@ public class SequenceLabelArea extends AlignmentLabelSubArea {
 		FontMetrics fm = g.getFontMetrics();
 		
 		// Paint name:
-		g.draw(new Line2D.Float(0, 0, getSize().width, 0));
+		if (getLabeledArea().getOwner().getSequenceOrder().indexByID(getLabeledArea().getSeqenceID()) > 0) {
+			g.draw(new Line2D.Float(0, 0, getSize().width, 0));  // Draw line only if there is another label above.
+		}
   	g.drawString(contentArea.getSequenceProvider().sequenceNameByID(getLabeledArea().getSeqenceID()), 
   			AlignmentLabelArea.BORDER_WIDTH, fm.getAscent());
 	}
