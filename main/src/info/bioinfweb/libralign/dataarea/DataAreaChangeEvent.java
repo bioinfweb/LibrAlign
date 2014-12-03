@@ -22,7 +22,6 @@ package info.bioinfweb.libralign.dataarea;
 import info.bioinfweb.commons.collections.ListChangeType;
 import info.bioinfweb.libralign.alignmentarea.AlignmentArea;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.EventObject;
@@ -77,7 +76,7 @@ public class DataAreaChangeEvent extends EventObject {
 	 * @param affectedElements - a list of elements that have been affected (inserted, removed or replaced
 	 *        or visibility change)
 	 */
-	public DataAreaChangeEvent(Object source,  boolean eventsFromSingleList, ListChangeType type,	
+	public DataAreaChangeEvent(Object source, boolean eventsFromSingleList, ListChangeType type,	
 			DataArea affectedElement) {
 		
 		super(source);
@@ -87,9 +86,7 @@ public class DataAreaChangeEvent extends EventObject {
 		if (affectedElement == null) {
 			throw new NullPointerException("Null is not a valid value for the affected element.");
 		}
-		affectedElements = new ArrayList<DataArea>(1);
-		affectedElements.add(affectedElement);
-		affectedElements = Collections.unmodifiableCollection(affectedElements);
+		affectedElements = Collections.nCopies(1, affectedElement);
 	}
 
 

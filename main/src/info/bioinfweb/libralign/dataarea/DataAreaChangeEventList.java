@@ -72,7 +72,7 @@ public class DataAreaChangeEventList implements List<DataArea> {
 	}
 
 
-	public List<DataArea> getUnderlyingList() {
+	protected List<DataArea> getUnderlyingList() {
 		return underlyingList;
 	}
 
@@ -97,8 +97,8 @@ public class DataAreaChangeEventList implements List<DataArea> {
 	@Override
 	public void add(int index, DataArea element) {
 		element.setList(getDataAreaList());
-		getDataAreaList().getOwner().fireInsertedRemoved(ListChangeType.INSERTION, element);
 		getUnderlyingList().add(index, element);
+		getDataAreaList().getOwner().fireInsertedRemoved(ListChangeType.INSERTION, element);
 	}
 	
 
@@ -233,7 +233,7 @@ public class DataAreaChangeEventList implements List<DataArea> {
 		
 					@Override
 					public void remove() {
-						iterator.remove();  // Would throw an exceotion is currentArea would still be null.
+						iterator.remove();  // Would throw an exception if currentArea would still be null.
 						thisList.getDataAreaList().getOwner().fireInsertedRemoved(ListChangeType.DELETION, currentArea);
 					}
 				};
