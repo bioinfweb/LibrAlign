@@ -24,11 +24,7 @@ import info.bioinfweb.libralign.alignmentarea.AlignmentArea;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Comparator;
-import java.util.Iterator;
 import java.util.List;
-import java.util.ListIterator;
-import java.util.function.Consumer;
 
 
 
