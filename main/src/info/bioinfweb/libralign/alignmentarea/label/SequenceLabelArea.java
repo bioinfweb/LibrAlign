@@ -55,8 +55,7 @@ public class SequenceLabelArea extends AlignmentLabelSubArea {
 	@Override
 	public void paint(TICPaintEvent e) {
 		Graphics2D g  = e.getGraphics();
-		g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, 
-  			RenderingHints.VALUE_ANTIALIAS_ON);
+		g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 
   		// Paint background:
 		g.setColor(SystemColor.menu);

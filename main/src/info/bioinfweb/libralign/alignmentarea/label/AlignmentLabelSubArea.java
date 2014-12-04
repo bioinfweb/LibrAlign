@@ -21,6 +21,9 @@ package info.bioinfweb.libralign.alignmentarea.label;
 
 import java.awt.Dimension;
 
+import org.eclipse.swt.layout.RowData;
+import org.eclipse.swt.widgets.Composite;
+
 import info.bioinfweb.commons.tic.TICComponent;
 import info.bioinfweb.libralign.alignmentarea.AlignmentArea;
 import info.bioinfweb.libralign.alignmentarea.content.AlignmentSubArea;
@@ -82,5 +85,15 @@ public abstract class AlignmentLabelSubArea extends TICComponent {
 	@Override
 	public Dimension getSize() {
 		return new Dimension(getOwner().getGlobalMaximumNeededWidth(), getLabeledArea().getSize().height);
+	}
+
+
+	@Override
+	public void assignSize() {
+		super.assignSize();
+		if (getToolkitComponent() instanceof Composite) {
+			Composite composite = (Composite)getToolkitComponent();
+			composite.setLayoutData(new RowData(composite.getSize()));
+		}
 	}
 }
