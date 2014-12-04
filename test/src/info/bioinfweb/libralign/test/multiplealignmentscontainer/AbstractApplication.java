@@ -36,6 +36,7 @@ import info.bioinfweb.libralign.dataarea.implementations.charset.CharSetArea;
 import info.bioinfweb.libralign.dataarea.implementations.pherogram.PherogramArea;
 import info.bioinfweb.libralign.multiplealignments.MultipleAlignmentsContainer;
 import info.bioinfweb.libralign.pherogram.provider.BioJavaPherogramProvider;
+import info.bioinfweb.libralign.sequenceprovider.SequenceDataProvider;
 import info.bioinfweb.libralign.sequenceprovider.implementations.BioJavaSequenceDataProvider;
 import info.bioinfweb.libralign.sequenceprovider.tokenset.BioJavaTokenSet;
 
@@ -133,8 +134,22 @@ public class AbstractApplication {
 			
 			result.getAlignmentAreas().add(area);
 			
+			// Additional alignment with longer names (to test of other label areas adopt their width):
+			alignment =	new SimpleAlignment<DNASequence, NucleotideCompound>();
+			alignment.add("Another Sequence", new DNASequence("ATCGTAGATCGTAGATCGTAGATCGTAGATCGTAGATCGTAGATCGTAG"));
+			SequenceDataProvider<NucleotideCompound> sequenceProvider2 = 
+					new BioJavaSequenceDataProvider<DNASequence, NucleotideCompound>(
+							new BioJavaTokenSet<NucleotideCompound>(
+									AlignmentAmbiguityNucleotideCompoundSet.getAlignmentAmbiguityNucleotideCompoundSet(), false),
+							alignment);
+
+			area = new AlignmentArea(result);
+			area.setAllowVerticalScrolling(false);      			
+			area.getContentArea().setSequenceProvider(sequenceProvider2, false);
+			result.getAlignmentAreas().add(area);
+			
 			// Consensus sequence:
-      area = new AlignmentArea(result);  //TODO ConsensusSequenceArea now needs a sequenceProvider parameter, because in could be in another alignment.
+      area = new AlignmentArea(result);
 			area.setAllowVerticalScrolling(false);
 			area.getContentArea().getDataAreas().getBottomAreas().add(new ConsensusSequenceArea(area.getContentArea(), sequenceProvider));
       result.getAlignmentAreas().add(area);
