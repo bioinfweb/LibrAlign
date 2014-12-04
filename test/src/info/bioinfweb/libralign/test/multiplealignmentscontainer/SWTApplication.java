@@ -62,7 +62,6 @@ public class SWTApplication extends AbstractApplication {
 		createContents();
 		shell.open();
 		shell.layout();
-		alignmentsContainer.redistributeHeight();
 		while (!shell.isDisposed()) {
 			if (!display.readAndDispatch()) {
 				display.sleep();
