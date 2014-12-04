@@ -508,16 +508,6 @@ public class AlignmentContentArea extends TICComponent implements SequenceDataCh
 	}
 	
 	
-	/**
-	 * Calls {@link #assignSize()} on this object and afterwards the {@code assignSize()} method of the 
-	 * {@link AlignmentLabelArea} associated with {@link #getOwner()}.
-	 */
-	public void assignSizeToThisAndLabelArea() {
-		assignSize();
-		getOwner().getLabelArea().assignSize();
-	}
-	
-	
 	public void reinsertSubelementsInThisAndLabelArea() {
 		getToolkitComponent().reinsertSubelements();
 		getOwner().getLabelArea().getToolkitComponent().reinsertSubelements();
@@ -526,11 +516,13 @@ public class AlignmentContentArea extends TICComponent implements SequenceDataCh
 
 	@Override
 	public <T> void afterSequenceChange(SequenceChangeEvent<T> e) {
-		getSequenceOrder().refreshFromSource();
-		if (hasToolkitComponent()) {
-			reinsertSubelementsInThisAndLabelArea();
+		if (e.getSource().equals(getSequenceProvider())) {
+			getSequenceOrder().refreshFromSource();
+			if (hasToolkitComponent()) {
+				reinsertSubelementsInThisAndLabelArea();
+			}
 		}
-		assignSizeToThisAndLabelArea();
+		getOwner().assignSizeToAll();
 		//repaint();  //TODO Does this have to be called?
 		//TODO Send message to all and/or remove some data areas? (Some might be data specific (e.g. pherograms), some not (e.g. consensus sequence).)
 		getDataAreas().getSequenceDataChangeListener().afterSequenceChange(e);
@@ -548,14 +540,16 @@ public class AlignmentContentArea extends TICComponent implements SequenceDataCh
 	@Override
 	public <T> void afterTokenChange(TokenChangeEvent<T> e) {
 		assignSize();  // Needs to happen first (otherwise the child elements get cut off in SWT probably because they are only painted as far as they are visible in the parent component even if the parent will be resized later on).
-		getToolkitComponent().assignSequenceAreaSize(e.getSequenceID());
+		if (hasToolkitComponent() && e.getSource().equals(getSequenceProvider())) {
+			getToolkitComponent().assignSequenceAreaSize(e.getSequenceID());
+		}
 		getDataAreas().getSequenceDataChangeListener().afterTokenChange(e);
 	}
 
 
 	@Override
 	public <T, U> void afterProviderChanged(SequenceDataProvider<T> previous, SequenceDataProvider<U> current) {
-		assignSizeToThisAndLabelArea();  //TODO reinsertSubements()?
+		getOwner().assignSizeToAll();  //TODO reinsertSubements()?
 		repaint();  //TODO Needed?
 		//TODO Remove some data areas? (Some might be data specific (e.g. pherograms), some not (e.g. consensus sequence).)
 		getDataAreas().getSequenceDataChangeListener().afterProviderChanged(previous, current);
@@ -565,8 +559,10 @@ public class AlignmentContentArea extends TICComponent implements SequenceDataCh
 	@Override
 	public void dataAreaInsertedRemoved(DataAreaChangeEvent e) {
 		if (hasToolkitComponent()) {
-			reinsertSubelementsInThisAndLabelArea();
-			assignSizeToThisAndLabelArea();
+			if (e.getSource().equals(getDataAreas())) {
+				reinsertSubelementsInThisAndLabelArea();
+			}
+			getOwner().assignSizeToAll();
 		}
 	}
 

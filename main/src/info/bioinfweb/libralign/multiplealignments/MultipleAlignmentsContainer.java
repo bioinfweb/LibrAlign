@@ -159,75 +159,85 @@ public class MultipleAlignmentsContainer extends TICComponent {
 		return (ToolkitSpecificMultipleAlignmentsContainer)super.getToolkitComponent();
 	}
 
+	
+	public void assignSizeToAll() {
+		for (AlignmentArea alignmentArea : getAlignmentAreas()) {
+			alignmentArea.assignSizeToAll();
+		}
+		assignSize();
+		redistributeHeight();
+	}	
+	
 
 	public void redistributeHeight() {
-  	// Calculate available and needed heights:
-  	int availableHeight = getToolkitComponent().getAvailableHeight();  // Height that can be distributed among the scroll panes.
-  	if (availableHeight > 0) {  // availableHeight 0 in the first call from SWT.
-	  	int maxNeededHeight = 0;  // Height needed for all areas to be fully visible.
-	  	int minNeededHeight = 0;  // Height needed only for the areas that do not allows scrolling to be fully visible.
-	  	for (int i = 0; i < getAlignmentAreas().size(); i++) {
-				int neededHeight = getToolkitComponent().getNeededHeight(i);
-				maxNeededHeight += neededHeight;
-				if (!getAlignmentAreas().get(i).isAllowVerticalScrolling()) {
-					minNeededHeight += neededHeight;
+		if (hasToolkitComponent()) {
+			// Calculate available and needed heights:
+			int availableHeight = getToolkitComponent().getAvailableHeight();  // Height that can be distributed among the scroll panes.
+			if (availableHeight > 0) {  // availableHeight 0 in the first call from SWT.
+			  	int maxNeededHeight = 0;  // Height needed for all areas to be fully visible.
+			  	int minNeededHeight = 0;  // Height needed only for the areas that do not allows scrolling to be fully visible.
+			  	for (int i = 0; i < getAlignmentAreas().size(); i++) {
+					int neededHeight = getToolkitComponent().getNeededHeight(i);
+					maxNeededHeight += neededHeight;
+					if (!getAlignmentAreas().get(i).isAllowVerticalScrolling()) {
+						minNeededHeight += neededHeight;
+					}
 				}
+			  	
+			  	// Calculate the visible fraction of the two types of areas:
+			  	boolean scrollAllComponents = (minNeededHeight > availableHeight);
+			  	float visibleFractionForNoScrolling;
+			  	float visibleFractionForScrolling;
+			  	if (maxNeededHeight <= availableHeight) {  // No area has to be scrolled.
+			  		visibleFractionForNoScrolling = 1.0f;
+			  		visibleFractionForScrolling = 1.0f;
+			  	}
+			  	else if (!scrollAllComponents) {  // Only the areas that allow scrolling have to be scrolled.
+			  		visibleFractionForNoScrolling = 1.0f;
+			  		visibleFractionForScrolling = (float)(availableHeight - minNeededHeight)  // remaining available height for areas that allow scrolling 
+			  				/ (float)(maxNeededHeight - minNeededHeight);  // needed height for areas that allow scrolling
+			  	}
+			  	else {  // All areas have to be scrolled.
+			  		visibleFractionForNoScrolling = (float)availableHeight / (float)maxNeededHeight;
+			  		visibleFractionForScrolling = visibleFractionForNoScrolling;
+			  	}
+			  	
+			  	// Set divider locations:
+			  	int usedHeight = 0;
+			  	int noOfScrollableComponents = 0;
+			  	int[] heights = new int[getAlignmentAreas().size()];
+			  	for (int i = 0; i < getAlignmentAreas().size(); i++) {
+			  		heights[i] = getToolkitComponent().getNeededHeight(i);
+			  		if (getAlignmentAreas().get(i).isAllowVerticalScrolling()) {
+			  			heights[i] = Math.round(heights[i] * visibleFractionForScrolling);
+			  			noOfScrollableComponents++;
+			  		}
+			  		else {
+			  			heights[i] = Math.round(heights[i] * visibleFractionForNoScrolling);
+			  		}
+			  			usedHeight += heights[i];
+					}
+			  	
+			  	// Distribute remaining height:
+			  	if (minNeededHeight > availableHeight) {  // All areas have to be scrolled.
+			  		noOfScrollableComponents = getAlignmentAreas().size();
+			  	}
+			  	availableHeight -= usedHeight; 
+			  	int lastIndex = heights.length - 1;
+			  	if (isDistributeRemainingSpace()) {
+				  	int availableHeightPerComponent = availableHeight / noOfScrollableComponents;
+				  	for (int i = 0; i < getAlignmentAreas().size(); i++) {
+				  		if (scrollAllComponents || getAlignmentAreas().get(i).isAllowVerticalScrolling()) {
+				  			heights[i] += availableHeightPerComponent;
+				  			availableHeight -= availableHeightPerComponent;
+				  			lastIndex = i;
+				  		}
+				  	}
+			  	}
+			  	heights[lastIndex] += availableHeight;  // Last area might get more space due to rounding issues even if isDistributeRemainingSpace() returned true.
+			  	
+			  	getToolkitComponent().setDividerLocations(heights);
 			}
-	  	//TODO subtract scroll bar height from availableHeight?
-	  	
-	  	// Calculate the visible fraction of the two types of areas:
-	  	boolean scrollAllComponents = (minNeededHeight > availableHeight);
-	  	float visibleFractionForNoScrolling;
-	  	float visibleFractionForScrolling;
-	  	if (maxNeededHeight <= availableHeight) {  // No area has to be scrolled.
-	  		visibleFractionForNoScrolling = 1.0f;
-	  		visibleFractionForScrolling = 1.0f;
-	  	}
-	  	else if (!scrollAllComponents) {  // Only the areas that allow scrolling have to be scrolled.
-	  		visibleFractionForNoScrolling = 1.0f;
-	  		visibleFractionForScrolling = (float)(availableHeight - minNeededHeight)  // remaining available height for areas that allow scrolling 
-	  				/ (float)(maxNeededHeight - minNeededHeight);  // needed height for areas that allow scrolling
-	  	}
-	  	else {  // All areas have to be scrolled.
-	  		visibleFractionForNoScrolling = (float)availableHeight / (float)maxNeededHeight;
-	  		visibleFractionForScrolling = visibleFractionForNoScrolling;
-	  	}
-	  	
-	  	// Set divider locations:
-	  	int usedHeight = 0;
-	  	int noOfScrollableComponents = 0;
-	  	int[] heights = new int[getAlignmentAreas().size()];
-	  	for (int i = 0; i < getAlignmentAreas().size(); i++) {
-	  		heights[i] = getToolkitComponent().getNeededHeight(i);
-	  		if (getAlignmentAreas().get(i).isAllowVerticalScrolling()) {
-	  			heights[i] = Math.round(heights[i] * visibleFractionForScrolling);
-	  			noOfScrollableComponents++;
-	  		}
-	  		else {
-	  			heights[i] = Math.round(heights[i] * visibleFractionForNoScrolling);
-	  		}
-	  		usedHeight += heights[i];
-			}
-	  	
-	  	// Distribute remaining height:
-	  	if (minNeededHeight > availableHeight) {  // All areas have to be scrolled.
-	  		noOfScrollableComponents = getAlignmentAreas().size();
-	  	}
-	  	availableHeight -= usedHeight; 
-	  	int lastIndex = heights.length - 1;
-	  	if (isDistributeRemainingSpace()) {
-		  	int availableHeightPerComponent = availableHeight / noOfScrollableComponents;
-		  	for (int i = 0; i < getAlignmentAreas().size(); i++) {
-		  		if (scrollAllComponents || getAlignmentAreas().get(i).isAllowVerticalScrolling()) {
-		  			heights[i] += availableHeightPerComponent;
-		  			availableHeight -= availableHeightPerComponent;
-		  			lastIndex = i;
-		  		}
-		  	}
-	  	}
-	  	heights[lastIndex] += availableHeight;  // Last area might get more space due to rounding issues even if isDistributeRemainingSpace() returned true.
-	  	
-	  	getToolkitComponent().setDividerLocations(heights);
-  	}
+		}
 	}
 }

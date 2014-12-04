@@ -21,6 +21,7 @@ package info.bioinfweb.libralign.alignmentarea;
 
 import java.awt.Dimension;
 import java.awt.Rectangle;
+import java.util.Iterator;
 
 import javax.swing.JComponent;
 
@@ -30,6 +31,7 @@ import org.eclipse.swt.widgets.Composite;
 import info.bioinfweb.commons.tic.TICComponent;
 import info.bioinfweb.commons.tic.TICPaintEvent;
 import info.bioinfweb.libralign.alignmentarea.content.AlignmentContentArea;
+import info.bioinfweb.libralign.alignmentarea.content.AlignmentSubArea;
 import info.bioinfweb.libralign.alignmentarea.label.AlignmentLabelArea;
 import info.bioinfweb.libralign.multiplealignments.MultipleAlignmentsContainer;
 
@@ -181,6 +183,25 @@ public class AlignmentArea extends TICComponent {
 				return new Dimension(point.x, point.y);
 			default:
 			  return new Dimension(0, 0);
+		}
+	}
+	
+	
+	/**
+	 * Calls the {@code assignSize()} method of the contained {@link AlignmentContentArea}, {@link AlignmentLabelArea},
+	 * their subcomponents and on this instance.
+	 */
+	public void assignSizeToAll() {
+		if (hasToolkitComponent() && getContentArea().hasToolkitComponent() && getLabelArea().hasToolkitComponent()) {
+			Iterator<AlignmentSubArea> iterator = getContentArea().getToolkitComponent().subAreaIterator();
+			while (iterator.hasNext()) {
+				AlignmentSubArea area = iterator.next();
+				area.assignSize();
+				area.getLabelSubArea().assignSize();
+			}
+			getContentArea().assignSize();
+			getLabelArea().assignSize();
+			assignSize();
 		}
 	}
 }

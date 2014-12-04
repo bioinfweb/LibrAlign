@@ -21,10 +21,10 @@ package info.bioinfweb.libralign.multiplealignments;
 
 import info.bioinfweb.commons.collections.observable.ObservableList;
 import info.bioinfweb.libralign.alignmentarea.AlignmentArea;
+import info.bioinfweb.libralign.alignmentarea.content.AlignmentContentArea;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
 
 
 
@@ -39,11 +39,13 @@ import java.util.List;
  */
 public class AlignmentAreaList extends ObservableList<AlignmentArea> {
 	private MultipleAlignmentsContainer owner;
+	private MultipleAlignmentListener multipleAlignmentListener;
 
 	
 	public AlignmentAreaList(MultipleAlignmentsContainer owner) {
 		super(new ArrayList<AlignmentArea>());
 		this.owner = owner;
+		multipleAlignmentListener = new MultipleAlignmentListener(owner);
 	}
 
 
@@ -75,34 +77,50 @@ public class AlignmentAreaList extends ObservableList<AlignmentArea> {
 	private void adoptToListChanges() {  //TODO Should this method better be in the owner?
 		if (getOwner().hasToolkitComponent()) {
 			getOwner().getToolkitComponent().adoptChildAreas();
-			getOwner().redistributeHeight();  //TODO Will this be to early for SWT or does layout() have to be called before?
 		}
+	}
+	
+	
+	private void addListenerToAlignmentArea(AlignmentArea alignmentArea) {
+		AlignmentContentArea contentArea = alignmentArea.getContentArea();
+		if (contentArea.hasSequenceProvider()) {
+			contentArea.getSequenceProvider().getChangeListeners().add(multipleAlignmentListener);
+		}
+		contentArea.getDataAreas().addListener(multipleAlignmentListener);
+	}
+
+	
+	private void removeListenerToAlignmentArea(AlignmentArea alignmentArea) {
+		AlignmentContentArea contentArea = alignmentArea.getContentArea();
+		if (contentArea.hasSequenceProvider()) {
+			contentArea.getSequenceProvider().getChangeListeners().remove(multipleAlignmentListener);
+		}
+		contentArea.getDataAreas().removeListener(multipleAlignmentListener);
 	}
 
 	
 	@Override
 	protected void afterAdd(int index, Collection<? extends AlignmentArea> addedElements) {
 		adoptToListChanges();
+		for (AlignmentArea alignmentArea : addedElements) {
+			addListenerToAlignmentArea(alignmentArea);
+		}
 	}
 
 
 	@Override
 	protected void afterRemove(Collection<? extends AlignmentArea> removedElements) {
 		adoptToListChanges();
+		for (AlignmentArea alignmentArea : removedElements) {
+			removeListenerToAlignmentArea(alignmentArea);
+		}
 	}
 
 
 	@Override
-	protected void afterReplace(int index, AlignmentArea previousElement,	AlignmentArea currentElement) {
+	protected void afterReplace(int index, AlignmentArea previousElement, AlignmentArea currentElement) {
+		removeListenerToAlignmentArea(previousElement);
 		adoptToListChanges();
-	}
-
-
-	public static void main(String[] args) {
-		MultipleAlignmentsContainer container = new MultipleAlignmentsContainer();
-		List<AlignmentArea> collection = new ArrayList<AlignmentArea>();
-		collection.add(new AlignmentArea(container));
-		collection.add(new AlignmentArea(container));
-		container.getAlignmentAreas().addAll(collection);
+		addListenerToAlignmentArea(currentElement);
 	}
 }

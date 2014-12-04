@@ -150,8 +150,7 @@ public class SWTAlignmentArea extends Composite implements ToolkitSpecificAlignm
 				});
 		
 		// Set correct size to recently created SWT components:
-		getIndependentComponent().getContentArea().assignSize();
-		getIndependentComponent().getLabelArea().assignSize();
+		getIndependentComponent().assignSizeToAll();
 	}
 
 
