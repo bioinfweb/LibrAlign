@@ -299,7 +299,7 @@ public class PherogramArea extends CustomHeightFullWidthArea implements Pherogra
 
 	@Override
 	public <T> void afterTokenChange(TokenChangeEvent<T> e) {
-		if (e.getSequenceID() == getList().getLocation().getSequenceID()) {
+		if (e.getSource().equals(getOwner().getSequenceProvider()) && e.getSequenceID() == getList().getLocation().getSequenceID()) {
 			switch (e.getType()) {
 				case INSERTION:
 					int addend = getOwner().getEditSettings().isInsertLeftInDataArea() ? -1 : 0;
