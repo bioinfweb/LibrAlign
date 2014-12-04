@@ -28,11 +28,16 @@ import java.util.Iterator;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Layout;
+import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.custom.SashForm;
 import org.eclipse.swt.custom.ScrolledComposite;
 import org.eclipse.swt.events.ControlAdapter;
 import org.eclipse.swt.events.ControlEvent;
+import org.eclipse.swt.events.ControlListener;
+import org.eclipse.swt.events.ShellEvent;
+import org.eclipse.swt.events.ShellListener;
 import org.eclipse.swt.layout.FillLayout;
 
 
@@ -154,6 +159,7 @@ public class SWTMultipleAlignmentsContainer extends Composite implements Toolkit
 
 	@Override
 	public int getAvailableHeight() {
+		getSashForm().getParent().layout();  // Otherwise the old height of the sashForm would be returned.
 		return getSashForm().getSize().y - 
 				((SWTAlignmentArea)getIndependentComponent().getAlignmentAreas().get(  // Subtract height reserved for horizontal scroll bar.
 						getIndependentComponent().getAlignmentAreas().size() - 1).getToolkitComponent()).getHorizontalScrollbarHeight();
