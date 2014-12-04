@@ -74,10 +74,8 @@ public class SWTAlignmentContentArea extends SWTAlignmentRowsArea implements Too
 			DataArea dataArea = iterator.next();
 			width = Math.max(width, dataArea.getLength());
 			if (dataArea.isVisible()) {
-				Composite composite = dataArea.createSWTWidget(this, SWT.NONE);
+				dataArea.createSWTWidget(this, SWT.NONE);
 				dataArea.assignSize();
-				Dimension2D size = dataArea.getSize();
-				composite.setLayoutData(new RowData((int)Math.round(size.getWidth()), (int)Math.round(size.getHeight())));
 			}
 		}
 	}

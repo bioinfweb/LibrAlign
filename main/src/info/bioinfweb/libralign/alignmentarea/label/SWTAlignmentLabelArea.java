@@ -86,9 +86,8 @@ public class SWTAlignmentLabelArea extends SWTAlignmentRowsArea implements Toolk
 					getIndependentComponent().getOwner().getContentArea().getToolkitComponent().subAreaIterator();
 			while (iterator.hasNext()) {
 				AlignmentLabelSubArea subArea = iterator.next().getLabelSubArea(); 
-				Composite composite = subArea.createSWTWidget(this, SWT.NONE);
+				subArea.createSWTWidget(this, SWT.NONE);
 				subArea.assignSize();
-				composite.setLayoutData(new RowData(composite.getSize()));  // Otherwise Control.setSize() of the parent which is called in TICComponent.assignSize() will overwrite the size set here.  //TODO How can that be done in a more general way?
 			}
 			layout(); // Needed to reposition elements if this methods is called again after the construction of the instance (e.g. when a new sequence was added).
 		}

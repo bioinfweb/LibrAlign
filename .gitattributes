@@ -20,6 +20,7 @@ main/src/info/bioinfweb/libralign/AlignmentDataViewMode.java -text svneol=unset#
 main/src/info/bioinfweb/libralign/GeneticCode.java -text svneol=unset#text/plain
 main/src/info/bioinfweb/libralign/actions/AlignmentActionProvider.java -text svneol=unset#text/plain
 main/src/info/bioinfweb/libralign/alignmentarea/AlignmentArea.java -text svneol=unset#text/plain
+main/src/info/bioinfweb/libralign/alignmentarea/RowLayoutTICComponent.java -text svneol=unset#text/plain
 main/src/info/bioinfweb/libralign/alignmentarea/SWTAlignmentArea.java -text svneol=unset#text/plain
 main/src/info/bioinfweb/libralign/alignmentarea/SWTScrolledCompositeResizeListener.java -text svneol=unset#text/plain
 main/src/info/bioinfweb/libralign/alignmentarea/SwingAlignmentArea.java -text svneol=unset#text/plain

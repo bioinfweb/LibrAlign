@@ -19,7 +19,7 @@
 package info.bioinfweb.libralign.alignmentarea.content;
 
 
-import info.bioinfweb.commons.tic.TICComponent;
+import info.bioinfweb.libralign.alignmentarea.RowLayoutTICComponent;
 import info.bioinfweb.libralign.alignmentarea.label.AlignmentLabelArea;
 import info.bioinfweb.libralign.alignmentarea.label.AlignmentLabelSubArea;
 import info.bioinfweb.libralign.alignmentarea.label.DefaultLabelSubArea;
@@ -32,7 +32,7 @@ import info.bioinfweb.libralign.alignmentarea.label.DefaultLabelSubArea;
  * @author Ben St&ouml;ver
  * @since 0.0.0
  */
-public abstract class AlignmentSubArea extends TICComponent {
+public abstract class AlignmentSubArea extends RowLayoutTICComponent {
 	private AlignmentLabelSubArea labelSubArea = null;
 	private AlignmentContentArea owner = null;
 
