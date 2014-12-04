@@ -73,6 +73,7 @@ public class SWTMultipleAlignmentsContainer extends Composite implements Toolkit
 				});
 		
 		adoptChildAreas();
+		getIndependentComponent().assignSizeToAll();  // Make sure all components adopt higher widths of other components below. (Previous insertion events did not trigger any updated as long as no toolkit component was present.)
 
 		// Synchronize horizontal scrolling:
 		ScrolledCompositeSyncListener horizontalSyncListener = 

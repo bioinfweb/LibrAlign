@@ -532,7 +532,7 @@ public class AlignmentContentArea extends TICComponent implements SequenceDataCh
 	@Override
 	public <T> void afterSequenceRenamed(SequenceRenamedEvent<T> e) {
 		//TODO Anything else to do?
-		getOwner().getLabelArea().assignSize();
+		getOwner().assignSizeToAll();  // Other label areas might also have to adopt their width.
 		getDataAreas().getSequenceDataChangeListener().afterSequenceRenamed(e);
 	}
 
