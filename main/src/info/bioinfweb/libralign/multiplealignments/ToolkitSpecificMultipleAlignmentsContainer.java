@@ -20,9 +20,6 @@ package info.bioinfweb.libralign.multiplealignments;
 
 
 import info.bioinfweb.commons.tic.toolkit.ToolkitComponent;
-import info.bioinfweb.libralign.alignmentarea.SWTAlignmentArea;
-import info.bioinfweb.libralign.alignmentarea.SwingAlignmentArea;
-import info.bioinfweb.libralign.alignmentarea.ToolkitSpecificAlignmentArea;
 
 
 
