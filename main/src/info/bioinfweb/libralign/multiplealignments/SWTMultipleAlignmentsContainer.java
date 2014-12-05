@@ -176,25 +176,7 @@ public class SWTMultipleAlignmentsContainer extends Composite implements Toolkit
 		heights[index] += ((SWTAlignmentArea)getIndependentComponent().getAlignmentAreas().get(index).getToolkitComponent()).
 				getHorizontalScrollbarHeight();
 		
-  	System.out.println("Processed heights (including scroll bar height) in SWTMultipleSequenceAlignmentContainer.setDividerLocations(): ");
-  	for (int height : heights) {
-			System.out.print(height + " ");
-		}
-  	System.out.println();
-
   	getSashForm().setWeights(heights);
-		
-  	System.out.println("getSashForm().getWeights() after setting in SWTMultipleSequenceAlignmentContainer.setDividerLocations(): ");
-  	for (int height : getSashForm().getWeights()) {
-			System.out.print(height + " ");
-		}
-  	System.out.println();
-  	
-  	System.out.println("Ratio (weight / height): ");
-  	for (int i = 0; i < heights.length; i++) {
-			System.out.print((getSashForm().getWeights()[i] / (float)heights[i]) + " ");
-		}
-  	System.out.println();
 	}
 
 
