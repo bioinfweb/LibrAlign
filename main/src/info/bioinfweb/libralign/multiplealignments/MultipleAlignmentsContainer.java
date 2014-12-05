@@ -26,6 +26,7 @@ import javax.swing.JComponent;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.Composite;
 
+import info.bioinfweb.commons.Math2;
 import info.bioinfweb.commons.tic.TICComponent;
 import info.bioinfweb.commons.tic.TICPaintEvent;
 import info.bioinfweb.libralign.alignmentarea.AlignmentArea;
@@ -196,11 +197,11 @@ public class MultipleAlignmentsContainer extends TICComponent {
 			  	for (int i = 0; i < getAlignmentAreas().size(); i++) {
 			  		heights[i] = getToolkitComponent().getNeededHeight(i);
 			  		if (getAlignmentAreas().get(i).isAllowVerticalScrolling()) {
-			  			heights[i] = Math.round(heights[i] * visibleFractionForScrolling);
+			  			heights[i] = Math2.roundUp(heights[i] * visibleFractionForScrolling);
 			  			noOfScrollableComponents++;
 			  		}
 			  		else {
-			  			heights[i] = Math.round(heights[i] * visibleFractionForNoScrolling);
+			  			heights[i] = Math2.roundUp(heights[i] * visibleFractionForNoScrolling);
 			  		}
 			  			usedHeight += heights[i];
 					}

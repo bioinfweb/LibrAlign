@@ -25,6 +25,7 @@ import java.awt.Rectangle;
 import info.bioinfweb.commons.swt.ScrolledCompositeSyncListener;
 import info.bioinfweb.libralign.alignmentarea.content.SWTAlignmentContentArea;
 import info.bioinfweb.libralign.alignmentarea.label.AlignmentLabelArea;
+import info.bioinfweb.libralign.alignmentarea.label.SWTAlignmentLabelArea;
 import info.bioinfweb.libralign.multiplealignments.SWTMultipleAlignmentsContainer;
 
 import org.eclipse.swt.SWT;
@@ -101,8 +102,9 @@ public class SWTAlignmentArea extends Composite implements ToolkitSpecificAlignm
 		labelContainer.setLayoutData(createGridData(false));
 		labelScroller = new ScrolledComposite(labelContainer,	SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL);
 		labelScroller.setAlwaysShowScrollBars(true);
-		AlignmentLabelArea labelArea = getIndependentComponent().getLabelArea();
-		labelScroller.setContent(labelArea.createSWTWidget(labelScroller, SWT.NONE));  // Will not create any subelements of labelArea because the content area has not yet been created.
+		SWTAlignmentLabelArea labelArea =  // Will not create any subelements of labelArea because the content area has not yet been created.
+				(SWTAlignmentLabelArea)getIndependentComponent().getLabelArea().createSWTWidget(labelScroller, SWT.NONE);
+		labelScroller.setContent(labelArea);
 		labelResizeListener = new SWTScrolledCompositeResizeListener(labelContainer, labelScroller, true, 
 				hideHorizontalScrollBar);
 		labelContainer.addControlListener(labelResizeListener);  // Must not be called before both fields are initialized.
@@ -120,7 +122,7 @@ public class SWTAlignmentArea extends Composite implements ToolkitSpecificAlignm
 		contentContainer.addControlListener(contentResizeListener);  // Must not be called before both fields are initialized.
 		
 		// Update label area:
-		labelArea.getToolkitComponent().reinsertSubelements();
+		labelArea.reinsertSubelements();
 		
 		// Synchronize vertical scrolling:
 		ScrolledCompositeSyncListener verticalSyncListener = new ScrolledCompositeSyncListener(
@@ -131,12 +133,12 @@ public class SWTAlignmentArea extends Composite implements ToolkitSpecificAlignm
 		contentArea.addControlListener(new ControlAdapter() {
 					@Override
 					public void controlResized(ControlEvent e) {
-						getIndependentComponent().getLabelArea().assignSize();  //TODO reinsertSubelements()?
+						getIndependentComponent().getLabelArea().assignSize();
 					}
 				});
 		
 		// Ensure correct width of label components:
-		((Composite)labelArea.getToolkitComponent()).addControlListener(new ControlAdapter() {
+		labelArea.addControlListener(new ControlAdapter() {
 					@Override
 					public void controlResized(ControlEvent e) {
 						Dimension size = getIndependentComponent().getLabelArea().getSize();
