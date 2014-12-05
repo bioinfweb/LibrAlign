@@ -164,13 +164,16 @@ public class MultipleAlignmentsContainer extends TICComponent {
 			if (availableHeight > 0) {  // availableHeight 0 in the first call from SWT.
 			  	int maxNeededHeight = 0;  // Height needed for all areas to be fully visible.
 			  	int minNeededHeight = 0;  // Height needed only for the areas that do not allows scrolling to be fully visible.
+			  	System.out.println("NeededHeights in MultipleSequenceAlignmentContainer.redistributeHeight(): ");
 			  	for (int i = 0; i < getAlignmentAreas().size(); i++) {
-					int neededHeight = getToolkitComponent().getNeededHeight(i);
-					maxNeededHeight += neededHeight;
-					if (!getAlignmentAreas().get(i).isAllowVerticalScrolling()) {
-						minNeededHeight += neededHeight;
+						int neededHeight = getToolkitComponent().getNeededHeight(i);
+						System.out.print(neededHeight + " ");
+						maxNeededHeight += neededHeight;
+						if (!getAlignmentAreas().get(i).isAllowVerticalScrolling()) {
+							minNeededHeight += neededHeight;
+						}
 					}
-				}
+			  	System.out.println();
 			  	
 			  	// Calculate the visible fraction of the two types of areas:
 			  	boolean scrollAllComponents = (minNeededHeight > availableHeight);
@@ -224,6 +227,11 @@ public class MultipleAlignmentsContainer extends TICComponent {
 			  	}
 			  	heights[lastIndex] += availableHeight;  // Last area might get more space due to rounding issues even if isDistributeRemainingSpace() returned true.
 			  	
+			  	System.out.println("Processed heights in MultipleSequenceAlignmentContainer.redistributeHeight(): ");
+			  	for (int height : heights) {
+						System.out.print(height + " ");
+					}
+			  	System.out.println();
 			  	getToolkitComponent().setDividerLocations(heights);
 			}
 		}
