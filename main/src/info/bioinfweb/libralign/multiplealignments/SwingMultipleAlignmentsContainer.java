@@ -44,6 +44,9 @@ import javax.swing.JSplitPane;
  * @since 0.1.0
  */
 public class SwingMultipleAlignmentsContainer extends JComponent implements ToolkitSpecificMultipleAlignmentsContainer {
+	public static final int NEEDED_BORDER_WIDTH = 1;
+	
+	
 	private final AdjustmentListener SCROLL_SYNC_LISTENER = new AdjustmentListener() {
 				@Override
 				public void adjustmentValueChanged(AdjustmentEvent e) {
@@ -211,7 +214,8 @@ public class SwingMultipleAlignmentsContainer extends JComponent implements Tool
 
 	@Override
 	public int getNeededHeight(int alignmentIndex) {
-		return getIndependentComponent().getAlignmentAreas().get(alignmentIndex).getContentArea().getSize().height;
+		return getIndependentComponent().getAlignmentAreas().get(alignmentIndex).getContentArea().getSize().height +
+				NEEDED_BORDER_WIDTH;
 	}
 
 
