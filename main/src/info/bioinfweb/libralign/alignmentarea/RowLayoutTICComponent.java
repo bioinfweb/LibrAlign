@@ -33,7 +33,7 @@ import info.bioinfweb.commons.tic.TICComponent;
  * {@link RowData} with the according width and height information. 
  * 
  * @author Ben St&ouml;ver
- * @since 0.4.0
+ * @since 0.3.0
  */
 public abstract class RowLayoutTICComponent extends TICComponent {
 	public RowLayoutTICComponent() {

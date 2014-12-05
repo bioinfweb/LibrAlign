@@ -36,7 +36,7 @@ import info.bioinfweb.libralign.sequenceprovider.events.TokenChangeEvent;
  * all other alignment areas in that container.
  * 
  * @author Ben St&ouml;ver
- * @since 0.4.0
+ * @since 0.3.0
  */
 public class MultipleAlignmentListener implements SequenceDataChangeListener, DataAreaModelListener {
 	private MultipleAlignmentsContainer owner;
