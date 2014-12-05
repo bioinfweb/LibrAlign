@@ -147,13 +147,6 @@ public class SWTMultipleAlignmentsContainer extends Composite implements Toolkit
 
 	
 	@Override
-	public ToolkitSpecificAlignmentArea getPartArea(int alignmentIndex) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-
-	@Override
 	public int getAvailableHeight() {
 		getSashForm().getParent().layout();  // Otherwise the old height of the sashForm would be returned.
 		return getSashForm().getSize().y - 

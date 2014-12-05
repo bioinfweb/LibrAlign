@@ -34,15 +34,6 @@ import info.bioinfweb.libralign.alignmentarea.ToolkitSpecificAlignmentArea;
  */
 public interface ToolkitSpecificMultipleAlignmentsContainer extends ToolkitComponent {
 	/**
-	 * Returns the contained toolkit specific component displaying the part of the alignment area
-	 * at the specified position.
-	 * 
-   * @param alignmentIndex - the index of the alignment in this component
-	 * @return an instance of {@link SwingAlignmentArea} or {@link SWTAlignmentArea}
-	 */
-	public ToolkitSpecificAlignmentArea getPartArea(int alignmentIndex);
-	
-	/**
 	 * This method is used internally by {@link MultipleAlignmentsContainer} of the order or set of contained
 	 * alignment areas changes and these changes shall be reflected by the underlying GUI component.
 	 */

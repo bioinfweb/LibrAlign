@@ -22,7 +22,6 @@ package info.bioinfweb.libralign.alignmentarea;
 import java.awt.Rectangle;
 
 import info.bioinfweb.commons.tic.toolkit.ToolkitComponent;
-import info.bioinfweb.libralign.dataarea.DataAreaList;
 import info.bioinfweb.libralign.multiplealignments.MultipleAlignmentsContainer;
 
 
@@ -34,8 +33,6 @@ import info.bioinfweb.libralign.multiplealignments.MultipleAlignmentsContainer;
  * @since 0.2.0
  */
 public interface ToolkitSpecificAlignmentArea extends ToolkitComponent {
-	public int getHeight();
-	
   /**
    * Scrolls the contained components so that the specified rectangle is visible.
    *  

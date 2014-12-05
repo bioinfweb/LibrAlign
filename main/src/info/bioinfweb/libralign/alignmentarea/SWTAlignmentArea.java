@@ -176,12 +176,6 @@ public class SWTAlignmentArea extends Composite implements ToolkitSpecificAlignm
 	}
 
 
-	@Override
-	public int getHeight() {
-		return getSize().y;
-	}
-
-
 	public boolean isHideHorizontalScrollBar() {
 		return contentResizeListener.isHideHorizontalBar();
 	}

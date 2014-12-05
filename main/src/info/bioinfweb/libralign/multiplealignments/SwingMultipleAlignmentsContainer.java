@@ -178,30 +178,6 @@ public class SwingMultipleAlignmentsContainer extends JComponent implements Tool
 	}
 
 
-//	@Override
-//	@Transient
-//	public Dimension getMinimumSize() {
-//		if ((contentLabelArea != null) && (contentScrollPane != null) && (bottomScrollPane != null)) {
-//			Dimension result = new Dimension(contentLabelArea.getSize().width + MIN_PART_AREA_WIDTH + 
-//					contentScrollPane.getVerticalScrollBar().getWidth(), 
-//					3 * MIN_PART_AREA_HEIGHT + bottomScrollPane.getHorizontalScrollBar().getHeight());  //TODO Add border widths
-//			System.out.println("calculating value " + result + " " + getPreferredSize() + " " + getSize());
-//			return result;
-//		}
-//		else {
-//			System.out.println("returning default value");
-//			return super.getMinimumSize();
-//		}
-//	}
-
-
-	@Override
-	public ToolkitSpecificAlignmentArea getPartArea(int alignmentIndex) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-
   @Override
 	public int getAvailableHeight() {
   	int result = 0;
