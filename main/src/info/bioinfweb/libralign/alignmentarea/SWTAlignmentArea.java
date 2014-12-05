@@ -32,6 +32,7 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.ScrolledComposite;
 import org.eclipse.swt.events.ControlAdapter;
 import org.eclipse.swt.events.ControlEvent;
+import org.eclipse.swt.events.ControlListener;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
@@ -50,8 +51,8 @@ import org.eclipse.swt.widgets.Composite;
 public class SWTAlignmentArea extends Composite implements ToolkitSpecificAlignmentArea {
 	private AlignmentArea owner;
 	
-	private Composite labelContainer;
-	private ScrolledComposite labelScroller;
+	public Composite labelContainer;  //TODO set private again
+	public ScrolledComposite labelScroller;  //TODO set private again
 	private SWTScrolledCompositeResizeListener labelResizeListener;
 	private Composite contentContainer;
 	private ScrolledComposite contentScroller;
@@ -138,7 +139,7 @@ public class SWTAlignmentArea extends Composite implements ToolkitSpecificAlignm
 				});
 		
 		// Ensure correct width of label components:
-		labelArea.addControlListener(new ControlAdapter() {
+		ControlListener labelAreaResizeListener = new ControlAdapter() {
 					@Override
 					public void controlResized(ControlEvent e) {
 						Dimension size = getIndependentComponent().getLabelArea().getSize();
@@ -149,7 +150,9 @@ public class SWTAlignmentArea extends Composite implements ToolkitSpecificAlignm
 						labelContainer.setLayoutData(data);
 						labelContainer.setSize(data.widthHint, data.heightHint);
 					}
-				});
+				};
+		labelArea.addControlListener(labelAreaResizeListener);
+		labelAreaResizeListener.controlResized(null);  // Apply initial size to container.
 		
 		// Set correct size to recently created SWT components:
 		getIndependentComponent().assignSizeToAll();

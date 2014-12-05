@@ -19,18 +19,16 @@
 package info.bioinfweb.libralign.alignmentarea.label;
 
 
-import java.awt.Dimension;
 import java.util.Iterator;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ControlAdapter;
 import org.eclipse.swt.events.ControlEvent;
-import org.eclipse.swt.events.ControlListener;
-import org.eclipse.swt.layout.RowData;
 import org.eclipse.swt.widgets.Composite;
 
 import info.bioinfweb.commons.tic.input.TICMouseAdapter;
 import info.bioinfweb.commons.tic.input.TICMouseEvent;
+import info.bioinfweb.libralign.alignmentarea.SWTAlignmentArea;
 import info.bioinfweb.libralign.alignmentarea.content.AlignmentSubArea;
 import info.bioinfweb.libralign.alignmentarea.content.SWTAlignmentContentArea;
 import info.bioinfweb.libralign.alignmentarea.rowsarea.SWTAlignmentRowsArea;
@@ -85,10 +83,11 @@ public class SWTAlignmentLabelArea extends SWTAlignmentRowsArea implements Toolk
 			Iterator<AlignmentSubArea> iterator = 
 					getIndependentComponent().getOwner().getContentArea().getToolkitComponent().subAreaIterator();
 			while (iterator.hasNext()) {
-				AlignmentLabelSubArea subArea = iterator.next().getLabelSubArea(); 
+				final AlignmentLabelSubArea subArea = iterator.next().getLabelSubArea(); 
 				subArea.createSWTWidget(this, SWT.NONE);
 				subArea.assignSize();
 			}
+			getIndependentComponent().assignSize(); 
 			layout(); // Needed to reposition elements if this methods is called again after the construction of the instance (e.g. when a new sequence was added).
 		}
 	}
