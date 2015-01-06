@@ -112,11 +112,11 @@ public class AbstractApplication {
 			area.getContentArea().getDataAreas().getTopAreas().add(new SequenceIndexArea(area.getContentArea()));
 			result.getAlignmentAreas().add(area);
 			
-			// Char sets:    //TODO CharSetArea now needs a sequenceProvider parameter, because in could be in another alignment.
-//			area = new AlignmentArea(result);
-//			area.setAllowVerticalScrolling(true);
-//			area.getContentArea().getDataAreas().getTopAreas().add(createCharSetArea(area.getContentArea()));
-//			result.add(area);
+			// Char sets:
+			area = new AlignmentArea(result);
+			area.setAllowVerticalScrolling(true);
+			area.getContentArea().getDataAreas().getTopAreas().add(createCharSetArea(area.getContentArea()));
+			result.getAlignmentAreas().add(area);
       
 			// Alignment with pherograms:
 			area = new AlignmentArea(result);
