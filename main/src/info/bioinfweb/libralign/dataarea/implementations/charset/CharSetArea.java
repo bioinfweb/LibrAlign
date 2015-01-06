@@ -29,6 +29,8 @@ import java.util.Set;
 
 import info.bioinfweb.commons.tic.TICPaintEvent;
 import info.bioinfweb.libralign.alignmentarea.content.AlignmentContentArea;
+import info.bioinfweb.libralign.alignmentarea.label.AlignmentLabelArea;
+import info.bioinfweb.libralign.alignmentarea.label.AlignmentLabelSubArea;
 import info.bioinfweb.libralign.dataarea.DataArea;
 import info.bioinfweb.libralign.dataarea.DataAreaListType;
 import info.bioinfweb.libralign.sequenceprovider.SequenceDataProvider;
@@ -76,7 +78,7 @@ public class CharSetArea extends DataArea {
 
 	@Override
 	public int getLength() {
-		return getOwner().getCompoundWidth() * getOwner().getSequenceProvider().getMaxSequenceLength();
+		return getOwner().getCompoundWidth() * getOwner().getGlobalMaxSequenceLength();  //getSequenceProvider().getMaxSequenceLength();
 	}
 
 	
@@ -96,7 +98,7 @@ public class CharSetArea extends DataArea {
 		// Determine area to be painted:
 		int firstIndex = Math.max(0, getOwner().columnByPaintX((int)event.getRectangle().getMinX()));
 		int lastIndex = getOwner().columnByPaintX((int)event.getRectangle().getMaxX());
-		int lastColumn = getOwner().getSequenceProvider().getMaxSequenceLength() - 1;
+		int lastColumn = getOwner().getGlobalMaxSequenceLength() - 1;  //getSequenceProvider().getMaxSequenceLength() - 1;
 		if ((lastIndex == -1) || (lastIndex > lastColumn)) {
 			lastIndex = lastColumn;
 		}
@@ -159,5 +161,11 @@ public class CharSetArea extends DataArea {
 			SequenceDataProvider<U> current) {
 		// TODO Auto-generated method stub
 		
+	}
+
+
+	@Override
+	protected AlignmentLabelSubArea createLabelSubArea(AlignmentLabelArea owner) {
+		return new CharSetNameArea(owner, this);
 	}
 }

@@ -44,6 +44,7 @@ main/src/info/bioinfweb/libralign/alignmentarea/label/DefaultLabelSubArea.java -
 main/src/info/bioinfweb/libralign/alignmentarea/label/SWTAlignmentLabelArea.java -text svneol=unset#text/plain
 main/src/info/bioinfweb/libralign/alignmentarea/label/SequenceLabelArea.java -text svneol=unset#text/plain
 main/src/info/bioinfweb/libralign/alignmentarea/label/SwingAlignmentLabelArea.java -text svneol=unset#text/plain
+main/src/info/bioinfweb/libralign/alignmentarea/label/TextLabelArea.java -text svneol=unset#text/plain
 main/src/info/bioinfweb/libralign/alignmentarea/label/ToolkitSpecificAlignmentLabelArea.java -text svneol=unset#text/plain
 main/src/info/bioinfweb/libralign/alignmentarea/label/package-info.java -text svneol=unset#text/plain
 main/src/info/bioinfweb/libralign/alignmentarea/order/SequenceOrder.java -text svneol=unset#text/plain

@@ -19,16 +19,11 @@
 package info.bioinfweb.libralign.alignmentarea.label;
 
 
-import java.awt.FontMetrics;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
-import java.awt.SystemColor;
 import java.awt.geom.Line2D;
 
-import info.bioinfweb.commons.Math2;
-import info.bioinfweb.commons.graphics.FontCalculator;
 import info.bioinfweb.commons.tic.TICPaintEvent;
-import info.bioinfweb.libralign.alignmentarea.content.AlignmentContentArea;
 import info.bioinfweb.libralign.alignmentarea.content.AlignmentSubArea;
 import info.bioinfweb.libralign.alignmentarea.content.SequenceArea;
 
@@ -40,9 +35,15 @@ import info.bioinfweb.libralign.alignmentarea.content.SequenceArea;
  * @author Ben St&ouml;ver
  * @since 0.3.0
  */
-public class SequenceLabelArea extends AlignmentLabelSubArea {
-	public SequenceLabelArea(AlignmentLabelArea owner, AlignmentSubArea labeledSubArea) {
+public class SequenceLabelArea extends TextLabelArea {
+	public SequenceLabelArea(AlignmentLabelArea owner, SequenceArea labeledSubArea) {
 		super(owner, labeledSubArea);
+	}
+
+
+	@Override
+	protected String getText() {
+		return getOwner().getOwner().getContentArea().getSequenceProvider().sequenceNameByID(getLabeledArea().getSeqenceID());
 	}
 
 
@@ -54,32 +55,13 @@ public class SequenceLabelArea extends AlignmentLabelSubArea {
 
 	@Override
 	public void paint(TICPaintEvent e) {
-		Graphics2D g  = e.getGraphics();
-		g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+		super.paint(e);
 
-  		// Paint background:
-		g.setColor(SystemColor.menu);
-		g.fill(e.getRectangle());
-		
-		g.setColor(SystemColor.menuText);
-		AlignmentContentArea contentArea = getOwner().getOwner().getContentArea(); 
-		g.setFont(contentArea.getCompoundFont());
-		FontMetrics fm = g.getFontMetrics();
-		
-		// Paint name:
+		// Paint separator:
 		if (getLabeledArea().getOwner().getSequenceOrder().indexByID(getLabeledArea().getSeqenceID()) > 0) {
+			Graphics2D g  = e.getGraphics();
+			g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 			g.draw(new Line2D.Float(0, 0, getSize().width, 0));  // Draw line only if there is another label above.
 		}
-		g.drawString(contentArea.getSequenceProvider().sequenceNameByID(getLabeledArea().getSeqenceID()), 
-				AlignmentLabelArea.BORDER_WIDTH, fm.getAscent());
-	}
-
-
-	@Override
-	public int getNeededWidth() {
-		AlignmentContentArea contentArea = getOwner().getOwner().getContentArea(); 
-		return Math2.roundUp(FontCalculator.getInstance().getWidth(contentArea.getCompoundFont(), 
-				contentArea.getSequenceProvider().sequenceNameByID(getLabeledArea().getSeqenceID()))) + 
-				2 * AlignmentLabelArea.BORDER_WIDTH;
 	}
 }

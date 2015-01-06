@@ -19,6 +19,21 @@
 package info.bioinfweb.libralign.dataarea.implementations.charset;
 
 
+import java.awt.Font;
+import java.awt.FontMetrics;
+import java.awt.Graphics2D;
+import java.awt.RenderingHints;
+import java.awt.SystemColor;
+import java.util.Iterator;
+
+import info.bioinfweb.commons.Math2;
+import info.bioinfweb.commons.graphics.FontCalculator;
+import info.bioinfweb.commons.tic.TICPaintEvent;
+import info.bioinfweb.libralign.alignmentarea.content.AlignmentContentArea;
+import info.bioinfweb.libralign.alignmentarea.label.AlignmentLabelArea;
+import info.bioinfweb.libralign.alignmentarea.label.AlignmentLabelSubArea;
+
+
 
 /**
  * GUI component used to display the name labels of character sets displayed by {@link CharSetArea}.
@@ -26,6 +41,51 @@ package info.bioinfweb.libralign.dataarea.implementations.charset;
  * @author Ben St&ouml;ver
  * @since 0.2.0
  */
-public class CharSetNameArea {  //TODO Soll dies eine separate Komponente sein? Falls ja, sollte es ein Interface für Beschriftungskomponenten der DataAreas geben?
+public class CharSetNameArea extends AlignmentLabelSubArea {
+	public CharSetNameArea(AlignmentLabelArea owner, CharSetArea labeledSubArea) {
+		super(owner, labeledSubArea);
+	}
+
 	
+	@Override
+	public CharSetArea getLabeledArea() {
+		return (CharSetArea)super.getLabeledArea();
+	}
+
+
+	@Override
+	public void paint(TICPaintEvent e) {
+		Graphics2D g  = e.getGraphics();
+		g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+
+  		// Paint background:
+		g.setColor(SystemColor.menu);
+		g.fill(e.getRectangle());
+		
+		g.setColor(SystemColor.menuText);
+		AlignmentContentArea contentArea = getOwner().getOwner().getContentArea(); 
+		g.setFont(contentArea.getCompoundFont());
+		FontMetrics fm = g.getFontMetrics();
+		
+		// Paint names:
+		Iterator<CharSet> iterator = getLabeledArea().getModel().iterator();
+		int y = 0;
+		final int compoundHeight = getOwner().getOwner().getContentArea().getCompoundHeight();
+		while (iterator.hasNext()) {
+			g.drawString(iterator.next().getName(), AlignmentLabelArea.BORDER_WIDTH, y + fm.getAscent());			
+			y += compoundHeight;
+		}
+	}
+
+
+	@Override
+	public int getNeededWidth() {
+		Font compundFont = getOwner().getOwner().getContentArea().getCompoundFont();
+		Iterator<CharSet> iterator = getLabeledArea().getModel().iterator();
+		float maxWidth = 0;
+		while (iterator.hasNext()) {
+			maxWidth = Math.max(maxWidth, FontCalculator.getInstance().getWidth(compundFont, iterator.next().getName()));
+		}
+		return Math2.roundUp(maxWidth) + 2 * AlignmentLabelArea.BORDER_WIDTH;
+	}
 }
