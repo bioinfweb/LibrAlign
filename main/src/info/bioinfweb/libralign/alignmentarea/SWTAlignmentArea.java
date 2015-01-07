@@ -50,8 +50,8 @@ import org.eclipse.swt.widgets.Composite;
 public class SWTAlignmentArea extends Composite implements ToolkitSpecificAlignmentArea {
 	private AlignmentArea owner;
 	
-	public Composite labelContainer;  //TODO set private again
-	public ScrolledComposite labelScroller;  //TODO set private again
+	private Composite labelContainer;
+	private ScrolledComposite labelScroller;
 	private SWTScrolledCompositeResizeListener labelResizeListener;
 	private Composite contentContainer;
 	private ScrolledComposite contentScroller;
