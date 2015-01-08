@@ -100,4 +100,11 @@ public class AlignmentCursor {
 		this.row = row;
 		this.height = height;
 	}
+	
+	
+	public void adoptFromOther(AlignmentCursor other) {
+	  column = other.column;
+	  row = other.row;
+	  height = other.height;
+	}
 }

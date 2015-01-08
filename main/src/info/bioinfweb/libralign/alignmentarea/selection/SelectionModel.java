@@ -185,6 +185,24 @@ public class SelectionModel {
 	}
 	
 	
+	/**
+	 * Adopts the selection from another instance.
+	 * 
+	 * @param otherModel - another selection model instance
+	 */
+	public void adoptFromOther(SelectionModel otherModel) {
+		columnSelection.adoptFromOther(otherModel.columnSelection);
+		rowSelection.adoptFromOther(otherModel.rowSelection);
+		cursor.adoptFromOther(otherModel.cursor);
+
+		cursorOnly = otherModel.cursorOnly;
+	  cursorStartRow = otherModel.cursorStartRow;
+	  cursorStartColumn = otherModel.cursorStartColumn;
+	  
+	  fireSelectionChanged();
+	}
+	
+	
 	private int bringCursorColumnInRange(int column) {
 		 return Math.max(0, Math.min(column, getOwner().getSequenceProvider().getMaxSequenceLength()));
 	}

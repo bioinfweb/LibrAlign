@@ -203,6 +203,13 @@ public class OneDimensionalSelection {
 	}
 	
 	
+	public void adoptFromOther(OneDimensionalSelection other) {
+		firstPos = other.firstPos;
+		lastPos = other.lastPos;
+		startPos = other.startPos;
+	}
+	
+	
 	/**
 	 * Checks if the specified column (or row) is included in this selection.
 	 * 
