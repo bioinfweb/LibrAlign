@@ -24,6 +24,7 @@ import java.util.Iterator;
 import java.util.Map;
 
 import org.biojava3.alignment.template.Profile;
+import org.biojava3.core.sequence.DNASequence;
 import org.biojava3.core.sequence.template.AbstractSequence;
 import org.biojava3.core.sequence.template.Compound;
 import org.biojava3.core.sequence.template.Sequence;
@@ -212,7 +213,7 @@ public class BioJavaSequenceDataProvider<S extends Sequence<C>, C extends Compou
 
 	@Override
 	public SequenceDataProviderWriteType getWriteType() {
-		return SequenceDataProviderWriteType.NONE;
+		return SequenceDataProviderWriteType.SEQUENCES_ONLY;
 	}
 
 
@@ -239,13 +240,20 @@ public class BioJavaSequenceDataProvider<S extends Sequence<C>, C extends Compou
 
 
 	@Override
-	protected void doAddSequence(int sequenceID, String sequenceName) {}  //TODO Implement when a way of creating new sequences independent of their type is known.
+	protected void doAddSequence(int sequenceID, String sequenceName) {
+		alignment.add(sequenceName, (S)new DNASequence());  // null cannot be added here, because SimpleAlignment.replace() does not work than. 
+		//TODO In later versions an empty instance should be created with a BioJava factory here. The current code is only a temporary solution.
+	}
 
 
 	@Override
-	protected void doRemoveSequence(int sequenceID) {}  //TODO Implement when a way of creating new sequences independent of their type is known.
+	protected void doRemoveSequence(int sequenceID) {
+		alignment.remove(sequenceNameByID(sequenceID));
+	}
 
 
 	@Override
-	protected void doRenameSequence(int sequenceID, String newSequenceName) {}  //TODO Implement when a way of creating new sequences independent of their type is known.
+	protected void doRenameSequence(int sequenceID, String newSequenceName) {
+		alignment.renameSequence(sequenceNameByID(sequenceID), newSequenceName);
+	}
 }
