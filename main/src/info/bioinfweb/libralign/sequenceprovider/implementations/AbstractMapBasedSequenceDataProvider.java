@@ -39,8 +39,8 @@ import org.biojava.bio.seq.Sequence;
 /**
  * Implements all methods dealing with the organization of the sequence set using some implementation
  * of {@link Map} to identify the sequence object belonging to a sequence ID. The ordering of the
- * sequences is implemented using an additional list storing the IDs. Inherited classes have the option to
- * provide a custom map implementation instead of {@link TreeMap} which is the default.
+ * sequences is implemented using an additional list storing the IDs. Inherited classes have the option 
+ * to provide a custom map implementation instead of {@link TreeMap} which is the default.
  * <p>
  * Sequences are sorted by the order they are added to the model. This ordering in independent to the
  * {@link SequenceOrder} object used in an associated {@link AlignmentArea}.  
@@ -56,7 +56,7 @@ import org.biojava.bio.seq.Sequence;
  */
 public abstract class AbstractMapBasedSequenceDataProvider<S, T> extends AbstractSequenceDataProvider<T> {
   private Map<Integer, S> sequenceMap;
-  private List<Integer> sequenceOrder;
+  private List<Integer> sequenceOrder;  // Only necessary to save the order the sequences were added, because they might be sorted like this later on. The actual ordering will be done by a SequenceOrder object of the GUI.
 
   
 	/**

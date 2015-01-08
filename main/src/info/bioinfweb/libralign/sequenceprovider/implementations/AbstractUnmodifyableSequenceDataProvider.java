@@ -36,7 +36,7 @@ import info.bioinfweb.libralign.sequenceprovider.tokenset.TokenSet;
 
 
 /**
- * Implements basic functionality for a map base sequence data provider that uses unmodifiable sequence
+ * Implements basic functionality for a map based sequence data provider that uses unmodifiable sequence
  * objects as its underlying data source.
  * 
  * @author Ben St&ouml;ver
@@ -89,6 +89,10 @@ public abstract class AbstractUnmodifyableSequenceDataProvider<S, T>
    * <p>
    * This method calls first {@link #addSequence(String)} and than {@link #setSequenceContent(int, Object)}
    * internally. Therefore two different events will be fired.
+   * <p>
+   * Note that since the sequences in this implementation are considered as unmutable it does not make
+   * sense to call {@link #addSequence(String)} on an instance of this class unless you want to have
+   * an empty sequence in the alignment.
    * 
    * @param sequenceName - the name of the new sequence
 	 * @param content - the sequence object to be added.

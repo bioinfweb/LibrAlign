@@ -118,7 +118,7 @@ public abstract class AbstractSequenceDataProvider<T> implements SequenceDataPro
 	 */
 	@Override
   public String sequenceNameByID(int sequenceID) {
-  	return nameByIDMap.get(sequenceID);
+  	return getNameByIDMap().get(sequenceID);
   }
   
   
@@ -127,7 +127,7 @@ public abstract class AbstractSequenceDataProvider<T> implements SequenceDataPro
 	 */
 	@Override
 	public int sequenceIDByName(String sequenceName) {
-		Integer result = idByNameMap.get(sequenceName);
+		Integer result = getIDByNameMap().get(sequenceName);
 		if (result == null) {
 			return NO_SEQUENCE_FOUND;
 		}
@@ -171,8 +171,8 @@ public abstract class AbstractSequenceDataProvider<T> implements SequenceDataPro
 		}
 		else {
 			int sequenceID = createNewID();
-			idByNameMap.put(sequenceName, sequenceID);
-			nameByIDMap.put(sequenceID, sequenceName);
+			getIDByNameMap().put(sequenceName, sequenceID);
+			getNameByIDMap().put(sequenceID, sequenceName);
 			doAddSequence(sequenceID, sequenceName);
 			fireAfterSequenceChange(new SequenceChangeEvent<T>(this, sequenceID, ListChangeType.INSERTION));
 			return sequenceID;
@@ -201,8 +201,8 @@ public abstract class AbstractSequenceDataProvider<T> implements SequenceDataPro
 	 * @param sequenceID - the ID associated with the sequence mapping that shall be removed 
 	 */
 	protected void removeSequenceNameMapping(int sequenceID) {
-		nameByIDMap.remove(sequenceID);
-		idByNameMap.remove(sequenceNameByID(sequenceID));
+		getNameByIDMap().remove(sequenceID);
+		getIDByNameMap().remove(sequenceNameByID(sequenceID));
 	}
 	
 	
@@ -278,9 +278,9 @@ public abstract class AbstractSequenceDataProvider<T> implements SequenceDataPro
 		  	throw new SequenceNotFoundException(this);
 		  }
 		  else {
-		  	idByNameMap.remove(sequenceName);
-		  	idByNameMap.put(newSequenceName, sequenceID);
-		  	nameByIDMap.put(sequenceID, newSequenceName);
+		  	getIDByNameMap().remove(sequenceName);
+		  	getIDByNameMap().put(newSequenceName, sequenceID);
+		  	getNameByIDMap().put(sequenceID, newSequenceName);
 		  	doRenameSequence(sequenceID, newSequenceName);
 				fireAfterSequenceChange(new SequenceChangeEvent<T>(this, sequenceID, ListChangeType.DELETION));
 		  }

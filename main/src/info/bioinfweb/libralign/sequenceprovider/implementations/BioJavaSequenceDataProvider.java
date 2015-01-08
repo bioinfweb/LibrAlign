@@ -30,7 +30,7 @@ import org.biojava3.core.sequence.template.Sequence;
 
 import info.bioinfweb.commons.bio.biojava3.alignment.SimpleAlignment;
 import info.bioinfweb.commons.bio.biojava3.alignment.template.Alignment;
-import info.bioinfweb.libralign.sequenceprovider.SequenceDataProvider;
+import info.bioinfweb.libralign.sequenceprovider.SequenceAccessDataProvider;
 import info.bioinfweb.libralign.sequenceprovider.SequenceDataProviderWriteType;
 import info.bioinfweb.libralign.sequenceprovider.exception.AlignmentSourceNotWritableException;
 import info.bioinfweb.libralign.sequenceprovider.tokenset.TokenSet;
@@ -46,10 +46,8 @@ import info.bioinfweb.libralign.sequenceprovider.tokenset.TokenSet;
  * @param <C> - the compound type used by the underlying sequence object
  */
 public class BioJavaSequenceDataProvider<S extends Sequence<C>, C extends Compound>
-    extends AbstractSequenceDataProvider<C> implements SequenceDataProvider<C> {
+    extends AbstractSequenceDataProvider<C> implements SequenceAccessDataProvider<S, C> {
 
-	//TODO Also create a version that implements SequenceObjectDataProvider for unmodifiable BioJava sequences.
-	
 	public static final String DEFAULT_SEQUENCE_NAME_PREFIX = "Sequence";
 	
 	
@@ -215,6 +213,28 @@ public class BioJavaSequenceDataProvider<S extends Sequence<C>, C extends Compou
 	@Override
 	public SequenceDataProviderWriteType getWriteType() {
 		return SequenceDataProviderWriteType.NONE;
+	}
+
+
+	@Override
+	public S getSequence(int sequenceID) {
+		return alignment.getSequence(sequenceNameByID(sequenceID));
+	}
+
+
+	@Override
+	public int addSequence(String sequenceName, S content) {
+		int id = addSequence(sequenceName);
+		alignment.replace(sequenceName, content);
+		return id;
+	}
+
+
+	@Override
+	public S replaceSequence(int sequenceID, S content) {
+		S result = getSequence(sequenceID);
+		alignment.replace(sequenceNameByID(sequenceID), content);
+		return result;
 	}
 
 

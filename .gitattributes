@@ -9,6 +9,7 @@ demo/src/info/bioinfweb/libralign/demo/swt/Main.java -text svneol=unset#text/pla
 main/.classpath -text svneol=unset#text/plain
 main/.project -text svneol=unset#text/plain
 main/.settings/org.eclipse.jdt.core.prefs -text svneol=unset#text/plain
+main/.settings/org.eclipse.jdt.ui.prefs -text svneol=unset#text/plain
 main/lib/NeXML.jar -text
 main/lib/biojava3-alignment-3.0.7.jar -text
 main/lib/biojava3-core-3.0.7.jar -text
