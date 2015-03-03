@@ -66,6 +66,12 @@ public class BioJavaSequenceDataProvider<S extends Sequence<C>, C extends Compou
 	}
 	
 	
+	/**
+	 * Creates a new instance of this class based on the contents of an {@link Alignment} object.
+	 * 
+	 * @param tokenSet - the set of allowed tokens in the sequences
+	 * @param alignment - the object containing the source data
+	 */
 	public BioJavaSequenceDataProvider(TokenSet<C> tokenSet, Alignment<S, C> alignment) {
 		super(tokenSet);
 		this.alignment = alignment;
@@ -84,6 +90,12 @@ public class BioJavaSequenceDataProvider<S extends Sequence<C>, C extends Compou
 	}
 	
 
+	/**
+	 * Creates a new instance of this class based on the contents of a {@link Profile} object.
+	 * 
+	 * @param tokenSet - the set of allowed tokens in the sequences
+	 * @param profile - the object containing the source data
+	 */
 	public BioJavaSequenceDataProvider(TokenSet<C> tokenSet, Profile<S, C> profile) {
 		super(tokenSet);
 		
@@ -103,6 +115,12 @@ public class BioJavaSequenceDataProvider<S extends Sequence<C>, C extends Compou
 	}
 
 
+	/**
+	 * Creates a new instance of this class based on the contents of a {@link Map} object.
+	 * 
+	 * @param tokenSet - the set of allowed tokens in the sequences
+	 * @param map - the object containing the source data
+	 */
 	public BioJavaSequenceDataProvider(TokenSet<C> tokenSet, Map<String, S> map) {
 		super(tokenSet);
 		

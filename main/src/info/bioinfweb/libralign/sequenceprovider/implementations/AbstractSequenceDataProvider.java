@@ -60,7 +60,7 @@ public abstract class AbstractSequenceDataProvider<T> implements SequenceDataPro
 	/**
 	 * Creates a new instance of this class.
 	 * 
-	 * @param dataType - the token type the implementing class will be using
+	 * @param tokenSet - the set of allowed tokens in the sequences of the implementing class
 	 */
 	public AbstractSequenceDataProvider(TokenSet<T> tokenSet) {
 		super();
