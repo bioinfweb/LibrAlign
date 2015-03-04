@@ -1,6 +1,6 @@
 /*
  * LibrAlign - A GUI library for displaying and editing multiple sequence alignments and attached data
- * Copyright (C) 2014  Ben Stöver
+ * Copyright (C) 2014-2015  Ben Stöver
  * <http://bioinfweb.info/LibrAlign>
  * 
  * This file is free software: you can redistribute it and/or modify
@@ -106,7 +106,7 @@ public class FASTAReader extends AbstractAlignmentReader {
 		while (line != null) {
 			if (line.startsWith(">")) {
 				String name = line.substring(1);
-				int sequenceID = provider.addSequence(name);  //TODO Check is sequence is already present?
+				int sequenceID = provider.addSequence(name);  //TODO Check if sequence is already present?
 				
 				line = reader.readLine();  // TODO Possibly use different implementation to avoid loading long lines into a string.  
 				while ((line != null) && !line.startsWith(">")) {
