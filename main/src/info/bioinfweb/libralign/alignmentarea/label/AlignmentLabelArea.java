@@ -42,9 +42,11 @@ import info.bioinfweb.libralign.multiplealignments.MultipleAlignmentsContainer;
  */
 public class AlignmentLabelArea extends TICComponent {
 	public static final int BORDER_WIDTH = 2;
+	public static final int RECALCULATE_VALUE = -1;
 	
 	
   private AlignmentArea owner;
+  private int localMaxNeededWidth = RECALCULATE_VALUE;
 	
 	
 	/**
@@ -77,15 +79,21 @@ public class AlignmentLabelArea extends TICComponent {
 	 * @return a value >= 0
 	 */
 	public int getLocalMaximumNeededWidth() {
-		int result = 0;
-		if (getOwner().getContentArea().hasToolkitComponent()) {
-			Iterator<AlignmentSubArea> iterator = getOwner().getContentArea().getToolkitComponent().subAreaIterator();
-			while (iterator.hasNext()) {
-				result = Math.max(result, iterator.next().getLabelSubArea().getNeededWidth());
+		if (localMaxNeededWidth == RECALCULATE_VALUE) {
+			localMaxNeededWidth = 0;
+			if (getOwner().getContentArea().hasToolkitComponent()) {
+				Iterator<AlignmentSubArea> iterator = getOwner().getContentArea().getToolkitComponent().subAreaIterator();
+				while (iterator.hasNext()) {
+					localMaxNeededWidth = Math.max(localMaxNeededWidth, iterator.next().getLabelSubArea().getNeededWidth());
+				}
 			}
 		}
-		return result;
-		//TODO Save value between calls
+		return localMaxNeededWidth;
+	}
+	
+	
+	public void setLocalMaxWidthRecalculate() {
+		localMaxNeededWidth = RECALCULATE_VALUE;
 	}
 	
 	

@@ -35,6 +35,7 @@ import org.biojava3.core.sequence.compound.NucleotideCompound;
 
 import info.bioinfweb.commons.Math2;
 import info.bioinfweb.commons.graphics.GraphicsUtils;
+import info.bioinfweb.commons.testing.TestLogger;
 import info.bioinfweb.commons.tic.TICPaintEvent;
 import info.bioinfweb.libralign.AlignmentDataViewMode;
 import info.bioinfweb.libralign.alignmentarea.AlignmentArea;

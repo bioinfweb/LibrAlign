@@ -124,7 +124,7 @@ public class SWTAlignmentContentArea extends SWTAlignmentRowsArea implements Too
 
 		addDataAreaList(dataAreaModel.getTopAreas());
 
-		Iterator<Integer> idIterator = getIndependentComponent().getSequenceOrder().getIDList().iterator();
+		Iterator<Integer> idIterator = getIndependentComponent().getSequenceOrder().idIterator();
 		while (idIterator.hasNext()) {
 			Integer id = idIterator.next();
 			sequenceAreaMap.get(id).createSWTWidget(this, SWT.NONE);

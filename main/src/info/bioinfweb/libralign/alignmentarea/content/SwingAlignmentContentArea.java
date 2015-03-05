@@ -71,7 +71,7 @@ public class SwingAlignmentContentArea extends SwingAlignmentRowsArea implements
 		
 		addDataAreaList(getIndependentComponent().getDataAreas().getTopAreas());
 		
-		Iterator<Integer> idIterator = getIndependentComponent().getSequenceOrder().getIDList().iterator();
+		Iterator<Integer> idIterator = getIndependentComponent().getSequenceOrder().idIterator();
 		while (idIterator.hasNext()) {
 			Integer id = idIterator.next();
 			add(sequenceAreaMap.get(id).createSwingComponent());

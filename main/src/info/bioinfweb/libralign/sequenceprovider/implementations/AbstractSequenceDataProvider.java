@@ -28,6 +28,7 @@ import java.util.Map;
 import java.util.TreeMap;
 
 import info.bioinfweb.commons.collections.ListChangeType;
+import info.bioinfweb.libralign.alignmentarea.label.AlignmentLabelArea;
 import info.bioinfweb.libralign.sequenceprovider.SequenceDataChangeListener;
 import info.bioinfweb.libralign.sequenceprovider.SequenceDataProvider;
 import info.bioinfweb.libralign.sequenceprovider.SequenceDataProviderWriteType;
@@ -55,6 +56,8 @@ public abstract class AbstractSequenceDataProvider<T> implements SequenceDataPro
 	private int nextID = 0;
 	private TokenSet<T> tokenSet;
 	private List<SequenceDataChangeListener> changeListeners = new ArrayList<SequenceDataChangeListener>();
+	private int maxSequenceLength = 0;
+	private boolean recalculateMaxSequenceLength = true; 
 
 	
 	/**
@@ -249,15 +252,36 @@ public abstract class AbstractSequenceDataProvider<T> implements SequenceDataPro
 	 * {@link #getSequenceLength(int)} for each ID.
 	 * 
 	 * @return the maximum length a sequence in the underlying data source currently has
+	 * @see #getApproxMaxSequenceLength()
 	 */
 	@Override
 	public int getMaxSequenceLength() {
-		int maxLength = 0;
-		Iterator<Integer> iterator = sequenceIDIterator();
-		while (iterator.hasNext()) {
-			maxLength = Math.max(maxLength, getSequenceLength(iterator.next()));
+		if (recalculateMaxSequenceLength) {
+			maxSequenceLength = 0;
+			Iterator<Integer> iterator = sequenceIDIterator();
+			while (iterator.hasNext()) {
+				maxSequenceLength = Math.max(maxSequenceLength, getSequenceLength(iterator.next()));
+			}
+			recalculateMaxSequenceLength = false;
 		}
-		return maxLength;
+		return maxSequenceLength;
+	}
+	
+	
+	/**
+	 * Returns the maximum sequence length that is currently known. The returned value might not reflect
+	 * recent changes to the model. Use {@link #getMaxSequenceLength()} if you need an up-to-date value,
+	 * but for a high number of sequences {@link #getMaxSequenceLength()} might be much slower.
+	 * 
+	 * @return the maximum length a sequence in the underlying data source currently has that is currently known
+	 */
+	public int getApproxMaxSequenceLength() {
+		return maxSequenceLength;
+	}
+	
+	
+	public void setMaxSequeceLengthRecalculte() {
+		recalculateMaxSequenceLength = true;
 	}
 	
 
@@ -299,6 +323,7 @@ public abstract class AbstractSequenceDataProvider<T> implements SequenceDataPro
 	 * Informs all listeners that a sequence has been inserted, removed or replaced.
 	 */
 	protected void fireAfterSequenceChange(SequenceChangeEvent<T> e) {
+		setMaxSequeceLengthRecalculte();
 		Iterator<SequenceDataChangeListener> iterator = changeListeners.iterator();
 		while (iterator.hasNext()) {
 			iterator.next().afterSequenceChange(e);
@@ -321,6 +346,7 @@ public abstract class AbstractSequenceDataProvider<T> implements SequenceDataPro
 	 * Informs all listeners that a sequence has been inserted, removed or replaced.
 	 */
 	protected void fireAfterTokenChange(TokenChangeEvent<T> e) {
+		setMaxSequeceLengthRecalculte();
 		Iterator<SequenceDataChangeListener> iterator = changeListeners.iterator();
 		while (iterator.hasNext()) {
 			iterator.next().afterTokenChange(e);

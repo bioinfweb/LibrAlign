@@ -517,6 +517,7 @@ public class AlignmentContentArea extends TICComponent implements SequenceDataCh
 	@Override
 	public <T> void afterSequenceChange(SequenceChangeEvent<T> e) {
 		if (e.getSource().equals(getSequenceProvider())) {
+			getOwner().getLabelArea().setLocalMaxWidthRecalculate();  // Needs to be called before assignSizeToAll().
 			getSequenceOrder().refreshFromSource();
 			if (hasToolkitComponent()) {
 				reinsertSubelementsInThisAndLabelArea();
@@ -531,7 +532,9 @@ public class AlignmentContentArea extends TICComponent implements SequenceDataCh
 
 	@Override
 	public <T> void afterSequenceRenamed(SequenceRenamedEvent<T> e) {
-		//TODO Anything else to do?
+		if (e.getSource().equals(getSequenceProvider())) {
+			getOwner().getLabelArea().setLocalMaxWidthRecalculate();  // Needs to be called before assignSizeToAll().
+		}
 		getOwner().assignSizeToAll();  // Other label areas might also have to adopt their width.
 		getDataAreas().getSequenceDataChangeListener().afterSequenceRenamed(e);
 	}
@@ -549,6 +552,7 @@ public class AlignmentContentArea extends TICComponent implements SequenceDataCh
 
 	@Override
 	public <T, U> void afterProviderChanged(SequenceDataProvider<T> previous, SequenceDataProvider<U> current) {
+		getOwner().getLabelArea().setLocalMaxWidthRecalculate();  // Needs to be called before assignSizeToAll().
 		getOwner().assignSizeToAll();  //TODO reinsertSubements()?
 		repaint();  //TODO Needed?
 		//TODO Remove some data areas? (Some might be data specific (e.g. pherograms), some not (e.g. consensus sequence).)
@@ -560,6 +564,7 @@ public class AlignmentContentArea extends TICComponent implements SequenceDataCh
 	public void dataAreaInsertedRemoved(DataAreaChangeEvent e) {
 		if (hasToolkitComponent()) {
 			if (e.getSource().equals(getDataAreas())) {
+				getDataAreas().setLocalMaxLengthBeforeStartRecalculate();
 				reinsertSubelementsInThisAndLabelArea();
 			}
 			getOwner().assignSizeToAll();

@@ -22,8 +22,8 @@ package info.bioinfweb.libralign.dataarea;
 import info.bioinfweb.commons.collections.ListChangeType;
 import info.bioinfweb.libralign.alignmentarea.AlignmentArea;
 import info.bioinfweb.libralign.alignmentarea.content.AlignmentContentArea;
+import info.bioinfweb.libralign.alignmentarea.label.AlignmentLabelArea;
 import info.bioinfweb.libralign.multiplealignments.MultipleAlignmentsContainer;
-import info.bioinfweb.libralign.sequenceprovider.SequenceDataChangeListener;
 import info.bioinfweb.libralign.sequenceprovider.SequenceDataProvider;
 
 import java.util.ArrayList;
@@ -48,6 +48,7 @@ public class DataAreaModel {
   private List<DataAreaModelListener> listeners = new ArrayList<DataAreaModelListener>(8);
   private boolean visibilityUpdateInProgress = false;
   private DataAreaSequenceChangeListener sequenceChangeListener = new DataAreaSequenceChangeListener(this);
+  private int localMaxLengthBeforeStart = AlignmentLabelArea.RECALCULATE_VALUE;
 
   
 	/**
@@ -175,12 +176,19 @@ public class DataAreaModel {
 	 * @return an integer >= 0
 	 */
 	public int getLocalMaxLengthBeforeStart() {
-		int result = Math.max(getTopAreas().getMaxLengthBeforeStart(), getBottomAreas().getMaxLengthBeforeStart());
-		Iterator<Integer> iterator = sequenceAreaLists.keySet().iterator(); 
-		while (iterator.hasNext()) {
-			result = Math.max(result, getSequenceAreas(iterator.next()).getMaxLengthBeforeStart());
+		if (localMaxLengthBeforeStart == AlignmentLabelArea.RECALCULATE_VALUE) {
+			localMaxLengthBeforeStart = Math.max(getTopAreas().getMaxLengthBeforeStart(), getBottomAreas().getMaxLengthBeforeStart());
+			Iterator<Integer> iterator = sequenceAreaLists.keySet().iterator(); 
+			while (iterator.hasNext()) {
+				localMaxLengthBeforeStart = Math.max(localMaxLengthBeforeStart, getSequenceAreas(iterator.next()).getMaxLengthBeforeStart());
+			}
 		}
-		return result;
+		return localMaxLengthBeforeStart;
+	}
+	
+	
+	public void setLocalMaxLengthBeforeStartRecalculate() {
+		localMaxLengthBeforeStart = AlignmentLabelArea.RECALCULATE_VALUE;
 	}
 	
 	

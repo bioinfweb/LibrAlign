@@ -19,6 +19,7 @@
 package info.bioinfweb.libralign.alignmentarea.order;
 
 
+import info.bioinfweb.commons.collections.CollectionUtils;
 import info.bioinfweb.libralign.alignmentarea.AlignmentArea;
 import info.bioinfweb.libralign.alignmentarea.content.AlignmentContentArea;
 
@@ -27,6 +28,8 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
 
 
 
@@ -57,6 +60,7 @@ public class SequenceOrder {
 
 	private AlignmentContentArea owner;
 	private List<Integer> idList = new ArrayList<Integer>();
+	private Map<Integer, Integer> indexByIDMap = new TreeMap<Integer, Integer>();
 	private SequenceOrderType orderType = SequenceOrderType.SOURCE;
 
 	
@@ -92,7 +96,12 @@ public class SequenceOrder {
 	 * @return the index of the sequence (The first sequence has the index 0.)
 	 */
 	public int indexByID(int id) {
-		return idList.indexOf(id);
+		Integer result = indexByIDMap.get(id);
+		if (result == null) {
+			result = idList.indexOf(id);
+			indexByIDMap.put(id, result);
+		}
+		return result;
 	}
 	
 	
@@ -108,6 +117,7 @@ public class SequenceOrder {
 	
 	
 	public void refreshFromSource() {
+		indexByIDMap.clear();
 		SequenceOrderType orderType = getOrderType();
 		setSourceSequenceOrder();
 		switch (orderType) {
@@ -129,6 +139,7 @@ public class SequenceOrder {
 	 * This method can also be used to refresh the sequence names if the data source changed.
 	 */
 	public void setSourceSequenceOrder() {
+		indexByIDMap.clear();
 		orderType = SequenceOrderType.SOURCE;
 		idList.clear();
 		if (getOwner().hasSequenceProvider()) {
@@ -147,6 +158,7 @@ public class SequenceOrder {
 	 *        alphabetical order and {@code false} for a descending order. 
 	 */
 	public void setAlphabeticalSequenceOrder(boolean ascending) {
+		indexByIDMap.clear();
 		if (ascending) {
 			orderType = SequenceOrderType.ALPHABETICAL_ASCENDENT;
 			Collections.sort(idList, ASCENDING_ALPHABETICAL_COMPARATOR);
@@ -155,14 +167,6 @@ public class SequenceOrder {
 			orderType = SequenceOrderType.ALPHABETICAL_DESCENDENT;
 			Collections.sort(idList, DESCENDING_ALPHABETICAL_COMPARATOR);
 		}
-	}
-
-	
-	/**
-	 * Sorts the sequences by their name in ascending order.
-	 */
-	public void setAscendingAlphabeticalSequenceOrder() {
-		Collections.sort(idList, ASCENDING_ALPHABETICAL_COMPARATOR);
 	}
 
 	
@@ -178,6 +182,7 @@ public class SequenceOrder {
 	 * @return the new index the specified sequence has after the move operation
 	 */
 	public int moveSequence(int index, int offset) {
+		indexByIDMap.clear();
 		int newIndex = Math.max(0, Math.min(idList.size() - 1, index + offset));
 		int id = idList.get(index);
 		if (newIndex < index) {
@@ -193,18 +198,28 @@ public class SequenceOrder {
 		idList.set(newIndex, id);
 		return newIndex;
 	}
+
+	
+	/**
+	 * Returns an iterator over all IDs contained in this order.
+	 * 
+	 * @return an unmodifiable iterator object
+	 */
+	public Iterator<Integer> idIterator() {
+		return CollectionUtils.unmodifiableIterator(idList.iterator());
+	}
 	
 
-	/**
-	 * Returns the underlying name list which can be used to change the ordering of the sequences.
-	 * <p>
-	 * You must not remove any names from this list that are contained in the data source of 
-	 * {@link #getOwner()}. This object will not be able to function correctly anymore if that would 
-	 * be done.
-	 * 
-	 * @return a reference to the name list this object uses to determine the order of the sequences.
-	 */
-	public List<Integer> getIDList() {
-		return idList;
-	}
+//	/**
+//	 * Returns the underlying name list which can be used to change the ordering of the sequences.
+//	 * <p>
+//	 * You must not remove any names from this list that are contained in the data source of 
+//	 * {@link #getOwner()}. This object will not be able to function correctly anymore if that would 
+//	 * be done.
+//	 * 
+//	 * @return a reference to the name list this object uses to determine the order of the sequences.
+//	 */
+//	public List<Integer> getIDList() {
+//		return idList;
+//	}
 }
