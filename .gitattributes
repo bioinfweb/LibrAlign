@@ -226,6 +226,8 @@ test/src/info/bioinfweb/libralign/test/editalignment/SwingTest.java -text svneol
 test/src/info/bioinfweb/libralign/test/multiplealignmentscontainer/AbstractApplication.java -text svneol=unset#text/plain
 test/src/info/bioinfweb/libralign/test/multiplealignmentscontainer/SWTApplication.java -text svneol=unset#text/plain
 test/src/info/bioinfweb/libralign/test/multiplealignmentscontainer/SwingApplication.java -text svneol=unset#text/plain
+test/src/info/bioinfweb/libralign/test/performance/application/AbstractApplication.java -text svneol=unset#text/plain
+test/src/info/bioinfweb/libralign/test/performance/application/SwingTest.java -text svneol=unset#text/plain
 test/src/info/bioinfweb/libralign/test/performance/data/DataGenerator.java -text svneol=unset#text/plain
 test/src/info/bioinfweb/libralign/test/pherogramview/AbstractPherogramViewTest.java -text svneol=unset#text/plain
 test/src/info/bioinfweb/libralign/test/pherogramview/SWTPherogramViewTest.java -text svneol=unset#text/plain

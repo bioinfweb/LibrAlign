@@ -40,8 +40,10 @@ public class DataGenerator {
 			"GAGCAGTGCTAAAAAATTGAACATAC----AA",
 			"GAACGGTGCTAAAAAATTGAACATAC----AA"};
 		// 12345678901234567890123456789012
-	public static final int MAX_ROWS_DIV_8 = 2048 / 8;
+	public static final int MAX_ROWS_DIV_8 = 16384 / 8;
 	public static final int MAX_COLUMNS_DIV_32 = 4096; //(2^17) / 32;
+	public static final int MANY_TAXA_DIV_8 = 4096 / 8;
+	public static final int MAX_COLUMNS_DIV_32_MANY_TAXA = 256;
 	
 	
 	private void writeAlignment(int rowCountDiv8, int colCountDiv32) throws IOException {
@@ -74,13 +76,29 @@ public class DataGenerator {
 			int rowsDiv8 = 1;
 			while (rowsDiv8 <= MAX_ROWS_DIV_8) {
 				int columnsDiv32 = 1;
-				while (columnsDiv32 <= MAX_COLUMNS_DIV_32) {
+				
+				// Max columns depends in the number of rows.
+				int maxColumnsDiv32 = MAX_COLUMNS_DIV_32;
+				if (rowsDiv8 > MANY_TAXA_DIV_8) {
+					maxColumnsDiv32 = MAX_COLUMNS_DIV_32_MANY_TAXA;
+				}
+				
+				while (columnsDiv32 <= maxColumnsDiv32) {
 					generator.writeAlignment(rowsDiv8, columnsDiv32);
 					columnsDiv32 *= 2;
 				}
 				rowsDiv8 *= 2;
 			}
 			System.out.println("Generating files finished.");
+			
+			
+//			generator.writeAlignment(4096, 1);
+//			generator.writeAlignment(4096 * 2, 1);
+//			generator.writeAlignment(4096 * 4, 1);
+//			generator.writeAlignment(4096 * 8, 1);
+//			generator.writeAlignment(4096 * 16, 1);
+//			generator.writeAlignment(4096 * 32, 1);
+//			generator.writeAlignment(4096 * 64, 1);
 		}
 		catch (IOException e) {
 			e.printStackTrace();
