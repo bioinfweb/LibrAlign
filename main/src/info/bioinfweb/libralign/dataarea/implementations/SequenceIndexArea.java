@@ -20,6 +20,7 @@ package info.bioinfweb.libralign.dataarea.implementations;
 
 
 import java.awt.BasicStroke;
+import java.awt.FontMetrics;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
 import java.awt.RenderingHints;
@@ -32,6 +33,7 @@ import java.util.Set;
 
 import info.bioinfweb.commons.Math2;
 import info.bioinfweb.commons.collections.ListChangeType;
+import info.bioinfweb.commons.text.StringUtils;
 import info.bioinfweb.commons.tic.TICPaintEvent;
 import info.bioinfweb.libralign.alignmentarea.AlignmentArea;
 import info.bioinfweb.libralign.alignmentarea.content.AlignmentContentArea;
@@ -75,7 +77,7 @@ public class SequenceIndexArea extends CustomHeightFullWidthArea {
   * This string is used to test if the interval between two main dashes is smaller than 
   * the usual label text. 
   */
-  public static final String LABEL_LENGTH_STANDARD = "00000";
+  //public static final String LABEL_LENGTH_STANDARD = "00000";
 	
 	
   private int firstIndex = DEFAULT_FIRST_INDEX;
@@ -101,6 +103,13 @@ public class SequenceIndexArea extends CustomHeightFullWidthArea {
 	}
   
   
+	private int calculateLabelInterval(FontMetrics fontMetrics) {
+		double compoundWidth = getOwner().getCompoundWidth();
+		return (int)Math2.roundUp((fontMetrics.stringWidth("0") * ("" + getOwner().getGlobalMaxSequenceLength()).length() + 
+				2 * LABEL_LEFT_DISTANCE_FACTOR * compoundWidth) / compoundWidth);
+	}
+	
+	
 	@Override
 	public void paint(TICPaintEvent e) {
 		Graphics2D g = e.getGraphics();
@@ -122,8 +131,7 @@ public class SequenceIndexArea extends CustomHeightFullWidthArea {
     final int maxLengthBeforeStart = getOwner().getDataAreas().getGlobalMaxLengthBeforeStart(); 
     double labelLeftDistance = LABEL_LEFT_DISTANCE_FACTOR * getOwner().getCompoundWidth();
     g.setFont(getOwner().getCompoundFont());
-    long labelInterval = Math2.roundUp(
-    		(g.getFontMetrics().stringWidth(LABEL_LENGTH_STANDARD) + 2 * labelLeftDistance) / compoundWidth);
+    int labelInterval = calculateLabelInterval(g.getFontMetrics());
     double x = Math.max(compoundWidth / 2f,  
     		visibleRect.x - visibleRect.x % compoundWidth - labelInterval * getOwner().getCompoundWidth() - compoundWidth / 2f);  // labelInterval is subtracted because partly visible text should also be painted
     Stroke stroke = g.getStroke();
@@ -131,7 +139,7 @@ public class SequenceIndexArea extends CustomHeightFullWidthArea {
       while (x <= visibleRect.x + visibleRect.width) {
     		// Text output
     		double dashLength = DASH_LENGTH_FACTOR * getHeight();
-    		long compoundIndex = Math.round((x - maxLengthBeforeStart) / compoundWidth); 
+    		long compoundIndex = Math.round((x - maxLengthBeforeStart) / compoundWidth);
     		if ((compoundIndex - 1) % labelInterval == 0) {  // BioJava indices start with 1
     			g.drawString("" + (compoundIndex + getFirstIndex() - 1), (int)(x + labelLeftDistance),	
     					(int)(LABEL_TOP_DISTANCE_FACTOR * getHeight()));
