@@ -215,7 +215,14 @@ public abstract class AbstractListSequenceDataProvider<T>
 	protected List<T> createNewSequence(int sequenceID, String sequenceName) {
 		int capacity = initialCapacity;
 		if (isUseMaxLength() && (getSequenceCount() > 0)) {
-			capacity = Math.max(initialCapacity, getApproxMaxSequenceLength());
+			int initialLength;
+			if (getSequenceCount() == 1) {
+				initialLength = getMaxSequenceLength();
+			}
+			else {
+				initialLength = getApproxMaxSequenceLength();
+			}
+			capacity = Math.max(initialCapacity, initialLength);
 		}
 		return createNewSequence(sequenceID, sequenceName, capacity);
 	}

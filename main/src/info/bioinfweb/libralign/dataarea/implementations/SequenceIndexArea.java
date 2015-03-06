@@ -60,16 +60,16 @@ public class SequenceIndexArea extends CustomHeightFullWidthArea {
 	public static final Stroke DASH_STROKE = new BasicStroke(0, BasicStroke.CAP_BUTT, BasicStroke.JOIN_BEVEL);
 	
   /** The length of a dash */
-  public static final float DASH_LENGTH_FACTOR = 0.3f;
+  public static final double DASH_LENGTH_FACTOR = 0.3f;
   
   /** The length of a dash with a label */
-  public static final float LABELED_DASH_LENGTH_FACTOR = 1f;
+  public static final double LABELED_DASH_LENGTH_FACTOR = 1f;
   
 	/** The distance of the labels to the border of the component */
-	public static final float LABEL_TOP_DISTANCE_FACTOR = 0.5f;
+	public static final double LABEL_TOP_DISTANCE_FACTOR = 0.5f;
 
 	/** The distance of the labels to their dash  */
-	public static final float LABEL_LEFT_DISTANCE_FACTOR = 0.2f;
+	public static final double LABEL_LEFT_DISTANCE_FACTOR = 0.2f;
 
 	/** 
   * This string is used to test if the interval between two main dashes is smaller than 
@@ -96,7 +96,7 @@ public class SequenceIndexArea extends CustomHeightFullWidthArea {
 //		g.setColor(SystemColor.textHighlight);
 //		AlignmentComparisonPanelSelection selection = getAlignmentComparisonPanel().getSelection();
 //		int x = getAlignmentComparisonPanel().paintXBycolumn(selection.getFirstPos()); 
-//		g.fill(new Rectangle2D.Float(x, 0, 
+//		g.fill(new Rectangle2D.Double(x, 0, 
 //				getAlignmentComparisonPanel().paintXBycolumn(selection.getLastPos() + 1) - 1 - x, HEIGHT));
 	}
   
@@ -114,33 +114,33 @@ public class SequenceIndexArea extends CustomHeightFullWidthArea {
 		paintSelection(g);
 		
     // Paint base line
-		float compoundWidth = getOwner().getCompoundWidth();
+		double compoundWidth = getOwner().getCompoundWidth();
 		g.setColor(SystemColor.menuText);
-    g.draw(new Line2D.Float(visibleRect.x, getHeight() - 1, visibleRect.x + visibleRect.width, getHeight() - 1));  // base line
+    g.draw(new Line2D.Double(visibleRect.x, getHeight() - 1, visibleRect.x + visibleRect.width, getHeight() - 1));  // base line
     
     // Paint text data and dashes:
     final int maxLengthBeforeStart = getOwner().getDataAreas().getGlobalMaxLengthBeforeStart(); 
-    float labelLeftDistance = LABEL_LEFT_DISTANCE_FACTOR * getOwner().getCompoundWidth();
+    double labelLeftDistance = LABEL_LEFT_DISTANCE_FACTOR * getOwner().getCompoundWidth();
     g.setFont(getOwner().getCompoundFont());
-    int labelInterval = Math2.roundUp(
+    long labelInterval = Math2.roundUp(
     		(g.getFontMetrics().stringWidth(LABEL_LENGTH_STANDARD) + 2 * labelLeftDistance) / compoundWidth);
-    float x = Math.max(compoundWidth / 2f,  
+    double x = Math.max(compoundWidth / 2f,  
     		visibleRect.x - visibleRect.x % compoundWidth - labelInterval * getOwner().getCompoundWidth() - compoundWidth / 2f);  // labelInterval is subtracted because partly visible text should also be painted
     Stroke stroke = g.getStroke();
     try {
       while (x <= visibleRect.x + visibleRect.width) {
     		// Text output
-    		float dashLength = DASH_LENGTH_FACTOR * getHeight();
-    		int compoundIndex = Math.round((x - maxLengthBeforeStart) / compoundWidth); 
+    		double dashLength = DASH_LENGTH_FACTOR * getHeight();
+    		long compoundIndex = Math.round((x - maxLengthBeforeStart) / compoundWidth); 
     		if ((compoundIndex - 1) % labelInterval == 0) {  // BioJava indices start with 1
-    			g.drawString("" + (compoundIndex + getFirstIndex() - 1), x + labelLeftDistance,	
-    					LABEL_TOP_DISTANCE_FACTOR * getHeight());
+    			g.drawString("" + (compoundIndex + getFirstIndex() - 1), (int)(x + labelLeftDistance),	
+    					(int)(LABEL_TOP_DISTANCE_FACTOR * getHeight()));
     			dashLength = LABELED_DASH_LENGTH_FACTOR * getHeight();
     		}
     		
       	// Dash output
     		g.setStroke(DASH_STROKE);
-    		Path2D path = new  Path2D.Float();
+    		Path2D path = new  Path2D.Double();
     		path.moveTo(x - 0.5, getHeight());
     		path.lineTo(x + 0.5, getHeight());
     		path.lineTo(x + 0.5, getHeight() - dashLength);

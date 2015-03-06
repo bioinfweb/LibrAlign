@@ -107,16 +107,16 @@ public class SequenceArea extends AlignmentSubArea {
 	
 	
   private static void paintNucleotideCompound(AlignmentContentArea area, Graphics2D g, NucleotideCompound compound, 
-  		float x, float y, boolean selected) {
+  		double x, double y, boolean selected) {
   	
   	Set<NucleotideCompound> consituents = compound.getConstituents();
-  	final float height = area.getCompoundHeight() / (float)consituents.size();
+  	final double height = area.getCompoundHeight() / (double)consituents.size();
   	Iterator<NucleotideCompound> iterator = consituents.iterator();
-  	float bgY = y;
+  	double bgY = y;
   	while (iterator.hasNext()) {  // Fill the compound rectangle with differently colored zones, if ambiguity codes are used.
   		g.setColor(getBGColor(area.getColorSchema(), area.getColorSchema().getNucleotideColorMap().get(
   				getNucleotideBaseString(area.getViewMode(), iterator.next())), selected));
-    	g.fill(new Rectangle2D.Float(x, bgY, area.getCompoundWidth(), height));
+    	g.fill(new Rectangle2D.Double(x, bgY, area.getCompoundWidth(), height));
     	bgY += height;
   	}
   	
@@ -124,15 +124,15 @@ public class SequenceArea extends AlignmentSubArea {
 	  	g.setColor(area.getColorSchema().getFontColor());
 	  	g.setFont(area.getCompoundFont());
 			FontMetrics fm = g.getFontMetrics();
-	  	g.drawString(compound.getBase(), x + 0.5f * 
-	  			(area.getCompoundWidth() - fm.charWidth(compound.getBase().charAt(0))), y + fm.getAscent());
+	  	g.drawString(compound.getBase(), (int)(x + 0.5 * 
+	  			(area.getCompoundWidth() - fm.charWidth(compound.getBase().charAt(0)))), (int)(y + fm.getAscent()));  // int needs to be used because the precision of float is not sufficient to paint long sequences
   	}
   }
   
   
-  public static void paintCompound(AlignmentContentArea area, Graphics2D g, Object compound, float x, float y, boolean selected) {
+  public static void paintCompound(AlignmentContentArea area, Graphics2D g, Object compound, double x, double y, boolean selected) {
   	g.setColor(area.getColorSchema().getTokenBorderColor());
-  	g.draw(new Rectangle2D.Float(x, y, area.getCompoundWidth(), area.getCompoundHeight()));
+  	g.draw(new Rectangle2D.Double(x, y, area.getCompoundWidth(), area.getCompoundHeight()));
   	
   	switch (area.getViewMode()) {
   		case NUCLEOTIDE:
@@ -153,7 +153,7 @@ public class SequenceArea extends AlignmentSubArea {
   }
 
   
-  public static void paintSequence(AlignmentContentArea area, int sequenceID, TICPaintEvent event, float x, float y) {
+  public static void paintSequence(AlignmentContentArea area, int sequenceID, TICPaintEvent event, double x, double y) {
 		int firstIndex = Math.max(0, area.columnByPaintX((int)event.getRectangle().getMinX()));
 		int lastIndex = area.columnByPaintX((int)event.getRectangle().getMaxX());
 		int lastColumn = area.getSequenceProvider().getSequenceLength(sequenceID) - 1;
@@ -164,7 +164,7 @@ public class SequenceArea extends AlignmentSubArea {
   	x += firstIndex * area.getCompoundWidth();
 		for (int i = firstIndex; i <= lastIndex; i++) {			
     	paintCompound(area, event.getGraphics(), 
-    			area.getSequenceProvider().getTokenAt(sequenceID, i), x, y,	
+    			area.getSequenceProvider().getTokenAt(sequenceID, i), (double)x, y,	
     			area.getSelection().isSelected(i, area.getSequenceOrder().indexByID(sequenceID)));
 	    x += area.getCompoundWidth();
     }
@@ -204,7 +204,7 @@ public class SequenceArea extends AlignmentSubArea {
 		}
 		
 		event.getGraphics().setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-		float x = firstIndex * getOwner().getCompoundWidth() + getOwner().getDataAreas().getGlobalMaxLengthBeforeStart(); 
+		double x = firstIndex * getOwner().getCompoundWidth() + getOwner().getDataAreas().getGlobalMaxLengthBeforeStart(); 
 		for (int i = firstIndex; i <= lastIndex; i++) {			
     	paintCompound(getOwner(), event.getGraphics(), 
     			getOwner().getSequenceProvider().getTokenAt(getSeqenceID(), i), x, 0f,	
