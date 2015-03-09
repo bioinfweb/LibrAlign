@@ -69,6 +69,11 @@ public class SelectionSynchronizer {
 	}
 
 	
+	public void clear() {
+		selectionModels.clear();
+	}
+
+
 	public boolean contains(Object object) {
 		return selectionModels.contains(object);
 	}
