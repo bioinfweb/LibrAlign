@@ -49,6 +49,7 @@ public abstract class SwingAlignmentRowsArea extends JComponent implements Scrol
 	@Override
 	public Dimension getPreferredSize() {
 		//TODO AWT tree lock?;
+		//TODO If the architecture with a component for each sequence remains, the return value of this method should also be stored between calls (like AlignmentLabelArea.getLocalMaximumNeededWidth()).  
 		Dimension result = new Dimension(0, 0);
 		Component[] components = getComponents();
 		for (int i = 0; i < components.length; i++) {
