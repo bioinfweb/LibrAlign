@@ -18,6 +18,7 @@
  */
 package info.bioinfweb.libralign.test.performance.data;
 
+
 import info.bioinfweb.commons.SystemUtils;
 
 import java.io.BufferedWriter;
@@ -73,23 +74,23 @@ public class DataGenerator {
 	public static void main(String[] args) {
 		try {
 			DataGenerator generator = new DataGenerator();
-			int rowsDiv8 = 1;
-			while (rowsDiv8 <= MAX_ROWS_DIV_8) {
-				int columnsDiv32 = 1;
-				
-				// Max columns depends in the number of rows.
-				int maxColumnsDiv32 = MAX_COLUMNS_DIV_32;
-				if (rowsDiv8 > MANY_TAXA_DIV_8) {
-					maxColumnsDiv32 = MAX_COLUMNS_DIV_32_MANY_TAXA;
-				}
-				
-				while (columnsDiv32 <= maxColumnsDiv32) {
-					generator.writeAlignment(rowsDiv8, columnsDiv32);
-					columnsDiv32 *= 2;
-				}
-				rowsDiv8 *= 2;
-			}
-			System.out.println("Generating files finished.");
+//			int rowsDiv8 = 1;
+//			while (rowsDiv8 <= MAX_ROWS_DIV_8) {
+//				int columnsDiv32 = 1;
+//				
+//				// Max columns depends in the number of rows.
+//				int maxColumnsDiv32 = MAX_COLUMNS_DIV_32;
+//				if (rowsDiv8 > MANY_TAXA_DIV_8) {
+//					maxColumnsDiv32 = MAX_COLUMNS_DIV_32_MANY_TAXA;
+//				}
+//				
+//				while (columnsDiv32 <= maxColumnsDiv32) {
+//					generator.writeAlignment(rowsDiv8, columnsDiv32);
+//					columnsDiv32 *= 2;
+//				}
+//				rowsDiv8 *= 2;
+//			}
+//			System.out.println("Generating files finished.");
 			
 			
 //			generator.writeAlignment(4096, 1);
@@ -99,6 +100,18 @@ public class DataGenerator {
 //			generator.writeAlignment(4096 * 16, 1);
 //			generator.writeAlignment(4096 * 32, 1);
 //			generator.writeAlignment(4096 * 64, 1);
+
+//			generator.writeAlignment(1, 4096 * 2);
+//			generator.writeAlignment(1, 4096 * 4);
+//			generator.writeAlignment(1, 4096 * 8);
+//			generator.writeAlignment(1, 4096 * 16);
+//			generator.writeAlignment(1, 4096 * 32);
+//			generator.writeAlignment(1, 4096 * 64);
+//			generator.writeAlignment(1, 4096 * 128);
+//			generator.writeAlignment(1, 4096 * 256);
+//			generator.writeAlignment(1, 4096 * 512);
+//			generator.writeAlignment(1, 4096 * 1024);
+			generator.writeAlignment(1, 4096 * 2048);
 		}
 		catch (IOException e) {
 			e.printStackTrace();
