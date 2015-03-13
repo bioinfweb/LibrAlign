@@ -89,7 +89,7 @@ public class SequenceIndexArea extends CustomHeightFullWidthArea {
 	 * @param owner - the alignment area that is going to contain this data area
 	 */
 	public SequenceIndexArea(AlignmentContentArea owner) {
-		super(owner, owner.getCompoundHeight());
+		super(owner, owner.getOwner().getCompoundHeight());
 	}
 
 
@@ -104,8 +104,8 @@ public class SequenceIndexArea extends CustomHeightFullWidthArea {
   
   
 	private int calculateLabelInterval(FontMetrics fontMetrics) {
-		double compoundWidth = getOwner().getCompoundWidth();
-		return (int)Math2.roundUp((fontMetrics.stringWidth("0") * ("" + getOwner().getGlobalMaxSequenceLength()).length() + 
+		double compoundWidth = getOwner().getOwner().getCompoundWidth();
+		return (int)Math2.roundUp((fontMetrics.stringWidth("0") * ("" + getOwner().getOwner().getGlobalMaxSequenceLength()).length() + 
 				2 * LABEL_LEFT_DISTANCE_FACTOR * compoundWidth) / compoundWidth);
 	}
 	
@@ -123,17 +123,17 @@ public class SequenceIndexArea extends CustomHeightFullWidthArea {
 		paintSelection(g);
 		
     // Paint base line
-		double compoundWidth = getOwner().getCompoundWidth();
+		double compoundWidth = getOwner().getOwner().getCompoundWidth();
 		g.setColor(SystemColor.menuText);
     g.draw(new Line2D.Double(visibleRect.x, getHeight() - 1, visibleRect.x + visibleRect.width, getHeight() - 1));  // base line
     
     // Paint text data and dashes:
-    final int maxLengthBeforeStart = getOwner().getDataAreas().getGlobalMaxLengthBeforeStart(); 
-    double labelLeftDistance = LABEL_LEFT_DISTANCE_FACTOR * getOwner().getCompoundWidth();
-    g.setFont(getOwner().getCompoundFont());
+    final int maxLengthBeforeStart = getOwner().getOwner().getDataAreas().getGlobalMaxLengthBeforeStart(); 
+    double labelLeftDistance = LABEL_LEFT_DISTANCE_FACTOR * getOwner().getOwner().getCompoundWidth();
+    g.setFont(getOwner().getOwner().getCompoundFont());
     int labelInterval = calculateLabelInterval(g.getFontMetrics());
     double x = Math.max(compoundWidth / 2f,  
-    		visibleRect.x - visibleRect.x % compoundWidth - labelInterval * getOwner().getCompoundWidth() - compoundWidth / 2f);  // labelInterval is subtracted because partly visible text should also be painted
+    		visibleRect.x - visibleRect.x % compoundWidth - labelInterval * getOwner().getOwner().getCompoundWidth() - compoundWidth / 2f);  // labelInterval is subtracted because partly visible text should also be painted
     Stroke stroke = g.getStroke();
     try {
       while (x <= visibleRect.x + visibleRect.width) {
@@ -173,7 +173,7 @@ public class SequenceIndexArea extends CustomHeightFullWidthArea {
 
 	@Override
 	public int getLength() {
-		return getOwner().getCompoundWidth() * getOwner().getGlobalMaxSequenceLength();
+		return getOwner().getOwner().getCompoundWidth() * getOwner().getOwner().getGlobalMaxSequenceLength();
 	}
 
 

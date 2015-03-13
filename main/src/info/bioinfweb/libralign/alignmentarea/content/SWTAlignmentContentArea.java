@@ -118,13 +118,13 @@ public class SWTAlignmentContentArea extends SWTAlignmentRowsArea implements Too
 
 	@Override
 	public void reinsertSubelements() {
-		DataAreaModel dataAreaModel = getIndependentComponent().getDataAreas();
+		DataAreaModel dataAreaModel = getIndependentComponent().getOwner().getDataAreas();
 		removeAll();
 		sequenceAreaMap.updateElements();
 
 		addDataAreaList(dataAreaModel.getTopAreas());
 
-		Iterator<Integer> idIterator = getIndependentComponent().getSequenceOrder().idIterator();
+		Iterator<Integer> idIterator = getIndependentComponent().getOwner().getSequenceOrder().idIterator();
 		while (idIterator.hasNext()) {
 			Integer id = idIterator.next();
 			sequenceAreaMap.get(id).createSWTWidget(this, SWT.NONE);

@@ -97,7 +97,7 @@ public class CursorSelectionInputListener extends TICMouseAdapter implements TIC
 	@Override
 	public void keyPressed(TICKeyEvent event) {
 		SelectionModel selection = getOwner().getSelection();
-		SequenceDataProvider provider = getOwner().getSequenceProvider();
+		SequenceDataProvider provider = getOwner().getOwner().getSequenceProvider();
 		switch (event.getKeyCode()) {
 			case KeyEvent.VK_LEFT:
 				if (event.isShiftDown()) {

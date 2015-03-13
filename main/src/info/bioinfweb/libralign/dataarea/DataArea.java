@@ -147,7 +147,7 @@ public abstract class DataArea extends AlignmentSubArea implements SequenceDataC
 	 */
 	@Override
 	public Dimension getSize() {
-		return new Dimension(getOwner().getDataAreas().getGlobalMaxLengthBeforeStart() + getLength(),	getHeight());  
+		return new Dimension(getOwner().getOwner().getDataAreas().getGlobalMaxLengthBeforeStart() + getLength(),	getHeight());  
 		//TODO Add additional space on the right, depending on the longest component in the alignment area? (Do area components need to have the same width?)
 	}
 }

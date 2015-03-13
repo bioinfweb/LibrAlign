@@ -69,16 +69,16 @@ public class SwingAlignmentContentArea extends SwingAlignmentRowsArea implements
 		removeAll();
 		sequenceAreaMap.updateElements();
 		
-		addDataAreaList(getIndependentComponent().getDataAreas().getTopAreas());
+		addDataAreaList(getIndependentComponent().getOwner().getDataAreas().getTopAreas());
 		
-		Iterator<Integer> idIterator = getIndependentComponent().getSequenceOrder().idIterator();
+		Iterator<Integer> idIterator = getIndependentComponent().getOwner().getSequenceOrder().idIterator();
 		while (idIterator.hasNext()) {
 			Integer id = idIterator.next();
 			add(sequenceAreaMap.get(id).createSwingComponent());
-			addDataAreaList(getIndependentComponent().getDataAreas().getSequenceAreas(id));
+			addDataAreaList(getIndependentComponent().getOwner().getDataAreas().getSequenceAreas(id));
 		}
 		
-		addDataAreaList(getIndependentComponent().getDataAreas().getBottomAreas());
+		addDataAreaList(getIndependentComponent().getOwner().getDataAreas().getBottomAreas());
 	}
 	
 	

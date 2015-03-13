@@ -56,9 +56,8 @@ public class MultipleAlignmentListener implements SequenceDataChangeListener, Da
 	@Override
 	public <T> void afterSequenceChange(SequenceChangeEvent<T> e) {
 		for (AlignmentArea alignmentArea : getOwner().getAlignmentAreas()) {
-			AlignmentContentArea contentArea = alignmentArea.getContentArea();
-			if (!e.getSource().equals(contentArea.getSequenceProvider())) {
-				contentArea.afterSequenceChange(e);
+			if (!e.getSource().equals(alignmentArea.getSequenceProvider())) {
+				alignmentArea.afterSequenceChange(e);
 			}
 		}
 	}
@@ -67,9 +66,8 @@ public class MultipleAlignmentListener implements SequenceDataChangeListener, Da
 	@Override
 	public <T> void afterSequenceRenamed(SequenceRenamedEvent<T> e) {
 		for (AlignmentArea alignmentArea : getOwner().getAlignmentAreas()) {
-			AlignmentContentArea contentArea = alignmentArea.getContentArea();
-			if (!e.getSource().equals(contentArea.getSequenceProvider())) {
-				contentArea.afterSequenceRenamed(e);
+			if (!e.getSource().equals(alignmentArea.getSequenceProvider())) {
+				alignmentArea.afterSequenceRenamed(e);
 			}
 		}
 	}
@@ -78,9 +76,8 @@ public class MultipleAlignmentListener implements SequenceDataChangeListener, Da
 	@Override
 	public <T> void afterTokenChange(TokenChangeEvent<T> e) {
 		for (AlignmentArea alignmentArea : getOwner().getAlignmentAreas()) {
-			AlignmentContentArea contentArea = alignmentArea.getContentArea();
-			if (!e.getSource().equals(contentArea.getSequenceProvider())) {
-				contentArea.afterTokenChange(e);
+			if (!e.getSource().equals(alignmentArea.getSequenceProvider())) {
+				alignmentArea.afterTokenChange(e);
 			}
 		}
 	}
@@ -94,9 +91,8 @@ public class MultipleAlignmentListener implements SequenceDataChangeListener, Da
 		}
 
 		for (AlignmentArea alignmentArea : getOwner().getAlignmentAreas()) {
-			AlignmentContentArea contentArea = alignmentArea.getContentArea();
-			if ((current != null) && !current.equals(contentArea.getSequenceProvider())) {
-				contentArea.afterProviderChanged(previous, current);
+			if ((current != null) && !current.equals(alignmentArea.getSequenceProvider())) {
+				alignmentArea.afterProviderChanged(previous, current);
 			}
 		}
 	}
@@ -105,9 +101,8 @@ public class MultipleAlignmentListener implements SequenceDataChangeListener, Da
 	@Override
 	public void dataAreaInsertedRemoved(DataAreaChangeEvent e) {
 		for (AlignmentArea alignmentArea : getOwner().getAlignmentAreas()) {
-			AlignmentContentArea contentArea = alignmentArea.getContentArea();
-			if (!e.getSource().equals(contentArea.getDataAreas())) {
-				contentArea.dataAreaInsertedRemoved(e);
+			if (!e.getSource().equals(alignmentArea.getDataAreas())) {
+				alignmentArea.dataAreaInsertedRemoved(e);
 			}
 		}
 	}
@@ -116,9 +111,8 @@ public class MultipleAlignmentListener implements SequenceDataChangeListener, Da
 	@Override
 	public void dataAreaVisibilityChanged(DataAreaChangeEvent e) {
 		for (AlignmentArea alignmentArea : getOwner().getAlignmentAreas()) {
-			AlignmentContentArea contentArea = alignmentArea.getContentArea();
-			if (!e.getSource().equals(contentArea.getDataAreas())) {
-				contentArea.dataAreaVisibilityChanged(e);
+			if (!e.getSource().equals(alignmentArea.getDataAreas())) {
+				alignmentArea.dataAreaVisibilityChanged(e);
 			}
 		}
 	}

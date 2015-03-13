@@ -82,20 +82,18 @@ public class AlignmentAreaList extends ObservableList<AlignmentArea> {
 	
 	
 	private void addListenerToAlignmentArea(AlignmentArea alignmentArea) {
-		AlignmentContentArea contentArea = alignmentArea.getContentArea();
-		if (contentArea.hasSequenceProvider()) {
-			contentArea.getSequenceProvider().getChangeListeners().add(multipleAlignmentListener);
+		if (alignmentArea.hasSequenceProvider()) {
+			alignmentArea.getSequenceProvider().getChangeListeners().add(multipleAlignmentListener);
 		}
-		contentArea.getDataAreas().addListener(multipleAlignmentListener);
+		alignmentArea.getDataAreas().addListener(multipleAlignmentListener);
 	}
 
 	
 	private void removeListenerToAlignmentArea(AlignmentArea alignmentArea) {
-		AlignmentContentArea contentArea = alignmentArea.getContentArea();
-		if (contentArea.hasSequenceProvider()) {
-			contentArea.getSequenceProvider().getChangeListeners().remove(multipleAlignmentListener);
+		if (alignmentArea.hasSequenceProvider()) {
+			alignmentArea.getSequenceProvider().getChangeListeners().remove(multipleAlignmentListener);
 		}
-		contentArea.getDataAreas().removeListener(multipleAlignmentListener);
+		alignmentArea.getDataAreas().removeListener(multipleAlignmentListener);
 	}
 
 	

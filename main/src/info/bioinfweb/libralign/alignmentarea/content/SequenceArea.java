@@ -105,7 +105,7 @@ public class SequenceArea extends AlignmentSubArea {
 	}
 	
 	
-  private static void paintNucleotideCompound(AlignmentContentArea area, Graphics2D g, NucleotideCompound compound, 
+  private static void paintNucleotideCompound(AlignmentArea area, Graphics2D g, NucleotideCompound compound, 
   		double x, double y, boolean selected) {
   	
   	Set<NucleotideCompound> consituents = compound.getConstituents();
@@ -113,14 +113,14 @@ public class SequenceArea extends AlignmentSubArea {
   	Iterator<NucleotideCompound> iterator = consituents.iterator();
   	double bgY = y;
   	while (iterator.hasNext()) {  // Fill the compound rectangle with differently colored zones, if ambiguity codes are used.
-  		g.setColor(getBGColor(area.getColorSchema(), area.getColorSchema().getNucleotideColorMap().get(
-  				getNucleotideBaseString(area.getViewMode(), iterator.next())), selected));
+  		g.setColor(getBGColor(area.getContentArea().getColorSchema(), area.getContentArea().getColorSchema().getNucleotideColorMap().get(
+  				getNucleotideBaseString(area.getContentArea().getViewMode(), iterator.next())), selected));
     	g.fill(new Rectangle2D.Double(x, bgY, area.getCompoundWidth(), height));
     	bgY += height;
   	}
   	
-  	if (area.isPaintCompoundText()) {  // Text output only if font size is not too low
-	  	g.setColor(area.getColorSchema().getFontColor());
+  	if (area.getContentArea().isPaintCompoundText()) {  // Text output only if font size is not too low
+	  	g.setColor(area.getContentArea().getColorSchema().getFontColor());
 	  	g.setFont(area.getCompoundFont());
 			FontMetrics fm = g.getFontMetrics();
 	  	g.drawString(compound.getBase(), (int)(x + 0.5 * 
@@ -129,11 +129,11 @@ public class SequenceArea extends AlignmentSubArea {
   }
   
   
-  public static void paintCompound(AlignmentContentArea area, Graphics2D g, Object compound, double x, double y, boolean selected) {
-  	g.setColor(area.getColorSchema().getTokenBorderColor());
+  public static void paintCompound(AlignmentArea area, Graphics2D g, Object compound, double x, double y, boolean selected) {
+  	g.setColor(area.getContentArea().getColorSchema().getTokenBorderColor());
   	g.draw(new Rectangle2D.Double(x, y, area.getCompoundWidth(), area.getCompoundHeight()));
   	
-  	switch (area.getViewMode()) {
+  	switch (area.getContentArea().getViewMode()) {
   		case NUCLEOTIDE:
 			case DNA:
 			case RNA:
@@ -152,9 +152,9 @@ public class SequenceArea extends AlignmentSubArea {
   }
 
   
-  public static void paintSequence(AlignmentContentArea area, int sequenceID, TICPaintEvent event, double x, double y) {
-		int firstIndex = Math.max(0, area.columnByPaintX((int)event.getRectangle().getMinX()));
-		int lastIndex = area.columnByPaintX((int)event.getRectangle().getMaxX());
+  public static void paintSequence(AlignmentArea area, int sequenceID, TICPaintEvent event, double x, double y) {
+		int firstIndex = Math.max(0, area.getContentArea().columnByPaintX((int)event.getRectangle().getMinX()));
+		int lastIndex = area.getContentArea().columnByPaintX((int)event.getRectangle().getMaxX());
 		int lastColumn = area.getSequenceProvider().getSequenceLength(sequenceID) - 1;
 		if ((lastIndex == -1) || (lastIndex > lastColumn)) {  //TODO Elongate to the length of the longest sequence and paint empty/special tokens on the right end?
 			lastIndex = lastColumn;
@@ -164,7 +164,7 @@ public class SequenceArea extends AlignmentSubArea {
 		for (int i = firstIndex; i <= lastIndex; i++) {			
     	paintCompound(area, event.getGraphics(), 
     			area.getSequenceProvider().getTokenAt(sequenceID, i), (double)x, y,	
-    			area.getSelection().isSelected(i, area.getSequenceOrder().indexByID(sequenceID)));
+    			area.getContentArea().getSelection().isSelected(i, area.getSequenceOrder().indexByID(sequenceID)));
 	    x += area.getCompoundWidth();
     }
   }
@@ -172,7 +172,7 @@ public class SequenceArea extends AlignmentSubArea {
   
   private void paintCursor(Graphics2D g, double x, double y) {
   	SelectionModel selection = getOwner().getSelection();
-  	if (Math2.isBetween(getOwner().getSequenceOrder().indexByID(getSeqenceID()), 
+  	if (Math2.isBetween(getOwner().getOwner().getSequenceOrder().indexByID(getSeqenceID()), 
   			selection.getCursorRow(), selection.getCursorRow() + selection.getCursorHeight() - 1)) {
   		
   		Stroke previousStroke = g.getStroke();
@@ -180,8 +180,8 @@ public class SequenceArea extends AlignmentSubArea {
   			SequenceColorSchema colorSchema = getOwner().getColorSchema();
   			g.setColor(colorSchema.getCursorColor());
   			g.setStroke(new BasicStroke(colorSchema.getCursorLineWidth()));
-  			x += selection.getCursorColumn() * getOwner().getCompoundWidth();
-  			g.draw(new Line2D.Double(x, y, x, y + getOwner().getCompoundHeight()));
+  			x += selection.getCursorColumn() * getOwner().getOwner().getCompoundWidth();
+  			g.draw(new Line2D.Double(x, y, x, y + getOwner().getOwner().getCompoundHeight()));
   		}
   		finally {
   			g.setStroke(previousStroke);
@@ -197,22 +197,22 @@ public class SequenceArea extends AlignmentSubArea {
 
 		int firstIndex = Math.max(0, getOwner().columnByPaintX((int)event.getRectangle().getMinX()));
 		int lastIndex = getOwner().columnByPaintX((int)event.getRectangle().getMaxX());
-		int lastColumn = getOwner().getSequenceProvider().getSequenceLength(getSeqenceID()) - 1;
+		int lastColumn = getOwner().getOwner().getSequenceProvider().getSequenceLength(getSeqenceID()) - 1;
 		if ((lastIndex == -1) || (lastIndex > lastColumn)) {  //TODO Elongate to the length of the longest sequence and paint empty/special tokens on the right end?
 			lastIndex = lastColumn;
 		}
 		
 		event.getGraphics().setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-		double x = firstIndex * getOwner().getCompoundWidth() + getOwner().getDataAreas().getGlobalMaxLengthBeforeStart(); 
+		double x = firstIndex * getOwner().getOwner().getCompoundWidth() + getOwner().getOwner().getDataAreas().getGlobalMaxLengthBeforeStart(); 
 		for (int i = firstIndex; i <= lastIndex; i++) {			
-    	paintCompound(getOwner(), event.getGraphics(), 
-    			getOwner().getSequenceProvider().getTokenAt(getSeqenceID(), i), x, 0f,	
-    			getOwner().getSelection().isSelected(i, getOwner().getSequenceOrder().indexByID(getSeqenceID())));
-	    x += getOwner().getCompoundWidth();
+    	paintCompound(getOwner().getOwner(), event.getGraphics(), 
+    			getOwner().getOwner().getSequenceProvider().getTokenAt(getSeqenceID(), i), x, 0f,	
+    			getOwner().getSelection().isSelected(i, getOwner().getOwner().getSequenceOrder().indexByID(getSeqenceID())));
+	    x += getOwner().getOwner().getCompoundWidth();
     }
 		
 		if (getOwner().getSelection().getType().equals(SelectionType.CELLS)) {
-			paintCursor(event.getGraphics(), getOwner().getDataAreas().getGlobalMaxLengthBeforeStart(), 0);
+			paintCursor(event.getGraphics(), getOwner().getOwner().getDataAreas().getGlobalMaxLengthBeforeStart(), 0);
 		}
 	}
 
@@ -220,9 +220,9 @@ public class SequenceArea extends AlignmentSubArea {
 	@Override
 	public Dimension getSize() {
 		return new Dimension(
-				getOwner().getDataAreas().getGlobalMaxLengthBeforeStart() + 
-				getOwner().getCompoundWidth() * getOwner().getSequenceProvider().getSequenceLength(getSeqenceID()),  //TODO Elongate to the length of the longest sequence and paint empty/special tokens on the right end? 
-				getOwner().getCompoundHeight());
+				getOwner().getOwner().getDataAreas().getGlobalMaxLengthBeforeStart() + 
+				getOwner().getOwner().getCompoundWidth() * getOwner().getOwner().getSequenceProvider().getSequenceLength(getSeqenceID()),  //TODO Elongate to the length of the longest sequence and paint empty/special tokens on the right end? 
+				getOwner().getOwner().getCompoundHeight());
 	}
 
 

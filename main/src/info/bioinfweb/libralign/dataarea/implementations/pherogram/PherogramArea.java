@@ -72,7 +72,7 @@ public class PherogramArea extends CustomHeightFullWidthArea implements Pherogra
 	 * @param pherogram - the provider for the pherogram data to be displayed by the returned instance
 	 */
 	public PherogramArea(AlignmentContentArea owner, PherogramProvider pherogram) {
-		super(owner, DEFAULT_HEIGHT_FACTOR * owner.getCompoundHeight());
+		super(owner, DEFAULT_HEIGHT_FACTOR * owner.getOwner().getCompoundHeight());
 		this.pherogram = pherogram;
 		verticalScale = getHeight();
 		leftCutPosition = 0;
@@ -112,9 +112,9 @@ public class PherogramArea extends CustomHeightFullWidthArea implements Pherogra
 		g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 		
 		double leftX = getAlignmentModel().editableIndexByBaseCallIndex(getLeftCutPosition()).getAfter() * 
-				getOwner().getCompoundWidth() + getOwner().getDataAreas().getGlobalMaxLengthBeforeStart();
+				getOwner().getOwner().getCompoundWidth() + getOwner().getOwner().getDataAreas().getGlobalMaxLengthBeforeStart();
 		double rightX = (getAlignmentModel().editableIndexByBaseCallIndex(getRightCutPosition()).getBefore() + 1) * 
-				getOwner().getCompoundWidth() + getOwner().getDataAreas().getGlobalMaxLengthBeforeStart();
+				getOwner().getOwner().getCompoundWidth() + getOwner().getOwner().getDataAreas().getGlobalMaxLengthBeforeStart();
 		
 		// Draw cut off background:
 		g.setColor(getFormats().getCutBackgroundColor());
@@ -138,15 +138,15 @@ public class PherogramArea extends CustomHeightFullWidthArea implements Pherogra
 		g.fill(new Rectangle2D.Double(leftX, e.getRectangle().y, rightX - leftX, e.getRectangle().height));
 
 		SimpleSequenceInterval paintRange = calculatePaintRange(e);
-		double x = (getFirstSeqPos() - getLeftCutPosition()) * getOwner().getCompoundWidth() + 
-				getOwner().getDataAreas().getGlobalMaxLengthBeforeStart();
+		double x = (getFirstSeqPos() - getLeftCutPosition()) * getOwner().getOwner().getCompoundWidth() + 
+				getOwner().getOwner().getDataAreas().getGlobalMaxLengthBeforeStart();
 		double y = 0; 
 		double height = getHeight();
 		ScaledPherogramDistortion distortion = getAlignmentModel().createPherogramDistortion();
 		
 		// Paint gaps:
 		painter.paintGaps(g, paintRange.getFirstPos(), paintRange.getLastPos(), x, y, height,	distortion, 
-				getOwner().getCompoundWidth());
+				getOwner().getOwner().getCompoundWidth());
 		
 		// Paint base call lines
 		if (getFormats().isShowBaseCallLines()) {
@@ -159,7 +159,7 @@ public class PherogramArea extends CustomHeightFullWidthArea implements Pherogra
 		g.setFont(getFormats().getIndexFont());
 		g.setColor(Color.BLACK);
 		painter.paintBaseCallIndices(g, paintRange.getFirstPos(), paintRange.getLastPos(), x, y, 
-				distortion, getOwner().getCompoundWidth());
+				distortion, getOwner().getOwner().getCompoundWidth());
 		y += getFormats().getIndexFont().getSize() * PherogramFormats.FONT_HEIGHT_FACTOR;
 		
 		// Paint base calls and probabilities:
@@ -168,7 +168,7 @@ public class PherogramArea extends CustomHeightFullWidthArea implements Pherogra
 		
 		// Draw curves:
 		height = painter.paintTraceCurves(g, paintRange.getFirstPos(), paintRange.getLastPos(), 
-				x, getHeight() - painter.calculateTraceCurvesHeight(),	distortion, getOwner().getCompoundWidth());
+				x, getHeight() - painter.calculateTraceCurvesHeight(),	distortion, getOwner().getOwner().getCompoundWidth());
 	}
 
 
@@ -268,7 +268,7 @@ public class PherogramArea extends CustomHeightFullWidthArea implements Pherogra
 
 	@Override
 	public int getLengthBeforeStart() {
-		return Math.max(0, getAlignmentModel().baseCallIndexByEditableIndex(0).getAfter() * getOwner().getCompoundWidth());
+		return Math.max(0, getAlignmentModel().baseCallIndexByEditableIndex(0).getAfter() * getOwner().getOwner().getCompoundWidth());
 	}
 
 
@@ -276,7 +276,7 @@ public class PherogramArea extends CustomHeightFullWidthArea implements Pherogra
 	public int getLength() {
 		return (getAlignmentModel().editableIndexByBaseCallIndex(getRightCutPosition() - 1).getAfter() + 1 + // space until the end of the aligned part
 				(getProvider().getSequenceLength() - getRightCutPosition()))  // possible unaligned part at the right end 
-				* getOwner().getCompoundWidth();
+				* getOwner().getOwner().getCompoundWidth();
 	}
 
 
@@ -299,7 +299,7 @@ public class PherogramArea extends CustomHeightFullWidthArea implements Pherogra
 
 	@Override
 	public <T> void afterTokenChange(TokenChangeEvent<T> e) {
-		if (e.getSource().equals(getOwner().getSequenceProvider()) && e.getSequenceID() == getList().getLocation().getSequenceID()) {
+		if (e.getSource().equals(getOwner().getOwner().getSequenceProvider()) && e.getSequenceID() == getList().getLocation().getSequenceID()) {
 			switch (e.getType()) {
 				case INSERTION:
 					int addend = getOwner().getEditSettings().isInsertLeftInDataArea() ? -1 : 0;

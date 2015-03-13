@@ -64,13 +64,13 @@ public class SequenceAreaMap extends TreeMap<Integer, SequenceArea> implements S
 	 * @since 0.3.0
 	 */
 	public void updateElements() {
-		if (getOwner().hasSequenceProvider()) {
+		if (getOwner().getOwner().hasSequenceProvider()) {
 			// Backup this map and clear it: (Necessary to remove sequences that are not present in the source anymore.)
 			Map<Integer, SequenceArea> saveMap = new TreeMap<Integer, SequenceArea>(this);
 			clear();
 			
 			// (Re)insert sequence areas: 
-			Iterator<Integer> iterator = getOwner().getSequenceProvider().sequenceIDIterator();
+			Iterator<Integer> iterator = getOwner().getOwner().getSequenceProvider().sequenceIDIterator();
 			while (iterator.hasNext()) {
 				Integer id = iterator.next();
 				SequenceArea sequenceArea = saveMap.get(id);

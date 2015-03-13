@@ -71,14 +71,14 @@ public class AlignmentActionProvider<T> {
 	
 	
 	public SequenceDataProvider<T> getModel() {
-		return (SequenceDataProvider<T>)view.getSequenceProvider();
+		return (SequenceDataProvider<T>)view.getOwner().getSequenceProvider();
 	}
 
 
 	private void deleteSelection(SelectionModel selection) {
 		if (!selection.isEmpty()) {
 			for (int row = selection.getCursorRow(); row < selection.getCursorRow() + selection.getCursorHeight(); row++) {
-				getModel().removeTokensAt(getView().getSequenceOrder().idByIndex(row), 
+				getModel().removeTokensAt(getView().getOwner().getSequenceOrder().idByIndex(row), 
 						selection.getFirstColumn(), selection.getFirstColumn() + selection.getWidth());
 			}
 			selection.setNewCursorColumn(selection.getFirstColumn());
@@ -104,8 +104,8 @@ public class AlignmentActionProvider<T> {
 		try {
 			if (selection.isEmpty()) {
 				for (int row = selection.getCursorRow(); row < selection.getCursorRow() + selection.getCursorHeight(); row++) {
-					if (selection.getCursorColumn() < getModel().getSequenceLength(getView().getSequenceOrder().idByIndex(row))) {
-						getModel().removeTokenAt(getView().getSequenceOrder().idByIndex(row), 
+					if (selection.getCursorColumn() < getModel().getSequenceLength(getView().getOwner().getSequenceOrder().idByIndex(row))) {
+						getModel().removeTokenAt(getView().getOwner().getSequenceOrder().idByIndex(row), 
 								selection.getCursorColumn());
 						result = true;
 				  }
@@ -139,7 +139,7 @@ public class AlignmentActionProvider<T> {
 			if (selection.isEmpty()) {
 				if (selection.getCursorColumn() > 0) {
 					for (int row = selection.getCursorRow(); row < selection.getCursorRow() + selection.getCursorHeight(); row++) {
-						getModel().removeTokenAt(getView().getSequenceOrder().idByIndex(row), 
+						getModel().removeTokenAt(getView().getOwner().getSequenceOrder().idByIndex(row), 
 								selection.getCursorColumn() - 1);
 					}
 					selection.setNewCursorColumn(selection.getCursorColumn() - 1);  // Move cursor backwards
@@ -186,7 +186,7 @@ public class AlignmentActionProvider<T> {
 			}
 			
 			for (int row = selection.getCursorRow(); row < selection.getCursorRow() + selection.getCursorHeight(); row++) {
-				getModel().insertTokensAt(getView().getSequenceOrder().idByIndex(row), 
+				getModel().insertTokensAt(getView().getOwner().getSequenceOrder().idByIndex(row), 
 						selection.getFirstColumn(), tokens);
 			}
 			selection.setNewCursorColumn(selection.getFirstColumn() + tokenCount);  // Move cursor forward
@@ -219,12 +219,12 @@ public class AlignmentActionProvider<T> {
 			for (int row = selection.getCursorRow(); row < selection.getCursorRow() + selection.getCursorHeight(); row++) {
 				// Remove possible additional tokens:
 				if (selection.getWidth() > 1) {
-					getModel().removeTokensAt(getView().getSequenceOrder().idByIndex(row), 
+					getModel().removeTokensAt(getView().getOwner().getSequenceOrder().idByIndex(row), 
 							selection.getFirstColumn() + 1, selection.getFirstColumn() + selection.getWidth());
 				}
 				
 				// Overwrite first token:
-				getModel().setTokenAt(getView().getSequenceOrder().idByIndex(row), 
+				getModel().setTokenAt(getView().getOwner().getSequenceOrder().idByIndex(row), 
 						selection.getFirstColumn(), token);
 			}
 			selection.setNewCursorColumn(selection.getFirstColumn() + 1);  // Move cursor forward

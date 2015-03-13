@@ -78,13 +78,13 @@ public class CharSetArea extends DataArea {
 
 	@Override
 	public int getLength() {
-		return getOwner().getCompoundWidth() * getOwner().getGlobalMaxSequenceLength();  //getSequenceProvider().getMaxSequenceLength();
+		return getOwner().getOwner().getCompoundWidth() * getOwner().getOwner().getGlobalMaxSequenceLength();  //getSequenceProvider().getMaxSequenceLength();
 	}
 
 	
 	@Override
 	public int getHeight() {
-		return getModel().size() * getOwner().getCompoundHeight();  //TODO Add possible border height
+		return getModel().size() * getOwner().getOwner().getCompoundHeight();  //TODO Add possible border height
 	}
 
 	
@@ -98,7 +98,7 @@ public class CharSetArea extends DataArea {
 		// Determine area to be painted:
 		int firstIndex = Math.max(0, getOwner().columnByPaintX((int)event.getRectangle().getMinX()));
 		int lastIndex = getOwner().columnByPaintX((int)event.getRectangle().getMaxX());
-		int lastColumn = getOwner().getGlobalMaxSequenceLength() - 1;  //getSequenceProvider().getMaxSequenceLength() - 1;
+		int lastColumn = getOwner().getOwner().getGlobalMaxSequenceLength() - 1;  //getSequenceProvider().getMaxSequenceLength() - 1;
 		if ((lastIndex == -1) || (lastIndex > lastColumn)) {
 			lastIndex = lastColumn;
 		}
@@ -106,18 +106,18 @@ public class CharSetArea extends DataArea {
 		// Paint output:
 		Iterator<CharSet> iterator = getModel().iterator();
 		double y = 0;
-		final double borderHeight = getOwner().getCompoundHeight() * BORDER_FRACTION;
-		final double height = getOwner().getCompoundHeight() - 2 * borderHeight;
+		final double borderHeight = getOwner().getOwner().getCompoundHeight() * BORDER_FRACTION;
+		final double height = getOwner().getOwner().getCompoundHeight() - 2 * borderHeight;
 		while (iterator.hasNext()) {
 			CharSet charSet = iterator.next();
 			g.setColor(charSet.getColor());
 			for (int index = firstIndex; index <= lastIndex; index++) {
 				if (charSet.contains(index)) {
-					g.fill(new Rectangle2D.Double(index * getOwner().getCompoundWidth(), y + borderHeight, 
-							getOwner().getCompoundWidth(), height));
+					g.fill(new Rectangle2D.Double(index * getOwner().getOwner().getCompoundWidth(), y + borderHeight, 
+							getOwner().getOwner().getCompoundWidth(), height));
 				}
 			}
-			y += getOwner().getCompoundHeight();
+			y += getOwner().getOwner().getCompoundHeight();
 		}
 	}
 

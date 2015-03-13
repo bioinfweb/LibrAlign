@@ -204,12 +204,12 @@ public class SelectionModel {
 	
 	
 	private int bringCursorColumnInRange(int column) {
-		 return Math.max(0, Math.min(column, getOwner().getSequenceProvider().getMaxSequenceLength()));
+		 return Math.max(0, Math.min(column, getOwner().getOwner().getSequenceProvider().getMaxSequenceLength()));
 	}
 	
 	
 	private int bringRowInRange(int row) {
-		 return Math.max(0, Math.min(row, getOwner().getSequenceProvider().getSequenceCount() - 1));
+		 return Math.max(0, Math.min(row, getOwner().getOwner().getSequenceProvider().getSequenceCount() - 1));
 	}
 	
 	
@@ -225,7 +225,7 @@ public class SelectionModel {
 		row = bringRowInRange(row);
 		cursorStartRow = row;
 		cursorStartColumn = column;
-		height = Math.max(1, Math.min(getOwner().getSequenceProvider().getSequenceCount() - row, height));
+		height = Math.max(1, Math.min(getOwner().getOwner().getSequenceProvider().getSequenceCount() - row, height));
 		clear();
 		cursor.setColumnRowHeight(column, row, height);
     fireSelectionChanged();
@@ -292,7 +292,7 @@ public class SelectionModel {
 	public void selectAll() {
 		columnSelection.selectAll();
 		rowSelection.selectAll();
-		SequenceDataProvider provider = getOwner().getSequenceProvider();
+		SequenceDataProvider provider = getOwner().getOwner().getSequenceProvider();
 		cursor.setColumnRowHeight(provider.getMaxSequenceLength(), 0, provider.getSequenceCount());
 		fireSelectionChanged();
 	}

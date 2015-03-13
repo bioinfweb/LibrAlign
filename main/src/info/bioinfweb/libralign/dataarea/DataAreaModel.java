@@ -41,7 +41,7 @@ import java.util.TreeMap;
  * @author Ben St&ouml;ver
  */
 public class DataAreaModel {
-	private AlignmentContentArea owner;
+	private AlignmentArea owner;
   private DataAreaList topAreas = new DataAreaList(this, DataAreaListType.TOP);	
   private DataAreaList bottomAreas = new DataAreaList(this, DataAreaListType.BOTTOM);	
   private Map<Integer, DataAreaList> sequenceAreaLists = new TreeMap<Integer, DataAreaList>();
@@ -56,7 +56,7 @@ public class DataAreaModel {
 	 * 
 	 * @param owner - the alignment content area that will be using this instance
 	 */
-  public DataAreaModel(AlignmentContentArea owner) {
+  public DataAreaModel(AlignmentArea owner) {
 		super();
 		this.owner = owner;
 	}
@@ -65,7 +65,7 @@ public class DataAreaModel {
 	/**
 	 * Returns the alignment content area that uses this instance.
 	 */
-	public AlignmentContentArea getOwner() {
+	public AlignmentArea getOwner() {
 		return owner;
 	}
 
@@ -200,11 +200,11 @@ public class DataAreaModel {
 	 * @return an integer >= 0
 	 */
 	public int getGlobalMaxLengthBeforeStart() {
-		AlignmentArea alignmentArea = getOwner().getOwner();
+		AlignmentArea alignmentArea = getOwner();
 		int result = 0;
 		if (alignmentArea.hasContainer()) {
 			for (AlignmentArea containerAlignmentArea : alignmentArea.getContainer().getAlignmentAreas()) {
-				result = Math.max(result, containerAlignmentArea.getContentArea().getDataAreas().getLocalMaxLengthBeforeStart());
+				result = Math.max(result, containerAlignmentArea.getDataAreas().getLocalMaxLengthBeforeStart());
 			}
 		}
 		else {

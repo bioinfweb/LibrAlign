@@ -69,7 +69,7 @@ public class ConsensusSequenceArea extends CustomHeightFullWidthArea {
 	 * @throws IllegalArgumentException if {@code owner} does not have a sequence data provider
 	 */
 	public ConsensusSequenceArea(AlignmentContentArea owner) {
-		this(owner, owner.getSequenceProvider(), true);
+		this(owner, owner.getOwner().getSequenceProvider(), true);
 	}
 	
 	
@@ -94,7 +94,7 @@ public class ConsensusSequenceArea extends CustomHeightFullWidthArea {
 	private ConsensusSequenceArea(AlignmentContentArea owner, SequenceDataProvider<?> sequenceDataProvider, 
 			boolean useSequenceDataProviderFromOwner) {
 			
-		super(owner, Math.round(DEFAULT_HEIGHT_FACTOR * owner.getCompoundHeight()));  //TODO Add listener for compoundHeight that updates the height.
+		super(owner, Math.round(DEFAULT_HEIGHT_FACTOR * owner.getOwner().getCompoundHeight()));  //TODO Add listener for compoundHeight that updates the height.
 		if (sequenceDataProvider == null) {
 			throw new IllegalArgumentException("The sequence data provider must not be null.");
 		}
@@ -187,7 +187,7 @@ public class ConsensusSequenceArea extends CustomHeightFullWidthArea {
 	
 	@Override
 	public int getLength() {
-		return getOwner().getCompoundWidth() * getSequenceDataProvider().getMaxSequenceLength();
+		return getOwner().getOwner().getCompoundWidth() * getSequenceDataProvider().getMaxSequenceLength();
 	}
 
 	
@@ -202,7 +202,7 @@ public class ConsensusSequenceArea extends CustomHeightFullWidthArea {
 		// Determine area to be painted:
 		int firstIndex = Math.max(0, getOwner().columnByPaintX((int)event.getRectangle().getMinX()));
 		int lastIndex = getOwner().columnByPaintX((int)event.getRectangle().getMaxX());
-		int lastColumn = getOwner().getGlobalMaxSequenceLength() - 1;
+		int lastColumn = getOwner().getOwner().getGlobalMaxSequenceLength() - 1;
 		if ((lastIndex == -1) || (lastIndex > lastColumn)) {  //TODO Elongate to the length of the longest sequence and paint empty/special tokens on the right end?
 			lastIndex = lastColumn;
 		}
@@ -214,9 +214,9 @@ public class ConsensusSequenceArea extends CustomHeightFullWidthArea {
 		AlignmentAmbiguityNucleotideCompoundSet compoundSet =  
 				AlignmentAmbiguityNucleotideCompoundSet.getAlignmentAmbiguityNucleotideCompoundSet();
 		g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-  	float x = firstIndex * getOwner().getCompoundWidth() + getOwner().getDataAreas().getGlobalMaxLengthBeforeStart();
-		float sequenceY = getHeight() - getOwner().getCompoundHeight();
-		final float barWidth = getOwner().getCompoundWidth() / 4; 
+  	float x = firstIndex * getOwner().getOwner().getCompoundWidth() + getOwner().getOwner().getDataAreas().getGlobalMaxLengthBeforeStart();
+		float sequenceY = getHeight() - getOwner().getOwner().getCompoundHeight();
+		final float barWidth = getOwner().getOwner().getCompoundWidth() / 4; 
 		for (int i = firstIndex; i <= lastIndex; i++) {
 			// Paint bars:
 			float barX = x;
@@ -229,10 +229,10 @@ public class ConsensusSequenceArea extends CustomHeightFullWidthArea {
 			}
 			
 			// Paint token:
-			SequenceArea.paintCompound(getOwner(), event.getGraphics(), 
+			SequenceArea.paintCompound(getOwner().getOwner(), event.getGraphics(), 
 					compoundSet.getCompoundForString("" + score.getConsensusBase()), x, sequenceY, false);
 			
-	    x += getOwner().getCompoundWidth();
+	    x += getOwner().getOwner().getCompoundWidth();
     }
 	}
 

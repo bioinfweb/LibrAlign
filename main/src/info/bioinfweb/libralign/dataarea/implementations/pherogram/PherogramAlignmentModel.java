@@ -334,7 +334,7 @@ public class PherogramAlignmentModel {
 		int firstEditableIndex = editableIndexByBaseCallIndex(shiftChange.getBaseCallIndex()).getCorresponding() - 
 				shiftChange.getShiftChange()/* - 1*/;
 		for (int i = 0; i < result.size(); i++) {
-			result.setGap(i, ((NucleotideCompound)getOwner().getOwner().getSequenceProvider().getTokenAt(
+			result.setGap(i, ((NucleotideCompound)getOwner().getOwner().getOwner().getSequenceProvider().getTokenAt(
 					getOwner().getList().getLocation().getSequenceID(), firstEditableIndex + i)).getBase().equals(
 							"" + AlignmentAmbiguityNucleotideCompoundSet.GAP_CHARACTER));
 		}
@@ -352,7 +352,7 @@ public class PherogramAlignmentModel {
 			shiftChange = shiftChangeIterator.next();
 		}
 		
-		final int compoundWidth = getOwner().getOwner().getCompoundWidth();
+		final int compoundWidth = getOwner().getOwner().getOwner().getCompoundWidth();
 		int stepWidth = 1;
 		int editPosPerBaseCallPos = 1;
 		double baseCallPaintX = 0; //0.5 * compoundWidth;

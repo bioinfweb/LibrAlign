@@ -58,7 +58,7 @@ public class SequenceOrder {
 	};
 
 
-	private AlignmentContentArea owner;
+	private AlignmentArea owner;
 	private List<Integer> idList = new ArrayList<Integer>();
 	private Map<Integer, Integer> indexByIDMap = new TreeMap<Integer, Integer>();
 	private SequenceOrderType orderType = SequenceOrderType.SOURCE;
@@ -72,14 +72,14 @@ public class SequenceOrder {
 	 * 
 	 * @param owner - the alignment view objects the returned instance should be used for
 	 */
-	public SequenceOrder(AlignmentContentArea owner) {
+	public SequenceOrder(AlignmentArea owner) {
 		super();
 		this.owner = owner;
 		setSourceSequenceOrder();
 	}
 
 
-	public AlignmentContentArea getOwner() {
+	public AlignmentArea getOwner() {
 		return owner;
 	}
 
