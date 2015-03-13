@@ -118,7 +118,7 @@ public class AbstractTestApplication {
 			
 			result.getDataAreas().getBottomAreas().add(new ConsensusSequenceArea(result.getContentArea()));
 			
-			result.getContentArea().getSelection().setType(SelectionType.COLUMN_ONLY);
+			result.getSelection().setType(SelectionType.COLUMN_ONLY);
 			
 			return result;
 		}
