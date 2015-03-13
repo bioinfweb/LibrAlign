@@ -46,14 +46,14 @@ public class AbstractApplication {
 			
 			AlignmentReader reader = new FASTAReader();
 			try {
-				reader.read(new File("D:\\Users\\BenStoever\\ownCloud\\Dokumente\\Projekte\\LibrAlign\\Testdaten\\Performance\\Alignment_8_268435456.fasta"), provider);
+				reader.read(new File("D:\\Users\\BenStoever\\ownCloud\\Dokumente\\Projekte\\LibrAlign\\Testdaten\\Performance\\Alignment_8_134217728.fasta"), provider);
 				// Alignment_8_268435456.fasta is the first file that is too long to be displayed (Alignment_8_134217728.fasta works with
 				// default compound width). The sequence components are just not set visible (without any exception). (The reason should be 
 				// that the component width would be higher than Integer.MAX_VALUE.) Loading of the the data took 200298 ms, which is a 
-				// linear behavior.
+				// linear complexity.
 				alignmentArea = new AlignmentArea();
-				alignmentArea.getContentArea().getDataAreas().getTopAreas().add(new SequenceIndexArea(alignmentArea.getContentArea()));
-				alignmentArea.getContentArea().setSequenceProvider(provider, false);
+				alignmentArea.getDataAreas().getTopAreas().add(new SequenceIndexArea(alignmentArea.getContentArea()));
+				alignmentArea.setSequenceProvider(provider, false);
 			}
 			catch (Exception e) {
 				e.printStackTrace();

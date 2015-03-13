@@ -40,8 +40,8 @@ import org.junit.* ;
 
 
 public class DataAreaListTest {
-  private DataAreaList createList(AlignmentContentArea alignmentContentArea, final List<DataAreaChangeEvent> eventList, DataAreaListType type) {
-  	DataAreaModel owner = new DataAreaModel(alignmentContentArea);
+  private DataAreaList createList(AlignmentArea alignmentArea, final List<DataAreaChangeEvent> eventList, DataAreaListType type) {
+  	DataAreaModel owner = new DataAreaModel(alignmentArea);
   	owner.addListener(new DataAreaModelListener() {
 					@Override
 					public void dataAreaVisibilityChanged(DataAreaChangeEvent e) {
@@ -108,17 +108,17 @@ public class DataAreaListTest {
   
   @Test
   public void test_events() {
-  	AlignmentContentArea alignmentContentArea = new AlignmentArea().getContentArea();
+  	AlignmentArea alignmentArea = new AlignmentArea();
   	List<DataAreaChangeEvent> eventList = new ArrayList<DataAreaChangeEvent>();
-  	DataAreaList areaList = createList(alignmentContentArea, eventList, DataAreaListType.TOP);
+  	DataAreaList areaList = createList(alignmentArea, eventList, DataAreaListType.TOP);
   	
-  	areaList.add(createDataArea(alignmentContentArea));
+  	areaList.add(createDataArea(alignmentArea.getContentArea()));
   	assertEquals(1, eventList.size());
   	eventList.clear();
   	
   	Collection<DataArea> severalAreas = new ArrayList<DataArea>(4);
   	for (int i = 0; i < 4; i++) {
-    	severalAreas.add(createDataArea(alignmentContentArea));
+    	severalAreas.add(createDataArea(alignmentArea.getContentArea()));
 		}
   	areaList.addAll(severalAreas);
   	assertEquals(1, eventList.size());  // Checks if several events have been produced.
@@ -157,13 +157,13 @@ public class DataAreaListTest {
   @Test
   public void test_events_sublist() {
   	// Produces assertions as long as DataArea.subList() does not have a special implementation.
-  	AlignmentContentArea alignmentContentArea = new AlignmentArea().getContentArea();
+  	AlignmentArea alignmentArea = new AlignmentArea();
   	List<DataAreaChangeEvent> eventList = new ArrayList<DataAreaChangeEvent>();
-  	DataAreaList areaList = createList(alignmentContentArea, eventList, DataAreaListType.TOP);
+  	DataAreaList areaList = createList(alignmentArea, eventList, DataAreaListType.TOP);
   	
   	Collection<DataArea> severalAreas = new ArrayList<DataArea>(4);
   	for (int i = 0; i < 4; i++) {
-    	severalAreas.add(createDataArea(alignmentContentArea));
+    	severalAreas.add(createDataArea(alignmentArea.getContentArea()));
 		}
   	areaList.addAll(severalAreas);
   	eventList.clear();

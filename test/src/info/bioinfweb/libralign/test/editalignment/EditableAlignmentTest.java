@@ -52,7 +52,7 @@ public class EditableAlignmentTest {
 			SequenceDataProvider<NucleotideCompound> provider = new PackedSequenceDataProvider<NucleotideCompound>(tokenSet);
 			
 			// Add index area:
-			contentArea.getDataAreas().getTopAreas().add(new SequenceIndexArea(contentArea));
+			alignmentArea.getDataAreas().getTopAreas().add(new SequenceIndexArea(contentArea));
 			
 			// Test sequence:
 			provider.addSequence("A");
@@ -88,13 +88,13 @@ public class EditableAlignmentTest {
 				PherogramArea pherogramArea = new PherogramArea(alignmentArea.getContentArea(), pherogramProvider);
 				//pherogramArea.setFirstSeqPos(1);
 				//pherogramArea.setLeftCutPosition(1);
-				alignmentArea.getContentArea().getDataAreas().getSequenceAreas(id).add(pherogramArea);
+				alignmentArea.getDataAreas().getSequenceAreas(id).add(pherogramArea);
 			}
 			catch (UnsupportedChromatogramFormatException | IOException e) {
 				e.printStackTrace();
 			}
 			
-			contentArea.setSequenceProvider(provider, false);
+			alignmentArea.setSequenceProvider(provider, false);
 		}
 		
 		return alignmentArea;
@@ -103,7 +103,7 @@ public class EditableAlignmentTest {
 	
 	private String newSequenceName() {
 		int index = 1;
-		while (getAlignmentArea().getContentArea().getSequenceProvider().sequenceIDByName(
+		while (getAlignmentArea().getSequenceProvider().sequenceIDByName(
 				"Sequence" + index) != SequenceDataProvider.NO_SEQUENCE_FOUND) {
 			index++;
 		}
@@ -113,7 +113,7 @@ public class EditableAlignmentTest {
 	
 	protected void addPherogramSequence() {
 		try {
-			SequenceDataProvider provider = getAlignmentArea().getContentArea().getSequenceProvider();
+			SequenceDataProvider provider = getAlignmentArea().getSequenceProvider();
 			String name = newSequenceName();
 			provider.addSequence(name);
 			int id = provider.sequenceIDByName(name);
@@ -128,7 +128,7 @@ public class EditableAlignmentTest {
 			
 			// Add data area:
 			PherogramArea pherogramArea = new PherogramArea(alignmentArea.getContentArea(), pherogramProvider);
-			alignmentArea.getContentArea().getDataAreas().getSequenceAreas(id).add(pherogramArea);
+			alignmentArea.getDataAreas().getSequenceAreas(id).add(pherogramArea);
 		}
 		catch (UnsupportedChromatogramFormatException | IOException e) {
 			e.printStackTrace();

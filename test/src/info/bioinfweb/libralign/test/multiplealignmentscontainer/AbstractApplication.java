@@ -109,20 +109,20 @@ public class AbstractApplication {
 			// Index:
 			AlignmentArea area = new AlignmentArea(result);
 			area.setAllowVerticalScrolling(false);
-			area.getContentArea().getDataAreas().getTopAreas().add(new SequenceIndexArea(area.getContentArea()));
+			area.getDataAreas().getTopAreas().add(new SequenceIndexArea(area.getContentArea()));
 			result.getAlignmentAreas().add(area);
 			
 			// Char sets:
 			area = new AlignmentArea(result);
 			area.setAllowVerticalScrolling(true);
-			area.getContentArea().getDataAreas().getTopAreas().add(createCharSetArea(area.getContentArea()));
+			area.getDataAreas().getTopAreas().add(createCharSetArea(area.getContentArea()));
 			result.getAlignmentAreas().add(area);
       
 			// Alignment with pherograms:
 			area = new AlignmentArea(result);
 			area.setAllowVerticalScrolling(true);
       			
-			area.getContentArea().setSequenceProvider(sequenceProvider, false);
+			area.setSequenceProvider(sequenceProvider, false);
 			
 			PherogramArea pherogramArea = new PherogramArea(area.getContentArea(), pherogramProvider);
 			pherogramArea.setFirstSeqPos(34 + 5);
@@ -130,7 +130,7 @@ public class AbstractApplication {
 			pherogramArea.setRightCutPosition(820);
 			pherogramArea.getAlignmentModel().setShiftChange(38, -1);
 			pherogramArea.getAlignmentModel().setShiftChange(49, 2);
-			area.getContentArea().getDataAreas().getSequenceAreas(sequenceProvider.sequenceIDByName("Sequence 4")).add(pherogramArea);
+			area.getDataAreas().getSequenceAreas(sequenceProvider.sequenceIDByName("Sequence 4")).add(pherogramArea);
 			
 			result.getAlignmentAreas().add(area);
 			
@@ -145,13 +145,13 @@ public class AbstractApplication {
 
 			area = new AlignmentArea(result);
 			area.setAllowVerticalScrolling(false);      			
-			area.getContentArea().setSequenceProvider(sequenceProvider2, false);
+			area.setSequenceProvider(sequenceProvider2, false);
 			result.getAlignmentAreas().add(area);
 			
 			// Consensus sequence:
       area = new AlignmentArea(result);
 			area.setAllowVerticalScrolling(false);
-			area.getContentArea().getDataAreas().getBottomAreas().add(new ConsensusSequenceArea(area.getContentArea(), sequenceProvider));
+			area.getDataAreas().getBottomAreas().add(new ConsensusSequenceArea(area.getContentArea(), sequenceProvider));
       result.getAlignmentAreas().add(area);
 			
 			return result;

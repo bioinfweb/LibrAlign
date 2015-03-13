@@ -22,12 +22,11 @@ package info.bioinfweb.libralign.test.performance.application;
 import info.bioinfweb.commons.testing.TestLogger;
 import info.bioinfweb.libralign.alignmentarea.SwingAlignmentArea;
 
+import java.awt.BorderLayout;
 import java.awt.EventQueue;
 
 import javax.swing.JFrame;
-import javax.swing.JPanel;
 
-import java.awt.BorderLayout;
 
 
 

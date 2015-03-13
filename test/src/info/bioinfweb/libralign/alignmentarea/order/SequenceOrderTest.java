@@ -51,11 +51,11 @@ public class SequenceOrderTest {
 		alignment.add("Sequence B", new DNASequence("ATG--CT"));
 		
 		AlignmentArea alignmentArea = new AlignmentArea();
-		alignmentArea.getContentArea().setSequenceProvider(new BioJavaSequenceDataProvider<DNASequence, NucleotideCompound>(
+		alignmentArea.setSequenceProvider(new BioJavaSequenceDataProvider<DNASequence, NucleotideCompound>(
 				new BioJavaTokenSet<NucleotideCompound>(
 						AlignmentAmbiguityNucleotideCompoundSet.getAlignmentAmbiguityNucleotideCompoundSet(), true),
 				alignment), false);
-		return new SequenceOrder(alignmentArea.getContentArea());
+		return new SequenceOrder(alignmentArea);
 	}
 	
 	
