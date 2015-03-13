@@ -31,13 +31,17 @@ import org.eclipse.swt.widgets.Composite;
 
 import info.bioinfweb.commons.tic.TICComponent;
 import info.bioinfweb.commons.tic.TICPaintEvent;
+import info.bioinfweb.libralign.AlignmentDataViewMode;
 import info.bioinfweb.libralign.alignmentarea.content.AlignmentContentArea;
 import info.bioinfweb.libralign.alignmentarea.content.AlignmentSubArea;
+import info.bioinfweb.libralign.alignmentarea.content.SequenceColorSchema;
 import info.bioinfweb.libralign.alignmentarea.label.AlignmentLabelArea;
 import info.bioinfweb.libralign.alignmentarea.order.SequenceOrder;
+import info.bioinfweb.libralign.alignmentarea.selection.SelectionModel;
 import info.bioinfweb.libralign.dataarea.DataAreaChangeEvent;
 import info.bioinfweb.libralign.dataarea.DataAreaModel;
 import info.bioinfweb.libralign.dataarea.DataAreaModelListener;
+import info.bioinfweb.libralign.editsettings.EditSettings;
 import info.bioinfweb.libralign.multiplealignments.MultipleAlignmentsContainer;
 import info.bioinfweb.libralign.sequenceprovider.SequenceDataChangeListener;
 import info.bioinfweb.libralign.sequenceprovider.SequenceDataProvider;
@@ -76,6 +80,10 @@ public class AlignmentArea extends TICComponent implements SequenceDataChangeLis
 	private int compoundHeight = COMPOUND_HEIGHT;	
 	private Font compoundFont = new Font(Font.SANS_SERIF, Font.PLAIN, Math.round(COMPOUND_HEIGHT * 0.7f));
 	private DataAreaModel dataAreas = new DataAreaModel(this);
+	private SequenceColorSchema colorSchema = new SequenceColorSchema();
+	private EditSettings editSettings;
+	private AlignmentDataViewMode viewMode = AlignmentDataViewMode.NUCLEOTIDE;  //TODO Initial value should be adjusted when the data type of the specified provider is known.
+	private SelectionModel selection = new SelectionModel(this);
 
 	private MultipleAlignmentsContainer container = null;
 	private AlignmentContentArea alignmentContentArea;
@@ -103,6 +111,14 @@ public class AlignmentArea extends TICComponent implements SequenceDataChangeLis
 	public AlignmentArea(MultipleAlignmentsContainer container) {
 		super();
 		this.container = container;
+		
+		if (hasContainer()) {
+			editSettings = getContainer().getEditSettings();
+		}
+		else {
+			editSettings = new EditSettings();
+		}
+		
 		alignmentContentArea = new AlignmentContentArea(this);
 		alignmentLabelArea = new AlignmentLabelArea(this);  // Must be called after alignmentContentArea has been created.
 
@@ -273,6 +289,35 @@ public class AlignmentArea extends TICComponent implements SequenceDataChangeLis
 	}
 
 
+	public SequenceColorSchema getColorSchema() {
+		return colorSchema;
+	}
+
+
+	public EditSettings getEditSettings() {
+		return editSettings;
+	}
+
+
+	public AlignmentDataViewMode getViewMode() {
+		return viewMode;
+	}
+	
+	
+	public void setViewMode(AlignmentDataViewMode viewMode) {
+		this.viewMode = viewMode;
+		//TODO repaint
+	}
+
+
+	/**
+	 * Returns the selection model used by this object.
+	 */
+	public SelectionModel getSelection() {
+		return selection;
+	}
+
+	
 	/**
 	 * Returns the container this object is contained in.
 	 * 

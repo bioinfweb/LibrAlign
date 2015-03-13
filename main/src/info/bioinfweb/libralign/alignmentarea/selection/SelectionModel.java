@@ -38,7 +38,7 @@ import info.bioinfweb.libralign.sequenceprovider.SequenceDataProvider;
  * @see AlignmentArea
  */
 public class SelectionModel {
-  private AlignmentContentArea owner;
+  private AlignmentArea owner;
   private SelectionType type = SelectionType.CELLS;
   private OneDimensionalSelection columnSelection = new OneDimensionalSelection(this, SelectionDimension.COLUMN);
   private OneDimensionalSelection rowSelection = new OneDimensionalSelection(this, SelectionDimension.ROW);
@@ -54,7 +54,7 @@ public class SelectionModel {
 	 * 
 	 * @param owner - the alignment content area that will be using this selection object
 	 */
-	public SelectionModel(AlignmentContentArea owner) {
+	public SelectionModel(AlignmentArea owner) {
 		super();
 		this.owner = owner;
 		cursor = new AlignmentCursor(owner);
@@ -64,7 +64,7 @@ public class SelectionModel {
 	/**
 	 * Returns the alignment content area that uses this selection object.
 	 */
-	public AlignmentContentArea getOwner() {
+	public AlignmentArea getOwner() {
 		return owner;
 	}
 
@@ -204,12 +204,12 @@ public class SelectionModel {
 	
 	
 	private int bringCursorColumnInRange(int column) {
-		 return Math.max(0, Math.min(column, getOwner().getOwner().getSequenceProvider().getMaxSequenceLength()));
+		 return Math.max(0, Math.min(column, getOwner().getSequenceProvider().getMaxSequenceLength()));
 	}
 	
 	
 	private int bringRowInRange(int row) {
-		 return Math.max(0, Math.min(row, getOwner().getOwner().getSequenceProvider().getSequenceCount() - 1));
+		 return Math.max(0, Math.min(row, getOwner().getSequenceProvider().getSequenceCount() - 1));
 	}
 	
 	
@@ -225,7 +225,7 @@ public class SelectionModel {
 		row = bringRowInRange(row);
 		cursorStartRow = row;
 		cursorStartColumn = column;
-		height = Math.max(1, Math.min(getOwner().getOwner().getSequenceProvider().getSequenceCount() - row, height));
+		height = Math.max(1, Math.min(getOwner().getSequenceProvider().getSequenceCount() - row, height));
 		clear();
 		cursor.setColumnRowHeight(column, row, height);
     fireSelectionChanged();
@@ -292,7 +292,7 @@ public class SelectionModel {
 	public void selectAll() {
 		columnSelection.selectAll();
 		rowSelection.selectAll();
-		SequenceDataProvider provider = getOwner().getOwner().getSequenceProvider();
+		SequenceDataProvider provider = getOwner().getSequenceProvider();
 		cursor.setColumnRowHeight(provider.getMaxSequenceLength(), 0, provider.getSequenceCount());
 		fireSelectionChanged();
 	}

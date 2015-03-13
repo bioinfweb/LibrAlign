@@ -208,7 +208,7 @@ public class ConsensusSequenceArea extends CustomHeightFullWidthArea {
 		}
 		
 		// Paint output:
-		Map<String, Color> map = getOwner().getColorSchema().getNucleotideColorMap();
+		Map<String, Color> map = getOwner().getOwner().getColorSchema().getNucleotideColorMap();
     Color[] bgColors = new Color[]{map.get("A"), map.get("T"), map.get("C"), map.get("G")};
     
 		AlignmentAmbiguityNucleotideCompoundSet compoundSet =  

@@ -113,14 +113,14 @@ public class SequenceArea extends AlignmentSubArea {
   	Iterator<NucleotideCompound> iterator = consituents.iterator();
   	double bgY = y;
   	while (iterator.hasNext()) {  // Fill the compound rectangle with differently colored zones, if ambiguity codes are used.
-  		g.setColor(getBGColor(area.getContentArea().getColorSchema(), area.getContentArea().getColorSchema().getNucleotideColorMap().get(
-  				getNucleotideBaseString(area.getContentArea().getViewMode(), iterator.next())), selected));
+  		g.setColor(getBGColor(area.getColorSchema(), area.getColorSchema().getNucleotideColorMap().get(
+  				getNucleotideBaseString(area.getViewMode(), iterator.next())), selected));
     	g.fill(new Rectangle2D.Double(x, bgY, area.getCompoundWidth(), height));
     	bgY += height;
   	}
   	
   	if (area.getContentArea().isPaintCompoundText()) {  // Text output only if font size is not too low
-	  	g.setColor(area.getContentArea().getColorSchema().getFontColor());
+	  	g.setColor(area.getColorSchema().getFontColor());
 	  	g.setFont(area.getCompoundFont());
 			FontMetrics fm = g.getFontMetrics();
 	  	g.drawString(compound.getBase(), (int)(x + 0.5 * 
@@ -130,10 +130,10 @@ public class SequenceArea extends AlignmentSubArea {
   
   
   public static void paintCompound(AlignmentArea area, Graphics2D g, Object compound, double x, double y, boolean selected) {
-  	g.setColor(area.getContentArea().getColorSchema().getTokenBorderColor());
+  	g.setColor(area.getColorSchema().getTokenBorderColor());
   	g.draw(new Rectangle2D.Double(x, y, area.getCompoundWidth(), area.getCompoundHeight()));
   	
-  	switch (area.getContentArea().getViewMode()) {
+  	switch (area.getViewMode()) {
   		case NUCLEOTIDE:
 			case DNA:
 			case RNA:
@@ -164,20 +164,20 @@ public class SequenceArea extends AlignmentSubArea {
 		for (int i = firstIndex; i <= lastIndex; i++) {			
     	paintCompound(area, event.getGraphics(), 
     			area.getSequenceProvider().getTokenAt(sequenceID, i), (double)x, y,	
-    			area.getContentArea().getSelection().isSelected(i, area.getSequenceOrder().indexByID(sequenceID)));
+    			area.getSelection().isSelected(i, area.getSequenceOrder().indexByID(sequenceID)));
 	    x += area.getCompoundWidth();
     }
   }
   
   
   private void paintCursor(Graphics2D g, double x, double y) {
-  	SelectionModel selection = getOwner().getSelection();
+  	SelectionModel selection = getOwner().getOwner().getSelection();
   	if (Math2.isBetween(getOwner().getOwner().getSequenceOrder().indexByID(getSeqenceID()), 
   			selection.getCursorRow(), selection.getCursorRow() + selection.getCursorHeight() - 1)) {
   		
   		Stroke previousStroke = g.getStroke();
   		try {
-  			SequenceColorSchema colorSchema = getOwner().getColorSchema();
+  			SequenceColorSchema colorSchema = getOwner().getOwner().getColorSchema();
   			g.setColor(colorSchema.getCursorColor());
   			g.setStroke(new BasicStroke(colorSchema.getCursorLineWidth()));
   			x += selection.getCursorColumn() * getOwner().getOwner().getCompoundWidth();
@@ -192,7 +192,7 @@ public class SequenceArea extends AlignmentSubArea {
   
   @Override
 	public void paint(TICPaintEvent event) {
-		event.getGraphics().setColor(getOwner().getColorSchema().getDefaultBgColor());  //TODO Define different background color for whole component and unknown tokens
+		event.getGraphics().setColor(getOwner().getOwner().getColorSchema().getDefaultBgColor());  //TODO Define different background color for whole component and unknown tokens
 		event.getGraphics().fillRect(event.getRectangle().x, event.getRectangle().y, event.getRectangle().width, event.getRectangle().height);
 
 		int firstIndex = Math.max(0, getOwner().columnByPaintX((int)event.getRectangle().getMinX()));
@@ -207,11 +207,11 @@ public class SequenceArea extends AlignmentSubArea {
 		for (int i = firstIndex; i <= lastIndex; i++) {			
     	paintCompound(getOwner().getOwner(), event.getGraphics(), 
     			getOwner().getOwner().getSequenceProvider().getTokenAt(getSeqenceID(), i), x, 0f,	
-    			getOwner().getSelection().isSelected(i, getOwner().getOwner().getSequenceOrder().indexByID(getSeqenceID())));
+    			getOwner().getOwner().getSelection().isSelected(i, getOwner().getOwner().getSequenceOrder().indexByID(getSeqenceID())));
 	    x += getOwner().getOwner().getCompoundWidth();
     }
 		
-		if (getOwner().getSelection().getType().equals(SelectionType.CELLS)) {
+		if (getOwner().getOwner().getSelection().getType().equals(SelectionType.CELLS)) {
 			paintCursor(event.getGraphics(), getOwner().getOwner().getDataAreas().getGlobalMaxLengthBeforeStart(), 0);
 		}
 	}

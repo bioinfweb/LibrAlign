@@ -22,6 +22,7 @@ package info.bioinfweb.libralign.actions;
 import java.util.ArrayList;
 import java.util.Collection;
 
+import info.bioinfweb.libralign.alignmentarea.AlignmentArea;
 import info.bioinfweb.libralign.alignmentarea.content.AlignmentContentArea;
 import info.bioinfweb.libralign.alignmentarea.selection.SelectionModel;
 import info.bioinfweb.libralign.sequenceprovider.SequenceDataProvider;
@@ -37,7 +38,7 @@ import info.bioinfweb.libralign.sequenceprovider.exception.AlignmentSourceNotWri
  * @since 0.3.0
  */
 public class AlignmentActionProvider<T> {
-	private AlignmentContentArea view;
+	private AlignmentArea alignmentArea;
 
 	
 //* Otherwise a {@link ClassCastException} will be thrown by all operation
@@ -54,9 +55,9 @@ public class AlignmentActionProvider<T> {
 	 * @param view - the alignment content area from which the user operations will be triggered (The sequence data 
 	 *        provider, the selection model and the sequence order this view provides will be used for all operations.)
 	 */
-	public AlignmentActionProvider(AlignmentContentArea view) {
+	public AlignmentActionProvider(AlignmentArea alignmentArea) {
 		super();
-		this.view = view;
+		this.alignmentArea = alignmentArea;
 	}
 
 
@@ -65,20 +66,20 @@ public class AlignmentActionProvider<T> {
 	 * 
 	 * @return the linked view instance
 	 */
-	public AlignmentContentArea getView() {
-		return view;
+	public AlignmentArea getAlignmentArea() {
+		return alignmentArea;
 	}
 	
 	
 	public SequenceDataProvider<T> getModel() {
-		return (SequenceDataProvider<T>)view.getOwner().getSequenceProvider();
+		return (SequenceDataProvider<T>)getAlignmentArea().getSequenceProvider();
 	}
 
 
 	private void deleteSelection(SelectionModel selection) {
 		if (!selection.isEmpty()) {
 			for (int row = selection.getCursorRow(); row < selection.getCursorRow() + selection.getCursorHeight(); row++) {
-				getModel().removeTokensAt(getView().getOwner().getSequenceOrder().idByIndex(row), 
+				getModel().removeTokensAt(getAlignmentArea().getSequenceOrder().idByIndex(row), 
 						selection.getFirstColumn(), selection.getFirstColumn() + selection.getWidth());
 			}
 			selection.setNewCursorColumn(selection.getFirstColumn());
@@ -100,12 +101,12 @@ public class AlignmentActionProvider<T> {
 	 */
 	public boolean deleteForward() {
 		boolean result = false;
-		SelectionModel selection = getView().getSelection();
+		SelectionModel selection = getAlignmentArea().getSelection();
 		try {
 			if (selection.isEmpty()) {
 				for (int row = selection.getCursorRow(); row < selection.getCursorRow() + selection.getCursorHeight(); row++) {
-					if (selection.getCursorColumn() < getModel().getSequenceLength(getView().getOwner().getSequenceOrder().idByIndex(row))) {
-						getModel().removeTokenAt(getView().getOwner().getSequenceOrder().idByIndex(row), 
+					if (selection.getCursorColumn() < getModel().getSequenceLength(getAlignmentArea().getSequenceOrder().idByIndex(row))) {
+						getModel().removeTokenAt(getAlignmentArea().getSequenceOrder().idByIndex(row), 
 								selection.getCursorColumn());
 						result = true;
 				  }
@@ -134,12 +135,12 @@ public class AlignmentActionProvider<T> {
 	 *         {@code false} otherwise
 	 */
 	public boolean deleteBackwards() {
-		SelectionModel selection = getView().getSelection();
+		SelectionModel selection = getAlignmentArea().getSelection();
 		try {
 			if (selection.isEmpty()) {
 				if (selection.getCursorColumn() > 0) {
 					for (int row = selection.getCursorRow(); row < selection.getCursorRow() + selection.getCursorHeight(); row++) {
-						getModel().removeTokenAt(getView().getOwner().getSequenceOrder().idByIndex(row), 
+						getModel().removeTokenAt(getAlignmentArea().getSequenceOrder().idByIndex(row), 
 								selection.getCursorColumn() - 1);
 					}
 					selection.setNewCursorColumn(selection.getCursorColumn() - 1);  // Move cursor backwards
@@ -176,7 +177,7 @@ public class AlignmentActionProvider<T> {
 	 *         {@code false} otherwise
 	 */
 	public boolean insertToken(T token) {
-		SelectionModel selection = getView().getSelection();
+		SelectionModel selection = getAlignmentArea().getSelection();
 		try {
 			// Create token list:
 			int tokenCount = Math.max(1, selection.getWidth());
@@ -186,7 +187,7 @@ public class AlignmentActionProvider<T> {
 			}
 			
 			for (int row = selection.getCursorRow(); row < selection.getCursorRow() + selection.getCursorHeight(); row++) {
-				getModel().insertTokensAt(getView().getOwner().getSequenceOrder().idByIndex(row), 
+				getModel().insertTokensAt(getAlignmentArea().getSequenceOrder().idByIndex(row), 
 						selection.getFirstColumn(), tokens);
 			}
 			selection.setNewCursorColumn(selection.getFirstColumn() + tokenCount);  // Move cursor forward
@@ -214,17 +215,17 @@ public class AlignmentActionProvider<T> {
 	 *         {@code false} otherwise
 	 */
 	public boolean overwriteWithToken(T token) {
-		SelectionModel selection = getView().getSelection();
+		SelectionModel selection = getAlignmentArea().getSelection();
 		try {
 			for (int row = selection.getCursorRow(); row < selection.getCursorRow() + selection.getCursorHeight(); row++) {
 				// Remove possible additional tokens:
 				if (selection.getWidth() > 1) {
-					getModel().removeTokensAt(getView().getOwner().getSequenceOrder().idByIndex(row), 
+					getModel().removeTokensAt(getAlignmentArea().getSequenceOrder().idByIndex(row), 
 							selection.getFirstColumn() + 1, selection.getFirstColumn() + selection.getWidth());
 				}
 				
 				// Overwrite first token:
-				getModel().setTokenAt(getView().getOwner().getSequenceOrder().idByIndex(row), 
+				getModel().setTokenAt(getAlignmentArea().getSequenceOrder().idByIndex(row), 
 						selection.getFirstColumn(), token);
 			}
 			selection.setNewCursorColumn(selection.getFirstColumn() + 1);  // Move cursor forward

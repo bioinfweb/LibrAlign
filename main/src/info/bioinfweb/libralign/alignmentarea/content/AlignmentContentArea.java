@@ -45,7 +45,7 @@ import info.bioinfweb.libralign.multiplealignments.MultipleAlignmentsContainer;
 
 
 /**
- * Toolkit independent component displaying the contents (not the labels) of a single alignment and its attaches 
+ * Toolkit independent component displaying the contents (not the labels) of a single alignment and its attached 
  * data areas.
  * <p>
  * This component is used a child component of {@link AlignmentArea} and in contrast to {@link AlignmentArea}
@@ -59,10 +59,6 @@ import info.bioinfweb.libralign.multiplealignments.MultipleAlignmentsContainer;
  */
 public class AlignmentContentArea extends TICComponent {
 	private AlignmentArea owner;
-	private SequenceColorSchema colorSchema = new SequenceColorSchema();
-	private EditSettings editSettings;
-	private AlignmentDataViewMode viewMode = AlignmentDataViewMode.NUCLEOTIDE;  //TODO Initial value should be adjusted when the data type of the specified provider is known.
-	private SelectionModel selection = new SelectionModel(this);
 	
 	
 	/**
@@ -76,12 +72,6 @@ public class AlignmentContentArea extends TICComponent {
 	public AlignmentContentArea(AlignmentArea owner) {
 		super();
 		this.owner = owner;
-		if (owner.hasContainer()) {
-			editSettings = owner.getContainer().getEditSettings();
-		}
-		else {
-			editSettings = new EditSettings();
-		}
   }
 
 
@@ -90,35 +80,6 @@ public class AlignmentContentArea extends TICComponent {
 	}
 
 
-	public SequenceColorSchema getColorSchema() {
-		return colorSchema;
-	}
-
-
-	public EditSettings getEditSettings() {
-		return editSettings;
-	}
-
-
-	public AlignmentDataViewMode getViewMode() {
-		return viewMode;
-	}
-	
-	
-	public void setViewMode(AlignmentDataViewMode viewMode) {
-		this.viewMode = viewMode;
-		//TODO repaint
-	}
-
-
-	/**
-	 * Returns the selection model used by this object.
-	 */
-	public SelectionModel getSelection() {
-		return selection;
-	}
-
-	
 	/**
 	 * Indicates whether compounds should are printed as text.
 	 * <p>
@@ -142,10 +103,11 @@ public class AlignmentContentArea extends TICComponent {
 	 * @return a rectangle with paint coordinates
 	 */
 	public Rectangle getCursorRectangle() {
-		int y = paintYByRow(getSelection().getCursorRow());
-		Rectangle result = new Rectangle(paintXByColumn(getSelection().getCursorColumn()), y,
-				getOwner().getCompoundWidth(), paintYByRow(getSelection().getCursorRow() + getSelection().getCursorHeight()) - y); 
-		if (getSelection().getCursorRow() + getSelection().getCursorHeight() - 1 == 
+		SelectionModel selection = getOwner().getSelection();
+		int y = paintYByRow(selection.getCursorRow());
+		Rectangle result = new Rectangle(paintXByColumn(selection.getCursorColumn()), y,
+				getOwner().getCompoundWidth(), paintYByRow(selection.getCursorRow() + selection.getCursorHeight()) - y); 
+		if (selection.getCursorRow() + selection.getCursorHeight() - 1 == 
 				getOwner().getSequenceProvider().getSequenceCount() - 1) {
 			
 			result.height += getOwner().getCompoundHeight();  // Add height of the last row, because the return value of paintYByRow(maxIndex + 1) is equal to paintYByRow(maxIndex).
@@ -194,7 +156,7 @@ public class AlignmentContentArea extends TICComponent {
 	
 	
 	private void addCursorScrollListener() {
-		getSelection().addSelectionListener(new SelectionListener() {
+		getOwner().getSelection().addSelectionListener(new SelectionListener() {
 					@Override
 					public void selectionChanged(SelectionChangeEvent event) {
 						getOwner().scrollCursorToVisible();

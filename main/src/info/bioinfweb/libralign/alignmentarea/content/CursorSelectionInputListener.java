@@ -32,6 +32,7 @@ import info.bioinfweb.commons.tic.input.TICMouseAdapter;
 import info.bioinfweb.commons.tic.input.TICMouseEvent;
 import info.bioinfweb.commons.tic.input.TICMouseListener;
 import info.bioinfweb.libralign.actions.AlignmentActionProvider;
+import info.bioinfweb.libralign.alignmentarea.AlignmentArea;
 import info.bioinfweb.libralign.alignmentarea.selection.SelectionModel;
 import info.bioinfweb.libralign.sequenceprovider.SequenceDataProvider;
 
@@ -44,24 +45,25 @@ import info.bioinfweb.libralign.sequenceprovider.SequenceDataProvider;
  * @since 0.2.0
  */
 public class CursorSelectionInputListener extends TICMouseAdapter implements TICMouseListener, TICKeyListener {
-	private AlignmentContentArea owner;
+	private AlignmentArea owner;
 	private AlignmentActionProvider actionProvider;
 	
 	
-	public CursorSelectionInputListener(AlignmentContentArea owner) {
+	public CursorSelectionInputListener(AlignmentArea owner) {
 		super();
 		this.owner = owner;
 		actionProvider = new AlignmentActionProvider(owner);
 	}
 
 
-	public AlignmentContentArea getOwner() {
+	public AlignmentArea getOwner() {
 		return owner;
 	}
 	
 	
 	private Point calculateColumnRow(SequenceArea source, int x, int y) {
-		return new Point(getOwner().columnByPaintX(x), getOwner().rowByPaintY(getOwner().alignmentPartY(source, y)));
+		return new Point(getOwner().getContentArea().columnByPaintX(x), 
+				getOwner().getContentArea().rowByPaintY(getOwner().getContentArea().alignmentPartY(source, y)));
 	}
 	
 	
@@ -97,7 +99,7 @@ public class CursorSelectionInputListener extends TICMouseAdapter implements TIC
 	@Override
 	public void keyPressed(TICKeyEvent event) {
 		SelectionModel selection = getOwner().getSelection();
-		SequenceDataProvider provider = getOwner().getOwner().getSequenceProvider();
+		SequenceDataProvider provider = getOwner().getSequenceProvider();
 		switch (event.getKeyCode()) {
 			case KeyEvent.VK_LEFT:
 				if (event.isShiftDown()) {

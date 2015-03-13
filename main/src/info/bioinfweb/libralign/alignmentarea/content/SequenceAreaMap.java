@@ -45,8 +45,8 @@ public class SequenceAreaMap extends TreeMap<Integer, SequenceArea> implements S
 	public SequenceAreaMap(AlignmentContentArea owner) {
 		super();
 		this.owner = owner;
-		selectionInputListener = new CursorSelectionInputListener(owner);
-		owner.getSelection().addSelectionListener(this);
+		selectionInputListener = new CursorSelectionInputListener(owner.getOwner());
+		owner.getOwner().getSelection().addSelectionListener(this);
 		updateElements();
 	}
 
