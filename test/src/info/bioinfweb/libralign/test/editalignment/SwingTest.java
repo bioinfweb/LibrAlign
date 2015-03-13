@@ -90,7 +90,7 @@ public class SwingTest extends EditableAlignmentTest {
 		testMenu.add(toggleInsertLeftRightMenuItem);
 		toggleInsertLeftRightMenuItem.addActionListener(new ActionListener() {
 					public void actionPerformed(ActionEvent e) {
-						getAlignmentArea().getContentArea().getEditSettings().toggleInsertLeftInDataArea();
+						getAlignmentArea().getEditSettings().toggleInsertLeftInDataArea();
 					}
 				});
 	}
