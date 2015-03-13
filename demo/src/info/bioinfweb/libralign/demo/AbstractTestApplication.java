@@ -100,13 +100,13 @@ public class AbstractTestApplication {
 							alignment);
 			
 			AlignmentArea result = new AlignmentArea();
-			result.getContentArea().setSequenceProvider(sequenceProvider, false);
+			result.setSequenceProvider(sequenceProvider, false);
 			SequenceIndexArea sequenceIndexArea = new SequenceIndexArea(result.getContentArea());
 			//sequenceIndexArea.setFirstIndex(5);
 			//sequenceIndexArea.setHeight(25);
-			result.getContentArea().getDataAreas().getTopAreas().add(sequenceIndexArea);
+			result.getDataAreas().getTopAreas().add(sequenceIndexArea);
 			
-			result.getContentArea().getDataAreas().getTopAreas().add(createCharSetArea(result.getContentArea()));
+			result.getDataAreas().getTopAreas().add(createCharSetArea(result.getContentArea()));
 			
 			PherogramArea pherogramArea = new PherogramArea(result.getContentArea(), pherogramProvider);
 			pherogramArea.setFirstSeqPos(34 + 5);
@@ -114,9 +114,9 @@ public class AbstractTestApplication {
 			pherogramArea.setRightCutPosition(820);
 			pherogramArea.getAlignmentModel().setShiftChange(38, -1);
 			pherogramArea.getAlignmentModel().setShiftChange(49, 2);
-			result.getContentArea().getDataAreas().getSequenceAreas(sequenceProvider.sequenceIDByName("Sequence 4")).add(pherogramArea);
+			result.getDataAreas().getSequenceAreas(sequenceProvider.sequenceIDByName("Sequence 4")).add(pherogramArea);
 			
-			result.getContentArea().getDataAreas().getBottomAreas().add(new ConsensusSequenceArea(result.getContentArea()));
+			result.getDataAreas().getBottomAreas().add(new ConsensusSequenceArea(result.getContentArea()));
 			
 			result.getContentArea().getSelection().setType(SelectionType.COLUMN_ONLY);
 			
