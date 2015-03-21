@@ -42,10 +42,10 @@ import info.bioinfweb.libralign.pherogram.distortion.ScaledPherogramDistortion;
  */
 public class PherogramAlignmentModel {
 	private PherogramArea owner;
-  private List<ShiftChange> shiftChangeList = new ArrayList<ShiftChange>();
+	private List<ShiftChange> shiftChangeList = new ArrayList<ShiftChange>();
   
 	
-  public PherogramAlignmentModel(PherogramArea owner) {
+	public PherogramAlignmentModel(PherogramArea owner) {
 		super();
 		this.owner = owner;
 	}
@@ -56,16 +56,16 @@ public class PherogramAlignmentModel {
 	}
 
 
-  /**
-   * Returns the index in the editable alignment sequence that corresponds to the specified index in the base
-   * call sequence.
-   * 
-   * @param baseCallIndex - the absolute index in the base call sequence
-   * @return the absolute index in the editable sequence or {@link #GAP} if the according position in the 
-   *         editable sequence has been deleted or {@link #OUT_OF_RANGE} if the specified base call index
-   *         lies outside the range of the pherogram
-   */
-  public PherogramAlignmentRelation editableIndexByBaseCallIndex(int baseCallIndex) {
+	/**
+	 * Returns the index in the editable alignment sequence that corresponds to the specified index in the base
+	 * call sequence.
+	 * 
+	 * @param baseCallIndex - the absolute index in the base call sequence
+	 * @return the absolute index in the editable sequence or {@link #GAP} if the according position in the 
+	 *         editable sequence has been deleted or {@link #OUT_OF_RANGE} if the specified base call index
+	 *         lies outside the range of the pherogram
+	 */
+	public PherogramAlignmentRelation editableIndexByBaseCallIndex(int baseCallIndex) {
   	if (baseCallIndex < 0) {
   		return new PherogramAlignmentRelation(PherogramAlignmentRelation.OUT_OF_RANGE, PherogramAlignmentRelation.OUT_OF_RANGE, 
   				1 - getOwner().getLeftCutPosition() + getOwner().getFirstSeqPos(), shiftChangeList.listIterator());
@@ -308,25 +308,25 @@ public class PherogramAlignmentModel {
 				//TODO Possibly delegate to iterator in future versions and fire according events.
 			}
 		};
-  }
+	}
 
 
-  public ListIterator<ShiftChange> shiftChangeIterator() {
-  	return shiftChangeIterator(0);
-  }
+	public ListIterator<ShiftChange> shiftChangeIterator() {
+		return shiftChangeIterator(0);
+	}
 
 
-  public ListIterator<ShiftChange> shiftChangeIteratorByBaseCallIndex(int baseCallIndex) {
-  	ListIterator<ShiftChange> result = shiftChangeIterator();
-  	while (result.hasNext()) {
-  		ShiftChange shiftChange = result.next();
-  		if (shiftChange.getBaseCallIndex() >= baseCallIndex) {
-  			result.previous();
-  			return result;  // Return iterator positioned before the first element at or after the specified base call index.
-  		}
-  	}
-  	return result;  // Return iterator positioned behind the end of the list
-  }
+	public ListIterator<ShiftChange> shiftChangeIteratorByBaseCallIndex(int baseCallIndex) {
+		ListIterator<ShiftChange> result = shiftChangeIterator();
+		while (result.hasNext()) {
+			ShiftChange shiftChange = result.next();
+			if (shiftChange.getBaseCallIndex() >= baseCallIndex) {
+				result.previous();
+				return result;  // Return iterator positioned before the first element at or after the specified base call index.
+			}
+		}
+		return result;  // Return iterator positioned behind the end of the list
+	}
   
   
 	private GapPattern getGapPattern(ShiftChange shiftChange) {
@@ -342,8 +342,19 @@ public class PherogramAlignmentModel {
 	}
 	
 	
-  public ScaledPherogramDistortion createPherogramDistortion() {
-  	ScaledPherogramDistortion result = new ScaledPherogramDistortion(getOwner().getProvider().getSequenceLength());
+	/**
+	 * Returns the number of shift changes that are currently contained in this model.
+	 * 
+	 * @return the number of shift changes
+	 * @since 0.4.0
+	 */
+	public int getShiftChangeCount() {
+		return shiftChangeList.size();
+	}
+
+
+	public ScaledPherogramDistortion createPherogramDistortion() {
+		ScaledPherogramDistortion result = new ScaledPherogramDistortion(getOwner().getProvider().getSequenceLength());
   	
 		int startTraceIndex = 0;  //getTracePosition(startBaseCallIndex);
 		Iterator<ShiftChange> shiftChangeIterator = shiftChangeIterator();

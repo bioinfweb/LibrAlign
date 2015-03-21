@@ -135,6 +135,7 @@ main/src/info/bioinfweb/libralign/sequenceprovider/SequenceDataChangeListener.ja
 main/src/info/bioinfweb/libralign/sequenceprovider/SequenceDataProvider.java -text svneol=unset#text/plain
 main/src/info/bioinfweb/libralign/sequenceprovider/SequenceDataProviderWriteType.java -text svneol=unset#text/plain
 main/src/info/bioinfweb/libralign/sequenceprovider/SequenceDataView.java -text svneol=unset#text/plain
+main/src/info/bioinfweb/libralign/sequenceprovider/SequenceUtils.java -text
 main/src/info/bioinfweb/libralign/sequenceprovider/adapters/AbstractSequenceDataAdapter.java -text svneol=unset#text/plain
 main/src/info/bioinfweb/libralign/sequenceprovider/adapters/AbstractSingleSequenceDataAdapter.java -text svneol=unset#text/plain
 main/src/info/bioinfweb/libralign/sequenceprovider/adapters/BioJavaSequenceAdapter.java -text svneol=unset#text/plain
