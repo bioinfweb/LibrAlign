@@ -25,6 +25,8 @@ import info.bioinfweb.libralign.pherogram.view.PherogramHeadingView;
 
 import java.awt.Color;
 import java.awt.Font;
+import java.beans.PropertyChangeListener;
+import java.beans.PropertyChangeSupport;
 
 
 
@@ -68,7 +70,7 @@ public class PherogramFormats {
 	public static final double FONT_HEIGHT_FACTOR = 1.2;
 	
 	
-	private SequenceColorSchema  nucleotideColorSchema;
+	private SequenceColorSchema nucleotideColorSchema;
 	private Color backgroundColor;
 	private Color cutBackgroundColor;
 	private Color headingBackgroundColor;
@@ -81,6 +83,7 @@ public class PherogramFormats {
 	private QualityOutputType qualityOutputType = QualityOutputType.MAXIMUM;
 	private boolean showProbabilityValues = false;
 	private Color probabilityColor;
+	private PropertyChangeSupport propertyChangeSupport = new PropertyChangeSupport(this);
 	
 	
 	/**
@@ -120,7 +123,9 @@ public class PherogramFormats {
 	 * @param colorSchema - the new color schema to be used
 	 */
 	public void setNucleotideColorSchema(SequenceColorSchema nucleotideColorSchema) {
+		final SequenceColorSchema oldSchema = this.nucleotideColorSchema;
 		this.nucleotideColorSchema = nucleotideColorSchema;
+		propertyChangeSupport.firePropertyChange("nucleotideColorSchema", oldSchema, nucleotideColorSchema);
 	}
 
 
@@ -142,7 +147,9 @@ public class PherogramFormats {
 	 * @param backgroundColor - the new background color for the center positions
 	 */
 	public void setBackgroundColor(Color backgroundColor) {
+		final Color oldColor = this.backgroundColor;
 		this.backgroundColor = backgroundColor;
+		propertyChangeSupport.firePropertyChange("backgroundColor", oldColor, backgroundColor);
 	}
 
 
@@ -164,7 +171,9 @@ public class PherogramFormats {
 	 * @param backgroundColor - the new background color for the cut off positions
 	 */
 	public void setCutBackgroundColor(Color cutBackgroundColor) {
+		final Color oldColor = this.cutBackgroundColor;
 		this.cutBackgroundColor = cutBackgroundColor;
+		propertyChangeSupport.firePropertyChange("cutBackgroundColor", oldColor, cutBackgroundColor);
 	}
 
 
@@ -186,7 +195,9 @@ public class PherogramFormats {
 	 * @param headingBackgroundColor - the new background color for the heading information area
 	 */
 	public void setHeadingBackgroundColor(Color headingBackgroundColor) {
+		final Color oldColor = this.headingBackgroundColor;
 		this.headingBackgroundColor = headingBackgroundColor;
+		propertyChangeSupport.firePropertyChange("headingBackgroundColor", oldColor, headingBackgroundColor);
 	}
 
 
@@ -208,7 +219,9 @@ public class PherogramFormats {
 	 * @param baseCallLineColor - the new base call line color for the center
 	 */
 	public void setBaseCallLineColor(Color baseCallLineColor) {
+		final Color oldColor = this.baseCallLineColor;
 		this.baseCallLineColor = baseCallLineColor;
+		propertyChangeSupport.firePropertyChange("baseCallLineColor", oldColor, baseCallLineColor);
 	}
 
 
@@ -230,7 +243,9 @@ public class PherogramFormats {
 	 * @param baseCallLineColor - the new base call line color for the cut off areas
 	 */
 	public void setCutBaseCallLineColor(Color cutBaseCallLineColor) {
+		final Color oldColor = this.cutBaseCallLineColor;
 		this.cutBaseCallLineColor = cutBaseCallLineColor;
+		propertyChangeSupport.firePropertyChange("cutBaseCallLineColor", oldColor, cutBaseCallLineColor);
 	}
 
 
@@ -252,7 +267,9 @@ public class PherogramFormats {
 	 * @param showBaseCallLines - Specify {@code true} here if lines shall be painted or {@code false} if not.
 	 */
 	public void setShowBaseCallLines(boolean showBaseCallLines) {
+		final boolean oldValue = this.showBaseCallLines;
 		this.showBaseCallLines = showBaseCallLines;
+		propertyChangeSupport.firePropertyChange("showBaseCallLines", oldValue, showBaseCallLines);
 	}
 
 
@@ -272,7 +289,9 @@ public class PherogramFormats {
 	 * @param baseCallFont - the new font
 	 */
 	public void setBaseCallFont(Font baseCallFont) {
+		final Font oldFont = this.baseCallFont;
 		this.baseCallFont = baseCallFont;
+		propertyChangeSupport.firePropertyChange("baseCallFont", oldFont, baseCallFont);
 	}
 
 
@@ -292,7 +311,9 @@ public class PherogramFormats {
 	 * @param baseCallFont - the new font
 	 */
 	public void setIndexFont(Font indexFont) {
+		final Font oldFont = this.indexFont;
 		this.indexFont = indexFont;
+		propertyChangeSupport.firePropertyChange("indexFont", oldFont, indexFont);
 	}
 
 
@@ -309,10 +330,12 @@ public class PherogramFormats {
 	/**
 	 * Sets a new font used to print the base call quality scores and probability values.
 	 * 
-	 * @param qualityFont - the new font
+	 * @param annotationFont - the new font
 	 */
-	public void setAnnotationFont(Font qualityFont) {
-		this.annotationFont = qualityFont;
+	public void setAnnotationFont(Font annotationFont) {
+		final Font oldFont = this.annotationFont;
+		this.annotationFont = annotationFont;
+		propertyChangeSupport.firePropertyChange("annotationFont", oldFont, annotationFont);
 	}
 
 
@@ -327,7 +350,9 @@ public class PherogramFormats {
 
 
 	public void setQualityOutputType(QualityOutputType qualityOutputType) {
+		final QualityOutputType oldValue = this.qualityOutputType;
 		this.qualityOutputType = qualityOutputType;
+		propertyChangeSupport.firePropertyChange("qualityOutputType", oldValue, qualityOutputType);
 	}
 
 	
@@ -362,7 +387,9 @@ public class PherogramFormats {
 	 *        {@code false} otherwise.
 	 */
 	public void setShowProbabilityValues(boolean showProbabilityValues) {
+		final boolean oldValue = this.showProbabilityValues;
 		this.showProbabilityValues = showProbabilityValues;
+		propertyChangeSupport.firePropertyChange("showProbabilityValues", oldValue, showProbabilityValues);
 	}
 
 
@@ -382,6 +409,28 @@ public class PherogramFormats {
 	 * @param probabilityColor - the new color for probability values
 	 */
 	public void setProbabilityColor(Color probabilityColor) {
+		final Color oldColor = this.probabilityColor;
 		this.probabilityColor = probabilityColor;
+		propertyChangeSupport.firePropertyChange("probabilityColor", oldColor, probabilityColor);
+	}
+
+
+	public void addPropertyChangeListener(PropertyChangeListener listener) {
+		propertyChangeSupport.addPropertyChangeListener(listener);
+	}
+
+
+	public void addPropertyChangeListener(String propertyName, PropertyChangeListener listener) {
+		propertyChangeSupport.addPropertyChangeListener(propertyName, listener);
+	}
+
+
+	public void removePropertyChangeListener(PropertyChangeListener listener) {
+		propertyChangeSupport.removePropertyChangeListener(listener);
+	}
+
+
+	public void removePropertyChangeListener(String propertyName, PropertyChangeListener listener) {
+		propertyChangeSupport.removePropertyChangeListener(propertyName, listener);
 	}
 }
