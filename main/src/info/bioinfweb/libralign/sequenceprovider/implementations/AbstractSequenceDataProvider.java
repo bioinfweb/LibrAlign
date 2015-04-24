@@ -28,7 +28,6 @@ import java.util.Map;
 import java.util.TreeMap;
 
 import info.bioinfweb.commons.collections.ListChangeType;
-import info.bioinfweb.libralign.alignmentarea.label.AlignmentLabelArea;
 import info.bioinfweb.libralign.sequenceprovider.SequenceDataChangeListener;
 import info.bioinfweb.libralign.sequenceprovider.SequenceDataProvider;
 import info.bioinfweb.libralign.sequenceprovider.SequenceDataProviderWriteType;
@@ -313,6 +312,18 @@ public abstract class AbstractSequenceDataProvider<T> implements SequenceDataPro
 	}
 
 	
+	@Override
+	public void appendTokenAt(int sequenceID, T token) throws AlignmentSourceNotWritableException {
+		insertTokenAt(sequenceID, getSequenceLength(sequenceID), token);
+	}
+
+
+	@Override
+	public void appendTokensAt(int sequenceID, Collection<? extends T> tokens) throws AlignmentSourceNotWritableException {
+		insertTokensAt(sequenceID, getSequenceLength(sequenceID), tokens);
+	}
+
+
 	@Override
 	public Collection<SequenceDataChangeListener> getChangeListeners() {
 		return changeListeners;

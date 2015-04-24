@@ -36,6 +36,9 @@ import org.biojava3.core.sequence.template.CompoundSet;
  * @param <C> - the compound type of the compounds contained in this set
  */
 public class BioJavaTokenSet<C extends Compound> extends AbstractTokenSet<C> implements TokenSet<C> {
+	private CompoundSet<C> compoundSet;
+	
+	
 	/**
 	 * A constructor used to clone instances of this class.
 	 * 
@@ -60,6 +63,7 @@ public class BioJavaTokenSet<C extends Compound> extends AbstractTokenSet<C> imp
 	 */
 	public BioJavaTokenSet(CompoundSet<C> compoundSet, boolean spaceForGaps) {
 		super();
+		this.compoundSet = compoundSet;
 		
 		addAll(compoundSet.getAllCompounds());
 		Iterator<C> iterator = iterator();
@@ -85,6 +89,12 @@ public class BioJavaTokenSet<C extends Compound> extends AbstractTokenSet<C> imp
 	}
 
 	
+	@Override
+	public C tokenByRepresentation(String representation) {
+		return compoundSet.getCompoundForString(representation);
+	}
+
+
 	@Override
 	public int maxRepresentationLength() {
 		return TokenSetTools.maxRepresentationLength(this);

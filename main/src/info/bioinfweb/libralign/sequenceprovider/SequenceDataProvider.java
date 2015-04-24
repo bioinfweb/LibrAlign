@@ -40,10 +40,10 @@ import info.bioinfweb.libralign.sequenceprovider.tokenset.TokenSet;
 /**
  * Interface that allows LibrAlign GUI elements to access different types of alignment data sources.
  * Classes implementing this interface act as a model for the sequence names and tokens (e.g. nucleotide
- * or amino acid compounds). 
+ * or amino acid compounds).
  * <p>
- * All sequences stored are identified by an integer ID and not by their names that are possibly displayed 
- * to an application user, because these names might change during runtime. Subclasses must ensure that 
+ * All sequences stored are identified by an integer ID and not by their names that are possibly displayed
+ * to an application user, because these names might change during runtime. Subclasses must ensure that
  * these IDs are unique and greater or equal to zero and do not change during runtime. Additionally IDs of 
  * deleted sequences should not be reused, because other objects might have stored references to the deleted 
  * sequence using its ID and therefore would not be able to determine that the sequence became deleted, if a 
@@ -194,7 +194,7 @@ public interface SequenceDataProvider<T> {
 	 * Returns an iterator over unique IDs of all sequences contained in the underlying data source
 	 * in the order they are stored in this model.
 	 * 
-	 * @return
+	 * @return an iterator over the IDs
 	 */
 	public Iterator<Integer> sequenceIDIterator();
   
@@ -273,6 +273,26 @@ public interface SequenceDataProvider<T> {
 			throws AlignmentSourceNotWritableException;
 
 	/**
+	 * Appends a token at the end of the sequence.
+	 * 
+	 * @param sequenceID - the identifier the sequence in the alignment
+	 * @param token - the token to be inserted
+	 * 
+	 * @throws AlignmentSourceNotWritableException if the underlying data source is not writable for tokens
+	 */
+	public void appendTokenAt(int sequenceID, T token) throws AlignmentSourceNotWritableException;
+	
+	/**
+	 * Appends a sequence of tokens starting at the end of the current sequence.
+	 * 
+	 * @param sequenceID - the identifier the sequence where the token is contained
+	 * @param tokens - the new tokens for the specified position
+	 * 
+	 * @throws AlignmentSourceNotWritableException if the underlying data source is not writable for tokens
+	 */
+	public void appendTokensAt(int sequenceID, Collection<? extends T> tokens) throws AlignmentSourceNotWritableException;
+
+	/**
 	 * Inserts a token at the specified position. All tokens located behind the specified index are moved 
 	 * by 1.
 	 * 
@@ -297,7 +317,7 @@ public interface SequenceDataProvider<T> {
 	 * @throws AlignmentSourceNotWritableException if the underlying data source is not writable for tokens
 	 */
 	public void insertTokensAt(int sequenceID, int beginIndex, Collection<? extends T> tokens) throws AlignmentSourceNotWritableException;
-
+	
 	/**
 	 * Removes the token at the specified position from the underlying data source.
 	 * 

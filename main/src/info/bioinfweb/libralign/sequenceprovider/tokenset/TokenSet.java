@@ -58,13 +58,21 @@ public interface TokenSet<T> extends Set<T>, Cloneable {
 	 * Returns the representation string of the specified token that shall be displayed in an 
 	 * {@link AlignmentArea}.
 	 * <p>
-	 * Note that some {@link CharSequenceAdapter} and {@link StringAdapter} only use the first character
+	 * Note that some {@link CharSequenceAdapter}s and {@link StringAdapter}s only use the first character
 	 * of the returned string to represent a token.
 	 * 
 	 * @param token - the token associated with the representation
 	 * @return a string which is at least one character long
 	 */
 	public String representationByToken(T token);
+	
+	/**
+	 * Returns the token associated with the specified string representation.
+	 * 
+	 * @param representation the string representation of the token
+	 * @return the according token
+	 */
+	public T tokenByRepresentation(String representation);
 	
 	/**
 	 * Calculates the maximal length of a representation returned by {@link #representationByToken(Object)}

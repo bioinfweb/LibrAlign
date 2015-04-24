@@ -73,6 +73,18 @@ public class CharacterTokenSet extends AbstractTokenSet<Character> {
 
 	
 	/**
+	 * Just returns the first character of {@code representation}.
+	 * 
+	 * @param representation the string representation of the token (This would usually be the token itself in this class.)
+	 * @see info.bioinfweb.libralign.sequenceprovider.tokenset.TokenSet#tokenByRepresentation(java.lang.String)
+	 */
+	@Override
+	public Character tokenByRepresentation(String representation) {
+		return representation.charAt(0);
+	}
+
+
+	/**
 	 * Always returns one. Overwrite this method if you overwrite {@link #representationByToken(Character)}.
 	 * 
 	 * @return {@code 1}

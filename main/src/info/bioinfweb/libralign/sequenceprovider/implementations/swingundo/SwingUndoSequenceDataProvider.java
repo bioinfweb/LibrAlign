@@ -229,6 +229,18 @@ public class SwingUndoSequenceDataProvider<T> implements SequenceDataProvider<T>
 
 
 	@Override
+	public void appendTokenAt(int sequenceID, T token) throws AlignmentSourceNotWritableException {
+		insertTokenAt(sequenceID, getSequenceLength(sequenceID), token);
+	}
+
+
+	@Override
+	public void appendTokensAt(int sequenceID, Collection<? extends T> tokens) throws AlignmentSourceNotWritableException {
+		insertTokensAt(sequenceID, getSequenceLength(sequenceID), tokens);
+	}
+
+
+	@Override
 	public void insertTokenAt(int sequenceID, int index, T token)
 			throws AlignmentSourceNotWritableException {
 		
