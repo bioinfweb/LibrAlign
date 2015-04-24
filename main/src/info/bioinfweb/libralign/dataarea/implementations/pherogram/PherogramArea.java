@@ -180,7 +180,7 @@ public class PherogramArea extends CustomHeightFullWidthArea implements Pherogra
 
 	/**
 	 * Returns the position in the sequence this pherogram is attached to where the output of the visible part
-	 * of the pherogram starts. 
+	 * of the pherogram starts.
 	 * 
 	 * @return a valid index in the sequence carrying this data area 
 	 */
