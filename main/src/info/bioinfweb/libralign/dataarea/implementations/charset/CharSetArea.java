@@ -24,7 +24,6 @@ import java.awt.SystemColor;
 import java.awt.geom.Rectangle2D;
 import java.util.EnumSet;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Set;
 
 import info.bioinfweb.commons.tic.TICPaintEvent;
@@ -51,7 +50,7 @@ public class CharSetArea extends DataArea {
 	public static final double BORDER_FRACTION = 0.17;
 	
 	
-	private List<CharSet> model;
+	private CharSetDataModel model;
 	
 	
 	/**
@@ -60,18 +59,28 @@ public class CharSetArea extends DataArea {
 	 * @param owner - the alignment area that will be containing the returned data area instance
 	 * @param model - the model providing the character set data
 	 */
-	public CharSetArea(AlignmentContentArea owner, List<CharSet> model) {
+	public CharSetArea(AlignmentContentArea owner, CharSetDataModel model) {
 		super(owner);
 		this.model = model;
 	}
 
 
 	/**
+	 * Creates a new instance of this class with an empty data model.
+	 * 
+	 * @param owner - the alignment area that will be containing the returned data area instance
+	 */
+	public CharSetArea(AlignmentContentArea owner) {
+		this(owner, new CharSetDataModel());
+	}
+	
+	
+	/**
 	 * Returns the underlying model providing character set data.
 	 * 
 	 * @return the instance of the underlying model
 	 */
-	public List<CharSet> getModel() {
+	public CharSetDataModel getModel() {
 		return model;
 	}
 
