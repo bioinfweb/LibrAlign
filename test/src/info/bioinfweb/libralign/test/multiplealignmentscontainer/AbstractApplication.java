@@ -21,8 +21,6 @@ package info.bioinfweb.libralign.test.multiplealignmentscontainer;
 
 import java.awt.Color;
 import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
 
 import info.bioinfweb.commons.bio.biojava3.alignment.SimpleAlignment;
 import info.bioinfweb.commons.bio.biojava3.alignment.template.Alignment;
@@ -33,6 +31,7 @@ import info.bioinfweb.libralign.dataarea.implementations.ConsensusSequenceArea;
 import info.bioinfweb.libralign.dataarea.implementations.SequenceIndexArea;
 import info.bioinfweb.libralign.dataarea.implementations.charset.CharSet;
 import info.bioinfweb.libralign.dataarea.implementations.charset.CharSetArea;
+import info.bioinfweb.libralign.dataarea.implementations.charset.CharSetDataModel;
 import info.bioinfweb.libralign.dataarea.implementations.pherogram.PherogramArea;
 import info.bioinfweb.libralign.multiplealignments.MultipleAlignmentsContainer;
 import info.bioinfweb.libralign.pherogram.provider.BioJavaPherogramProvider;
@@ -53,7 +52,7 @@ import org.biojava3.core.sequence.compound.NucleotideCompound;
  */
 public class AbstractApplication {
 	private CharSetArea createCharSetArea(AlignmentContentArea owner) {
-		List<CharSet> model = new ArrayList<CharSet>(3);
+		CharSetDataModel model = new CharSetDataModel();
 		
 		CharSet charSet = new CharSet("A", Color.RED);
 		charSet.add(2, 5);
