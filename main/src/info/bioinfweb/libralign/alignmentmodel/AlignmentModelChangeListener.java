@@ -29,17 +29,17 @@ import info.bioinfweb.libralign.alignmentmodel.events.TokenChangeEvent;
 
 /**
  * This interface should be implemented by classes that want to track changes of an instance of 
- * {@link ConcatenatedAlignmentModel} and the {@link AlignmentPartModel} implementations it contains.
+ * {@link DefaultConcatenatedAlignmentModel} and the {@link AlignmentPartModel} implementations it contains.
  * 
  * @author Ben St&ouml;ver
  * @since 0.0.0
  */
 public interface AlignmentModelChangeListener {
 	/**
-	 * Called after a part model has been inserted or removed from an instance of {@link ConcatenatedAlignmentModel}.
+	 * Called after a part model has been inserted or removed from an instance of {@link DefaultConcatenatedAlignmentModel}.
 	 * <p>
 	 * A part model is an instance of {@link AlignmentPartModel} which provides a subsequent set of columns of the
-	 * whole alignment (described by {@link ConcatenatedAlignmentModel}) which share a common token set.
+	 * whole alignment (described by {@link DefaultConcatenatedAlignmentModel}) which share a common token set.
 	 * 
 	 * @param e - the event object containing information on the change
 	 * @since 0.4.0
@@ -68,7 +68,7 @@ public interface AlignmentModelChangeListener {
 	public <T> void afterTokenChange(TokenChangeEvent<T> e);
 
 	/**
-	 * Called if this listener was moved to another instance of {@link ConcatenatedAlignmentModel}.
+	 * Called if this listener was moved to another instance of {@link DefaultConcatenatedAlignmentModel}.
 	 * <p>
 	 * This might e.g. happen, if the model of an {@link AlignmentArea} was changed.
 	 * 

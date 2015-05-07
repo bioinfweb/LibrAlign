@@ -28,7 +28,7 @@ import info.bioinfweb.libralign.alignmentmodel.tokenset.TokenSet;
  * columns) based on a single token set.
  * <p>
  * Different implementations of this interface using different token sets can be concatenated to a single 
- * alignment by {@link ConcatenatedAlignmentModel}.
+ * alignment by {@link DefaultConcatenatedAlignmentModel}.
  * 
  * @author Ben St&ouml;ver
  * @since 0.4.0

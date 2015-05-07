@@ -21,7 +21,7 @@ package info.bioinfweb.libralign.alignmentmodel.exception;
  
 import info.bioinfweb.libralign.alignmentmodel.AlignmentModel;
 import info.bioinfweb.libralign.alignmentmodel.AlignmentPartModel;
-import info.bioinfweb.libralign.alignmentmodel.ConcatenatedAlignmentModel;
+import info.bioinfweb.libralign.alignmentmodel.DefaultConcatenatedAlignmentModel;
 
 
 
@@ -29,7 +29,7 @@ import info.bioinfweb.libralign.alignmentmodel.ConcatenatedAlignmentModel;
  * This exceptions is thrown if a requested sequence provided by an implementation of 
  * {@link AlignmentModel} was not found in the underlying data source.
  * <p>
- * Note that not all methods of {@link AlignmentPartModel} or {@link ConcatenatedAlignmentModel} 
+ * Note that not all methods of {@link AlignmentPartModel} or {@link DefaultConcatenatedAlignmentModel} 
  * throw this exception. Some also use their return value to indicate this fact. 
  * 
  * @author Ben St&ouml;ver

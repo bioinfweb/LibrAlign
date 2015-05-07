@@ -172,7 +172,7 @@ public class TokenChangeEvent<T> extends AbstractPartModelEvent<T> {
 	 * @see #getPartStartIndex()
 	 */
 	public int getGlobalStartIndex() {
-		return getSource().partModelIndexOffset(getPartModel()) + getIndex();
+		return getSource().columnOffsetForPartModel(getPartModel()) + getIndex();
 	}
 
 

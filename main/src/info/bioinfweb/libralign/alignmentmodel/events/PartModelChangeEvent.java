@@ -22,13 +22,13 @@ package info.bioinfweb.libralign.alignmentmodel.events;
 import info.bioinfweb.commons.collections.ListChangeType;
 import info.bioinfweb.libralign.alignmentarea.AlignmentArea;
 import info.bioinfweb.libralign.alignmentmodel.AlignmentPartModel;
-import info.bioinfweb.libralign.alignmentmodel.ConcatenatedAlignmentModel;
+import info.bioinfweb.libralign.alignmentmodel.DefaultConcatenatedAlignmentModel;
 
 
 
 /**
  * Event object that indicates the insertion or removal of an alignment part (an instance of 
- * {@link AlignmentPartModel} as part of an {@link ConcatenatedAlignmentModel}). 
+ * {@link AlignmentPartModel} as part of an {@link DefaultConcatenatedAlignmentModel}). 
  * <p>
  * An alignment part would be a subsequent set of columns of an alignment displayed in an
  * {@link AlignmentArea} with its own token set.
@@ -53,7 +53,7 @@ public class PartModelChangeEvent<T> extends AbstractPartModelEvent<T> {
 	
 	/**
 	 * Creates a new instance of this class indicating the insertion of a new part model in an instance
-	 * of {@link ConcatenatedAlignmentModel}.
+	 * of {@link DefaultConcatenatedAlignmentModel}.
 	 * 
 	 * @param partModel the part model that was inserted
 	 * @param index the index the new part model has
@@ -66,7 +66,7 @@ public class PartModelChangeEvent<T> extends AbstractPartModelEvent<T> {
 	
 	/**
 	 * Creates a new instance of this class indicating the removal of a part model from an instance
-	 * of {@link ConcatenatedAlignmentModel}.
+	 * of {@link DefaultConcatenatedAlignmentModel}.
 	 * 
 	 * @param partModel the part model that was removed
 	 * @param index the index the part model has before it was removed

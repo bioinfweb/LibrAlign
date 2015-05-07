@@ -71,6 +71,7 @@ main/src/info/bioinfweb/libralign/alignmentmodel/AlignmentPartModel.java -text s
 main/src/info/bioinfweb/libralign/alignmentmodel/BasicSequenceDataView.java -text svneol=unset#text/plain
 main/src/info/bioinfweb/libralign/alignmentmodel/ConcatenatedAlignmentModel.java -text svneol=unset#text/plain
 main/src/info/bioinfweb/libralign/alignmentmodel/DataProvider.java -text svneol=unset#text/plain
+main/src/info/bioinfweb/libralign/alignmentmodel/DefaultConcatenatedAlignmentModel.java -text svneol=unset#text/plain
 main/src/info/bioinfweb/libralign/alignmentmodel/SequenceAccess.java -text svneol=unset#text/plain
 main/src/info/bioinfweb/libralign/alignmentmodel/SequenceAccessDataProvider.java -text svneol=unset#text/plain
 main/src/info/bioinfweb/libralign/alignmentmodel/SequenceDataProviderWriteType.java -text svneol=unset#text/plain
