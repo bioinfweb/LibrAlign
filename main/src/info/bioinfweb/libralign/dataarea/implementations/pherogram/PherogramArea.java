@@ -22,6 +22,10 @@ package info.bioinfweb.libralign.dataarea.implementations.pherogram;
 import info.bioinfweb.commons.collections.SimpleSequenceInterval;
 import info.bioinfweb.commons.tic.TICPaintEvent;
 import info.bioinfweb.libralign.alignmentarea.content.AlignmentContentArea;
+import info.bioinfweb.libralign.alignmentmodel.AlignmentModel;
+import info.bioinfweb.libralign.alignmentmodel.events.SequenceChangeEvent;
+import info.bioinfweb.libralign.alignmentmodel.events.SequenceRenamedEvent;
+import info.bioinfweb.libralign.alignmentmodel.events.TokenChangeEvent;
 import info.bioinfweb.libralign.dataarea.DataAreaListType;
 import info.bioinfweb.libralign.dataarea.implementations.CustomHeightFullWidthArea;
 import info.bioinfweb.libralign.pherogram.PherogramComponent;
@@ -30,10 +34,6 @@ import info.bioinfweb.libralign.pherogram.PherogramPainter;
 import info.bioinfweb.libralign.pherogram.distortion.ScaledPherogramDistortion;
 import info.bioinfweb.libralign.pherogram.provider.PherogramProvider;
 import info.bioinfweb.libralign.pherogram.view.PherogramView;
-import info.bioinfweb.libralign.sequenceprovider.SequenceDataProvider;
-import info.bioinfweb.libralign.sequenceprovider.events.SequenceChangeEvent;
-import info.bioinfweb.libralign.sequenceprovider.events.SequenceRenamedEvent;
-import info.bioinfweb.libralign.sequenceprovider.events.TokenChangeEvent;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
@@ -304,12 +304,12 @@ public class PherogramArea extends CustomHeightFullWidthArea implements Pherogra
 				case INSERTION:
 					int addend = getOwner().getOwner().getEditSettings().isInsertLeftInDataArea() ? -1 : 0;
 					getAlignmentModel().addShiftChange(
-							getAlignmentModel().baseCallIndexByEditableIndex(Math.max(0, e.getStartIndex() + addend)).getBefore(),  //TODO is getBefore immer sinnvoll? 
+							getAlignmentModel().baseCallIndexByEditableIndex(Math.max(0, e.getPartStartIndex() + addend)).getBefore(),  //TODO is getBefore immer sinnvoll? 
 							e.getAffectedTokens().size());
 					assignSize();
 					break;
 				case DELETION:
-					getAlignmentModel().addShiftChange(getAlignmentModel().baseCallIndexByEditableIndex(e.getStartIndex()).getAfter()/*getBefore()*/,  //TODO is getBefore immer sinnvoll? 
+					getAlignmentModel().addShiftChange(getAlignmentModel().baseCallIndexByEditableIndex(e.getPartStartIndex()).getAfter()/*getBefore()*/,  //TODO is getBefore immer sinnvoll? 
 							-e.getAffectedTokens().size());
 					assignSize();
 					break;
@@ -321,6 +321,6 @@ public class PherogramArea extends CustomHeightFullWidthArea implements Pherogra
 
 
 	@Override
-	public <T, U> void afterProviderChanged(SequenceDataProvider<T> previous,	SequenceDataProvider<U> current) {}  
+	public <T, U> void afterModelChanged(AlignmentModel<T> previous,	AlignmentModel<U> current) {}  
 	// This event is currently not passed to sequence attached areas.
 }

@@ -19,7 +19,7 @@
 package info.bioinfweb.libralign.io;
 
 
-import info.bioinfweb.libralign.sequenceprovider.DataProvider;
+import info.bioinfweb.libralign.alignmentmodel.DataProvider;
 
 
 

@@ -19,7 +19,7 @@
 package info.bioinfweb.libralign.io.alignment;
 
 
-import info.bioinfweb.libralign.sequenceprovider.SequenceDataProvider;
+import info.bioinfweb.libralign.alignmentmodel.AlignmentModel;
 
 import java.io.BufferedOutputStream;
 import java.io.File;
@@ -30,17 +30,17 @@ import java.io.OutputStream;
 
 /**
  * Implements basic functionality for writing alignments to streams and files. All methods are delegated to 
- * {@link #doWrite(BufferedOutputStream, SequenceDataProvider)} and streams are buffered.
+ * {@link #doWrite(BufferedOutputStream, AlignmentModel)} and streams are buffered.
  * 
  * @author Ben St&ouml;ver
  * @since 0.3.0
  */
 public abstract class AbstractAlignmentWriter implements AlignmentWriter {
-	protected abstract void doWrite(BufferedOutputStream stream, SequenceDataProvider<?> provider) throws Exception;
+	protected abstract void doWrite(BufferedOutputStream stream, AlignmentModel<?> provider) throws Exception;
 	
 
 	@Override
-	public void write(OutputStream stream, SequenceDataProvider<?> provider) throws Exception {
+	public void write(OutputStream stream, AlignmentModel<?> provider) throws Exception {
 		if (!(stream instanceof BufferedOutputStream)) {
 			stream = new BufferedOutputStream(stream);
 		}
@@ -49,7 +49,7 @@ public abstract class AbstractAlignmentWriter implements AlignmentWriter {
 
 	
 	@Override
-	public void write(File file, SequenceDataProvider<?> provider) throws Exception {
+	public void write(File file, AlignmentModel<?> provider) throws Exception {
 		write(new FileOutputStream(file), provider);
 	}
 }

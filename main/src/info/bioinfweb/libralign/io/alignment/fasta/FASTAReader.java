@@ -25,9 +25,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 
+import info.bioinfweb.libralign.alignmentmodel.AlignmentModel;
+import info.bioinfweb.libralign.alignmentmodel.tokenset.TokenSet;
 import info.bioinfweb.libralign.io.alignment.AbstractAlignmentReader;
-import info.bioinfweb.libralign.sequenceprovider.SequenceDataProvider;
-import info.bioinfweb.libralign.sequenceprovider.tokenset.TokenSet;
 
 
 
@@ -90,7 +90,7 @@ public class FASTAReader extends AbstractAlignmentReader {
 
 	
 	@SuppressWarnings({"rawtypes", "unchecked"})
-	private void appendLine(SequenceDataProvider provider, int sequenceID, String line) {
+	private void appendLine(AlignmentModel provider, int sequenceID, String line) {
 		TokenSet<?> set = provider.getTokenSet();
 		for (int i = 0; i < line.length(); i++) {
 			provider.insertTokenAt(sequenceID, provider.getSequenceLength(sequenceID), set.tokenByKeyChar(line.charAt(i)));
@@ -99,7 +99,7 @@ public class FASTAReader extends AbstractAlignmentReader {
 	
 	
 	@Override
-	protected void doRead(BufferedInputStream stream,	SequenceDataProvider<?> provider) throws Exception {
+	protected void doRead(BufferedInputStream stream,	AlignmentModel<?> provider) throws Exception {
 		//TODO Clear current contents?
 		BufferedReader reader = new BufferedReader(new InputStreamReader(stream));  // Can double buffering be avoided?
 		String line = reader.readLine();

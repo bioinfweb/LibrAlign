@@ -21,22 +21,22 @@ package info.bioinfweb.libralign.dataarea;
 
 import java.util.Iterator;
 
-import info.bioinfweb.libralign.sequenceprovider.SequenceDataChangeListener;
-import info.bioinfweb.libralign.sequenceprovider.SequenceDataProvider;
-import info.bioinfweb.libralign.sequenceprovider.events.SequenceChangeEvent;
-import info.bioinfweb.libralign.sequenceprovider.events.SequenceRenamedEvent;
-import info.bioinfweb.libralign.sequenceprovider.events.TokenChangeEvent;
+import info.bioinfweb.libralign.alignmentmodel.AlignmentModelChangeListener;
+import info.bioinfweb.libralign.alignmentmodel.AlignmentModel;
+import info.bioinfweb.libralign.alignmentmodel.events.SequenceChangeEvent;
+import info.bioinfweb.libralign.alignmentmodel.events.SequenceRenamedEvent;
+import info.bioinfweb.libralign.alignmentmodel.events.TokenChangeEvent;
 
 
 
 /**
  * Helper class used by {@link DataAreaModel} to inform the data areas it contains about changes in the
- * associated {@link SequenceDataProvider}.
+ * associated {@link AlignmentModel}.
  * 
  * @author Ben St&ouml;ver
  * @since 0.3.0
  */
-public class DataAreaSequenceChangeListener implements SequenceDataChangeListener {
+public class DataAreaSequenceChangeListener implements AlignmentModelChangeListener {
 	private DataAreaModel owner;
 
 	
@@ -124,19 +124,19 @@ public class DataAreaSequenceChangeListener implements SequenceDataChangeListene
 	}
 	
 
-	private <T, U> void fireAfterProviderChanged(DataAreaList list, SequenceDataProvider<T> previous,
-			SequenceDataProvider<U> current) {
+	private <T, U> void fireAfterProviderChanged(DataAreaList list, AlignmentModel<T> previous,
+			AlignmentModel<U> current) {
 		
 		Iterator<DataArea> iterator = list.iterator();
 		while (iterator.hasNext()) {
-			iterator.next().afterProviderChanged(previous, current);
+			iterator.next().afterModelChanged(previous, current);
 		}
 	}
 	
 	
 	@Override
-	public <T, U> void afterProviderChanged(SequenceDataProvider<T> previous,
-			SequenceDataProvider<U> current) {
+	public <T, U> void afterModelChanged(AlignmentModel<T> previous,
+			AlignmentModel<U> current) {
 
 		fireAfterProviderChanged(getOwner().getTopAreas(), previous, current);
 

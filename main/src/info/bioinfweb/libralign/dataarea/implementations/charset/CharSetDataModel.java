@@ -21,7 +21,7 @@ package info.bioinfweb.libralign.dataarea.implementations.charset;
 
 import java.util.ArrayList;
 
-import info.bioinfweb.libralign.sequenceprovider.DataProvider;
+import info.bioinfweb.libralign.alignmentmodel.DataProvider;
 
 
 

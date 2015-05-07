@@ -43,7 +43,7 @@ import info.bioinfweb.libralign.alignmentarea.label.AlignmentLabelSubArea;
 import info.bioinfweb.libralign.alignmentarea.label.SequenceLabelArea;
 import info.bioinfweb.libralign.alignmentarea.selection.SelectionModel;
 import info.bioinfweb.libralign.alignmentarea.selection.SelectionType;
-import info.bioinfweb.libralign.sequenceprovider.SequenceDataProvider;
+import info.bioinfweb.libralign.alignmentmodel.AlignmentModel;
 
 
 
@@ -73,7 +73,7 @@ public class SequenceArea extends AlignmentSubArea {
 	/**
 	 * Returns the unique identifier of the the sequence displayed by this area.
 	 * 
-	 * @return an ID of a sequence stored in the according {@link SequenceDataProvider}
+	 * @return an ID of a sequence stored in the according {@link AlignmentModel}
 	 */
 	public int getSeqenceID() {
 		return seqenceID;

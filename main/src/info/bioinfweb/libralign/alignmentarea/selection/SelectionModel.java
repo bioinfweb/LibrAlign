@@ -26,7 +26,7 @@ import java.util.List;
 
 import info.bioinfweb.libralign.alignmentarea.AlignmentArea;
 import info.bioinfweb.libralign.alignmentarea.content.AlignmentContentArea;
-import info.bioinfweb.libralign.sequenceprovider.SequenceDataProvider;
+import info.bioinfweb.libralign.alignmentmodel.AlignmentModel;
 
 
 
@@ -292,7 +292,7 @@ public class SelectionModel {
 	public void selectAll() {
 		columnSelection.selectAll();
 		rowSelection.selectAll();
-		SequenceDataProvider provider = getOwner().getSequenceProvider();
+		AlignmentModel provider = getOwner().getSequenceProvider();
 		cursor.setColumnRowHeight(provider.getMaxSequenceLength(), 0, provider.getSequenceCount());
 		fireSelectionChanged();
 	}

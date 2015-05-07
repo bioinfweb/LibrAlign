@@ -21,13 +21,13 @@ package info.bioinfweb.libralign.multiplealignments;
 
 import info.bioinfweb.libralign.alignmentarea.AlignmentArea;
 import info.bioinfweb.libralign.alignmentarea.content.AlignmentContentArea;
+import info.bioinfweb.libralign.alignmentmodel.AlignmentModelChangeListener;
+import info.bioinfweb.libralign.alignmentmodel.AlignmentModel;
+import info.bioinfweb.libralign.alignmentmodel.events.SequenceChangeEvent;
+import info.bioinfweb.libralign.alignmentmodel.events.SequenceRenamedEvent;
+import info.bioinfweb.libralign.alignmentmodel.events.TokenChangeEvent;
 import info.bioinfweb.libralign.dataarea.DataAreaChangeEvent;
 import info.bioinfweb.libralign.dataarea.DataAreaModelListener;
-import info.bioinfweb.libralign.sequenceprovider.SequenceDataChangeListener;
-import info.bioinfweb.libralign.sequenceprovider.SequenceDataProvider;
-import info.bioinfweb.libralign.sequenceprovider.events.SequenceChangeEvent;
-import info.bioinfweb.libralign.sequenceprovider.events.SequenceRenamedEvent;
-import info.bioinfweb.libralign.sequenceprovider.events.TokenChangeEvent;
 
 
 
@@ -38,7 +38,7 @@ import info.bioinfweb.libralign.sequenceprovider.events.TokenChangeEvent;
  * @author Ben St&ouml;ver
  * @since 0.3.0
  */
-public class MultipleAlignmentListener implements SequenceDataChangeListener, DataAreaModelListener {
+public class MultipleAlignmentListener implements AlignmentModelChangeListener, DataAreaModelListener {
 	private MultipleAlignmentsContainer owner;
 
 	
@@ -84,7 +84,7 @@ public class MultipleAlignmentListener implements SequenceDataChangeListener, Da
 
 
 	@Override
-	public <T, U> void afterProviderChanged(SequenceDataProvider<T> previous, SequenceDataProvider<U> current) {
+	public <T, U> void afterModelChanged(AlignmentModel<T> previous, AlignmentModel<U> current) {
 		previous.getChangeListeners().remove(this);
 		if (!current.getChangeListeners().contains(this)) {
 			current.getChangeListeners().add(this);
@@ -92,7 +92,7 @@ public class MultipleAlignmentListener implements SequenceDataChangeListener, Da
 
 		for (AlignmentArea alignmentArea : getOwner().getAlignmentAreas()) {
 			if ((current != null) && !current.equals(alignmentArea.getSequenceProvider())) {
-				alignmentArea.afterProviderChanged(previous, current);
+				alignmentArea.afterModelChanged(previous, current);
 			}
 		}
 	}
