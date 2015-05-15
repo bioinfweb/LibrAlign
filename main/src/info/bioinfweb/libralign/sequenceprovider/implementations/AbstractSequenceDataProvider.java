@@ -176,7 +176,7 @@ public abstract class AbstractSequenceDataProvider<T> implements SequenceDataPro
 			getIDByNameMap().put(sequenceName, sequenceID);
 			getNameByIDMap().put(sequenceID, sequenceName);
 			doAddSequence(sequenceID, sequenceName);
-			fireAfterSequenceChange(new SequenceChangeEvent<T>(this, sequenceID, ListChangeType.INSERTION));
+			fireAfterSequenceChange(SequenceChangeEvent.newInsertInstance(this, sequenceID));
 			return sequenceID;
 		}
 	}
@@ -221,7 +221,7 @@ public abstract class AbstractSequenceDataProvider<T> implements SequenceDataPro
 			if (result) {
 				removeSequenceNameMapping(sequenceID);
 				doRemoveSequence(sequenceID);
-				fireAfterSequenceChange(new SequenceChangeEvent<T>(this, sequenceID, ListChangeType.DELETION));
+				fireAfterSequenceChange(SequenceChangeEvent.newRemoveInstance(this, sequenceID));
 			}
 			return result;
 		}
@@ -305,7 +305,7 @@ public abstract class AbstractSequenceDataProvider<T> implements SequenceDataPro
 		  	getIDByNameMap().put(newSequenceName, sequenceID);
 		  	getNameByIDMap().put(sequenceID, newSequenceName);
 		  	doRenameSequence(sequenceID, newSequenceName);
-				fireAfterSequenceChange(new SequenceChangeEvent<T>(this, sequenceID, ListChangeType.DELETION));
+				fireAfterSequenceChange(SequenceChangeEvent.newRemoveInstance(this, sequenceID));
 		  }
 			return sequenceName;
 		}

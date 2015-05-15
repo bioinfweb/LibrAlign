@@ -22,7 +22,6 @@ package info.bioinfweb.libralign.sequenceprovider.events;
 import info.bioinfweb.commons.collections.ListChangeType;
 import info.bioinfweb.libralign.sequenceprovider.SequenceDataProvider;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 

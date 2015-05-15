@@ -19,7 +19,6 @@
 package info.bioinfweb.libralign.sequenceprovider.implementations;
 
 
-import info.bioinfweb.commons.collections.ListChangeType;
 import info.bioinfweb.libralign.alignmentarea.AlignmentArea;
 import info.bioinfweb.libralign.alignmentarea.order.SequenceOrder;
 import info.bioinfweb.libralign.sequenceprovider.SequenceAccessDataProvider;
@@ -134,8 +133,7 @@ public abstract class AbstractMapBasedSequenceDataProvider<S, T> extends Abstrac
 					protected void doRemove() {
 						removeSequenceNameMapping(getCurrentID());
 						getSequenceMap().remove(getCurrentID());
-						fireAfterSequenceChange(new SequenceChangeEvent(getProvider(), getCurrentID(), 
-								ListChangeType.DELETION));
+						fireAfterSequenceChange(SequenceChangeEvent.newRemoveInstance(getProvider(), getCurrentID()));
 					}
 				};
 	}

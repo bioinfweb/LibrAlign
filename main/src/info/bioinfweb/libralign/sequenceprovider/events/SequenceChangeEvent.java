@@ -37,9 +37,19 @@ public class SequenceChangeEvent<T> extends SequenceDataProviderChangeEvent<T> {
 	private ListChangeType type;
 
 	
-	public SequenceChangeEvent(SequenceDataProvider<T> source, int sequenceID, ListChangeType type) {
+	protected SequenceChangeEvent(SequenceDataProvider<T> source, int sequenceID, ListChangeType type) {
 		super(source, sequenceID);
 		this.type = type;
+	}
+	
+	
+	public static <T> SequenceChangeEvent<T> newInsertInstance(SequenceDataProvider<T> source, int sequenceID) {
+		return new SequenceChangeEvent<T>(source, sequenceID, ListChangeType.INSERTION);
+	}
+	
+	
+	public static <T> SequenceChangeEvent<T> newRemoveInstance(SequenceDataProvider<T> source, int sequenceID) {
+		return new SequenceChangeEvent<T>(source, sequenceID, ListChangeType.DELETION);
 	}
 
 

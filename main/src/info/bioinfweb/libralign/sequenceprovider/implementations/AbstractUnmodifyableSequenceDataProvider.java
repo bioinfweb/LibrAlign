@@ -133,12 +133,12 @@ public abstract class AbstractUnmodifyableSequenceDataProvider<S, T>
 		S previous = null;
 		if (removeSequence(sequenceID)) {
 			previous = getSequenceMap().get(sequenceID);
-			fireAfterSequenceChange(new SequenceChangeEvent<T>(this, sequenceID, ListChangeType.DELETION));
+			fireAfterSequenceChange(SequenceChangeEvent.newRemoveInstance(this, sequenceID));
 		}
 		
 		// Add new sequence:
 		getSequenceMap().put(sequenceID, content);
-		fireAfterSequenceChange(new SequenceChangeEvent<T>(this, sequenceID, ListChangeType.INSERTION));
+		fireAfterSequenceChange(SequenceChangeEvent.newInsertInstance(this, sequenceID));
 		return previous;
 	}
 
