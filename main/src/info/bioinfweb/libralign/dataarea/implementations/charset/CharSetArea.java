@@ -32,10 +32,10 @@ import info.bioinfweb.libralign.alignmentarea.label.AlignmentLabelArea;
 import info.bioinfweb.libralign.alignmentarea.label.AlignmentLabelSubArea;
 import info.bioinfweb.libralign.dataarea.DataArea;
 import info.bioinfweb.libralign.dataarea.DataAreaListType;
-import info.bioinfweb.libralign.sequenceprovider.SequenceDataProvider;
-import info.bioinfweb.libralign.sequenceprovider.events.SequenceChangeEvent;
-import info.bioinfweb.libralign.sequenceprovider.events.SequenceRenamedEvent;
-import info.bioinfweb.libralign.sequenceprovider.events.TokenChangeEvent;
+import info.bioinfweb.libralign.model.AlignmentModel;
+import info.bioinfweb.libralign.model.events.SequenceChangeEvent;
+import info.bioinfweb.libralign.model.events.SequenceRenamedEvent;
+import info.bioinfweb.libralign.model.events.TokenChangeEvent;
 
 
 
@@ -166,10 +166,10 @@ public class CharSetArea extends DataArea {
 
 
 	@Override
-	public <T, U> void afterProviderChanged(SequenceDataProvider<T> previous,
-			SequenceDataProvider<U> current) {
-		// TODO Auto-generated method stub
+	public <T, U> void afterProviderChanged(AlignmentModel<T> previous,
+			AlignmentModel<U> current) {
 		
+		// TODO Auto-generated method stub		
 	}
 
 

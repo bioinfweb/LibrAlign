@@ -43,7 +43,7 @@ public class SequenceLabelArea extends TextLabelArea {
 
 	@Override
 	protected String getText() {
-		return getOwner().getOwner().getSequenceProvider().sequenceNameByID(getLabeledArea().getSeqenceID());
+		return getOwner().getOwner().getAlignmentModel().sequenceNameByID(getLabeledArea().getSeqenceID());
 	}
 
 

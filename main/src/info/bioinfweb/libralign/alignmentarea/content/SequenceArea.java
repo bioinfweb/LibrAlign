@@ -43,7 +43,7 @@ import info.bioinfweb.libralign.alignmentarea.label.AlignmentLabelSubArea;
 import info.bioinfweb.libralign.alignmentarea.label.SequenceLabelArea;
 import info.bioinfweb.libralign.alignmentarea.selection.SelectionModel;
 import info.bioinfweb.libralign.alignmentarea.selection.SelectionType;
-import info.bioinfweb.libralign.sequenceprovider.SequenceDataProvider;
+import info.bioinfweb.libralign.model.AlignmentModel;
 
 
 
@@ -73,7 +73,7 @@ public class SequenceArea extends AlignmentSubArea {
 	/**
 	 * Returns the unique identifier of the the sequence displayed by this area.
 	 * 
-	 * @return an ID of a sequence stored in the according {@link SequenceDataProvider}
+	 * @return an ID of a sequence stored in the according {@link AlignmentModel}
 	 */
 	public int getSeqenceID() {
 		return seqenceID;
@@ -155,7 +155,7 @@ public class SequenceArea extends AlignmentSubArea {
   public static void paintSequence(AlignmentArea area, int sequenceID, TICPaintEvent event, double x, double y) {
 		int firstIndex = Math.max(0, area.getContentArea().columnByPaintX((int)event.getRectangle().getMinX()));
 		int lastIndex = area.getContentArea().columnByPaintX((int)event.getRectangle().getMaxX());
-		int lastColumn = area.getSequenceProvider().getSequenceLength(sequenceID) - 1;
+		int lastColumn = area.getAlignmentModel().getSequenceLength(sequenceID) - 1;
 		if ((lastIndex == -1) || (lastIndex > lastColumn)) {  //TODO Elongate to the length of the longest sequence and paint empty/special tokens on the right end?
 			lastIndex = lastColumn;
 		}
@@ -163,7 +163,7 @@ public class SequenceArea extends AlignmentSubArea {
   	x += firstIndex * area.getCompoundWidth();
 		for (int i = firstIndex; i <= lastIndex; i++) {			
     	paintCompound(area, event.getGraphics(), 
-    			area.getSequenceProvider().getTokenAt(sequenceID, i), (double)x, y,	
+    			area.getAlignmentModel().getTokenAt(sequenceID, i), (double)x, y,	
     			area.getSelection().isSelected(i, area.getSequenceOrder().indexByID(sequenceID)));
 	    x += area.getCompoundWidth();
     }
@@ -197,7 +197,7 @@ public class SequenceArea extends AlignmentSubArea {
 
 		int firstIndex = Math.max(0, getOwner().columnByPaintX((int)event.getRectangle().getMinX()));
 		int lastIndex = getOwner().columnByPaintX((int)event.getRectangle().getMaxX());
-		int lastColumn = getOwner().getOwner().getSequenceProvider().getSequenceLength(getSeqenceID()) - 1;
+		int lastColumn = getOwner().getOwner().getAlignmentModel().getSequenceLength(getSeqenceID()) - 1;
 		if ((lastIndex == -1) || (lastIndex > lastColumn)) {  //TODO Elongate to the length of the longest sequence and paint empty/special tokens on the right end?
 			lastIndex = lastColumn;
 		}
@@ -206,7 +206,7 @@ public class SequenceArea extends AlignmentSubArea {
 		double x = firstIndex * getOwner().getOwner().getCompoundWidth() + getOwner().getOwner().getDataAreas().getGlobalMaxLengthBeforeStart(); 
 		for (int i = firstIndex; i <= lastIndex; i++) {			
     	paintCompound(getOwner().getOwner(), event.getGraphics(), 
-    			getOwner().getOwner().getSequenceProvider().getTokenAt(getSeqenceID(), i), x, 0f,	
+    			getOwner().getOwner().getAlignmentModel().getTokenAt(getSeqenceID(), i), x, 0f,	
     			getOwner().getOwner().getSelection().isSelected(i, getOwner().getOwner().getSequenceOrder().indexByID(getSeqenceID())));
 	    x += getOwner().getOwner().getCompoundWidth();
     }
@@ -221,7 +221,7 @@ public class SequenceArea extends AlignmentSubArea {
 	public Dimension getSize() {
 		return new Dimension(
 				getOwner().getOwner().getDataAreas().getGlobalMaxLengthBeforeStart() + 
-				getOwner().getOwner().getCompoundWidth() * getOwner().getOwner().getSequenceProvider().getSequenceLength(getSeqenceID()),  //TODO Elongate to the length of the longest sequence and paint empty/special tokens on the right end? 
+				getOwner().getOwner().getCompoundWidth() * getOwner().getOwner().getAlignmentModel().getSequenceLength(getSeqenceID()),  //TODO Elongate to the length of the longest sequence and paint empty/special tokens on the right end? 
 				getOwner().getOwner().getCompoundHeight());
 	}
 

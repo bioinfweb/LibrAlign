@@ -38,10 +38,10 @@ import info.bioinfweb.commons.tic.TICPaintEvent;
 import info.bioinfweb.libralign.alignmentarea.content.AlignmentContentArea;
 import info.bioinfweb.libralign.alignmentarea.content.SequenceArea;
 import info.bioinfweb.libralign.dataarea.DataAreaListType;
-import info.bioinfweb.libralign.sequenceprovider.SequenceDataProvider;
-import info.bioinfweb.libralign.sequenceprovider.events.SequenceChangeEvent;
-import info.bioinfweb.libralign.sequenceprovider.events.SequenceRenamedEvent;
-import info.bioinfweb.libralign.sequenceprovider.events.TokenChangeEvent;
+import info.bioinfweb.libralign.model.AlignmentModel;
+import info.bioinfweb.libralign.model.events.SequenceChangeEvent;
+import info.bioinfweb.libralign.model.events.SequenceRenamedEvent;
+import info.bioinfweb.libralign.model.events.TokenChangeEvent;
 
 
 
@@ -57,7 +57,7 @@ public class ConsensusSequenceArea extends CustomHeightFullWidthArea {
 	
 	private TreeMap<String, AmbiguityBaseScore> mapByBase;
 	private Map<Integer, AmbiguityBaseScore> scores;
-	private SequenceDataProvider<?> sequenceDataProvider;
+	private AlignmentModel<?> sequenceDataProvider;
 	private boolean useSequenceDataProviderFromOwner;
 	
 	
@@ -69,7 +69,7 @@ public class ConsensusSequenceArea extends CustomHeightFullWidthArea {
 	 * @throws IllegalArgumentException if {@code owner} does not have a sequence data provider
 	 */
 	public ConsensusSequenceArea(AlignmentContentArea owner) {
-		this(owner, owner.getOwner().getSequenceProvider(), true);
+		this(owner, owner.getOwner().getAlignmentModel(), true);
 	}
 	
 	
@@ -77,21 +77,21 @@ public class ConsensusSequenceArea extends CustomHeightFullWidthArea {
 	 * Creates a new instance of this class that uses the specified sequence data provider.
 	 * <p>
 	 * Note that this instance will not react to calls of 
-	 * {@link #afterProviderChanged(SequenceDataProvider, SequenceDataProvider)} when this constructor
+	 * {@link #afterProviderChanged(AlignmentModel, AlignmentModel)} when this constructor
 	 * is used. Such changes would than have to be done manually by the application code using 
-	 * {@link #setSequenceDataProvider(SequenceDataProvider)}.
+	 * {@link #setSequenceDataProvider(AlignmentModel)}.
 	 * 
 	 * @param owner - the alignment area that will be containing the returned data area instance
 	 * @param sequenceDataProvider - the model to calculate the consensus sequence from (Does not have
 	 *        to be the same as the one used by {@code owner}.)
 	 * @throws IllegalArgumentException if {@code sequenceDataProvider} is {@code null}
 	 */
-	public ConsensusSequenceArea(AlignmentContentArea owner, SequenceDataProvider<?> sequenceDataProvider) {
+	public ConsensusSequenceArea(AlignmentContentArea owner, AlignmentModel<?> sequenceDataProvider) {
 		this(owner, sequenceDataProvider, false);
 	}
 	
 	
-	private ConsensusSequenceArea(AlignmentContentArea owner, SequenceDataProvider<?> sequenceDataProvider, 
+	private ConsensusSequenceArea(AlignmentContentArea owner, AlignmentModel<?> sequenceDataProvider, 
 			boolean useSequenceDataProviderFromOwner) {
 			
 		super(owner, Math.round(DEFAULT_HEIGHT_FACTOR * owner.getOwner().getCompoundHeight()));  //TODO Add listener for compoundHeight that updates the height.
@@ -116,7 +116,7 @@ public class ConsensusSequenceArea extends CustomHeightFullWidthArea {
 	 * 
 	 * @return a reference to the sequence data provider that is used
 	 */
-	public SequenceDataProvider<?> getSequenceDataProvider() {
+	public AlignmentModel<?> getSequenceDataProvider() {
 		return sequenceDataProvider;
 	}
 
@@ -125,12 +125,12 @@ public class ConsensusSequenceArea extends CustomHeightFullWidthArea {
 	 * Replaces the sequence data provider to be used to calculate the consensus sequence.
 	 * <p>
 	 * Note that after calling this method {@link #isUseSequenceDataProviderFromOwner()} will
-	 * always return {@code true} and a call of {@link #afterProviderChanged(SequenceDataProvider, SequenceDataProvider)}
+	 * always return {@code true} and a call of {@link #afterProviderChanged(AlignmentModel, AlignmentModel)}
 	 * therefore will have no effect from now on.
 	 * 
 	 * @param sequenceDataProvider - the new model
 	 */
-	public void setSequenceDataProvider(SequenceDataProvider<?> sequenceDataProvider) {
+	public void setSequenceDataProvider(AlignmentModel<?> sequenceDataProvider) {
 		this.sequenceDataProvider.getChangeListeners().remove(this);
 		useSequenceDataProviderFromOwner = false;
 		this.sequenceDataProvider = sequenceDataProvider;
@@ -270,7 +270,7 @@ public class ConsensusSequenceArea extends CustomHeightFullWidthArea {
 	
 	
 	@Override
-	public void afterProviderChanged(SequenceDataProvider previous,	SequenceDataProvider current) {
+	public void afterProviderChanged(AlignmentModel previous,	AlignmentModel current) {
 		if (isUseSequenceDataProviderFromOwner()) {  // This event is only coming from the owner.
 			sequenceDataProvider = current;
 			refreshConsensus();

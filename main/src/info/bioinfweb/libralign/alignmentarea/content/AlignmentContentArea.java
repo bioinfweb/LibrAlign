@@ -108,7 +108,7 @@ public class AlignmentContentArea extends TICComponent {
 		Rectangle result = new Rectangle(paintXByColumn(selection.getCursorColumn()), y,
 				getOwner().getCompoundWidth(), paintYByRow(selection.getCursorRow() + selection.getCursorHeight()) - y); 
 		if (selection.getCursorRow() + selection.getCursorHeight() - 1 == 
-				getOwner().getSequenceProvider().getSequenceCount() - 1) {
+				getOwner().getAlignmentModel().getSequenceCount() - 1) {
 			
 			result.height += getOwner().getCompoundHeight();  // Add height of the last row, because the return value of paintYByRow(maxIndex + 1) is equal to paintYByRow(maxIndex).
 		}
@@ -123,7 +123,7 @@ public class AlignmentContentArea extends TICComponent {
 				getOwner().getGlobalMaxSequenceLength() * getOwner().getCompoundWidth();
 		result.height = getOwner().getDataAreas().getVisibleAreaHeight();
 		if (getOwner().hasSequenceProvider()) {
-			result.height += getOwner().getSequenceProvider().getSequenceCount() * getOwner().getCompoundHeight();
+			result.height += getOwner().getAlignmentModel().getSequenceCount() * getOwner().getCompoundHeight();
 		}
 		return result;
 	}
@@ -213,7 +213,7 @@ public class AlignmentContentArea extends TICComponent {
 			return 0;
 		}
 		else {
-			return getOwner().getSequenceProvider().getSequenceCount() - 1;
+			return getOwner().getAlignmentModel().getSequenceCount() - 1;
 		}
 	}
 	
@@ -230,7 +230,7 @@ public class AlignmentContentArea extends TICComponent {
 	 * @return a value >= 0
 	 */
 	public int paintYByRow(int row) {
-		row = Math.max(0, Math.min(getOwner().getSequenceProvider().getSequenceCount() - 1, row));
+		row = Math.max(0, Math.min(getOwner().getAlignmentModel().getSequenceCount() - 1, row));
     return getToolkitComponent().getSequenceAreaByID(getOwner().getSequenceOrder().idByIndex(row)).getLocationInParent().y;		
 	}
 	

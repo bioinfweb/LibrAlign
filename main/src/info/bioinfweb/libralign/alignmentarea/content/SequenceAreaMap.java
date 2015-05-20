@@ -21,8 +21,8 @@ package info.bioinfweb.libralign.alignmentarea.content;
 
 import info.bioinfweb.libralign.alignmentarea.selection.SelectionChangeEvent;
 import info.bioinfweb.libralign.alignmentarea.selection.SelectionListener;
+import info.bioinfweb.libralign.model.AlignmentModel;
 import info.bioinfweb.libralign.multiplealignments.ToolkitSpecificMultipleAlignmentsContainer;
-import info.bioinfweb.libralign.sequenceprovider.SequenceDataProvider;
 
 import java.util.Iterator;
 import java.util.Map;
@@ -57,7 +57,7 @@ public class SequenceAreaMap extends TreeMap<Integer, SequenceArea> implements S
 	
 	
 	/**
-	 * Removes sequence areas for sequences that are not present anymore in the linked {@link SequenceDataProvider}
+	 * Removes sequence areas for sequences that are not present anymore in the linked {@link AlignmentModel}
 	 * and adds new sequence areas for new sequences in the provider which were not present at the last call of this
 	 * method.
 	 * 
@@ -70,7 +70,7 @@ public class SequenceAreaMap extends TreeMap<Integer, SequenceArea> implements S
 			clear();
 			
 			// (Re)insert sequence areas: 
-			Iterator<Integer> iterator = getOwner().getOwner().getSequenceProvider().sequenceIDIterator();
+			Iterator<Integer> iterator = getOwner().getOwner().getAlignmentModel().sequenceIDIterator();
 			while (iterator.hasNext()) {
 				Integer id = iterator.next();
 				SequenceArea sequenceArea = saveMap.get(id);

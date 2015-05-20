@@ -26,7 +26,7 @@ import java.util.List;
 
 import info.bioinfweb.libralign.alignmentarea.AlignmentArea;
 import info.bioinfweb.libralign.alignmentarea.content.AlignmentContentArea;
-import info.bioinfweb.libralign.sequenceprovider.SequenceDataProvider;
+import info.bioinfweb.libralign.model.AlignmentModel;
 
 
 
@@ -204,12 +204,12 @@ public class SelectionModel {
 	
 	
 	private int bringCursorColumnInRange(int column) {
-		 return Math.max(0, Math.min(column, getOwner().getSequenceProvider().getMaxSequenceLength()));
+		 return Math.max(0, Math.min(column, getOwner().getAlignmentModel().getMaxSequenceLength()));
 	}
 	
 	
 	private int bringRowInRange(int row) {
-		 return Math.max(0, Math.min(row, getOwner().getSequenceProvider().getSequenceCount() - 1));
+		 return Math.max(0, Math.min(row, getOwner().getAlignmentModel().getSequenceCount() - 1));
 	}
 	
 	
@@ -225,7 +225,7 @@ public class SelectionModel {
 		row = bringRowInRange(row);
 		cursorStartRow = row;
 		cursorStartColumn = column;
-		height = Math.max(1, Math.min(getOwner().getSequenceProvider().getSequenceCount() - row, height));
+		height = Math.max(1, Math.min(getOwner().getAlignmentModel().getSequenceCount() - row, height));
 		clear();
 		cursor.setColumnRowHeight(column, row, height);
     fireSelectionChanged();
@@ -292,7 +292,7 @@ public class SelectionModel {
 	public void selectAll() {
 		columnSelection.selectAll();
 		rowSelection.selectAll();
-		SequenceDataProvider provider = getOwner().getSequenceProvider();
+		AlignmentModel provider = getOwner().getAlignmentModel();
 		cursor.setColumnRowHeight(provider.getMaxSequenceLength(), 0, provider.getSequenceCount());
 		fireSelectionChanged();
 	}

@@ -21,6 +21,7 @@ package info.bioinfweb.libralign.pherogram.provider;
 
 import info.bioinfweb.commons.bio.biojava3.core.sequence.BioJava1SymbolTranslator;
 import info.bioinfweb.commons.bio.biojava3.core.sequence.compound.NoGapDNACompoundSet;
+import info.bioinfweb.libralign.model.AlignmentModel;
 
 import java.util.Map;
 import java.util.NoSuchElementException;
@@ -38,7 +39,7 @@ import org.biojava3.core.sequence.compound.NucleotideCompound;
 
 /**
  * Adapter class that provides the contents of any implementation of {@link Chromatogram} from BioJava 1
- * as a {@link PherogramProvider}.
+ * as a {@link PherogramModel}.
  * <p>
  * You can use this class together with {@link ChromatogramFactory} to load ABI or SCF files into LibrAlign.
  * Note that base call indices in LibrAlign start with 0 whereas the BioJava indices in the underlying
@@ -48,7 +49,7 @@ import org.biojava3.core.sequence.compound.NucleotideCompound;
  * 
  * @author Ben St&ouml;ver
  */
-public class BioJavaPherogramProvider implements PherogramProvider {
+public class BioJavaPherogramProvider implements PherogramModel {
 	public static final String QUALITY_LABEL_PREFIX = "quality-";
 	
 	
@@ -71,7 +72,6 @@ public class BioJavaPherogramProvider implements PherogramProvider {
 	
 	private static Map<String, AtomicSymbol> createTraceCurveMap() {
 		Map<String, AtomicSymbol> result = new TreeMap<String, AtomicSymbol>();
-		NoGapDNACompoundSet set = NoGapDNACompoundSet.getNoGapDNACompoundSet(); 
 		result.put("A", DNATools.a());
 		result.put("T", DNATools.t());
 		result.put("C", DNATools.c());
@@ -162,16 +162,16 @@ public class BioJavaPherogramProvider implements PherogramProvider {
 	public int getSequenceLength() {
 		return chromatogram.getSequenceLength();
 	}
-
-
+	
+	
 	/**
-	 * Returns a new instance of this class which uses the reverse complemented version of the underlying BioJava 1 
-	 * chromatogram.
-	 * 
-	 * @return a new instance of this class
-	 */
-	@Override
-	public PherogramProvider reverseComplement() {
+   * Returns a new instance of this class which uses the reverse complemented version of the underlying BioJava 1 
+   * chromatogram.
+   * 
+   * @return a new instance of this class
+   */
+  @Override
+  public PherogramModel reverseComplement() {
 		return new BioJavaPherogramProvider(chromatogram.reverseComplement());
 	}
 }

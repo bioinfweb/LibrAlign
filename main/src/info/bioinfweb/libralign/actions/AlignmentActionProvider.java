@@ -25,14 +25,14 @@ import java.util.Collection;
 import info.bioinfweb.libralign.alignmentarea.AlignmentArea;
 import info.bioinfweb.libralign.alignmentarea.content.AlignmentContentArea;
 import info.bioinfweb.libralign.alignmentarea.selection.SelectionModel;
-import info.bioinfweb.libralign.sequenceprovider.SequenceDataProvider;
-import info.bioinfweb.libralign.sequenceprovider.exception.AlignmentSourceNotWritableException;
+import info.bioinfweb.libralign.model.AlignmentModel;
+import info.bioinfweb.libralign.model.exception.AlignmentSourceNotWritableException;
 
 
 
 /**
  * This class provider the business logic for user actions triggered through the view {@link AlignmentContentArea}
- * to manipulate the associated models {@link SequenceDataProvider} and {@link SelectionModel}.
+ * to manipulate the associated models {@link AlignmentModel} and {@link SelectionModel}.
  * 
  * @author Ben St&ouml;ver
  * @since 0.3.0
@@ -49,7 +49,7 @@ public class AlignmentActionProvider<T> {
 	/**
 	 * Creates a new instance of this class that is associated with the specified view and model.
 	 * <p>
-	 * Note that the token type of the {@link SequenceDataProvider} associated with {@code view} and the token type
+	 * Note that the token type of the {@link AlignmentModel} associated with {@code view} and the token type
 	 * {@code T} if this instance must match. 
 	 * 
 	 * @param view - the alignment content area from which the user operations will be triggered (The sequence data 
@@ -71,8 +71,8 @@ public class AlignmentActionProvider<T> {
 	}
 	
 	
-	public SequenceDataProvider<T> getModel() {
-		return (SequenceDataProvider<T>)getAlignmentArea().getSequenceProvider();
+	public AlignmentModel<T> getModel() {
+		return (AlignmentModel<T>)getAlignmentArea().getAlignmentModel();
 	}
 
 
@@ -88,12 +88,12 @@ public class AlignmentActionProvider<T> {
 	
 	
 	/**
-	 * Removes the currently selected tokens from the underlying {@link SequenceDataProvider}. If no tokens
+	 * Removes the currently selected tokens from the underlying {@link AlignmentModel}. If no tokens
 	 * are selected the token right of the cursor is removed from each sequence the cursor spans to.
 	 * <p>
 	 * Most users would probably expect this operation to be executed when the delete button is pressed.
 	 * <p>
-	 * Note that calling this method will have no effect if the underlying {@link SequenceDataProvider} is
+	 * Note that calling this method will have no effect if the underlying {@link AlignmentModel} is
 	 * not writable.
 	 * 
 	 * @return {@code true} if the underlying data source was changed as a result of this operation, 
@@ -123,12 +123,12 @@ public class AlignmentActionProvider<T> {
 	
 	
 	/**
-	 * Removes the currently selected tokens from the underlying {@link SequenceDataProvider}. If no tokens
+	 * Removes the currently selected tokens from the underlying {@link AlignmentModel}. If no tokens
 	 * are selected the token left of the cursor is removed from each sequence the cursor spans to.
 	 * <p>
 	 * Most users would probably expect this operation to be executed when the backspace button is pressed.
 	 * <p>
-	 * Note that calling this method will have no effect if the underlying {@link SequenceDataProvider} is
+	 * Note that calling this method will have no effect if the underlying {@link AlignmentModel} is
 	 * not writable.
 	 * 
 	 * @return {@code true} if the underlying data source was changed as a result of this operation, 
@@ -166,10 +166,10 @@ public class AlignmentActionProvider<T> {
 	 * specified token will be inserted as often as the length of the selection.
 	 * <p>
 	 * Note that no deep copy of the specified token will be used, if it is inserted into several rows. Generally
-	 * implementations of {@link SequenceDataProvider} do not necessarily store one object per position in a sequence,
+	 * implementations of {@link AlignmentModel} do not necessarily store one object per position in a sequence,
 	 * but equal objects can also be mapped to the token set to save memory. 
 	 * <p>
-	 * Note that calling this method will have no effect if the underlying {@link SequenceDataProvider} is
+	 * Note that calling this method will have no effect if the underlying {@link AlignmentModel} is
 	 * not writable.
 	 * 
 	 * @param token - the token to be inserted
@@ -204,10 +204,10 @@ public class AlignmentActionProvider<T> {
 	 * If not token is selected the token(s) right of the cursor are replaced.
 	 * <p>
 	 * If more than one token in each sequence is selected, the first one will be replaced by 
-	 * {@link SequenceDataProvider#setTokenAt(int, int, Object)} and the other will be deleted using
-	 * {@link SequenceDataProvider#removeTokensAt(int, int, int)}.
+	 * {@link AlignmentModel#setTokenAt(int, int, Object)} and the other will be deleted using
+	 * {@link AlignmentModel#removeTokensAt(int, int, int)}.
 	 * <p>
-	 * Note that calling this method will have no effect if the underlying {@link SequenceDataProvider} is
+	 * Note that calling this method will have no effect if the underlying {@link AlignmentModel} is
 	 * not writable.
 	 * 
 	 * @param token - the new token to replace the other(s)

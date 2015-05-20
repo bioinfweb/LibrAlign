@@ -23,8 +23,8 @@ import info.bioinfweb.commons.collections.ListChangeType;
 import info.bioinfweb.libralign.alignmentarea.AlignmentArea;
 import info.bioinfweb.libralign.alignmentarea.content.AlignmentContentArea;
 import info.bioinfweb.libralign.alignmentarea.label.AlignmentLabelArea;
+import info.bioinfweb.libralign.model.AlignmentModel;
 import info.bioinfweb.libralign.multiplealignments.MultipleAlignmentsContainer;
-import info.bioinfweb.libralign.sequenceprovider.SequenceDataProvider;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -238,7 +238,7 @@ public class DataAreaModel {
 
 	
 	/**
-	 * Returns the change listener that forwards events from the associated {@link SequenceDataProvider} to
+	 * Returns the change listener that forwards events from the associated {@link AlignmentModel} to
 	 * all data areas contained in this model. 
 	 */
 	public DataAreaSequenceChangeListener getSequenceDataChangeListener() {

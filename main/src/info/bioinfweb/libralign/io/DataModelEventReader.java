@@ -20,15 +20,15 @@ package info.bioinfweb.libralign.io;
 
 
 import info.bioinfweb.jphyloio.JPhyloIOEventListener;
-import info.bioinfweb.libralign.sequenceprovider.DataProvider;
+import info.bioinfweb.libralign.model.data.DataModel;
 
 
 
 /**
  * Interface to be implemented by all readers that process JPhyloIO events to read data to be stored in
- * implementations of {@link DataProvider}.
+ * implementations of {@link DataModel}.
  * <p>
- * All implementations should accept an instance of {@link DataProvider} as a constructor parameter that
+ * All implementations should accept an instance of {@link DataModel} as a constructor parameter that
  * will than be returned by {@link #getModel()}. Implementing classes should not allow to change the model
  * during runtime, since changing the model between two calls of 
  * {@link #processEvent(info.bioinfweb.jphyloio.JPhyloIOEventReader, info.bioinfweb.jphyloio.events.JPhyloIOEvent)}
@@ -43,5 +43,5 @@ public interface DataModelEventReader extends JPhyloIOEventListener {
 	 * 
 	 * @return the associated model
 	 */
-	public DataProvider getModel();
+	public DataModel getModel();
 }

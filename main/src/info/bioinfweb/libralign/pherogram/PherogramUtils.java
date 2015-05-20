@@ -19,7 +19,7 @@
 package info.bioinfweb.libralign.pherogram;
 
 
-import info.bioinfweb.libralign.pherogram.provider.PherogramProvider;
+import info.bioinfweb.libralign.pherogram.provider.PherogramModel;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,7 +30,7 @@ import org.biojava3.core.sequence.compound.NucleotideCompound;
 
 
 /**
- * provides values for constants of {@link PherogramProvider}  and general tool methods to deal with pherogram data. 
+ * provides values for constants of {@link PherogramModel}  and general tool methods to deal with pherogram data. 
  * 
  * @author Ben St&ouml;ver
  * @since 0.1.0
@@ -43,7 +43,7 @@ public class PherogramUtils {
 	 * @param baseCallIndex - the index of the base call
 	 * @return a valid trace value index
 	 */
-	public static int getFirstTracePosition(PherogramProvider provider, int baseCallIndex) {
+	public static int getFirstTracePosition(PherogramModel provider, int baseCallIndex) {
 		if (baseCallIndex <= 0) {  // BioJava indices start with 1
 			return 0;
 		}
@@ -70,9 +70,9 @@ public class PherogramUtils {
   
   public static List<String> createProbabilityLabelsList() {
   	List<String> result = new ArrayList<String>(3);
-  	result.add(PherogramProvider.LABEL_SUBSTITUTION_PROBABILITY);
-  	result.add(PherogramProvider.LABEL_OVERCALL_PROBABILITY);
-  	result.add(PherogramProvider.LABEL_UNDERCALL_PROBABILITY);
+  	result.add(PherogramModel.LABEL_SUBSTITUTION_PROBABILITY);
+  	result.add(PherogramModel.LABEL_OVERCALL_PROBABILITY);
+  	result.add(PherogramModel.LABEL_UNDERCALL_PROBABILITY);
   	return result;
   }
 }

@@ -34,7 +34,7 @@ import info.bioinfweb.commons.tic.input.TICMouseListener;
 import info.bioinfweb.libralign.actions.AlignmentActionProvider;
 import info.bioinfweb.libralign.alignmentarea.AlignmentArea;
 import info.bioinfweb.libralign.alignmentarea.selection.SelectionModel;
-import info.bioinfweb.libralign.sequenceprovider.SequenceDataProvider;
+import info.bioinfweb.libralign.model.AlignmentModel;
 
 
 
@@ -99,7 +99,7 @@ public class CursorSelectionInputListener extends TICMouseAdapter implements TIC
 	@Override
 	public void keyPressed(TICKeyEvent event) {
 		SelectionModel selection = getOwner().getSelection();
-		SequenceDataProvider provider = getOwner().getSequenceProvider();
+		AlignmentModel provider = getOwner().getAlignmentModel();
 		switch (event.getKeyCode()) {
 			case KeyEvent.VK_LEFT:
 				if (event.isShiftDown()) {

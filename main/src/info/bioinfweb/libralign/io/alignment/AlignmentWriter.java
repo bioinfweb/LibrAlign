@@ -19,7 +19,7 @@
 package info.bioinfweb.libralign.io.alignment;
 
 
-import info.bioinfweb.libralign.sequenceprovider.SequenceDataProvider;
+import info.bioinfweb.libralign.model.AlignmentModel;
 
 import java.io.File;
 import java.io.OutputStream;
@@ -27,7 +27,7 @@ import java.io.OutputStream;
 
 
 /**
- * Interface to be implemented by all classes writing alignment data provided by an instance of {@link SequenceDataProvider}
+ * Interface to be implemented by all classes writing alignment data provided by an instance of {@link AlignmentModel}
  * in different formats to streams of files.
  * 
  * @author Ben St&ouml;ver
@@ -41,7 +41,7 @@ public interface AlignmentWriter {
 	 * @param provider - the sequence data provider containing the alignment data
 	 * @throws Exception depending on the implementing class
 	 */
-	public void write(OutputStream stream, SequenceDataProvider<?> provider) throws Exception;
+	public void write(OutputStream stream, AlignmentModel<?> provider) throws Exception;
 
 	/**
 	 * Writes the contents of {@code provider} into the specified file.
@@ -51,5 +51,5 @@ public interface AlignmentWriter {
 	 * @throws Exception IO exceptions thrown while trying to write the file or possibly additional exceptions
 	 *         of other types depending on the implementing class
 	 */
-	public void write(File file, SequenceDataProvider<?> provider) throws Exception;
+	public void write(File file, AlignmentModel<?> provider) throws Exception;
 }

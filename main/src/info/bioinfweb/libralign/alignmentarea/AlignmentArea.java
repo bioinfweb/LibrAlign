@@ -42,12 +42,13 @@ import info.bioinfweb.libralign.dataarea.DataAreaChangeEvent;
 import info.bioinfweb.libralign.dataarea.DataAreaModel;
 import info.bioinfweb.libralign.dataarea.DataAreaModelListener;
 import info.bioinfweb.libralign.editsettings.EditSettings;
+import info.bioinfweb.libralign.model.AlignmentModelChangeListener;
+import info.bioinfweb.libralign.model.AlignmentModel;
+import info.bioinfweb.libralign.model.events.SequenceChangeEvent;
+import info.bioinfweb.libralign.model.events.AlignmentModelChangeEvent;
+import info.bioinfweb.libralign.model.events.SequenceRenamedEvent;
+import info.bioinfweb.libralign.model.events.TokenChangeEvent;
 import info.bioinfweb.libralign.multiplealignments.MultipleAlignmentsContainer;
-import info.bioinfweb.libralign.sequenceprovider.SequenceDataChangeListener;
-import info.bioinfweb.libralign.sequenceprovider.SequenceDataProvider;
-import info.bioinfweb.libralign.sequenceprovider.events.SequenceChangeEvent;
-import info.bioinfweb.libralign.sequenceprovider.events.SequenceRenamedEvent;
-import info.bioinfweb.libralign.sequenceprovider.events.TokenChangeEvent;
 
 
 
@@ -57,7 +58,7 @@ import info.bioinfweb.libralign.sequenceprovider.events.TokenChangeEvent;
  * @author Ben St&ouml;ver
  * @since 0.0.0
  */
-public class AlignmentArea extends TICComponent implements SequenceDataChangeListener, DataAreaModelListener {
+public class AlignmentArea extends TICComponent implements AlignmentModelChangeListener, DataAreaModelListener {
 	public static final int COMPOUND_WIDTH = 10;
 	public static final int COMPOUND_HEIGHT = 14;
 	
@@ -72,7 +73,7 @@ public class AlignmentArea extends TICComponent implements SequenceDataChangeLis
 	public static final int MIN_PART_AREA_HEIGHT = 5;
 	
 	
-	private SequenceDataProvider<?> sequenceProvider = null;
+	private AlignmentModel<?> alignmentModel = null;
 	private SequenceOrder sequenceOrder = new SequenceOrder(this);
 	private float zoomX = 1f;
 	private float zoomY = 1f;
@@ -127,63 +128,62 @@ public class AlignmentArea extends TICComponent implements SequenceDataChangeLis
 
 
 	public boolean hasSequenceProvider() {
-		return getSequenceProvider() != null;
+		return getAlignmentModel() != null;
 	}
 	
 	
-	public SequenceDataProvider<?> getSequenceProvider() {
-		return sequenceProvider;
+	public AlignmentModel<?> getAlignmentModel() {
+		return alignmentModel;
 	}
 	
 	
 	/**
-	 * Changes the sequence provider used by this instance.
+	 * Changes the sequence model used by this instance.
 	 * 
-	 * @param sequenceProvider - the new data provider to use from now on
-	 * @param moveListeners - Specify {@code true} here, if you want the {@link SequenceDataChangeListener}s
-	 *        attached to the current sequence provider to be moved to the specified {@code sequenceProvider},
-	 *        {@code false} if the listeners shall remain attached to the old sequence provider. (This instance
+	 * @param alignmentModel - the new data provider to use from now on
+	 * @param moveListeners - Specify {@code true} here, if you want the {@link AlignmentModelChangeListener}s
+	 *        attached to the current model to be moved to the specified {@code alignmentModel},
+	 *        {@code false} if the listeners shall remain attached to the old model. (This instance
 	 *        is also registered as a listener and is always moved to the new object, no matter which value is
 	 *        specified here.)
-	 * @return the previous sequence provider that has been replaced or {@code null} if there was no provider 
-	 *         before
+	 * @return the previous model that has been replaced or {@code null} if there was no model before
 	 */
-	public SequenceDataProvider<?> setSequenceProvider(SequenceDataProvider<?> sequenceProvider, 
+	public AlignmentModel<?> setAlignmentModel(AlignmentModel<?> alignmentModel, 
 			boolean moveListeners) {
 		
-		SequenceDataProvider<?> result = this.sequenceProvider;
-		if (!sequenceProvider.equals(this.sequenceProvider)) {
-			if (this.sequenceProvider != null) {
+		AlignmentModel<?> result = this.alignmentModel;
+		if (!alignmentModel.equals(this.alignmentModel)) {
+			if (this.alignmentModel != null) {
 				if (moveListeners) {  // Move all listeners
-					sequenceProvider.getChangeListeners().addAll(this.sequenceProvider.getChangeListeners());
-					this.sequenceProvider.getChangeListeners().clear();
+					alignmentModel.getChangeListeners().addAll(this.alignmentModel.getChangeListeners());
+					this.alignmentModel.getChangeListeners().clear();
 				}
 				else {  // Move this instance as the listener anyway:
-					this.sequenceProvider.getChangeListeners().remove(this);
-					sequenceProvider.getChangeListeners().add(this);
+					this.alignmentModel.getChangeListeners().remove(this);
+					alignmentModel.getChangeListeners().add(this);
 				}
 			}
 			
-			this.sequenceProvider = sequenceProvider;
+			this.alignmentModel = alignmentModel;
 			getSequenceOrder().setSourceSequenceOrder();  // Update sequence names
 			if (hasToolkitComponent()) {
 				reinsertSubelements();
 			}
 			
       // Fire events for listener move after the process finished
-			if (this.sequenceProvider != null) {
-				if (!this.sequenceProvider.getChangeListeners().contains(this)) {  // Add this object as a listener if it was not already moved from the previous provider.
-					this.sequenceProvider.getChangeListeners().add(this);
+			if (this.alignmentModel != null) {
+				if (!this.alignmentModel.getChangeListeners().contains(this)) {  // Add this object as a listener if it was not already moved from the previous provider.
+					this.alignmentModel.getChangeListeners().add(this);
 				}
 				
 				if (moveListeners) {
-					Iterator<SequenceDataChangeListener> iterator = this.sequenceProvider.getChangeListeners().iterator();
+					Iterator<AlignmentModelChangeListener> iterator = this.alignmentModel.getChangeListeners().iterator();
 					while (iterator.hasNext()) {
-						iterator.next().afterProviderChanged(result, this.sequenceProvider);
+						iterator.next().afterProviderChanged(result, this.alignmentModel);
 					}
 				}
 				else {
-					afterProviderChanged(result, this.sequenceProvider);
+					afterProviderChanged(result, this.alignmentModel);
 				}
 			}
 		}
@@ -360,13 +360,13 @@ public class AlignmentArea extends TICComponent implements SequenceDataChangeLis
 	 * this container. Otherwise the return value is identical with {@code getSequenceProvider.getMaxSequenceLength()}.
 	 * 
 	 * @return a value >= 0
-	 * @see SequenceDataProvider#getMaxSequenceLength()
+	 * @see AlignmentModel#getMaxSequenceLength()
 	 */
 	public int getGlobalMaxSequenceLength() {
 		if (hasContainer()) {
 			int result = 0;
 			for (AlignmentArea alignmentArea : getContainer().getAlignmentAreas()) {
-				SequenceDataProvider<?> provider = alignmentArea.getSequenceProvider();
+				AlignmentModel<?> provider = alignmentArea.getAlignmentModel();
 				if (provider != null) {
 					result = Math.max(result, provider.getMaxSequenceLength());
 				}
@@ -374,7 +374,7 @@ public class AlignmentArea extends TICComponent implements SequenceDataChangeLis
 			return result;
 		}
 		else {
-			return getSequenceProvider().getMaxSequenceLength();
+			return getAlignmentModel().getMaxSequenceLength();
 		}
 	}
 	
@@ -484,7 +484,7 @@ public class AlignmentArea extends TICComponent implements SequenceDataChangeLis
 	
 	@Override
 	public <T> void afterSequenceChange(SequenceChangeEvent<T> e) {
-		if (e.getSource().equals(getSequenceProvider())) {
+		if (e.getSource().equals(getAlignmentModel())) {
 			getLabelArea().setLocalMaxWidthRecalculate();  // Needs to be called before assignSizeToAll().
 			getSequenceOrder().refreshFromSource();
 			if (hasToolkitComponent()) {
@@ -500,7 +500,7 @@ public class AlignmentArea extends TICComponent implements SequenceDataChangeLis
 
 	@Override
 	public <T> void afterSequenceRenamed(SequenceRenamedEvent<T> e) {
-		if (e.getSource().equals(getSequenceProvider())) {
+		if (e.getSource().equals(getAlignmentModel())) {
 			getLabelArea().setLocalMaxWidthRecalculate();  // Needs to be called before assignSizeToAll().
 		}
 		assignSizeToAll();  // Other label areas might also have to adopt their width.
@@ -511,7 +511,7 @@ public class AlignmentArea extends TICComponent implements SequenceDataChangeLis
 	@Override
 	public <T> void afterTokenChange(TokenChangeEvent<T> e) {
 		assignSize();  // Needs to happen first (otherwise the child elements get cut off in SWT probably because they are only painted as far as they are visible in the parent component even if the parent will be resized later on).
-		if (getContentArea().hasToolkitComponent() && e.getSource().equals(getSequenceProvider())) {
+		if (getContentArea().hasToolkitComponent() && e.getSource().equals(getAlignmentModel())) {
 			getContentArea().getToolkitComponent().assignSequenceAreaSize(e.getSequenceID());
 		}
 		getDataAreas().getSequenceDataChangeListener().afterTokenChange(e);
@@ -519,7 +519,7 @@ public class AlignmentArea extends TICComponent implements SequenceDataChangeLis
 
 
 	@Override
-	public <T, U> void afterProviderChanged(SequenceDataProvider<T> previous, SequenceDataProvider<U> current) {
+	public <T, U> void afterProviderChanged(AlignmentModel<T> previous, AlignmentModel<U> current) {
 		getLabelArea().setLocalMaxWidthRecalculate();  // Needs to be called before assignSizeToAll().
 		assignSizeToAll();  //TODO reinsertSubements()?
 		repaint();  //TODO Needed?

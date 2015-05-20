@@ -21,22 +21,22 @@ package info.bioinfweb.libralign.dataarea;
 
 import java.util.Iterator;
 
-import info.bioinfweb.libralign.sequenceprovider.SequenceDataChangeListener;
-import info.bioinfweb.libralign.sequenceprovider.SequenceDataProvider;
-import info.bioinfweb.libralign.sequenceprovider.events.SequenceChangeEvent;
-import info.bioinfweb.libralign.sequenceprovider.events.SequenceRenamedEvent;
-import info.bioinfweb.libralign.sequenceprovider.events.TokenChangeEvent;
+import info.bioinfweb.libralign.model.AlignmentModelChangeListener;
+import info.bioinfweb.libralign.model.AlignmentModel;
+import info.bioinfweb.libralign.model.events.SequenceChangeEvent;
+import info.bioinfweb.libralign.model.events.SequenceRenamedEvent;
+import info.bioinfweb.libralign.model.events.TokenChangeEvent;
 
 
 
 /**
  * Helper class used by {@link DataAreaModel} to inform the data areas it contains about changes in the
- * associated {@link SequenceDataProvider}.
+ * associated {@link AlignmentModel}.
  * 
  * @author Ben St&ouml;ver
  * @since 0.3.0
  */
-public class DataAreaSequenceChangeListener implements SequenceDataChangeListener {
+public class DataAreaSequenceChangeListener implements AlignmentModelChangeListener {
 	private DataAreaModel owner;
 
 	
@@ -124,8 +124,8 @@ public class DataAreaSequenceChangeListener implements SequenceDataChangeListene
 	}
 	
 
-	private <T, U> void fireAfterProviderChanged(DataAreaList list, SequenceDataProvider<T> previous,
-			SequenceDataProvider<U> current) {
+	private <T, U> void fireAfterProviderChanged(DataAreaList list, AlignmentModel<T> previous,
+			AlignmentModel<U> current) {
 		
 		Iterator<DataArea> iterator = list.iterator();
 		while (iterator.hasNext()) {
@@ -135,8 +135,8 @@ public class DataAreaSequenceChangeListener implements SequenceDataChangeListene
 	
 	
 	@Override
-	public <T, U> void afterProviderChanged(SequenceDataProvider<T> previous,
-			SequenceDataProvider<U> current) {
+	public <T, U> void afterProviderChanged(AlignmentModel<T> previous,
+			AlignmentModel<U> current) {
 
 		fireAfterProviderChanged(getOwner().getTopAreas(), previous, current);
 

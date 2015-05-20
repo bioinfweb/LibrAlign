@@ -19,8 +19,8 @@
 package info.bioinfweb.libralign.io.alignment;
 
 
-import info.bioinfweb.libralign.sequenceprovider.SequenceDataProvider;
-import info.bioinfweb.libralign.sequenceprovider.tokenset.TokenSet;
+import info.bioinfweb.libralign.model.AlignmentModel;
+import info.bioinfweb.libralign.model.tokenset.TokenSet;
 
 import java.io.File;
 import java.io.InputStream;
@@ -29,7 +29,7 @@ import java.io.InputStream;
 
 /**
  * Interface to be implemented by all classes reading alignments in different formats into an instance of
- * {@link SequenceDataProvider}.
+ * {@link AlignmentModel}.
  * 
  * @author Ben St&ouml;ver
  * @since 0.3.0
@@ -50,7 +50,7 @@ public interface AlignmentReader {
 	 * @param provider - the sequence data provider to take up the alignment
 	 * @throws Exception depending on the implementing class
 	 */
-	public void read(InputStream stream, SequenceDataProvider<?> provider) throws Exception;
+	public void read(InputStream stream, AlignmentModel<?> provider) throws Exception;
 	
 	/**
 	 * Reads alignment data from the specified file and stores it into {@code provider}. Previous
@@ -61,7 +61,7 @@ public interface AlignmentReader {
 	 * @throws Exception IO exceptions thrown while trying to write the file or possibly additional exceptions
 	 *         of other types depending on the implementing class
 	 */
-	public void read(File file, SequenceDataProvider<?> provider) throws Exception;
+	public void read(File file, AlignmentModel<?> provider) throws Exception;
 	
 	/**
 	 * Reads the specified stream and checks which of the specified token sets contains all tokens found in the read

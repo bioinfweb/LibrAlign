@@ -19,7 +19,7 @@
 package info.bioinfweb.libralign.io.alignment;
 
 
-import info.bioinfweb.libralign.sequenceprovider.SequenceDataProvider;
+import info.bioinfweb.libralign.model.AlignmentModel;
 
 import java.io.BufferedInputStream;
 import java.io.File;
@@ -30,17 +30,17 @@ import java.io.InputStream;
 
 /**
  * Implements basic functionality for reading alignments from streams or files. All methods are delegated 
- * to {@link #doRead(BufferedInputStream, SequenceDataProvider)} and streams are buffered.
+ * to {@link #doRead(BufferedInputStream, AlignmentModel)} and streams are buffered.
  * 
  * @author Ben St&ouml;ver
  * @since 0.3.0
  */
 public abstract class AbstractAlignmentReader implements AlignmentReader { 
-	protected abstract void doRead(BufferedInputStream stream, SequenceDataProvider<?> provider) throws Exception;
+	protected abstract void doRead(BufferedInputStream stream, AlignmentModel<?> provider) throws Exception;
 
 	
 	@Override
-	public void read(InputStream stream, SequenceDataProvider<?> provider) throws Exception {
+	public void read(InputStream stream, AlignmentModel<?> provider) throws Exception {
 		if (!(stream instanceof BufferedInputStream)) {
 			stream = new BufferedInputStream(stream);
 		}
@@ -49,7 +49,7 @@ public abstract class AbstractAlignmentReader implements AlignmentReader {
 
 
 	@Override
-	public void read(File file, SequenceDataProvider<?> provider)	throws Exception {
+	public void read(File file, AlignmentModel<?> provider)	throws Exception {
 		read(new FileInputStream(file), provider);
 	}
 }

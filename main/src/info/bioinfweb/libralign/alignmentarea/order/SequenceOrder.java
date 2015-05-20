@@ -43,8 +43,8 @@ public class SequenceOrder {
 	private final Comparator<Integer> ASCENDING_ALPHABETICAL_COMPARATOR = new Comparator<Integer>() {
 		@Override
 		public int compare(Integer o1, Integer o2) {
-			return getOwner().getSequenceProvider().sequenceNameByID(o1).compareTo(
-					getOwner().getSequenceProvider().sequenceNameByID(o2));
+			return getOwner().getAlignmentModel().sequenceNameByID(o1).compareTo(
+					getOwner().getAlignmentModel().sequenceNameByID(o2));
 		}
 	};
 
@@ -52,8 +52,8 @@ public class SequenceOrder {
 	private final Comparator<Integer> DESCENDING_ALPHABETICAL_COMPARATOR = new Comparator<Integer>() {
 		@Override
 		public int compare(Integer o1, Integer o2) {
-			return getOwner().getSequenceProvider().sequenceNameByID(o2).compareTo(
-					getOwner().getSequenceProvider().sequenceNameByID(o1));
+			return getOwner().getAlignmentModel().sequenceNameByID(o2).compareTo(
+					getOwner().getAlignmentModel().sequenceNameByID(o1));
 		}
 	};
 
@@ -143,7 +143,7 @@ public class SequenceOrder {
 		orderType = SequenceOrderType.SOURCE;
 		idList.clear();
 		if (getOwner().hasSequenceProvider()) {
-			Iterator<Integer> iterator = getOwner().getSequenceProvider().sequenceIDIterator();
+			Iterator<Integer> iterator = getOwner().getAlignmentModel().sequenceIDIterator();
 			while (iterator.hasNext()) {
 				idList.add(iterator.next());
 			}

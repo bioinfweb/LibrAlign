@@ -21,7 +21,7 @@ package info.bioinfweb.libralign.dataarea.implementations.charset;
 
 import java.util.ArrayList;
 
-import info.bioinfweb.libralign.sequenceprovider.DataProvider;
+import info.bioinfweb.libralign.model.data.DataModel;
 
 
 
@@ -31,7 +31,7 @@ import info.bioinfweb.libralign.sequenceprovider.DataProvider;
  * @author Ben St&ouml;ver
  * @since 0.4.0
  */
-public class CharSetDataModel extends ArrayList<CharSet> implements DataProvider {
+public class CharSetDataModel extends ArrayList<CharSet> implements DataModel {
 	public CharSet getByName(String name) {
 		for (CharSet charSet : this) {  //TODO Possibly use a TreeMap for this method in the future to support large numbers of character sets.
 			if (charSet.getName().equals(name)) {

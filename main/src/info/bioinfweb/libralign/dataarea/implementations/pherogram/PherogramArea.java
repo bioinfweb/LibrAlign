@@ -24,16 +24,16 @@ import info.bioinfweb.commons.tic.TICPaintEvent;
 import info.bioinfweb.libralign.alignmentarea.content.AlignmentContentArea;
 import info.bioinfweb.libralign.dataarea.DataAreaListType;
 import info.bioinfweb.libralign.dataarea.implementations.CustomHeightFullWidthArea;
+import info.bioinfweb.libralign.model.AlignmentModel;
+import info.bioinfweb.libralign.model.events.SequenceChangeEvent;
+import info.bioinfweb.libralign.model.events.SequenceRenamedEvent;
+import info.bioinfweb.libralign.model.events.TokenChangeEvent;
 import info.bioinfweb.libralign.pherogram.PherogramComponent;
 import info.bioinfweb.libralign.pherogram.PherogramFormats;
 import info.bioinfweb.libralign.pherogram.PherogramPainter;
 import info.bioinfweb.libralign.pherogram.distortion.ScaledPherogramDistortion;
-import info.bioinfweb.libralign.pherogram.provider.PherogramProvider;
+import info.bioinfweb.libralign.pherogram.provider.PherogramModel;
 import info.bioinfweb.libralign.pherogram.view.PherogramView;
-import info.bioinfweb.libralign.sequenceprovider.SequenceDataProvider;
-import info.bioinfweb.libralign.sequenceprovider.events.SequenceChangeEvent;
-import info.bioinfweb.libralign.sequenceprovider.events.SequenceRenamedEvent;
-import info.bioinfweb.libralign.sequenceprovider.events.TokenChangeEvent;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
@@ -55,7 +55,7 @@ public class PherogramArea extends CustomHeightFullWidthArea implements Pherogra
 	public static final int DEFAULT_HEIGHT_FACTOR = 5;
 	
 	
-	private PherogramProvider pherogram;
+	private PherogramModel pherogram;
 	private PherogramAlignmentModel alignmentModel = new PherogramAlignmentModel(this);
 	private int firstSeqPos;
 	private int leftCutPosition;
@@ -71,7 +71,7 @@ public class PherogramArea extends CustomHeightFullWidthArea implements Pherogra
 	 * @param owner - the alignment area that will be containing the returned data area instance
 	 * @param pherogram - the provider for the pherogram data to be displayed by the returned instance
 	 */
-	public PherogramArea(AlignmentContentArea owner, PherogramProvider pherogram) {
+	public PherogramArea(AlignmentContentArea owner, PherogramModel pherogram) {
 		super(owner, DEFAULT_HEIGHT_FACTOR * owner.getOwner().getCompoundHeight());
 		this.pherogram = pherogram;
 		verticalScale = getHeight();
@@ -201,7 +201,7 @@ public class PherogramArea extends CustomHeightFullWidthArea implements Pherogra
 
 
 	@Override
-	public PherogramProvider getProvider() {
+	public PherogramModel getProvider() {
 		return pherogram;
 	}
   
@@ -299,7 +299,7 @@ public class PherogramArea extends CustomHeightFullWidthArea implements Pherogra
 
 	@Override
 	public <T> void afterTokenChange(TokenChangeEvent<T> e) {
-		if (e.getSource().equals(getOwner().getOwner().getSequenceProvider()) && e.getSequenceID() == getList().getLocation().getSequenceID()) {
+		if (e.getSource().equals(getOwner().getOwner().getAlignmentModel()) && e.getSequenceID() == getList().getLocation().getSequenceID()) {
 			switch (e.getType()) {
 				case INSERTION:
 					int addend = getOwner().getOwner().getEditSettings().isInsertLeftInDataArea() ? -1 : 0;
@@ -321,6 +321,6 @@ public class PherogramArea extends CustomHeightFullWidthArea implements Pherogra
 
 
 	@Override
-	public <T, U> void afterProviderChanged(SequenceDataProvider<T> previous,	SequenceDataProvider<U> current) {}  
+	public <T, U> void afterProviderChanged(AlignmentModel<T> previous,	AlignmentModel<U> current) {}  
 	// This event is currently not passed to sequence attached areas.
 }

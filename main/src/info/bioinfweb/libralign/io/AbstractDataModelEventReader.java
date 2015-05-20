@@ -19,19 +19,19 @@
 package info.bioinfweb.libralign.io;
 
 
-import info.bioinfweb.libralign.sequenceprovider.DataProvider;
+import info.bioinfweb.libralign.model.data.DataModel;
 
 
 
 /**
  * Implements shared functionality for all classes reading data from JPhyloIO events into implementations
- * of {@link DataProvider}.
+ * of {@link DataModel}.
  * 
  * @author Ben St&ouml;ver
  * @since 0.4.0
  */
 public abstract class AbstractDataModelEventReader implements DataModelEventReader {
-	private DataProvider model;
+	private DataModel model;
 
 	
 	/**
@@ -39,14 +39,14 @@ public abstract class AbstractDataModelEventReader implements DataModelEventRead
 	 * 
 	 * @param model the model object to write the data into
 	 */
-	public AbstractDataModelEventReader(DataProvider model) {
+	public AbstractDataModelEventReader(DataModel model) {
 		super();
 		this.model = model;
 	}
 
 
 	@Override
-	public DataProvider getModel() {
+	public DataModel getModel() {
 		return model;
 	}
 }

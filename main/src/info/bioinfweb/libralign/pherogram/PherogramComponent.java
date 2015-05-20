@@ -19,7 +19,7 @@
 package info.bioinfweb.libralign.pherogram;
 
 
-import info.bioinfweb.libralign.pherogram.provider.PherogramProvider;
+import info.bioinfweb.libralign.pherogram.provider.PherogramModel;
 
 import java.awt.Color;
 
@@ -35,9 +35,9 @@ public interface PherogramComponent {
 	/**
 	 * Returns the underlying class providing the pherogram data.
 	 * 
-	 * @return the underlying implementation of {@link PherogramProvider}
+	 * @return the underlying implementation of {@link PherogramModel}
 	 */
-	public PherogramProvider getProvider();
+	public PherogramModel getProvider();
 	
 //	/**
 //	 * Returns if the vertical scale is calculated automatically depending on the currently visible part
