@@ -21,6 +21,7 @@ package info.bioinfweb.libralign.sequenceprovider.events;
 
 import info.bioinfweb.commons.collections.ListChangeType;
 import info.bioinfweb.libralign.sequenceprovider.SequenceDataProvider;
+import info.bioinfweb.libralign.sequenceprovider.concatenated.ConcatenatedAlignmentModel;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -152,6 +153,24 @@ public class TokenChangeEvent<T> extends SequenceChangeEvent<T> {
 			int index, T replacedToken) {
 		
 		return newReplaceInstance(source, sequenceID, index, Collections.nCopies(1, replacedToken));
+	}
+	
+	
+	/**
+	 * Creates a new instance of this class derived from another instance. The main application of this method
+	 * if translating token events from part models of implementations of {@link ConcatenatedAlignmentModel}
+	 * to token events of the parent class. 
+	 * 
+	 * @param source the model that will fire this event
+	 * @param offset the offset that shall be added to the start index of the specified event
+	 * @param event the event to derive the returned event from
+	 * @return the new event with a different source and a start index
+	 */
+	public static <T> TokenChangeEvent<T> newForwardedInstance(SequenceDataProvider<T> source, int offset, 
+			TokenChangeEvent<? extends T> event) {
+		
+		return new TokenChangeEvent<T>(source, event.getSequenceID(), event.getType(), event.getStartIndex() + offset, 
+				event.getAffectedTokens());
 	}
 
 

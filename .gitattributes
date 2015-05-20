@@ -151,6 +151,8 @@ main/src/info/bioinfweb/libralign/sequenceprovider/adapters/SingleCharSequenceAd
 main/src/info/bioinfweb/libralign/sequenceprovider/adapters/SingleSequenceDataAdapter.java -text svneol=unset#text/plain
 main/src/info/bioinfweb/libralign/sequenceprovider/adapters/StringAdapter.java -text svneol=unset#text/plain
 main/src/info/bioinfweb/libralign/sequenceprovider/adapters/package-info.java -text svneol=unset#text/plain
+main/src/info/bioinfweb/libralign/sequenceprovider/concatenated/ConcatenatedAlignmentModel.java -text svneol=unset#text/plain
+main/src/info/bioinfweb/libralign/sequenceprovider/concatenated/DefaultConcatenatedAlignmentModel.java -text svneol=unset#text/plain
 main/src/info/bioinfweb/libralign/sequenceprovider/events/SequenceChangeEvent.java -text svneol=unset#text/plain
 main/src/info/bioinfweb/libralign/sequenceprovider/events/SequenceDataProviderChangeEvent.java -text svneol=unset#text/plain
 main/src/info/bioinfweb/libralign/sequenceprovider/events/SequenceRenamedEvent.java -text svneol=unset#text/plain

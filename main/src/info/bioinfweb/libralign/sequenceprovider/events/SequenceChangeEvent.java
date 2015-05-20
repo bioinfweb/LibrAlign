@@ -53,6 +53,13 @@ public class SequenceChangeEvent<T> extends SequenceDataProviderChangeEvent<T> {
 	}
 
 
+	public static <T> SequenceChangeEvent<T> newForwardedInstance(SequenceDataProvider<T> source, 
+			SequenceChangeEvent<? extends T> event) {
+		
+		return new SequenceChangeEvent<T>(source, event.getSequenceID(), event.getType());
+	}
+
+
 	public ListChangeType getType() {
 		return type;
 	}
