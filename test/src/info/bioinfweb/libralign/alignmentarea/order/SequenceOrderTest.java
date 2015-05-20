@@ -24,12 +24,13 @@ import info.bioinfweb.commons.bio.biojava3.alignment.SimpleAlignment;
 import info.bioinfweb.commons.bio.biojava3.alignment.template.Alignment;
 import info.bioinfweb.commons.bio.biojava3.core.sequence.compound.AlignmentAmbiguityNucleotideCompoundSet;
 import info.bioinfweb.libralign.alignmentarea.AlignmentArea;
-import info.bioinfweb.libralign.sequenceprovider.SequenceDataProvider;
-import info.bioinfweb.libralign.sequenceprovider.implementations.BioJavaSequenceDataProvider;
-import info.bioinfweb.libralign.sequenceprovider.tokenset.BioJavaTokenSet;
 
 
 
+
+import info.bioinfweb.libralign.model.AlignmentModel;
+import info.bioinfweb.libralign.model.implementations.BioJavaAlignmentModel;
+import info.bioinfweb.libralign.model.tokenset.BioJavaTokenSet;
 
 import org.biojava3.core.sequence.DNASequence;
 import org.biojava3.core.sequence.compound.NucleotideCompound;
@@ -51,7 +52,7 @@ public class SequenceOrderTest {
 		alignment.add("Sequence B", new DNASequence("ATG--CT"));
 		
 		AlignmentArea alignmentArea = new AlignmentArea();
-		alignmentArea.setSequenceProvider(new BioJavaSequenceDataProvider<DNASequence, NucleotideCompound>(
+		alignmentArea.setAlignmentModel(new BioJavaAlignmentModel<DNASequence, NucleotideCompound>(
 				new BioJavaTokenSet<NucleotideCompound>(
 						AlignmentAmbiguityNucleotideCompoundSet.getAlignmentAmbiguityNucleotideCompoundSet(), true),
 				alignment), false);
@@ -62,7 +63,7 @@ public class SequenceOrderTest {
 	@Test
 	public void test_moveSequence_backward() {
 		SequenceOrder sequenceOrder = createSequenceOrder();
-		SequenceDataProvider provider = sequenceOrder.getOwner().getSequenceProvider();
+		AlignmentModel provider = sequenceOrder.getOwner().getAlignmentModel();
 		assertEquals(0, sequenceOrder.moveSequence(2, -2));
 		assertEquals("Sequence A", provider.sequenceNameByID(sequenceOrder.idByIndex(0)));
 		assertEquals("Sequence C", provider.sequenceNameByID(sequenceOrder.idByIndex(1)));
@@ -74,7 +75,7 @@ public class SequenceOrderTest {
 	@Test
 	public void test_moveSequence_forward() {
 		SequenceOrder sequenceOrder = createSequenceOrder();
-		SequenceDataProvider provider = sequenceOrder.getOwner().getSequenceProvider();
+		AlignmentModel provider = sequenceOrder.getOwner().getAlignmentModel();
 		assertEquals(3, sequenceOrder.moveSequence(2, 5));  // Should be equal to moveSequence(2, 1) 
 		assertEquals("Sequence C", provider.sequenceNameByID(sequenceOrder.idByIndex(0)));
 		assertEquals("Sequence D", provider.sequenceNameByID(sequenceOrder.idByIndex(1)));
@@ -86,7 +87,7 @@ public class SequenceOrderTest {
 	@Test
 	public void test_moveSequence_noChange() {
 		SequenceOrder sequenceOrder = createSequenceOrder();
-		SequenceDataProvider provider = sequenceOrder.getOwner().getSequenceProvider();
+		AlignmentModel provider = sequenceOrder.getOwner().getAlignmentModel();
 		assertEquals(0, sequenceOrder.moveSequence(0, -5));
 		assertEquals("Sequence C", provider.sequenceNameByID(sequenceOrder.idByIndex(0)));
 		assertEquals("Sequence D", provider.sequenceNameByID(sequenceOrder.idByIndex(1)));
@@ -110,7 +111,7 @@ public class SequenceOrderTest {
 	@Test
 	public void test_setSequenceOrder() {
 		SequenceOrder sequenceOrder = createSequenceOrder();
-		SequenceDataProvider provider = sequenceOrder.getOwner().getSequenceProvider();
+		AlignmentModel provider = sequenceOrder.getOwner().getAlignmentModel();
 
 		sequenceOrder.setAlphabeticalSequenceOrder(true);
 		assertEquals("Sequence A", provider.sequenceNameByID(sequenceOrder.idByIndex(0)));

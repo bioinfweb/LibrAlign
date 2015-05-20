@@ -33,11 +33,11 @@ import info.bioinfweb.libralign.dataarea.implementations.charset.CharSet;
 import info.bioinfweb.libralign.dataarea.implementations.charset.CharSetArea;
 import info.bioinfweb.libralign.dataarea.implementations.charset.CharSetDataModel;
 import info.bioinfweb.libralign.dataarea.implementations.pherogram.PherogramArea;
+import info.bioinfweb.libralign.model.AlignmentModel;
+import info.bioinfweb.libralign.model.implementations.BioJavaAlignmentModel;
+import info.bioinfweb.libralign.model.tokenset.BioJavaTokenSet;
 import info.bioinfweb.libralign.multiplealignments.MultipleAlignmentsContainer;
 import info.bioinfweb.libralign.pherogram.provider.BioJavaPherogramProvider;
-import info.bioinfweb.libralign.sequenceprovider.SequenceDataProvider;
-import info.bioinfweb.libralign.sequenceprovider.implementations.BioJavaSequenceDataProvider;
-import info.bioinfweb.libralign.sequenceprovider.tokenset.BioJavaTokenSet;
 
 import org.biojava.bio.chromatogram.ChromatogramFactory;
 import org.biojava3.core.sequence.DNASequence;
@@ -96,8 +96,8 @@ public class AbstractApplication {
 
 			alignment.add("Sequence 5", new DNASequence("ATCGTAGATCGTAGATGGTAGATCGTAGATCGT---TCGTAGATCGTAG"));
 			
-			BioJavaSequenceDataProvider<DNASequence, NucleotideCompound> sequenceProvider = 
-					new BioJavaSequenceDataProvider<DNASequence, NucleotideCompound>(
+			BioJavaAlignmentModel<DNASequence, NucleotideCompound> sequenceProvider = 
+					new BioJavaAlignmentModel<DNASequence, NucleotideCompound>(
 							new BioJavaTokenSet<NucleotideCompound>(
 									AlignmentAmbiguityNucleotideCompoundSet.getAlignmentAmbiguityNucleotideCompoundSet(), false),
 							alignment);
@@ -121,7 +121,7 @@ public class AbstractApplication {
 			area = new AlignmentArea(result);
 			area.setAllowVerticalScrolling(true);
       			
-			area.setSequenceProvider(sequenceProvider, false);
+			area.setAlignmentModel(sequenceProvider, false);
 			
 			PherogramArea pherogramArea = new PherogramArea(area.getContentArea(), pherogramProvider);
 			pherogramArea.setFirstSeqPos(34 + 5);
@@ -136,15 +136,15 @@ public class AbstractApplication {
 			// Additional alignment with longer names (to test of other label areas adopt their width):
 			alignment =	new SimpleAlignment<DNASequence, NucleotideCompound>();
 			alignment.add("Another Sequence", new DNASequence("ATCGTAGATCGTAGATCGTAGATCGTAGATCGTAGATCGTAGATCGTAG"));
-			SequenceDataProvider<NucleotideCompound> sequenceProvider2 = 
-					new BioJavaSequenceDataProvider<DNASequence, NucleotideCompound>(
+			AlignmentModel<NucleotideCompound> sequenceProvider2 = 
+					new BioJavaAlignmentModel<DNASequence, NucleotideCompound>(
 							new BioJavaTokenSet<NucleotideCompound>(
 									AlignmentAmbiguityNucleotideCompoundSet.getAlignmentAmbiguityNucleotideCompoundSet(), false),
 							alignment);
 
 			area = new AlignmentArea(result);
 			area.setAllowVerticalScrolling(false);      			
-			area.setSequenceProvider(sequenceProvider2, false);
+			area.setAlignmentModel(sequenceProvider2, false);
 			result.getAlignmentAreas().add(area);
 			
 			// Consensus sequence:

@@ -23,11 +23,11 @@ import info.bioinfweb.libralign.alignmentarea.AlignmentArea;
 import info.bioinfweb.libralign.alignmentarea.content.AlignmentContentArea;
 import info.bioinfweb.libralign.dataarea.implementations.SequenceIndexArea;
 import info.bioinfweb.libralign.dataarea.implementations.pherogram.PherogramArea;
+import info.bioinfweb.libralign.model.AlignmentModel;
+import info.bioinfweb.libralign.model.implementations.PackedAlignmentModel;
+import info.bioinfweb.libralign.model.tokenset.BioJavaTokenSet;
+import info.bioinfweb.libralign.model.tokenset.TokenSet;
 import info.bioinfweb.libralign.pherogram.provider.BioJavaPherogramProvider;
-import info.bioinfweb.libralign.sequenceprovider.SequenceDataProvider;
-import info.bioinfweb.libralign.sequenceprovider.implementations.PackedSequenceDataProvider;
-import info.bioinfweb.libralign.sequenceprovider.tokenset.BioJavaTokenSet;
-import info.bioinfweb.libralign.sequenceprovider.tokenset.TokenSet;
 
 import java.io.File;
 import java.io.IOException;
@@ -49,7 +49,7 @@ public class EditableAlignmentTest {
 			AlignmentContentArea contentArea = alignmentArea.getContentArea();
 			
 			TokenSet<NucleotideCompound> tokenSet = new BioJavaTokenSet<NucleotideCompound>(new DNACompoundSet(), true);
-			SequenceDataProvider<NucleotideCompound> provider = new PackedSequenceDataProvider<NucleotideCompound>(tokenSet);
+			AlignmentModel<NucleotideCompound> provider = new PackedAlignmentModel<NucleotideCompound>(tokenSet);
 			
 			// Add index area:
 			alignmentArea.getDataAreas().getTopAreas().add(new SequenceIndexArea(contentArea));
@@ -94,7 +94,7 @@ public class EditableAlignmentTest {
 				e.printStackTrace();
 			}
 			
-			alignmentArea.setSequenceProvider(provider, false);
+			alignmentArea.setAlignmentModel(provider, false);
 		}
 		
 		return alignmentArea;
@@ -103,8 +103,8 @@ public class EditableAlignmentTest {
 	
 	private String newSequenceName() {
 		int index = 1;
-		while (getAlignmentArea().getSequenceProvider().sequenceIDByName(
-				"Sequence" + index) != SequenceDataProvider.NO_SEQUENCE_FOUND) {
+		while (getAlignmentArea().getAlignmentModel().sequenceIDByName(
+				"Sequence" + index) != AlignmentModel.NO_SEQUENCE_FOUND) {
 			index++;
 		}
 		return "Sequence" + index;
@@ -113,7 +113,7 @@ public class EditableAlignmentTest {
 	
 	protected void addPherogramSequence() {
 		try {
-			SequenceDataProvider provider = getAlignmentArea().getSequenceProvider();
+			AlignmentModel provider = getAlignmentArea().getAlignmentModel();
 			String name = newSequenceName();
 			provider.addSequence(name);
 			int id = provider.sequenceIDByName(name);

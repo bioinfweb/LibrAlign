@@ -1,6 +1,6 @@
 /*
  * LibrAlign - A GUI library for displaying and editing multiple sequence alignments and attached data
- * Copyright (C) 2014  Ben Stöver
+ * Copyright (C) 2014  Ben Stï¿½ver
  * <http://bioinfweb.info/LibrAlign>
  * 
  * This program is free software: you can redistribute it and/or modify
@@ -22,14 +22,14 @@ package info.bioinfweb.libralign.test;
 import java.util.ArrayList;
 import java.util.Collection;
 
-import info.bioinfweb.libralign.sequenceprovider.implementations.ArrayListSequenceDataProvider;
+import info.bioinfweb.libralign.model.implementations.ArrayListAlignmentModel;
 
 
 
 public class GenericCollectionTest {
   public static void main(String[] args) {
-		ArrayListSequenceDataProvider<Character> provider = 
-				new ArrayListSequenceDataProvider(null);  //TODO When implementation of main classes is finished, specifying null might lead to an exception.
+		ArrayListAlignmentModel<Character> provider = 
+				new ArrayListAlignmentModel(null);  //TODO When implementation of main classes is finished, specifying null might lead to an exception.
 		
 		Collection collection = new ArrayList<Object>();
 		collection.add('a');

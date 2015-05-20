@@ -81,7 +81,7 @@ public class SequenceAreaSWTTest extends AbstractTestApplication {
 		
 		AlignmentArea alignmentArea = createAlignmentArea();
 		SequenceArea sequenceArea = new SequenceArea(alignmentArea.getContentArea(), 
-				alignmentArea.getSequenceProvider().sequenceIDByName("Sequence 1"));
+				alignmentArea.getAlignmentModel().sequenceIDByName("Sequence 1"));
 		
 		Composite sequenceComposite = sequenceArea.createSWTWidget(scrolledComposite, SWT.NONE);
 		scrolledComposite.setContent(sequenceComposite);

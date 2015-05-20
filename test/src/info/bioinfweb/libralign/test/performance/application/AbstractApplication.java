@@ -28,9 +28,9 @@ import info.bioinfweb.libralign.alignmentarea.AlignmentArea;
 import info.bioinfweb.libralign.dataarea.implementations.SequenceIndexArea;
 import info.bioinfweb.libralign.io.alignment.AlignmentReader;
 import info.bioinfweb.libralign.io.alignment.fasta.FASTAReader;
-import info.bioinfweb.libralign.sequenceprovider.SequenceDataProvider;
-import info.bioinfweb.libralign.sequenceprovider.implementations.PackedSequenceDataProvider;
-import info.bioinfweb.libralign.sequenceprovider.tokenset.BioJavaTokenSet;
+import info.bioinfweb.libralign.model.AlignmentModel;
+import info.bioinfweb.libralign.model.implementations.PackedAlignmentModel;
+import info.bioinfweb.libralign.model.tokenset.BioJavaTokenSet;
 
 
 
@@ -40,7 +40,7 @@ public class AbstractApplication {
 	
 	protected AlignmentArea getAlignmentArea() {
 		if (alignmentArea == null) {
-			SequenceDataProvider<NucleotideCompound> provider = new PackedSequenceDataProvider<NucleotideCompound>(
+			AlignmentModel<NucleotideCompound> provider = new PackedAlignmentModel<NucleotideCompound>(
 					new BioJavaTokenSet<NucleotideCompound>(
 							AlignmentAmbiguityNucleotideCompoundSet.getAlignmentAmbiguityNucleotideCompoundSet(), false));
 			
@@ -53,7 +53,7 @@ public class AbstractApplication {
 				// linear complexity.
 				alignmentArea = new AlignmentArea();
 				alignmentArea.getDataAreas().getTopAreas().add(new SequenceIndexArea(alignmentArea.getContentArea()));
-				alignmentArea.setSequenceProvider(provider, false);
+				alignmentArea.setAlignmentModel(provider, false);
 			}
 			catch (Exception e) {
 				e.printStackTrace();
