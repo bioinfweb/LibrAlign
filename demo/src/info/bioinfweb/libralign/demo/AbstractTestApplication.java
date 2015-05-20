@@ -34,9 +34,9 @@ import info.bioinfweb.libralign.dataarea.implementations.charset.CharSet;
 import info.bioinfweb.libralign.dataarea.implementations.charset.CharSetArea;
 import info.bioinfweb.libralign.dataarea.implementations.charset.CharSetDataModel;
 import info.bioinfweb.libralign.dataarea.implementations.pherogram.PherogramArea;
+import info.bioinfweb.libralign.model.implementations.BioJavaAlignmentModel;
+import info.bioinfweb.libralign.model.tokenset.BioJavaTokenSet;
 import info.bioinfweb.libralign.pherogram.provider.BioJavaPherogramProvider;
-import info.bioinfweb.libralign.sequenceprovider.implementations.BioJavaSequenceDataProvider;
-import info.bioinfweb.libralign.sequenceprovider.tokenset.BioJavaTokenSet;
 
 import org.biojava.bio.chromatogram.ChromatogramFactory;
 import org.biojava3.core.sequence.DNASequence;
@@ -92,14 +92,14 @@ public class AbstractTestApplication {
 
 			alignment.add("Sequence 5", new DNASequence("ATCGTAGATCGTAGATGGTAGATCGTAGATCGT---TCGTAGATCGTAG"));
 			
-			BioJavaSequenceDataProvider<DNASequence, NucleotideCompound> sequenceProvider = 
-					new BioJavaSequenceDataProvider<DNASequence, NucleotideCompound>(
+			BioJavaAlignmentModel<DNASequence, NucleotideCompound> sequenceProvider = 
+					new BioJavaAlignmentModel<DNASequence, NucleotideCompound>(
 							new BioJavaTokenSet<NucleotideCompound>(
 									AlignmentAmbiguityNucleotideCompoundSet.getAlignmentAmbiguityNucleotideCompoundSet(), false),
 							alignment);
 			
 			AlignmentArea result = new AlignmentArea();
-			result.setSequenceProvider(sequenceProvider, false);
+			result.setAlignmentModel(sequenceProvider, false);
 			SequenceIndexArea sequenceIndexArea = new SequenceIndexArea(result.getContentArea());
 			//sequenceIndexArea.setFirstIndex(5);
 			//sequenceIndexArea.setHeight(25);
