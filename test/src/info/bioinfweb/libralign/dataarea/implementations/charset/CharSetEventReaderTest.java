@@ -20,10 +20,14 @@ package info.bioinfweb.libralign.dataarea.implementations.charset;
 
 
 import java.io.File;
+import java.io.IOException;
 
 import info.bioinfweb.jphyloio.EventForwarder;
 import info.bioinfweb.jphyloio.formats.nexus.NexusCommandReaderFactory;
 import info.bioinfweb.jphyloio.formats.nexus.NexusEventReader;
+import info.bioinfweb.libralign.model.AlignmentModel;
+import info.bioinfweb.libralign.model.io.AlignmentDataReader;
+import info.bioinfweb.libralign.model.io.DataModelReadInfo;
 
 import org.junit.* ;
 
@@ -41,17 +45,27 @@ public class CharSetEventReaderTest {
 	
 	@Test
 	public void testReadingCharSets() {
-		CharSetDataModel model = new CharSetDataModel();
-		CharSetEventReader charSetReader = new CharSetEventReader(model);
-		
 		NexusCommandReaderFactory factory = new NexusCommandReaderFactory();
 		factory.addJPhyloIOReaders();
 		try {
-			NexusEventReader reader = new NexusEventReader(new File("data/charSet/CharSet.nex"), false, factory);
+			NexusEventReader eventReader = new NexusEventReader(new File("data/charSet/CharSet.nex"), false, factory);
 
-			EventForwarder forwarder = new EventForwarder();
-			forwarder.getListeners().add(charSetReader);
-			forwarder.readAll(reader);
+			AlignmentDataReader mainReader = new AlignmentDataReader(eventReader);
+			CharSetEventReader charSetReader = new CharSetEventReader(mainReader);
+			mainReader.addDataModelReader(charSetReader);
+			try {
+				mainReader.readAll();
+			}
+			catch (Exception e) {
+				e.printStackTrace();
+				fail(e.getLocalizedMessage());
+			}
+			
+			assertEquals(1, charSetReader.getModels().size());
+			DataModelReadInfo<CharSetDataModel> info = charSetReader.getModels().get(0);
+			assertNull(info.getAlignmentModel());
+			assertEquals(AlignmentModel.NO_SEQUENCE_FOUND, info.getSequenceID());
+			CharSetDataModel model = info.getDataModel();			
 			
 			CharSet set = model.getByName("set01");
 			assertNotNull(set);
@@ -105,9 +119,9 @@ public class CharSetEventReaderTest {
 			
 			assertEquals(6, model.size());  // Check that no additional sets are present.
 		}
-		catch (Exception e) {
+		catch (IOException e) {
+			e.printStackTrace();
 			fail(e.getLocalizedMessage());
 		}
-		
 	}
 }
