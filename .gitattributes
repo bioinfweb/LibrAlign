@@ -165,6 +165,7 @@ main/src/info/bioinfweb/libralign/model/implementations/translation/DNASequenceD
 main/src/info/bioinfweb/libralign/model/implementations/translation/RNASequenceDataView.java -text svneol=unset#text/plain
 main/src/info/bioinfweb/libralign/model/implementations/translation/SameTokenTypeSequenceDataView.java -text svneol=unset#text/plain
 main/src/info/bioinfweb/libralign/model/implementations/translation/package-info.java -text svneol=unset#text/plain
+main/src/info/bioinfweb/libralign/model/io/AlignmentDataReader.java -text svneol=unset#text/plain
 main/src/info/bioinfweb/libralign/model/package-info.java -text svneol=unset#text/plain
 main/src/info/bioinfweb/libralign/model/tokenset/AbstractTokenSet.java -text svneol=unset#text/plain
 main/src/info/bioinfweb/libralign/model/tokenset/BioJavaTokenSet.java -text svneol=unset#text/plain
