@@ -36,7 +36,7 @@ import info.bioinfweb.libralign.dataarea.implementations.charset.CharSetDataMode
 import info.bioinfweb.libralign.dataarea.implementations.pherogram.PherogramArea;
 import info.bioinfweb.libralign.model.implementations.BioJavaAlignmentModel;
 import info.bioinfweb.libralign.model.tokenset.BioJavaTokenSet;
-import info.bioinfweb.libralign.pherogram.provider.BioJavaPherogramProvider;
+import info.bioinfweb.libralign.pherogram.model.BioJavaPherogramModel;
 
 import org.biojava.bio.chromatogram.ChromatogramFactory;
 import org.biojava3.core.sequence.DNASequence;
@@ -73,7 +73,7 @@ public class AbstractTestApplication {
 	
 	protected AlignmentArea createAlignmentArea() {
 		try {
-			BioJavaPherogramProvider pherogramProvider = new BioJavaPherogramProvider(ChromatogramFactory.create(
+			BioJavaPherogramModel pherogramProvider = new BioJavaPherogramModel(ChromatogramFactory.create(
 	      	new File("data\\Test_qualityScore.scf")));
 			
 			Alignment<DNASequence, NucleotideCompound> alignment = 
