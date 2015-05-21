@@ -16,11 +16,14 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package info.bioinfweb.libralign.io;
+package info.bioinfweb.libralign.model.io;
 
+
+import java.util.List;
 
 import info.bioinfweb.jphyloio.JPhyloIOEventListener;
 import info.bioinfweb.libralign.model.data.DataModel;
+import info.bioinfweb.libralign.model.data.DataModelFactory;
 
 
 
@@ -36,12 +39,31 @@ import info.bioinfweb.libralign.model.data.DataModel;
  * 
  * @author Ben St&ouml;ver
  * @since 0.4.0
+ *
+ * @param <M> the type of data model to read by this reader
  */
-public interface DataModelEventReader extends JPhyloIOEventListener {
+public interface DataModelEventReader<M extends DataModel> extends JPhyloIOEventListener {
 	/**
-	 * Returns the model object associated with this reader.
+	 * Returns the instance of the main reader (for reading alignment and data models) which
+	 * uses this data model reader.
+	 * 
+	 * @return the parent alignment and data reader
+	 */
+	public AlignmentDataReader getMainReader();
+	
+	/**
+	 * Returns the model objects that have been read from the underlying <i>JPhyloIO</i> event stream until now.
+	 * New objects will always be added at the end of the list. The list may be modified by application classes
+	 * (e.g. to remove consumed objects).
 	 * 
 	 * @return the associated model
 	 */
-	public DataModel getModel();
+	public List<DataModelReadInfo<M>> getModels();
+	
+	/**
+	 * Returns the factory used to create new data models in this instance.
+	 * 
+	 * @return the factory (never {@code null})
+	 */
+	public DataModelFactory<M> getFactory();
 }

@@ -20,7 +20,7 @@ package info.bioinfweb.libralign.pherogram.distortion;
 
 
 import info.bioinfweb.libralign.pherogram.PherogramUtils;
-import info.bioinfweb.libralign.pherogram.provider.PherogramModel;
+import info.bioinfweb.libralign.pherogram.model.PherogramModel;
 import info.bioinfweb.libralign.pherogram.view.PherogramTraceCurveView;
 
 

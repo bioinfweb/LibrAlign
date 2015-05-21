@@ -16,37 +16,10 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package info.bioinfweb.libralign.io;
-
-
-import info.bioinfweb.libralign.model.data.DataModel;
+package info.bioinfweb.libralign.model.data;
 
 
 
-/**
- * Implements shared functionality for all classes reading data from JPhyloIO events into implementations
- * of {@link DataModel}.
- * 
- * @author Ben St&ouml;ver
- * @since 0.4.0
- */
-public abstract class AbstractDataModelEventReader implements DataModelEventReader {
-	private DataModel model;
-
-	
-	/**
-	 * Creates a new instance of this class.
-	 * 
-	 * @param model the model object to write the data into
-	 */
-	public AbstractDataModelEventReader(DataModel model) {
-		super();
-		this.model = model;
-	}
-
-
-	@Override
-	public DataModel getModel() {
-		return model;
-	}
+public interface DataModelFactory<M extends DataModel> {
+	public M createNewModel();
 }

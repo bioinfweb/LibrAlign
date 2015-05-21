@@ -31,7 +31,7 @@ import info.bioinfweb.libralign.dataarea.implementations.pherogram.PherogramArea
 import info.bioinfweb.libralign.pherogram.PherogramFormats.QualityOutputType;
 import info.bioinfweb.libralign.pherogram.distortion.GapPattern;
 import info.bioinfweb.libralign.pherogram.distortion.PherogramDistortion;
-import info.bioinfweb.libralign.pherogram.provider.PherogramModel;
+import info.bioinfweb.libralign.pherogram.model.PherogramModel;
 import info.bioinfweb.libralign.pherogram.view.PherogramTraceCurveView;
 
 

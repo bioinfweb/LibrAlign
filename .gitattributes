@@ -94,8 +94,6 @@ main/src/info/bioinfweb/libralign/editsettings/EditSettingsChangeEvent.java -tex
 main/src/info/bioinfweb/libralign/editsettings/EditSettingsListener.java -text svneol=unset#text/plain
 main/src/info/bioinfweb/libralign/editsettings/WorkingMode.java -text svneol=unset#text/plain
 main/src/info/bioinfweb/libralign/editsettings/package-info.java -text svneol=unset#text/plain
-main/src/info/bioinfweb/libralign/io/AbstractDataModelEventReader.java -text svneol=unset#text/plain
-main/src/info/bioinfweb/libralign/io/DataModelEventReader.java -text svneol=unset#text/plain
 main/src/info/bioinfweb/libralign/io/alignment/AbstractAlignmentReader.java -text svneol=unset#text/plain
 main/src/info/bioinfweb/libralign/io/alignment/AbstractAlignmentWriter.java -text svneol=unset#text/plain
 main/src/info/bioinfweb/libralign/io/alignment/AlignmentReader.java -text svneol=unset#text/plain
@@ -110,22 +108,40 @@ main/src/info/bioinfweb/libralign/model/SequenceAccess.java -text svneol=unset#t
 main/src/info/bioinfweb/libralign/model/SequenceAccessDataProvider.java -text svneol=unset#text/plain
 main/src/info/bioinfweb/libralign/model/SequenceDataView.java -text svneol=unset#text/plain
 main/src/info/bioinfweb/libralign/model/SequenceUtils.java -text
+main/src/info/bioinfweb/libralign/model/adapters/AbstractSequenceDataAdapter.class -text
 main/src/info/bioinfweb/libralign/model/adapters/AbstractSequenceDataAdapter.java -text svneol=unset#text/plain
+main/src/info/bioinfweb/libralign/model/adapters/AbstractSingleSequenceDataAdapter.class -text
 main/src/info/bioinfweb/libralign/model/adapters/AbstractSingleSequenceDataAdapter.java -text svneol=unset#text/plain
+main/src/info/bioinfweb/libralign/model/adapters/BioJavaSequenceAdapter.class -text
 main/src/info/bioinfweb/libralign/model/adapters/BioJavaSequenceAdapter.java -text svneol=unset#text/plain
+main/src/info/bioinfweb/libralign/model/adapters/CharSequenceAdapter.class -text
 main/src/info/bioinfweb/libralign/model/adapters/CharSequenceAdapter.java -text svneol=unset#text/plain
+main/src/info/bioinfweb/libralign/model/adapters/InvalidUnderlyingTokenException.class -text
 main/src/info/bioinfweb/libralign/model/adapters/InvalidUnderlyingTokenException.java -text svneol=unset#text/plain
+main/src/info/bioinfweb/libralign/model/adapters/SequenceDataAdapter.class -text
 main/src/info/bioinfweb/libralign/model/adapters/SequenceDataAdapter.java -text svneol=unset#text/plain
+main/src/info/bioinfweb/libralign/model/adapters/SingleBioJavaSequenceAdapter.class -text
 main/src/info/bioinfweb/libralign/model/adapters/SingleBioJavaSequenceAdapter.java -text svneol=unset#text/plain
+main/src/info/bioinfweb/libralign/model/adapters/SingleCharSequenceAdapter.class -text
 main/src/info/bioinfweb/libralign/model/adapters/SingleCharSequenceAdapter.java -text svneol=unset#text/plain
+main/src/info/bioinfweb/libralign/model/adapters/SingleSequenceDataAdapter.class -text
 main/src/info/bioinfweb/libralign/model/adapters/SingleSequenceDataAdapter.java -text svneol=unset#text/plain
+main/src/info/bioinfweb/libralign/model/adapters/StringAdapter.class -text
 main/src/info/bioinfweb/libralign/model/adapters/StringAdapter.java -text svneol=unset#text/plain
+main/src/info/bioinfweb/libralign/model/adapters/package-info.class -text
 main/src/info/bioinfweb/libralign/model/adapters/package-info.java -text svneol=unset#text/plain
 main/src/info/bioinfweb/libralign/model/data/DataModel.java -text svneol=unset#text/plain
+main/src/info/bioinfweb/libralign/model/data/DataModelFactory.java -text svneol=unset#text/plain
+main/src/info/bioinfweb/libralign/model/data/NoArgDataModelFactory.java -text svneol=unset#text/plain
+main/src/info/bioinfweb/libralign/model/events/AlignmentModelChangeEvent.class -text
 main/src/info/bioinfweb/libralign/model/events/AlignmentModelChangeEvent.java -text svneol=unset#text/plain
+main/src/info/bioinfweb/libralign/model/events/SequenceChangeEvent.class -text
 main/src/info/bioinfweb/libralign/model/events/SequenceChangeEvent.java -text svneol=unset#text/plain
+main/src/info/bioinfweb/libralign/model/events/SequenceRenamedEvent.class -text
 main/src/info/bioinfweb/libralign/model/events/SequenceRenamedEvent.java -text svneol=unset#text/plain
+main/src/info/bioinfweb/libralign/model/events/TokenChangeEvent.class -text
 main/src/info/bioinfweb/libralign/model/events/TokenChangeEvent.java -text svneol=unset#text/plain
+main/src/info/bioinfweb/libralign/model/events/package-info.class -text
 main/src/info/bioinfweb/libralign/model/events/package-info.java -text svneol=unset#text/plain
 main/src/info/bioinfweb/libralign/model/exception/AlignmentDataProviderException.java -text svneol=unset#text/plain
 main/src/info/bioinfweb/libralign/model/exception/AlignmentSourceNotWritableException.java -text svneol=unset#text/plain
@@ -165,12 +181,21 @@ main/src/info/bioinfweb/libralign/model/implementations/translation/DNASequenceD
 main/src/info/bioinfweb/libralign/model/implementations/translation/RNASequenceDataView.java -text svneol=unset#text/plain
 main/src/info/bioinfweb/libralign/model/implementations/translation/SameTokenTypeSequenceDataView.java -text svneol=unset#text/plain
 main/src/info/bioinfweb/libralign/model/implementations/translation/package-info.java -text svneol=unset#text/plain
+main/src/info/bioinfweb/libralign/model/io/AbstractDataModelEventReader.java -text svneol=unset#text/plain
 main/src/info/bioinfweb/libralign/model/io/AlignmentDataReader.java -text svneol=unset#text/plain
+main/src/info/bioinfweb/libralign/model/io/DataModelEventReader.java -text svneol=unset#text/plain
+main/src/info/bioinfweb/libralign/model/io/DataModelReadInfo.java -text svneol=unset#text/plain
+main/src/info/bioinfweb/libralign/model/io/ReadAlignmentData.java -text svneol=unset#text/plain
 main/src/info/bioinfweb/libralign/model/package-info.java -text svneol=unset#text/plain
+main/src/info/bioinfweb/libralign/model/tokenset/AbstractTokenSet.class -text
 main/src/info/bioinfweb/libralign/model/tokenset/AbstractTokenSet.java -text svneol=unset#text/plain
+main/src/info/bioinfweb/libralign/model/tokenset/BioJavaTokenSet.class -text
 main/src/info/bioinfweb/libralign/model/tokenset/BioJavaTokenSet.java -text svneol=unset#text/plain
+main/src/info/bioinfweb/libralign/model/tokenset/CharacterTokenSet.class -text
 main/src/info/bioinfweb/libralign/model/tokenset/CharacterTokenSet.java -text svneol=unset#text/plain
+main/src/info/bioinfweb/libralign/model/tokenset/TokenSet.class -text
 main/src/info/bioinfweb/libralign/model/tokenset/TokenSet.java -text svneol=unset#text/plain
+main/src/info/bioinfweb/libralign/model/tokenset/TokenSetTools.class -text
 main/src/info/bioinfweb/libralign/model/tokenset/TokenSetTools.java -text svneol=unset#text/plain
 main/src/info/bioinfweb/libralign/multiplealignments/AlignmentAreaList.java -text svneol=unset#text/plain
 main/src/info/bioinfweb/libralign/multiplealignments/MultipleAlignmentListener.java -text
@@ -189,11 +214,11 @@ main/src/info/bioinfweb/libralign/pherogram/distortion/PherogramDistortion.java 
 main/src/info/bioinfweb/libralign/pherogram/distortion/ScaledPherogramDistortion.java -text svneol=unset#text/plain
 main/src/info/bioinfweb/libralign/pherogram/distortion/UnscaledPherogramDistortion.java -text svneol=unset#text/plain
 main/src/info/bioinfweb/libralign/pherogram/distortion/package-info.java -text svneol=unset#text/plain
+main/src/info/bioinfweb/libralign/pherogram/model/BioJavaPherogramModel.java -text svneol=unset#text/plain
+main/src/info/bioinfweb/libralign/pherogram/model/PherogramModel.java -text svneol=unset#text/plain
+main/src/info/bioinfweb/libralign/pherogram/model/ReverseComplementPherogramModel.java -text svneol=unset#text/plain
+main/src/info/bioinfweb/libralign/pherogram/model/package-info.java -text svneol=unset#text/plain
 main/src/info/bioinfweb/libralign/pherogram/package-info.java -text svneol=unset#text/plain
-main/src/info/bioinfweb/libralign/pherogram/provider/BioJavaPherogramProvider.java -text svneol=unset#text/plain
-main/src/info/bioinfweb/libralign/pherogram/provider/PherogramModel.java -text svneol=unset#text/plain
-main/src/info/bioinfweb/libralign/pherogram/provider/ReverseComplementPherogramModel.java -text svneol=unset#text/plain
-main/src/info/bioinfweb/libralign/pherogram/provider/package-info.java -text svneol=unset#text/plain
 main/src/info/bioinfweb/libralign/pherogram/view/PherogramHeadingView.java -text svneol=unset#text/plain
 main/src/info/bioinfweb/libralign/pherogram/view/PherogramTraceCurveView.java -text svneol=unset#text/plain
 main/src/info/bioinfweb/libralign/pherogram/view/PherogramView.java -text svneol=unset#text/plain

@@ -22,45 +22,83 @@ package info.bioinfweb.libralign.dataarea.implementations.charset;
 import info.bioinfweb.commons.graphics.UniqueColorLister;
 import info.bioinfweb.jphyloio.JPhyloIOEventReader;
 import info.bioinfweb.jphyloio.events.CharacterSetEvent;
-import info.bioinfweb.jphyloio.events.EventType;
 import info.bioinfweb.jphyloio.events.JPhyloIOEvent;
-import info.bioinfweb.libralign.io.AbstractDataModelEventReader;
+import info.bioinfweb.libralign.model.data.NoArgDataModelFactory;
+import info.bioinfweb.libralign.model.io.AbstractDataModelEventReader;
+import info.bioinfweb.libralign.model.io.AlignmentDataReader;
+import info.bioinfweb.libralign.model.io.DataModelReadInfo;
 
 
 
 /**
- * Reads {@link CharacterSetEvent}s from JPhyloIO into an instance of {@link CharSetDataModel}.
+ * Reads {@link CharacterSetEvent}s from JPhyloIO into instances of {@link CharSetDataModel}.
+ * <p>
+ * {@link CharacterSetEvent}s between alignment start and end events are stored a model associated
+ * with the according alignment model. Events fired outside alignments are stored in an additional
+ * global model not associated with any alignment model. This global model is returned when the end
+ * of the event stream was reached (if any according events occurred).
+ * <p>
+ * For parsing Nexus files that would mean that all character sets defined in {@code SETS} blocks
+ * are stored in the global model. Additionally the supported MrBayes {@code MIXED} data type 
+ * extension may lead to character set events within alignments. These are than stored in separate
+ * models, because different sets may be defined for each alignment block in the file. If this
+ * MrBayes extension is not used all character sets (also from separate {@code SETS} blocks
+ * will be stored in one global model, which will be the only returned instance.
  * 
  * @author Ben St&ouml;ver
  * @since 0.4.0
  */
-public class CharSetEventReader extends AbstractDataModelEventReader {
+public class CharSetEventReader extends AbstractDataModelEventReader<CharSetDataModel> {
+	private CharSetDataModel globalModel = null;
 	private UniqueColorLister colorLister = new UniqueColorLister();
 	
 	
-	public CharSetEventReader(CharSetDataModel model) {
-		super(model);
+	public CharSetEventReader(AlignmentDataReader mainReader) {
+		super(mainReader, new NoArgDataModelFactory<CharSetDataModel>(CharSetDataModel.class));
 	}
 
 
-	@Override
-	public CharSetDataModel getModel() {
-		return (CharSetDataModel)super.getModel();
-	}
-
-	
 	@Override
 	public void processEvent(JPhyloIOEventReader source, JPhyloIOEvent event) {
-		if (event.getEventType().equals(EventType.CHARACTER_SET)) {
-			CharacterSetEvent characterSetEvent = event.asCharacterSetEvent();
-			
-			CharSet charSet = getModel().getByName(characterSetEvent.getName());
-			if (charSet == null) {
-				charSet = new CharSet(characterSetEvent.getName(), colorLister.generateNext());
-				getModel().add(charSet);
-			}
-			
-			charSet.add((int)characterSetEvent.getStart(), (int)characterSetEvent.getEnd() - 1);  //TODO Refactor NonOverlappingIntervalList so that end index is also behind the interval.
+		switch (event.getEventType()) {
+			case ALIGNMENT_END:
+				publishCurrentInfo();  // Adds alignment specific model to the result list, if one is present.
+				break;
+			case CHARACTER_SET:
+				// Determine model to write to:
+				CharSetDataModel model;
+				if (getMainReader().hasCurrentAlignmentModel()) {
+					if (!super.isReadingInstance()) {
+						createNewInfo(getMainReader().getCurrentAlignmentModel());
+					}
+					model = getCurrentInfo().getDataModel();
+				}
+				else {  // Use gobal character set model
+					if (globalModel == null) {
+						globalModel = getFactory().createNewModel();
+					}
+					model = globalModel;
+				}
+				
+				// Read data:
+				CharacterSetEvent characterSetEvent = event.asCharacterSetEvent();
+				CharSet charSet = model.getByName(characterSetEvent.getName());
+				if (charSet == null) {
+					charSet = new CharSet(characterSetEvent.getName(), colorLister.generateNext());
+					model.add(charSet);
+				}
+				charSet.add((int)characterSetEvent.getStart(), (int)characterSetEvent.getEnd() - 1);  //TODO Refactor NonOverlappingIntervalList so that end index is also behind the interval.
+				break;
+			case DOCUMENT_END:
+				getModels().add(new DataModelReadInfo<CharSetDataModel>(globalModel));
+			default:  // Nothing to do
+				break;
 		}
+	}
+
+
+	@Override
+	public boolean isReadingInstance() {
+		return super.isReadingInstance() || (globalModel != null);
 	}
 }

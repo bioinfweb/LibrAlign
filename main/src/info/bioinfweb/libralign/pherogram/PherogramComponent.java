@@ -19,7 +19,7 @@
 package info.bioinfweb.libralign.pherogram;
 
 
-import info.bioinfweb.libralign.pherogram.provider.PherogramModel;
+import info.bioinfweb.libralign.pherogram.model.PherogramModel;
 
 import java.awt.Color;
 

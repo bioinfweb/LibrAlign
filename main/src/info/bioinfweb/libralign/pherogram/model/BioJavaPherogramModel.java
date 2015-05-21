@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package info.bioinfweb.libralign.pherogram.provider;
+package info.bioinfweb.libralign.pherogram.model;
 
 
 import info.bioinfweb.commons.bio.biojava3.core.sequence.BioJava1SymbolTranslator;
@@ -49,7 +49,7 @@ import org.biojava3.core.sequence.compound.NucleotideCompound;
  * 
  * @author Ben St&ouml;ver
  */
-public class BioJavaPherogramProvider implements PherogramModel {
+public class BioJavaPherogramModel implements PherogramModel {
 	public static final String QUALITY_LABEL_PREFIX = "quality-";
 	
 	
@@ -63,7 +63,7 @@ public class BioJavaPherogramProvider implements PherogramModel {
 	 * 
 	 * @param chromatogram - the BioJava pherogram instance
 	 */
-	public BioJavaPherogramProvider(Chromatogram chromatogram) {
+	public BioJavaPherogramModel(Chromatogram chromatogram) {
 		super();
 		this.chromatogram = chromatogram;
 		maxTraceValue = chromatogram.getMax();
@@ -172,6 +172,6 @@ public class BioJavaPherogramProvider implements PherogramModel {
    */
   @Override
   public PherogramModel reverseComplement() {
-		return new BioJavaPherogramProvider(chromatogram.reverseComplement());
+		return new BioJavaPherogramModel(chromatogram.reverseComplement());
 	}
 }

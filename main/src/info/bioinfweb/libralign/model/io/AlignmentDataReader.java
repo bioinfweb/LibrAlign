@@ -39,7 +39,7 @@ import info.bioinfweb.libralign.model.data.DataModel;
  */
 public class AlignmentDataReader {
 	private JPhyloIOEventReader eventReader;
-	private Collection<DataModelEventReader<?>> dataModelReaders;
+	private List<DataModelEventReader<?>> dataModelReaders = new ArrayList<DataModelEventReader<?>>();
 	private AlignmentModel<?> currentAlignmentModel = null;
 	private List<AlignmentModel<?>> alignmentModels = new ArrayList<AlignmentModel<?>>();
 	
@@ -53,29 +53,55 @@ public class AlignmentDataReader {
 	 * @param dataModelReaders the data model readers to process events (an empty collection may be specified here)
 	 * @throws NullPointerException if {@code eventReader} or {@code dataModelReaders} is {@code null} 
 	 */
-	public AlignmentDataReader(JPhyloIOEventReader eventReader,	Collection<DataModelEventReader<?>> dataModelReaders) {
+	public AlignmentDataReader(JPhyloIOEventReader eventReader) {
 		super();
-		if ((eventReader == null) || (dataModelReaders == null)) {
-			throw new NullPointerException("The specified event reader and list of data model readers must not be null.");
+		if (eventReader == null) {
+			throw new NullPointerException("The specified event reader must not be null.");
 		}
 		else {
 			this.eventReader = eventReader;
-			this.dataModelReaders = dataModelReaders;
 		}
 	}
 
+
+	/**
+	 * Adds the specified data model reader to this instance, if it is not already present. All <i>JPhyloIO</i> 
+	 * events processed from now on will be forwarded to that reader.
+	 * <p>
+	 * It is recommended to add all readers before the first method that processed events (e.g. 
+	 * {@link #readUnitlNextAlignmentModel()}) is called. If new readers are added in between, its up to the 
+	 * application developer to make sure that these reader still work properly without knowledge of the events
+	 * that were already consumed.
+	 * 
+	 * @param reader the reader to be added
+	 * @return {@code true} if the new reader was added, {@code false} if the specified reader was already present
+	 * @throws IllegalArgumentException if the specified reader does not reference this instance by 
+	 *         {@link DataModelEventReader#getMainReader()}
+	 */
+	public boolean addDataModelReader(DataModelEventReader<?> reader) {
+		if (!dataModelReaders.contains(reader)) {
+			if (this.equals(reader.getMainReader())) {
+				return dataModelReaders.add(reader);
+			}
+			else {
+				throw new IllegalArgumentException("The specified reader does not reference this instance as its main reader.");
+			}
+		}
+		else {
+			return false;
+		}
+	}
+	
 	
 	/**
-	 * Creates a new instance of this class.
-	 * <p>
-	 * A new instance must be created for each stream of <i>JPhyloIO</i> events that shall be processed.
+	 * Removes the specified data model reader from this instance.
 	 * 
-	 * @param eventReader the reader providing <i>JPhyloIO</i> events
-	 * @param dataModelReaders any number of data model readers to process events
-	 * @throws NullPointerException if {@code eventReader} is {@code null} 
+	 * @param reader the reader to be removed
+	 * @return {@code true} if the specified reader was removed, {@code false} if that reader was not contained in 
+	 *         this instance
 	 */
-	public AlignmentDataReader(JPhyloIOEventReader eventReader,	DataModelEventReader<?>... dataModelReaders) {
-		this(eventReader, Arrays.asList(dataModelReaders));
+	public boolean removeDataModelReader(DataModelEventReader<?> reader) {
+		return dataModelReaders.remove(reader);
 	}
 	
 	
@@ -137,6 +163,13 @@ public class AlignmentDataReader {
 	}
 	
 	
+	/**
+	 * Processes all events from the underlying <i>JPhyloIO</i> event stream. The resulting models
+	 * can be accessed by {@link #getAlignmentModels()} or by the according data model readers, if 
+	 * specified before calling this method.
+	 * 
+	 * @throws Exception if an exception was thrown by {@link JPhyloIOEventReader#next()}.
+	 */
 	public void readAll() throws Exception {
 		while (processNextEvent());
 	}

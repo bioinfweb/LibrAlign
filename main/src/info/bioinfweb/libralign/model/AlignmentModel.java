@@ -65,7 +65,7 @@ import info.bioinfweb.libralign.model.tokenset.TokenSet;
  * @see AbstractMapBasedAlignmentModel
  * @see AbstractSequenceDataAdapter
  *
- * @param <T> - the type of sequence elements (tokens) the implementing provider object works with
+ * @param <T> the type of sequence elements (tokens) the implementing model object works with
  */
 public interface AlignmentModel<T> {
 	public static final int NO_SEQUENCE_FOUND = -1;

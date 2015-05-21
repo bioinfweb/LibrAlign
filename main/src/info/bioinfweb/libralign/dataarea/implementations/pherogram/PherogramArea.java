@@ -32,7 +32,7 @@ import info.bioinfweb.libralign.pherogram.PherogramComponent;
 import info.bioinfweb.libralign.pherogram.PherogramFormats;
 import info.bioinfweb.libralign.pherogram.PherogramPainter;
 import info.bioinfweb.libralign.pherogram.distortion.ScaledPherogramDistortion;
-import info.bioinfweb.libralign.pherogram.provider.PherogramModel;
+import info.bioinfweb.libralign.pherogram.model.PherogramModel;
 import info.bioinfweb.libralign.pherogram.view.PherogramView;
 
 import java.awt.Color;
