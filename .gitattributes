@@ -130,6 +130,8 @@ main/src/info/bioinfweb/libralign/model/adapters/StringAdapter.class -text
 main/src/info/bioinfweb/libralign/model/adapters/StringAdapter.java -text svneol=unset#text/plain
 main/src/info/bioinfweb/libralign/model/adapters/package-info.class -text
 main/src/info/bioinfweb/libralign/model/adapters/package-info.java -text svneol=unset#text/plain
+main/src/info/bioinfweb/libralign/model/concatenated/ConcatenatedAlignmentModel.java -text svneol=unset#text/plain
+main/src/info/bioinfweb/libralign/model/concatenated/package-info.java -text svneol=unset#text/plain
 main/src/info/bioinfweb/libralign/model/data/DataModel.java -text svneol=unset#text/plain
 main/src/info/bioinfweb/libralign/model/data/DataModelFactory.java -text svneol=unset#text/plain
 main/src/info/bioinfweb/libralign/model/data/NoArgDataModelFactory.java -text svneol=unset#text/plain
