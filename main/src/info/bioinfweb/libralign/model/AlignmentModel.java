@@ -82,8 +82,11 @@ public interface AlignmentModel<T> {
 	 * Replaces the current token set with the specified one.
 	 * 
 	 * @param set - the new token set to be used
+	 * @throws UnsupportedOperationException if this implementation does not support changing token sets during runtime
+	 * @throws IllegalArgumentException if the specified token set is not a valid replacement for the previous one (in some
+	 *         does way does not fulfill the needs of the implementation)
 	 */
-	public void setTokenSet(TokenSet<T> set);
+	public void setTokenSet(TokenSet<T> set) throws UnsupportedOperationException, IllegalArgumentException;
 	
 	/**
 	 * Returns the length of the specified sequence.

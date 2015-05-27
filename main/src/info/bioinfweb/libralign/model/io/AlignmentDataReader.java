@@ -20,14 +20,13 @@ package info.bioinfweb.libralign.model.io;
 
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
 import java.util.List;
 
 import info.bioinfweb.jphyloio.JPhyloIOEventReader;
 import info.bioinfweb.jphyloio.events.JPhyloIOEvent;
 import info.bioinfweb.libralign.model.AlignmentModel;
 import info.bioinfweb.libralign.model.data.DataModel;
+import info.bioinfweb.libralign.model.factory.AlignmentModelFactory;
 
 
 
@@ -39,9 +38,8 @@ import info.bioinfweb.libralign.model.data.DataModel;
  */
 public class AlignmentDataReader {
 	private JPhyloIOEventReader eventReader;
+	private AlignmentModelEventReader alignmentModelReader;
 	private List<DataModelEventReader<?>> dataModelReaders = new ArrayList<DataModelEventReader<?>>();
-	private AlignmentModel<?> currentAlignmentModel = null;
-	private List<AlignmentModel<?>> alignmentModels = new ArrayList<AlignmentModel<?>>();
 	
 	
 	/**
@@ -50,17 +48,28 @@ public class AlignmentDataReader {
 	 * A new instance must be created for each stream of <i>JPhyloIO</i> events that shall be processed.
 	 * 
 	 * @param eventReader the reader providing <i>JPhyloIO</i> events
-	 * @param dataModelReaders the data model readers to process events (an empty collection may be specified here)
-	 * @throws NullPointerException if {@code eventReader} or {@code dataModelReaders} is {@code null} 
+	 * @param alignmentModelFactory the factory to create alignment model instances during reading
+	 * @throws NullPointerException if {@code eventReader} or {@code alignmentModelReader} are {@code null} 
 	 */
-	public AlignmentDataReader(JPhyloIOEventReader eventReader) {
+	public AlignmentDataReader(JPhyloIOEventReader eventReader, AlignmentModelFactory alignmentModelFactory) {
 		super();
-		if (eventReader == null) {
-			throw new NullPointerException("The specified event reader must not be null.");
+		if ((eventReader == null) || (alignmentModelFactory == null)) {
+			throw new NullPointerException("The specified event reader and alignment model factory must not be null.");
 		}
 		else {
 			this.eventReader = eventReader;
+			this.alignmentModelReader = new AlignmentModelEventReader(alignmentModelFactory);
 		}
+	}
+
+
+	/**
+	 * Returns the alignment event reader used create to and read alignment model instances
+	 * 
+	 * @return the alignment model reader using the factory that was passed to the constructor
+	 */
+	public AlignmentModelEventReader getAlignmentModelReader() {
+		return alignmentModelReader;
 	}
 
 
@@ -105,53 +114,10 @@ public class AlignmentDataReader {
 	}
 	
 	
-	/**
-	 * Returns the alignment model that is currently read. Note that this model might not yet contain all data,
-	 * because this data is currently read from the underlying <i>JPhyloIO</i> event stream. As soon as a model
-	 * is read completely (an alignment end event if reached) it is added to {@link #getAlignmentModels()} and
-	 * this method will return {@code null} until the next alignment is reached in the stream.
-	 * 
-	 * @return the current alignment model or {@code null} if the current stream position is not between an 
-	 *         alignment start and end event
-	 * @see AlignmentDataReader#getAlignmentModels()
-	 */
-	public AlignmentModel<?> getCurrentAlignmentModel() {
-		return currentAlignmentModel;
-	}
-	
-	
-	/**
-	 * Checks whether an alignment model that is currently filled with data from the stream is present.
-	 * That would be the case every time the reader is positioned between an alignment start and end event.
-	 * 
-	 * @return {@code true} if an alignment model is currently present, {@code false} otherwise.
-	 */
-	public boolean hasCurrentAlignmentModel() {
-		return getCurrentAlignmentModel() != null;
-	}
-
-
-	/**
-	 * Returns the list of alignment models that have been completely read from the underlying <i>JPhyloIO</i> 
-	 * event stream until now.
-	 * 
-	 * @return the list of models (may be empty, but is never {@code null})
-	 * @see #getCurrentAlignmentModel()
-	 */
-	public List<AlignmentModel<?>> getAlignmentModels() {
-		return alignmentModels;
-	}
-	
-	
-	private void processEventForAlignmentModel(JPhyloIOEvent event) {
-		//TODO implement (possibly in separate reader class)
-	}
-	
-	
 	private boolean processNextEvent() throws Exception {
 		if (eventReader.hasNextEvent()) {
 			JPhyloIOEvent event = eventReader.next();
-			processEventForAlignmentModel(event);
+			alignmentModelReader.processEvent(eventReader, event);
 			for (DataModelEventReader<?> dataModelReader : dataModelReaders) {
 				dataModelReader.processEvent(eventReader, event);
 			}
@@ -165,7 +131,7 @@ public class AlignmentDataReader {
 	
 	/**
 	 * Processes all events from the underlying <i>JPhyloIO</i> event stream. The resulting models
-	 * can be accessed by {@link #getAlignmentModels()} or by the according data model readers, if 
+	 * can be accessed by {@link #getCompletedModels()} or by the according data model readers, if 
 	 * specified before calling this method.
 	 * 
 	 * @throws Exception if an exception was thrown by {@link JPhyloIOEventReader#next()}.

@@ -29,6 +29,9 @@ import java.util.TreeMap;
  * An abstract implementation of {@link TokenSet} that provides a {@link TreeMap} used to map key characters
  * to tokens and inherits from {@link HashSet} so also tokens that do not implement {@link Comparable} are
  * supported.
+ * <p>
+ * Since the implemented functionality of this class assumes discrete token values, {@link #isContinuous()} 
+ * always returns {@code false}.
  * 
  * @author Ben St&ouml;ver
  * @since 0.1.0
@@ -39,6 +42,26 @@ public abstract class AbstractTokenSet<T> extends HashSet<T> implements TokenSet
 	private Map<Character, T> keyMap = new TreeMap<Character, T>();
 	
 	
+	/**
+	 * Creates a new empty instance of this class.
+	 */
+	public AbstractTokenSet() {
+		super();
+	}
+
+
+	/**
+	 * Copy constructor that copies all elements the contents of the key map from source to the new instance.
+	 * 
+	 * @param source the source instance to be cloned
+	 */
+	public AbstractTokenSet(AbstractTokenSet<T> source) {
+		super();
+		addAll(source);
+		getKeyMap().putAll(source.getKeyMap());
+	}
+
+
 	@Override
 	public T tokenByKeyChar(char key) {
 		return keyMap.get(key);
@@ -65,5 +88,11 @@ public abstract class AbstractTokenSet<T> extends HashSet<T> implements TokenSet
 	
 	protected void addSpaceKeyForGaps() {
 		getKeyMap().put(' ', tokenByKeyChar('-'));
+	}
+
+
+	@Override
+	public boolean isContinuous() {
+		return false;
 	}
 }

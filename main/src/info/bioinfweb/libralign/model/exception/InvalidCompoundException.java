@@ -19,8 +19,6 @@
 package info.bioinfweb.libralign.model.exception;
 
 
-import org.biojava3.core.sequence.template.Compound;
-
 import info.bioinfweb.libralign.model.AlignmentModel;
 
 
@@ -33,10 +31,8 @@ import info.bioinfweb.libralign.model.AlignmentModel;
  * @since 0.0.0
  */
 public class InvalidCompoundException extends AlignmentDataProviderException {
-	//TODO Is this class still needed?
-	public InvalidCompoundException(AlignmentModel<?> source, Compound compound) {
-		
-		super(source, "The compound " + compound.getLongName() + " of type " + compound.getClass().getName() + 
+	public InvalidCompoundException(AlignmentModel<?> source, Object compound) {
+		super(source, "The compound " + compound.toString() + " of type " + compound.getClass().getName() + 
 				" cannot does not match the data type of the provider.");
 	}
 }

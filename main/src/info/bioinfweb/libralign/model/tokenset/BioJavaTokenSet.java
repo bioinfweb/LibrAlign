@@ -19,8 +19,11 @@
 package info.bioinfweb.libralign.model.tokenset;
 
 
+import info.bioinfweb.commons.collections.CollectionUtils;
+
+import java.util.AbstractSet;
+import java.util.ConcurrentModificationException;
 import java.util.Iterator;
-import java.util.Map;
 
 import org.biojava3.core.sequence.template.Compound;
 import org.biojava3.core.sequence.template.CompoundSet;
@@ -28,14 +31,15 @@ import org.biojava3.core.sequence.template.CompoundSet;
 
 
 /**
- * Implementation of {@link TokenSet} that adopts the contents of a BioJava {@link CompoundSet} object.
+ * Implementation of {@link TokenSet} containing shared functionality between classes adopting the 
+ * contents of a BioJava {@link CompoundSet} object.
  * 
  * @author Ben St&ouml;ver
- * @since 0.1.0
- *
+ * @since 0.4.0
+ * 
  * @param <C> - the compound type of the compounds contained in this set
  */
-public class BioJavaTokenSet<C extends Compound> extends AbstractTokenSet<C> implements TokenSet<C> {
+public class BioJavaTokenSet<C extends Compound> extends AbstractSet<C> implements TokenSet<C> {
 	private CompoundSet<C> compoundSet;
 	
 	
@@ -46,8 +50,7 @@ public class BioJavaTokenSet<C extends Compound> extends AbstractTokenSet<C> imp
 	 */
 	public BioJavaTokenSet(BioJavaTokenSet<C> tokenSet) {
 		super();
-		addAll(tokenSet);
-		getKeyMap().putAll(tokenSet.getKeyMap());
+		this.compoundSet = tokenSet.compoundSet;
 	}
 	
 	
@@ -55,31 +58,65 @@ public class BioJavaTokenSet<C extends Compound> extends AbstractTokenSet<C> imp
 	 * Creates a new instance of this class.
 	 * <p>
 	 * The contents of {@code compoundSet} are copied to the new instance and the key character map of 
-	 * {@link AbstractTokenSet} is filled with the first character of the return values of #
+	 * {@link AbstractTokenSet} is filled with the first character of the return values of
 	 * {@link Compound#getShortName()} from every compound. Clear the contents {@link #getKeyMap()} 
 	 * afterwards, if you do not want this mapping.
 	 * 
 	 * @param compoundSet - the BioJava compound set containing the compounds to be copied into the new instance
 	 */
-	public BioJavaTokenSet(CompoundSet<C> compoundSet, boolean spaceForGaps) {
+	public BioJavaTokenSet(CompoundSet<C> compoundSet) {
 		super();
 		this.compoundSet = compoundSet;
-		
-		addAll(compoundSet.getAllCompounds());
-		Iterator<C> iterator = iterator();
-		while (iterator.hasNext()) {
-			C compound = iterator.next();
-			getKeyMap().put(representationByToken(compound).charAt(0), compound);
-		}
-		if (spaceForGaps) {
-			addSpaceKeyForGaps();
-		}
+	}
+
+
+	/**
+	 * Returns the BioJava compound set that is viewed by this instance.
+	 * 
+	 * @return the underlying compound set instance
+	 */
+	public CompoundSet<C> getCompoundSet() {
+		return compoundSet;
 	}
 
 
 	@Override
-	public Map<Character, C> getKeyMap() {
-		return super.getKeyMap();
+	public C tokenByKeyChar(char key) {
+		Iterator<C> iterator = iterator();
+		while (iterator.hasNext()) {
+			C token = iterator.next();
+			if (representationByToken(token).charAt(0) == key) {
+				return token;
+			}
+		}
+		return null;
+	}
+
+
+	@Override
+	public boolean isContinuous() {
+		return false;
+	}
+
+
+	/**
+	 * Returns an unmodifiable iterator of the underlying BioJava compound set.
+	 * <p>
+	 * Note that this iterator will return the elements of this set as they were when this method
+	 * if called. If the set is modified later on, the iterator will not reflect such changes and 
+	 * will not throw a {@link ConcurrentModificationException}.
+	 *
+	 * @return the iterator
+	 */
+	@Override
+	public Iterator<C> iterator() {
+		return CollectionUtils.unmodifiableIterator(compoundSet.getAllCompounds().iterator());  // The BioJava implementation return a new array list and its iterator would allow removing elements without modifying the compound set.
+	}
+
+
+	@Override
+	public int size() {
+		return compoundSet.getAllCompounds().size();  // BioJava creates a new ArrayList every time this method is called.
 	}
 
 

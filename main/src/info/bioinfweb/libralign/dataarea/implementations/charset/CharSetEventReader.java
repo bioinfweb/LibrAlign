@@ -67,9 +67,9 @@ public class CharSetEventReader extends AbstractDataModelEventReader<CharSetData
 			case CHARACTER_SET:
 				// Determine model to write to:
 				CharSetDataModel model;
-				if (getMainReader().hasCurrentAlignmentModel()) {
+				if (getMainReader().getAlignmentModelReader().hasCurrentModel()) {
 					if (!super.isReadingInstance()) {
-						createNewInfo(getMainReader().getCurrentAlignmentModel());
+						createNewInfo(getMainReader().getAlignmentModelReader().getCurrentModel());
 					}
 					model = getCurrentInfo().getDataModel();
 				}

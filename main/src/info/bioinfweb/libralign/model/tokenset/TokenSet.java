@@ -34,12 +34,17 @@ import java.util.Set;
  * {@link AlignmentModel}.
  * <p>
  * Implementing classes define a set of valid tokens that may be contained in an alignment and define
- * an optional keyboard shortcut a user of LibrAlign can use to insert the according token into an alignment. 
+ * an optional keyboard shortcut a user of LibrAlign can use to insert the according token into an alignment.
+ * <p>
+ * Note that implementations may also represent a set of continuous values. In this case the implementation
+ * should return {@code true} for {@link #isContinuous()}, {@code null} for {@link #iterator()},
+ * {@link Integer#MAX_VALUE} for {@link #size()} and {@code false} for {@link #isEmpty()}. The optional add
+ * and remove operations may throw {@link UnsupportedOperationException}s.
  * 
  * @author Ben St&ouml;ver
  * @since 0.1.0
  *
- * @param <T> - the type of sequence elements (tokens) used in the sequences of an {@link AlignmentArea}
+ * @param <T> the type of sequence elements (tokens) used in the sequences of an {@link AlignmentArea}
  */
 public interface TokenSet<T> extends Set<T>, Cloneable {
 	/**
@@ -50,13 +55,13 @@ public interface TokenSet<T> extends Set<T>, Cloneable {
 	 * keyboard action. (Usually the key character can be any lower or upper case letter or digit.)
 	 * 
 	 * @param key - the character the user can press to insert the returned token into an {@link AlignmentArea}
-	 * @return the associated token (sequence element)
+	 * @return the associated token (sequence element) or {@code null} if none is defined
 	 */
 	public T tokenByKeyChar(char key);
 	
 	/**
 	 * Returns the representation string of the specified token that shall be displayed in an 
-	 * {@link AlignmentArea}.
+	 * {@link AlignmentArea} or written into an alignment file.
 	 * <p>
 	 * Note that some {@link CharSequenceAdapter}s and {@link StringAdapter}s only use the first character
 	 * of the returned string to represent a token.
@@ -67,10 +72,11 @@ public interface TokenSet<T> extends Set<T>, Cloneable {
 	public String representationByToken(T token);
 	
 	/**
-	 * Returns the token associated with the specified string representation.
+	 * Returns the token associated with the specified string representation used to display the token in
+	 * an {@link AlignmentArea} or an alignment file.
 	 * 
 	 * @param representation the string representation of the token
-	 * @return the according token
+	 * @return the according token or {@code null} if none is defined
 	 */
 	public T tokenByRepresentation(String representation);
 	
@@ -98,6 +104,15 @@ public interface TokenSet<T> extends Set<T>, Cloneable {
 	 * @return a string containing no line breaks
 	 */
 	public String descriptionByToken(T token);
+	
+	/**
+	 * Determines whether this set describes a continuous set of values. Continuous sets do not return an 
+	 * {@link #iterator()} and return {@link Integer#MAX_VALUE} for {@link #size()}.
+	 * 
+	 * @return {@code true} if this set represents continuous (e.g. floating point) values or {@code false}
+	 *         if it represents a set of discrete values. 
+	 */
+	public boolean isContinuous();
 	
 	/**
 	 * Returns a deep copy of this instance. Implementing this method is important when creating custom
