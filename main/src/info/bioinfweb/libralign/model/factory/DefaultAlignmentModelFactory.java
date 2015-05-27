@@ -101,7 +101,7 @@ public class DefaultAlignmentModelFactory implements AlignmentModelFactory {
 						nucleotideCompoundSet.addNucleotideCompound(tokenDefinition.getTokenName(), tokenDefinition.getTokenName());
 					}
 				}
-				BioJavaTokenSet<NucleotideCompound> nucleotideTokenSet = new BioJavaTokenSet<NucleotideCompound>(nucleotideCompoundSet);  //TODO Use BioJava 4 tokens here/ Should this class really be bound to BioJava?
+				BioJavaTokenSet<NucleotideCompound> nucleotideTokenSet = new BioJavaTokenSet<NucleotideCompound>(nucleotideCompoundSet, true);  //TODO Use BioJava 4 tokens here/ Should this class really be bound to BioJava?
 				
 				// Create model:
 				return new PackedAlignmentModel<NucleotideCompound>(nucleotideTokenSet,
@@ -109,7 +109,7 @@ public class DefaultAlignmentModelFactory implements AlignmentModelFactory {
 						DEFAULT_NUCLEOTIDE_CHARACTER_STATE_COUNT)));
 				
 			case AMINO_ACID:
-				return new PackedAlignmentModel<AminoAcidCompound>(new BioJavaTokenSet<AminoAcidCompound>(new AminoAcidCompoundSet()));
+				return new PackedAlignmentModel<AminoAcidCompound>(new BioJavaTokenSet<AminoAcidCompound>(new AminoAcidCompoundSet(), true));
 				// BioJava does not support adding new amino acid definitions to single compound sets. Therefore token definitions in the 
 				// file and possible token counts are ignored.
 

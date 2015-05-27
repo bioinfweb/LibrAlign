@@ -19,6 +19,7 @@
 package info.bioinfweb.libralign.model.tokenset;
 
 
+import info.bioinfweb.commons.bio.biojava3.core.sequence.compound.AlignmentAmbiguityNucleotideCompoundSet;
 import info.bioinfweb.commons.collections.CollectionUtils;
 
 import java.util.AbstractSet;
@@ -41,6 +42,7 @@ import org.biojava3.core.sequence.template.CompoundSet;
  */
 public class BioJavaTokenSet<C extends Compound> extends AbstractSet<C> implements TokenSet<C> {
 	private CompoundSet<C> compoundSet;
+	private boolean spaceForGap;
 	
 	
 	/**
@@ -51,6 +53,7 @@ public class BioJavaTokenSet<C extends Compound> extends AbstractSet<C> implemen
 	public BioJavaTokenSet(BioJavaTokenSet<C> tokenSet) {
 		super();
 		this.compoundSet = tokenSet.compoundSet;
+		this.spaceForGap = tokenSet.spaceForGap;
 	}
 	
 	
@@ -64,9 +67,10 @@ public class BioJavaTokenSet<C extends Compound> extends AbstractSet<C> implemen
 	 * 
 	 * @param compoundSet - the BioJava compound set containing the compounds to be copied into the new instance
 	 */
-	public BioJavaTokenSet(CompoundSet<C> compoundSet) {
+	public BioJavaTokenSet(CompoundSet<C> compoundSet, boolean spaceForGap) {
 		super();
 		this.compoundSet = compoundSet;
+		this.spaceForGap = spaceForGap;
 	}
 
 
@@ -88,6 +92,9 @@ public class BioJavaTokenSet<C extends Compound> extends AbstractSet<C> implemen
 			if (representationByToken(token).charAt(0) == key) {
 				return token;
 			}
+		}
+		if ((spaceForGap) && (key == ' ')) {
+			return tokenByKeyChar(AlignmentAmbiguityNucleotideCompoundSet.GAP_CHARACTER);
 		}
 		return null;
 	}
