@@ -26,6 +26,7 @@ import info.bioinfweb.jphyloio.EventForwarder;
 import info.bioinfweb.jphyloio.formats.nexus.NexusCommandReaderFactory;
 import info.bioinfweb.jphyloio.formats.nexus.NexusEventReader;
 import info.bioinfweb.libralign.model.AlignmentModel;
+import info.bioinfweb.libralign.model.factory.DefaultAlignmentModelFactory;
 import info.bioinfweb.libralign.model.io.AlignmentDataReader;
 import info.bioinfweb.libralign.model.io.DataModelReadInfo;
 
@@ -50,7 +51,7 @@ public class CharSetEventReaderTest {
 		try {
 			NexusEventReader eventReader = new NexusEventReader(new File("data/charSet/CharSet.nex"), false, factory);
 
-			AlignmentDataReader mainReader = new AlignmentDataReader(eventReader);
+			AlignmentDataReader mainReader = new AlignmentDataReader(eventReader, new DefaultAlignmentModelFactory());
 			CharSetEventReader charSetReader = new CharSetEventReader(mainReader);
 			mainReader.addDataModelReader(charSetReader);
 			try {
