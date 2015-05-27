@@ -24,15 +24,15 @@ import info.bioinfweb.libralign.model.AlignmentModel;
 
 
 /**
- * This exceptions is thrown if a compound is used with {@link AlignmentModel} which does not
+ * This exceptions is thrown if a token is used with {@link AlignmentModel} which does not
  * match the data type of the provide (e.g. trying to write an amino acid to a nucleotide data source). 
  * 
  * @author Ben St&ouml;ver
  * @since 0.0.0
  */
-public class InvalidCompoundException extends AlignmentDataProviderException {
-	public InvalidCompoundException(AlignmentModel<?> source, Object compound) {
-		super(source, "The compound " + compound.toString() + " of type " + compound.getClass().getName() + 
+public class InvalidTokenException extends AlignmentDataProviderException {
+	public InvalidTokenException(AlignmentModel<?> source, Object token) {
+		super(source, "The token " + token.toString() + " of type " + token.getClass().getName() + 
 				" cannot does not match the data type of the provider.");
 	}
 }

@@ -19,7 +19,6 @@
 package info.bioinfweb.libralign.model.io;
 
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.EnumMap;
 import java.util.List;
@@ -31,14 +30,14 @@ import info.bioinfweb.jphyloio.JPhyloIOEventReader;
 import info.bioinfweb.jphyloio.events.CharacterSetEvent;
 import info.bioinfweb.jphyloio.events.JPhyloIOEvent;
 import info.bioinfweb.jphyloio.events.SequenceTokensEvent;
-import info.bioinfweb.jphyloio.events.SingleTokenDefinitionEvent;
 import info.bioinfweb.jphyloio.events.TokenSetDefinitionEvent;
 import info.bioinfweb.jphyloio.events.TokenSetType;
-import info.bioinfweb.libralign.dataarea.implementations.charset.CharSet;
 import info.bioinfweb.libralign.model.AlignmentModel;
 import info.bioinfweb.libralign.model.concatenated.ConcatenatedAlignmentModel;
 import info.bioinfweb.libralign.model.factory.AlignmentModelFactory;
 import info.bioinfweb.libralign.model.factory.NewAlignmentModelParameterMap;
+import info.bioinfweb.libralign.model.factory.StringAlignmentModelFactory;
+import info.bioinfweb.libralign.model.factory.continuous.DoubleAlignmentModelFactory;
 
 
 
@@ -58,13 +57,23 @@ public class AlignmentModelEventReader implements JPhyloIOEventListener {
 	
 	
 	/**
+	 * Creates a new instance of this class using {@link StringAlignmentModelFactory} as the default factory
+	 * and {@link DoubleAlignmentModelFactory} as the factory for continuous data.
+	 */
+	public AlignmentModelEventReader() {
+		this(new StringAlignmentModelFactory());
+		getFactoryMap().put(TokenSetType.CONTINUOUS, new DoubleAlignmentModelFactory());
+	}
+
+
+	/**
 	 * Creates a new instance of this class with an empty factory map. The map can be populated later on using 
 	 * {@link #getFactoryMap()}.
 	 * 
 	 * @param defaultFactory the factory to use to create new model instances for character state (token)
 	 *        set types which are not defined in the factory map 
 	 */
-	public AlignmentModelEventReader(AlignmentModelFactory defaultFactory) {
+	public AlignmentModelEventReader(AlignmentModelFactory<?> defaultFactory) {
 		this(defaultFactory, new EnumMap<TokenSetType, AlignmentModelFactory>(TokenSetType.class));
 	}
 
