@@ -85,7 +85,7 @@ public class BioJavaTokenSet<C extends Compound> extends AbstractSet<C> implemen
 
 
 	@Override
-	public C tokenByKeyChar(char key) {
+	public C tokenByKeyChar(char key) {  //TODO Possibly use key map again, like in AbstractTokenSet. (This implementation is temporary.)
 		Iterator<C> iterator = iterator();
 		while (iterator.hasNext()) {
 			C token = iterator.next();
