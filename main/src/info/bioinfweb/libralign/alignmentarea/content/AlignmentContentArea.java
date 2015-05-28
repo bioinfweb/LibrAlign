@@ -89,7 +89,7 @@ public class AlignmentContentArea extends TICComponent {
 	 * 
 	 * @return {@code true}, if any compound text will be painted, {@code false} otherwise
 	 */
-	public boolean isPaintCompoundText() {
+	public boolean isPaintCompoundText() {  //TODO This method can be removed when token painter are implemented.
 		return getOwner().getCompoundFont().getSize() >= AlignmentArea.MIN_FONT_SIZE;
 	}
 	

@@ -63,8 +63,11 @@ main/src/info/bioinfweb/libralign/alignmentarea/selection/SelectionModel.java -t
 main/src/info/bioinfweb/libralign/alignmentarea/selection/SelectionSynchronizer.java -text svneol=unset#text/plain
 main/src/info/bioinfweb/libralign/alignmentarea/selection/SelectionType.java -text svneol=unset#text/plain
 main/src/info/bioinfweb/libralign/alignmentarea/selection/package-info.java -text svneol=unset#text/plain
+main/src/info/bioinfweb/libralign/alignmentarea/tokenpainter/AbstractBioPolymerTokenPainter.java -text svneol=unset#text/plain
 main/src/info/bioinfweb/libralign/alignmentarea/tokenpainter/AbstractTokenPainter.java -text svneol=unset#text/plain
+main/src/info/bioinfweb/libralign/alignmentarea/tokenpainter/AminoAcidTokenPainter.java -text svneol=unset#text/plain
 main/src/info/bioinfweb/libralign/alignmentarea/tokenpainter/NucleotideTokenPainter.java -text svneol=unset#text/plain
+main/src/info/bioinfweb/libralign/alignmentarea/tokenpainter/SingleColorTokenPainter.java -text svneol=unset#text/plain
 main/src/info/bioinfweb/libralign/alignmentarea/tokenpainter/TokenPainter.java -text svneol=unset#text/plain
 main/src/info/bioinfweb/libralign/alignmentarea/tokenpainter/package-info.java -text svneol=unset#text/plain
 main/src/info/bioinfweb/libralign/dataarea/DataArea.java -text svneol=unset#text/plain

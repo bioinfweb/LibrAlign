@@ -1,0 +1,94 @@
+/*
+ * LibrAlign - A GUI library for displaying and editing multiple sequence alignments and attached data
+ * Copyright (C) 2014 - 2015  Ben Stöver
+ * <http://bioinfweb.info/LibrAlign>
+ * 
+ * This file is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * 
+ * This file is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ */
+package info.bioinfweb.libralign.alignmentarea.tokenpainter;
+
+
+import info.bioinfweb.commons.bio.SequenceUtils;
+
+import java.awt.Color;
+
+
+
+/**
+ * Token painter that paints amino acids.
+ * 
+ * @author Ben St&ouml;ver
+ * @since 0.4.0
+ */
+public class AminoAcidTokenPainter extends AbstractBioPolymerTokenPainter {
+	public AminoAcidTokenPainter() {
+		super();
+		putAminoAcidColors();
+	}
+	
+	
+	private void putAminoAcidColor(String code1, String code3, Color color) {
+		getBackgroundColorMap().put(code1.toUpperCase(), color);
+		getBackgroundColorMap().put(code1.toLowerCase(), color);
+		getBackgroundColorMap().put(code3.toUpperCase(), color);
+	}
+	
+	
+	protected void putAminoAcidColors() {
+		putAminoAcidColor("A", "Ala", new Color(32, 255, 8));
+		putAminoAcidColor("C", "Cys", new Color(255, 162, 202));
+		putAminoAcidColor("D", "Asp", new Color(220, 134, 38));
+		putAminoAcidColor("E", "Glu", new Color(236, 164, 38));
+		putAminoAcidColor("F", "Phe", new Color(255, 0, 179));
+		putAminoAcidColor("G", "Gly", new Color(100, 137, 179));
+		putAminoAcidColor("H", "His", new Color(151, 60, 142));
+		putAminoAcidColor("I", "Ile", new Color(248, 255, 0));
+		putAminoAcidColor("K", "Lys", new Color(0, 196, 252));
+		putAminoAcidColor("L", "Leu", new Color(255, 253, 0));
+		putAminoAcidColor("M", "Met", new Color(248, 247, 0));
+		putAminoAcidColor("N", "Asn", new Color(197, 109, 105));
+		putAminoAcidColor("P", "Pro", new Color(148, 83, 95));
+		putAminoAcidColor("Q", "Gln", new Color(255, 190, 3));
+		putAminoAcidColor("R", "Arg", new Color(7, 182, 255));
+		putAminoAcidColor("S", "Ser", new Color(0, 255, 12));
+		putAminoAcidColor("T", "Thr", new Color(0, 255, 59));
+		putAminoAcidColor("V", "Val", new Color(254, 255, 0));
+		putAminoAcidColor("W", "Trp", new Color(255, 0, 29));
+		putAminoAcidColor("Y", "Tyr", new Color(235, 0, 173));
+		
+		putAminoAcidColor("O", "Pyl", new Color(0, 196, 252).brighter());
+		putAminoAcidColor("U", "Sec", new Color(255, 162, 202).brighter());
+	}
+
+
+	@Override
+	protected boolean isAmbiguity(String tokenRepresentation) {
+		return SequenceUtils.isAminoAcidAmbiguityCode(tokenRepresentation);
+	}
+
+
+	@Override
+	protected char[] calculateConstituents(String tokenRepresentation) {
+		return SequenceUtils.oneLetterAminoAcidConstituents(tokenRepresentation);
+	}
+
+
+	@Override
+	public Color backgroundColorByRepresentation(String tokenRepresentation, Color selectionColor) {
+		if (tokenRepresentation.length() == 3) {  // Handle 3 letter amino acid codes.
+			tokenRepresentation = tokenRepresentation.toUpperCase();
+		}
+		return super.backgroundColorByRepresentation(tokenRepresentation, selectionColor);
+	}
+}

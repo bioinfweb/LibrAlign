@@ -19,19 +19,58 @@
 package info.bioinfweb.libralign.alignmentarea.tokenpainter;
 
 
-import info.bioinfweb.libralign.model.AlignmentModel;
+import info.bioinfweb.commons.bio.SequenceUtils;
+import info.bioinfweb.libralign.alignmentarea.AlignmentArea;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.geom.Rectangle2D;
-import java.util.List;
 
 
 
-public class NucleotideTokenPainter extends AbstractTokenPainter<List<Color>> {
+/**
+ * Token painter that paints nucleotides.
+ * 
+ * @author Ben St&ouml;ver
+ * @since 0.4.0
+ */
+public class NucleotideTokenPainter extends AbstractBioPolymerTokenPainter {
+	/**
+	 * Creates a new instance of this class.
+	 */
+	public NucleotideTokenPainter() {
+		super();
+		putNucleotideColors();
+	}
+	
+	
+	private void putNucleotideColor(String nucleotide, Color color) {
+		getBackgroundColorMap().put(nucleotide.toUpperCase(), color);
+		getBackgroundColorMap().put(nucleotide.toLowerCase(), color);
+	}
+	
+	
+	protected void putNucleotideColors() {
+		Color colorTU = new Color(230, 90, 90);
+		putNucleotideColor("A", new Color(90, 228, 93));
+		putNucleotideColor("T", colorTU);
+		putNucleotideColor("U", colorTU);
+		putNucleotideColor("C", new Color(90, 90, 230));
+		putNucleotideColor("G", new Color(226, 230, 90));
+		putNucleotideColor("-", Color.GRAY);
+		putNucleotideColor("?", Color.GRAY.brighter());
+	}
+	
+	
 	@Override
-	public void paintToken(AlignmentModel<?> alignmentModel, Object token, Graphics2D g, Rectangle2D area) {
-		// TODO Auto-generated method stub
-		
+	protected boolean isAmbiguity(String tokenRepresentation) {
+		return (tokenRepresentation.length() == 1) && 
+				SequenceUtils.isNucleotideAmbuguityCode(tokenRepresentation.charAt(0));
+	}
+
+
+	@Override
+	protected char[] calculateConstituents(String tokenRepresentation) {
+		return SequenceUtils.nucleotideConstituents(tokenRepresentation.charAt(0));
 	}
 }

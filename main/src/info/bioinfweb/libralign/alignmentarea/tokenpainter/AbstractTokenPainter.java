@@ -19,22 +19,56 @@
 package info.bioinfweb.libralign.alignmentarea.tokenpainter;
 
 
-import java.util.Map;
-import java.util.TreeMap;
+import info.bioinfweb.libralign.alignmentarea.AlignmentArea;
+import info.bioinfweb.libralign.model.AlignmentModel;
+
+import java.awt.Color;
+import java.awt.Graphics2D;
+import java.awt.geom.Rectangle2D;
 
 
 
-public abstract class AbstractTokenPainter<D> implements TokenPainter<D> {
-	private Map<String, D> dataMap = new TreeMap<String, D>();
-
+/**
+ * Implements shared functionality between implementations of {@link TokenPainter}.
+ * 
+ * @author Ben St&ouml;ver
+ * @since 0.4.0
+ */
+public abstract class AbstractTokenPainter implements TokenPainter {
+	/**
+	 * Method to be implemented by inherited classes performing the actual paint operation. It extends the paint 
+	 * method specified in {@link TokenPainter} by an additional parameter providing the string representation of
+	 * the token.
+	 * 
+	 * @param alignmentArea the alignment area displaying {@code token}
+	 * @param token the token to be painted
+	 * @param tokenRepresentation the string representation of {@code token} determined from the token set of 
+	 *        {@code alignmentModel} 
+	 * @param g the graphics context to paint to
+	 * @param paintArea the rectangle to be filled with the representation of the token
+	 * @param selectionColor this color must be mixed by half with the painted output if it is not {@code null}
+	 */
+	protected abstract void doPaintToken(AlignmentArea alignmentModel, Object token, String tokenRepresentation, 
+			Graphics2D g, Rectangle2D paintArea, Color selectionColor);
 	
+	
+	/**
+	 * Default implementation that delegates to 
+	 * {@link #doPaintToken(AlignmentModel, Object, String, Graphics2D, Rectangle2D)} and determines 
+	 * the string representation of the specified token from the token set of the specified alignment 
+	 * model.
+	 * 
+	 * @param alignmentArea the alignment area displaying {@code token}
+	 * @param token the token to be painted
+	 * @param g the graphics context to paint to
+	 * @param paintArea the rectangle to be filled with the representation of the token
+	 * @param selectionColor this color must be mixed by half with the painted output if it is not {@code null}
+	 */
+	@SuppressWarnings({"rawtypes", "unchecked"})
 	@Override
-	public D getPaintData(String tokenRepresentation) {
-		return dataMap.get(tokenRepresentation);
-	}
-
-	@Override
-	public D putPaintData(String tokenRepresentation, D data) {
-		return dataMap.put(tokenRepresentation, data);
+	public void paintToken(AlignmentArea alignmentArea, Object token, Graphics2D g, Rectangle2D paintArea, Color selectionColor) {
+		doPaintToken(alignmentArea, token, 
+				((AlignmentModel)alignmentArea.getAlignmentModel()).getTokenSet().representationByToken(token), 
+				g, paintArea, selectionColor);
 	}
 }

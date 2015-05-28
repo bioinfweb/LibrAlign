@@ -19,17 +19,31 @@
 package info.bioinfweb.libralign.alignmentarea.tokenpainter;
 
 
+import info.bioinfweb.libralign.alignmentarea.AlignmentArea;
 import info.bioinfweb.libralign.model.AlignmentModel;
 
+import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.geom.Rectangle2D;
 
 
 
-public interface TokenPainter<D> {
-	public D getPaintData(String tokenRepresentation);
-
-	public D putPaintData(String tokenRepresentation, D data);
-	
-	public void paintToken(AlignmentModel<?> alignmentModel, Object token, Graphics2D g, Rectangle2D area);
+/**
+ * Interface to be implemented by all classes responsible for painting tokens from an {@link AlignmentModel}
+ * in an {@link AlignmentArea}.
+ * 
+ * @author Ben St&ouml;ver
+ * @since 0.4.0
+ */
+public interface TokenPainter {
+	/**
+	 * Paints a representation of the specified token filling up the specified area.
+	 * 
+	 * @param alignmentArea the alignment area displaying {@code token}
+	 * @param token the token to be painted
+	 * @param g the graphics context to paint to
+	 * @param paintArea the rectangle to be filled with the representation of the token
+	 * @param selectionColor this color must be mixed by half with the painted output if it is not {@code null}
+	 */
+	public void paintToken(AlignmentArea alignmentArea, Object token, Graphics2D g, Rectangle2D paintArea, Color selectionColor);
 }
