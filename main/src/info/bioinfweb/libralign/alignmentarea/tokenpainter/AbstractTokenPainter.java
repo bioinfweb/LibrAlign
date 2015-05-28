@@ -40,7 +40,9 @@ public abstract class AbstractTokenPainter implements TokenPainter {
 	 * method specified in {@link TokenPainter} by an additional parameter providing the string representation of
 	 * the token.
 	 * 
-	 * @param alignmentArea the alignment area displaying {@code token}
+-	 * @param alignmentArea the alignment area displaying the token to be painted
+	 * @param sequenceID the ID of the sequence containing the token to be painted
+	 * @param columnIndex the index of the alignment column containing  the token to be painted
 	 * @param token the token to be painted
 	 * @param tokenRepresentation the string representation of {@code token} determined from the token set of 
 	 *        {@code alignmentModel} 
@@ -48,8 +50,8 @@ public abstract class AbstractTokenPainter implements TokenPainter {
 	 * @param paintArea the rectangle to be filled with the representation of the token
 	 * @param selectionColor this color must be mixed by half with the painted output if it is not {@code null}
 	 */
-	protected abstract void doPaintToken(AlignmentArea alignmentModel, Object token, String tokenRepresentation, 
-			Graphics2D g, Rectangle2D paintArea, Color selectionColor);
+	protected abstract void doPaintToken(AlignmentArea alignmentModel, int sequenceID,	int columnIndex, Object token, 
+			String tokenRepresentation,	Graphics2D g, Rectangle2D paintArea, Color selectionColor);
 	
 	
 	/**
@@ -58,17 +60,21 @@ public abstract class AbstractTokenPainter implements TokenPainter {
 	 * the string representation of the specified token from the token set of the specified alignment 
 	 * model.
 	 * 
-	 * @param alignmentArea the alignment area displaying {@code token}
-	 * @param token the token to be painted
+-	 * @param alignmentArea the alignment area displaying the token to be painted
+	 * @param sequenceID the ID of the sequence containing the token to be painted
+	 * @param columnIndex the index of the alignment column containing  the token to be painted
 	 * @param g the graphics context to paint to
 	 * @param paintArea the rectangle to be filled with the representation of the token
 	 * @param selectionColor this color must be mixed by half with the painted output if it is not {@code null}
 	 */
 	@SuppressWarnings({"rawtypes", "unchecked"})
 	@Override
-	public void paintToken(AlignmentArea alignmentArea, Object token, Graphics2D g, Rectangle2D paintArea, Color selectionColor) {
-		doPaintToken(alignmentArea, token, 
-				((AlignmentModel)alignmentArea.getAlignmentModel()).getTokenSet().representationByToken(token), 
+	public void paintToken(AlignmentArea alignmentArea, int sequenceID,	int columnIndex, Graphics2D g, 
+			Rectangle2D paintArea, Color selectionColor) {
+		
+		AlignmentModel alignmentModel = (AlignmentModel)alignmentArea.getAlignmentModel();
+		Object token = alignmentModel.getTokenAt(sequenceID, columnIndex);
+		doPaintToken(alignmentArea, sequenceID, columnIndex, token, alignmentModel.getTokenSet().representationByToken(token), 
 				g, paintArea, selectionColor);
 	}
 }

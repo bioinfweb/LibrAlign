@@ -38,12 +38,18 @@ import java.awt.geom.Rectangle2D;
 public interface TokenPainter {
 	/**
 	 * Paints a representation of the specified token filling up the specified area.
+	 * <p>
+	 * Tokens are identified by the alignment area they are contained, the sequence ID of their sequence and
+	 * their column index instead of a direct reference, to allow implementing classes to consider information
+	 * e.g. on neighboring tokens.
 	 * 
-	 * @param alignmentArea the alignment area displaying {@code token}
-	 * @param token the token to be painted
+-	 * @param alignmentArea the alignment area displaying the token to be painted
+	 * @param sequenceID the ID of the sequence containing the token to be painted
+	 * @param columnIndex the index of the alignment column containing  the token to be painted
 	 * @param g the graphics context to paint to
 	 * @param paintArea the rectangle to be filled with the representation of the token
 	 * @param selectionColor this color must be mixed by half with the painted output if it is not {@code null}
 	 */
-	public void paintToken(AlignmentArea alignmentArea, Object token, Graphics2D g, Rectangle2D paintArea, Color selectionColor);
+	public void paintToken(AlignmentArea alignmentArea, int sequenceID, int columnIndex, Graphics2D g, Rectangle2D paintArea, 
+			Color selectionColor);
 }

@@ -159,7 +159,7 @@ public class SingleColorTokenPainter extends AbstractTokenPainter implements Tok
 	
 
 	@Override
-	protected void doPaintToken(AlignmentArea alignmentArea, Object token,
+	protected void doPaintToken(AlignmentArea alignmentArea, int sequenceID,	int columnIndex, Object token,
 			String tokenRepresentation, Graphics2D g, Rectangle2D area, Color selectionColor) {
 
 		g.setColor(backgroundColorByRepresentation(tokenRepresentation, selectionColor));

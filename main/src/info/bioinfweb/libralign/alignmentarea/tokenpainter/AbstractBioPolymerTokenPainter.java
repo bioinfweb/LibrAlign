@@ -57,8 +57,8 @@ public abstract class AbstractBioPolymerTokenPainter extends SingleColorTokenPai
 	
 	
 	@Override
-	protected void doPaintToken(AlignmentArea alignmentArea, Object token, String tokenRepresentation, 
-			Graphics2D g, Rectangle2D paintArea, Color selectionColor) {
+	protected void doPaintToken(AlignmentArea alignmentArea, int sequenceID,	int columnIndex, Object token, 
+			String tokenRepresentation,	Graphics2D g, Rectangle2D paintArea, Color selectionColor) {
 		
 		if (isAmbiguity(tokenRepresentation.toUpperCase())) {
 		  // Fill the compound rectangle with differently colored zones, if ambiguity codes are used:
@@ -74,7 +74,7 @@ public abstract class AbstractBioPolymerTokenPainter extends SingleColorTokenPai
 			paintText(g, paintArea, tokenRepresentation, selectionColor);
 		}
 		else {
-			super.doPaintToken(alignmentArea, token, tokenRepresentation, g, paintArea, selectionColor);
+			super.doPaintToken(alignmentArea, sequenceID, columnIndex, token, tokenRepresentation, g, paintArea, selectionColor);
 		}
 	}
 }
