@@ -36,7 +36,6 @@ main/src/info/bioinfweb/libralign/alignmentarea/content/SequenceArea.java -text 
 main/src/info/bioinfweb/libralign/alignmentarea/content/SequenceAreaMap.java -text svneol=unset#text/plain
 main/src/info/bioinfweb/libralign/alignmentarea/content/SequenceColorSchema.java -text svneol=unset#text/plain
 main/src/info/bioinfweb/libralign/alignmentarea/content/SwingAlignmentContentArea.java -text svneol=unset#text/plain
-main/src/info/bioinfweb/libralign/alignmentarea/content/TokenPainter.java -text svneol=unset#text/plain
 main/src/info/bioinfweb/libralign/alignmentarea/content/ToolkitSpecificAlignmentContentArea.java -text svneol=unset#text/plain
 main/src/info/bioinfweb/libralign/alignmentarea/content/package-info.java -text svneol=unset#text/plain
 main/src/info/bioinfweb/libralign/alignmentarea/label/AlignmentLabelArea.java -text svneol=unset#text/plain
@@ -64,6 +63,10 @@ main/src/info/bioinfweb/libralign/alignmentarea/selection/SelectionModel.java -t
 main/src/info/bioinfweb/libralign/alignmentarea/selection/SelectionSynchronizer.java -text svneol=unset#text/plain
 main/src/info/bioinfweb/libralign/alignmentarea/selection/SelectionType.java -text svneol=unset#text/plain
 main/src/info/bioinfweb/libralign/alignmentarea/selection/package-info.java -text svneol=unset#text/plain
+main/src/info/bioinfweb/libralign/alignmentarea/tokenpainter/AbstractTokenPainter.java -text svneol=unset#text/plain
+main/src/info/bioinfweb/libralign/alignmentarea/tokenpainter/NucleotideTokenPainter.java -text svneol=unset#text/plain
+main/src/info/bioinfweb/libralign/alignmentarea/tokenpainter/TokenPainter.java -text svneol=unset#text/plain
+main/src/info/bioinfweb/libralign/alignmentarea/tokenpainter/package-info.java -text svneol=unset#text/plain
 main/src/info/bioinfweb/libralign/dataarea/DataArea.java -text svneol=unset#text/plain
 main/src/info/bioinfweb/libralign/dataarea/DataAreaChangeEvent.java -text svneol=unset#text/plain
 main/src/info/bioinfweb/libralign/dataarea/DataAreaChangeEventList.java -text svneol=unset#text/plain
