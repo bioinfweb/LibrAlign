@@ -38,37 +38,37 @@ public class AminoAcidTokenPainter extends AbstractBioPolymerTokenPainter {
 	}
 	
 	
-	private void putAminoAcidColor(String code1, String code3, Color color) {
+	private void putAminoAcidColor(String code1, Color color) {
 		getBackgroundColorMap().put(code1.toUpperCase(), color);
 		getBackgroundColorMap().put(code1.toLowerCase(), color);
-		getBackgroundColorMap().put(code3.toUpperCase(), color);
+		getBackgroundColorMap().put(SequenceUtils.threeLetterAminoAcidByOneLetter(code1.charAt(0)).toUpperCase(), color);
 	}
 	
 	
 	protected void putAminoAcidColors() {
-		putAminoAcidColor("A", "Ala", new Color(32, 255, 8));
-		putAminoAcidColor("C", "Cys", new Color(255, 162, 202));
-		putAminoAcidColor("D", "Asp", new Color(220, 134, 38));
-		putAminoAcidColor("E", "Glu", new Color(236, 164, 38));
-		putAminoAcidColor("F", "Phe", new Color(255, 0, 179));
-		putAminoAcidColor("G", "Gly", new Color(100, 137, 179));
-		putAminoAcidColor("H", "His", new Color(151, 60, 142));
-		putAminoAcidColor("I", "Ile", new Color(248, 255, 0));
-		putAminoAcidColor("K", "Lys", new Color(0, 196, 252));
-		putAminoAcidColor("L", "Leu", new Color(255, 253, 0));
-		putAminoAcidColor("M", "Met", new Color(248, 247, 0));
-		putAminoAcidColor("N", "Asn", new Color(197, 109, 105));
-		putAminoAcidColor("P", "Pro", new Color(148, 83, 95));
-		putAminoAcidColor("Q", "Gln", new Color(255, 190, 3));
-		putAminoAcidColor("R", "Arg", new Color(7, 182, 255));
-		putAminoAcidColor("S", "Ser", new Color(0, 255, 12));
-		putAminoAcidColor("T", "Thr", new Color(0, 255, 59));
-		putAminoAcidColor("V", "Val", new Color(254, 255, 0));
-		putAminoAcidColor("W", "Trp", new Color(255, 0, 29));
-		putAminoAcidColor("Y", "Tyr", new Color(235, 0, 173));
+		putAminoAcidColor("A", new Color(32, 255, 8));
+		putAminoAcidColor("C", new Color(255, 162, 202));
+		putAminoAcidColor("D", new Color(220, 134, 38));
+		putAminoAcidColor("E", new Color(236, 164, 38));
+		putAminoAcidColor("F", new Color(255, 0, 179));
+		putAminoAcidColor("G", new Color(100, 137, 179));
+		putAminoAcidColor("H", new Color(151, 60, 142));
+		putAminoAcidColor("I", new Color(248, 255, 0));
+		putAminoAcidColor("K", new Color(0, 196, 252));
+		putAminoAcidColor("L", new Color(255, 253, 0));
+		putAminoAcidColor("M", new Color(248, 247, 0));
+		putAminoAcidColor("N", new Color(197, 109, 105));
+		putAminoAcidColor("P", new Color(148, 83, 95));
+		putAminoAcidColor("Q", new Color(255, 190, 3));
+		putAminoAcidColor("R", new Color(7, 182, 255));
+		putAminoAcidColor("S", new Color(0, 255, 12));
+		putAminoAcidColor("T", new Color(0, 255, 59));
+		putAminoAcidColor("V", new Color(254, 255, 0));
+		putAminoAcidColor("W", new Color(255, 0, 29));
+		putAminoAcidColor("Y", new Color(235, 0, 173));
 		
-		putAminoAcidColor("O", "Pyl", new Color(0, 196, 252).brighter());
-		putAminoAcidColor("U", "Sec", new Color(255, 162, 202).brighter());
+		putAminoAcidColor("O", new Color(0, 196, 252).brighter());
+		putAminoAcidColor("U", new Color(255, 162, 202).brighter());
 	}
 
 
