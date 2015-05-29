@@ -117,23 +117,8 @@ public class SingleColorTokenPainter extends AbstractTokenPainter implements Tok
 			return currentFont;
 		}
 		else {
-			Font result = null;
-			int height = (int)Math.round(area.getHeight() * FONT_SIZE_FACTOR);
-			if (height < MIN_FONT_SIZE) {
-				return null;
-			}
-			else {
-				result = new Font(getFontName(), getFontStyle(), height);  // Font with maximum height.
-				double aspectRatio = FontCalculator.getInstance().getAspectRatio(result, text);
-				if (aspectRatio * area.getHeight() > area.getWidth()) {  // Maximum height cannot be used, because string would be to wide then.
-					height = (int)Math.round((area.getWidth() / aspectRatio) * FONT_SIZE_FACTOR);
-					if (height < MIN_FONT_SIZE) {
-						return null;
-					}
-					else {
-						result = new Font(getFontName(), getFontStyle(), height);
-					}
-				}
+			Font result = FontCalculator.fontToFitRectangle(area, FONT_SIZE_FACTOR, text, getFontName(), getFontStyle(), MIN_FONT_SIZE);
+			if (result != null) {
 				currentArea = area;
 				currentFont = result;
 			}
@@ -151,9 +136,7 @@ public class SingleColorTokenPainter extends AbstractTokenPainter implements Tok
 			}
 			g.setColor(fontColor);
 			g.setFont(font);
-			FontMetrics fm = g.getFontMetrics();
-	  	g.drawString(text, (int)(area.getX() + 0.5 * 
-	  			(area.getWidth() - fm.stringWidth(text))), (int)(area.getY() + fm.getAscent()));  // int needs to be used because the precision of float is not sufficient to paint long sequences
+			GraphicsUtils.drawStringInRectangle(g, area, text);
 		}
 	}
 	
