@@ -67,4 +67,14 @@ public interface TokenPainter {
 	 * @return the optimal height of a token
 	 */
 	public double getPreferredHeight();
+	
+	/**
+	 * Returns the color associated with the specified token. 
+	 * <p>
+	 * This is an optional method. Classes not implementing this feature should always return {@code null} here.
+	 * 
+	 * @param tokenRepresentation the string representation of the token
+	 * @return the color associated with the token or {@code null} of no associated color is known.
+	 */
+	public Color getColor(String tokenRepresentation); 
 }

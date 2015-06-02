@@ -77,4 +77,17 @@ public abstract class AbstractTokenPainter implements TokenPainter {
 		doPaintToken(alignmentArea, sequenceID, columnIndex, token, alignmentModel.getTokenSet().representationByToken(token), 
 				g, paintArea, selectionColor);
 	}
+
+
+	/**
+	 * Default implementation that returns {@code null}. Inherited classes providing colors should overwrite this method.
+	 * 
+	 * @param tokenRepresentation the string representation of the token
+	 * @return always {@code null} 
+	 * @see info.bioinfweb.libralign.alignmentarea.tokenpainter.TokenPainter#getColor(java.lang.String)
+	 */
+	@Override
+	public Color getColor(String tokenRepresentation) {
+		return null;
+	}
 }

@@ -103,11 +103,31 @@ public class SingleColorTokenPainter extends AbstractTokenPainter implements Tok
 	}
 	
 	
-	public Color backgroundColorByRepresentation(String tokenRepresentation, Color selectionColor) {
+	/**
+	 * Returns the background color associated with the specified token as stored in {@link #getBackgroundColorMap()}.
+	 * 
+	 * @param tokenRepresentation the string representation of the token
+	 * @return the associated background color or the same as {@link #getDefaultBackgroundColor()} if no such color is defined
+	 */
+	@Override
+	public Color getColor(String tokenRepresentation) {
 		Color result = getBackgroundColorMap().get(tokenRepresentation);
 		if (result == null) {
 			result = getDefaultBackgroundColor();
 		}
+		return result;
+	}
+
+
+	/**
+	 * Returns the same color as {@link #getColor(String)} but blends it with a selection color, if one is specified.
+	 * 
+	 * @param tokenRepresentation the string representation of the token
+	 * @param selectionColor the color of the selection in the associated alignment area (may be {@code null})
+	 * @return the color to fill the background of a token with
+	 */
+	public Color backgroundColorByRepresentation(String tokenRepresentation, Color selectionColor) {
+		Color result = getColor(tokenRepresentation);
 		if (selectionColor != null) {
 			result = GraphicsUtils.blend(result, selectionColor);
 		}
