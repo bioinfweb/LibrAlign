@@ -10,5 +10,6 @@
 	<classpathentry kind="lib" path="/LibrAlign/lib/sequencing-1.8.5.jar"/>
 	<classpathentry kind="lib" path="/LibrAlign/lib/commons-lang3-3.1.jar"/>
 	<classpathentry kind="lib" path="/LibrAlign/bin" sourcepath="/LibrAlign/src"/>
+	<classpathentry kind="lib" path="/JPhyloIO/bin" sourcepath="/JPhyloIO/src"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
