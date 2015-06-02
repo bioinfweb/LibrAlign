@@ -37,7 +37,8 @@ import java.awt.geom.Rectangle2D;
  */
 public interface TokenPainter {
 	/**
-	 * Paints a representation of the specified token filling up the specified area.
+	 * Paints a representation of the specified token filling up the specified area. The dimensions (including aspect ratio) 
+	 * of {@code area} may be different from the preferred width and height specified by this instance, if necessary.
 	 * <p>
 	 * Tokens are identified by the alignment area they are contained, the sequence ID of their sequence and
 	 * their column index instead of a direct reference, to allow implementing classes to consider information
@@ -53,7 +54,17 @@ public interface TokenPainter {
 	public void paintToken(AlignmentArea alignmentArea, int sequenceID, int columnIndex, Graphics2D g, Rectangle2D paintArea, 
 			Color selectionColor);
 	
+	/**
+	 * Returns the optimal width this painter would need to paint a supported token in original size (100 % zoom).
+	 * 
+	 * @return the optimal width of a token
+	 */
 	public double getPreferredWidth();
 	
+	/**
+	 * Returns the optimal height this painter would need to paint a supported token in original size (100 % zoom).
+	 * 
+	 * @return the optimal height of a token
+	 */
 	public double getPreferredHeight();
 }

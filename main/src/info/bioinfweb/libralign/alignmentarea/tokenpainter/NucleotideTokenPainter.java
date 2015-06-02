@@ -20,11 +20,8 @@ package info.bioinfweb.libralign.alignmentarea.tokenpainter;
 
 
 import info.bioinfweb.commons.bio.SequenceUtils;
-import info.bioinfweb.libralign.alignmentarea.AlignmentArea;
 
 import java.awt.Color;
-import java.awt.Graphics2D;
-import java.awt.geom.Rectangle2D;
 
 
 
