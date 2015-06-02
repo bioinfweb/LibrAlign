@@ -19,6 +19,7 @@
 package info.bioinfweb.libralign.test.editalignment;
 
 
+import info.bioinfweb.jphyloio.events.TokenSetType;
 import info.bioinfweb.libralign.alignmentarea.AlignmentArea;
 import info.bioinfweb.libralign.alignmentarea.content.AlignmentContentArea;
 import info.bioinfweb.libralign.dataarea.implementations.SequenceIndexArea;
@@ -48,7 +49,8 @@ public class EditableAlignmentTest {
 			alignmentArea = new AlignmentArea();
 			AlignmentContentArea contentArea = alignmentArea.getContentArea();
 			
-			TokenSet<NucleotideCompound> tokenSet = new BioJavaTokenSet<NucleotideCompound>(new DNACompoundSet(), true);
+			TokenSet<NucleotideCompound> tokenSet = new BioJavaTokenSet<NucleotideCompound>(
+					TokenSetType.NUCLEOTIDE, new DNACompoundSet(), true);
 			AlignmentModel<NucleotideCompound> provider = new PackedAlignmentModel<NucleotideCompound>(tokenSet);
 			
 			// Add index area:
