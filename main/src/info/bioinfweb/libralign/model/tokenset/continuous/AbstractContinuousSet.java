@@ -19,6 +19,7 @@
 package info.bioinfweb.libralign.model.tokenset.continuous;
 
 
+import info.bioinfweb.jphyloio.events.TokenSetType;
 import info.bioinfweb.libralign.model.tokenset.TokenSet;
 
 import java.util.Collection;
@@ -204,8 +205,8 @@ public abstract class AbstractContinuousSet<T> implements TokenSet<T> {
 
 	
 	@Override
-	public boolean isContinuous() {
-		return true;
+	public TokenSetType getType() {
+		return TokenSetType.CONTINUOUS;
 	}
 
 

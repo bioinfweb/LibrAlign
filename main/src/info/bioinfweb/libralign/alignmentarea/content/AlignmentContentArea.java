@@ -29,7 +29,6 @@ import org.eclipse.swt.widgets.Composite;
 
 import info.bioinfweb.commons.tic.TICComponent;
 import info.bioinfweb.commons.tic.TICPaintEvent;
-import info.bioinfweb.libralign.AlignmentDataViewMode;
 import info.bioinfweb.libralign.alignmentarea.AlignmentArea;
 import info.bioinfweb.libralign.alignmentarea.ToolkitSpecificAlignmentArea;
 import info.bioinfweb.libralign.alignmentarea.label.AlignmentLabelArea;
@@ -39,7 +38,6 @@ import info.bioinfweb.libralign.alignmentarea.selection.SelectionModel;
 import info.bioinfweb.libralign.dataarea.DataArea;
 import info.bioinfweb.libralign.dataarea.DataAreaListType;
 import info.bioinfweb.libralign.dataarea.DataAreaLocation;
-import info.bioinfweb.libralign.editsettings.EditSettings;
 import info.bioinfweb.libralign.multiplealignments.MultipleAlignmentsContainer;
 
 

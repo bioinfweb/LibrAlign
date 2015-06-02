@@ -19,6 +19,7 @@
 package info.bioinfweb.libralign.model.factory.biojava;
 
 
+import info.bioinfweb.jphyloio.events.TokenSetType;
 import info.bioinfweb.libralign.model.AlignmentModel;
 import info.bioinfweb.libralign.model.exception.InvalidTokenException;
 import info.bioinfweb.libralign.model.factory.AlignmentModelFactory;
@@ -34,7 +35,8 @@ import org.biojava3.core.sequence.compound.AminoAcidCompoundSet;
 public class BioJavaAminoAcidAligmentModelFactory implements AlignmentModelFactory<AminoAcidCompound> {
 	@Override
 	public AlignmentModel<AminoAcidCompound> createNewModel(NewAlignmentModelParameterMap parameterMap) {
-		return new PackedAlignmentModel<AminoAcidCompound>(new BioJavaTokenSet<AminoAcidCompound>(new AminoAcidCompoundSet(), true));
+		return new PackedAlignmentModel<AminoAcidCompound>(new BioJavaTokenSet<AminoAcidCompound>(
+				TokenSetType.AMINO_ACID, new AminoAcidCompoundSet(), true));  //TODO Throw exception for other token types in parameterMap?
 		// BioJava does not support adding new amino acid definitions to single compound sets. Therefore token definitions in the 
 		// file and possible token counts are ignored.
 	}

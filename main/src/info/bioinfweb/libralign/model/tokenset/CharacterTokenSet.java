@@ -19,6 +19,9 @@
 package info.bioinfweb.libralign.model.tokenset;
 
 
+import info.bioinfweb.jphyloio.events.TokenSetType;
+
+
 
 /**
  * A token set consisting of characters.
@@ -29,9 +32,11 @@ package info.bioinfweb.libralign.model.tokenset;
 public class CharacterTokenSet extends AbstractTokenSet<Character> {
 	/**
 	 * Creates a new empty instance of this class.
+	 * 
+	 * @param type the token type of the new instance (Only a discrete type would make sense for this class.)
 	 */
-	public CharacterTokenSet() {
-		super();
+	public CharacterTokenSet(TokenSetType type) {
+		super(type);
 	}
 
 
@@ -39,10 +44,11 @@ public class CharacterTokenSet extends AbstractTokenSet<Character> {
 	 * Creates a new instance of this class where the initial tokens are determined
 	 * by the characters in the specified character sequence.
 	 * 
+	 * @param type the token type of the new instance (Only a disdrete type would make sense for this class.)
 	 * @param tokens - a sequence containing the tokens to be contained in this set 
 	 */
-	public CharacterTokenSet(CharSequence tokens) {
-		super();
+	public CharacterTokenSet(TokenSetType type, CharSequence tokens) {
+		super(type);
 		for (int i = 0; i < tokens.length(); i++) {
 			add(tokens.charAt(i));
 		}
@@ -55,7 +61,7 @@ public class CharacterTokenSet extends AbstractTokenSet<Character> {
 	 * @param tokenSet - the instance to be cloned
 	 */
 	public CharacterTokenSet(CharacterTokenSet tokenSet) {
-		super();
+		super(tokenSet.getType());
 		addAll(tokenSet);
 		getKeyMap().putAll(tokenSet.getKeyMap());
 	}

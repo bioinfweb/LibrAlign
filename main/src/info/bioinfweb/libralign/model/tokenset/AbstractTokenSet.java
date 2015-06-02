@@ -19,6 +19,8 @@
 package info.bioinfweb.libralign.model.tokenset;
 
 
+import info.bioinfweb.jphyloio.events.TokenSetType;
+
 import java.util.HashSet;
 import java.util.Map;
 import java.util.TreeMap;
@@ -39,26 +41,35 @@ import java.util.TreeMap;
  * @param <T> - the type of token to be stored in this set
  */
 public abstract class AbstractTokenSet<T> extends HashSet<T> implements TokenSet<T> {
+	private TokenSetType type;
 	private Map<Character, T> keyMap = new TreeMap<Character, T>();
 	
 	
 	/**
 	 * Creates a new empty instance of this class.
 	 */
-	public AbstractTokenSet() {
+	public AbstractTokenSet(TokenSetType type) {
 		super();
+		this.type = type;
 	}
 
 
 	/**
 	 * Copy constructor that copies all elements the contents of the key map from source to the new instance.
 	 * 
+	 * @param type the token type of the new instance (Only a discrete type would make sense for this class.)
 	 * @param source the source instance to be cloned
 	 */
-	public AbstractTokenSet(AbstractTokenSet<T> source) {
-		super();
+	public AbstractTokenSet(TokenSetType type, AbstractTokenSet<T> source) {
+		this(type);
 		addAll(source);
 		getKeyMap().putAll(source.getKeyMap());
+	}
+
+
+	@Override
+	public TokenSetType getType() {
+		return type;
 	}
 
 
@@ -88,11 +99,5 @@ public abstract class AbstractTokenSet<T> extends HashSet<T> implements TokenSet
 	
 	protected void addSpaceKeyForGaps() {
 		getKeyMap().put(' ', tokenByKeyChar('-'));
-	}
-
-
-	@Override
-	public boolean isContinuous() {
-		return false;
 	}
 }

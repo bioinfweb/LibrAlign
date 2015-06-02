@@ -38,6 +38,9 @@ import info.bioinfweb.libralign.alignmentarea.content.SequenceColorSchema;
 import info.bioinfweb.libralign.alignmentarea.label.AlignmentLabelArea;
 import info.bioinfweb.libralign.alignmentarea.order.SequenceOrder;
 import info.bioinfweb.libralign.alignmentarea.selection.SelectionModel;
+import info.bioinfweb.libralign.alignmentarea.tokenpainter.SingleColorTokenPainter;
+import info.bioinfweb.libralign.alignmentarea.tokenpainter.TokenPainter;
+import info.bioinfweb.libralign.alignmentarea.tokenpainter.TokenPainterList;
 import info.bioinfweb.libralign.dataarea.DataAreaChangeEvent;
 import info.bioinfweb.libralign.dataarea.DataAreaModel;
 import info.bioinfweb.libralign.dataarea.DataAreaModelListener;
@@ -45,7 +48,6 @@ import info.bioinfweb.libralign.editsettings.EditSettings;
 import info.bioinfweb.libralign.model.AlignmentModelChangeListener;
 import info.bioinfweb.libralign.model.AlignmentModel;
 import info.bioinfweb.libralign.model.events.SequenceChangeEvent;
-import info.bioinfweb.libralign.model.events.AlignmentModelChangeEvent;
 import info.bioinfweb.libralign.model.events.SequenceRenamedEvent;
 import info.bioinfweb.libralign.model.events.TokenChangeEvent;
 import info.bioinfweb.libralign.multiplealignments.MultipleAlignmentsContainer;
@@ -81,9 +83,11 @@ public class AlignmentArea extends TICComponent implements AlignmentModelChangeL
 	private int compoundHeight = COMPOUND_HEIGHT;	
 	private Font compoundFont = new Font(Font.SANS_SERIF, Font.PLAIN, Math.round(COMPOUND_HEIGHT * 0.7f));
 	private DataAreaModel dataAreas = new DataAreaModel(this);
-	private SequenceColorSchema colorSchema = new SequenceColorSchema();
+	private SequenceColorSchema colorSchema = new SequenceColorSchema();  //TODO Remove
+	private TokenPainterList tokenPainterList = new TokenPainterList(this);
+	private TokenPainter defaultTokenPainter = new SingleColorTokenPainter();  // Currently all elements would be painted in the default color.
 	private EditSettings editSettings;
-	private AlignmentDataViewMode viewMode = AlignmentDataViewMode.NUCLEOTIDE;  //TODO Initial value should be adjusted when the data type of the specified provider is known.
+	private AlignmentDataViewMode viewMode = AlignmentDataViewMode.NUCLEOTIDE;  //TODO Remove
 	private SelectionModel selection = new SelectionModel(this);
 
 	private MultipleAlignmentsContainer container = null;
@@ -187,6 +191,7 @@ public class AlignmentArea extends TICComponent implements AlignmentModelChangeL
 				}
 			}
 		}
+		getTokenPainterList().afterAlignmentModelChanged();
 		
 		return result;
 	}
@@ -281,16 +286,44 @@ public class AlignmentArea extends TICComponent implements AlignmentModelChangeL
 	
 	
 	/**
-	 * Returns the data area model used by this object containing all data areas attached 
-	 * to this alignment. 
+	 * Returns the data area model used by this instance containing all data areas attached 
+	 * to the displayed alignment.
+	 * 
+	 * @return the model object managing all attached data areas 
 	 */
 	public DataAreaModel getDataAreas() {
 		return dataAreas;
 	}
 
 
-	public SequenceColorSchema getColorSchema() {
+	public SequenceColorSchema getColorSchema() {  //TODO Remove
 		return colorSchema;
+	}
+
+
+	/**
+	 * Returns the list of token painters to be used for the output of the data from the alignment model.
+	 * If an concatenated alignment model is used, this list holds one painter for each part (column range),
+	 * otherwise it will only contain one.
+	 * <p>
+	 * The size and the order of the list are updated automatically depending on alignment model changes (events). 
+	 * 
+	 * @return the token painter list
+	 */
+	public TokenPainterList getTokenPainterList() {
+		return tokenPainterList;
+	}
+
+
+	/**
+	 * Returns the default token painter that is used to paint tokens from the alignment model if no according
+	 * painter in defined in {@link #getTokenPainterList()} or the painter specified there is not able to paint
+	 * the according token.
+	 * 
+	 * @return the default token painter instance used by this alignment area
+	 */
+	public TokenPainter getDefaultTokenPainter() {
+		return defaultTokenPainter;
 	}
 
 
@@ -299,12 +332,12 @@ public class AlignmentArea extends TICComponent implements AlignmentModelChangeL
 	}
 
 
-	public AlignmentDataViewMode getViewMode() {
+	public AlignmentDataViewMode getViewMode() {  //TODO remove
 		return viewMode;
 	}
 	
 	
-	public void setViewMode(AlignmentDataViewMode viewMode) {
+	public void setViewMode(AlignmentDataViewMode viewMode) {  //TODO remove
 		this.viewMode = viewMode;
 		//TODO repaint
 	}

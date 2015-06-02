@@ -19,6 +19,7 @@
 package info.bioinfweb.libralign.model.tokenset;
 
 
+import info.bioinfweb.jphyloio.events.TokenSetType;
 import info.bioinfweb.libralign.alignmentarea.AlignmentArea;
 import info.bioinfweb.libralign.model.AlignmentModel;
 import info.bioinfweb.libralign.model.adapters.CharSequenceAdapter;
@@ -106,13 +107,11 @@ public interface TokenSet<T> extends Set<T>, Cloneable {
 	public String descriptionByToken(T token);
 	
 	/**
-	 * Determines whether this set describes a continuous set of values. Continuous sets do not return an 
-	 * {@link #iterator()} and return {@link Integer#MAX_VALUE} for {@link #size()}.
+	 * Determines the type of tokens that are defined by this instance.
 	 * 
-	 * @return {@code true} if this set represents continuous (e.g. floating point) values or {@code false}
-	 *         if it represents a set of discrete values. 
+	 * @return the token set type
 	 */
-	public boolean isContinuous();
+	public TokenSetType getType();
 	
 	/**
 	 * Returns a deep copy of this instance. Implementing this method is important when creating custom

@@ -19,6 +19,9 @@
 package info.bioinfweb.libralign.model.tokenset;
 
 
+import info.bioinfweb.jphyloio.events.TokenSetType;
+
+
 
 /**
  * Basic implementation of a discrete token set. It can contain any set of objects and returns their string
@@ -32,6 +35,16 @@ package info.bioinfweb.libralign.model.tokenset;
  * @param <T> the type of token in this token set
  */
 public class DefaultTokenSet<T> extends AbstractTokenSet<T> {
+	/**
+	 * Returns a new instance of this class.
+	 * 
+	 * @param type the token type of the new instance
+	 */
+	public DefaultTokenSet(TokenSetType type) {
+		super(type);
+	}
+
+
 	@Override
 	public String representationByToken(T token) {
 		return token.toString();
@@ -76,7 +89,7 @@ public class DefaultTokenSet<T> extends AbstractTokenSet<T> {
 	
 	@Override
 	public DefaultTokenSet<T> clone() {
-		DefaultTokenSet<T> result = new DefaultTokenSet<T>();
+		DefaultTokenSet<T> result = new DefaultTokenSet<T>(getType());
 		result.addAll(this);
 		result.getKeyMap().putAll(getKeyMap());
 		return result;

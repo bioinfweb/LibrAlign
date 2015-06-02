@@ -21,6 +21,7 @@ package info.bioinfweb.libralign.model.tokenset;
 
 import info.bioinfweb.commons.bio.biojava3.core.sequence.compound.AlignmentAmbiguityNucleotideCompoundSet;
 import info.bioinfweb.commons.collections.CollectionUtils;
+import info.bioinfweb.jphyloio.events.TokenSetType;
 
 import java.util.AbstractSet;
 import java.util.ConcurrentModificationException;
@@ -43,6 +44,7 @@ import org.biojava3.core.sequence.template.CompoundSet;
 public class BioJavaTokenSet<C extends Compound> extends AbstractSet<C> implements TokenSet<C> {
 	private CompoundSet<C> compoundSet;
 	private boolean spaceForGap;
+	private TokenSetType type;
 	
 	
 	/**
@@ -52,6 +54,7 @@ public class BioJavaTokenSet<C extends Compound> extends AbstractSet<C> implemen
 	 */
 	public BioJavaTokenSet(BioJavaTokenSet<C> tokenSet) {
 		super();
+		this.type = tokenSet.type;
 		this.compoundSet = tokenSet.compoundSet;
 		this.spaceForGap = tokenSet.spaceForGap;
 	}
@@ -65,10 +68,13 @@ public class BioJavaTokenSet<C extends Compound> extends AbstractSet<C> implemen
 	 * {@link Compound#getShortName()} from every compound. Clear the contents {@link #getKeyMap()} 
 	 * afterwards, if you do not want this mapping.
 	 * 
+	 * @param type the token type of the new instance (Only a discrete type would make sense for this class.)
 	 * @param compoundSet - the BioJava compound set containing the compounds to be copied into the new instance
+	 * @param spaceForGap determines whether the space key shall be associated with gap symbol 
 	 */
-	public BioJavaTokenSet(CompoundSet<C> compoundSet, boolean spaceForGap) {
+	public BioJavaTokenSet(TokenSetType type, CompoundSet<C> compoundSet, boolean spaceForGap) {
 		super();
+		this.type = type;
 		this.compoundSet = compoundSet;
 		this.spaceForGap = spaceForGap;
 	}
@@ -97,12 +103,6 @@ public class BioJavaTokenSet<C extends Compound> extends AbstractSet<C> implemen
 			return tokenByKeyChar(AlignmentAmbiguityNucleotideCompoundSet.GAP_CHARACTER);
 		}
 		return null;
-	}
-
-
-	@Override
-	public boolean isContinuous() {
-		return false;
 	}
 
 
@@ -154,6 +154,12 @@ public class BioJavaTokenSet<C extends Compound> extends AbstractSet<C> implemen
 	@Override
 	public String descriptionByToken(C token) {
 		return token.getDescription();
+	}
+
+
+	@Override
+	public TokenSetType getType() {
+		return type;
 	}
 
 

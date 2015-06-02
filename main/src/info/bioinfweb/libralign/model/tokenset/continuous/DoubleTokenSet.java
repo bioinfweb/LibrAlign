@@ -29,6 +29,9 @@ package info.bioinfweb.libralign.model.tokenset.continuous;
  * @since 0.4.0
  */
 public class DoubleTokenSet extends AbstractContinuousSet<Double> {
+	public static final int DOUBLE_MAX_REPRESENTATION_LENGTH = "-1.7976931348623157E308".length();
+	
+	
 	@Override
 	public Double tokenByKeyChar(char key) {
 		return tokenByRepresentation(Character.toString(key));
@@ -47,13 +50,14 @@ public class DoubleTokenSet extends AbstractContinuousSet<Double> {
 
 	
 	/**
-	 * The lengths of {@code double} values depend on the notation. 
+	 * This method returns the length of 17 significant digits in exponential notation which is the notation this token
+	 * set uses to generate string representations.  
 	 * 
-	 * @return always {@link Integer#MAX_VALUE}
+	 * @return the length of {@code -1.7976931348623157E308}
 	 */
 	@Override
 	public int maxRepresentationLength() {
-		return Integer.MAX_VALUE;
+		return DOUBLE_MAX_REPRESENTATION_LENGTH;
 	}
 
 

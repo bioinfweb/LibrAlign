@@ -24,6 +24,7 @@ import org.biojava3.core.sequence.template.CompoundSet;
 
 import info.bioinfweb.commons.bio.biojava3.core.sequence.compound.AlignmentAmbiguityNucleotideCompoundSet;
 import info.bioinfweb.jphyloio.events.SingleTokenDefinitionEvent;
+import info.bioinfweb.jphyloio.events.TokenSetType;
 import info.bioinfweb.libralign.model.AlignmentModel;
 import info.bioinfweb.libralign.model.factory.AlignmentModelFactory;
 import info.bioinfweb.libralign.model.factory.NewAlignmentModelParameterMap;
@@ -46,13 +47,23 @@ public class BioJavaNucleotideAlignmentModelFactory implements AlignmentModelFac
 	
 	@Override
 	public AlignmentModel<NucleotideCompound> createNewModel(NewAlignmentModelParameterMap parameterMap) {
+		TokenSetType type = parameterMap.getCharacterStateSetType();
+		if (!type.isNucleotide()) {
+			if (type.equals(TokenSetType.UNKNOWN)) {
+				type = TokenSetType.NUCLEOTIDE;
+			}
+			else {
+				throw new IllegalArgumentException("An instance of " + getClass().getCanonicalName() + 
+						" cannot be created with the token type " + type + ".");
+			}
+		}
 		ModifiableNucleotideCompoundSet nucleotideCompoundSet = new ModifiableNucleotideCompoundSet();
 		for (SingleTokenDefinitionEvent tokenDefinition : parameterMap.getDefinedTokens()) {
 			if (nucleotideCompoundSet.getCompoundForString(tokenDefinition.getTokenName()) == null) {
 				nucleotideCompoundSet.addNucleotideCompound(tokenDefinition.getTokenName(), tokenDefinition.getTokenName());
 			}
 		}
-		BioJavaTokenSet<NucleotideCompound> nucleotideTokenSet = new BioJavaTokenSet<NucleotideCompound>(nucleotideCompoundSet, true);  //TODO Use BioJava 4 tokens here/ Should this class really be bound to BioJava?
+		BioJavaTokenSet<NucleotideCompound> nucleotideTokenSet = new BioJavaTokenSet<NucleotideCompound>(type, nucleotideCompoundSet, true);  //TODO Use BioJava 4 tokens here/ Should this class really be bound to BioJava?
 		
 		// Create model:
 		return new PackedAlignmentModel<NucleotideCompound>(nucleotideTokenSet,

@@ -29,6 +29,9 @@ package info.bioinfweb.libralign.model.tokenset.continuous;
  * @since 0.4.0
  */
 public class FloatTokenSet extends AbstractContinuousSet<Float> {
+	public static final int FLOAT_MAX_REPRESENTATION_LENGTH = "-3.4028235E38".length();
+	
+	
 	@Override
 	public Float tokenByKeyChar(char key) {
 		return tokenByRepresentation(Character.toString(key));
@@ -47,13 +50,14 @@ public class FloatTokenSet extends AbstractContinuousSet<Float> {
 
 	
 	/**
-	 * The lengths of {@code float} values depend on the notation. 
+	 * This method returns the length of 8 significant digits in exponential notation which is the notation this token
+	 * set uses to generate string representations.  
 	 * 
-	 * @return always {@link Integer#MAX_VALUE}
+	 * @return the length of {@code -3.4028235E38}
 	 */
 	@Override
 	public int maxRepresentationLength() {
-		return Integer.MAX_VALUE;
+		return FLOAT_MAX_REPRESENTATION_LENGTH;
 	}
 
 

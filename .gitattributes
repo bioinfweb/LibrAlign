@@ -69,6 +69,7 @@ main/src/info/bioinfweb/libralign/alignmentarea/tokenpainter/AminoAcidTokenPaint
 main/src/info/bioinfweb/libralign/alignmentarea/tokenpainter/NucleotideTokenPainter.java -text svneol=unset#text/plain
 main/src/info/bioinfweb/libralign/alignmentarea/tokenpainter/SingleColorTokenPainter.java -text svneol=unset#text/plain
 main/src/info/bioinfweb/libralign/alignmentarea/tokenpainter/TokenPainter.java -text svneol=unset#text/plain
+main/src/info/bioinfweb/libralign/alignmentarea/tokenpainter/TokenPainterList.java -text svneol=unset#text/plain
 main/src/info/bioinfweb/libralign/alignmentarea/tokenpainter/package-info.java -text svneol=unset#text/plain
 main/src/info/bioinfweb/libralign/dataarea/DataArea.java -text svneol=unset#text/plain
 main/src/info/bioinfweb/libralign/dataarea/DataAreaChangeEvent.java -text svneol=unset#text/plain

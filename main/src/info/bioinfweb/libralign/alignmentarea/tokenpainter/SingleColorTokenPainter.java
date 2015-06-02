@@ -21,11 +21,12 @@ package info.bioinfweb.libralign.alignmentarea.tokenpainter;
 
 import info.bioinfweb.commons.graphics.FontCalculator;
 import info.bioinfweb.commons.graphics.GraphicsUtils;
+import info.bioinfweb.commons.text.StringUtils;
 import info.bioinfweb.libralign.alignmentarea.AlignmentArea;
+import info.bioinfweb.libralign.model.tokenset.TokenSet;
 
 import java.awt.Color;
 import java.awt.Font;
-import java.awt.FontMetrics;
 import java.awt.Graphics2D;
 import java.awt.geom.Rectangle2D;
 import java.util.Map;
@@ -41,6 +42,8 @@ import java.util.TreeMap;
  * @since 0.4.0
  */
 public class SingleColorTokenPainter extends AbstractTokenPainter implements TokenPainter {
+	public static final double DEFAULT_WIDTH = 10;  // For one character.
+	public static final double DEFAULT_HEIGHT = 14;
 	public static final float FONT_SIZE_FACTOR = 0.7f;
 	public static final int MIN_FONT_SIZE = 4;
 	
@@ -52,7 +55,7 @@ public class SingleColorTokenPainter extends AbstractTokenPainter implements Tok
 	private int fontStyle = Font.PLAIN;
 	private Font currentFont = new Font(Font.SANS_SERIF, Font.PLAIN, 0);  // Initial value that would only be used if the first area is equal to the initial value of currentArea. (In that case no text would be painted.) 
 	private Rectangle2D currentArea = new Rectangle2D.Double(0, 0, 0, 0);
-	
+	private double preferredWidth = DEFAULT_WIDTH;
 
 	
 	public Color getDefaultBackgroundColor() {
@@ -117,7 +120,8 @@ public class SingleColorTokenPainter extends AbstractTokenPainter implements Tok
 			return currentFont;
 		}
 		else {
-			Font result = FontCalculator.fontToFitRectangle(area, FONT_SIZE_FACTOR, text, getFontName(), getFontStyle(), MIN_FONT_SIZE);
+			Font result = FontCalculator.getInstance().fontToFitRectangle(area, FONT_SIZE_FACTOR, text, 
+					getFontName(), getFontStyle(), MIN_FONT_SIZE);
 			if (result != null) {
 				currentArea = area;
 				currentFont = result;
@@ -148,5 +152,94 @@ public class SingleColorTokenPainter extends AbstractTokenPainter implements Tok
 		g.setColor(backgroundColorByRepresentation(tokenRepresentation, selectionColor));
 		g.fill(area);
 		paintText(g, area, tokenRepresentation, selectionColor);
+	}
+	
+	
+	public void calculatePreferredWidth(TokenSet<?> tokenSet) {
+		preferredWidth = FontCalculator.getInstance().getWidthToHeigth(getFontName(), getFontStyle(), 
+				StringUtils.repeat("m", tokenSet.maxRepresentationLength()), (float)(getPreferredHeight() * FONT_SIZE_FACTOR));
+	}
+	
+	
+	@Override
+	public double getPreferredWidth() {
+		return preferredWidth;
+	}
+
+
+	@Override
+	public double getPreferredHeight() {
+		return DEFAULT_HEIGHT;
+	}
+
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result
+				+ ((backgroundColorMap == null) ? 0 : backgroundColorMap.hashCode());
+		result = prime * result
+				+ ((currentArea == null) ? 0 : currentArea.hashCode());
+		result = prime * result
+				+ ((currentFont == null) ? 0 : currentFont.hashCode());
+		result = prime
+				* result
+				+ ((defaultBackgroundColor == null) ? 0 : defaultBackgroundColor
+						.hashCode());
+		result = prime * result + ((fontColor == null) ? 0 : fontColor.hashCode());
+		result = prime * result + ((fontName == null) ? 0 : fontName.hashCode());
+		result = prime * result + fontStyle;
+		long temp;
+		temp = Double.doubleToLongBits(preferredWidth);
+		result = prime * result + (int) (temp ^ (temp >>> 32));
+		return result;
+	}
+
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		SingleColorTokenPainter other = (SingleColorTokenPainter) obj;
+		if (backgroundColorMap == null) {
+			if (other.backgroundColorMap != null)
+				return false;
+		} else if (!backgroundColorMap.equals(other.backgroundColorMap))
+			return false;
+		if (currentArea == null) {
+			if (other.currentArea != null)
+				return false;
+		} else if (!currentArea.equals(other.currentArea))
+			return false;
+		if (currentFont == null) {
+			if (other.currentFont != null)
+				return false;
+		} else if (!currentFont.equals(other.currentFont))
+			return false;
+		if (defaultBackgroundColor == null) {
+			if (other.defaultBackgroundColor != null)
+				return false;
+		} else if (!defaultBackgroundColor.equals(other.defaultBackgroundColor))
+			return false;
+		if (fontColor == null) {
+			if (other.fontColor != null)
+				return false;
+		} else if (!fontColor.equals(other.fontColor))
+			return false;
+		if (fontName == null) {
+			if (other.fontName != null)
+				return false;
+		} else if (!fontName.equals(other.fontName))
+			return false;
+		if (fontStyle != other.fontStyle)
+			return false;
+		if (Double.doubleToLongBits(preferredWidth) != Double.doubleToLongBits(other.preferredWidth))
+			return false;
+		return true;
 	}
 }

@@ -52,4 +52,8 @@ public interface TokenPainter {
 	 */
 	public void paintToken(AlignmentArea alignmentArea, int sequenceID, int columnIndex, Graphics2D g, Rectangle2D paintArea, 
 			Color selectionColor);
+	
+	public double getPreferredWidth();
+	
+	public double getPreferredHeight();
 }

@@ -49,11 +49,15 @@ public class NewAlignmentModelParameterMap extends ParameterMap {
 	/**
 	 * Returns the character set type the alignment model to be created shall have.
 	 * 
-	 * @return the character set type of {@code null} if no value is stored for the key 
-	 *         {@link #KEY_CHARACTER_SET_TYPE} in this instance
+	 * @return the character set type ({@link TokenSetType#UNKNOWN} is also returned if no value is stored for the key 
+	 *         {@link #KEY_CHARACTER_SET_TYPE} in this instance.)
 	 */
 	public TokenSetType getCharacterStateSetType() {
-		return (TokenSetType)get(KEY_CHARACTER_STATE_SET_TYPE);  // Null is also returned correctly by this code.
+		TokenSetType result = (TokenSetType)get(KEY_CHARACTER_STATE_SET_TYPE);  // Null is also cast correctly by this code.
+		if (result == null) {
+			result = TokenSetType.UNKNOWN;
+		}
+		return result;
 	}
 	
 	

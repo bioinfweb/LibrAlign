@@ -57,8 +57,8 @@ public class ConsensusSequenceArea extends CustomHeightFullWidthArea {
 	
 	private TreeMap<String, AmbiguityBaseScore> mapByBase;
 	private Map<Integer, AmbiguityBaseScore> scores;
-	private AlignmentModel<?> sequenceDataProvider;
-	private boolean useSequenceDataProviderFromOwner;
+	private AlignmentModel<?> alignmentModel;
+	private boolean useAlignmentModelFromOwner;
 	
 	
 	/**
@@ -79,30 +79,30 @@ public class ConsensusSequenceArea extends CustomHeightFullWidthArea {
 	 * Note that this instance will not react to calls of 
 	 * {@link #afterProviderChanged(AlignmentModel, AlignmentModel)} when this constructor
 	 * is used. Such changes would than have to be done manually by the application code using 
-	 * {@link #setSequenceDataProvider(AlignmentModel)}.
+	 * {@link #setAlignmentModel(AlignmentModel)}.
 	 * 
 	 * @param owner - the alignment area that will be containing the returned data area instance
-	 * @param sequenceDataProvider - the model to calculate the consensus sequence from (Does not have
+	 * @param alignmentModel - the model to calculate the consensus sequence from (Does not have
 	 *        to be the same as the one used by {@code owner}.)
 	 * @throws IllegalArgumentException if {@code sequenceDataProvider} is {@code null}
 	 */
-	public ConsensusSequenceArea(AlignmentContentArea owner, AlignmentModel<?> sequenceDataProvider) {
-		this(owner, sequenceDataProvider, false);
+	public ConsensusSequenceArea(AlignmentContentArea owner, AlignmentModel<?> alignmentModel) {
+		this(owner, alignmentModel, false);
 	}
 	
 	
-	private ConsensusSequenceArea(AlignmentContentArea owner, AlignmentModel<?> sequenceDataProvider, 
-			boolean useSequenceDataProviderFromOwner) {
+	private ConsensusSequenceArea(AlignmentContentArea owner, AlignmentModel<?> alignmentModel, 
+			boolean useAlignmentModelFromOwner) {
 			
 		super(owner, Math.round(DEFAULT_HEIGHT_FACTOR * owner.getOwner().getCompoundHeight()));  //TODO Add listener for compoundHeight that updates the height.
-		if (sequenceDataProvider == null) {
+		if (alignmentModel == null) {
 			throw new IllegalArgumentException("The sequence data provider must not be null.");
 		}
 		else {
-			this.sequenceDataProvider = sequenceDataProvider;
-			this.useSequenceDataProviderFromOwner = useSequenceDataProviderFromOwner;
-			if (!useSequenceDataProviderFromOwner) {
-				sequenceDataProvider.getChangeListeners().add(this);
+			this.alignmentModel = alignmentModel;
+			this.useAlignmentModelFromOwner = useAlignmentModelFromOwner;
+			if (!useAlignmentModelFromOwner) {
+				alignmentModel.getChangeListeners().add(this);
 			}
 			createMap();
 			scores = new TreeMap<Integer, AmbiguityBaseScore>();  // Saves scores between change events of the provider.
@@ -116,31 +116,31 @@ public class ConsensusSequenceArea extends CustomHeightFullWidthArea {
 	 * 
 	 * @return a reference to the sequence data provider that is used
 	 */
-	public AlignmentModel<?> getSequenceDataProvider() {
-		return sequenceDataProvider;
+	public AlignmentModel<?> getAlignmentModel() {
+		return alignmentModel;
 	}
 
 
 	/**
 	 * Replaces the sequence data provider to be used to calculate the consensus sequence.
 	 * <p>
-	 * Note that after calling this method {@link #isUseSequenceDataProviderFromOwner()} will
+	 * Note that after calling this method {@link #isUseAlignmentModelFromOwner()} will
 	 * always return {@code true} and a call of {@link #afterProviderChanged(AlignmentModel, AlignmentModel)}
 	 * therefore will have no effect from now on.
 	 * 
-	 * @param sequenceDataProvider - the new model
+	 * @param alignmentModel - the new model
 	 */
-	public void setSequenceDataProvider(AlignmentModel<?> sequenceDataProvider) {
-		this.sequenceDataProvider.getChangeListeners().remove(this);
-		useSequenceDataProviderFromOwner = false;
-		this.sequenceDataProvider = sequenceDataProvider;
-		sequenceDataProvider.getChangeListeners().add(this);
+	public void setAlignmentModel(AlignmentModel<?> alignmentModel) {
+		this.alignmentModel.getChangeListeners().remove(this);
+		useAlignmentModelFromOwner = false;
+		this.alignmentModel = alignmentModel;
+		alignmentModel.getChangeListeners().add(this);
 		refreshConsensus();
 	}
 
 
-	public boolean isUseSequenceDataProviderFromOwner() {
-		return useSequenceDataProviderFromOwner;
+	public boolean isUseAlignmentModelFromOwner() {
+		return useAlignmentModelFromOwner;
 	}
 
 
@@ -169,11 +169,11 @@ public class ConsensusSequenceArea extends CustomHeightFullWidthArea {
 		AmbiguityBaseScore score = scores.get(column);
 		if (score == null) {
 			score = new AmbiguityBaseScore(0, 0, 0, 0);
-			Iterator<Integer> iterator = getSequenceDataProvider().sequenceIDIterator();
+			Iterator<Integer> iterator = getAlignmentModel().sequenceIDIterator();
 			while (iterator.hasNext()) {
 				int id = iterator.next();
-				if (getSequenceDataProvider().getSequenceLength(id) > column) {
-					AmbiguityBaseScore addend = mapByBase.get(((NucleotideCompound)getSequenceDataProvider().getTokenAt(id, column)).getBase());
+				if (getAlignmentModel().getSequenceLength(id) > column) {
+					AmbiguityBaseScore addend = mapByBase.get(((NucleotideCompound)getAlignmentModel().getTokenAt(id, column)).getBase());
 					if (addend != null) {
 						score.add(addend);
 					}
@@ -187,7 +187,7 @@ public class ConsensusSequenceArea extends CustomHeightFullWidthArea {
 	
 	@Override
 	public int getLength() {
-		return getOwner().getOwner().getCompoundWidth() * getSequenceDataProvider().getMaxSequenceLength();
+		return getOwner().getOwner().getCompoundWidth() * getAlignmentModel().getMaxSequenceLength();
 	}
 
 	
@@ -251,7 +251,7 @@ public class ConsensusSequenceArea extends CustomHeightFullWidthArea {
 	
 	@Override
 	public void afterTokenChange(TokenChangeEvent e) {
-		if (e.getSource().equals(getSequenceDataProvider())) {  // The owner always delegates this call, also if its sequence provider is not used.
+		if (e.getSource().equals(getAlignmentModel())) {  // The owner always delegates this call, also if its sequence provider is not used.
 			refreshConsensus();
 		}
 	}
@@ -263,7 +263,7 @@ public class ConsensusSequenceArea extends CustomHeightFullWidthArea {
 	
 	@Override
 	public void afterSequenceChange(SequenceChangeEvent e) {
-		if (e.getSource().equals(getSequenceDataProvider())) {  // The owner always delegates this call, also if its sequence provider is not used.
+		if (e.getSource().equals(getAlignmentModel())) {  // The owner always delegates this call, also if its sequence provider is not used.
 			refreshConsensus();
 		}
 	}
@@ -271,8 +271,8 @@ public class ConsensusSequenceArea extends CustomHeightFullWidthArea {
 	
 	@Override
 	public void afterProviderChanged(AlignmentModel previous,	AlignmentModel current) {
-		if (isUseSequenceDataProviderFromOwner()) {  // This event is only coming from the owner.
-			sequenceDataProvider = current;
+		if (isUseAlignmentModelFromOwner()) {  // This event is only coming from the owner.
+			alignmentModel = current;
 			refreshConsensus();
 		}
 	}
