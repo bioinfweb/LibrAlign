@@ -90,8 +90,11 @@ public class AlignmentContentArea extends TICComponent {
 	public Rectangle getCursorRectangle() {
 		SelectionModel selection = getOwner().getSelection();
 		int y = paintYByRow(selection.getCursorRow());
-		Rectangle result = new Rectangle(paintXByColumn(selection.getCursorColumn()), y,
-				(int)Math.round(getOwner().getPaintSettings().getTokenWidth(selection.getCursorColumn())), 
+		int width = 0;
+		if (selection.getCursorColumn() < getOwner().getAlignmentModel().getMaxSequenceLength()) {  // There is no more token behind the cursor, if it is located at the right end of the alignment. 
+			width = (int)Math.round(getOwner().getPaintSettings().getTokenWidth(selection.getCursorColumn()));
+		}
+		Rectangle result = new Rectangle(paintXByColumn(selection.getCursorColumn()), y, width, 
 				paintYByRow(selection.getCursorRow() + selection.getCursorHeight()) - y); 
 		if (selection.getCursorRow() + selection.getCursorHeight() - 1 == 
 				getOwner().getAlignmentModel().getSequenceCount() - 1) {
@@ -180,7 +183,7 @@ public class AlignmentContentArea extends TICComponent {
 			throw new InternalError("not implemented");  //TODO Implement and consider that different alignment parts may have different token widths here.
 		}
 		else {
-			return (int)((column - 1) * getOwner().getPaintSettings().getTokenWidth(0)) + getOwner().getDataAreas().getGlobalMaxLengthBeforeStart();  //TODO Catch IllegalStateException?
+			return (int)((column /*- 1*/) * getOwner().getPaintSettings().getTokenWidth(0)) + getOwner().getDataAreas().getGlobalMaxLengthBeforeStart();  //TODO Catch IllegalStateException?
 		}
 	}
 

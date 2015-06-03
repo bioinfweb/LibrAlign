@@ -167,7 +167,7 @@ public class SequenceArea extends AlignmentSubArea {
 //  }
   
   
-  private void paintCursor(Graphics2D g, double x, double y) {
+  private void paintCursor(Graphics2D g) {
   	SelectionModel selection = getOwner().getOwner().getSelection();
   	if (Math2.isBetween(getOwner().getOwner().getSequenceOrder().indexByID(getSeqenceID()), 
   			selection.getCursorRow(), selection.getCursorRow() + selection.getCursorHeight() - 1)) {
@@ -177,8 +177,8 @@ public class SequenceArea extends AlignmentSubArea {
   			PaintSettings paintSettings = getOwner().getOwner().getPaintSettings();
   			g.setColor(paintSettings.getCursorColor());
   			g.setStroke(new BasicStroke((float)paintSettings.getCursorLineWidth()));
-  			x += getOwner().paintXByColumn(selection.getCursorColumn());  //TODO Test if this is equivalent to previous implementation.
-  			g.draw(new Line2D.Double(x, y, x, y + paintSettings.getTokenHeight()));
+  			double x = getOwner().paintXByColumn(selection.getCursorColumn());  //TODO Test if this is equivalent to previous implementation.
+  			g.draw(new Line2D.Double(x, 0, x, paintSettings.getTokenHeight()));
   		}
   		finally {
   			g.setStroke(previousStroke);
@@ -207,14 +207,11 @@ public class SequenceArea extends AlignmentSubArea {
 			paintSettings.getTokenPainterList().painterByColumn(i).paintToken(getOwner().getOwner(), getSeqenceID(), i, 
 					event.getGraphics(), new Rectangle2D.Double(x, 0, paintSettings.getTokenWidth(i), paintSettings.getTokenHeight()), 
 					paintSettings.getSelectionColor());
-//    	paintCompound(getOwner().getOwner(), event.getGraphics(), 
-//    			getOwner().getOwner().getAlignmentModel().getTokenAt(getSeqenceID(), i), x, 0f,	
-//    			getOwner().getOwner().getSelection().isSelected(i, getOwner().getOwner().getSequenceOrder().indexByID(getSeqenceID())));
 	    x += paintSettings.getTokenWidth(i);
     }
 		
 		if (!getOwner().getOwner().getSelection().getType().equals(SelectionType.ROW_ONLY)) {
-			paintCursor(event.getGraphics(), getOwner().getOwner().getDataAreas().getGlobalMaxLengthBeforeStart(), 0);
+			paintCursor(event.getGraphics());
 		}
 	}
 
