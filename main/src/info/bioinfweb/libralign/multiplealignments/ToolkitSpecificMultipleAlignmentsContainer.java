@@ -31,7 +31,7 @@ import info.bioinfweb.commons.tic.toolkit.ToolkitComponent;
  */
 public interface ToolkitSpecificMultipleAlignmentsContainer extends ToolkitComponent {
 	/**
-	 * This method is used internally by {@link MultipleAlignmentsContainer} of the order or set of contained
+	 * This method is used internally by {@link MultipleAlignmentsContainer} if the order or set of contained
 	 * alignment areas changes and these changes shall be reflected by the underlying GUI component.
 	 */
 	public void adoptChildAreas();

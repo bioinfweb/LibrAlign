@@ -20,7 +20,6 @@ package info.bioinfweb.libralign.multiplealignments;
 
 
 import info.bioinfweb.libralign.alignmentarea.AlignmentArea;
-import info.bioinfweb.libralign.alignmentarea.content.AlignmentContentArea;
 import info.bioinfweb.libralign.dataarea.DataAreaChangeEvent;
 import info.bioinfweb.libralign.dataarea.DataAreaModelListener;
 import info.bioinfweb.libralign.model.AlignmentModelChangeListener;
@@ -32,17 +31,17 @@ import info.bioinfweb.libralign.model.events.TokenChangeEvent;
 
 
 /**
- * Delegates events from a single alignment area contained in a {@link MultipleAlignmentsContainer} to
- * all other alignment areas in that container.
+ * Forwards events from alignment and data models of a single alignment area contained in a 
+ * {@link MultipleAlignmentsContainer} to all other alignment areas in that container.
  * 
  * @author Ben St&ouml;ver
  * @since 0.3.0
  */
-public class MultipleAlignmentListener implements AlignmentModelChangeListener, DataAreaModelListener {
+public class MultipleAlignmentsEventForwarder implements AlignmentModelChangeListener, DataAreaModelListener {
 	private MultipleAlignmentsContainer owner;
 
 	
-	public MultipleAlignmentListener(MultipleAlignmentsContainer owner) {
+	public MultipleAlignmentsEventForwarder(MultipleAlignmentsContainer owner) {
 		super();
 		this.owner = owner;
 	}

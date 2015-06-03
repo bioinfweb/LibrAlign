@@ -21,7 +21,8 @@ package info.bioinfweb.libralign.multiplealignments;
 
 import info.bioinfweb.commons.collections.observable.ObservableList;
 import info.bioinfweb.libralign.alignmentarea.AlignmentArea;
-import info.bioinfweb.libralign.alignmentarea.content.AlignmentContentArea;
+import info.bioinfweb.libralign.alignmentarea.paintsettings.PaintSettings;
+import info.bioinfweb.libralign.alignmentarea.paintsettings.PaintSettingsSynchronizer;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -39,13 +40,14 @@ import java.util.Collection;
  */
 public class AlignmentAreaList extends ObservableList<AlignmentArea> {
 	private MultipleAlignmentsContainer owner;
-	private MultipleAlignmentListener multipleAlignmentListener;
+	private MultipleAlignmentsEventForwarder multipleAlignmentListener;
+	private PaintSettingsSynchronizer paintSettingsSynchronizer = new PaintSettingsSynchronizer(this);
 
 	
 	public AlignmentAreaList(MultipleAlignmentsContainer owner) {
 		super(new ArrayList<AlignmentArea>());
 		this.owner = owner;
-		multipleAlignmentListener = new MultipleAlignmentListener(owner);
+		multipleAlignmentListener = new MultipleAlignmentsEventForwarder(owner);
 	}
 
 
@@ -54,6 +56,11 @@ public class AlignmentAreaList extends ObservableList<AlignmentArea> {
 	}
 
 	
+	protected PaintSettingsSynchronizer getPaintSettingsSynchronizer() {
+		return paintSettingsSynchronizer;
+	}
+
+
 	private void checkContainer(AlignmentArea alignmentArea) {
 		if (alignmentArea.getContainer() != getOwner()) {
 			throw new IllegalArgumentException("The alignment area to be inserted does not reference this instance as its container.");
@@ -102,6 +109,7 @@ public class AlignmentAreaList extends ObservableList<AlignmentArea> {
 		adoptToListChanges();
 		for (AlignmentArea alignmentArea : addedElements) {
 			addListenerToAlignmentArea(alignmentArea);
+			alignmentArea.getPaintSettings().addListener(paintSettingsSynchronizer);
 		}
 	}
 
@@ -111,6 +119,7 @@ public class AlignmentAreaList extends ObservableList<AlignmentArea> {
 		adoptToListChanges();
 		for (AlignmentArea alignmentArea : removedElements) {
 			removeListenerToAlignmentArea(alignmentArea);
+			alignmentArea.getPaintSettings().removeListener(paintSettingsSynchronizer);
 		}
 	}
 
@@ -118,7 +127,9 @@ public class AlignmentAreaList extends ObservableList<AlignmentArea> {
 	@Override
 	protected void afterReplace(int index, AlignmentArea previousElement, AlignmentArea currentElement) {
 		removeListenerToAlignmentArea(previousElement);
+		previousElement.getPaintSettings().removeListener(paintSettingsSynchronizer);
 		adoptToListChanges();
 		addListenerToAlignmentArea(currentElement);
+		currentElement.getPaintSettings().addListener(paintSettingsSynchronizer);
 	}
 }

@@ -20,6 +20,7 @@ package info.bioinfweb.libralign.multiplealignments;
 
 
 import java.awt.Dimension;
+import java.util.Set;
 
 import javax.swing.JComponent;
 
@@ -30,6 +31,7 @@ import info.bioinfweb.commons.Math2;
 import info.bioinfweb.commons.tic.TICComponent;
 import info.bioinfweb.commons.tic.TICPaintEvent;
 import info.bioinfweb.libralign.alignmentarea.AlignmentArea;
+import info.bioinfweb.libralign.alignmentarea.paintsettings.PaintSettings;
 import info.bioinfweb.libralign.dataarea.implementations.SequenceIndexArea;
 import info.bioinfweb.libralign.editsettings.EditSettings;
 
@@ -227,5 +229,18 @@ public class MultipleAlignmentsContainer extends TICComponent {
 			  	getToolkitComponent().setDividerLocations(heights);
 			}
 		}
+	}
+	
+	
+	/**
+	 * Returns a set of property names that are synchronized between the paint setting objects of the alignment areas
+	 * contained in this container. By default this set is empty. Application code can add names to define single paint
+	 * settings as global.
+	 * 
+	 * @return a modifiable set of paint setting property names
+	 * @see PaintSettings
+	 */
+	public Set<String> getPaintSettingsToSynchronize() {
+		return getAlignmentAreas().getPaintSettingsSynchronizer().getPropertiesToSynchronizes();
 	}
 }
