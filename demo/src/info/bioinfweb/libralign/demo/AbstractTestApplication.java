@@ -29,6 +29,7 @@ import info.bioinfweb.jphyloio.events.TokenSetType;
 import info.bioinfweb.libralign.alignmentarea.AlignmentArea;
 import info.bioinfweb.libralign.alignmentarea.content.AlignmentContentArea;
 import info.bioinfweb.libralign.alignmentarea.selection.SelectionType;
+import info.bioinfweb.libralign.alignmentarea.tokenpainter.NucleotideTokenPainter;
 import info.bioinfweb.libralign.dataarea.implementations.ConsensusSequenceArea;
 import info.bioinfweb.libralign.dataarea.implementations.SequenceIndexArea;
 import info.bioinfweb.libralign.dataarea.implementations.charset.CharSet;
@@ -68,7 +69,7 @@ public class AbstractTestApplication {
 		charSet.add(17, 25);
 		model.add(charSet);
 		
-		return new CharSetArea(owner, model);
+		return new CharSetArea(owner, owner.getOwner(), model);
 	}
 	
 	
@@ -84,7 +85,7 @@ public class AbstractTestApplication {
 			alignment.add("Sequence 3", new DNASequence("AT-GTAG"));
 			
 			StringBuffer seqBuffer = new StringBuffer(pherogramProvider.getSequenceLength());
-			for (int i = 1; i <= pherogramProvider.getSequenceLength(); i++) {
+			for (int i = 0; i <= pherogramProvider.getSequenceLength() - 1; i++) {
 				seqBuffer.append(pherogramProvider.getBaseCall(i).getUpperedBase());
 			}
 			alignment.add("Sequence 4", new DNASequence("-----" + seqBuffer.substring(0, 38) + 
@@ -118,6 +119,7 @@ public class AbstractTestApplication {
 			
 			result.getDataAreas().getBottomAreas().add(new ConsensusSequenceArea(result.getContentArea()));
 			
+			result.getPaintSettings().getTokenPainterList().set(0, new NucleotideTokenPainter());
 			result.getSelection().setType(SelectionType.COLUMN_ONLY);
 			
 			return result;
