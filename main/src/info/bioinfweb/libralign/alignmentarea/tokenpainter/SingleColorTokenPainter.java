@@ -50,7 +50,7 @@ public class SingleColorTokenPainter extends AbstractTokenPainter implements Tok
 	
 	private Map<String, Color> backgroundColorMap = new TreeMap<String, Color>();
 	private Color defaultBackgroundColor = Color.GRAY;
-	private Color fontColor = Color.GRAY;
+	private Color fontColor = Color.BLACK;
 	private String fontName = Font.SANS_SERIF;
 	private int fontStyle = Font.PLAIN;
 	private Font currentFont = new Font(Font.SANS_SERIF, Font.PLAIN, 0);  // Initial value that would only be used if the first area is equal to the initial value of currentArea. (In that case no text would be painted.) 

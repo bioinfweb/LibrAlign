@@ -74,6 +74,9 @@ public abstract class AbstractTokenPainter implements TokenPainter {
 		
 		AlignmentModel alignmentModel = (AlignmentModel)alignmentArea.getAlignmentModel();
 		Object token = alignmentModel.getTokenAt(sequenceID, columnIndex);
+		if (!alignmentArea.getSelection().isSelected(columnIndex, alignmentArea.getSequenceOrder().indexByID(sequenceID))) {
+			selectionColor = null;
+		}
 		doPaintToken(alignmentArea, sequenceID, columnIndex, token, alignmentModel.getTokenSet().representationByToken(token), 
 				g, paintArea, selectionColor);
 	}
