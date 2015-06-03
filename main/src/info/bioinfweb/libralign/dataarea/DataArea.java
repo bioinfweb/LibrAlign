@@ -29,7 +29,9 @@ import info.bioinfweb.libralign.alignmentarea.content.AlignmentSubArea;
 import info.bioinfweb.libralign.alignmentarea.paintsettings.PaintSettingsListener;
 import info.bioinfweb.libralign.alignmentarea.paintsettings.TokenPainterListEvent;
 import info.bioinfweb.libralign.alignmentarea.paintsettings.TokenPainterReplacedEvent;
+import info.bioinfweb.libralign.model.AlignmentModel;
 import info.bioinfweb.libralign.model.AlignmentModelChangeListener;
+import info.bioinfweb.libralign.multiplealignments.MultipleAlignmentsContainer;
 
 
 
@@ -40,6 +42,7 @@ import info.bioinfweb.libralign.model.AlignmentModelChangeListener;
  * @since 0.0.0
  */
 public abstract class DataArea extends AlignmentSubArea implements AlignmentModelChangeListener, PaintSettingsListener {
+	private AlignmentArea labeledAlignmentArea;
 	private DataAreaList list = null;
 	private boolean visible = true;
 	
@@ -47,16 +50,49 @@ public abstract class DataArea extends AlignmentSubArea implements AlignmentMode
 	/**
 	 * Creates a new instance of this class.
 	 * 
-	 * @param owner - the alignment area that will contain this instance
+	 * @param owner the alignment area that will contain this instance
+	 * @param labeledArea the alignment area displays the sequence which is labeled by the new instance
+	 *        (If {@code null} is specified here, the parent alignment area of {@code owner} will be assumed.)  
 	 */
-	public DataArea(AlignmentContentArea owner) {
+	public DataArea(AlignmentContentArea owner, AlignmentArea labeledArea) {
 		super(owner);
+		if (labeledArea == null) {
+			this.labeledAlignmentArea = owner.getOwner();
+		}
+		else {
+			this.labeledAlignmentArea = labeledArea;
+		}
 	}
 
+	/**
+	 * Returns the alignment area that is labeled by this data area.
+	 * <p>
+	 * Note that inside a {@link MultipleAlignmentsContainer} a data area could be located in a different 
+	 * alignment area than the related alignment data. Therefore the returned instance is not necessarily 
+	 * identical with the instance returned by {@code getOwner().getOwner()}. 
+	 * 
+	 * @return the labeled alignment area
+	 * @see #getLabeledAlignmentModel()
+	 */
+	public AlignmentArea getLabeledAlignmentArea() {
+		return labeledAlignmentArea;
+	}
+
+	
+	/**
+	 * Convenience method that returns the alignment model of the labeled alignment area.
+	 * 
+	 * @return the alignment model providing the sequence data related to the contents of this data area
+	 * @see #getLabeledAlignmentArea()
+	 */
+	public AlignmentModel<?> getLabeledAlignmentModel() {
+		return getLabeledAlignmentArea().getAlignmentModel();
+	}
+	
 
 	/**
-	 * Returns the list this data area is contained in. (The contents of that list could either be located above 
-	 * or underneath the alignment or attached to a sequence.)
+	 * Returns the list this data area is contained in. This list defines whether this data area is located above 
+	 * or underneath the alignment or attached to a sequence.
 	 */
 	public DataAreaList getList() {
 		return list;
@@ -68,7 +104,7 @@ public abstract class DataArea extends AlignmentSubArea implements AlignmentMode
 	 * 
 	 * @param list - the list that contains this element
 	 */
-	public void setList(DataAreaList list) {  //TODO Does it make sense to allow setting this property if owner cannot be set? 
+	public void setList(DataAreaList list) { 
 		this.list = list;
 	}
 

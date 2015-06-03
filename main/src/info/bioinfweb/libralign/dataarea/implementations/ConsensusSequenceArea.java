@@ -35,6 +35,7 @@ import org.biojava3.core.sequence.compound.NucleotideCompound;
 import info.bioinfweb.commons.bio.AmbiguityBaseScore;
 import info.bioinfweb.commons.bio.biojava3.core.sequence.compound.AlignmentAmbiguityNucleotideCompoundSet;
 import info.bioinfweb.commons.tic.TICPaintEvent;
+import info.bioinfweb.libralign.alignmentarea.AlignmentArea;
 import info.bioinfweb.libralign.alignmentarea.content.AlignmentContentArea;
 import info.bioinfweb.libralign.alignmentarea.content.SequenceArea;
 import info.bioinfweb.libralign.dataarea.DataArea;
@@ -43,6 +44,7 @@ import info.bioinfweb.libralign.model.AlignmentModel;
 import info.bioinfweb.libralign.model.events.SequenceChangeEvent;
 import info.bioinfweb.libralign.model.events.SequenceRenamedEvent;
 import info.bioinfweb.libralign.model.events.TokenChangeEvent;
+import info.bioinfweb.libralign.multiplealignments.MultipleAlignmentsContainer;
 
 
 
@@ -58,19 +60,17 @@ public class ConsensusSequenceArea extends DataArea {
 	
 	private TreeMap<String, AmbiguityBaseScore> mapByBase;
 	private Map<Integer, AmbiguityBaseScore> scores;
-	private AlignmentModel<?> alignmentModel;
-	private boolean useAlignmentModelFromOwner;
 	
 	
 	/**
 	 * Creates a new instance of this class that uses the sequence data provider of the specified
 	 * alignment area.
 	 * 
-	 * @param owner - the alignment area that will be containing the returned data area instance
+	 * @param owner the alignment area that will be containing the returned data area instance
 	 * @throws IllegalArgumentException if {@code owner} does not have a sequence data provider
 	 */
 	public ConsensusSequenceArea(AlignmentContentArea owner) {
-		this(owner, owner.getOwner().getAlignmentModel(), true);
+		this(owner, owner.getOwner());
 	}
 	
 	
@@ -82,69 +82,21 @@ public class ConsensusSequenceArea extends DataArea {
 	 * is used. Such changes would than have to be done manually by the application code using 
 	 * {@link #setAlignmentModel(AlignmentModel)}.
 	 * 
-	 * @param owner - the alignment area that will be containing the returned data area instance
-	 * @param alignmentModel - the model to calculate the consensus sequence from (Does not have
-	 *        to be the same as the one used by {@code owner}.)
+	 * @param owner the alignment area that will be containing the returned data area instance
+	 * @param labeledAlignmentArea the alignment area containg the alignment model that shall provide the 
+	 *        source data for the consensus sequence (Should only be different from {@code owner.getOwner()} 
+	 *        if the new instance will be placed in a different alignment area than the sequence data in a 
+	 *        scenario with a {@link MultipleAlignmentsContainer}.) 
 	 * @throws IllegalArgumentException if {@code sequenceDataProvider} is {@code null}
 	 */
-	public ConsensusSequenceArea(AlignmentContentArea owner, AlignmentModel<?> alignmentModel) {
-		this(owner, alignmentModel, false);
-	}
-	
-	
-	private ConsensusSequenceArea(AlignmentContentArea owner, AlignmentModel<?> alignmentModel, 
-			boolean useAlignmentModelFromOwner) {
-			
-		super(owner);  //TODO Add listener for compoundHeight that updates the height.
-		if (alignmentModel == null) {
-			throw new IllegalArgumentException("The sequence data provider must not be null.");
-		}
-		else {
-			this.alignmentModel = alignmentModel;
-			this.useAlignmentModelFromOwner = useAlignmentModelFromOwner;
-			if (!useAlignmentModelFromOwner) {
-				alignmentModel.getChangeListeners().add(this);
-			}
-			createMap();
-			scores = new TreeMap<Integer, AmbiguityBaseScore>();  // Saves scores between change events of the provider.
-			assignSize();
-		}
+	public ConsensusSequenceArea(AlignmentContentArea owner, AlignmentArea labeledAlignmentArea) {
+		super(owner, labeledAlignmentArea);
+		createMap();
+		scores = new TreeMap<Integer, AmbiguityBaseScore>();  // Saves scores between change events of the provider.
+		assignSize();
 	}
 
 	
-	/**
-	 * The model this instance uses to calculate the consensus sequence from. 
-	 * 
-	 * @return a reference to the sequence data provider that is used
-	 */
-	public AlignmentModel<?> getAlignmentModel() {
-		return alignmentModel;
-	}
-
-
-	/**
-	 * Replaces the sequence data provider to be used to calculate the consensus sequence.
-	 * <p>
-	 * Note that after calling this method {@link #isUseAlignmentModelFromOwner()} will
-	 * always return {@code true} and a call of {@link #afterProviderChanged(AlignmentModel, AlignmentModel)}
-	 * therefore will have no effect from now on.
-	 * 
-	 * @param alignmentModel - the new model
-	 */
-	public void setAlignmentModel(AlignmentModel<?> alignmentModel) {
-		this.alignmentModel.getChangeListeners().remove(this);
-		useAlignmentModelFromOwner = false;
-		this.alignmentModel = alignmentModel;
-		alignmentModel.getChangeListeners().add(this);
-		refreshConsensus();
-	}
-
-
-	public boolean isUseAlignmentModelFromOwner() {
-		return useAlignmentModelFromOwner;
-	}
-
-
 	private void createMap() {  //TODO Use ConsensusSequenceCreator instead when implementation is adjusted.
 		mapByBase = new TreeMap<String, AmbiguityBaseScore>();
 		mapByBase.put("A", new AmbiguityBaseScore(1, 0, 0, 0));
@@ -170,11 +122,11 @@ public class ConsensusSequenceArea extends DataArea {
 		AmbiguityBaseScore score = scores.get(column);
 		if (score == null) {
 			score = new AmbiguityBaseScore(0, 0, 0, 0);
-			Iterator<Integer> iterator = getAlignmentModel().sequenceIDIterator();
+			Iterator<Integer> iterator = getLabeledAlignmentModel().sequenceIDIterator();
 			while (iterator.hasNext()) {
 				int id = iterator.next();
-				if (getAlignmentModel().getSequenceLength(id) > column) {
-					AmbiguityBaseScore addend = mapByBase.get(((NucleotideCompound)getAlignmentModel().getTokenAt(id, column)).getBase());
+				if (getLabeledAlignmentModel().getSequenceLength(id) > column) {
+					AmbiguityBaseScore addend = mapByBase.get(((NucleotideCompound)getLabeledAlignmentModel().getTokenAt(id, column)).getBase());
 					if (addend != null) {
 						score.add(addend);
 					}
@@ -188,14 +140,14 @@ public class ConsensusSequenceArea extends DataArea {
 	
 	@Override
 	public int getLength() {
-		return getOwner().paintXByColumn(getAlignmentModel().getMaxSequenceLength()) 
+		return getLabeledAlignmentArea().getContentArea().paintXByColumn(getLabeledAlignmentModel().getMaxSequenceLength()) 
 				- getOwner().getOwner().getDataAreas().getGlobalMaxLengthBeforeStart();
 	}
 
 	
 	@Override
 	public int getHeight() {
-		return (int)Math.round(DEFAULT_HEIGHT_FACTOR * getOwner().getOwner().getPaintSettings().getTokenHeight());
+		return (int)Math.round(DEFAULT_HEIGHT_FACTOR * getLabeledAlignmentArea().getPaintSettings().getTokenHeight());
 	}
 
 
@@ -208,9 +160,9 @@ public class ConsensusSequenceArea extends DataArea {
 
 		
 		// Determine area to be painted:
-		int firstIndex = Math.max(0, getOwner().columnByPaintX((int)event.getRectangle().getMinX()));
-		int lastIndex = getOwner().columnByPaintX((int)event.getRectangle().getMaxX());
-		int lastColumn = getOwner().getOwner().getGlobalMaxSequenceLength() - 1;
+		int firstIndex = Math.max(0, getLabeledAlignmentArea().getContentArea().columnByPaintX((int)event.getRectangle().getMinX()));
+		int lastIndex = getLabeledAlignmentArea().getContentArea().columnByPaintX((int)event.getRectangle().getMaxX());
+		int lastColumn = getLabeledAlignmentModel().getMaxSequenceLength() - 1;
 		if ((lastIndex == -1) || (lastIndex > lastColumn)) {  //TODO Elongate to the length of the longest sequence and paint empty/special tokens on the right end?
 			lastIndex = lastColumn;
 		}
@@ -260,7 +212,7 @@ public class ConsensusSequenceArea extends DataArea {
 	
 	@Override
 	public void afterTokenChange(TokenChangeEvent e) {
-		if (e.getSource().equals(getAlignmentModel())) {  // The owner always delegates this call, also if its sequence provider is not used.
+		if (e.getSource().equals(getLabeledAlignmentModel())) {  // The owner always delegates this call, also if its sequence provider is not used.
 			refreshConsensus();
 		}
 	}
@@ -272,7 +224,7 @@ public class ConsensusSequenceArea extends DataArea {
 	
 	@Override
 	public void afterSequenceChange(SequenceChangeEvent e) {
-		if (e.getSource().equals(getAlignmentModel())) {  // The owner always delegates this call, also if its sequence provider is not used.
+		if (e.getSource().equals(getLabeledAlignmentModel())) {  // The owner always delegates this call, also if its sequence provider is not used.
 			refreshConsensus();
 		}
 	}
@@ -280,9 +232,6 @@ public class ConsensusSequenceArea extends DataArea {
 	
 	@Override
 	public void afterProviderChanged(AlignmentModel previous,	AlignmentModel current) {
-		if (isUseAlignmentModelFromOwner()) {  // This event is only coming from the owner.
-			alignmentModel = current;
-			refreshConsensus();
-		}
+		refreshConsensus();
 	}
 }

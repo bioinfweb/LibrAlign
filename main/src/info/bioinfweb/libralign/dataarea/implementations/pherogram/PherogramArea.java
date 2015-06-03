@@ -73,7 +73,7 @@ public class PherogramArea extends DataArea implements PherogramComponent {
 	 * @param pherogram - the provider for the pherogram data to be displayed by the returned instance
 	 */
 	public PherogramArea(AlignmentContentArea owner, PherogramModel pherogram) {
-		super(owner);
+		super(owner, owner.getOwner());  // Pherogram areas are always directly attached to their sequences. 
 		this.pherogram = pherogram;
 		verticalScale = getHeight();
 		leftCutPosition = 0;
@@ -83,7 +83,7 @@ public class PherogramArea extends DataArea implements PherogramComponent {
 	
 	protected SimpleSequenceInterval calculatePaintRange(TICPaintEvent e) {
 		PherogramAlignmentRelation lowerBorderRelation = getAlignmentModel().baseCallIndexByEditableIndex(
-				getOwner().columnByPaintX(e.getRectangle().x) - 2);  // - 2 because two (expiremetally obtained) half visible column should be painted. (Why are this two?) 
+				getLabeledAlignmentArea().getContentArea().columnByPaintX(e.getRectangle().x) - 2);  // - 2 because two (expiremetally obtained) half visible column should be painted. (Why are this two?) 
 		int lowerBorder;
 		if (lowerBorderRelation.getCorresponding() == PherogramAlignmentRelation.GAP) {
 			lowerBorder = lowerBorderRelation.getBefore();
@@ -93,7 +93,7 @@ public class PherogramArea extends DataArea implements PherogramComponent {
 		}
 
 		PherogramAlignmentRelation upperBorderRelation = getAlignmentModel().baseCallIndexByEditableIndex(
-				getOwner().columnByPaintX(e.getRectangle().x + e.getRectangle().width) + 2);  // + 1 + 1 because BioJava indices start with 1 and one half visible column should be painted.
+				getLabeledAlignmentArea().getContentArea().columnByPaintX(e.getRectangle().x + e.getRectangle().width) + 2);  // + 1 + 1 because BioJava indices start with 1 and one half visible column should be painted.
 		int upperBorder;
 		if (upperBorderRelation.getCorresponding() == PherogramAlignmentRelation.GAP) {
 			upperBorder = upperBorderRelation.getAfter();
@@ -111,8 +111,8 @@ public class PherogramArea extends DataArea implements PherogramComponent {
 		Graphics2D g = e.getGraphics();
 		g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 		
-		double leftX = getOwner().paintXByColumn(getAlignmentModel().editableIndexByBaseCallIndex(getLeftCutPosition()).getAfter());
-		double rightX = getOwner().paintXByColumn(getAlignmentModel().editableIndexByBaseCallIndex(getRightCutPosition()).getBefore() + 1);
+		double leftX = getLabeledAlignmentArea().getContentArea().paintXByColumn(getAlignmentModel().editableIndexByBaseCallIndex(getLeftCutPosition()).getAfter());
+		double rightX = getLabeledAlignmentArea().getContentArea().paintXByColumn(getAlignmentModel().editableIndexByBaseCallIndex(getRightCutPosition()).getBefore() + 1);
 		
 		// Draw cut off background:
 		g.setColor(getFormats().getCutBackgroundColor());
@@ -136,16 +136,16 @@ public class PherogramArea extends DataArea implements PherogramComponent {
 		g.fill(new Rectangle2D.Double(leftX, e.getRectangle().y, rightX - leftX, e.getRectangle().height));
 
 		SimpleSequenceInterval paintRange = calculatePaintRange(e);
-		double x = getOwner().paintXByColumn(getFirstSeqPos() - getLeftCutPosition());
+		double x = getLabeledAlignmentArea().getContentArea().paintXByColumn(getFirstSeqPos() - getLeftCutPosition());
 		double y = 0; 
 		double height = getHeight();
 		ScaledPherogramDistortion distortion = getAlignmentModel().createPherogramDistortion();
 		
 		// Paint gaps:
-		if (getOwner().getOwner().getAlignmentModel() instanceof ConcatenatedAlignmentModel) {
+		if (getLabeledAlignmentArea().getAlignmentModel() instanceof ConcatenatedAlignmentModel) {
 			throw new InternalError("Support for concatenated models not yet implemented.");
 		}
-		double tokenWidth = getOwner().getOwner().getPaintSettings().getTokenWidth(0);  //TODO Use index of an aligned column to determine correct width also for concatenated models.
+		double tokenWidth = getLabeledAlignmentArea().getPaintSettings().getTokenWidth(0);  //TODO Use index of an aligned column to determine correct width also for concatenated models.
 		
 		painter.paintGaps(g, paintRange.getFirstPos(), paintRange.getLastPos(), x, y, height,	distortion, tokenWidth);
 		
@@ -268,21 +268,21 @@ public class PherogramArea extends DataArea implements PherogramComponent {
 
 	@Override
 	public int getLengthBeforeStart() {
-		return Math.max(0, getOwner().paintXByColumn(getAlignmentModel().baseCallIndexByEditableIndex(0).getAfter()));
+		return Math.max(0, getLabeledAlignmentArea().getContentArea().paintXByColumn(getAlignmentModel().baseCallIndexByEditableIndex(0).getAfter()));
 	}
 
 
 	@Override
 	public int getLength() {
-		return getOwner().paintXByColumn(getAlignmentModel().editableIndexByBaseCallIndex(getRightCutPosition() - 1).getAfter() + 1 + // space until the end of the aligned part
+		return getLabeledAlignmentArea().getContentArea().paintXByColumn(getAlignmentModel().editableIndexByBaseCallIndex(getRightCutPosition() - 1).getAfter() + 1 + // space until the end of the aligned part
 				(getProvider().getSequenceLength() - getRightCutPosition()))  // possible unaligned part at the right end
-				- getOwner().getOwner().getDataAreas().getGlobalMaxLengthBeforeStart(); 
+				- getLabeledAlignmentArea().getDataAreas().getGlobalMaxLengthBeforeStart(); 
 	}
 
 
 	@Override
 	public int getHeight() {
-		return (int)Math.round(DEFAULT_HEIGHT_FACTOR * getOwner().getOwner().getPaintSettings().getTokenHeight());
+		return (int)Math.round(DEFAULT_HEIGHT_FACTOR * getLabeledAlignmentArea().getPaintSettings().getTokenHeight());
 	}
 
 
@@ -298,10 +298,10 @@ public class PherogramArea extends DataArea implements PherogramComponent {
 
 	@Override
 	public <T> void afterTokenChange(TokenChangeEvent<T> e) {
-		if (e.getSource().equals(getOwner().getOwner().getAlignmentModel()) && e.getSequenceID() == getList().getLocation().getSequenceID()) {
+		if (e.getSource().equals(getLabeledAlignmentArea().getAlignmentModel()) && e.getSequenceID() == getList().getLocation().getSequenceID()) {
 			switch (e.getType()) {
 				case INSERTION:
-					int addend = getOwner().getOwner().getEditSettings().isInsertLeftInDataArea() ? -1 : 0;
+					int addend = getLabeledAlignmentArea().getEditSettings().isInsertLeftInDataArea() ? -1 : 0;
 					getAlignmentModel().addShiftChange(
 							getAlignmentModel().baseCallIndexByEditableIndex(Math.max(0, e.getStartIndex() + addend)).getBefore(),  //TODO is getBefore immer sinnvoll? 
 							e.getAffectedTokens().size());

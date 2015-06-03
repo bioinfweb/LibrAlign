@@ -38,6 +38,7 @@ import info.bioinfweb.libralign.model.AlignmentModel;
 import info.bioinfweb.libralign.model.events.SequenceChangeEvent;
 import info.bioinfweb.libralign.model.events.SequenceRenamedEvent;
 import info.bioinfweb.libralign.model.events.TokenChangeEvent;
+import info.bioinfweb.libralign.multiplealignments.MultipleAlignmentsContainer;
 
 
 
@@ -58,11 +59,15 @@ public class CharSetArea extends DataArea {
 	/**
 	 * Creates a new instance of this class.
 	 * 
-	 * @param owner - the alignment area that will be containing the returned data area instance
-	 * @param model - the model providing the character set data
+	 * @param owner the alignment area that will be containing the returned data area instance
+	 * @param labeledAlignmentArea the alignment area that shall determine the token widths considered when painting
+	 *        the character sets (Should only be different from {@code owner.getOwner()} if the new instance will be
+	 *        placed in a different alignment area than the sequence data in a scenario with a
+	 *        {@link MultipleAlignmentsContainer}.) 
+	 * @param model the model providing the character set data
 	 */
-	public CharSetArea(AlignmentContentArea owner, CharSetDataModel model) {
-		super(owner);
+	public CharSetArea(AlignmentContentArea owner, AlignmentArea labeledAlignmentArea, CharSetDataModel model) {
+		super(owner, labeledAlignmentArea);
 		this.model = model;
 	}
 
@@ -71,9 +76,13 @@ public class CharSetArea extends DataArea {
 	 * Creates a new instance of this class with an empty data model.
 	 * 
 	 * @param owner - the alignment area that will be containing the returned data area instance
+	 * @param labeledAlignmentArea the alignment area that shall determine the token widths considered when painting
+	 *        the character sets (Should only be different from {@code owner.getOwner()} if the new instance will be
+	 *        placed in a different alignment area than the sequence data in a scenario with a
+	 *        {@link MultipleAlignmentsContainer}.) 
 	 */
-	public CharSetArea(AlignmentContentArea owner) {
-		this(owner, new CharSetDataModel());
+	public CharSetArea(AlignmentContentArea owner, AlignmentArea labeledAlignmentArea) {
+		this(owner, labeledAlignmentArea, new CharSetDataModel());
 	}
 	
 	
@@ -89,28 +98,30 @@ public class CharSetArea extends DataArea {
 
 	@Override
 	public int getLength() {
-		AlignmentArea area = getOwner().getOwner();
-		return getOwner().paintXByColumn(area.getGlobalMaxSequenceLength()) - area.getDataAreas().getGlobalMaxLengthBeforeStart();
+		return getLabeledAlignmentArea().getContentArea().paintXByColumn(getLabeledAlignmentModel().getMaxSequenceLength()) 
+				- getLabeledAlignmentArea().getDataAreas().getGlobalMaxLengthBeforeStart();
 	}
 
 	
 	@Override
 	public int getHeight() {
-		return (int)Math.round(getModel().size() * getOwner().getOwner().getPaintSettings().getTokenHeight());  //TODO Add possible border height, possibly round up?
+		return (int)Math.round(getModel().size() * getLabeledAlignmentArea().getPaintSettings().getTokenHeight());  //TODO Add possible border height, possibly round up?
 	}
 
 	
 	@Override
 	public void paint(TICPaintEvent event) {
+		AlignmentContentArea contentArea = getLabeledAlignmentArea().getContentArea();
+		
 		// Paint background:
 		Graphics2D g = event.getGraphics();
 		g.setColor(SystemColor.menu);
 		g.fill(event.getRectangle());
 		
 		// Determine area to be painted:
-		int firstIndex = Math.max(0, getOwner().columnByPaintX((int)event.getRectangle().getMinX()));
-		int lastIndex = getOwner().columnByPaintX((int)event.getRectangle().getMaxX());
-		int lastColumn = getOwner().getOwner().getGlobalMaxSequenceLength() - 1;  //getSequenceProvider().getMaxSequenceLength() - 1;
+		int firstIndex = Math.max(0, contentArea.columnByPaintX((int)event.getRectangle().getMinX()));
+		int lastIndex = contentArea.columnByPaintX((int)event.getRectangle().getMaxX());
+		int lastColumn = getLabeledAlignmentArea().getGlobalMaxSequenceLength() - 1;  //getSequenceProvider().getMaxSequenceLength() - 1;
 		if ((lastIndex == -1) || (lastIndex > lastColumn)) {
 			lastIndex = lastColumn;
 		}
@@ -118,13 +129,13 @@ public class CharSetArea extends DataArea {
 		// Paint output:
 		Iterator<CharSet> iterator = getModel().iterator();
 		double y = 0;
-		PaintSettings paintSettings = getOwner().getOwner().getPaintSettings();
+		PaintSettings paintSettings = getLabeledAlignmentArea().getPaintSettings();
 		final double borderHeight = paintSettings.getTokenHeight() * BORDER_FRACTION;
 		final double height = paintSettings.getTokenHeight() - 2 * borderHeight;
 		while (iterator.hasNext()) {
 			CharSet charSet = iterator.next();
 			g.setColor(charSet.getColor());
-			double x = getOwner().paintXByColumn(firstIndex);
+			double x = contentArea.paintXByColumn(firstIndex);
 			for (int index = firstIndex; index <= lastIndex; index++) {
 				if (charSet.contains(index)) {
 					double width = paintSettings.getTokenWidth(index);

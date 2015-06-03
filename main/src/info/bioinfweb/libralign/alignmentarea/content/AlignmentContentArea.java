@@ -108,7 +108,12 @@ public class AlignmentContentArea extends TICComponent {
 	@Override
 	public Dimension getSize() {
 		Dimension result = new Dimension();
-		result.width = paintXByColumn(getOwner().getGlobalMaxSequenceLength());  //TODO Test if this is equivalent to previous implementation.
+		if (getOwner().hasAlignmentModel()) {
+			result.width = paintXByColumn(getOwner().getAlignmentModel().getMaxSequenceLength());  //TODO Replace this by global maximum width
+		}
+		else {
+			result.width = getOwner().getDataAreas().getGlobalMaxLengthBeforeStart();
+		}
 		result.height = getOwner().getDataAreas().getVisibleAreaHeight();
 		if (getOwner().hasAlignmentModel()) {
 			result.height += getOwner().getAlignmentModel().getSequenceCount() * getOwner().getPaintSettings().getTokenHeight();

@@ -28,7 +28,6 @@ import java.awt.Stroke;
 import java.awt.SystemColor;
 import java.awt.geom.Line2D;
 import java.awt.geom.Path2D;
-import java.beans.PropertyChangeEvent;
 import java.util.EnumSet;
 import java.util.Set;
 
@@ -37,8 +36,6 @@ import info.bioinfweb.commons.collections.ListChangeType;
 import info.bioinfweb.commons.tic.TICPaintEvent;
 import info.bioinfweb.libralign.alignmentarea.AlignmentArea;
 import info.bioinfweb.libralign.alignmentarea.content.AlignmentContentArea;
-import info.bioinfweb.libralign.alignmentarea.paintsettings.TokenPainterListEvent;
-import info.bioinfweb.libralign.alignmentarea.paintsettings.TokenPainterReplacedEvent;
 import info.bioinfweb.libralign.dataarea.DataArea;
 import info.bioinfweb.libralign.dataarea.DataAreaListType;
 import info.bioinfweb.libralign.model.AlignmentModel;
@@ -82,12 +79,24 @@ public class SequenceIndexArea extends DataArea {
 
 	
 	/**
-	 * Creates a new instance of this class using a default height.
+	 * Creates a new instance of this class.
+	 * 
+	 * @param owner - the alignment area that is going to contain this data area
+	 * @param labeledArea the alignment area displays the sequence which is labeled by the new instance
+	 *        (If {@code null} is specified here, the parent alignment area of {@code owner} will be assumed.)  
+	 */
+	public SequenceIndexArea(AlignmentContentArea owner, AlignmentArea labeledArea) {
+		super(owner, labeledArea);
+	}
+
+
+	/**
+	 * Creates a new instance of this class using the parent alignment area of {@code owner} as the labeled area.
 	 * 
 	 * @param owner - the alignment area that is going to contain this data area
 	 */
 	public SequenceIndexArea(AlignmentContentArea owner) {
-		super(owner);
+		this(owner, owner.getOwner());
 	}
 
 
@@ -102,9 +111,10 @@ public class SequenceIndexArea extends DataArea {
   
   
 	private int calculateLabelInterval(FontMetrics fontMetrics) {
-		double compoundWidth = getOwner().getOwner().getPaintSettings().minTokenWidth();
-		return (int)Math2.roundUp((fontMetrics.stringWidth("0") * ("" + getOwner().getOwner().getGlobalMaxSequenceLength()).length() + 
-				2 * LABEL_LEFT_DISTANCE_FACTOR * compoundWidth) / compoundWidth);
+		double compoundWidth = getLabeledAlignmentArea().getPaintSettings().minTokenWidth();
+		return (int)Math2.roundUp((fontMetrics.stringWidth("0") * 
+				("" + getLabeledAlignmentArea().getGlobalMaxSequenceLength()).length() + 2 * LABEL_LEFT_DISTANCE_FACTOR * compoundWidth) 
+				/ compoundWidth);
 	}
 	
 	
@@ -121,17 +131,17 @@ public class SequenceIndexArea extends DataArea {
 		paintSelection(g);
 		
     // Paint base line
-		if (getOwner().getOwner().getAlignmentModel() instanceof ConcatenatedAlignmentModel) {
+		if (getLabeledAlignmentModel() instanceof ConcatenatedAlignmentModel) {
 			throw new InternalError("Support for concatenated models not yet implemented.");
 		}
-		double compoundWidth = getOwner().getOwner().getPaintSettings().getTokenWidth(0);  //TODO Implement support for concatenated models.
+		double compoundWidth = getLabeledAlignmentArea().getPaintSettings().getTokenWidth(0);  //TODO Implement support for concatenated models.
 		g.setColor(SystemColor.menuText);
     g.draw(new Line2D.Double(visibleRect.x, getHeight() - 1, visibleRect.x + visibleRect.width, getHeight() - 1));  // base line
     
     // Paint text data and dashes:
-    final int maxLengthBeforeStart = getOwner().getOwner().getDataAreas().getGlobalMaxLengthBeforeStart(); 
+    final int maxLengthBeforeStart = getLabeledAlignmentArea().getDataAreas().getGlobalMaxLengthBeforeStart(); 
     double labelLeftDistance = LABEL_LEFT_DISTANCE_FACTOR * compoundWidth;
-    g.setFont(getOwner().getOwner().getPaintSettings().getTokenHeightFont());
+    g.setFont(getLabeledAlignmentArea().getPaintSettings().getTokenHeightFont());
     int labelInterval = calculateLabelInterval(g.getFontMetrics());
     double x = Math.max(compoundWidth / 2f,  
     		visibleRect.x - visibleRect.x % compoundWidth - labelInterval * compoundWidth - compoundWidth / 2f);  // labelInterval is subtracted because partly visible text should also be painted
@@ -174,8 +184,13 @@ public class SequenceIndexArea extends DataArea {
 
 	@Override
 	public int getLength() {
-		return getOwner().paintXByColumn(getOwner().getOwner().getGlobalMaxSequenceLength()) 
-				- getOwner().getOwner().getDataAreas().getGlobalMaxLengthBeforeStart();
+		if (getLabeledAlignmentArea().hasAlignmentModel()) {
+			return getLabeledAlignmentArea().getContentArea().paintXByColumn(getLabeledAlignmentModel().getMaxSequenceLength())  // Global maximum sequence length cannot be used here, because token widths might differ between alignment areas.
+					- getLabeledAlignmentArea().getDataAreas().getGlobalMaxLengthBeforeStart();
+		}
+		else {
+			return 0;
+		}
 	}
 
 
@@ -208,7 +223,7 @@ public class SequenceIndexArea extends DataArea {
 
 	@Override
 	public int getHeight() {
-		return (int)Math.round(getOwner().getOwner().getPaintSettings().getTokenHeight());
+		return (int)Math.round(getLabeledAlignmentArea().getPaintSettings().getTokenHeight());
 	}
 
 
