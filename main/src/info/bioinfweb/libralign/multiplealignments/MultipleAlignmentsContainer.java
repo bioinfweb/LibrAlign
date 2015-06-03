@@ -235,7 +235,11 @@ public class MultipleAlignmentsContainer extends TICComponent {
 	/**
 	 * Returns a set of property names that are synchronized between the paint setting objects of the alignment areas
 	 * contained in this container. By default this set is empty. Application code can add names to define single paint
-	 * settings as global.
+	 * settings as global. (Such a property will than be changed in all alignment areas of this container, as soon as it 
+	 * is modified in one of them.)
+	 * <p>
+	 * Note that all simple properties of {@link PaintSettings} can be added here, but it is not possible to synchronize
+	 * token painters.
 	 * 
 	 * @return a modifiable set of paint setting property names
 	 * @see PaintSettings

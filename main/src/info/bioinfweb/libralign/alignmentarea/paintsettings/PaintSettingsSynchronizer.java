@@ -34,10 +34,9 @@ import org.apache.commons.beanutils.BeanUtils;
 
 /**
  * Class for internal use with {@link MultipleAlignmentsContainer} to synchronize single paint setting properties
- * between different alignment areas in such a container.
- * <p>
- * Application developers who want to define single paint settings as global must modify 
- * {@link MultipleAlignmentsContainer#getPaintSettingsToSynchronize()} instead of using this class directly.
+ * between different alignment areas in such a container. Application developers who want to define single paint 
+ * settings as global must modify {@link MultipleAlignmentsContainer#getPaintSettingsToSynchronize()} instead of 
+ * using this class directly.
  * <p>
  * <b>Warning:</b> This class is for internal use in LibrAlign only and should not be referenced in application code
  * directly. API stability is not guaranteed for this class for any release of LibrAlign (no matter if the major version
