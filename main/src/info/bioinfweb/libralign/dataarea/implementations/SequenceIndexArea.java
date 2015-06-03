@@ -83,7 +83,7 @@ public class SequenceIndexArea extends CustomHeightFullWidthArea {
 	 * @param owner - the alignment area that is going to contain this data area
 	 */
 	public SequenceIndexArea(AlignmentContentArea owner) {
-		super(owner, (int)Math.round(owner.getOwner().getTokenHeight()));
+		super(owner, (int)Math.round(owner.getOwner().getPaintSettings().getTokenHeight()));
 	}
 
 
@@ -98,7 +98,7 @@ public class SequenceIndexArea extends CustomHeightFullWidthArea {
   
   
 	private int calculateLabelInterval(FontMetrics fontMetrics) {
-		double compoundWidth = getOwner().getOwner().minTokenWidth();
+		double compoundWidth = getOwner().getOwner().getPaintSettings().minTokenWidth();
 		return (int)Math2.roundUp((fontMetrics.stringWidth("0") * ("" + getOwner().getOwner().getGlobalMaxSequenceLength()).length() + 
 				2 * LABEL_LEFT_DISTANCE_FACTOR * compoundWidth) / compoundWidth);
 	}
@@ -120,14 +120,14 @@ public class SequenceIndexArea extends CustomHeightFullWidthArea {
 		if (getOwner().getOwner().getAlignmentModel() instanceof ConcatenatedAlignmentModel) {
 			throw new InternalError("Support for concatenated models not yet implemented.");
 		}
-		double compoundWidth = getOwner().getOwner().getTokenWidth(0);  //TODO Implement support for concatenated models.
+		double compoundWidth = getOwner().getOwner().getPaintSettings().getTokenWidth(0);  //TODO Implement support for concatenated models.
 		g.setColor(SystemColor.menuText);
     g.draw(new Line2D.Double(visibleRect.x, getHeight() - 1, visibleRect.x + visibleRect.width, getHeight() - 1));  // base line
     
     // Paint text data and dashes:
     final int maxLengthBeforeStart = getOwner().getOwner().getDataAreas().getGlobalMaxLengthBeforeStart(); 
     double labelLeftDistance = LABEL_LEFT_DISTANCE_FACTOR * compoundWidth;
-    g.setFont(getOwner().getOwner().getTokenHeightFont());
+    g.setFont(getOwner().getOwner().getPaintSettings().getTokenHeightFont());
     int labelInterval = calculateLabelInterval(g.getFontMetrics());
     double x = Math.max(compoundWidth / 2f,  
     		visibleRect.x - visibleRect.x % compoundWidth - labelInterval * compoundWidth - compoundWidth / 2f);  // labelInterval is subtracted because partly visible text should also be painted

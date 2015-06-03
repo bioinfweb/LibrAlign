@@ -91,12 +91,12 @@ public class AlignmentContentArea extends TICComponent {
 		SelectionModel selection = getOwner().getSelection();
 		int y = paintYByRow(selection.getCursorRow());
 		Rectangle result = new Rectangle(paintXByColumn(selection.getCursorColumn()), y,
-				(int)Math.round(getOwner().getTokenWidth(selection.getCursorColumn())), 
+				(int)Math.round(getOwner().getPaintSettings().getTokenWidth(selection.getCursorColumn())), 
 				paintYByRow(selection.getCursorRow() + selection.getCursorHeight()) - y); 
 		if (selection.getCursorRow() + selection.getCursorHeight() - 1 == 
 				getOwner().getAlignmentModel().getSequenceCount() - 1) {
 			
-			result.height += getOwner().getTokenHeight();  // Add height of the last row, because the return value of paintYByRow(maxIndex + 1) is equal to paintYByRow(maxIndex).
+			result.height += getOwner().getPaintSettings().getTokenHeight();  // Add height of the last row, because the return value of paintYByRow(maxIndex + 1) is equal to paintYByRow(maxIndex).
 		}
 		return result; 
 	}
@@ -108,7 +108,7 @@ public class AlignmentContentArea extends TICComponent {
 		result.width = paintXByColumn(getOwner().getGlobalMaxSequenceLength());  //TODO Test if this is equivalent to previous implementation.
 		result.height = getOwner().getDataAreas().getVisibleAreaHeight();
 		if (getOwner().hasAlignmentModel()) {
-			result.height += getOwner().getAlignmentModel().getSequenceCount() * getOwner().getTokenHeight();
+			result.height += getOwner().getAlignmentModel().getSequenceCount() * getOwner().getPaintSettings().getTokenHeight();
 		}
 		return result;
 	}
@@ -162,7 +162,7 @@ public class AlignmentContentArea extends TICComponent {
 		}
 		else {
 			return Math.max(0, Math.min(getOwner().getGlobalMaxSequenceLength() - 1,
-					(int)((x - getOwner().getDataAreas().getGlobalMaxLengthBeforeStart()) / getOwner().getTokenWidth(0))));  //TODO Catch IllegalStateException?
+					(int)((x - getOwner().getDataAreas().getGlobalMaxLengthBeforeStart()) / getOwner().getPaintSettings().getTokenWidth(0))));  //TODO Catch IllegalStateException?
 		}
 	}
 
@@ -180,7 +180,7 @@ public class AlignmentContentArea extends TICComponent {
 			throw new InternalError("not implemented");  //TODO Implement and consider that different alignment parts may have different token widths here.
 		}
 		else {
-			return (int)((column - 1) * getOwner().getTokenWidth(0)) + getOwner().getDataAreas().getGlobalMaxLengthBeforeStart();  //TODO Catch IllegalStateException?
+			return (int)((column - 1) * getOwner().getPaintSettings().getTokenWidth(0)) + getOwner().getDataAreas().getGlobalMaxLengthBeforeStart();  //TODO Catch IllegalStateException?
 		}
 	}
 

@@ -49,6 +49,8 @@ main/src/info/bioinfweb/libralign/alignmentarea/label/package-info.java -text sv
 main/src/info/bioinfweb/libralign/alignmentarea/order/SequenceOrder.java -text svneol=unset#text/plain
 main/src/info/bioinfweb/libralign/alignmentarea/order/SequenceOrderType.java -text
 main/src/info/bioinfweb/libralign/alignmentarea/package-info.java -text svneol=unset#text/plain
+main/src/info/bioinfweb/libralign/alignmentarea/paintsettings/PaintSettings.java -text svneol=unset#text/plain
+main/src/info/bioinfweb/libralign/alignmentarea/paintsettings/package-info.java -text svneol=unset#text/plain
 main/src/info/bioinfweb/libralign/alignmentarea/rowsarea/SWTAlignmentRowsArea.java -text svneol=unset#text/plain
 main/src/info/bioinfweb/libralign/alignmentarea/rowsarea/SwingAlignmentRowsArea.java -text svneol=unset#text/plain
 main/src/info/bioinfweb/libralign/alignmentarea/rowsarea/ToolkitSpecificAlignmentRowsArea.java -text svneol=unset#text/plain

@@ -382,7 +382,7 @@ public class PherogramAlignmentModel {
 		if (getOwner().getOwner().getOwner().getAlignmentModel() instanceof ConcatenatedAlignmentModel) {
 			throw new InternalError("Support for concatenated models not yet implemented.");
 		}
-		final double compoundWidth = getOwner().getOwner().getOwner().getTokenWidth(0);  //TODO Use index of an aligned column to determine correct width also for concatenated models.
+		final double compoundWidth = getOwner().getOwner().getOwner().getPaintSettings().getTokenWidth(0);  //TODO Use index of an aligned column to determine correct width also for concatenated models.
 		int stepWidth = 1;
 		int editPosPerBaseCallPos = 1;
 		double baseCallPaintX = 0; //0.5 * compoundWidth;

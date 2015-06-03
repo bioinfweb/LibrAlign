@@ -62,13 +62,13 @@ public class CharSetNameArea extends AlignmentLabelSubArea {
 		g.fill(e.getRectangle());
 		
 		g.setColor(SystemColor.menuText);
-		g.setFont(getOwner().getOwner().getTokenHeightFont());
+		g.setFont(getOwner().getOwner().getPaintSettings().getTokenHeightFont());
 		FontMetrics fm = g.getFontMetrics();
 		
 		// Paint names:
 		Iterator<CharSet> iterator = getLabeledArea().getModel().iterator();
 		double y = 0;
-		final double compoundHeight = getOwner().getOwner().getTokenHeight();
+		final double compoundHeight = getOwner().getOwner().getPaintSettings().getTokenHeight();
 		while (iterator.hasNext()) {
 			g.drawString(iterator.next().getName(), AlignmentLabelArea.BORDER_WIDTH, Math.round(y + fm.getAscent()));			
 			y += compoundHeight;
@@ -78,7 +78,7 @@ public class CharSetNameArea extends AlignmentLabelSubArea {
 
 	@Override
 	public int getNeededWidth() {
-		Font compundFont = getOwner().getOwner().getTokenHeightFont();
+		Font compundFont = getOwner().getOwner().getPaintSettings().getTokenHeightFont();
 		Iterator<CharSet> iterator = getLabeledArea().getModel().iterator();
 		float maxWidth = 0;
 		while (iterator.hasNext()) {

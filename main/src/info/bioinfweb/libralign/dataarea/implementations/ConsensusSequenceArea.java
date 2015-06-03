@@ -94,7 +94,7 @@ public class ConsensusSequenceArea extends CustomHeightFullWidthArea {
 	private ConsensusSequenceArea(AlignmentContentArea owner, AlignmentModel<?> alignmentModel, 
 			boolean useAlignmentModelFromOwner) {
 			
-		super(owner, (int)Math.round(DEFAULT_HEIGHT_FACTOR * owner.getOwner().getTokenHeight()));  //TODO Add listener for compoundHeight that updates the height.
+		super(owner, (int)Math.round(DEFAULT_HEIGHT_FACTOR * owner.getOwner().getPaintSettings().getTokenHeight()));  //TODO Add listener for compoundHeight that updates the height.
 		if (alignmentModel == null) {
 			throw new IllegalArgumentException("The sequence data provider must not be null.");
 		}

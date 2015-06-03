@@ -37,6 +37,7 @@ import info.bioinfweb.libralign.alignmentarea.content.AlignmentContentArea;
 import info.bioinfweb.libralign.alignmentarea.content.AlignmentSubArea;
 import info.bioinfweb.libralign.alignmentarea.label.AlignmentLabelArea;
 import info.bioinfweb.libralign.alignmentarea.order.SequenceOrder;
+import info.bioinfweb.libralign.alignmentarea.paintsettings.PaintSettings;
 import info.bioinfweb.libralign.alignmentarea.selection.SelectionModel;
 import info.bioinfweb.libralign.alignmentarea.tokenpainter.SingleColorTokenPainter;
 import info.bioinfweb.libralign.alignmentarea.tokenpainter.TokenPainter;
@@ -62,7 +63,6 @@ import info.bioinfweb.libralign.multiplealignments.MultipleAlignmentsContainer;
  * @since 0.0.0
  */
 public class AlignmentArea extends TICComponent implements AlignmentModelChangeListener, DataAreaModelListener {
-	public static final double DEFAULT_CURSOR_LINE_WIDTH = 2;
 	public static final int MIN_PART_AREA_HEIGHT = 5;
 	
 	/** Defines the width of the divider of the GUI components for the head, content, and bottom area. */ 
@@ -71,13 +71,8 @@ public class AlignmentArea extends TICComponent implements AlignmentModelChangeL
 
 	private AlignmentModel<?> alignmentModel = null;
 	private SequenceOrder sequenceOrder = new SequenceOrder(this);
-	private float zoomX = 1f;
-	private float zoomY = 1f;
 	private DataAreaModel dataAreas = new DataAreaModel(this);
-	private TokenPainterList tokenPainterList = new TokenPainterList(this);
-	private Color cursorColor = Color.BLACK;
-	private double cursorLineWidth = DEFAULT_CURSOR_LINE_WIDTH;
-	private Color selectionColor = SystemColor.textHighlight;    //TODO Move cursor color, width and selection color to separate object?
+	private PaintSettings paintSettings = new PaintSettings(this);
 	private EditSettings editSettings;
 	private SelectionModel selection = new SelectionModel(this);
 
@@ -132,6 +127,11 @@ public class AlignmentArea extends TICComponent implements AlignmentModelChangeL
 	}
 	
 	
+	public PaintSettings getPaintSettings() {
+		return paintSettings;
+	}
+
+
 	/**
 	 * Changes the sequence model used by this instance.
 	 * 
@@ -182,7 +182,7 @@ public class AlignmentArea extends TICComponent implements AlignmentModelChangeL
 				}
 			}
 		}
-		getTokenPainterList().afterAlignmentModelChanged();
+		getPaintSettings().getTokenPainterList().afterAlignmentModelChanged();
 		
 		return result;
 	}
@@ -193,127 +193,6 @@ public class AlignmentArea extends TICComponent implements AlignmentModelChangeL
 	}
 
 
-	public float getZoomX() {
-		return zoomX;
-	}
-
-
-	public float getZoomY() {
-		return zoomY;
-	}
-
-
-	public void setZoomX(float zoomX) {
-		setZoom(zoomX, getZoomY());
-	}
-	
-	
-	public void setZoomY(float zoomY) {
-		setZoom(getZoomX(), zoomY);
-	}
-	
-	
-	public void setZoom(float zoomX, float zoomY) {
-		this.zoomX = zoomX;
-		this.zoomY = zoomY;
-		
-		//assignPaintSize();
-		//fireZoomChanged();
-	}
-	
-	
-	/**
-	 * Returns the width of the column with the specified index.
-	 * 
-	 * @param columnIndex the index of the column to determine the width from
-	 * @return the width of column in pixels
-	 * @throws IllegalStateException if this instance does not have an alignment model
-	 * @throws IndexOutOfBoundsException if the specified column does not exist in the alignment model
-	 */
-	public double getTokenWidth(int columnIndex) {
-		if (!hasAlignmentModel()) {
-			throw new IllegalStateException("There is no associated alignment model defined that specifies any columns.");
-		}
-		else if ((columnIndex < 0) || (columnIndex >= getAlignmentModel().getMaxSequenceLength())) {
-			throw new IndexOutOfBoundsException("A column with the index " + columnIndex + " does not exist in the current model.");
-		}
-		else {
-			return getTokenPainterList().painterByColumn(columnIndex).getPreferredWidth() * getZoomX();
-		}
-	}
-	
-	
-	public double maxTokenWidth() {
-		if (getTokenPainterList().isEmpty()) {
-			return getTokenPainterList().getDefaultTokenPainter().getPreferredWidth() * getZoomX();
-		}
-		else {
-			double result = 0;
-			for (TokenPainter painter : getTokenPainterList()) {
-				double width;
-				if (painter == null) {
-					width = getTokenPainterList().getDefaultTokenPainter().getPreferredWidth();
-				}
-				else {
-					width = painter.getPreferredWidth();
-				}
-				result = Math.max(result, width);
-			}
-			return result * getZoomX();
-		}
-	}
-	
-	
-	public double minTokenWidth() {
-		if (getTokenPainterList().isEmpty()) {
-			return getTokenPainterList().getDefaultTokenPainter().getPreferredWidth() * getZoomX();
-		}
-		else {
-			double result = 0;
-			for (TokenPainter painter : getTokenPainterList()) {
-				double width;
-				if (painter == null) {
-					width = getTokenPainterList().getDefaultTokenPainter().getPreferredWidth();
-				}
-				else {
-					width = painter.getPreferredWidth();
-				}
-				result = Math.min(result, width);
-			}
-			return result * getZoomX();
-		}
-	}
-	
-	
-	/**
-	 * Returns the height of tokens displayed in this alignment.
-	 * 
-	 * @return the height in pixels
-	 */
-	public double getTokenHeight() {
-		if (!hasAlignmentModel()) {
-			throw new IllegalStateException("There is no associated alignment model defined that specifies any columns.");
-		}
-		else {
-			int index;
-			if (getAlignmentModel() instanceof ConcatenatedAlignmentModel) {
-				throw new InternalError("not implemented");
-				// index = ?;   //TODO Which painter should define the height?
-			}
-			else {
-				index = 0;
-			}
-			return getTokenPainterList().painterByColumn(index).getPreferredHeight() * getZoomY();
-		}
-	}
-	
-	
-	public Font getTokenHeightFont() {
-		return new Font(Font.SANS_SERIF, Font.PLAIN, 
-				(int)Math.round(SingleColorTokenPainter.FONT_SIZE_FACTOR * getTokenHeight()));
-	}
-	
-	
 	/**
 	 * Returns the data area model used by this instance containing all data areas attached 
 	 * to the displayed alignment.
@@ -322,50 +201,6 @@ public class AlignmentArea extends TICComponent implements AlignmentModelChangeL
 	 */
 	public DataAreaModel getDataAreas() {
 		return dataAreas;
-	}
-
-
-	/**
-	 * Returns the list of token painters to be used for the output of the data from the alignment model.
-	 * If an concatenated alignment model is used, this list holds one painter for each part (column range),
-	 * otherwise it will only contain one.
-	 * <p>
-	 * The size and the order of the list are updated automatically depending on alignment model changes (events). 
-	 * 
-	 * @return the token painter list
-	 */
-	public TokenPainterList getTokenPainterList() {
-		return tokenPainterList;
-	}
-
-
-	public Color getCursorColor() {
-		return cursorColor;
-	}
-
-
-	public void setCursorColor(Color cursorColor) {
-		this.cursorColor = cursorColor;
-	}
-
-
-	public Color getSelectionColor() {
-		return selectionColor;
-	}
-
-
-	public void setSelectionColor(Color selectionColor) {
-		this.selectionColor = selectionColor;
-	}
-
-
-	public double getCursorLineWidth() {
-		return cursorLineWidth;
-	}
-
-
-	public void setCursorLineWidth(double cursorLineWidth) {
-		this.cursorLineWidth = cursorLineWidth;
 	}
 
 

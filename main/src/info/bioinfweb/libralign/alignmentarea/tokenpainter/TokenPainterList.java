@@ -25,6 +25,7 @@ import java.util.List;
 
 import info.bioinfweb.commons.collections.CollectionUtils;
 import info.bioinfweb.libralign.alignmentarea.AlignmentArea;
+import info.bioinfweb.libralign.alignmentarea.paintsettings.PaintSettings;
 import info.bioinfweb.libralign.model.concatenated.ConcatenatedAlignmentModel;
 
 
@@ -38,7 +39,7 @@ import info.bioinfweb.libralign.model.concatenated.ConcatenatedAlignmentModel;
  * @since 0.4.0
  */
 public class TokenPainterList implements Iterable<TokenPainter> {
-	private AlignmentArea owner;
+	private PaintSettings owner;
 	private List<TokenPainter> painters = new ArrayList<TokenPainter>();
 	private TokenPainter defaultTokenPainter = new SingleColorTokenPainter();  // Currently all elements would be painted in the default color.
 	
@@ -46,20 +47,20 @@ public class TokenPainterList implements Iterable<TokenPainter> {
 	/**
 	 * Creates a new instance of this class.
 	 * 
-	 * @param owner the alignment area using this instance
+	 * @param owner the paint settings object containing this instance
 	 */
-	public TokenPainterList(AlignmentArea owner) {
+	public TokenPainterList(PaintSettings owner) {
 		super();
 		this.owner = owner;
 	}
 	
 	
 	/**
-	 * Returns the alignment area using this instance.
+	 * Returns the paint settings object containing this instance.
 	 * 
-	 * @return the owning alignment area instance
+	 * @return the owning paint settings instance
 	 */
-	public AlignmentArea getOwner() {
+	public PaintSettings getOwner() {
 		return owner;
 	}
 
@@ -85,8 +86,8 @@ public class TokenPainterList implements Iterable<TokenPainter> {
 	 */
 	public TokenPainter painterByColumn(int columnIndex) {
 		TokenPainter result = null;
-		if (getOwner().hasAlignmentModel()) {
-			if (getOwner().getAlignmentModel() instanceof ConcatenatedAlignmentModel) {
+		if (getOwner().getOwner().hasAlignmentModel()) {
+			if (getOwner().getOwner().getAlignmentModel() instanceof ConcatenatedAlignmentModel) {
 				throw new InternalError("not implemented");
 				//TODO Implement returning painters for concatenated model
 			}
@@ -181,7 +182,7 @@ public class TokenPainterList implements Iterable<TokenPainter> {
 	 * external code.
 	 */
 	public void afterAlignmentModelChanged() {
-		if (getOwner().getAlignmentModel() instanceof ConcatenatedAlignmentModel) {
+		if (getOwner().getOwner().getAlignmentModel() instanceof ConcatenatedAlignmentModel) {
 			throw new InternalError("Not yet implemented.");
 			//TODO Implement handling concatenated models
 			//TODO Implement listening to model events and modify the list accordingly.

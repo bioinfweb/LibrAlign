@@ -31,6 +31,7 @@ import info.bioinfweb.libralign.alignmentarea.AlignmentArea;
 import info.bioinfweb.libralign.alignmentarea.content.AlignmentContentArea;
 import info.bioinfweb.libralign.alignmentarea.label.AlignmentLabelArea;
 import info.bioinfweb.libralign.alignmentarea.label.AlignmentLabelSubArea;
+import info.bioinfweb.libralign.alignmentarea.paintsettings.PaintSettings;
 import info.bioinfweb.libralign.dataarea.DataArea;
 import info.bioinfweb.libralign.dataarea.DataAreaListType;
 import info.bioinfweb.libralign.model.AlignmentModel;
@@ -95,7 +96,7 @@ public class CharSetArea extends DataArea {
 	
 	@Override
 	public int getHeight() {
-		return (int)Math.round(getModel().size() * getOwner().getOwner().getTokenHeight());  //TODO Add possible border height, possibly round up?
+		return (int)Math.round(getModel().size() * getOwner().getOwner().getPaintSettings().getTokenHeight());  //TODO Add possible border height, possibly round up?
 	}
 
 	
@@ -117,20 +118,21 @@ public class CharSetArea extends DataArea {
 		// Paint output:
 		Iterator<CharSet> iterator = getModel().iterator();
 		double y = 0;
-		final double borderHeight = getOwner().getOwner().getTokenHeight() * BORDER_FRACTION;
-		final double height = getOwner().getOwner().getTokenHeight() - 2 * borderHeight;
+		PaintSettings paintSettings = getOwner().getOwner().getPaintSettings();
+		final double borderHeight = paintSettings.getTokenHeight() * BORDER_FRACTION;
+		final double height = paintSettings.getTokenHeight() - 2 * borderHeight;
 		while (iterator.hasNext()) {
 			CharSet charSet = iterator.next();
 			g.setColor(charSet.getColor());
 			double x = getOwner().paintXByColumn(firstIndex);
 			for (int index = firstIndex; index <= lastIndex; index++) {
 				if (charSet.contains(index)) {
-					double width = getOwner().getOwner().getTokenWidth(index);
+					double width = paintSettings.getTokenWidth(index);
 					g.fill(new Rectangle2D.Double(x, y + borderHeight, width, height));
 					x += width;
 				}
 			}
-			y += getOwner().getOwner().getTokenHeight();
+			y += paintSettings.getTokenHeight();
 		}
 	}
 

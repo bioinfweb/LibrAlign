@@ -73,7 +73,7 @@ public class PherogramArea extends CustomHeightFullWidthArea implements Pherogra
 	 * @param pherogram - the provider for the pherogram data to be displayed by the returned instance
 	 */
 	public PherogramArea(AlignmentContentArea owner, PherogramModel pherogram) {
-		super(owner, (int)Math.round(DEFAULT_HEIGHT_FACTOR * owner.getOwner().getTokenHeight()));  //TODO Always round up?
+		super(owner, (int)Math.round(DEFAULT_HEIGHT_FACTOR * owner.getOwner().getPaintSettings().getTokenHeight()));  //TODO Always round up?
 		this.pherogram = pherogram;
 		verticalScale = getHeight();
 		leftCutPosition = 0;
@@ -145,7 +145,7 @@ public class PherogramArea extends CustomHeightFullWidthArea implements Pherogra
 		if (getOwner().getOwner().getAlignmentModel() instanceof ConcatenatedAlignmentModel) {
 			throw new InternalError("Support for concatenated models not yet implemented.");
 		}
-		double tokenWidth = getOwner().getOwner().getTokenWidth(0);  //TODO Use index of an aligned column to determine correct width also for concatenated models.
+		double tokenWidth = getOwner().getOwner().getPaintSettings().getTokenWidth(0);  //TODO Use index of an aligned column to determine correct width also for concatenated models.
 		
 		painter.paintGaps(g, paintRange.getFirstPos(), paintRange.getLastPos(), x, y, height,	distortion, tokenWidth);
 		

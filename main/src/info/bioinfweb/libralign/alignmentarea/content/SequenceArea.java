@@ -34,6 +34,7 @@ import info.bioinfweb.libralign.alignmentarea.AlignmentArea;
 import info.bioinfweb.libralign.alignmentarea.label.AlignmentLabelArea;
 import info.bioinfweb.libralign.alignmentarea.label.AlignmentLabelSubArea;
 import info.bioinfweb.libralign.alignmentarea.label.SequenceLabelArea;
+import info.bioinfweb.libralign.alignmentarea.paintsettings.PaintSettings;
 import info.bioinfweb.libralign.alignmentarea.selection.SelectionModel;
 import info.bioinfweb.libralign.alignmentarea.selection.SelectionType;
 import info.bioinfweb.libralign.model.AlignmentModel;
@@ -173,11 +174,11 @@ public class SequenceArea extends AlignmentSubArea {
   		
   		Stroke previousStroke = g.getStroke();
   		try {
-  			AlignmentArea area = getOwner().getOwner();
-  			g.setColor(area.getCursorColor());
-  			g.setStroke(new BasicStroke((float)area.getCursorLineWidth()));
+  			PaintSettings paintSettings = getOwner().getOwner().getPaintSettings();
+  			g.setColor(paintSettings.getCursorColor());
+  			g.setStroke(new BasicStroke((float)paintSettings.getCursorLineWidth()));
   			x += getOwner().paintXByColumn(selection.getCursorColumn());  //TODO Test if this is equivalent to previous implementation.
-  			g.draw(new Line2D.Double(x, y, x, y + area.getTokenHeight()));
+  			g.draw(new Line2D.Double(x, y, x, y + paintSettings.getTokenHeight()));
   		}
   		finally {
   			g.setStroke(previousStroke);
@@ -201,14 +202,15 @@ public class SequenceArea extends AlignmentSubArea {
 		event.getGraphics().setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 		
 		double x = getOwner().paintXByColumn(firstIndex);
-		AlignmentArea area = getOwner().getOwner();
+		PaintSettings paintSettings = getOwner().getOwner().getPaintSettings();
 		for (int i = firstIndex; i <= lastIndex; i++) {
-			area.getTokenPainterList().painterByColumn(i).paintToken(area, getSeqenceID(), i, event.getGraphics(), 
-					new Rectangle2D.Double(x, 0, area.getTokenWidth(i), area.getTokenHeight()), area.getSelectionColor());
+			paintSettings.getTokenPainterList().painterByColumn(i).paintToken(getOwner().getOwner(), getSeqenceID(), i, 
+					event.getGraphics(), new Rectangle2D.Double(x, 0, paintSettings.getTokenWidth(i), paintSettings.getTokenHeight()), 
+					paintSettings.getSelectionColor());
 //    	paintCompound(getOwner().getOwner(), event.getGraphics(), 
 //    			getOwner().getOwner().getAlignmentModel().getTokenAt(getSeqenceID(), i), x, 0f,	
 //    			getOwner().getOwner().getSelection().isSelected(i, getOwner().getOwner().getSequenceOrder().indexByID(getSeqenceID())));
-	    x += getOwner().getOwner().getTokenWidth(i);
+	    x += paintSettings.getTokenWidth(i);
     }
 		
 		if (!getOwner().getOwner().getSelection().getType().equals(SelectionType.ROW_ONLY)) {
@@ -221,7 +223,7 @@ public class SequenceArea extends AlignmentSubArea {
 	public Dimension getSize() {
 		return new Dimension(
 				getOwner().paintXByColumn(getOwner().getOwner().getAlignmentModel().getSequenceLength(getSeqenceID())),  //TODO Test if this is equivalent to previous implementation. //TODO Elongate to the length of the longest sequence and paint empty/special tokens on the right end? 
-				(int)Math.round(getOwner().getOwner().getTokenHeight()));  //TODO Always round up here?
+				(int)Math.round(getOwner().getOwner().getPaintSettings().getTokenHeight()));  //TODO Always round up here?
 	}
 
 

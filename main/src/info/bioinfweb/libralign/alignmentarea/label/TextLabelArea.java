@@ -53,7 +53,7 @@ public abstract class TextLabelArea extends AlignmentLabelSubArea {
 		
 		g.setColor(SystemColor.menuText);
 		
-		g.setFont(getOwner().getOwner().getTokenHeightFont());
+		g.setFont(getOwner().getOwner().getPaintSettings().getTokenHeightFont());
 		FontMetrics fm = g.getFontMetrics();
 		
 		// Paint name:
@@ -63,7 +63,7 @@ public abstract class TextLabelArea extends AlignmentLabelSubArea {
 
 	@Override
 	public int getNeededWidth() {
-		return Math2.roundUp(FontCalculator.getInstance().getWidth(getOwner().getOwner().getTokenHeightFont(),
+		return Math2.roundUp(FontCalculator.getInstance().getWidth(getOwner().getOwner().getPaintSettings().getTokenHeightFont(),
 				getText())) +	2 * AlignmentLabelArea.BORDER_WIDTH;
 	}
 }
