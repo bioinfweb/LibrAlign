@@ -22,16 +22,25 @@ package info.bioinfweb.libralign.alignmentarea.paintsettings;
 import info.bioinfweb.libralign.alignmentarea.AlignmentArea;
 import info.bioinfweb.libralign.alignmentarea.tokenpainter.SingleColorTokenPainter;
 import info.bioinfweb.libralign.alignmentarea.tokenpainter.TokenPainter;
-import info.bioinfweb.libralign.alignmentarea.tokenpainter.TokenPainterList;
 import info.bioinfweb.libralign.model.concatenated.ConcatenatedAlignmentModel;
 
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.SystemColor;
+import java.beans.PropertyChangeEvent;
+import java.util.HashSet;
+import java.util.Set;
 
 
 
+/**
+ * Object that manages properties related to painting the contents of an {@link AlignmentArea}.
+ * 
+ * @author Ben St&ouml;ver
+ * @since 0.4.0
+ */
 public class PaintSettings {
+	/** The initial cursor line width. */
 	public static final double DEFAULT_CURSOR_LINE_WIDTH = 2;
 	
 	
@@ -39,17 +48,28 @@ public class PaintSettings {
 	private TokenPainterList tokenPainterList = new TokenPainterList(this);
 	private Color cursorColor = Color.BLACK;
 	private double cursorLineWidth = DEFAULT_CURSOR_LINE_WIDTH;
-	private Color selectionColor = SystemColor.textHighlight;    //TODO Move cursor color, width and selection color to separate object?
+	private Color selectionColor = SystemColor.textHighlight;
 	private double zoomX = 1;
 	private double zoomY = 1;
+	private Set<PaintSettingsListener> listeners = new HashSet<PaintSettingsListener>();
 	
 	
+	/**
+	 * Creates a new instance of this class using default values for the properties.
+	 * 
+	 * @param owner the alignment area using this instance
+	 */
 	public PaintSettings(AlignmentArea owner) {
 		super();
 		this.owner = owner;
 	}
 
 
+	/**
+	 * Returns the alignment area using this instance.
+	 * 
+	 * @return the associated alignment area
+	 */
 	public AlignmentArea getOwner() {
 		return owner;
 	}
@@ -74,8 +94,21 @@ public class PaintSettings {
 	}
 
 
+	/**
+	 * Sets a new color to paint the alignment cursor.
+	 * 
+	 * @param cursorColor the new cursor color
+	 * @throws NullPointerException if {@code null} is specified
+	 */
 	public void setCursorColor(Color cursorColor) {
-		this.cursorColor = cursorColor;
+		if (cursorColor == null) {
+			throw new NullPointerException("The cursor color connot be null.");
+		}
+		else if (!this.cursorColor.equals(cursorColor)) {
+			Color oldValue = this.cursorColor;
+			this.cursorColor = cursorColor;
+			firePropertyChanged("cursorColor", oldValue, cursorColor);
+		}
 	}
 
 
@@ -84,8 +117,21 @@ public class PaintSettings {
 	}
 
 
+	/**
+	 * Sets a new color of the selection in the owning alignment area.
+	 * 
+	 * @param selectionColor the new selection color
+	 * @throws NullPointerException if {@code null} is specified
+	 */
 	public void setSelectionColor(Color selectionColor) {
-		this.selectionColor = selectionColor;
+		if (selectionColor == null) {
+			throw new NullPointerException("The selection color connot be null.");
+		}
+		else if (!this.selectionColor.equals(selectionColor)) {
+			Color oldValue = this.selectionColor;
+			this.selectionColor = selectionColor;
+			firePropertyChanged("selectionColor", oldValue, selectionColor);
+		}
 	}
 
 
@@ -95,7 +141,11 @@ public class PaintSettings {
 
 
 	public void setCursorLineWidth(double cursorLineWidth) {
-		this.cursorLineWidth = cursorLineWidth;
+		if (this.cursorLineWidth != cursorLineWidth) {
+			double oldValue = this.cursorLineWidth;
+			this.cursorLineWidth = cursorLineWidth;
+			firePropertyChanged("cursorLineWidth", oldValue, cursorLineWidth);
+		}
 	}
 
 
@@ -120,11 +170,16 @@ public class PaintSettings {
 	
 	
 	public void setZoom(double zoomX, double zoomY) {
-		this.zoomX = zoomX;
-		this.zoomY = zoomY;
-		
-		//assignPaintSize();
-		//fireZoomChanged();
+		if (this.zoomX != zoomX) {
+			double oldValue = zoomX;
+			this.zoomX = zoomX;
+			firePropertyChanged("zoomX", oldValue, zoomX);
+		}
+		if (this.zoomY != zoomY) {
+			double oldValue = zoomY;
+			this.zoomY = zoomY;
+			firePropertyChanged("zoomY", oldValue, zoomY);
+		}
 	}
 	
 	
@@ -149,6 +204,13 @@ public class PaintSettings {
 	}
 	
 	
+	/**
+	 * Returns the maximal token width in the list of token painters according to the current zoom factor.
+	 * The preferred with of the default painter is considered if the token list is empty or contains at
+	 * least one {@code null} element.
+	 * 
+	 * @return the maximal width
+	 */
 	public double maxTokenWidth() {
 		if (getTokenPainterList().isEmpty()) {
 			return getTokenPainterList().getDefaultTokenPainter().getPreferredWidth() * getZoomX();
@@ -170,6 +232,13 @@ public class PaintSettings {
 	}
 	
 	
+	/**
+	 * Returns the minimal token width in the list of token painters according to the current zoom factor.
+	 * The preferred with of the default painter is considered if the token list is empty or contains at
+	 * least one {@code null} element.
+	 * 
+	 * @return the minimal width
+	 */
 	public double minTokenWidth() {
 		if (getTokenPainterList().isEmpty()) {
 			return getTokenPainterList().getDefaultTokenPainter().getPreferredWidth() * getZoomX();
@@ -214,8 +283,59 @@ public class PaintSettings {
 	}
 	
 	
+	/**
+	 * Returns a sans serif plain font object with the size according to the token height in the current zoom factor. 
+	 * 
+	 * @return the font object
+	 */
 	public Font getTokenHeightFont() {
 		return new Font(Font.SANS_SERIF, Font.PLAIN, 
 				(int)Math.round(SingleColorTokenPainter.FONT_SIZE_FACTOR * getTokenHeight()));
+	}
+	
+	
+	/**
+	 * Attaches a paint settings listener to this instance.
+	 * 
+	 * @param listener the listener to be attached
+	 * @return {@code true} if the new listener was added, {@code false} if that listener was already attached
+	 */
+	public boolean addListener(PaintSettingsListener listener) {
+		return listeners.add(listener);
+	}
+	
+	
+	/**
+	 * Removes a paint settings listener from this instance.
+	 * 
+	 * @param listener the listener to be removed
+	 * @return {@code true} if the listener was removed, {@code false} if it was not attached before calling this method
+	 */
+	public boolean removeListener(PaintSettingsListener listener) {
+		return listeners.remove(listener);
+	}
+	
+	
+	protected void firePropertyChanged(String propertyName, Object oldValue, Object newValue) {
+		PropertyChangeEvent event = new PropertyChangeEvent(this, propertyName, oldValue, newValue);
+		for (PaintSettingsListener listener : listeners) {
+			listener.propertyChange(event);
+		}
+	}
+	
+	
+	protected void fireTokenPainterReplaced(TokenPainter previousPainter, TokenPainter newPainter, int index) {
+		TokenPainterReplacedEvent event = new TokenPainterReplacedEvent(getTokenPainterList(), previousPainter, newPainter, index);
+		for (PaintSettingsListener listener : listeners) {
+			listener.tokenPainterReplaced(event);
+		}
+	}
+	
+	
+	protected void fireTokenPainterListChange() {
+		TokenPainterListEvent event = new TokenPainterListEvent(getTokenPainterList());
+		for (PaintSettingsListener listener : listeners) {
+			listener.tokenPainterListChange(event);
+		}
 	}
 }

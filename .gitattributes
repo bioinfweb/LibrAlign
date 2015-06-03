@@ -50,6 +50,10 @@ main/src/info/bioinfweb/libralign/alignmentarea/order/SequenceOrder.java -text s
 main/src/info/bioinfweb/libralign/alignmentarea/order/SequenceOrderType.java -text
 main/src/info/bioinfweb/libralign/alignmentarea/package-info.java -text svneol=unset#text/plain
 main/src/info/bioinfweb/libralign/alignmentarea/paintsettings/PaintSettings.java -text svneol=unset#text/plain
+main/src/info/bioinfweb/libralign/alignmentarea/paintsettings/PaintSettingsListener.java -text svneol=unset#text/plain
+main/src/info/bioinfweb/libralign/alignmentarea/paintsettings/TokenPainterList.java -text svneol=unset#text/plain
+main/src/info/bioinfweb/libralign/alignmentarea/paintsettings/TokenPainterListEvent.java -text svneol=unset#text/plain
+main/src/info/bioinfweb/libralign/alignmentarea/paintsettings/TokenPainterReplacedEvent.java -text svneol=unset#text/plain
 main/src/info/bioinfweb/libralign/alignmentarea/paintsettings/package-info.java -text svneol=unset#text/plain
 main/src/info/bioinfweb/libralign/alignmentarea/rowsarea/SWTAlignmentRowsArea.java -text svneol=unset#text/plain
 main/src/info/bioinfweb/libralign/alignmentarea/rowsarea/SwingAlignmentRowsArea.java -text svneol=unset#text/plain
@@ -70,7 +74,6 @@ main/src/info/bioinfweb/libralign/alignmentarea/tokenpainter/AminoAcidTokenPaint
 main/src/info/bioinfweb/libralign/alignmentarea/tokenpainter/NucleotideTokenPainter.java -text svneol=unset#text/plain
 main/src/info/bioinfweb/libralign/alignmentarea/tokenpainter/SingleColorTokenPainter.java -text svneol=unset#text/plain
 main/src/info/bioinfweb/libralign/alignmentarea/tokenpainter/TokenPainter.java -text svneol=unset#text/plain
-main/src/info/bioinfweb/libralign/alignmentarea/tokenpainter/TokenPainterList.java -text svneol=unset#text/plain
 main/src/info/bioinfweb/libralign/alignmentarea/tokenpainter/package-info.java -text svneol=unset#text/plain
 main/src/info/bioinfweb/libralign/dataarea/DataArea.java -text svneol=unset#text/plain
 main/src/info/bioinfweb/libralign/dataarea/DataAreaChangeEvent.java -text svneol=unset#text/plain

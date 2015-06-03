@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package info.bioinfweb.libralign.alignmentarea.tokenpainter;
+package info.bioinfweb.libralign.alignmentarea.paintsettings;
 
 
 import java.util.ArrayList;
@@ -25,7 +25,8 @@ import java.util.List;
 
 import info.bioinfweb.commons.collections.CollectionUtils;
 import info.bioinfweb.libralign.alignmentarea.AlignmentArea;
-import info.bioinfweb.libralign.alignmentarea.paintsettings.PaintSettings;
+import info.bioinfweb.libralign.alignmentarea.tokenpainter.SingleColorTokenPainter;
+import info.bioinfweb.libralign.alignmentarea.tokenpainter.TokenPainter;
 import info.bioinfweb.libralign.model.concatenated.ConcatenatedAlignmentModel;
 
 
@@ -114,7 +115,12 @@ public class TokenPainterList implements Iterable<TokenPainter> {
 	 * @throws IndexOutOfBoundsException if the index is out of range ({@code index < 0 || index >= size()})
 	 */
 	public TokenPainter set(int index, TokenPainter painter) {
-		return painters.set(index, painter);
+		TokenPainter oldValue = painters.get(index);
+		if (((painter == null) && (oldValue != null)) || !painter.equals(oldValue)) {  // Second condition also covers oldValue == null
+			painters.set(index, painter);
+			getOwner().fireTokenPainterReplaced(oldValue, painter, index);
+		}
+		return oldValue;
 	}
 
 
@@ -197,5 +203,6 @@ public class TokenPainterList implements Iterable<TokenPainter> {
 				}
 			}
 		}
+		getOwner().fireTokenPainterListChange();
 	}
 }
