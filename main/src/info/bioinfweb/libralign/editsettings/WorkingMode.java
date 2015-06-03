@@ -18,6 +18,7 @@
  */
 package info.bioinfweb.libralign.editsettings;
 
+
 import info.bioinfweb.libralign.alignmentarea.AlignmentArea;
 
 

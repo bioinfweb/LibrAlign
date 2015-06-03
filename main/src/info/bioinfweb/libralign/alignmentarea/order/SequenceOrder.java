@@ -142,7 +142,7 @@ public class SequenceOrder {
 		indexByIDMap.clear();
 		orderType = SequenceOrderType.SOURCE;
 		idList.clear();
-		if (getOwner().hasSequenceProvider()) {
+		if (getOwner().hasAlignmentModel()) {
 			Iterator<Integer> iterator = getOwner().getAlignmentModel().sequenceIDIterator();
 			while (iterator.hasNext()) {
 				idList.add(iterator.next());

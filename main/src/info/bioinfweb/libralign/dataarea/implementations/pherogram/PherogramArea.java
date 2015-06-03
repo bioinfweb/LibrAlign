@@ -25,6 +25,7 @@ import info.bioinfweb.libralign.alignmentarea.content.AlignmentContentArea;
 import info.bioinfweb.libralign.dataarea.DataAreaListType;
 import info.bioinfweb.libralign.dataarea.implementations.CustomHeightFullWidthArea;
 import info.bioinfweb.libralign.model.AlignmentModel;
+import info.bioinfweb.libralign.model.concatenated.ConcatenatedAlignmentModel;
 import info.bioinfweb.libralign.model.events.SequenceChangeEvent;
 import info.bioinfweb.libralign.model.events.SequenceRenamedEvent;
 import info.bioinfweb.libralign.model.events.TokenChangeEvent;
@@ -72,7 +73,7 @@ public class PherogramArea extends CustomHeightFullWidthArea implements Pherogra
 	 * @param pherogram - the provider for the pherogram data to be displayed by the returned instance
 	 */
 	public PherogramArea(AlignmentContentArea owner, PherogramModel pherogram) {
-		super(owner, DEFAULT_HEIGHT_FACTOR * owner.getOwner().getCompoundHeight());
+		super(owner, (int)Math.round(DEFAULT_HEIGHT_FACTOR * owner.getOwner().getTokenHeight()));  //TODO Always round up?
 		this.pherogram = pherogram;
 		verticalScale = getHeight();
 		leftCutPosition = 0;
@@ -108,13 +109,10 @@ public class PherogramArea extends CustomHeightFullWidthArea implements Pherogra
 	@Override
 	public void paint(TICPaintEvent e) {
 		Graphics2D g = e.getGraphics();
-		
 		g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 		
-		double leftX = getAlignmentModel().editableIndexByBaseCallIndex(getLeftCutPosition()).getAfter() * 
-				getOwner().getOwner().getCompoundWidth() + getOwner().getOwner().getDataAreas().getGlobalMaxLengthBeforeStart();
-		double rightX = (getAlignmentModel().editableIndexByBaseCallIndex(getRightCutPosition()).getBefore() + 1) * 
-				getOwner().getOwner().getCompoundWidth() + getOwner().getOwner().getDataAreas().getGlobalMaxLengthBeforeStart();
+		double leftX = getOwner().paintXByColumn(getAlignmentModel().editableIndexByBaseCallIndex(getLeftCutPosition()).getAfter());
+		double rightX = getOwner().paintXByColumn(getAlignmentModel().editableIndexByBaseCallIndex(getRightCutPosition()).getBefore() + 1);
 		
 		// Draw cut off background:
 		g.setColor(getFormats().getCutBackgroundColor());
@@ -138,15 +136,18 @@ public class PherogramArea extends CustomHeightFullWidthArea implements Pherogra
 		g.fill(new Rectangle2D.Double(leftX, e.getRectangle().y, rightX - leftX, e.getRectangle().height));
 
 		SimpleSequenceInterval paintRange = calculatePaintRange(e);
-		double x = (getFirstSeqPos() - getLeftCutPosition()) * getOwner().getOwner().getCompoundWidth() + 
-				getOwner().getOwner().getDataAreas().getGlobalMaxLengthBeforeStart();
+		double x = getOwner().paintXByColumn(getFirstSeqPos() - getLeftCutPosition());
 		double y = 0; 
 		double height = getHeight();
 		ScaledPherogramDistortion distortion = getAlignmentModel().createPherogramDistortion();
 		
 		// Paint gaps:
-		painter.paintGaps(g, paintRange.getFirstPos(), paintRange.getLastPos(), x, y, height,	distortion, 
-				getOwner().getOwner().getCompoundWidth());
+		if (getOwner().getOwner().getAlignmentModel() instanceof ConcatenatedAlignmentModel) {
+			throw new InternalError("Support for concatenated models not yet implemented.");
+		}
+		double tokenWidth = getOwner().getOwner().getTokenWidth(0);  //TODO Use index of an aligned column to determine correct width also for concatenated models.
+		
+		painter.paintGaps(g, paintRange.getFirstPos(), paintRange.getLastPos(), x, y, height,	distortion, tokenWidth);
 		
 		// Paint base call lines
 		if (getFormats().isShowBaseCallLines()) {
@@ -158,8 +159,7 @@ public class PherogramArea extends CustomHeightFullWidthArea implements Pherogra
     // Paint indices:
 		g.setFont(getFormats().getIndexFont());
 		g.setColor(Color.BLACK);
-		painter.paintBaseCallIndices(g, paintRange.getFirstPos(), paintRange.getLastPos(), x, y, 
-				distortion, getOwner().getOwner().getCompoundWidth());
+		painter.paintBaseCallIndices(g, paintRange.getFirstPos(), paintRange.getLastPos(), x, y, distortion, tokenWidth);
 		y += getFormats().getIndexFont().getSize() * PherogramFormats.FONT_HEIGHT_FACTOR;
 		
 		// Paint base calls and probabilities:
@@ -168,7 +168,7 @@ public class PherogramArea extends CustomHeightFullWidthArea implements Pherogra
 		
 		// Draw curves:
 		height = painter.paintTraceCurves(g, paintRange.getFirstPos(), paintRange.getLastPos(), 
-				x, getHeight() - painter.calculateTraceCurvesHeight(),	distortion, getOwner().getOwner().getCompoundWidth());
+				x, getHeight() - painter.calculateTraceCurvesHeight(),	distortion, tokenWidth);
 	}
 
 
@@ -268,15 +268,15 @@ public class PherogramArea extends CustomHeightFullWidthArea implements Pherogra
 
 	@Override
 	public int getLengthBeforeStart() {
-		return Math.max(0, getAlignmentModel().baseCallIndexByEditableIndex(0).getAfter() * getOwner().getOwner().getCompoundWidth());
+		return Math.max(0, getOwner().paintXByColumn(getAlignmentModel().baseCallIndexByEditableIndex(0).getAfter()));
 	}
 
 
 	@Override
 	public int getLength() {
-		return (getAlignmentModel().editableIndexByBaseCallIndex(getRightCutPosition() - 1).getAfter() + 1 + // space until the end of the aligned part
-				(getProvider().getSequenceLength() - getRightCutPosition()))  // possible unaligned part at the right end 
-				* getOwner().getOwner().getCompoundWidth();
+		return getOwner().paintXByColumn(getAlignmentModel().editableIndexByBaseCallIndex(getRightCutPosition() - 1).getAfter() + 1 + // space until the end of the aligned part
+				(getProvider().getSequenceLength() - getRightCutPosition()))  // possible unaligned part at the right end
+				- getOwner().getOwner().getDataAreas().getGlobalMaxLengthBeforeStart(); 
 	}
 
 

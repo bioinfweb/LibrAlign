@@ -64,7 +64,7 @@ public class SequenceAreaMap extends TreeMap<Integer, SequenceArea> implements S
 	 * @since 0.3.0
 	 */
 	public void updateElements() {
-		if (getOwner().getOwner().hasSequenceProvider()) {
+		if (getOwner().getOwner().hasAlignmentModel()) {
 			// Backup this map and clear it: (Necessary to remove sequences that are not present in the source anymore.)
 			Map<Integer, SequenceArea> saveMap = new TreeMap<Integer, SequenceArea>(this);
 			clear();

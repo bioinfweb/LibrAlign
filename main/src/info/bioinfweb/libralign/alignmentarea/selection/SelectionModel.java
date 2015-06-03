@@ -25,7 +25,6 @@ import java.util.Iterator;
 import java.util.List;
 
 import info.bioinfweb.libralign.alignmentarea.AlignmentArea;
-import info.bioinfweb.libralign.alignmentarea.content.AlignmentContentArea;
 import info.bioinfweb.libralign.model.AlignmentModel;
 
 

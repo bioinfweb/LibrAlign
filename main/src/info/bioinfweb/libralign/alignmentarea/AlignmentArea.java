@@ -19,9 +19,11 @@
 package info.bioinfweb.libralign.alignmentarea;
 
 
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Rectangle;
+import java.awt.SystemColor;
 import java.util.Iterator;
 
 import javax.swing.JComponent;
@@ -31,10 +33,8 @@ import org.eclipse.swt.widgets.Composite;
 
 import info.bioinfweb.commons.tic.TICComponent;
 import info.bioinfweb.commons.tic.TICPaintEvent;
-import info.bioinfweb.libralign.AlignmentDataViewMode;
 import info.bioinfweb.libralign.alignmentarea.content.AlignmentContentArea;
 import info.bioinfweb.libralign.alignmentarea.content.AlignmentSubArea;
-import info.bioinfweb.libralign.alignmentarea.content.SequenceColorSchema;
 import info.bioinfweb.libralign.alignmentarea.label.AlignmentLabelArea;
 import info.bioinfweb.libralign.alignmentarea.order.SequenceOrder;
 import info.bioinfweb.libralign.alignmentarea.selection.SelectionModel;
@@ -47,6 +47,7 @@ import info.bioinfweb.libralign.dataarea.DataAreaModelListener;
 import info.bioinfweb.libralign.editsettings.EditSettings;
 import info.bioinfweb.libralign.model.AlignmentModelChangeListener;
 import info.bioinfweb.libralign.model.AlignmentModel;
+import info.bioinfweb.libralign.model.concatenated.ConcatenatedAlignmentModel;
 import info.bioinfweb.libralign.model.events.SequenceChangeEvent;
 import info.bioinfweb.libralign.model.events.SequenceRenamedEvent;
 import info.bioinfweb.libralign.model.events.TokenChangeEvent;
@@ -61,33 +62,23 @@ import info.bioinfweb.libralign.multiplealignments.MultipleAlignmentsContainer;
  * @since 0.0.0
  */
 public class AlignmentArea extends TICComponent implements AlignmentModelChangeListener, DataAreaModelListener {
-	public static final int COMPOUND_WIDTH = 10;
-	public static final int COMPOUND_HEIGHT = 14;
+	public static final double DEFAULT_CURSOR_LINE_WIDTH = 2;
+	public static final int MIN_PART_AREA_HEIGHT = 5;
 	
-	public static final String FONT_NAME = Font.SANS_SERIF;
-	public static final int FONT_STYLE = Font.PLAIN;
-	public static final float FONT_SIZE_FACTOR = 0.7f;
-	public static final int MIN_FONT_SIZE = 4;
-
 	/** Defines the width of the divider of the GUI components for the head, content, and bottom area. */ 
 	public static final int DIVIDER_WIDTH = 2;
 	
-	public static final int MIN_PART_AREA_HEIGHT = 5;
-	
-	
+
 	private AlignmentModel<?> alignmentModel = null;
 	private SequenceOrder sequenceOrder = new SequenceOrder(this);
 	private float zoomX = 1f;
 	private float zoomY = 1f;
-	private int compoundWidth = COMPOUND_WIDTH;
-	private int compoundHeight = COMPOUND_HEIGHT;	
-	private Font compoundFont = new Font(Font.SANS_SERIF, Font.PLAIN, Math.round(COMPOUND_HEIGHT * 0.7f));
 	private DataAreaModel dataAreas = new DataAreaModel(this);
-	private SequenceColorSchema colorSchema = new SequenceColorSchema();  //TODO Remove
 	private TokenPainterList tokenPainterList = new TokenPainterList(this);
-	private TokenPainter defaultTokenPainter = new SingleColorTokenPainter();  // Currently all elements would be painted in the default color.
+	private Color cursorColor = Color.BLACK;
+	private double cursorLineWidth = DEFAULT_CURSOR_LINE_WIDTH;
+	private Color selectionColor = SystemColor.textHighlight;    //TODO Move cursor color, width and selection color to separate object?
 	private EditSettings editSettings;
-	private AlignmentDataViewMode viewMode = AlignmentDataViewMode.NUCLEOTIDE;  //TODO Remove
 	private SelectionModel selection = new SelectionModel(this);
 
 	private MultipleAlignmentsContainer container = null;
@@ -131,7 +122,7 @@ public class AlignmentArea extends TICComponent implements AlignmentModelChangeL
 	}
 
 
-	public boolean hasSequenceProvider() {
+	public boolean hasAlignmentModel() {
 		return getAlignmentModel() != null;
 	}
 	
@@ -225,63 +216,101 @@ public class AlignmentArea extends TICComponent implements AlignmentModelChangeL
 	public void setZoom(float zoomX, float zoomY) {
 		this.zoomX = zoomX;
 		this.zoomY = zoomY;
-		compoundWidth = Math.round(COMPOUND_WIDTH * zoomX);
-		compoundHeight = Math.round(COMPOUND_HEIGHT * zoomY);
-		calculateFont();
 		
 		//assignPaintSize();
 		//fireZoomChanged();
 	}
 	
-	
-	private void calculateFont() {
-		compoundFont = new Font(FONT_NAME, FONT_STYLE, Math.round(Math.min(
-				compoundHeight * (COMPOUND_WIDTH / COMPOUND_HEIGHT), compoundWidth) * FONT_SIZE_FACTOR));
-	}
-
 	
 	/**
-	 * Returns the current width of a compound depending on the current zoom factor.
+	 * Returns the width of the column with the specified index.
 	 * 
-	 * @return a float value greater than zero
+	 * @param columnIndex the index of the column to determine the width from
+	 * @return the width of column in pixels
+	 * @throws IllegalStateException if this instance does not have an alignment model
+	 * @throws IndexOutOfBoundsException if the specified column does not exist in the alignment model
 	 */
-	public int getCompoundWidth() {
-		return compoundWidth;
+	public double getTokenWidth(int columnIndex) {
+		if (!hasAlignmentModel()) {
+			throw new IllegalStateException("There is no associated alignment model defined that specifies any columns.");
+		}
+		else if ((columnIndex < 0) || (columnIndex >= getAlignmentModel().getMaxSequenceLength())) {
+			throw new IndexOutOfBoundsException("A column with the index " + columnIndex + " does not exist in the current model.");
+		}
+		else {
+			return getTokenPainterList().painterByColumn(columnIndex).getPreferredWidth() * getZoomX();
+		}
 	}
-
-
-	public void setCompoundWidth(int compoundWidth) {
-		this.compoundWidth = compoundWidth;
-		zoomX = compoundWidth / COMPOUND_WIDTH;
-		calculateFont();
-		
-		//assignPaintSize();
-		//fireZoomChanged();
+	
+	
+	public double maxTokenWidth() {
+		if (getTokenPainterList().isEmpty()) {
+			return getTokenPainterList().getDefaultTokenPainter().getPreferredWidth() * getZoomX();
+		}
+		else {
+			double result = 0;
+			for (TokenPainter painter : getTokenPainterList()) {
+				double width;
+				if (painter == null) {
+					width = getTokenPainterList().getDefaultTokenPainter().getPreferredWidth();
+				}
+				else {
+					width = painter.getPreferredWidth();
+				}
+				result = Math.max(result, width);
+			}
+			return result * getZoomX();
+		}
 	}
-
-
+	
+	
+	public double minTokenWidth() {
+		if (getTokenPainterList().isEmpty()) {
+			return getTokenPainterList().getDefaultTokenPainter().getPreferredWidth() * getZoomX();
+		}
+		else {
+			double result = 0;
+			for (TokenPainter painter : getTokenPainterList()) {
+				double width;
+				if (painter == null) {
+					width = getTokenPainterList().getDefaultTokenPainter().getPreferredWidth();
+				}
+				else {
+					width = painter.getPreferredWidth();
+				}
+				result = Math.min(result, width);
+			}
+			return result * getZoomX();
+		}
+	}
+	
+	
 	/**
-	 * Returns the current height of a compound depending on the current zoom factor.
+	 * Returns the height of tokens displayed in this alignment.
 	 * 
-	 * @return a float value greater than zero
+	 * @return the height in pixels
 	 */
-	public int getCompoundHeight() {
-		return compoundHeight;
+	public double getTokenHeight() {
+		if (!hasAlignmentModel()) {
+			throw new IllegalStateException("There is no associated alignment model defined that specifies any columns.");
+		}
+		else {
+			int index;
+			if (getAlignmentModel() instanceof ConcatenatedAlignmentModel) {
+				throw new InternalError("not implemented");
+				// index = ?;   //TODO Which painter should define the height?
+			}
+			else {
+				index = 0;
+			}
+			return getTokenPainterList().painterByColumn(index).getPreferredHeight() * getZoomY();
+		}
 	}
 	
 	
-	public void setCompoundHeight(int compoundHeight) {
-		this.compoundHeight = compoundHeight;
-		zoomY = compoundHeight / COMPOUND_HEIGHT;
-		calculateFont();
-		
-		//assignPaintSize();
-		//fireZoomChanged();
-	}
-
-
-	public Font getCompoundFont() {
-		return compoundFont;
+	public Font getTokenHeightFont() {
+		return new Font(Font.SANS_SERIF, Font.PLAIN, 
+				(int)Math.round(SingleColorTokenPainter.FONT_SIZE_FACTOR * getTokenHeight()));
 	}
 	
 	
@@ -293,11 +322,6 @@ public class AlignmentArea extends TICComponent implements AlignmentModelChangeL
 	 */
 	public DataAreaModel getDataAreas() {
 		return dataAreas;
-	}
-
-
-	public SequenceColorSchema getColorSchema() {  //TODO Remove
-		return colorSchema;
 	}
 
 
@@ -315,31 +339,38 @@ public class AlignmentArea extends TICComponent implements AlignmentModelChangeL
 	}
 
 
-	/**
-	 * Returns the default token painter that is used to paint tokens from the alignment model if no according
-	 * painter in defined in {@link #getTokenPainterList()} or the painter specified there is not able to paint
-	 * the according token.
-	 * 
-	 * @return the default token painter instance used by this alignment area
-	 */
-	public TokenPainter getDefaultTokenPainter() {
-		return defaultTokenPainter;
+	public Color getCursorColor() {
+		return cursorColor;
+	}
+
+
+	public void setCursorColor(Color cursorColor) {
+		this.cursorColor = cursorColor;
+	}
+
+
+	public Color getSelectionColor() {
+		return selectionColor;
+	}
+
+
+	public void setSelectionColor(Color selectionColor) {
+		this.selectionColor = selectionColor;
+	}
+
+
+	public double getCursorLineWidth() {
+		return cursorLineWidth;
+	}
+
+
+	public void setCursorLineWidth(double cursorLineWidth) {
+		this.cursorLineWidth = cursorLineWidth;
 	}
 
 
 	public EditSettings getEditSettings() {
 		return editSettings;
-	}
-
-
-	public AlignmentDataViewMode getViewMode() {  //TODO remove
-		return viewMode;
-	}
-	
-	
-	public void setViewMode(AlignmentDataViewMode viewMode) {  //TODO remove
-		this.viewMode = viewMode;
-		//TODO repaint
 	}
 
 

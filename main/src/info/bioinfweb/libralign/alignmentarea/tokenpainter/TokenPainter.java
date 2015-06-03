@@ -76,5 +76,5 @@ public interface TokenPainter {
 	 * @param tokenRepresentation the string representation of the token
 	 * @return the color associated with the token or {@code null} of no associated color is known.
 	 */
-	public Color getColor(String tokenRepresentation); 
+	public Color getColor(String tokenRepresentation);
 }

@@ -38,6 +38,7 @@ import info.bioinfweb.libralign.alignmentarea.selection.SelectionModel;
 import info.bioinfweb.libralign.dataarea.DataArea;
 import info.bioinfweb.libralign.dataarea.DataAreaListType;
 import info.bioinfweb.libralign.dataarea.DataAreaLocation;
+import info.bioinfweb.libralign.model.concatenated.ConcatenatedAlignmentModel;
 import info.bioinfweb.libralign.multiplealignments.MultipleAlignmentsContainer;
 
 
@@ -79,20 +80,6 @@ public class AlignmentContentArea extends TICComponent {
 
 
 	/**
-	 * Indicates whether compounds should are printed as text.
-	 * <p>
-	 * If any zoom factor is to low, each compound is only painted as a rectangle without any text in it.
-	 * Text output will not be done, if the font size would be below {@link #MIN_FONT_SIZE}.
-	 * </p>
-	 * 
-	 * @return {@code true}, if any compound text will be painted, {@code false} otherwise
-	 */
-	public boolean isPaintCompoundText() {  //TODO This method can be removed when token painter are implemented.
-		return getOwner().getCompoundFont().getSize() >= AlignmentArea.MIN_FONT_SIZE;
-	}
-	
-	
-	/**
 	 * Returns the rectangle in the paint coordinate system of scrolled area displaying the sequences, that contains
 	 * all cells currently occupied by the alignment cursor. 
 	 * <p>
@@ -104,11 +91,12 @@ public class AlignmentContentArea extends TICComponent {
 		SelectionModel selection = getOwner().getSelection();
 		int y = paintYByRow(selection.getCursorRow());
 		Rectangle result = new Rectangle(paintXByColumn(selection.getCursorColumn()), y,
-				getOwner().getCompoundWidth(), paintYByRow(selection.getCursorRow() + selection.getCursorHeight()) - y); 
+				(int)Math.round(getOwner().getTokenWidth(selection.getCursorColumn())), 
+				paintYByRow(selection.getCursorRow() + selection.getCursorHeight()) - y); 
 		if (selection.getCursorRow() + selection.getCursorHeight() - 1 == 
 				getOwner().getAlignmentModel().getSequenceCount() - 1) {
 			
-			result.height += getOwner().getCompoundHeight();  // Add height of the last row, because the return value of paintYByRow(maxIndex + 1) is equal to paintYByRow(maxIndex).
+			result.height += getOwner().getTokenHeight();  // Add height of the last row, because the return value of paintYByRow(maxIndex + 1) is equal to paintYByRow(maxIndex).
 		}
 		return result; 
 	}
@@ -117,11 +105,10 @@ public class AlignmentContentArea extends TICComponent {
 	@Override
 	public Dimension getSize() {
 		Dimension result = new Dimension();
-		result.width = getOwner().getDataAreas().getGlobalMaxLengthBeforeStart() + 
-				getOwner().getGlobalMaxSequenceLength() * getOwner().getCompoundWidth();
+		result.width = paintXByColumn(getOwner().getGlobalMaxSequenceLength());  //TODO Test if this is equivalent to previous implementation.
 		result.height = getOwner().getDataAreas().getVisibleAreaHeight();
-		if (getOwner().hasSequenceProvider()) {
-			result.height += getOwner().getAlignmentModel().getSequenceCount() * getOwner().getCompoundHeight();
+		if (getOwner().hasAlignmentModel()) {
+			result.height += getOwner().getAlignmentModel().getSequenceCount() * getOwner().getTokenHeight();
 		}
 		return result;
 	}
@@ -170,8 +157,13 @@ public class AlignmentContentArea extends TICComponent {
 	 * @return the alignment column
 	 */
 	public int columnByPaintX(int x) {
-		return Math.max(0, Math.min(getOwner().getGlobalMaxSequenceLength() - 1,
-				(int)((x - getOwner().getDataAreas().getGlobalMaxLengthBeforeStart()) / getOwner().getCompoundWidth())));
+		if (getOwner().getAlignmentModel() instanceof ConcatenatedAlignmentModel) {
+			throw new InternalError("not implemented");  //TODO Implement and consider that different alignment parts may have different token widths here.
+		}
+		else {
+			return Math.max(0, Math.min(getOwner().getGlobalMaxSequenceLength() - 1,
+					(int)((x - getOwner().getDataAreas().getGlobalMaxLengthBeforeStart()) / getOwner().getTokenWidth(0))));  //TODO Catch IllegalStateException?
+		}
 	}
 
 
@@ -184,7 +176,12 @@ public class AlignmentContentArea extends TICComponent {
 	 * @return a value >= 0
 	 */
 	public int paintXByColumn(int column) {
-		return (int)((column - 1) * getOwner().getCompoundWidth()) + getOwner().getDataAreas().getGlobalMaxLengthBeforeStart();
+		if (getOwner().getAlignmentModel() instanceof ConcatenatedAlignmentModel) {
+			throw new InternalError("not implemented");  //TODO Implement and consider that different alignment parts may have different token widths here.
+		}
+		else {
+			return (int)((column - 1) * getOwner().getTokenWidth(0)) + getOwner().getDataAreas().getGlobalMaxLengthBeforeStart();  //TODO Catch IllegalStateException?
+		}
 	}
 
 

@@ -33,12 +33,12 @@ import java.util.Set;
 
 import info.bioinfweb.commons.Math2;
 import info.bioinfweb.commons.collections.ListChangeType;
-import info.bioinfweb.commons.text.StringUtils;
 import info.bioinfweb.commons.tic.TICPaintEvent;
 import info.bioinfweb.libralign.alignmentarea.AlignmentArea;
 import info.bioinfweb.libralign.alignmentarea.content.AlignmentContentArea;
 import info.bioinfweb.libralign.dataarea.DataAreaListType;
 import info.bioinfweb.libralign.model.AlignmentModel;
+import info.bioinfweb.libralign.model.concatenated.ConcatenatedAlignmentModel;
 import info.bioinfweb.libralign.model.events.SequenceChangeEvent;
 import info.bioinfweb.libralign.model.events.SequenceRenamedEvent;
 import info.bioinfweb.libralign.model.events.TokenChangeEvent;
@@ -73,12 +73,6 @@ public class SequenceIndexArea extends CustomHeightFullWidthArea {
 	/** The distance of the labels to their dash  */
 	public static final double LABEL_LEFT_DISTANCE_FACTOR = 0.2f;
 
-	/** 
-  * This string is used to test if the interval between two main dashes is smaller than 
-  * the usual label text. 
-  */
-  //public static final String LABEL_LENGTH_STANDARD = "00000";
-	
 	
   private int firstIndex = DEFAULT_FIRST_INDEX;
 
@@ -89,7 +83,7 @@ public class SequenceIndexArea extends CustomHeightFullWidthArea {
 	 * @param owner - the alignment area that is going to contain this data area
 	 */
 	public SequenceIndexArea(AlignmentContentArea owner) {
-		super(owner, owner.getOwner().getCompoundHeight());
+		super(owner, (int)Math.round(owner.getOwner().getTokenHeight()));
 	}
 
 
@@ -104,7 +98,7 @@ public class SequenceIndexArea extends CustomHeightFullWidthArea {
   
   
 	private int calculateLabelInterval(FontMetrics fontMetrics) {
-		double compoundWidth = getOwner().getOwner().getCompoundWidth();
+		double compoundWidth = getOwner().getOwner().minTokenWidth();
 		return (int)Math2.roundUp((fontMetrics.stringWidth("0") * ("" + getOwner().getOwner().getGlobalMaxSequenceLength()).length() + 
 				2 * LABEL_LEFT_DISTANCE_FACTOR * compoundWidth) / compoundWidth);
 	}
@@ -123,17 +117,20 @@ public class SequenceIndexArea extends CustomHeightFullWidthArea {
 		paintSelection(g);
 		
     // Paint base line
-		double compoundWidth = getOwner().getOwner().getCompoundWidth();
+		if (getOwner().getOwner().getAlignmentModel() instanceof ConcatenatedAlignmentModel) {
+			throw new InternalError("Support for concatenated models not yet implemented.");
+		}
+		double compoundWidth = getOwner().getOwner().getTokenWidth(0);  //TODO Implement support for concatenated models.
 		g.setColor(SystemColor.menuText);
     g.draw(new Line2D.Double(visibleRect.x, getHeight() - 1, visibleRect.x + visibleRect.width, getHeight() - 1));  // base line
     
     // Paint text data and dashes:
     final int maxLengthBeforeStart = getOwner().getOwner().getDataAreas().getGlobalMaxLengthBeforeStart(); 
-    double labelLeftDistance = LABEL_LEFT_DISTANCE_FACTOR * getOwner().getOwner().getCompoundWidth();
-    g.setFont(getOwner().getOwner().getCompoundFont());
+    double labelLeftDistance = LABEL_LEFT_DISTANCE_FACTOR * compoundWidth;
+    g.setFont(getOwner().getOwner().getTokenHeightFont());
     int labelInterval = calculateLabelInterval(g.getFontMetrics());
     double x = Math.max(compoundWidth / 2f,  
-    		visibleRect.x - visibleRect.x % compoundWidth - labelInterval * getOwner().getOwner().getCompoundWidth() - compoundWidth / 2f);  // labelInterval is subtracted because partly visible text should also be painted
+    		visibleRect.x - visibleRect.x % compoundWidth - labelInterval * compoundWidth - compoundWidth / 2f);  // labelInterval is subtracted because partly visible text should also be painted
     Stroke stroke = g.getStroke();
     try {
       while (x <= visibleRect.x + visibleRect.width) {
@@ -173,7 +170,8 @@ public class SequenceIndexArea extends CustomHeightFullWidthArea {
 
 	@Override
 	public int getLength() {
-		return getOwner().getOwner().getCompoundWidth() * getOwner().getOwner().getGlobalMaxSequenceLength();
+		return getOwner().paintXByColumn(getOwner().getOwner().getGlobalMaxSequenceLength()) 
+				- getOwner().getOwner().getDataAreas().getGlobalMaxLengthBeforeStart();
 	}
 
 

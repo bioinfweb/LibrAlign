@@ -17,7 +17,6 @@ main/lib/commons-lang3-3.1.jar -text
 main/lib/core-1.8.5.jar -text
 main/lib/sequencing-1.8.5.jar -text
 main/lib/swt.jar -text
-main/src/info/bioinfweb/libralign/AlignmentDataViewMode.java -text svneol=unset#text/plain
 main/src/info/bioinfweb/libralign/GeneticCode.java -text svneol=unset#text/plain
 main/src/info/bioinfweb/libralign/actions/AlignmentActionProvider.java -text svneol=unset#text/plain
 main/src/info/bioinfweb/libralign/alignmentarea/AlignmentArea.java -text svneol=unset#text/plain

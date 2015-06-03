@@ -94,7 +94,7 @@ public class ConsensusSequenceArea extends CustomHeightFullWidthArea {
 	private ConsensusSequenceArea(AlignmentContentArea owner, AlignmentModel<?> alignmentModel, 
 			boolean useAlignmentModelFromOwner) {
 			
-		super(owner, Math.round(DEFAULT_HEIGHT_FACTOR * owner.getOwner().getCompoundHeight()));  //TODO Add listener for compoundHeight that updates the height.
+		super(owner, (int)Math.round(DEFAULT_HEIGHT_FACTOR * owner.getOwner().getTokenHeight()));  //TODO Add listener for compoundHeight that updates the height.
 		if (alignmentModel == null) {
 			throw new IllegalArgumentException("The sequence data provider must not be null.");
 		}
@@ -187,7 +187,8 @@ public class ConsensusSequenceArea extends CustomHeightFullWidthArea {
 	
 	@Override
 	public int getLength() {
-		return getOwner().getOwner().getCompoundWidth() * getAlignmentModel().getMaxSequenceLength();
+		return getOwner().paintXByColumn(getAlignmentModel().getMaxSequenceLength()) 
+				- getOwner().getOwner().getDataAreas().getGlobalMaxLengthBeforeStart();
 	}
 
 	
@@ -207,33 +208,34 @@ public class ConsensusSequenceArea extends CustomHeightFullWidthArea {
 			lastIndex = lastColumn;
 		}
 		
+		//TODO Refactor nucleotide independent:
 		// Paint output:
-		Map<String, Color> map = getOwner().getOwner().getColorSchema().getNucleotideColorMap();
-    Color[] bgColors = new Color[]{map.get("A"), map.get("T"), map.get("C"), map.get("G")};
-    
-		AlignmentAmbiguityNucleotideCompoundSet compoundSet =  
-				AlignmentAmbiguityNucleotideCompoundSet.getAlignmentAmbiguityNucleotideCompoundSet();
-		g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-  	float x = firstIndex * getOwner().getOwner().getCompoundWidth() + getOwner().getOwner().getDataAreas().getGlobalMaxLengthBeforeStart();
-		float sequenceY = getHeight() - getOwner().getOwner().getCompoundHeight();
-		final float barWidth = getOwner().getOwner().getCompoundWidth() / 4; 
-		for (int i = firstIndex; i <= lastIndex; i++) {
-			// Paint bars:
-			float barX = x;
-			AmbiguityBaseScore score = getScore(i);
-			for (int j = 0; j < 4; j++) {
-				float barHeight = sequenceY * (float)score.getScoreByIndex(j);
-				g.setColor(bgColors[j]);
-				g.fill(new Rectangle2D.Float(barX, sequenceY - barHeight, barWidth, barHeight));
-				barX += barWidth;
-			}
-			
-			// Paint token:
-			SequenceArea.paintCompound(getOwner().getOwner(), event.getGraphics(), 
-					compoundSet.getCompoundForString("" + score.getConsensusBase()), x, sequenceY, false);
-			
-	    x += getOwner().getOwner().getCompoundWidth();
-    }
+//		Map<String, Color> map = getOwner().getOwner().getColorSchema().getNucleotideColorMap();
+//    Color[] bgColors = new Color[]{map.get("A"), map.get("T"), map.get("C"), map.get("G")};
+//    
+//		AlignmentAmbiguityNucleotideCompoundSet compoundSet =  
+//				AlignmentAmbiguityNucleotideCompoundSet.getAlignmentAmbiguityNucleotideCompoundSet();
+//		g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+//  	float x = firstIndex * getOwner().getOwner().getCompoundWidth() + getOwner().getOwner().getDataAreas().getGlobalMaxLengthBeforeStart();
+//		float sequenceY = getHeight() - getOwner().getOwner().getCompoundHeight();
+//		final float barWidth = getOwner().getOwner().getCompoundWidth() / 4; 
+//		for (int i = firstIndex; i <= lastIndex; i++) {
+//			// Paint bars:
+//			float barX = x;
+//			AmbiguityBaseScore score = getScore(i);
+//			for (int j = 0; j < 4; j++) {
+//				float barHeight = sequenceY * (float)score.getScoreByIndex(j);
+//				g.setColor(bgColors[j]);
+//				g.fill(new Rectangle2D.Float(barX, sequenceY - barHeight, barWidth, barHeight));
+//				barX += barWidth;
+//			}
+//			
+//			// Paint token:
+//			SequenceArea.paintCompound(getOwner().getOwner(), event.getGraphics(), 
+//					compoundSet.getCompoundForString("" + score.getConsensusBase()), x, sequenceY, false);
+//			
+//	    x += getOwner().getOwner().getCompoundWidth();
+//    }
 	}
 
 	

@@ -28,6 +28,7 @@ import org.biojava3.core.sequence.compound.NucleotideCompound;
 
 import info.bioinfweb.commons.Math2;
 import info.bioinfweb.commons.bio.biojava3.core.sequence.compound.AlignmentAmbiguityNucleotideCompoundSet;
+import info.bioinfweb.libralign.model.concatenated.ConcatenatedAlignmentModel;
 import info.bioinfweb.libralign.pherogram.PherogramUtils;
 import info.bioinfweb.libralign.pherogram.distortion.GapPattern;
 import info.bioinfweb.libralign.pherogram.distortion.ScaledPherogramDistortion;
@@ -35,8 +36,7 @@ import info.bioinfweb.libralign.pherogram.distortion.ScaledPherogramDistortion;
 
 
 /**
- * Classes implementing this interface allow storing data that defines the alignment between a
- * pherogram and the sequence in an alignment area it is associated with.
+ * Stores data defining the alignment between a pherogram and the sequence in an alignment area it is associated with.
  * 
  * @author Ben St&ouml;ver
  */
@@ -45,12 +45,28 @@ public class PherogramAlignmentModel {
 	private List<ShiftChange> shiftChangeList = new ArrayList<ShiftChange>();
   
 	
+	/**
+	 * Creates a new instance of this class.
+	 * 
+	 * @param owner the pherogram area relying on this model
+	 * @throws NullPointerException if {@code owner} is {@code null}
+	 */
 	public PherogramAlignmentModel(PherogramArea owner) {
 		super();
-		this.owner = owner;
+		if (owner == null) {
+			throw new NullPointerException("The provided owner argument must not be null.");
+		}
+		else {
+			this.owner = owner;
+		}
 	}
 
 
+	/**
+	 * The pherogram area associated with this model.
+	 * 
+	 * @return the associated data area (never {@code null})
+	 */
 	public PherogramArea getOwner() {
 		return owner;
 	}
@@ -363,7 +379,10 @@ public class PherogramAlignmentModel {
 			shiftChange = shiftChangeIterator.next();
 		}
 		
-		final int compoundWidth = getOwner().getOwner().getOwner().getCompoundWidth();
+		if (getOwner().getOwner().getOwner().getAlignmentModel() instanceof ConcatenatedAlignmentModel) {
+			throw new InternalError("Support for concatenated models not yet implemented.");
+		}
+		final double compoundWidth = getOwner().getOwner().getOwner().getTokenWidth(0);  //TODO Use index of an aligned column to determine correct width also for concatenated models.
 		int stepWidth = 1;
 		int editPosPerBaseCallPos = 1;
 		double baseCallPaintX = 0; //0.5 * compoundWidth;

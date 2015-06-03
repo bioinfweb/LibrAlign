@@ -24,7 +24,6 @@ import java.awt.RenderingHints;
 import java.awt.geom.Line2D;
 
 import info.bioinfweb.commons.tic.TICPaintEvent;
-import info.bioinfweb.libralign.alignmentarea.content.AlignmentSubArea;
 import info.bioinfweb.libralign.alignmentarea.content.SequenceArea;
 
 

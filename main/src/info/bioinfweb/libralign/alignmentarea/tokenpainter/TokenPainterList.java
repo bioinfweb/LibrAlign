@@ -20,8 +20,10 @@ package info.bioinfweb.libralign.alignmentarea.tokenpainter;
 
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
+import info.bioinfweb.commons.collections.CollectionUtils;
 import info.bioinfweb.libralign.alignmentarea.AlignmentArea;
 import info.bioinfweb.libralign.model.concatenated.ConcatenatedAlignmentModel;
 
@@ -30,14 +32,15 @@ import info.bioinfweb.libralign.model.concatenated.ConcatenatedAlignmentModel;
 /**
  * Manages a list of {@link TokenPainter}s used by {@link AlignmentArea}. For usual alignment models
  * this list will contain only one token painter, but if an instance of {@link ConcatenatedAlignmentModel}
- * is used, it will contain one token painter for each part model. 
+ * is used, it will contain one token painter for each part model.
  * 
  * @author Ben St&ouml;ver
  * @since 0.4.0
  */
-public class TokenPainterList {
+public class TokenPainterList implements Iterable<TokenPainter> {
 	private AlignmentArea owner;
 	private List<TokenPainter> painters = new ArrayList<TokenPainter>();
+	private TokenPainter defaultTokenPainter = new SingleColorTokenPainter();  // Currently all elements would be painted in the default color.
 	
 	
 	/**
@@ -70,6 +73,31 @@ public class TokenPainterList {
 	 */
 	public TokenPainter get(int index) {
 		return painters.get(index);
+	}
+	
+	
+	/**
+	 * Returns the according painter to the specified column index. If no painter is found, the default painter will
+	 * be returned, even if the specified column does not exist in the associated model.
+	 * 
+	 * @param columnIndex the index of the column that contains the token to be painted
+	 * @return the associated painter or the default painter if no according painter is available
+	 */
+	public TokenPainter painterByColumn(int columnIndex) {
+		TokenPainter result = null;
+		if (getOwner().hasAlignmentModel()) {
+			if (getOwner().getAlignmentModel() instanceof ConcatenatedAlignmentModel) {
+				throw new InternalError("not implemented");
+				//TODO Implement returning painters for concatenated model
+			}
+			else {
+				result = get(0);  // In this case this list must have the length 1.
+			}
+		}
+		if (result == null) {
+			return getDefaultTokenPainter();
+		}
+		return result;
 	}
 
 
@@ -108,6 +136,39 @@ public class TokenPainterList {
 	 */
 	public int indexOf(TokenPainter painter) {
 		return painters.indexOf(painter);
+	}
+
+
+	/**
+	 * Returns an unmodifiable iterator over all painter of this list. ({@code null} elements can occur.)
+	 * 
+	 * @return an iterator not supporting {@link Iterator#remove()}
+	 */
+	@Override
+	public Iterator<TokenPainter> iterator() {
+		return CollectionUtils.unmodifiableIterator(painters.iterator());
+	}
+
+
+	/**
+	 * Checks whether this list contains any painters. A list with only {@code null} elements is not empty.
+	 * A list with the length of 0 only specifying a default painter is considered empty. 
+	 * 
+	 * @return {@code true} if the list is empty, {@code false} otherwise
+	 */
+	public boolean isEmpty() {
+		return painters.isEmpty();
+	}
+
+
+	/**
+	 * Returns the default token painter that is used to paint tokens from the alignment model if no according
+	 * painter is defined in the list.
+	 * 
+	 * @return the default token painter instance used by this alignment area
+	 */
+	public TokenPainter getDefaultTokenPainter() {
+		return defaultTokenPainter;
 	}
 
 

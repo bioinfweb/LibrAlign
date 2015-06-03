@@ -82,7 +82,7 @@ public class AlignmentAreaList extends ObservableList<AlignmentArea> {
 	
 	
 	private void addListenerToAlignmentArea(AlignmentArea alignmentArea) {
-		if (alignmentArea.hasSequenceProvider()) {
+		if (alignmentArea.hasAlignmentModel()) {
 			alignmentArea.getAlignmentModel().getChangeListeners().add(multipleAlignmentListener);
 		}
 		alignmentArea.getDataAreas().addListener(multipleAlignmentListener);
@@ -90,7 +90,7 @@ public class AlignmentAreaList extends ObservableList<AlignmentArea> {
 
 	
 	private void removeListenerToAlignmentArea(AlignmentArea alignmentArea) {
-		if (alignmentArea.hasSequenceProvider()) {
+		if (alignmentArea.hasAlignmentModel()) {
 			alignmentArea.getAlignmentModel().getChangeListeners().remove(multipleAlignmentListener);
 		}
 		alignmentArea.getDataAreas().removeListener(multipleAlignmentListener);
