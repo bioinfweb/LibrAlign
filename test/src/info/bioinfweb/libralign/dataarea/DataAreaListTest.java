@@ -60,7 +60,7 @@ public class DataAreaListTest {
   
   
   private DataArea createDataArea(AlignmentContentArea alignmentArea) {
-  	return new DataArea(alignmentArea) {
+  	return new DataArea(alignmentArea, alignmentArea.getOwner()) {
 						@Override
 						public void paint(TICPaintEvent event) {}
 						

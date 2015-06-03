@@ -28,6 +28,7 @@ import info.bioinfweb.commons.bio.biojava3.core.sequence.compound.AlignmentAmbig
 import info.bioinfweb.jphyloio.events.TokenSetType;
 import info.bioinfweb.libralign.alignmentarea.AlignmentArea;
 import info.bioinfweb.libralign.alignmentarea.content.AlignmentContentArea;
+import info.bioinfweb.libralign.alignmentarea.tokenpainter.NucleotideTokenPainter;
 import info.bioinfweb.libralign.dataarea.implementations.ConsensusSequenceArea;
 import info.bioinfweb.libralign.dataarea.implementations.SequenceIndexArea;
 import info.bioinfweb.libralign.dataarea.implementations.charset.CharSet;
@@ -52,7 +53,7 @@ import org.biojava3.core.sequence.compound.NucleotideCompound;
  * @author Ben St&ouml;ver
  */
 public class AbstractApplication {
-	private CharSetArea createCharSetArea(AlignmentContentArea owner) {
+	private CharSetArea createCharSetArea(AlignmentContentArea owner, AlignmentArea labeledArea) {
 		CharSetDataModel model = new CharSetDataModel();
 		
 		CharSet charSet = new CharSet("A", Color.RED);
@@ -69,7 +70,7 @@ public class AbstractApplication {
 		charSet.add(17, 25);
 		model.add(charSet);
 		
-		return new CharSetArea(owner, model);
+		return new CharSetArea(owner, labeledArea, model);
 	}
 	
 	
@@ -105,34 +106,35 @@ public class AbstractApplication {
 			
 			
 			// Create alignment areas:
+			AlignmentArea mainArea = new AlignmentArea(result);  // Needs to be created first to act as a reference for data areas.
 			
 			// Index:
 			AlignmentArea area = new AlignmentArea(result);
 			area.setAllowVerticalScrolling(false);
-			area.getDataAreas().getTopAreas().add(new SequenceIndexArea(area.getContentArea()));
+			area.getDataAreas().getTopAreas().add(new SequenceIndexArea(area.getContentArea(), mainArea));
 			result.getAlignmentAreas().add(area);
 			
 			// Char sets:
 			area = new AlignmentArea(result);
 			area.setAllowVerticalScrolling(true);
-			area.getDataAreas().getTopAreas().add(createCharSetArea(area.getContentArea()));
+			area.getDataAreas().getTopAreas().add(createCharSetArea(area.getContentArea(), mainArea));
 			result.getAlignmentAreas().add(area);
       
 			// Alignment with pherograms:
-			area = new AlignmentArea(result);
-			area.setAllowVerticalScrolling(true);
+			mainArea.setAllowVerticalScrolling(true);
       			
-			area.setAlignmentModel(sequenceProvider, false);
+			mainArea.setAlignmentModel(sequenceProvider, false);
+			mainArea.getPaintSettings().getTokenPainterList().set(0, new NucleotideTokenPainter());
 			
-			PherogramArea pherogramArea = new PherogramArea(area.getContentArea(), pherogramProvider);
+			PherogramArea pherogramArea = new PherogramArea(mainArea.getContentArea(), pherogramProvider);
 			pherogramArea.setFirstSeqPos(34 + 5);
 			pherogramArea.setLeftCutPosition(34);
 			pherogramArea.setRightCutPosition(820);
 			pherogramArea.getAlignmentModel().setShiftChange(38, -1);
 			pherogramArea.getAlignmentModel().setShiftChange(49, 2);
-			area.getDataAreas().getSequenceAreas(sequenceProvider.sequenceIDByName("Sequence 4")).add(pherogramArea);
+			mainArea.getDataAreas().getSequenceAreas(sequenceProvider.sequenceIDByName("Sequence 4")).add(pherogramArea);
 			
-			result.getAlignmentAreas().add(area);
+			result.getAlignmentAreas().add(mainArea);
 			
 			// Additional alignment with longer names (to test of other label areas adopt their width):
 			alignment =	new SimpleAlignment<DNASequence, NucleotideCompound>();
@@ -146,12 +148,13 @@ public class AbstractApplication {
 			area = new AlignmentArea(result);
 			area.setAllowVerticalScrolling(false);      			
 			area.setAlignmentModel(sequenceProvider2, false);
+			area.getPaintSettings().getTokenPainterList().set(0, new NucleotideTokenPainter());
 			result.getAlignmentAreas().add(area);
 			
 			// Consensus sequence:
       area = new AlignmentArea(result);
 			area.setAllowVerticalScrolling(false);
-			area.getDataAreas().getBottomAreas().add(new ConsensusSequenceArea(area.getContentArea(), sequenceProvider));
+			area.getDataAreas().getBottomAreas().add(new ConsensusSequenceArea(area.getContentArea(), mainArea));
       result.getAlignmentAreas().add(area);
 			
 			return result;

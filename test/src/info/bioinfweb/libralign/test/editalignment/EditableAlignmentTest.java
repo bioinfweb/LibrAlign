@@ -22,6 +22,7 @@ package info.bioinfweb.libralign.test.editalignment;
 import info.bioinfweb.jphyloio.events.TokenSetType;
 import info.bioinfweb.libralign.alignmentarea.AlignmentArea;
 import info.bioinfweb.libralign.alignmentarea.content.AlignmentContentArea;
+import info.bioinfweb.libralign.alignmentarea.tokenpainter.NucleotideTokenPainter;
 import info.bioinfweb.libralign.dataarea.implementations.SequenceIndexArea;
 import info.bioinfweb.libralign.dataarea.implementations.pherogram.PherogramArea;
 import info.bioinfweb.libralign.model.AlignmentModel;
@@ -97,6 +98,7 @@ public class EditableAlignmentTest {
 			}
 			
 			alignmentArea.setAlignmentModel(provider, false);
+			alignmentArea.getPaintSettings().getTokenPainterList().set(0, new NucleotideTokenPainter());
 		}
 		
 		return alignmentArea;
