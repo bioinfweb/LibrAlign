@@ -37,6 +37,7 @@ import info.bioinfweb.commons.bio.biojava3.core.sequence.compound.AlignmentAmbig
 import info.bioinfweb.commons.tic.TICPaintEvent;
 import info.bioinfweb.libralign.alignmentarea.content.AlignmentContentArea;
 import info.bioinfweb.libralign.alignmentarea.content.SequenceArea;
+import info.bioinfweb.libralign.dataarea.DataArea;
 import info.bioinfweb.libralign.dataarea.DataAreaListType;
 import info.bioinfweb.libralign.model.AlignmentModel;
 import info.bioinfweb.libralign.model.events.SequenceChangeEvent;
@@ -51,7 +52,7 @@ import info.bioinfweb.libralign.model.events.TokenChangeEvent;
  * @author Ben St&ouml;ver
  * @since 0.0.0
  */
-public class ConsensusSequenceArea extends CustomHeightFullWidthArea {
+public class ConsensusSequenceArea extends DataArea {
 	public static final float DEFAULT_HEIGHT_FACTOR = 3f;
 	
 	
@@ -94,7 +95,7 @@ public class ConsensusSequenceArea extends CustomHeightFullWidthArea {
 	private ConsensusSequenceArea(AlignmentContentArea owner, AlignmentModel<?> alignmentModel, 
 			boolean useAlignmentModelFromOwner) {
 			
-		super(owner, (int)Math.round(DEFAULT_HEIGHT_FACTOR * owner.getOwner().getPaintSettings().getTokenHeight()));  //TODO Add listener for compoundHeight that updates the height.
+		super(owner);  //TODO Add listener for compoundHeight that updates the height.
 		if (alignmentModel == null) {
 			throw new IllegalArgumentException("The sequence data provider must not be null.");
 		}
@@ -192,6 +193,12 @@ public class ConsensusSequenceArea extends CustomHeightFullWidthArea {
 	}
 
 	
+	@Override
+	public int getHeight() {
+		return (int)Math.round(DEFAULT_HEIGHT_FACTOR * getOwner().getOwner().getPaintSettings().getTokenHeight());
+	}
+
+
 	@Override
 	public void paint(TICPaintEvent event) {
 		// Paint background:

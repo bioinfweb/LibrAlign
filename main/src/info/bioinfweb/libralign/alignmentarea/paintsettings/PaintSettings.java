@@ -244,7 +244,7 @@ public class PaintSettings {
 			return getTokenPainterList().getDefaultTokenPainter().getPreferredWidth() * getZoomX();
 		}
 		else {
-			double result = 0;
+			double result = Double.POSITIVE_INFINITY;
 			for (TokenPainter painter : getTokenPainterList()) {
 				double width;
 				if (painter == null) {
@@ -267,7 +267,7 @@ public class PaintSettings {
 	 */
 	public double getTokenHeight() {
 		if (!getOwner().hasAlignmentModel()) {
-			throw new IllegalStateException("There is no associated alignment model defined that specifies any columns.");
+			return getTokenPainterList().getDefaultTokenPainter().getPreferredHeight() * getZoomY();
 		}
 		else {
 			int index;

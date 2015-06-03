@@ -22,8 +22,8 @@ package info.bioinfweb.libralign.dataarea.implementations.pherogram;
 import info.bioinfweb.commons.collections.SimpleSequenceInterval;
 import info.bioinfweb.commons.tic.TICPaintEvent;
 import info.bioinfweb.libralign.alignmentarea.content.AlignmentContentArea;
+import info.bioinfweb.libralign.dataarea.DataArea;
 import info.bioinfweb.libralign.dataarea.DataAreaListType;
-import info.bioinfweb.libralign.dataarea.implementations.CustomHeightFullWidthArea;
 import info.bioinfweb.libralign.model.AlignmentModel;
 import info.bioinfweb.libralign.model.concatenated.ConcatenatedAlignmentModel;
 import info.bioinfweb.libralign.model.events.SequenceChangeEvent;
@@ -52,7 +52,7 @@ import java.util.Set;
  * @since 0.1.0
  * @see PherogramView
  */
-public class PherogramArea extends CustomHeightFullWidthArea implements PherogramComponent {
+public class PherogramArea extends DataArea implements PherogramComponent {
 	public static final int DEFAULT_HEIGHT_FACTOR = 5;
 	
 	
@@ -73,7 +73,7 @@ public class PherogramArea extends CustomHeightFullWidthArea implements Pherogra
 	 * @param pherogram - the provider for the pherogram data to be displayed by the returned instance
 	 */
 	public PherogramArea(AlignmentContentArea owner, PherogramModel pherogram) {
-		super(owner, (int)Math.round(DEFAULT_HEIGHT_FACTOR * owner.getOwner().getPaintSettings().getTokenHeight()));  //TODO Always round up?
+		super(owner);
 		this.pherogram = pherogram;
 		verticalScale = getHeight();
 		leftCutPosition = 0;
@@ -280,11 +280,10 @@ public class PherogramArea extends CustomHeightFullWidthArea implements Pherogra
 	}
 
 
-//	@Override
-//	public int getHeight() {
-//		return (int)Math2.roundUp(painter.calculateTraceCurvesHeight() + getFormats().qualityOutputHeight() +
-//				(getFormats().getIndexFont().getSize() + getFormats().getBaseCallFont().getSize()) * PherogramFormats.FONT_HEIGHT_FACTOR);
-//	}
+	@Override
+	public int getHeight() {
+		return (int)Math.round(DEFAULT_HEIGHT_FACTOR * getOwner().getOwner().getPaintSettings().getTokenHeight());
+	}
 
 
 	@Override

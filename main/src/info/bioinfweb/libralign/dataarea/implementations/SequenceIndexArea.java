@@ -28,6 +28,7 @@ import java.awt.Stroke;
 import java.awt.SystemColor;
 import java.awt.geom.Line2D;
 import java.awt.geom.Path2D;
+import java.beans.PropertyChangeEvent;
 import java.util.EnumSet;
 import java.util.Set;
 
@@ -36,6 +37,9 @@ import info.bioinfweb.commons.collections.ListChangeType;
 import info.bioinfweb.commons.tic.TICPaintEvent;
 import info.bioinfweb.libralign.alignmentarea.AlignmentArea;
 import info.bioinfweb.libralign.alignmentarea.content.AlignmentContentArea;
+import info.bioinfweb.libralign.alignmentarea.paintsettings.TokenPainterListEvent;
+import info.bioinfweb.libralign.alignmentarea.paintsettings.TokenPainterReplacedEvent;
+import info.bioinfweb.libralign.dataarea.DataArea;
 import info.bioinfweb.libralign.dataarea.DataAreaListType;
 import info.bioinfweb.libralign.model.AlignmentModel;
 import info.bioinfweb.libralign.model.concatenated.ConcatenatedAlignmentModel;
@@ -54,7 +58,7 @@ import info.bioinfweb.libralign.model.events.TokenChangeEvent;
  * @author Ben St&ouml;ver
  * @since 0.2.0
  */
-public class SequenceIndexArea extends CustomHeightFullWidthArea {
+public class SequenceIndexArea extends DataArea {
 	/** The default value returned by {@link #getFirstIndex()} if it has not been changed. */
 	public static final int DEFAULT_FIRST_INDEX = 1;
 	
@@ -83,7 +87,7 @@ public class SequenceIndexArea extends CustomHeightFullWidthArea {
 	 * @param owner - the alignment area that is going to contain this data area
 	 */
 	public SequenceIndexArea(AlignmentContentArea owner) {
-		super(owner, (int)Math.round(owner.getOwner().getPaintSettings().getTokenHeight()));
+		super(owner);
 	}
 
 
@@ -199,6 +203,12 @@ public class SequenceIndexArea extends CustomHeightFullWidthArea {
 	 */
 	public void setFirstIndex(int firstIndex) {
 		this.firstIndex = firstIndex;
+	}
+
+
+	@Override
+	public int getHeight() {
+		return (int)Math.round(getOwner().getOwner().getPaintSettings().getTokenHeight());
 	}
 
 

@@ -20,11 +20,15 @@ package info.bioinfweb.libralign.dataarea;
 
 
 import java.awt.Dimension;
+import java.beans.PropertyChangeEvent;
 import java.util.Set;
 
 import info.bioinfweb.libralign.alignmentarea.AlignmentArea;
 import info.bioinfweb.libralign.alignmentarea.content.AlignmentContentArea;
 import info.bioinfweb.libralign.alignmentarea.content.AlignmentSubArea;
+import info.bioinfweb.libralign.alignmentarea.paintsettings.PaintSettingsListener;
+import info.bioinfweb.libralign.alignmentarea.paintsettings.TokenPainterListEvent;
+import info.bioinfweb.libralign.alignmentarea.paintsettings.TokenPainterReplacedEvent;
 import info.bioinfweb.libralign.model.AlignmentModelChangeListener;
 
 
@@ -35,7 +39,7 @@ import info.bioinfweb.libralign.model.AlignmentModelChangeListener;
  * @author Ben St&ouml;ver
  * @since 0.0.0
  */
-public abstract class DataArea extends AlignmentSubArea implements AlignmentModelChangeListener {
+public abstract class DataArea extends AlignmentSubArea implements AlignmentModelChangeListener, PaintSettingsListener {
 	private DataAreaList list = null;
 	private boolean visible = true;
 	
@@ -149,5 +153,25 @@ public abstract class DataArea extends AlignmentSubArea implements AlignmentMode
 	public Dimension getSize() {
 		return new Dimension(getOwner().getOwner().getDataAreas().getGlobalMaxLengthBeforeStart() + getLength(),	getHeight());  
 		//TODO Add additional space on the right, depending on the longest component in the alignment area? (Do area components need to have the same width?)
+	}
+
+
+	@Override
+	public void propertyChange(PropertyChangeEvent event) {
+		if (event.getPropertyName().startsWith("zoom")) {
+			assignSize();
+		}
+	}
+
+
+	@Override
+	public void tokenPainterReplaced(TokenPainterReplacedEvent event) {
+		assignSize();
+	}
+
+
+	@Override
+	public void tokenPainterListChange(TokenPainterListEvent event) {
+		assignSize();
 	}
 }
