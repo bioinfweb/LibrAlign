@@ -30,7 +30,7 @@ import java.util.ListIterator;
 
 
 /**
- * A wrapper around any implementation if {@link List} that fires {@link DataAreaChangeEvent}s.
+ * A wrapper around any implementation of {@link List} that fires {@link DataAreaChangeEvent}s.
  * 
  * @author Ben St&ouml;ver
  * @since 0.1.0

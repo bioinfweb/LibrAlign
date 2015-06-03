@@ -61,9 +61,10 @@ public abstract class DataArea extends AlignmentSubArea implements AlignmentMode
 
 	/**
 	 * Updates the list this element is contained in.
+	 * 
 	 * @param list - the list that contains this element
 	 */
-	public void setList(DataAreaList list) {
+	public void setList(DataAreaList list) {  //TODO Does it make sense to allow setting this property if owner cannot be set? 
 		this.list = list;
 	}
 
@@ -73,7 +74,6 @@ public abstract class DataArea extends AlignmentSubArea implements AlignmentMode
 	 * <p>
 	 * It does not state whether this data area is contained a area of the alignment area that is 
 	 * currently visible on the screen. 
-	 * </p>
 	 * 
 	 * @return {@code true} if this data area is faded in, {@code false} if it is faded out
 	 */

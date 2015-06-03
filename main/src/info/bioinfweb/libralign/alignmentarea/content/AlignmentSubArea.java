@@ -50,6 +50,8 @@ public abstract class AlignmentSubArea extends RowLayoutTICComponent {
 
 	/**
 	 * Returns the alignment content area that displays this data area.
+	 * 
+	 * @return the owning alignment content area
 	 */
 	public AlignmentContentArea getOwner() {
 		return owner;
