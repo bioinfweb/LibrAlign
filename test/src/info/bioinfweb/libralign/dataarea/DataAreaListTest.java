@@ -65,11 +65,6 @@ public class DataAreaListTest {
 						public void paint(TICPaintEvent event) {}
 						
 						@Override
-						public int getLength() {
-							return 1;
-						}
-
-						@Override
 						public int getHeight() {
 							return 1;
 						}
