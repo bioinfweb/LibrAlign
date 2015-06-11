@@ -2,25 +2,22 @@
  * LibrAlign - A GUI library for displaying and editing multiple sequence alignments and attached data
  * Copyright (C) 2014-2015  Ben Stöver
  * <http://bioinfweb.info/LibrAlign>
- * 
+ *
  * This file is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- * 
+ *
  * This file is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 package info.bioinfweb.libralign.actions;
 
-
-import java.util.ArrayList;
-import java.util.Collection;
 
 import info.bioinfweb.libralign.alignmentarea.AlignmentArea;
 import info.bioinfweb.libralign.alignmentarea.content.AlignmentContentArea;
@@ -28,19 +25,22 @@ import info.bioinfweb.libralign.alignmentarea.selection.SelectionModel;
 import info.bioinfweb.libralign.model.AlignmentModel;
 import info.bioinfweb.libralign.model.exception.AlignmentSourceNotWritableException;
 
+import java.util.ArrayList;
+import java.util.Collection;
+
 
 
 /**
  * This class provider the business logic for user actions triggered through the view {@link AlignmentContentArea}
  * to manipulate the associated models {@link AlignmentModel} and {@link SelectionModel}.
- * 
+ *
  * @author Ben St&ouml;ver
  * @since 0.3.0
  */
 public class AlignmentActionProvider<T> {
-	private AlignmentArea alignmentArea;
+	private final AlignmentArea alignmentArea;
 
-	
+
 //* Otherwise a {@link ClassCastException} will be thrown by all operation
 //* methods. If the sequence data provider of {@code view} is changed during runtime to a provider with a different
 //* token type a new instance of this class with the correct token type needs to created.
@@ -50,9 +50,9 @@ public class AlignmentActionProvider<T> {
 	 * Creates a new instance of this class that is associated with the specified view and model.
 	 * <p>
 	 * Note that the token type of the {@link AlignmentModel} associated with {@code view} and the token type
-	 * {@code T} if this instance must match. 
-	 * 
-	 * @param view - the alignment content area from which the user operations will be triggered (The sequence data 
+	 * {@code T} if this instance must match.
+	 *
+	 * @param view - the alignment content area from which the user operations will be triggered (The sequence data
 	 *        provider, the selection model and the sequence order this view provides will be used for all operations.)
 	 */
 	public AlignmentActionProvider(AlignmentArea alignmentArea) {
@@ -63,14 +63,14 @@ public class AlignmentActionProvider<T> {
 
 	/**
 	 * Returns the view this instance is associated with.
-	 * 
+	 *
 	 * @return the linked view instance
 	 */
 	public AlignmentArea getAlignmentArea() {
 		return alignmentArea;
 	}
-	
-	
+
+
 	public AlignmentModel<T> getModel() {
 		return (AlignmentModel<T>)getAlignmentArea().getAlignmentModel();
 	}
@@ -79,14 +79,14 @@ public class AlignmentActionProvider<T> {
 	private void deleteSelection(SelectionModel selection) {
 		if (!selection.isEmpty()) {
 			for (int row = selection.getCursorRow(); row < selection.getCursorRow() + selection.getCursorHeight(); row++) {
-				getModel().removeTokensAt(getAlignmentArea().getSequenceOrder().idByIndex(row), 
+				getModel().removeTokensAt(getAlignmentArea().getSequenceOrder().idByIndex(row),
 						selection.getFirstColumn(), selection.getFirstColumn() + selection.getWidth());
 			}
 			selection.setNewCursorColumn(selection.getFirstColumn());
 		}
 	}
-	
-	
+
+
 	/**
 	 * Removes the currently selected tokens from the underlying {@link AlignmentModel}. If no tokens
 	 * are selected the token right of the cursor is removed from each sequence the cursor spans to.
@@ -95,8 +95,8 @@ public class AlignmentActionProvider<T> {
 	 * <p>
 	 * Note that calling this method will have no effect if the underlying {@link AlignmentModel} is
 	 * not writable.
-	 * 
-	 * @return {@code true} if the underlying data source was changed as a result of this operation, 
+	 *
+	 * @return {@code true} if the underlying data source was changed as a result of this operation,
 	 *         {@code false} otherwise
 	 */
 	public boolean deleteForward() {
@@ -106,7 +106,7 @@ public class AlignmentActionProvider<T> {
 			if (selection.isEmpty()) {
 				for (int row = selection.getCursorRow(); row < selection.getCursorRow() + selection.getCursorHeight(); row++) {
 					if (selection.getCursorColumn() < getModel().getSequenceLength(getAlignmentArea().getSequenceOrder().idByIndex(row))) {
-						getModel().removeTokenAt(getAlignmentArea().getSequenceOrder().idByIndex(row), 
+						getModel().removeTokenAt(getAlignmentArea().getSequenceOrder().idByIndex(row),
 								selection.getCursorColumn());
 						result = true;
 				  }
@@ -120,8 +120,8 @@ public class AlignmentActionProvider<T> {
 		catch (AlignmentSourceNotWritableException e) {}  // Nothing to do, since result is false by default.
 		return result;
 	}
-	
-	
+
+
 	/**
 	 * Removes the currently selected tokens from the underlying {@link AlignmentModel}. If no tokens
 	 * are selected the token left of the cursor is removed from each sequence the cursor spans to.
@@ -130,8 +130,8 @@ public class AlignmentActionProvider<T> {
 	 * <p>
 	 * Note that calling this method will have no effect if the underlying {@link AlignmentModel} is
 	 * not writable.
-	 * 
-	 * @return {@code true} if the underlying data source was changed as a result of this operation, 
+	 *
+	 * @return {@code true} if the underlying data source was changed as a result of this operation,
 	 *         {@code false} otherwise
 	 */
 	public boolean deleteBackwards() {
@@ -140,7 +140,7 @@ public class AlignmentActionProvider<T> {
 			if (selection.isEmpty()) {
 				if (selection.getCursorColumn() > 0) {
 					for (int row = selection.getCursorRow(); row < selection.getCursorRow() + selection.getCursorHeight(); row++) {
-						getModel().removeTokenAt(getAlignmentArea().getSequenceOrder().idByIndex(row), 
+						getModel().removeTokenAt(getAlignmentArea().getSequenceOrder().idByIndex(row),
 								selection.getCursorColumn() - 1);
 					}
 					selection.setNewCursorColumn(selection.getCursorColumn() - 1);  // Move cursor backwards
@@ -158,8 +158,8 @@ public class AlignmentActionProvider<T> {
 		}
 		return true;
 	}
-	
-	
+
+
 	/**
 	 * Inserts the specified token at the current cursor position specified by {@code selection}. If the cursor
 	 * spans over multiple rows the token is inserted into each row. If other tokens are currently selected the
@@ -167,13 +167,13 @@ public class AlignmentActionProvider<T> {
 	 * <p>
 	 * Note that no deep copy of the specified token will be used, if it is inserted into several rows. Generally
 	 * implementations of {@link AlignmentModel} do not necessarily store one object per position in a sequence,
-	 * but equal objects can also be mapped to the token set to save memory. 
+	 * but equal objects can also be mapped to the token set to save memory.
 	 * <p>
 	 * Note that calling this method will have no effect if the underlying {@link AlignmentModel} is
 	 * not writable.
-	 * 
+	 *
 	 * @param token - the token to be inserted
-	 * @return {@code true} if the underlying data source was changed as a result of this operation, 
+	 * @return {@code true} if the underlying data source was changed as a result of this operation,
 	 *         {@code false} otherwise
 	 */
 	public boolean insertToken(T token) {
@@ -185,9 +185,9 @@ public class AlignmentActionProvider<T> {
 			for (int i = 0; i < tokenCount; i++) {
 				tokens.add(token);
 			}
-			
+
 			for (int row = selection.getCursorRow(); row < selection.getCursorRow() + selection.getCursorHeight(); row++) {
-				getModel().insertTokensAt(getAlignmentArea().getSequenceOrder().idByIndex(row), 
+				getModel().insertTokensAt(getAlignmentArea().getSequenceOrder().idByIndex(row),
 						selection.getFirstColumn(), tokens);
 			}
 			selection.setNewCursorColumn(selection.getFirstColumn() + tokenCount);  // Move cursor forward
@@ -201,17 +201,17 @@ public class AlignmentActionProvider<T> {
 
 	/**
 	 * Overwrites the currently selected token(s) in each selected sequence with the specified tokens.
-	 * If not token is selected the token(s) right of the cursor are replaced.
+	 * If no token is selected the token(s) right of the cursor are replaced.
 	 * <p>
-	 * If more than one token in each sequence is selected, the first one will be replaced by 
+	 * If more than one token in each sequence is selected, the first one will be replaced by
 	 * {@link AlignmentModel#setTokenAt(int, int, Object)} and the other will be deleted using
 	 * {@link AlignmentModel#removeTokensAt(int, int, int)}.
 	 * <p>
 	 * Note that calling this method will have no effect if the underlying {@link AlignmentModel} is
 	 * not writable.
-	 * 
+	 *
 	 * @param token - the new token to replace the other(s)
-	 * @return {@code true} if the underlying data source was changed as a result of this operation, 
+	 * @return {@code true} if the underlying data source was changed as a result of this operation,
 	 *         {@code false} otherwise
 	 */
 	public boolean overwriteWithToken(T token) {
@@ -220,12 +220,12 @@ public class AlignmentActionProvider<T> {
 			for (int row = selection.getCursorRow(); row < selection.getCursorRow() + selection.getCursorHeight(); row++) {
 				// Remove possible additional tokens:
 				if (selection.getWidth() > 1) {
-					getModel().removeTokensAt(getAlignmentArea().getSequenceOrder().idByIndex(row), 
+					getModel().removeTokensAt(getAlignmentArea().getSequenceOrder().idByIndex(row),
 							selection.getFirstColumn() + 1, selection.getFirstColumn() + selection.getWidth());
 				}
-				
+
 				// Overwrite first token:
-				getModel().setTokenAt(getAlignmentArea().getSequenceOrder().idByIndex(row), 
+				getModel().setTokenAt(getAlignmentArea().getSequenceOrder().idByIndex(row),
 						selection.getFirstColumn(), token);
 			}
 			selection.setNewCursorColumn(selection.getFirstColumn() + 1);  // Move cursor forward
