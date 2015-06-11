@@ -19,7 +19,6 @@
 package info.bioinfweb.libralign.alignmentarea.rowsarea;
 
 
-import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Rectangle;
 
@@ -43,21 +42,6 @@ public abstract class SwingAlignmentRowsArea extends JComponent implements Scrol
 		super();
 		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 		// reinsertSubelements() cannot be called here, because necessary fields need to be initialized by the implementing class first.
-	}
-
-
-	@Override
-	public Dimension getPreferredSize() {
-		//TODO AWT tree lock?;
-		//TODO If the architecture with a component for each sequence remains, the return value of this method should also be stored between calls (like AlignmentLabelArea.getLocalMaximumNeededWidth()).  
-		Dimension result = new Dimension(0, 0);
-		Component[] components = getComponents();
-		for (int i = 0; i < components.length; i++) {
-			Dimension componentSize = components[i].getPreferredSize();
-			result.width = Math.max(result.width, componentSize.width);
-			result.height += componentSize.height;
-		}
-		return result;
 	}
 
 

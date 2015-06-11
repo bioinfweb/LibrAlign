@@ -386,9 +386,10 @@ public class AlignmentArea extends TICComponent implements AlignmentModelChangeL
 	 */
 	@Override
 	public Dimension getSize() {
+		// Just returns the size already set to the toolkit component because the size of an alignment area is determined just by the layout manager and not dependent of the alignment and data area size. 
 		switch (getCurrentToolkit()) {
 			case SWING:
-				return ((JComponent)getToolkitComponent()).getPreferredSize();  //TODO correct size?
+				return ((JComponent)getToolkitComponent()).getSize();
 			case SWT:
 				Point point = ((Composite)getToolkitComponent()).getSize();
 				return new Dimension(point.x, point.y);
@@ -459,7 +460,7 @@ public class AlignmentArea extends TICComponent implements AlignmentModelChangeL
 
 	@Override
 	public <T> void afterTokenChange(TokenChangeEvent<T> e) {
-		assignSize();  // Needs to happen first (otherwise the child elements get cut off in SWT probably because they are only painted as far as they are visible in the parent component even if the parent will be resized later on).
+		assignSizeToAll();  // Needs to happen first (otherwise the child elements get cut off in SWT probably because they are only painted as far as they are visible in the parent component even if the parent will be resized later on).
 		if (getContentArea().hasToolkitComponent() && e.getSource().equals(getAlignmentModel())) {
 			getContentArea().getToolkitComponent().assignSequenceAreaSize(e.getSequenceID());
 		}
