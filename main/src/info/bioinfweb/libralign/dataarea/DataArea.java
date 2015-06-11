@@ -163,13 +163,18 @@ public abstract class DataArea extends AlignmentSubArea implements AlignmentMode
 	
 	
 	/**
-	 * Returns the length in pixels considering the current zoom factor starting at the left most alignment column.
+	 * Returns the length in pixels considering the current zoom factor this component needs to display
+	 * data right of the last alignment column.
+	 * <p>
+	 * Overwrite this method if your component displays additional information right of the alignment.
 	 * 
-	 * @return an integer value >= 0
+	 * @return This default implementation always returns 0. 
 	 */
-	public abstract int getLength();
+	public int getLengthAfterEnd() {
+		return 0;
+	}
 	
-
+	
 	/**
 	 * Returns the height in pixels considering the current zoom factor this component needs.
 	 * 
@@ -187,8 +192,7 @@ public abstract class DataArea extends AlignmentSubArea implements AlignmentMode
 	 */
 	@Override
 	public Dimension getSize() {
-		return new Dimension(getOwner().getOwner().getDataAreas().getGlobalMaxLengthBeforeStart() + getLength(),	getHeight());  
-		//TODO Add additional space on the right, depending on the longest component in the alignment area? (Do area components need to have the same width?)
+		return new Dimension(getOwner().getOwner().getGlobalMaxNeededWidth(),	getHeight());  
 	}
 
 

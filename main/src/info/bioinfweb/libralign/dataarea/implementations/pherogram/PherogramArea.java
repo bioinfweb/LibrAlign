@@ -273,10 +273,10 @@ public class PherogramArea extends DataArea implements PherogramComponent {
 
 
 	@Override
-	public int getLength() {
-		return getLabeledAlignmentArea().getContentArea().paintXByColumn(getAlignmentModel().editableIndexByBaseCallIndex(getRightCutPosition() - 1).getAfter() + 1 + // space until the end of the aligned part
-				(getProvider().getSequenceLength() - getRightCutPosition()))  // possible unaligned part at the right end
-				- getLabeledAlignmentArea().getDataAreas().getGlobalMaxLengthBeforeStart(); 
+	public int getLengthAfterEnd() {
+		//return Math.max(0, lengthOfOutputAfterAlignmentStart - getOwner().getOwner().getLocalMaximumNeededAlignmentWidth());
+		//TODO Return space that is needed to display right unaligned part of the pherogram
+		return super.getLengthAfterEnd();
 	}
 
 

@@ -97,13 +97,6 @@ public class CharSetArea extends DataArea {
 
 
 	@Override
-	public int getLength() {
-		return getLabeledAlignmentArea().getContentArea().paintXByColumn(getLabeledAlignmentModel().getMaxSequenceLength()) 
-				- getLabeledAlignmentArea().getDataAreas().getGlobalMaxLengthBeforeStart();
-	}
-
-	
-	@Override
 	public int getHeight() {
 		return (int)Math.round(getModel().size() * getLabeledAlignmentArea().getPaintSettings().getTokenHeight());  //TODO Add possible border height, possibly round up?
 	}

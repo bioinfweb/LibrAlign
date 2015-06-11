@@ -68,11 +68,9 @@ public class SWTAlignmentContentArea extends SWTAlignmentRowsArea implements Too
 
 	@Override
 	public void addDataAreaList(DataAreaList list) {
-		int width = 0;
 		Iterator<DataArea> iterator = list.iterator();
 		while (iterator.hasNext()) {
 			DataArea dataArea = iterator.next();
-			width = Math.max(width, dataArea.getLength());
 			if (dataArea.isVisible()) {
 				dataArea.createSWTWidget(this, SWT.NONE);
 				dataArea.assignSize();

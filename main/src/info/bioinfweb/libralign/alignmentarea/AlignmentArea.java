@@ -31,6 +31,7 @@ import javax.swing.JComponent;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.Composite;
 
+import info.bioinfweb.commons.Math2;
 import info.bioinfweb.commons.tic.TICComponent;
 import info.bioinfweb.commons.tic.TICPaintEvent;
 import info.bioinfweb.libralign.alignmentarea.content.AlignmentContentArea;
@@ -275,6 +276,55 @@ public class AlignmentArea extends TICComponent implements AlignmentModelChangeL
 		else {
 			return getAlignmentModel().getMaxSequenceLength();
 		}
+	}
+	
+	
+	/**
+	 * Calculates the needed with to label the associated alignment. Note that the actual width of this
+	 * component is calculated using {@link #getGlobalMaximumNeededWidth()}.
+	 * 
+	 * @return a value >= 0
+	 */
+	public double getLocalMaximumNeededAlignmentWidth() {
+		if (hasAlignmentModel()) {
+			if (getAlignmentModel() instanceof ConcatenatedAlignmentModel) {
+				throw new InternalError("not implemented");
+			}
+			else {
+				int length = getAlignmentModel().getMaxSequenceLength(); 
+				if (length > 0) {
+					return length * getPaintSettings().getTokenPainterList().painterByColumn(0).getPreferredWidth();
+				}
+			}
+		}
+		return 0;
+	}
+	
+	
+	public double getLocalMaxNeededWidth() {
+		return getDataAreas().getGlobalMaxLengthBeforeStart() + getLocalMaximumNeededAlignmentWidth() + 
+				getDataAreas().getLocalMaxLengthAfterEnd();
+	}
+	
+	
+	/**
+	 * Returns the maximum needed width to display all alignment columns with the according token painters and the
+	 * current zoom factor and the space before and after the alignment possibly occupied by data areas calculated 
+	 * over all alignments contained in the parent {@link MultipleAlignmentsContainer}.
+	 * 
+	 * @return a value >= 0
+	 */
+	public int getGlobalMaxNeededWidth() {
+		double result = 0;
+		if (hasContainer()) {
+			for (AlignmentArea alignmentArea : getContainer().getAlignmentAreas()) {
+				result = Math.max(result, alignmentArea.getLocalMaxNeededWidth());
+			}
+		}
+		else {
+			result = getLocalMaxNeededWidth();
+		}
+		return (int)Math2.roundUp(result);  // Rounded because this method is mainly used to determine component widths.
 	}
 	
 	

@@ -182,18 +182,6 @@ public class SequenceIndexArea extends DataArea {
   }
 	
 
-	@Override
-	public int getLength() {
-		if (getLabeledAlignmentArea().hasAlignmentModel()) {
-			return getLabeledAlignmentArea().getContentArea().paintXByColumn(getLabeledAlignmentModel().getMaxSequenceLength())  // Global maximum sequence length cannot be used here, because token widths might differ between alignment areas.
-					- getLabeledAlignmentArea().getDataAreas().getGlobalMaxLengthBeforeStart();
-		}
-		else {
-			return 0;
-		}
-	}
-
-
 	/**
 	 * Returns the index that will be displayed for the first column of the alignment area.
 	 * <p>

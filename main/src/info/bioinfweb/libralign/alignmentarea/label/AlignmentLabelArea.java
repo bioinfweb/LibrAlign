@@ -98,7 +98,7 @@ public class AlignmentLabelArea extends TICComponent {
 	
 	
 	/**
-	 * Returns the maximum needed to label the alignment calculated over all alignments contained in the parent
+	 * Returns the maximum needed width to label the alignment calculated over all alignments contained in the parent
 	 * {@link MultipleAlignmentsContainer}. If the parent alignment area is not contained in such a container, the
 	 * return value is equal to {@link #getLocalMaximumNeededWidth()}.
 	 * 

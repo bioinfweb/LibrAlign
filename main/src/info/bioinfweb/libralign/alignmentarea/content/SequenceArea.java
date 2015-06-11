@@ -218,8 +218,7 @@ public class SequenceArea extends AlignmentSubArea {
 	
 	@Override
 	public Dimension getSize() {
-		return new Dimension(
-				getOwner().paintXByColumn(getOwner().getOwner().getAlignmentModel().getSequenceLength(getSeqenceID())),  //TODO Test if this is equivalent to previous implementation. //TODO Elongate to the length of the longest sequence and paint empty/special tokens on the right end? 
+		return new Dimension(getOwner().getOwner().getGlobalMaxNeededWidth(),
 				(int)Math.round(getOwner().getOwner().getPaintSettings().getTokenHeight()));  //TODO Always round up here?
 	}
 

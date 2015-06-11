@@ -139,13 +139,6 @@ public class ConsensusSequenceArea extends DataArea {
 	
 	
 	@Override
-	public int getLength() {
-		return getLabeledAlignmentArea().getContentArea().paintXByColumn(getLabeledAlignmentModel().getMaxSequenceLength()) 
-				- getOwner().getOwner().getDataAreas().getGlobalMaxLengthBeforeStart();
-	}
-
-	
-	@Override
 	public int getHeight() {
 		return (int)Math.round(DEFAULT_HEIGHT_FACTOR * getLabeledAlignmentArea().getPaintSettings().getTokenHeight());
 	}
