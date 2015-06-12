@@ -306,12 +306,12 @@ public class PherogramArea extends DataArea implements PherogramComponent {
 					getAlignmentModel().addShiftChange(
 							getAlignmentModel().baseCallIndexByEditableIndex(Math.max(0, e.getStartIndex() + addend)).getBefore(),  //TODO is getBefore immer sinnvoll? 
 							e.getAffectedTokens().size());
-					assignSize();
+					repaint();  // Needs to be done if this edit does not lead to a resize of the component.
 					break;
 				case DELETION:
 					getAlignmentModel().addShiftChange(getAlignmentModel().baseCallIndexByEditableIndex(e.getStartIndex()).getAfter()/*getBefore()*/,  //TODO is getBefore immer sinnvoll? 
 							-e.getAffectedTokens().size());
-					assignSize();
+					repaint();  // Needs to be done if this edit does not lead to a resize of the component.
 					break;
 				case REPLACEMENT:  // Nothing to do (Replacements differing in length are not allowed.)
 					break;  //TODO If a token is replaced by a gap a shift change would have to be added. (Solve this problem when gap displaying is generally implemented for all data areas.)
