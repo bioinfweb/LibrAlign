@@ -441,10 +441,9 @@ public class AlignmentArea extends TICComponent implements AlignmentModelChangeL
 				reinsertSubelements();
 			}
 		}
-		assignSizeToAll();
-		//repaint();  //TODO Does this have to be called?
 		//TODO Send message to all and/or remove some data areas? (Some might be data specific (e.g. pherograms), some not (e.g. consensus sequence).)
 		getDataAreas().getSequenceDataChangeListener().afterSequenceChange(e);
+		assignSizeToAll();
 	}
 
 
@@ -453,28 +452,28 @@ public class AlignmentArea extends TICComponent implements AlignmentModelChangeL
 		if (e.getSource().equals(getAlignmentModel())) {
 			getLabelArea().setLocalMaxWidthRecalculate();  // Needs to be called before assignSizeToAll().
 		}
-		assignSizeToAll();  // Other label areas might also have to adopt their width.
 		getDataAreas().getSequenceDataChangeListener().afterSequenceRenamed(e);
+		assignSizeToAll();  // Other label areas might also have to adopt their width.
 	}
 
 
 	@Override
 	public <T> void afterTokenChange(TokenChangeEvent<T> e) {
-		assignSizeToAll();  // Needs to happen first (otherwise the child elements get cut off in SWT probably because they are only painted as far as they are visible in the parent component even if the parent will be resized later on).
-		if (getContentArea().hasToolkitComponent() && e.getSource().equals(getAlignmentModel())) {
-			getContentArea().getToolkitComponent().assignSequenceAreaSize(e.getSequenceID());
-		}
+		//assignSizeToAll();  // Needs to happen first (otherwise the child elements get cut off in SWT probably because they are only painted as far as they are visible in the parent component even if the parent will be resized later on).
+//		if (getContentArea().hasToolkitComponent() && e.getSource().equals(getAlignmentModel())) {
+//			getContentArea().getToolkitComponent().assignSequenceAreaSize(e.getSequenceID());
+//		}
 		getDataAreas().getSequenceDataChangeListener().afterTokenChange(e);
+		assignSizeToAll();
 	}
 
 
 	@Override
 	public <T, U> void afterProviderChanged(AlignmentModel<T> previous, AlignmentModel<U> current) {
 		getLabelArea().setLocalMaxWidthRecalculate();  // Needs to be called before assignSizeToAll().
-		assignSizeToAll();  //TODO reinsertSubements()?
-		repaint();  //TODO Needed?
 		//TODO Remove some data areas? (Some might be data specific (e.g. pherograms), some not (e.g. consensus sequence).)
 		getDataAreas().getSequenceDataChangeListener().afterProviderChanged(previous, current);
+		assignSizeToAll();  //TODO reinsertSubements()?
 	}
 
 
