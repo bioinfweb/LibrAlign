@@ -300,12 +300,7 @@ public class PherogramArea extends DataArea implements PherogramComponent {
 	@Override
 	public <T> void afterTokenChange(TokenChangeEvent<T> e) {
 		if (e.getSource().equals(getLabeledAlignmentArea().getAlignmentModel()) && e.getSequenceID() == getList().getLocation().getSequenceID()) {
-			if (e.getAffectedToken().toString().equals("-")) {
-				System.out.println("gap");
-			}
-			
 			int addend = getLabeledAlignmentArea().getEditSettings().isInsertLeftInDataArea() ? -1 : 0;
-			
 			int lastSeqPos = getPherogramAlignmentModel().editableIndexByBaseCallIndex(getPherogramModel().getSequenceLength() - 1).getAfter() 
 					- addend;
 			int tokensBefore = Math.min(e.getAffectedTokens().size(), Math.max(0, getFirstSeqPos() - e.getStartIndex() - addend));
@@ -316,9 +311,8 @@ public class PherogramArea extends DataArea implements PherogramComponent {
 				case INSERTION:
 					setFirstSeqPos(getFirstSeqPos() + tokensBefore);
 					if (tokensInside > 0) {
-						getPherogramAlignmentModel().addShiftChange(
-								getPherogramAlignmentModel().baseCallIndexByEditableIndex(
-										Math.max(0, e.getStartIndex() + tokensBefore + addend)).getBefore(), tokensInside);
+						getPherogramAlignmentModel().addShiftChange(getPherogramAlignmentModel().baseCallIndexByEditableIndex(
+								Math.max(0, e.getStartIndex() + tokensBefore + addend)).getBeforeValidIndex(), tokensInside);
 					}
 					repaint();  // Needs to be done if this edit does not lead to a resize of the component.
 					break;
@@ -326,7 +320,7 @@ public class PherogramArea extends DataArea implements PherogramComponent {
 					setFirstSeqPos(getFirstSeqPos() - tokensBefore);
 					if (tokensInside > 0) {
 						getPherogramAlignmentModel().addShiftChange(getPherogramAlignmentModel().baseCallIndexByEditableIndex(
-								e.getStartIndex() + tokensBefore).getAfter(), -e.getAffectedTokens().size());
+								e.getStartIndex() + tokensBefore).getAfterValidIndex(), -e.getAffectedTokens().size());
 					}
 					repaint();  // Needs to be done if this edit does not lead to a resize of the component.
 					break;

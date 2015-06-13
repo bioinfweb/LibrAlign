@@ -24,11 +24,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
 
-import org.biojava3.core.sequence.compound.NucleotideCompound;
-
 import info.bioinfweb.commons.Math2;
-import info.bioinfweb.commons.bio.biojava3.core.sequence.compound.AlignmentAmbiguityNucleotideCompoundSet;
-import info.bioinfweb.libralign.alignmentarea.AlignmentArea;
 import info.bioinfweb.libralign.model.AlignmentModel;
 import info.bioinfweb.libralign.model.concatenated.ConcatenatedAlignmentModel;
 import info.bioinfweb.libralign.pherogram.PherogramUtils;
@@ -147,9 +143,15 @@ public class PherogramAlignmentModel {
     				correspondingPos = PherogramAlignmentRelation.GAP;
     				if (resultPos == shiftChangeEntry.baseCallIndex) {
     					beforePos = shiftChangeEntry.baseCallIndex - 1;  // First editable position in the distortion is the gap.
+    					if (beforePos < 0) {
+    						beforePos = PherogramAlignmentRelation.OUT_OF_RANGE;
+    					}
     				}
     				if (resultPos == shiftChangeEntry.baseCallIndex + shiftChangeEntry.shiftChange - 1) {
-    					beforePos = shiftChangeEntry.baseCallIndex + 1;  // Last editable position in the distortion is the gap.
+    					afterPos = shiftChangeEntry.baseCallIndex + 1;  // Last editable position in the distortion is the gap.
+    					if (afterPos >= getOwner().getPherogramModel().getSequenceLength()) {
+    						afterPos = PherogramAlignmentRelation.OUT_OF_RANGE;
+    					}
     				}
     			}
     			return new PherogramAlignmentRelation(beforePos, correspondingPos, afterPos, iterator);  //TODO Does the iterator have to be moved back in one of the cases?
@@ -224,8 +226,10 @@ public class PherogramAlignmentModel {
   	if (Math2.isBetween(firstIndex, 0, shiftChangeList.size() - 2)) {
       ShiftChange firstChange = shiftChangeList.get(firstIndex);
       ShiftChange secondChange = shiftChangeList.get(firstIndex + 1);
-      if ((secondChange.baseCallIndex <= firstChange.baseCallIndex - firstChange.shiftChange) || 
-      		(firstChange.baseCallIndex >= secondChange.baseCallIndex - secondChange.shiftChange)) {
+      if ((((firstChange.shiftChange < 0) && (secondChange.shiftChange > 0)) ||
+      		((firstChange.shiftChange > 0) && (secondChange.shiftChange < 0))) &&  // Avoid two neighboring shifts in the same direction to be combined.
+      		((secondChange.baseCallIndex <= firstChange.baseCallIndex - firstChange.shiftChange) || 
+      		(firstChange.baseCallIndex >= secondChange.baseCallIndex - secondChange.shiftChange))) {  // Test if shifts in opposite directions neutralize each other.
       	
   			firstChange.shiftChange += secondChange.shiftChange;
       	shiftChangeList.remove(secondChange);

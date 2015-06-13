@@ -102,6 +102,44 @@ public class PherogramAlignmentRelation {
 	
 	
 	/**
+	 * Returns any index that is not {@link #GAP} or {@link #OUT_OF_RANGE} and first tries {@link #getCorresponding()}
+	 * than {@link #getBefore()} and finally {@link #getAfter()}.
+	 * 
+	 * @return the first valid index that is found in the algorithm above or the same as {@link #getAfter()} if all 
+	 *         indices should be invalid
+	 */
+	public int getBeforeValidIndex() {
+		int result = getCorresponding();
+		if (result < 0) {
+			result = getBefore();
+			if (result < 0) {
+				result = getAfter();
+			}
+		}
+		return result;
+	}
+	
+	
+	/**
+	 * Returns any index that is not {@link #GAP} or {@link #OUT_OF_RANGE} and first tries {@link #getCorresponding()}
+	 * than {@link #getAfter()} and finally {@link #getBefore()}.
+	 * 
+	 * @return the first valid index that is found in the algorithm above or the same as {@link #getBefore()} if all 
+	 *         indices should be invalid
+	 */
+	public int getAfterValidIndex() {
+		int result = getCorresponding();
+		if (result < 0) {
+			result = getAfter();
+			if (result < 0) {
+				result = getBefore();
+			}
+		}
+		return result;
+	}
+	
+	
+	/**
 	 * Returns an iterator positioned before the next shift change entry. 
 	 */
 	public ListIterator<ShiftChange> getIterator() {
