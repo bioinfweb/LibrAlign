@@ -110,14 +110,21 @@ public class PherogramAlignmentModel {
       			resultPos -= baseCallIndex - shiftChangeEntry.baseCallIndex;
       			return new PherogramAlignmentRelation(resultPos - 1, PherogramAlignmentRelation.GAP,	resultPos, iterator);
       		}
-      		else if ((shiftChangeEntry.baseCallIndex </*=*/ baseCallIndex)) {
+      		else if ((shiftChangeEntry.baseCallIndex < baseCallIndex)) {
       			resultPos += shiftChangeEntry.shiftChange;
       		}
       		else {
       			if (iterator.hasPrevious()) {
       				iterator.previous();
       			}
-      			return new PherogramAlignmentRelation(resultPos, resultPos, resultPos, iterator);
+      			
+      			int afterPos = resultPos;
+      			if (Math2.isBetween(baseCallIndex, shiftChangeEntry.baseCallIndex, 
+      					shiftChangeEntry.baseCallIndex + shiftChangeEntry.shiftChange - 1)) {
+      				
+      				afterPos += shiftChangeEntry.shiftChange;
+      			}
+      			return new PherogramAlignmentRelation(resultPos, resultPos, afterPos, iterator);
       		}
       	}
     	}

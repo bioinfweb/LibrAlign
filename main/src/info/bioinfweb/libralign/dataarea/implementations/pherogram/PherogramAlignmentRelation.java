@@ -144,5 +144,24 @@ public class PherogramAlignmentRelation {
 	 */
 	public ListIterator<ShiftChange> getIterator() {
 		return iterator;
+	}
+
+
+	public String indexToString(int index) {
+		if (index == GAP) {
+			return "GAP";
+		}
+		else if (index == OUT_OF_RANGE) {
+			return "OUT_OF_RANGE";
+		}
+		else {
+			return Integer.toString(index);
+		}
+	}
+	
+	
+	@Override
+	public String toString() {
+		return "(" + indexToString(getBefore()) + ", " + indexToString(getCorresponding()) + ", " + indexToString(getAfter()) + ")";
 	}	
 }

@@ -112,7 +112,7 @@ public class PherogramArea extends DataArea implements PherogramComponent {
 		g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 		
 		double leftX = getLabeledAlignmentArea().getContentArea().paintXByColumn(getPherogramAlignmentModel().editableIndexByBaseCallIndex(getLeftCutPosition()).getBefore()); // getAfter());
-		double rightX = getLabeledAlignmentArea().getContentArea().paintXByColumn(getPherogramAlignmentModel().editableIndexByBaseCallIndex(getRightCutPosition()).getBefore() + 1);
+		double rightX = getLabeledAlignmentArea().getContentArea().paintXByColumn(getPherogramAlignmentModel().editableIndexByBaseCallIndex(getRightCutPosition() - 1).getAfter() + 1);
 		
 		// Draw cut off background:
 		g.setColor(getFormats().getCutBackgroundColor());
@@ -304,7 +304,7 @@ public class PherogramArea extends DataArea implements PherogramComponent {
 			int lastSeqPos = getPherogramAlignmentModel().editableIndexByBaseCallIndex(getPherogramModel().getSequenceLength() - 1).getAfter() 
 					- addend;
 			int tokensBefore = Math.min(e.getAffectedTokens().size(), Math.max(0, getFirstSeqPos() - e.getStartIndex() - addend));
-			int tokensAfter = Math.max(0, e.getAffectedTokens().size() - Math.max(0, lastSeqPos - e.getStartIndex()));
+			int tokensAfter = Math.max(0, e.getAffectedTokens().size() - Math.max(0, lastSeqPos - e.getStartIndex()) + addend);
 			int tokensInside = e.getAffectedTokens().size() - tokensBefore - tokensAfter;
 			
 			switch (e.getType()) {
