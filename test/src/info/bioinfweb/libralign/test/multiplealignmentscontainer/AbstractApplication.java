@@ -130,8 +130,8 @@ public class AbstractApplication {
 			pherogramArea.setFirstSeqPos(34 + 5);
 			pherogramArea.setLeftCutPosition(34);
 			pherogramArea.setRightCutPosition(820);
-			pherogramArea.getAlignmentModel().setShiftChange(38, -1);
-			pherogramArea.getAlignmentModel().setShiftChange(49, 2);
+			pherogramArea.getPherogramAlignmentModel().setShiftChange(38, -1);
+			pherogramArea.getPherogramAlignmentModel().setShiftChange(49, 2);
 			mainArea.getDataAreas().getSequenceAreas(sequenceProvider.sequenceIDByName("Sequence 4")).add(pherogramArea);
 			
 			result.getAlignmentAreas().add(mainArea);

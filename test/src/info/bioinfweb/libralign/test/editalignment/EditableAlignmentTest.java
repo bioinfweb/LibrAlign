@@ -26,6 +26,7 @@ import info.bioinfweb.libralign.alignmentarea.tokenpainter.NucleotideTokenPainte
 import info.bioinfweb.libralign.dataarea.implementations.SequenceIndexArea;
 import info.bioinfweb.libralign.dataarea.implementations.pherogram.PherogramArea;
 import info.bioinfweb.libralign.model.AlignmentModel;
+import info.bioinfweb.libralign.model.implementations.ArrayListAlignmentModel;
 import info.bioinfweb.libralign.model.implementations.PackedAlignmentModel;
 import info.bioinfweb.libralign.model.tokenset.BioJavaTokenSet;
 import info.bioinfweb.libralign.model.tokenset.TokenSet;
@@ -52,7 +53,8 @@ public class EditableAlignmentTest {
 			
 			TokenSet<NucleotideCompound> tokenSet = new BioJavaTokenSet<NucleotideCompound>(
 					TokenSetType.NUCLEOTIDE, new DNACompoundSet(), true);
-			AlignmentModel<NucleotideCompound> provider = new PackedAlignmentModel<NucleotideCompound>(tokenSet);
+			AlignmentModel<NucleotideCompound> provider = new ArrayListAlignmentModel<NucleotideCompound>(tokenSet);
+			//AlignmentModel<NucleotideCompound> provider = new PackedAlignmentModel<NucleotideCompound>(tokenSet);
 			
 			// Add index area:
 			alignmentArea.getDataAreas().getTopAreas().add(new SequenceIndexArea(contentArea));
