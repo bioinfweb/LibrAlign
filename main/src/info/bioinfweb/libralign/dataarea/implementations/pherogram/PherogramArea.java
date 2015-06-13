@@ -153,7 +153,7 @@ public class PherogramArea extends DataArea implements PherogramComponent {
 		if (getFormats().isShowBaseCallLines()) {
 			g.setColor(getFormats().getBaseCallLineColor());
 			painter.paintBaseCallLines(g, paintRange.getFirstPos(), paintRange.getLastPos(), x, y, 
-					getHeight(),	distortion);
+					getHeight(), distortion);
 		}
 
     // Paint indices:

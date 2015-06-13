@@ -123,7 +123,8 @@ public class GapPattern {
 	 * @return a value >= 0
 	 */
 	public int countGapsBeforeCurveCenter() {
-		int centerElement = (size() - getGapCount()) / 2;
+		int countWOGaps = size() - getGapCount();
+		int centerElement = countWOGaps / 2 + countWOGaps % 2;
 		int curveElementCount = 0;
 		int result = 0;
 		for (int i = 0; i < size(); i++) {
