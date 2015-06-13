@@ -18,10 +18,13 @@
  */
 package info.bioinfweb.libralign.model.tokenset.continuous;
 
+import info.bioinfweb.libralign.model.tokenset.AbstractTokenSet;
+
 
 
 /**
- * Implementation of a token set containing all possible {@code double} values.
+ * Implementation of a token set containing all possible {@code double} values. Gaps are represented by {@link Double#NaN}
+ * in this set.
  * <p>
  * For sets containing only a continuous subset of these, overwrite the according methods.
  * 
@@ -40,11 +43,16 @@ public class DoubleTokenSet extends AbstractContinuousSet<Double> {
 	
 	@Override
 	public Double tokenByRepresentation(String representation) {
-		try {
-			return Double.parseDouble(representation);
+		if (Character.toString(AbstractTokenSet.DEFAULT_GAP_REPRESENTATION).equals(representation)) {
+			return Double.NaN;
 		}
-		catch (NumberFormatException e) {
-			return null;
+		else {
+			try {
+				return Double.parseDouble(representation);
+			}
+			catch (NumberFormatException e) {
+				return null;
+			}
 		}
 	}
 
@@ -58,6 +66,12 @@ public class DoubleTokenSet extends AbstractContinuousSet<Double> {
 	@Override
 	public int maxRepresentationLength() {
 		return DOUBLE_MAX_REPRESENTATION_LENGTH;
+	}
+
+
+	@Override
+	public boolean isGapToken(Double token) {
+		return token.isNaN();
 	}
 
 

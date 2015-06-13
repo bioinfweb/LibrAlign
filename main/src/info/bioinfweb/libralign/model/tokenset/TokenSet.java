@@ -98,7 +98,7 @@ public interface TokenSet<T> extends Set<T>, Cloneable {
 	 */
   public boolean representationLengthEqual();
 
-		/**
+  /**
 	 * An description of the specified token (e.g. the full name of the compound like "Adenine"). 
 	 * 
 	 * @param token - the token that shall be described
@@ -112,6 +112,16 @@ public interface TokenSet<T> extends Set<T>, Cloneable {
 	 * @return the token set type
 	 */
 	public TokenSetType getType();
+	
+	/**
+	 * Tests if the specified token represents a gap. 
+	 * <p>
+	 * This method is e.g. used by data areas to determine the positions of gaps. 
+	 * 
+	 * @param token the token to be tested
+	 * @return {@code true} if the specified token is recognized as a gap, {@code false} otherwise.
+	 */
+	public boolean isGapToken(T token);
 	
 	/**
 	 * Returns a deep copy of this instance. Implementing this method is important when creating custom

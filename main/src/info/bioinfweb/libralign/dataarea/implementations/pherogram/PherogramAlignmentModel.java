@@ -28,6 +28,8 @@ import org.biojava3.core.sequence.compound.NucleotideCompound;
 
 import info.bioinfweb.commons.Math2;
 import info.bioinfweb.commons.bio.biojava3.core.sequence.compound.AlignmentAmbiguityNucleotideCompoundSet;
+import info.bioinfweb.libralign.alignmentarea.AlignmentArea;
+import info.bioinfweb.libralign.model.AlignmentModel;
 import info.bioinfweb.libralign.model.concatenated.ConcatenatedAlignmentModel;
 import info.bioinfweb.libralign.pherogram.PherogramUtils;
 import info.bioinfweb.libralign.pherogram.distortion.GapPattern;
@@ -71,6 +73,13 @@ public class PherogramAlignmentModel {
 		return owner;
 	}
 
+	
+	@SuppressWarnings({"rawtypes", "unchecked"})
+	private boolean isGap(int editableIndex) {
+		AlignmentModel model = getOwner().getOwner().getOwner().getAlignmentModel();
+		return model.getTokenSet().isGapToken(model.getTokenAt(getOwner().getList().getLocation().getSequenceID(), editableIndex));
+	}
+	
 
 	/**
 	 * Returns the index in the editable alignment sequence that corresponds to the specified index in the base
@@ -86,9 +95,9 @@ public class PherogramAlignmentModel {
   		return new PherogramAlignmentRelation(PherogramAlignmentRelation.OUT_OF_RANGE, PherogramAlignmentRelation.OUT_OF_RANGE, 
   				1 - getOwner().getLeftCutPosition() + getOwner().getFirstSeqPos(), shiftChangeList.listIterator());
   	}
-  	else if (baseCallIndex >= getOwner().getProvider().getSequenceLength()) {
+  	else if (baseCallIndex >= getOwner().getPherogramModel().getSequenceLength()) {
   		return new PherogramAlignmentRelation(
-  				editableIndexByBaseCallIndex(getOwner().getProvider().getSequenceLength() - 1).getCorresponding(), 
+  				editableIndexByBaseCallIndex(getOwner().getPherogramModel().getSequenceLength() - 1).getCorresponding(), 
   				PherogramAlignmentRelation.OUT_OF_RANGE, PherogramAlignmentRelation.OUT_OF_RANGE, 
   				shiftChangeList.listIterator(shiftChangeList.size()));  // Iterator positioned behind the last element of the list.
   	}
@@ -105,7 +114,7 @@ public class PherogramAlignmentModel {
       			resultPos -= baseCallIndex - shiftChangeEntry.baseCallIndex;
       			return new PherogramAlignmentRelation(resultPos - 1, PherogramAlignmentRelation.GAP,	resultPos, iterator);
       		}
-      		else if ((shiftChangeEntry.baseCallIndex <= baseCallIndex)) {
+      		else if ((shiftChangeEntry.baseCallIndex </*=*/ baseCallIndex)) {
       			resultPos += shiftChangeEntry.shiftChange;
       		}
       		else {
@@ -131,8 +140,19 @@ public class PherogramAlignmentModel {
     		if ((shiftChangeEntry.shiftChange > 0) && (Math2.isBetween(resultPos, 
     				shiftChangeEntry.baseCallIndex, shiftChangeEntry.baseCallIndex + shiftChangeEntry.shiftChange - 1))) {
     			
-    			return new PherogramAlignmentRelation(shiftChangeEntry.baseCallIndex - 1, PherogramAlignmentRelation.GAP,	
-    					shiftChangeEntry.baseCallIndex, iterator);
+    			int beforePos = shiftChangeEntry.baseCallIndex;
+    			int correspondingPos = shiftChangeEntry.baseCallIndex;
+    			int afterPos = shiftChangeEntry.baseCallIndex;
+    			if (isGap(editableIndex)) {
+    				correspondingPos = PherogramAlignmentRelation.GAP;
+    				if (resultPos == shiftChangeEntry.baseCallIndex) {
+    					beforePos = shiftChangeEntry.baseCallIndex - 1;  // First editable position in the distortion is the gap.
+    				}
+    				if (resultPos == shiftChangeEntry.baseCallIndex + shiftChangeEntry.shiftChange - 1) {
+    					beforePos = shiftChangeEntry.baseCallIndex + 1;  // Last editable position in the distortion is the gap.
+    				}
+    			}
+    			return new PherogramAlignmentRelation(beforePos, correspondingPos, afterPos, iterator);  //TODO Does the iterator have to be moved back in one of the cases?
     		}
     		else if ((shiftChangeEntry.baseCallIndex <= resultPos)) {
     			resultPos -= shiftChangeEntry.shiftChange;
@@ -149,8 +169,8 @@ public class PherogramAlignmentModel {
   		return new PherogramAlignmentRelation(PherogramAlignmentRelation.OUT_OF_RANGE, PherogramAlignmentRelation.OUT_OF_RANGE, 0, 
   				iterator);
   	}
-  	else if (resultPos >= getOwner().getProvider().getSequenceLength()) {
-  		return new PherogramAlignmentRelation(getOwner().getProvider().getSequenceLength() - 1, 
+  	else if (resultPos >= getOwner().getPherogramModel().getSequenceLength()) {
+  		return new PherogramAlignmentRelation(getOwner().getPherogramModel().getSequenceLength() - 1, 
   				PherogramAlignmentRelation.OUT_OF_RANGE, PherogramAlignmentRelation.OUT_OF_RANGE, iterator);
   	}
   	else {
@@ -240,9 +260,6 @@ public class PherogramAlignmentModel {
    * @param shiftChange - a positive of negative for the the shift change (number of positions in the editable sequence)
    */
   public void setShiftChange(int baseCallIndex, int shiftChange) {
-  	//System.out.print("Before (" + baseCallIndex + "): ");
-  	//printShiftChangeList();
-  	
   	int listIndex = shiftChangeListIndexByBaseCallIndex(baseCallIndex);
   	if (listIndex < shiftChangeList.size() && (shiftChangeList.get(listIndex).baseCallIndex == baseCallIndex)) {
     	if (shiftChange == 0) {
@@ -253,13 +270,9 @@ public class PherogramAlignmentModel {
     	}
   	}
   	else if (shiftChange != 0) {
-  		//System.out.println("  adding at " + listIndex + " " + baseCallIndex + " " + shiftChange);
   		shiftChangeList.add(listIndex, new ShiftChange(baseCallIndex, shiftChange));
   		combineThreeShiftChanges(listIndex);
   	}
-
-  	//System.out.print("After (" + baseCallIndex + "): ");
-  	//printShiftChangeList();
   }
   
   
@@ -347,12 +360,9 @@ public class PherogramAlignmentModel {
   
 	private GapPattern getGapPattern(ShiftChange shiftChange) {
 		GapPattern result = new GapPattern(shiftChange.getShiftChange() + 1);
-		int firstEditableIndex = editableIndexByBaseCallIndex(shiftChange.getBaseCallIndex()).getCorresponding() - 
-				shiftChange.getShiftChange()/* - 1*/;
+		int firstEditableIndex = editableIndexByBaseCallIndex(shiftChange.getBaseCallIndex()).getCorresponding();
 		for (int i = 0; i < result.size(); i++) {
-			result.setGap(i, ((NucleotideCompound)getOwner().getOwner().getOwner().getAlignmentModel().getTokenAt(
-					getOwner().getList().getLocation().getSequenceID(), firstEditableIndex + i)).getBase().equals(
-							"" + AlignmentAmbiguityNucleotideCompoundSet.GAP_CHARACTER));
+			result.setGap(i, isGap(firstEditableIndex + i));
 		}
 		return result;
 	}
@@ -370,7 +380,7 @@ public class PherogramAlignmentModel {
 
 
 	public ScaledPherogramDistortion createPherogramDistortion() {
-		ScaledPherogramDistortion result = new ScaledPherogramDistortion(getOwner().getProvider().getSequenceLength());
+		ScaledPherogramDistortion result = new ScaledPherogramDistortion(getOwner().getPherogramModel().getSequenceLength());
   	
 		int startTraceIndex = 0;  //getTracePosition(startBaseCallIndex);
 		Iterator<ShiftChange> shiftChangeIterator = shiftChangeIterator();
@@ -386,7 +396,7 @@ public class PherogramAlignmentModel {
 		int stepWidth = 1;
 		int editPosPerBaseCallPos = 1;
 		double baseCallPaintX = 0; //0.5 * compoundWidth;
-		for (int baseCallIndex = 0; baseCallIndex < getOwner().getProvider().getSequenceLength(); baseCallIndex += stepWidth) {
+		for (int baseCallIndex = 0; baseCallIndex < getOwner().getPherogramModel().getSequenceLength(); baseCallIndex += stepWidth) {
 			// Treat possible gaps:
 			if ((shiftChange != null) && (baseCallIndex == shiftChange.getBaseCallIndex())) {
 				if (shiftChange.getShiftChange() < 0) {  // Deletion in editable sequence
@@ -413,7 +423,7 @@ public class PherogramAlignmentModel {
 			}
 			
 			// Calculate scale and initialize variables:
-			int endTraceIndex = PherogramUtils.getFirstTracePosition(getOwner().getProvider(), baseCallIndex + stepWidth);
+			int endTraceIndex = PherogramUtils.getFirstTracePosition(getOwner().getPherogramModel(), baseCallIndex + stepWidth);
 			result.setHorizontalScale(baseCallIndex, editPosPerBaseCallPos * compoundWidth / (double)(endTraceIndex - startTraceIndex));
 
 			// Calculate paint positions:

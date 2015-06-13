@@ -37,7 +37,7 @@ public interface PherogramComponent {
 	 * 
 	 * @return the underlying implementation of {@link PherogramModel}
 	 */
-	public PherogramModel getProvider();
+	public PherogramModel getPherogramModel();
 	
 //	/**
 //	 * Returns if the vertical scale is calculated automatically depending on the currently visible part

@@ -163,6 +163,12 @@ public class BioJavaTokenSet<C extends Compound> extends AbstractSet<C> implemen
 	}
 
 
+	@Override	
+	public boolean isGapToken(C token) {
+		return TokenSetTools.isGapToken(this, token);
+	}
+	
+	
 	/**
 	 * Clones this instance.
 	 * 

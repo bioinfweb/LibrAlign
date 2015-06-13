@@ -41,6 +41,9 @@ import java.util.TreeMap;
  * @param <T> - the type of token to be stored in this set
  */
 public abstract class AbstractTokenSet<T> extends HashSet<T> implements TokenSet<T> {
+	public static final char DEFAULT_GAP_REPRESENTATION = '-';
+	
+	
 	private TokenSetType type;
 	private Map<Character, T> keyMap = new TreeMap<Character, T>();
 	
@@ -91,6 +94,18 @@ public abstract class AbstractTokenSet<T> extends HashSet<T> implements TokenSet
 
 
 	/**
+	 * Default implementation that tests of the string representation of the specified token is equal to
+	 * "{@value #DEFAULT_GAP_REPRESENTATION}".
+	 * 
+	 * @see info.bioinfweb.libralign.model.tokenset.TokenSet#isGapToken(java.lang.Object)
+	 */
+	@Override	
+	public boolean isGapToken(T token) {
+		return TokenSetTools.isGapToken(this, token);
+	}
+
+
+	/**
 	 * Inherited classes have to overwrite this method and create a deep copy of {@link #getKeyMap()}.
 	 */
 	@Override
@@ -98,6 +113,6 @@ public abstract class AbstractTokenSet<T> extends HashSet<T> implements TokenSet
 	
 	
 	protected void addSpaceKeyForGaps() {
-		getKeyMap().put(' ', tokenByKeyChar('-'));
+		getKeyMap().put(' ', tokenByKeyChar(DEFAULT_GAP_REPRESENTATION));
 	}
 }

@@ -19,6 +19,8 @@
 package info.bioinfweb.libralign.model.tokenset;
 
 
+import info.bioinfweb.libralign.model.AlignmentModel;
+
 import java.util.Iterator;
 
 
@@ -69,4 +71,16 @@ public class TokenSetTools {
   	}
  		return true;
   }
+	
+	
+	/**
+	 * Tests if the specified token represents a gap in the specified token set. 
+	 * 
+	 * @param tokenSet the token set containing the specified token
+	 * @param token the token to be tested
+	 * @return {@code true} if the specified token is recognized as a gap, {@code false} otherwise.
+	 */
+	public static <T> boolean isGapToken(TokenSet<T> tokenSet, T token) {
+		return Character.toString(AbstractTokenSet.DEFAULT_GAP_REPRESENTATION).equals(tokenSet.representationByToken(token));
+	}
 }

@@ -24,7 +24,7 @@ import info.bioinfweb.libralign.dataarea.implementations.pherogram.PherogramArea
 
 
 /**
- * Stores scales and gap pattern for each base call index of a pherogram. (Used with {@link PherogramArea}).
+ * Stores scale and gap pattern for each base call index of a pherogram. (Used with {@link PherogramArea}).
  * 
  * @author Ben St&ouml;ver
  * @since 0.2.0

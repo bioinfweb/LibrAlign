@@ -20,6 +20,7 @@ package info.bioinfweb.libralign.model.tokenset.continuous;
 
 
 import info.bioinfweb.jphyloio.events.TokenSetType;
+import info.bioinfweb.libralign.model.tokenset.AbstractTokenSet;
 import info.bioinfweb.libralign.model.tokenset.TokenSet;
 
 import java.util.Collection;
@@ -188,7 +189,12 @@ public abstract class AbstractContinuousSet<T> implements TokenSet<T> {
 	
 	@Override
 	public String representationByToken(T token) {
-		return token.toString();
+		if (isGapToken(token)) {
+			return Character.toString(AbstractTokenSet.DEFAULT_GAP_REPRESENTATION);
+		}
+		else {
+			return token.toString();
+		}
 	}
 	
 
@@ -200,7 +206,7 @@ public abstract class AbstractContinuousSet<T> implements TokenSet<T> {
 	
 	@Override
 	public String descriptionByToken(T token) {
-		return token.toString();
+		return representationByToken(token);
 	}
 
 	

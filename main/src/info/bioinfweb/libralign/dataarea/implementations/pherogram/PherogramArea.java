@@ -56,8 +56,8 @@ public class PherogramArea extends DataArea implements PherogramComponent {
 	public static final int DEFAULT_HEIGHT_FACTOR = 5;
 	
 	
-	private PherogramModel pherogram;
-	private PherogramAlignmentModel alignmentModel = new PherogramAlignmentModel(this);
+	private PherogramModel pherogramModel;
+	private PherogramAlignmentModel pherogramAlignmentModel = new PherogramAlignmentModel(this);
 	private int firstSeqPos;
 	private int leftCutPosition;
 	private int rightCutPosition;
@@ -74,7 +74,7 @@ public class PherogramArea extends DataArea implements PherogramComponent {
 	 */
 	public PherogramArea(AlignmentContentArea owner, PherogramModel pherogram) {
 		super(owner, owner.getOwner());  // Pherogram areas are always directly attached to their sequences. 
-		this.pherogram = pherogram;
+		this.pherogramModel = pherogram;
 		verticalScale = getHeight();
 		leftCutPosition = 0;
 		rightCutPosition = pherogram.getSequenceLength();
@@ -82,7 +82,7 @@ public class PherogramArea extends DataArea implements PherogramComponent {
 	
 	
 	protected SimpleSequenceInterval calculatePaintRange(TICPaintEvent e) {
-		PherogramAlignmentRelation lowerBorderRelation = getAlignmentModel().baseCallIndexByEditableIndex(
+		PherogramAlignmentRelation lowerBorderRelation = getPherogramAlignmentModel().baseCallIndexByEditableIndex(
 				getLabeledAlignmentArea().getContentArea().columnByPaintX(e.getRectangle().x) - 2);  // - 2 because two (expiremetally obtained) half visible column should be painted. (Why are this two?) 
 		int lowerBorder;
 		if (lowerBorderRelation.getCorresponding() == PherogramAlignmentRelation.GAP) {
@@ -92,14 +92,14 @@ public class PherogramArea extends DataArea implements PherogramComponent {
 			lowerBorder = 0;
 		}
 
-		PherogramAlignmentRelation upperBorderRelation = getAlignmentModel().baseCallIndexByEditableIndex(
+		PherogramAlignmentRelation upperBorderRelation = getPherogramAlignmentModel().baseCallIndexByEditableIndex(
 				getLabeledAlignmentArea().getContentArea().columnByPaintX(e.getRectangle().x + e.getRectangle().width) + 2);  // + 1 + 1 because BioJava indices start with 1 and one half visible column should be painted.
 		int upperBorder;
 		if (upperBorderRelation.getCorresponding() == PherogramAlignmentRelation.GAP) {
 			upperBorder = upperBorderRelation.getAfter();
 		}
 		else {  // OUT_OF_RANGE or valid index
-			upperBorder = getProvider().getSequenceLength() - 1; 
+			upperBorder = getPherogramModel().getSequenceLength() - 1; 
 		}
 
 		return new SimpleSequenceInterval(lowerBorder, upperBorder);
@@ -111,8 +111,8 @@ public class PherogramArea extends DataArea implements PherogramComponent {
 		Graphics2D g = e.getGraphics();
 		g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 		
-		double leftX = getLabeledAlignmentArea().getContentArea().paintXByColumn(getAlignmentModel().editableIndexByBaseCallIndex(getLeftCutPosition()).getAfter());
-		double rightX = getLabeledAlignmentArea().getContentArea().paintXByColumn(getAlignmentModel().editableIndexByBaseCallIndex(getRightCutPosition()).getBefore() + 1);
+		double leftX = getLabeledAlignmentArea().getContentArea().paintXByColumn(getPherogramAlignmentModel().editableIndexByBaseCallIndex(getLeftCutPosition()).getBefore()); // getAfter());
+		double rightX = getLabeledAlignmentArea().getContentArea().paintXByColumn(getPherogramAlignmentModel().editableIndexByBaseCallIndex(getRightCutPosition()).getBefore() + 1);
 		
 		// Draw cut off background:
 		g.setColor(getFormats().getCutBackgroundColor());
@@ -139,7 +139,7 @@ public class PherogramArea extends DataArea implements PherogramComponent {
 		double x = getLabeledAlignmentArea().getContentArea().paintXByColumn(getFirstSeqPos() - getLeftCutPosition());
 		double y = 0; 
 		double height = getHeight();
-		ScaledPherogramDistortion distortion = getAlignmentModel().createPherogramDistortion();
+		ScaledPherogramDistortion distortion = getPherogramAlignmentModel().createPherogramDistortion();
 		
 		// Paint gaps:
 		if (getLabeledAlignmentArea().getAlignmentModel() instanceof ConcatenatedAlignmentModel) {
@@ -201,8 +201,8 @@ public class PherogramArea extends DataArea implements PherogramComponent {
 
 
 	@Override
-	public PherogramModel getProvider() {
-		return pherogram;
+	public PherogramModel getPherogramModel() {
+		return pherogramModel;
 	}
   
   /**
@@ -211,8 +211,8 @@ public class PherogramArea extends DataArea implements PherogramComponent {
    * 
    * @return the model instance currently used
    */
-  public PherogramAlignmentModel getAlignmentModel() {
-  	return alignmentModel;
+  public PherogramAlignmentModel getPherogramAlignmentModel() {
+  	return pherogramAlignmentModel;
   }
 
 
@@ -268,15 +268,15 @@ public class PherogramArea extends DataArea implements PherogramComponent {
 
 	@Override
 	public int getLengthBeforeStart() {
-		return Math.max(0, getLabeledAlignmentArea().getContentArea().paintXByColumn(getAlignmentModel().baseCallIndexByEditableIndex(0).getAfter()));
+		return Math.max(0, getLabeledAlignmentArea().getContentArea().paintXByColumn(getPherogramAlignmentModel().baseCallIndexByEditableIndex(0).getAfter()));
 	}
 
 
 	@Override
 	public int getLengthAfterEnd() {
-		int lastEditableIndex = getAlignmentModel().editableIndexByBaseCallIndex(getRightCutPosition() - 1).getAfter();
+		int lastEditableIndex = getPherogramAlignmentModel().editableIndexByBaseCallIndex(getRightCutPosition() - 1).getAfter();
 		double lengthOfOutputAfterAlignmentStart = getLabeledAlignmentArea().getContentArea().paintXByColumn(lastEditableIndex) + 
-				(1 + getProvider().getSequenceLength() - getRightCutPosition()) * getOwner().getOwner().getPaintSettings().getTokenWidth(lastEditableIndex); 
+				(1 + getPherogramModel().getSequenceLength() - getRightCutPosition()) * getOwner().getOwner().getPaintSettings().getTokenWidth(lastEditableIndex); 
 		return Math.max(0, (int)Math.round(lengthOfOutputAfterAlignmentStart - getOwner().getOwner().getLocalMaximumNeededAlignmentWidth()));
 	}
 
@@ -300,17 +300,34 @@ public class PherogramArea extends DataArea implements PherogramComponent {
 	@Override
 	public <T> void afterTokenChange(TokenChangeEvent<T> e) {
 		if (e.getSource().equals(getLabeledAlignmentArea().getAlignmentModel()) && e.getSequenceID() == getList().getLocation().getSequenceID()) {
+			if (e.getAffectedToken().toString().equals("-")) {
+				System.out.println("gap");
+			}
+			
+			int addend = getLabeledAlignmentArea().getEditSettings().isInsertLeftInDataArea() ? -1 : 0;
+			
+			int lastSeqPos = getPherogramAlignmentModel().editableIndexByBaseCallIndex(getPherogramModel().getSequenceLength() - 1).getAfter() 
+					- addend;
+			int tokensBefore = Math.min(e.getAffectedTokens().size(), Math.max(0, getFirstSeqPos() - e.getStartIndex() - addend));
+			int tokensAfter = Math.max(0, e.getAffectedTokens().size() - Math.max(0, lastSeqPos - e.getStartIndex()));
+			int tokensInside = e.getAffectedTokens().size() - tokensBefore - tokensAfter;
+			
 			switch (e.getType()) {
 				case INSERTION:
-					int addend = getLabeledAlignmentArea().getEditSettings().isInsertLeftInDataArea() ? -1 : 0;
-					getAlignmentModel().addShiftChange(
-							getAlignmentModel().baseCallIndexByEditableIndex(Math.max(0, e.getStartIndex() + addend)).getBefore(),  //TODO is getBefore immer sinnvoll? 
-							e.getAffectedTokens().size());
+					setFirstSeqPos(getFirstSeqPos() + tokensBefore);
+					if (tokensInside > 0) {
+						getPherogramAlignmentModel().addShiftChange(
+								getPherogramAlignmentModel().baseCallIndexByEditableIndex(
+										Math.max(0, e.getStartIndex() + tokensBefore + addend)).getBefore(), tokensInside);
+					}
 					repaint();  // Needs to be done if this edit does not lead to a resize of the component.
 					break;
 				case DELETION:
-					getAlignmentModel().addShiftChange(getAlignmentModel().baseCallIndexByEditableIndex(e.getStartIndex()).getAfter()/*getBefore()*/,  //TODO is getBefore immer sinnvoll? 
-							-e.getAffectedTokens().size());
+					setFirstSeqPos(getFirstSeqPos() - tokensBefore);
+					if (tokensInside > 0) {
+						getPherogramAlignmentModel().addShiftChange(getPherogramAlignmentModel().baseCallIndexByEditableIndex(
+								e.getStartIndex() + tokensBefore).getAfter(), -e.getAffectedTokens().size());
+					}
 					repaint();  // Needs to be done if this edit does not lead to a resize of the component.
 					break;
 				case REPLACEMENT:  // Nothing to do (Replacements differing in length are not allowed.)

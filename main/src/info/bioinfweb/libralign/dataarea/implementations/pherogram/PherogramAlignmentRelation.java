@@ -102,7 +102,7 @@ public class PherogramAlignmentRelation {
 	
 	
 	/**
-	 * Returns an iterator positioned before the next gap (shift change entry). 
+	 * Returns an iterator positioned before the next shift change entry. 
 	 */
 	public ListIterator<ShiftChange> getIterator() {
 		return iterator;

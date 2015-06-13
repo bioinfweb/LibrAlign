@@ -18,10 +18,13 @@
  */
 package info.bioinfweb.libralign.model.tokenset.continuous;
 
+import info.bioinfweb.libralign.model.tokenset.AbstractTokenSet;
+
 
 
 /**
- * Implementation of a token set containing all possible {@code float} values.
+ * Implementation of a token set containing all possible {@code float} values. Gaps are represented by {@link Float#NaN}
+ * in this set.
  * <p>
  * For sets containing only a continuous subset of these, overwrite the according methods.
  * 
@@ -40,11 +43,16 @@ public class FloatTokenSet extends AbstractContinuousSet<Float> {
 	
 	@Override
 	public Float tokenByRepresentation(String representation) {
-		try {
-			return Float.parseFloat(representation);
+		if (Character.toString(AbstractTokenSet.DEFAULT_GAP_REPRESENTATION).equals(representation)) {
+			return Float.NaN;
 		}
-		catch (NumberFormatException e) {
-			return null;
+		else {
+			try {
+				return Float.parseFloat(representation);
+			}
+			catch (NumberFormatException e) {
+				return null;
+			}
 		}
 	}
 
@@ -58,6 +66,12 @@ public class FloatTokenSet extends AbstractContinuousSet<Float> {
 	@Override
 	public int maxRepresentationLength() {
 		return FLOAT_MAX_REPRESENTATION_LENGTH;
+	}
+
+
+	@Override
+	public boolean isGapToken(Float token) {
+		return token.isNaN();
 	}
 
 

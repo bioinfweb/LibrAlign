@@ -63,7 +63,7 @@ public class PherogramTraceCurveView extends TICComponent implements PherogramCo
 
 
 	@Override
-	public PherogramModel getProvider() {
+	public PherogramModel getPherogramModel() {
 		return pherogram;
 	}
 
@@ -183,8 +183,8 @@ public class PherogramTraceCurveView extends TICComponent implements PherogramCo
 
 
 	public int getWidth() {
-		if (getProvider() != null) {
-			return (int)Math2.roundUp(getProvider().getTraceLength() * getHorizontalScale());
+		if (getPherogramModel() != null) {
+			return (int)Math2.roundUp(getPherogramModel().getTraceLength() * getHorizontalScale());
 		}
 		else {
 			return 0;

@@ -74,7 +74,7 @@ public class PherogramPainter {
 	
 	private void paintBaseCallData(Graphics2D g, int index, double paintX, double paintY) {
 		PherogramFormats formats = owner.getFormats();
-		NucleotideCompound nucleotide = owner.getProvider().getBaseCall(index);
+		NucleotideCompound nucleotide = owner.getPherogramModel().getBaseCall(index);
 		
 		g.setFont(formats.getBaseCallFont());
 		g.setColor(getNucleotideColor(nucleotide.getUpperedBase()));
@@ -85,12 +85,12 @@ public class PherogramPainter {
 			g.setFont(formats.getAnnotationFont());
 			if (formats.getQualityOutputType().equals(QualityOutputType.MAXIMUM)) {
 				// Color is already set correctly by the nucleotide output.
-				paintY = paintAnnotation(g, owner.getProvider().getQuality(nucleotide, index), paintX, paintY);
+				paintY = paintAnnotation(g, owner.getPherogramModel().getQuality(nucleotide, index), paintX, paintY);
 			}
 			else {  // QualityOutputType.ALL
 				for (NucleotideCompound qualityNucleotide: PherogramModel.TRACE_CURVE_NUCLEOTIDES) {
 					g.setColor(getNucleotideColor(qualityNucleotide.getUpperedBase()));
-					paintY = paintAnnotation(g, owner.getProvider().getQuality(qualityNucleotide, index), paintX, paintY);
+					paintY = paintAnnotation(g, owner.getPherogramModel().getQuality(qualityNucleotide, index), paintX, paintY);
 				}
 			}
 		}
@@ -99,7 +99,7 @@ public class PherogramPainter {
 			g.setFont(formats.getAnnotationFont());
 			
 			for (String label: PherogramModel.PROBABILITY_LABELS) {
-				paintY = paintAnnotation(g, owner.getProvider().getAnnotation(label, index), paintX, paintY);
+				paintY = paintAnnotation(g, owner.getPherogramModel().getAnnotation(label, index), paintX, paintY);
 			}
 		}
 	}
@@ -137,27 +137,27 @@ public class PherogramPainter {
 			double horizontalScale) {
 		
 		int index = 0;
-		while ((index < owner.getProvider().getSequenceLength()) && 
-				(owner.getProvider().getBaseCallPosition(index) < startX)) {
+		while ((index < owner.getPherogramModel().getSequenceLength()) && 
+				(owner.getPherogramModel().getBaseCallPosition(index) < startX)) {
 			
 			index++;
 		}
 		
-		if (index < owner.getProvider().getSequenceLength()) {
+		if (index < owner.getPherogramModel().getSequenceLength()) {
 			if (index > 0) {
 				index--;  // Also paint first possible partly visible character
 			}
 			
-			while ((index < owner.getProvider().getSequenceLength()) && 
-					(owner.getProvider().getBaseCallPosition(index) < endX)) {
+			while ((index < owner.getPherogramModel().getSequenceLength()) && 
+					(owner.getPherogramModel().getBaseCallPosition(index) < endX)) {
 				
-    		paintBaseCallData(g, index, paintStartX + (owner.getProvider().getBaseCallPosition(index) - startX) * horizontalScale, 
+    		paintBaseCallData(g, index, paintStartX + (owner.getPherogramModel().getBaseCallPosition(index) - startX) * horizontalScale, 
     				paintY);
 				index++;
 			}
 
-			if (index < owner.getProvider().getSequenceLength()) {
-				paintBaseCallData(g, index, paintStartX + (owner.getProvider().getBaseCallPosition(index) - startX) * horizontalScale, 
+			if (index < owner.getPherogramModel().getSequenceLength()) {
+				paintBaseCallData(g, index, paintStartX + (owner.getPherogramModel().getBaseCallPosition(index) - startX) * horizontalScale, 
 						paintY);  // Also paint last possible partly visible character
 			}
     }
@@ -194,18 +194,18 @@ public class PherogramPainter {
 		
 		double height = calculateTraceCurvesHeight();
 		startX = Math.max(startX, 0);
-		endX = Math.min(endX + 1, owner.getProvider().getTraceLength());
+		endX = Math.min(endX + 1, owner.getPherogramModel().getTraceLength());
 		
 		for (NucleotideCompound nucleotide: PherogramModel.TRACE_CURVE_NUCLEOTIDES) {
 			Path2D path = new Path2D.Double();
 			double x = paintX;
 			path.moveTo(x, paintY + height - 
-					owner.getProvider().getTraceValue(nucleotide, startX) * owner.getVerticalScale());
+					owner.getPherogramModel().getTraceValue(nucleotide, startX) * owner.getVerticalScale());
 			
 			for (int traceX = startX + 1; traceX < endX; traceX++) {
 				x += horizontalScale;
 				path.lineTo(x, paintY + height - 
-						owner.getProvider().getTraceValue(nucleotide, traceX) * owner.getVerticalScale());  //TODO curveTo() could be used alternatively.
+						owner.getPherogramModel().getTraceValue(nucleotide, traceX) * owner.getVerticalScale());  //TODO curveTo() could be used alternatively.
 			}
 
 			g.setColor(owner.getFormats().getNucleotideColorSchema().getNucleotideColorMap().get("" + nucleotide.toString().charAt(0)));
@@ -220,17 +220,17 @@ public class PherogramPainter {
 			double horizontalScale) {
 		
 		int index = 0;
-		while ((index < owner.getProvider().getSequenceLength()) && 
-				(owner.getProvider().getBaseCallPosition(index) < startX)) {
+		while ((index < owner.getPherogramModel().getSequenceLength()) && 
+				(owner.getPherogramModel().getBaseCallPosition(index) < startX)) {
 			
 			index++;			
 		}
 		
-		if (index < owner.getProvider().getSequenceLength()) {
-			while ((index < owner.getProvider().getSequenceLength()) && 
-					(owner.getProvider().getBaseCallPosition(index) <= endX)) {
+		if (index < owner.getPherogramModel().getSequenceLength()) {
+			while ((index < owner.getPherogramModel().getSequenceLength()) && 
+					(owner.getPherogramModel().getBaseCallPosition(index) <= endX)) {
 				
-	  		double x = paintX + (owner.getProvider().getBaseCallPosition(index) - startX) * horizontalScale;
+	  		double x = paintX + (owner.getPherogramModel().getBaseCallPosition(index) - startX) * horizontalScale;
 	  		Path2D path = new  Path2D.Double();
 	  		path.moveTo(x, paintY);
 	  		path.lineTo(x, paintY + height);
@@ -246,8 +246,8 @@ public class PherogramPainter {
 			double height, PherogramDistortion distortion) {
 		
 		int baseCallIndex = firstBaseCallIndex;
-		if (baseCallIndex < owner.getProvider().getSequenceLength()) {
-			while ((baseCallIndex < owner.getProvider().getSequenceLength()) && 
+		if (baseCallIndex < owner.getPherogramModel().getSequenceLength()) {
+			while ((baseCallIndex < owner.getPherogramModel().getSequenceLength()) && 
 					(baseCallIndex <= lastBaseCallIndex)) {
 				
 	  		double x = startX + distortion.getPaintCenterX(baseCallIndex);
@@ -266,22 +266,22 @@ public class PherogramPainter {
 			double horizontalScale) {
 		
 		int index = 0;
-		while ((index < owner.getProvider().getSequenceLength()) && 
-				(owner.getProvider().getBaseCallPosition(index) < startX)) {
+		while ((index < owner.getPherogramModel().getSequenceLength()) && 
+				(owner.getPherogramModel().getBaseCallPosition(index) < startX)) {
 			
 			index++;			
 		}
 		
 		float leftMostLabelStart = 0;  // Make sure the first label is always painted
-		if (index < owner.getProvider().getSequenceLength()) {
+		if (index < owner.getPherogramModel().getSequenceLength()) {
 			index = Math.max(INDEX_LABEL_INTERVAL, index - index % INDEX_LABEL_INTERVAL - INDEX_LABEL_INTERVAL);
 			
-			while ((index < owner.getProvider().getSequenceLength()) && 
-					(owner.getProvider().getBaseCallPosition(index) < endX)) {
+			while ((index < owner.getPherogramModel().getSequenceLength()) && 
+					(owner.getPherogramModel().getBaseCallPosition(index) < endX)) {
 				
 				String label = "" + index;
 				int labelWidth = g.getFontMetrics().stringWidth(label);
-				float labelX = (float)(paintX + (owner.getProvider().getBaseCallPosition(index) - startX) * horizontalScale - 
+				float labelX = (float)(paintX + (owner.getPherogramModel().getBaseCallPosition(index) - startX) * horizontalScale - 
 						0.5 * labelWidth);
 				if (labelX > leftMostLabelStart) {  // Draw label only if it does not overlap with its left neighbor.
 					g.drawString(label, labelX,	(float)paintY + g.getFont().getSize());
@@ -291,10 +291,10 @@ public class PherogramPainter {
 				index += INDEX_LABEL_INTERVAL;			
 			}
 			
-			if (index < owner.getProvider().getSequenceLength()) {  // Draw possibly partly visible label
+			if (index < owner.getPherogramModel().getSequenceLength()) {  // Draw possibly partly visible label
 				String label = "" + index;
 				int labelWidth = g.getFontMetrics().stringWidth(label);
-				float labelX = (float)(paintX + (owner.getProvider().getBaseCallPosition(index) - startX) * horizontalScale - 
+				float labelX = (float)(paintX + (owner.getPherogramModel().getBaseCallPosition(index) - startX) * horizontalScale - 
 						0.5 * labelWidth);
 				if (labelX > leftMostLabelStart) {  // Draw label only if it does not overlap with its left neighbor.
 					g.drawString(label, labelX,	(float)paintY + g.getFont().getSize());
@@ -309,10 +309,10 @@ public class PherogramPainter {
 		
 		int baseCallIndex = firstBaseCallIndex;
 		float leftMostLabelStart = 0;  // Make sure the first label is always painted
-		if (baseCallIndex < owner.getProvider().getSequenceLength()) {
+		if (baseCallIndex < owner.getPherogramModel().getSequenceLength()) {
 			baseCallIndex = Math.max(INDEX_LABEL_INTERVAL, baseCallIndex - baseCallIndex % INDEX_LABEL_INTERVAL - INDEX_LABEL_INTERVAL);
 			
-			while ((baseCallIndex < owner.getProvider().getSequenceLength()) && 
+			while ((baseCallIndex < owner.getPherogramModel().getSequenceLength()) && 
 					(baseCallIndex <= lastBaseCallIndex)) {
 				
 				String label = "" + baseCallIndex;
@@ -334,13 +334,13 @@ public class PherogramPainter {
 		
 		final double height = calculateTraceCurvesHeight();
 		for (NucleotideCompound nucleotide: PherogramModel.TRACE_CURVE_NUCLEOTIDES) {
-			int startTraceIndex = PherogramUtils.getFirstTracePosition(owner.getProvider(), firstBaseCallIndex);
+			int startTraceIndex = PherogramUtils.getFirstTracePosition(owner.getPherogramModel(), firstBaseCallIndex);
 			Path2D path = new Path2D.Double();
 			path.moveTo(x + distortion.getPaintStartX(firstBaseCallIndex), 
-					y + height - owner.getProvider().getTraceValue(nucleotide, startTraceIndex) * owner.getVerticalScale());
+					y + height - owner.getPherogramModel().getTraceValue(nucleotide, startTraceIndex) * owner.getVerticalScale());
 			for (int baseCallIndex = firstBaseCallIndex; baseCallIndex <= lastBaseCallIndex; baseCallIndex++) {
         // Create path for trace curve:
-				int endTraceIndex = PherogramUtils.getFirstTracePosition(owner.getProvider(), baseCallIndex + 1);
+				int endTraceIndex = PherogramUtils.getFirstTracePosition(owner.getPherogramModel(), baseCallIndex + 1);
 				
 				double paintX = x + distortion.getPaintStartX(baseCallIndex);
 				double previousX = paintX - compoundWidth;
@@ -353,7 +353,7 @@ public class PherogramPainter {
 								(distortion.getGapPattern(baseCallIndex).isGap(editablePos))) {
 							
 							paintX += compoundWidth;
-							path.moveTo(paintX, y + height - owner.getProvider().getTraceValue(nucleotide, 
+							path.moveTo(paintX, y + height - owner.getPherogramModel().getTraceValue(nucleotide, 
 									Math.max(startTraceIndex, traceX - 1)) * owner.getVerticalScale());
 							previousX += compoundWidth;
 							editablePos++;
@@ -362,13 +362,13 @@ public class PherogramPainter {
 					}
 					paintX += distortion.getHorizontalScale(baseCallIndex);
 					path.lineTo(paintX, y + height - 
-							owner.getProvider().getTraceValue(nucleotide, traceX) * owner.getVerticalScale());  //TODO curveTo() could be used alternatively.
+							owner.getPherogramModel().getTraceValue(nucleotide, traceX) * owner.getVerticalScale());  //TODO curveTo() could be used alternatively.
 				}
 				
 				// Leave space for remaining gaps at the end:
 				if (distortion.getGapPattern(baseCallIndex) != null) {
 					paintX += compoundWidth * (distortion.getGapPattern(baseCallIndex).size() - editablePos); 
-					path.moveTo(paintX, y + height - owner.getProvider().getTraceValue(nucleotide, 
+					path.moveTo(paintX, y + height - owner.getPherogramModel().getTraceValue(nucleotide, 
 								Math.max(startTraceIndex, endTraceIndex - 1)) * owner.getVerticalScale());
 				}
 				
