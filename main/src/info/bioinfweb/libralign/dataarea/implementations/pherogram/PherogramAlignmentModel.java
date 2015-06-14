@@ -219,22 +219,21 @@ public class PherogramAlignmentModel {
   }
   
   
-//  private void printShiftChangeList() {
-//  	Iterator<ShiftChange> iterator = shiftChangeIterator();
-//  	while (iterator.hasNext()) {
-//  		ShiftChange shiftChange = iterator.next();
-//  		System.out.print("(" + shiftChange.baseCallIndex + ": " + shiftChange.shiftChange + "), ");
-//  	}
-//  	System.out.println();
-//  }
+  private void printShiftChangeList() {
+  	Iterator<ShiftChange> iterator = shiftChangeIterator();
+  	while (iterator.hasNext()) {
+  		ShiftChange shiftChange = iterator.next();
+  		System.out.print("(" + shiftChange.baseCallIndex + ": " + shiftChange.shiftChange + "), ");
+  	}
+  	System.out.println();
+  }
 
   
   private int combineTwoShiftChanges(int firstIndex) {
   	if (Math2.isBetween(firstIndex, 0, shiftChangeList.size() - 2)) {
       ShiftChange firstChange = shiftChangeList.get(firstIndex);
       ShiftChange secondChange = shiftChangeList.get(firstIndex + 1);
-      if ((((firstChange.shiftChange < 0) && (secondChange.shiftChange > 0)) ||
-      		((firstChange.shiftChange > 0) && (secondChange.shiftChange < 0))) &&  // Avoid two neighboring shifts in the same direction to be combined.
+      if (((firstChange.shiftChange < 0) || (secondChange.shiftChange < 0)) &&  // Avoid two neighboring positive shifts to be combined.
       		((secondChange.baseCallIndex <= firstChange.baseCallIndex - firstChange.shiftChange) || 
       		(firstChange.baseCallIndex >= secondChange.baseCallIndex - secondChange.shiftChange))) {  // Test if shifts in opposite directions neutralize each other.
       	
@@ -284,6 +283,7 @@ public class PherogramAlignmentModel {
   		shiftChangeList.add(listIndex, new ShiftChange(baseCallIndex, shiftChange));
   		combineThreeShiftChanges(listIndex);
   	}
+  	printShiftChangeList();
   }
   
   
