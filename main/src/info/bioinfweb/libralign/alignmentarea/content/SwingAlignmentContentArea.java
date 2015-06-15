@@ -117,4 +117,10 @@ public class SwingAlignmentContentArea extends SwingAlignmentRowsArea implements
 	public void assignSequenceAreaSize(int sequenceID) throws IllegalArgumentException {
 		AlignmentContentAreaTools.assignSequenceAreaSize(sequenceAreaMap, sequenceID);
 	}
+
+
+	@Override
+	public void repaintSequenceAreas() {
+		sequenceAreaMap.repaintSequenceAreas();
+	}
 }

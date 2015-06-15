@@ -153,4 +153,10 @@ public class SWTAlignmentContentArea extends SWTAlignmentRowsArea implements Too
 	public void assignSequenceAreaSize(int sequenceID) throws IllegalArgumentException {
 		AlignmentContentAreaTools.assignSequenceAreaSize(sequenceAreaMap, sequenceID);
 	}
+
+
+	@Override
+	public void repaintSequenceAreas() {
+		sequenceAreaMap.repaintSequenceAreas();
+	}
 }

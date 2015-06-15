@@ -74,4 +74,9 @@ public interface ToolkitSpecificAlignmentContentArea extends ToolkitSpecificAlig
    * @param list - the data areas to be added
    */
   public void addDataAreaList(DataAreaList list);
+  
+	/**
+	 * Forces all contained {@link SequenceArea}s (not data areas) to be repainted.
+	 */
+	public void repaintSequenceAreas();
 }

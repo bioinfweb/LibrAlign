@@ -453,12 +453,11 @@ public class AlignmentArea extends TICComponent implements AlignmentModelChangeL
 
 	@Override
 	public <T> void afterTokenChange(TokenChangeEvent<T> e) {
-		//assignSizeToAll();  // Needs to happen first (otherwise the child elements get cut off in SWT probably because they are only painted as far as they are visible in the parent component even if the parent will be resized later on).
-//		if (getContentArea().hasToolkitComponent() && e.getSource().equals(getAlignmentModel())) {
-//			getContentArea().getToolkitComponent().assignSequenceAreaSize(e.getSequenceID());
-//		}
 		getDataAreas().getSequenceDataChangeListener().afterTokenChange(e);
 		assignSizeToAll();
+		if (getContentArea().hasToolkitComponent()) {
+			getContentArea().getToolkitComponent().repaintSequenceAreas();  // Necessary when neither the selection changes nor the size of the sequence areas changed (e.g. when deleting right in a sequence with an attached pherogram with space before and after the alignment).
+		}
 	}
 
 

@@ -126,7 +126,7 @@ public class SelectionModel {
 	
 	
 	/**
-	 * Returns the current height of the alignment cursor (which is equal to the heigt of a possible selection).
+	 * Returns the current height of the alignment cursor (which is equal to the height of a possible selection).
 	 * 
 	 * @return a value greater 0
 	 * @see #getWidth()
