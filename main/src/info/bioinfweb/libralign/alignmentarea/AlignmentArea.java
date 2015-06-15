@@ -476,6 +476,7 @@ public class AlignmentArea extends TICComponent implements AlignmentModelChangeL
 		if (hasToolkitComponent()) {
 			if (e.getSource().equals(getDataAreas())) {
 				getDataAreas().setLocalMaxLengthBeforeStartRecalculate();
+				getDataAreas().setLocalMaxLengthAfterEndRecalculate();
 				reinsertSubelements();
 			}
 			assignSizeToAll();
