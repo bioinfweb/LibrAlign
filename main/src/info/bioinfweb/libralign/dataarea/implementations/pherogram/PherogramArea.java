@@ -197,7 +197,15 @@ public class PherogramArea extends DataArea implements PherogramComponent {
 	 * @param firstSeqPos - the new index
 	 */
 	public void setFirstSeqPos(int firstSeqPos) {
-		this.firstSeqPos = firstSeqPos;
+		if (Math2.isBetween(firstSeqPos, 0,  //TODO Also check right cut position to match the sequence end?
+				getLabeledAlignmentArea().getAlignmentModel().getSequenceLength(getList().getLocation().getSequenceID()) - 1)) {
+			
+			this.firstSeqPos = firstSeqPos;
+			getList().getOwner().setLocalMaxLengthBeforeAfterStartRecalculate();
+		}
+		else {
+			throw new IndexOutOfBoundsException(firstSeqPos + " is not a valid index to attach this pherogram to.");
+		}
 	}
 
 
@@ -206,6 +214,7 @@ public class PherogramArea extends DataArea implements PherogramComponent {
 		return pherogramModel;
 	}
   
+	
   /**
    * Returns a model instance defining the alignment of this pherogram onto the associated sequence
    * in the alignment.
@@ -214,6 +223,13 @@ public class PherogramArea extends DataArea implements PherogramComponent {
    */
   public PherogramAlignmentModel getPherogramAlignmentModel() {
   	return pherogramAlignmentModel;
+  }
+  
+  
+  private void updateChangedCutPosition() {
+		getPherogramAlignmentModel().deleteCutOffDistortions();
+		getList().getOwner().setLocalMaxLengthBeforeAfterStartRecalculate();
+		repaint();
   }
 
 
@@ -238,11 +254,10 @@ public class PherogramArea extends DataArea implements PherogramComponent {
 		if (Math2.isBetween(baseCallIndex, 0, getPherogramModel().getSequenceLength() - 1)) {
 			leftCutPosition = baseCallIndex;
 			if (getLeftCutPosition() > getRightCutPosition()) {
-				setRightCutPosition(baseCallIndex);  // Calls repaint and deleted distortions.
+				setRightCutPosition(baseCallIndex);  // Calls updateChangedCutPosition().
 			}
 			else {
-				getPherogramAlignmentModel().deleteCutOffDistortions();
-				repaint();
+				updateChangedCutPosition();
 			}
 		}
 		else {
@@ -300,11 +315,10 @@ public class PherogramArea extends DataArea implements PherogramComponent {
 		if (Math2.isBetween(baseCallIndex, 0, getPherogramModel().getSequenceLength() - 1)) {
 			rightCutPosition = baseCallIndex;
 			if (getLeftCutPosition() > getRightCutPosition()) {
-				setLeftCutPosition(baseCallIndex);  // Calls repaint and deleted distortions.
+				setLeftCutPosition(baseCallIndex);  // Calls updateChangedCutPosition().
 			}
 			else {
-				getPherogramAlignmentModel().deleteCutOffDistortions();
-				repaint();
+				updateChangedCutPosition();
 			}
 		}
 		else {

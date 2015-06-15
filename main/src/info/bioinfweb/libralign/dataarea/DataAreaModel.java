@@ -187,8 +187,16 @@ public class DataAreaModel {
 	}
 
 
-	public void setLocalMaxLengthBeforeStartRecalculate() {
+	/**
+	 * Flags the properties {@link #getLocalMaxLengthBeforeStart()} and {@link #getLocalMaxLengthAfterEnd()} to
+	 * be recalculated when they are accessed the next time. 
+	 * <p>
+	 * LibrAlign does not recalculate these values on every call for performance reasons. Usually application code 
+	 * will not have to call this method directly.
+	 */
+	public void setLocalMaxLengthBeforeAfterStartRecalculate() {
 		localMaxLengthBeforeStart = AlignmentLabelArea.RECALCULATE_VALUE;
+    localMaxLengthAfterEnd = AlignmentLabelArea.RECALCULATE_VALUE;
 	}
 
 
@@ -229,11 +237,6 @@ public class DataAreaModel {
       }
     }
     return localMaxLengthAfterEnd;
-  }
-
-
-  public void setLocalMaxLengthAfterEndRecalculate() {
-    localMaxLengthAfterEnd = AlignmentLabelArea.RECALCULATE_VALUE;
   }
 
 

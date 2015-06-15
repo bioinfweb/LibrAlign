@@ -25,6 +25,7 @@ import java.util.List;
 import java.util.ListIterator;
 
 import info.bioinfweb.commons.Math2;
+import info.bioinfweb.libralign.dataarea.DataAreaModel;
 import info.bioinfweb.libralign.model.AlignmentModel;
 import info.bioinfweb.libralign.model.concatenated.ConcatenatedAlignmentModel;
 import info.bioinfweb.libralign.pherogram.PherogramUtils;
@@ -421,7 +422,8 @@ public class PherogramAlignmentModel {
 				iterator.remove();
 			}
 		}
-		getOwner().setFirstSeqPos(getOwner().getFirstSeqPos() + firstPosShift);
+		getOwner().setFirstSeqPos(getOwner().getFirstSeqPos() + firstPosShift);	
+		// Repainting and flagging recalculation of maxLengthBeforeStart/AfterEnd is performed by calling methods of PherogramArea and is not repeated here for performance reasons.
 	}
 
 

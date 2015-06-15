@@ -475,8 +475,7 @@ public class AlignmentArea extends TICComponent implements AlignmentModelChangeL
 	public void dataAreaInsertedRemoved(DataAreaChangeEvent e) {
 		if (hasToolkitComponent()) {
 			if (e.getSource().equals(getDataAreas())) {
-				getDataAreas().setLocalMaxLengthBeforeStartRecalculate();
-				getDataAreas().setLocalMaxLengthAfterEndRecalculate();
+				getDataAreas().setLocalMaxLengthBeforeAfterStartRecalculate();
 				reinsertSubelements();
 			}
 			assignSizeToAll();
