@@ -387,7 +387,8 @@ public class PherogramArea extends DataArea implements PherogramComponent {
 	public int getLengthAfterEnd() {
 		int lastEditableIndex = getPherogramAlignmentModel().editableIndexByBaseCallIndex(getRightCutPosition() - 1).getAfter();
 		double lengthOfOutputAfterAlignmentStart = getLabeledAlignmentArea().getContentArea().paintXByColumn(lastEditableIndex) + 
-				(1 + getPherogramModel().getSequenceLength() - getRightCutPosition()) * getOwner().getOwner().getPaintSettings().getTokenWidth(lastEditableIndex); 
+				(1 + getPherogramModel().getSequenceLength() - getRightCutPosition()) *  
+				getOwner().getOwner().getPaintSettings().getTokenWidth(lastEditableIndex) - getLengthBeforeStart(); 
 		return Math.max(0, (int)Math.round(lengthOfOutputAfterAlignmentStart - getOwner().getOwner().getLocalMaximumNeededAlignmentWidth()));
 	}
 
