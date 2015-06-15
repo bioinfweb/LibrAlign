@@ -36,7 +36,7 @@ public class CharacterTokenSet extends AbstractTokenSet<Character> {
 	 * @param type the token type of the new instance (Only a discrete type would make sense for this class.)
 	 */
 	public CharacterTokenSet(TokenSetType type) {
-		super(type, DEFAULT_GAP_REPRESENTATION);
+		super(type);
 	}
 
 
@@ -48,7 +48,7 @@ public class CharacterTokenSet extends AbstractTokenSet<Character> {
 	 * @param tokens - a sequence containing the tokens to be contained in this set 
 	 */
 	public CharacterTokenSet(TokenSetType type, CharSequence tokens) {
-		super(type, DEFAULT_GAP_REPRESENTATION);
+		super(type);
 		for (int i = 0; i < tokens.length(); i++) {
 			add(tokens.charAt(i));
 		}
@@ -61,7 +61,7 @@ public class CharacterTokenSet extends AbstractTokenSet<Character> {
 	 * @param tokenSet - the instance to be cloned
 	 */
 	public CharacterTokenSet(CharacterTokenSet tokenSet) {
-		super(tokenSet.getType(), tokenSet.getGapToken());
+		super(tokenSet.getType());
 		addAll(tokenSet);
 		getKeyMap().putAll(tokenSet.getKeyMap());
 	}

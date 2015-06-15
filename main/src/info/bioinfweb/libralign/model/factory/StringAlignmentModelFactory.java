@@ -51,8 +51,7 @@ public class StringAlignmentModelFactory implements AlignmentModelFactory<String
 	@Override
 	public AlignmentModel<String> createNewModel(NewAlignmentModelParameterMap parameterMap) {
 		// Create token set:
-		DefaultTokenSet<String> discreteTokenSet = new DefaultTokenSet<String>(parameterMap.getCharacterStateSetType(),
-				Character.toString(AbstractTokenSet.DEFAULT_GAP_REPRESENTATION));
+		DefaultTokenSet<String> discreteTokenSet = new DefaultTokenSet<String>(parameterMap.getCharacterStateSetType());
 		for (SingleTokenDefinitionEvent tokenDefinition : parameterMap.getDefinedTokens()) {
 			discreteTokenSet.add(tokenDefinition.getTokenName());  //TODO Should the meaning be modeled in the token set?
 		}

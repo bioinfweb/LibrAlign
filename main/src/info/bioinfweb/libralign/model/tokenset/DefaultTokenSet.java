@@ -40,8 +40,8 @@ public class DefaultTokenSet<T> extends AbstractTokenSet<T> {
 	 * 
 	 * @param type the token type of the new instance
 	 */
-	public DefaultTokenSet(TokenSetType type, T gapToken) {
-		super(type, gapToken);
+	public DefaultTokenSet(TokenSetType type) {
+		super(type);
 	}
 
 
@@ -89,7 +89,7 @@ public class DefaultTokenSet<T> extends AbstractTokenSet<T> {
 	
 	@Override
 	public DefaultTokenSet<T> clone() {
-		DefaultTokenSet<T> result = new DefaultTokenSet<T>(getType(), getGapToken());
+		DefaultTokenSet<T> result = new DefaultTokenSet<T>(getType());
 		result.addAll(this);
 		result.getKeyMap().putAll(getKeyMap());
 		return result;

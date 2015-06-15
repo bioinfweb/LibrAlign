@@ -19,11 +19,8 @@
 package info.bioinfweb.libralign.alignmentarea;
 
 
-import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.Font;
 import java.awt.Rectangle;
-import java.awt.SystemColor;
 import java.util.Iterator;
 
 import javax.swing.JComponent;
@@ -39,10 +36,7 @@ import info.bioinfweb.libralign.alignmentarea.content.AlignmentSubArea;
 import info.bioinfweb.libralign.alignmentarea.label.AlignmentLabelArea;
 import info.bioinfweb.libralign.alignmentarea.order.SequenceOrder;
 import info.bioinfweb.libralign.alignmentarea.paintsettings.PaintSettings;
-import info.bioinfweb.libralign.alignmentarea.paintsettings.TokenPainterList;
 import info.bioinfweb.libralign.alignmentarea.selection.SelectionModel;
-import info.bioinfweb.libralign.alignmentarea.tokenpainter.SingleColorTokenPainter;
-import info.bioinfweb.libralign.alignmentarea.tokenpainter.TokenPainter;
 import info.bioinfweb.libralign.dataarea.DataAreaChangeEvent;
 import info.bioinfweb.libralign.dataarea.DataAreaModel;
 import info.bioinfweb.libralign.dataarea.DataAreaModelListener;
