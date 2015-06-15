@@ -170,6 +170,20 @@ public class BioJavaTokenSet<C extends Compound> extends AbstractSet<C> implemen
 	
 	
 	/**
+	 * Returns the compound associated with {@link AbstractTokenSet#DEFAULT_GAP_REPRESENTATION} from the underlying
+	 * BioJava token set using {@link CompoundSet#getCompoundForString(String)}. 
+	 * 
+	 * @return the gap token or {@code null} if the underlying BioJava token set does contain a representation for
+	 *         {@link AbstractTokenSet#DEFAULT_GAP_REPRESENTATION}
+	 * @see info.bioinfweb.libralign.model.tokenset.TokenSet#getGapToken()
+	 */
+	@Override
+	public C getGapToken() {
+		return compoundSet.getCompoundForString(Character.toString(AbstractTokenSet.DEFAULT_GAP_REPRESENTATION));
+	}
+
+
+	/**
 	 * Clones this instance.
 	 * 
 	 * @return a deep copy of this object

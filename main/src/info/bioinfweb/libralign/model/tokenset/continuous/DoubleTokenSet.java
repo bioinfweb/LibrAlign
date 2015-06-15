@@ -76,6 +76,12 @@ public class DoubleTokenSet extends AbstractContinuousSet<Double> {
 
 
 	@Override
+	public Double getGapToken() {
+		return Double.NaN;
+	}
+
+
+	@Override
 	public DoubleTokenSet clone() {
 		return new DoubleTokenSet();  // Current implementation has no fields or properties.
 	}

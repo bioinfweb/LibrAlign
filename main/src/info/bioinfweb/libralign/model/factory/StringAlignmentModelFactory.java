@@ -24,6 +24,7 @@ import info.bioinfweb.libralign.model.AlignmentModel;
 import info.bioinfweb.libralign.model.exception.InvalidTokenException;
 import info.bioinfweb.libralign.model.implementations.ArrayListAlignmentModel;
 import info.bioinfweb.libralign.model.implementations.PackedAlignmentModel;
+import info.bioinfweb.libralign.model.tokenset.AbstractTokenSet;
 import info.bioinfweb.libralign.model.tokenset.DefaultTokenSet;
 
 
@@ -50,7 +51,8 @@ public class StringAlignmentModelFactory implements AlignmentModelFactory<String
 	@Override
 	public AlignmentModel<String> createNewModel(NewAlignmentModelParameterMap parameterMap) {
 		// Create token set:
-		DefaultTokenSet<String> discreteTokenSet = new DefaultTokenSet<String>(parameterMap.getCharacterStateSetType());
+		DefaultTokenSet<String> discreteTokenSet = new DefaultTokenSet<String>(parameterMap.getCharacterStateSetType(),
+				Character.toString(AbstractTokenSet.DEFAULT_GAP_REPRESENTATION));
 		for (SingleTokenDefinitionEvent tokenDefinition : parameterMap.getDefinedTokens()) {
 			discreteTokenSet.add(tokenDefinition.getTokenName());  //TODO Should the meaning be modeled in the token set?
 		}

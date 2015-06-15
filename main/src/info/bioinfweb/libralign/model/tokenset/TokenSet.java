@@ -124,6 +124,16 @@ public interface TokenSet<T> extends Set<T>, Cloneable {
 	public boolean isGapToken(T token);
 	
 	/**
+	 * Returns an object that represents a gap in this token set.
+	 * 
+	 * @return the according gap object (Implementations may create a new instance with every call of this method
+	 *         or always return the same instance. In general gap objects should not have any mutable object 
+	 *         specific properties to avoid problems if the same instance if located at multiple positions in an
+	 *         alignment.)
+	 */
+	public T getGapToken();
+	
+	/**
 	 * Returns a deep copy of this instance. Implementing this method is important when creating custom
 	 * implementations of this interface, because other classes in LibrAlign use this method internally. 
 	 * 

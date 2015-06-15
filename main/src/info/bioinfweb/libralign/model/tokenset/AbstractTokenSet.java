@@ -45,15 +45,17 @@ public abstract class AbstractTokenSet<T> extends HashSet<T> implements TokenSet
 	
 	
 	private TokenSetType type;
+	private T gapToken;
 	private Map<Character, T> keyMap = new TreeMap<Character, T>();
 	
 	
 	/**
 	 * Creates a new empty instance of this class.
 	 */
-	public AbstractTokenSet(TokenSetType type) {
+	public AbstractTokenSet(TokenSetType type, T gapToken) {
 		super();
 		this.type = type;
+		this.gapToken = gapToken;
 	}
 
 
@@ -63,8 +65,8 @@ public abstract class AbstractTokenSet<T> extends HashSet<T> implements TokenSet
 	 * @param type the token type of the new instance (Only a discrete type would make sense for this class.)
 	 * @param source the source instance to be cloned
 	 */
-	public AbstractTokenSet(TokenSetType type, AbstractTokenSet<T> source) {
-		this(type);
+	public AbstractTokenSet(TokenSetType type, T gapToken, AbstractTokenSet<T> source) {
+		this(type, gapToken);
 		addAll(source);
 		getKeyMap().putAll(source.getKeyMap());
 	}
@@ -102,6 +104,12 @@ public abstract class AbstractTokenSet<T> extends HashSet<T> implements TokenSet
 	@Override	
 	public boolean isGapToken(T token) {
 		return TokenSetTools.isGapToken(this, token);
+	}
+
+
+	@Override
+	public T getGapToken() {
+		return gapToken;
 	}
 
 

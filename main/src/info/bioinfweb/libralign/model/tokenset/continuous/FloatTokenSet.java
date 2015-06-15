@@ -76,6 +76,12 @@ public class FloatTokenSet extends AbstractContinuousSet<Float> {
 
 
 	@Override
+	public Float getGapToken() {
+		return Float.NaN;
+	}
+
+
+	@Override
 	public FloatTokenSet clone() {
 		return new FloatTokenSet();  // Current implementation has no fields or properties.
 	}
