@@ -224,7 +224,8 @@ public class PherogramArea extends DataArea implements PherogramComponent {
 
 
 	/**
-	 * Defines a new left border where the pherogram is cut off. 
+	 * Defines a new left border where the pherogram is cut off. Pherogram distortions in cut off areas are
+	 * automatically deleted by this method.
 	 * <p>
 	 * If the right cut position would be located left of the left cut position after this operation, it will
 	 * be moved to {@code baseCallIndex} as well. 
@@ -237,9 +238,10 @@ public class PherogramArea extends DataArea implements PherogramComponent {
 		if (Math2.isBetween(baseCallIndex, 0, getPherogramModel().getSequenceLength() - 1)) {
 			leftCutPosition = baseCallIndex;
 			if (getLeftCutPosition() > getRightCutPosition()) {
-				setRightCutPosition(baseCallIndex);  // Calls repaint
+				setRightCutPosition(baseCallIndex);  // Calls repaint and deleted distortions.
 			}
 			else {
+				getPherogramAlignmentModel().deleteCutOffDistortions();
 				repaint();
 			}
 		}
@@ -259,13 +261,11 @@ public class PherogramArea extends DataArea implements PherogramComponent {
 	 * <p>
 	 * Note that this method does not test if the sequence, this area is attached to, is contained in the selection.
 	 * It just relies on the selected columns. It will not perform any changes on the editable sequence (e.g. deleting
-	 * the cut off tokens) or delete distortions in the cut off area. Such operations need to be implemented in 
-	 * application code if necessary, e.g. by calling {@link PherogramAlignmentModel#deleteCutOffDistortions()}.
+	 * the cut off tokens).
 	 * 
 	 * @return {@code true} if the right cut position was changed according to the selection (or the right cut position), 
 	 *         {@code false} if that was not possible because the current right end of the selection lies outside of the 
 	 *         pherogram
-	 * @see PherogramAlignmentModel#deleteCutOffDistortions()
 	 */
 	public boolean setLeftCutPositionBySelection() {
 		int pos = getPherogramAlignmentModel().baseCallIndexByEditableIndex(
@@ -286,7 +286,8 @@ public class PherogramArea extends DataArea implements PherogramComponent {
 
 
 	/**
-	 * Defines a new right border where the pherogram is cut off.
+	 * Defines a new right border where the pherogram is cut off.Pherogram distortions in cut off areas are
+	 * automatically deleted by this method.
 	 * <p>
 	 * If the left cut position would be located right of the right cut position after this operation, it will
 	 * be moved to {@code baseCallIndex} as well. 
@@ -299,9 +300,10 @@ public class PherogramArea extends DataArea implements PherogramComponent {
 		if (Math2.isBetween(baseCallIndex, 0, getPherogramModel().getSequenceLength() - 1)) {
 			rightCutPosition = baseCallIndex;
 			if (getLeftCutPosition() > getRightCutPosition()) {
-				setLeftCutPosition(baseCallIndex);  // Calls repaint
+				setLeftCutPosition(baseCallIndex);  // Calls repaint and deleted distortions.
 			}
 			else {
+				getPherogramAlignmentModel().deleteCutOffDistortions();
 				repaint();
 			}
 		}
@@ -320,13 +322,11 @@ public class PherogramArea extends DataArea implements PherogramComponent {
 	 * <p>
 	 * Note that this method does not test if the sequence, this area is attached to, is contained in the selection.
 	 * It just relies on the selected columns. It will not perform any changes on the editable sequence (e.g. deleting
-	 * the cut off tokens) or delete distortions in the cut off area. Such operations need to be implemented in 
-	 * application code if necessary, e.g. by calling {@link PherogramAlignmentModel#deleteCutOffDistortions()}.
+	 * the cut off tokens).
 	 * 
 	 * @return {@code true} if the right cut position was changed according to the selection (or the right cut position), 
 	 *         {@code false} if that was not possible because the current right end of the selection lies outside of the 
 	 *         pherogram
-	 * @see PherogramAlignmentModel#deleteCutOffDistortions()
 	 */
 	public boolean setRightCutPositionBySelection() {
 		int pos = getPherogramAlignmentModel().baseCallIndexByEditableIndex(

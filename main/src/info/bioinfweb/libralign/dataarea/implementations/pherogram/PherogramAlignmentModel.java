@@ -391,8 +391,18 @@ public class PherogramAlignmentModel {
 	}
 	
 	
+	/**
+	 * Deletes all distortions of the base call sequence to the editable sequence in the cut off areas at the beginning
+	 * and the end of the pherogram and moves {@link PherogramArea#getFirstSeqPos()} of the owner accordingly, so that 
+	 * the visible part of the pherogram still correctly aligns to the editable sequence.
+	 * <p>
+	 * This method is intended for internal use in <i>LibrAlign</i> and is called from within 
+	 * {@link PherogramArea#setLeftCutPosition(int)} and {@link PherogramArea#setRightCutPosition(int)}. Usually there
+	 * should be no need to call it in application code directly.
+	 */
 	public void deleteCutOffDistortions() {
 		Iterator<ShiftChange> iterator = shiftChangeList.iterator();
+		int firstPosShift = 0;
 		while (iterator.hasNext()) {
 			ShiftChange change = iterator.next();
 			if (change.getBaseCallIndex() < getOwner().getLeftCutPosition()) {
@@ -400,8 +410,10 @@ public class PherogramAlignmentModel {
 				if ((change.getShiftChange() < 0) && (overlap > 0)) {  // Split up distortion that spans the cut position.
 					change.baseCallIndex = getOwner().getLeftCutPosition();  // New overlaps with neighboring entries because of this operation are not possible, if there were none before.
 					change.shiftChange += overlap;
+					firstPosShift -= overlap;
 				}
 				else {  // Remove distortion that is completely contained in the cut off area.
+					firstPosShift += change.shiftChange;
 					iterator.remove();
 				}
 			}
@@ -409,6 +421,7 @@ public class PherogramAlignmentModel {
 				iterator.remove();
 			}
 		}
+		getOwner().setFirstSeqPos(getOwner().getFirstSeqPos() + firstPosShift);
 	}
 
 
