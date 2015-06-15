@@ -19,6 +19,7 @@
 package info.bioinfweb.libralign.dataarea.implementations.pherogram;
 
 
+import info.bioinfweb.commons.Math2;
 import info.bioinfweb.commons.collections.SimpleSequenceInterval;
 import info.bioinfweb.commons.tic.TICPaintEvent;
 import info.bioinfweb.libralign.alignmentarea.content.AlignmentContentArea;
@@ -227,6 +228,27 @@ public class PherogramArea extends DataArea implements PherogramComponent {
 		leftCutPosition = baseCallIndex;
 		repaint();
 	}
+	
+	
+	/**
+	 * Tries to set the left border where the base call sequence of cut off according to the left end of the current
+	 * selection.
+	 * <p>
+	 * Note that this method does not test of the sequence this area is attached to, is contained in the selection.
+	 * It just relies in the selection columns. 
+	 * 
+	 * @return {@code true} if the left cut position was changed according to the selection, {@code false} if that was
+	 *         not possible because the current left end of the selection lies outside of the pherogram
+	 */
+	public boolean setLeftCutPositionBySelection() {
+		int pos = getPherogramAlignmentModel().baseCallIndexByEditableIndex(
+				getOwner().getOwner().getSelection().getFirstColumn()).getBefore();
+		boolean result = (pos != PherogramAlignmentRelation.OUT_OF_RANGE); 
+		if (result) {
+			setLeftCutPosition(pos);
+		}
+		return result;
+	}
 
 
 	@Override
@@ -239,6 +261,27 @@ public class PherogramArea extends DataArea implements PherogramComponent {
 	public void setRightCutPosition(int baseCallIndex) {
 		rightCutPosition = baseCallIndex;
 		repaint();
+	}
+
+
+	/**
+	 * Tries to set the right border where the base call sequence of cut off according to the right end of the current
+	 * selection.
+	 * <p>
+	 * Note that this method does not test of the sequence this area is attached to, is contained in the selection.
+	 * It just relies in the selection columns. 
+	 * 
+	 * @return {@code true} if the right cut position was changed according to the selection, {@code false} if that was
+	 *         not possible because the current right end of the selection lies outside of the pherogram
+	 */
+	public boolean setRightCutPositionBySelection() {
+		int pos = getPherogramAlignmentModel().baseCallIndexByEditableIndex(
+				getOwner().getOwner().getSelection().getLastColumn()).getAfter();
+		boolean result = (pos != PherogramAlignmentRelation.OUT_OF_RANGE); 
+		if (result) {
+			setRightCutPosition(pos);
+		}
+		return result;
 	}
 
 
