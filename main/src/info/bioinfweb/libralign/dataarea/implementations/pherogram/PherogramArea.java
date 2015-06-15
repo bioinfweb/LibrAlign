@@ -257,7 +257,8 @@ public class PherogramArea extends DataArea implements PherogramComponent {
 
 	/**
 	 * Defines a new left border where the pherogram is cut off. Pherogram distortions in cut off areas are
-	 * automatically deleted by this method.
+	 * automatically deleted by this method. The tokens at newly aligned positions in the editable sequence 
+	 * are replaced by the tokens from the base call sequence, if a the cut position was moved left.
 	 * <p>
 	 * If the right cut position would be located left of the left cut position after this operation, it will
 	 * be moved to {@code baseCallIndex} as well. 
@@ -293,11 +294,8 @@ public class PherogramArea extends DataArea implements PherogramComponent {
 	 * visible part of the pherogram still correctly aligns to the editable sequence.
 	 * <p>
 	 * If the right cut position would be located left of the left cut position after this operation, it will
-	 * be moved to {@code baseCallIndex} as well. 
-	 * <p>
-	 * Note that this method does not test if the sequence, this area is attached to, is contained in the selection.
-	 * It just relies on the selected columns. It will not perform any changes on the editable sequence (e.g. deleting
-	 * the cut off tokens).
+	 * be moved to {@code baseCallIndex} as well.  Note that this method does not test if the sequence, this area is 
+	 * attached to, is contained in the selection. It just relies on the selected columns.
 	 * 
 	 * @return {@code true} if the right cut position was changed according to the selection (or the right cut position), 
 	 *         {@code false} if that was not possible because the current right end of the selection lies outside of the 
@@ -323,7 +321,8 @@ public class PherogramArea extends DataArea implements PherogramComponent {
 
 	/**
 	 * Defines a new right border where the pherogram is cut off.Pherogram distortions in cut off areas are
-	 * automatically deleted by this method.
+	 * automatically deleted by this method. The tokens at newly aligned positions in the editable sequence 
+	 * are replaced by the tokens from the base call sequence, if a the cut position was moved right.
 	 * <p>
 	 * If the left cut position would be located right of the right cut position after this operation, it will
 	 * be moved to {@code baseCallIndex} as well. 
@@ -358,11 +357,8 @@ public class PherogramArea extends DataArea implements PherogramComponent {
 	 * selection.
 	 * <p>
 	 * If the left cut position would be located right of the right cut position after this operation, it will
-	 * be moved to {@code baseCallIndex} as well. 
-	 * <p>
-	 * Note that this method does not test if the sequence, this area is attached to, is contained in the selection.
-	 * It just relies on the selected columns. It will not perform any changes on the editable sequence (e.g. deleting
-	 * the cut off tokens).
+	 * be moved to {@code baseCallIndex} as well. Note that this method does not test if the sequence, this area is 
+	 * attached to, is contained in the selection. It just relies on the selected columns.
 	 * 
 	 * @return {@code true} if the right cut position was changed according to the selection (or the right cut position), 
 	 *         {@code false} if that was not possible because the current right end of the selection lies outside of the 
@@ -427,7 +423,7 @@ public class PherogramArea extends DataArea implements PherogramComponent {
 
 	@Override
 	public <T> void afterSequenceChange(SequenceChangeEvent<T> e) {
-		//TODO React if the associates sequence was removed? (AlignmentContentArea should probably better implement this behavior.)
+		//TODO React if the associated sequence was removed? (AlignmentContentArea should probably better implement this behavior.)
 	}
 
 
