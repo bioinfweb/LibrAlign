@@ -464,7 +464,7 @@ public class PherogramArea extends DataArea implements PherogramComponent {
 	@Override
 	public <T> void afterTokenChange(TokenChangeEvent<T> e) {
 		if (e.getSource().equals(getLabeledAlignmentArea().getAlignmentModel()) && 
-				e.getSequenceID() == getList().getLocation().getSequenceID()) {
+				(e.getSequenceID() == getList().getLocation().getSequenceID())) {
 			
 			int addend = getLabeledAlignmentArea().getEditSettings().isInsertLeftInDataArea() ? -1 : 0;
 			int lastSeqPos = getPherogramAlignmentModel().editableIndexByBaseCallIndex(getRightCutPosition() - 1).getAfter() 
@@ -497,6 +497,9 @@ public class PherogramArea extends DataArea implements PherogramComponent {
 						break;  //TODO If a token is replaced by a gap a shift change would have to be added. (Solve this problem when gap displaying is generally implemented for all data areas.)
 				}
 			}
+		}
+		else {
+			repaint();  // The space before the alignment could have changed. (Only necessary in SWT. Swing seems to repaint automatically.)
 		}
 	}
 
