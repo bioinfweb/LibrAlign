@@ -42,6 +42,8 @@ import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
 import java.awt.geom.Rectangle2D;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.EnumSet;
 import java.util.Set;
 
@@ -247,6 +249,17 @@ public class PherogramArea extends DataArea implements PherogramComponent {
   		}
 		}
   }
+  
+  
+  @SuppressWarnings("unchecked")
+	private void setGaps(int startEditableIndex, int length) {
+  	Collection<Object> tokens = new ArrayList<Object>(length);
+  	for (int i = 0; i < length; i++) {
+			tokens.add(getLabeledAlignmentModel().getTokenSet().getGapToken());
+		}
+  	((AlignmentModel<Object>)getLabeledAlignmentModel()).setTokensAt(getList().getLocation().getSequenceID(), 
+  			startEditableIndex, tokens);
+  }
 
 
 	@Override
@@ -269,7 +282,10 @@ public class PherogramArea extends DataArea implements PherogramComponent {
 	@Override
 	public void setLeftCutPosition(int baseCallIndex) {
 		if (Math2.isBetween(baseCallIndex, 0, getPherogramModel().getSequenceLength() - 1)) {
-			int oldValue = leftCutPosition;
+			int oldBaseCallIndex = leftCutPosition;
+			int oldEditableIndex = getPherogramAlignmentModel().editableIndexByBaseCallIndex(leftCutPosition).getBefore();  // Needs to be stored before any distortions are deleted.
+			int newEditableIndex = getPherogramAlignmentModel().editableIndexByBaseCallIndex(baseCallIndex).getBefore();  // Needs to be stored before any distortions are deleted.
+			
 			leftCutPosition = baseCallIndex;
 			if (getLeftCutPosition() > getRightCutPosition()) {
 				setRightCutPosition(baseCallIndex);  // Calls updateChangedCutPosition().
@@ -278,8 +294,11 @@ public class PherogramArea extends DataArea implements PherogramComponent {
 				updateChangedCutPosition();
 			}
 			
-			if (baseCallIndex < oldValue) {
-				copyBaseCallSequence(baseCallIndex, oldValue);  // Needs to be called after all changes are performed in order to calculate correct indices.
+			if (baseCallIndex < oldBaseCallIndex) {
+				copyBaseCallSequence(baseCallIndex, oldBaseCallIndex);  // Needs to be called after all changes are performed in order to calculate correct indices.
+			}
+			else if (oldEditableIndex < newEditableIndex) {
+				setGaps(oldEditableIndex, newEditableIndex - oldEditableIndex);
 			}
 		}
 		else {
@@ -306,8 +325,9 @@ public class PherogramArea extends DataArea implements PherogramComponent {
 				getOwner().getOwner().getSelection().getFirstColumn()).getBefore();
 		boolean result = pos != PherogramAlignmentRelation.OUT_OF_RANGE; 
 		if (result) {
-			setFirstSeqPos(getFirstSeqPos() + pos - getLeftCutPosition());
+			int oldLeftCutPos = getLeftCutPosition();
 			setLeftCutPosition(pos);
+			setFirstSeqPos(getFirstSeqPos() + pos - oldLeftCutPos);  // Needs to happen after setLeftCutPosition() in order to insert gaps in the editable correctly. 
 		}
 		return result;
 	}
@@ -334,6 +354,12 @@ public class PherogramArea extends DataArea implements PherogramComponent {
 	public void setRightCutPosition(int baseCallIndex) {
 		if (Math2.isBetween(baseCallIndex, 0, getPherogramModel().getSequenceLength() - 1)) {
 			int oldValue = rightCutPosition;
+			int oldEditableIndex = getPherogramAlignmentModel().editableIndexByBaseCallIndex(rightCutPosition).getBefore();  // Needs to be stored before any distortions are deleted.
+			if (rightCutPosition == getPherogramModel().getSequenceLength()) {
+				oldEditableIndex++;  // corresponding is OUT_OF_RANGE and "before" is one left.  
+			}
+			int newEditableIndex = getPherogramAlignmentModel().editableIndexByBaseCallIndex(baseCallIndex).getCorresponding();  // Needs to be stored before any distortions are deleted.
+			
 			rightCutPosition = baseCallIndex;
 			if (getLeftCutPosition() > getRightCutPosition()) {
 				setLeftCutPosition(baseCallIndex);  // Calls updateChangedCutPosition().
@@ -344,6 +370,9 @@ public class PherogramArea extends DataArea implements PherogramComponent {
 			
 			if (oldValue < baseCallIndex) {
 				copyBaseCallSequence(oldValue, baseCallIndex);  // Needs to be called after all changes are performed in order to calculate correct indices.
+			}
+			else if (newEditableIndex < oldEditableIndex) {
+				setGaps(newEditableIndex, oldEditableIndex - newEditableIndex);
 			}
 		}
 		else {
