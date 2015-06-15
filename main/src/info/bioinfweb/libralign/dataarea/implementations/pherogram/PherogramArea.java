@@ -30,6 +30,7 @@ import info.bioinfweb.libralign.model.concatenated.ConcatenatedAlignmentModel;
 import info.bioinfweb.libralign.model.events.SequenceChangeEvent;
 import info.bioinfweb.libralign.model.events.SequenceRenamedEvent;
 import info.bioinfweb.libralign.model.events.TokenChangeEvent;
+import info.bioinfweb.libralign.model.tokenset.TokenSet;
 import info.bioinfweb.libralign.pherogram.PherogramComponent;
 import info.bioinfweb.libralign.pherogram.PherogramFormats;
 import info.bioinfweb.libralign.pherogram.PherogramPainter;
@@ -231,6 +232,21 @@ public class PherogramArea extends DataArea implements PherogramComponent {
 		getList().getOwner().setLocalMaxLengthBeforeAfterStartRecalculate();
 		repaint();
   }
+  
+  
+  @SuppressWarnings({"rawtypes", "unchecked"})
+	public void copyBaseCallSequence(int startBaseCallIndex, int endBaseCallIndex) {
+  	int sequenceID = getList().getLocation().getSequenceID();
+  	AlignmentModel model = getLabeledAlignmentModel();
+  	TokenSet tokenSet = model.getTokenSet();
+  	for (int baseCallIndex = startBaseCallIndex; baseCallIndex < endBaseCallIndex; baseCallIndex++) {
+  		String base = getPherogramModel().getBaseCall(baseCallIndex).getBase().toUpperCase();
+			int editableIndex = getPherogramAlignmentModel().editableIndexByBaseCallIndex(baseCallIndex).getCorresponding();
+  		if ((editableIndex >= 0) && (!base.equals(tokenSet.representationByToken(model.getTokenAt(sequenceID, editableIndex))))) {
+  			model.setTokenAt(sequenceID, editableIndex, tokenSet.tokenByRepresentation(base));
+  		}
+		}
+  }
 
 
 	@Override
@@ -252,12 +268,17 @@ public class PherogramArea extends DataArea implements PherogramComponent {
 	@Override
 	public void setLeftCutPosition(int baseCallIndex) {
 		if (Math2.isBetween(baseCallIndex, 0, getPherogramModel().getSequenceLength() - 1)) {
+			int oldValue = leftCutPosition;
 			leftCutPosition = baseCallIndex;
 			if (getLeftCutPosition() > getRightCutPosition()) {
 				setRightCutPosition(baseCallIndex);  // Calls updateChangedCutPosition().
 			}
 			else {
 				updateChangedCutPosition();
+			}
+			
+			if (baseCallIndex < oldValue) {
+				copyBaseCallSequence(baseCallIndex, oldValue);  // Needs to be called after all changes are performed in order to calculate correct indices.
 			}
 		}
 		else {
@@ -313,12 +334,17 @@ public class PherogramArea extends DataArea implements PherogramComponent {
 	@Override
 	public void setRightCutPosition(int baseCallIndex) {
 		if (Math2.isBetween(baseCallIndex, 0, getPherogramModel().getSequenceLength() - 1)) {
+			int oldValue = rightCutPosition;
 			rightCutPosition = baseCallIndex;
 			if (getLeftCutPosition() > getRightCutPosition()) {
 				setLeftCutPosition(baseCallIndex);  // Calls updateChangedCutPosition().
 			}
 			else {
 				updateChangedCutPosition();
+			}
+			
+			if (oldValue < baseCallIndex) {
+				copyBaseCallSequence(oldValue, baseCallIndex);  // Needs to be called after all changes are performed in order to calculate correct indices.
 			}
 		}
 		else {
@@ -411,31 +437,39 @@ public class PherogramArea extends DataArea implements PherogramComponent {
 
 	@Override
 	public <T> void afterTokenChange(TokenChangeEvent<T> e) {
-		if (e.getSource().equals(getLabeledAlignmentArea().getAlignmentModel()) && e.getSequenceID() == getList().getLocation().getSequenceID()) {
-			int addend = getLabeledAlignmentArea().getEditSettings().isInsertLeftInDataArea() ? -1 : 0;
-			int lastSeqPos = getPherogramAlignmentModel().editableIndexByBaseCallIndex(getPherogramModel().getSequenceLength() - 1).getAfter() 
-					- addend;
-			int tokensBefore = Math.min(e.getAffectedTokens().size(), Math.max(0, getFirstSeqPos() - e.getStartIndex() - addend));
-			int tokensAfter = Math.max(0, e.getAffectedTokens().size() - Math.max(0, lastSeqPos - e.getStartIndex()) + addend);
-			int tokensInside = e.getAffectedTokens().size() - tokensBefore - tokensAfter;
+		if (e.getSource().equals(getLabeledAlignmentArea().getAlignmentModel()) && 
+				e.getSequenceID() == getList().getLocation().getSequenceID()) {
 			
-			switch (e.getType()) {
-				case INSERTION:
-					setFirstSeqPos(getFirstSeqPos() + tokensBefore);
-					if (tokensInside > 0) {
-						getPherogramAlignmentModel().addShiftChange(getPherogramAlignmentModel().baseCallIndexByEditableIndex(
-								Math.max(0, e.getStartIndex() + tokensBefore + addend)).getBeforeValidIndex(), tokensInside);
-					}
-					break;
-				case DELETION:
-					setFirstSeqPos(getFirstSeqPos() - tokensBefore);
-					if (tokensInside > 0) {
-						getPherogramAlignmentModel().addShiftChange(getPherogramAlignmentModel().baseCallIndexByEditableIndex(
-								e.getStartIndex() + tokensBefore).getAfterValidIndex(), -e.getAffectedTokens().size());
-					}
-					break;
-				case REPLACEMENT:  // Nothing to do (Replacements differing in length are not allowed.)
-					break;  //TODO If a token is replaced by a gap a shift change would have to be added. (Solve this problem when gap displaying is generally implemented for all data areas.)
+			int addend = getLabeledAlignmentArea().getEditSettings().isInsertLeftInDataArea() ? -1 : 0;
+			int lastSeqPos = getPherogramAlignmentModel().editableIndexByBaseCallIndex(getRightCutPosition() - 1).getAfter() 
+					- addend;
+			if (e.getStartIndex() <= lastSeqPos) {  // Do not process edits behind the pherogram.
+				int tokensBefore = Math.min(e.getAffectedTokens().size(), Math.max(0, getFirstSeqPos() - e.getStartIndex() - addend));
+				int tokensAfter = Math.max(0, e.getAffectedTokens().size() - Math.max(0, lastSeqPos - e.getStartIndex()) + addend);
+				int tokensInside = e.getAffectedTokens().size() - tokensBefore - tokensAfter;
+				
+				switch (e.getType()) {
+					case INSERTION:
+						if (tokensBefore > 0) {
+							setFirstSeqPos(getFirstSeqPos() + tokensBefore);
+						}
+						if (tokensInside > 0) {
+							getPherogramAlignmentModel().addShiftChange(getPherogramAlignmentModel().baseCallIndexByEditableIndex(
+									Math.max(0, e.getStartIndex() + tokensBefore + addend)).getBeforeValidIndex(), tokensInside);
+						}
+						break;
+					case DELETION:
+						if (tokensBefore > 0) {
+							setFirstSeqPos(getFirstSeqPos() - tokensBefore);
+						}
+						if (tokensInside > 0) {
+							getPherogramAlignmentModel().addShiftChange(getPherogramAlignmentModel().baseCallIndexByEditableIndex(
+									e.getStartIndex() + tokensBefore).getAfterValidIndex(), -e.getAffectedTokens().size());
+						}
+						break;
+					case REPLACEMENT:  // Nothing to do (Replacements differing in length are not allowed.)
+						break;  //TODO If a token is replaced by a gap a shift change would have to be added. (Solve this problem when gap displaying is generally implemented for all data areas.)
+				}
 			}
 		}
 	}
