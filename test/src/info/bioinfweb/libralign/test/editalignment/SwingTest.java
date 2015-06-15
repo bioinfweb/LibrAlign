@@ -19,6 +19,8 @@
 package info.bioinfweb.libralign.test.editalignment;
 
 
+import info.bioinfweb.libralign.dataarea.implementations.pherogram.PherogramArea;
+
 import java.awt.BorderLayout;
 import java.awt.EventQueue;
 
@@ -26,6 +28,7 @@ import javax.swing.JFrame;
 import javax.swing.JMenuBar;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
+
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 
@@ -87,11 +90,29 @@ public class SwingTest extends EditableAlignmentTest {
 		testMenu.add(addPherogramMenuItem);
 		
 		JMenuItem toggleInsertLeftRightMenuItem = new JMenuItem("Toggle insert left/right");
-		testMenu.add(toggleInsertLeftRightMenuItem);
 		toggleInsertLeftRightMenuItem.addActionListener(new ActionListener() {
-					public void actionPerformed(ActionEvent e) {
-						getAlignmentArea().getEditSettings().toggleInsertLeftInDataArea();
-					}
-				});
+			public void actionPerformed(ActionEvent e) {
+				getAlignmentArea().getEditSettings().toggleInsertLeftInDataArea();
+			}
+		});
+		testMenu.add(toggleInsertLeftRightMenuItem);
+		
+		JMenuItem cutPherogramLeftMenuItem = new JMenuItem("Cut pherogram left");
+		cutPherogramLeftMenuItem.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				int sequenceID = getAlignmentArea().getSequenceOrder().idByIndex(getAlignmentArea().getSelection().getFirstRow());
+				((PherogramArea)getAlignmentArea().getDataAreas().getSequenceAreas(sequenceID).get(0)).setLeftCutPositionBySelection();
+			}
+		});
+		testMenu.add(cutPherogramLeftMenuItem);
+		
+		JMenuItem cutPherogramRightMenuItem = new JMenuItem("Cut pherogram right");
+		cutPherogramRightMenuItem.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				int sequenceID = getAlignmentArea().getSequenceOrder().idByIndex(getAlignmentArea().getSelection().getFirstRow());
+				((PherogramArea)getAlignmentArea().getDataAreas().getSequenceAreas(sequenceID).get(0)).setRightCutPositionBySelection();
+			}
+		});
+		testMenu.add(cutPherogramRightMenuItem);
 	}
 }
