@@ -271,10 +271,12 @@ public class PherogramArea extends DataArea implements PherogramComponent {
 	/**
 	 * Defines a new left border where the pherogram is cut off. Pherogram distortions in cut off areas are
 	 * automatically deleted by this method. The tokens at newly aligned positions in the editable sequence 
-	 * are replaced by the tokens from the base call sequence, if a the cut position was moved left.
+	 * are replaced by the tokens from the base call sequence, if a the cut position was moved left. 
 	 * <p>
-	 * If the right cut position would be located left of the left cut position after this operation, it will
-	 * be moved to {@code baseCallIndex} as well. 
+	 * If the  left cut position is changed, the first sequence position is moved accordingly, so that the 
+	 * visible part of the pherogram still correctly aligns to the editable sequence. If the right cut 
+	 * position would be located left of the left cut position after this operation, it will be moved to 
+	 * {@code baseCallIndex} as well. 
 	 * 
 	 * @param baseCallIndex the new first visible index in the base call sequence
 	 * @throws IndexOutOfBoundsException if {@code baseCallIndex} is not between 0 and the last base call index
@@ -285,7 +287,8 @@ public class PherogramArea extends DataArea implements PherogramComponent {
 			int oldBaseCallIndex = leftCutPosition;
 			int oldEditableIndex = getPherogramAlignmentModel().editableIndexByBaseCallIndex(leftCutPosition).getBefore();  // Needs to be stored before any distortions are deleted.
 			int newEditableIndex = getPherogramAlignmentModel().editableIndexByBaseCallIndex(baseCallIndex).getBefore();  // Needs to be stored before any distortions are deleted.
-			
+
+			setFirstSeqPos(getFirstSeqPos() + baseCallIndex - getLeftCutPosition());
 			leftCutPosition = baseCallIndex;
 			if (getLeftCutPosition() > getRightCutPosition()) {
 				setRightCutPosition(baseCallIndex);  // Calls updateChangedCutPosition().
@@ -313,7 +316,7 @@ public class PherogramArea extends DataArea implements PherogramComponent {
 	 * visible part of the pherogram still correctly aligns to the editable sequence.
 	 * <p>
 	 * If the right cut position would be located left of the left cut position after this operation, it will
-	 * be moved to {@code baseCallIndex} as well.  Note that this method does not test if the sequence, this area is 
+	 * be moved to {@code baseCallIndex} as well. Note that this method does not test if the sequence, this area is 
 	 * attached to, is contained in the selection. It just relies on the selected columns.
 	 * 
 	 * @return {@code true} if the right cut position was changed according to the selection (or the right cut position), 
@@ -325,9 +328,7 @@ public class PherogramArea extends DataArea implements PherogramComponent {
 				getOwner().getOwner().getSelection().getFirstColumn()).getBefore();
 		boolean result = pos != PherogramAlignmentRelation.OUT_OF_RANGE; 
 		if (result) {
-			int oldLeftCutPos = getLeftCutPosition();
 			setLeftCutPosition(pos);
-			setFirstSeqPos(getFirstSeqPos() + pos - oldLeftCutPos);  // Needs to happen after setLeftCutPosition() in order to insert gaps in the editable correctly. 
 		}
 		return result;
 	}
@@ -439,7 +440,7 @@ public class PherogramArea extends DataArea implements PherogramComponent {
 		int lastEditableIndex = getPherogramAlignmentModel().editableIndexByBaseCallIndex(getRightCutPosition() - 1).getAfter();
 		double lengthOfOutputAfterAlignmentStart = getLabeledAlignmentArea().getContentArea().paintXByColumn(lastEditableIndex) + 
 				(1 + getPherogramModel().getSequenceLength() - getRightCutPosition()) *  
-				getOwner().getOwner().getPaintSettings().getTokenWidth(lastEditableIndex) - getLengthBeforeStart(); 
+				getOwner().getOwner().getPaintSettings().getTokenWidth(Math.max(0, getFirstSeqPos())) - getLengthBeforeStart();  // Math.max(0, ...) is used because this method might be called during the execution of setter cut position method, when other properties are not yet adjusted.  
 		return Math.max(0, (int)Math.round(lengthOfOutputAfterAlignmentStart - getOwner().getOwner().getLocalMaximumNeededAlignmentWidth()));
 	}
 
