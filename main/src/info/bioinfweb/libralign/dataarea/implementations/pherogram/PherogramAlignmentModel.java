@@ -283,7 +283,8 @@ public class PherogramAlignmentModel {
   		shiftChangeList.add(listIndex, new ShiftChange(baseCallIndex, shiftChange));
   		combineThreeShiftChanges(listIndex);
   	}
-  	printShiftChangeList();
+  	//printShiftChangeList();
+  	getOwner().repaint();
   }
   
   
@@ -387,6 +388,27 @@ public class PherogramAlignmentModel {
 	 */
 	public int getShiftChangeCount() {
 		return shiftChangeList.size();
+	}
+	
+	
+	public void deleteCutOffDistortions() {
+		Iterator<ShiftChange> iterator = shiftChangeList.iterator();
+		while (iterator.hasNext()) {
+			ShiftChange change = iterator.next();
+			if (change.getBaseCallIndex() < getOwner().getLeftCutPosition()) {
+				int overlap = change.getBaseCallIndex() - change.getShiftChange() - getOwner().getLeftCutPosition();  // Value is only valid if shift change is negative, otherwise an overlap is anyway impossible because it cannot span multiple editable positions.
+				if ((change.getShiftChange() < 0) && (overlap > 0)) {  // Split up distortion that spans the cut position.
+					change.baseCallIndex = getOwner().getLeftCutPosition();  // New overlaps with neighboring entries because of this operation are not possible, if there were none before.
+					change.shiftChange += overlap;
+				}
+				else {  // Remove distortion that is completely contained in the cut off area.
+					iterator.remove();
+				}
+			}
+			else if (change.getBaseCallIndex() >= getOwner().getRightCutPosition()) {  // No overlaps as in the left case are possible here.
+				iterator.remove();
+			}
+		}
 	}
 
 

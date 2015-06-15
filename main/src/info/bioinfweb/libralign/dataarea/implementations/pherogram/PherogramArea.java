@@ -223,28 +223,56 @@ public class PherogramArea extends DataArea implements PherogramComponent {
 	}
 
 
+	/**
+	 * Defines a new left border where the pherogram is cut off. 
+	 * <p>
+	 * If the right cut position would be located left of the left cut position after this operation, it will
+	 * be moved to {@code baseCallIndex} as well. 
+	 * 
+	 * @param baseCallIndex the new first visible index in the base call sequence
+	 * @throws IndexOutOfBoundsException if {@code baseCallIndex} is not between 0 and the last base call index
+	 */
 	@Override
 	public void setLeftCutPosition(int baseCallIndex) {
-		leftCutPosition = baseCallIndex;
-		repaint();
+		if (Math2.isBetween(baseCallIndex, 0, getPherogramModel().getSequenceLength() - 1)) {
+			leftCutPosition = baseCallIndex;
+			if (getLeftCutPosition() > getRightCutPosition()) {
+				setRightCutPosition(baseCallIndex);  // Calls repaint
+			}
+			else {
+				repaint();
+			}
+		}
+		else {
+			throw new IndexOutOfBoundsException("The base call index " + baseCallIndex + " is not contained in this pherogram.");
+		}
 	}
 	
 	
 	/**
-	 * Tries to set the left border where the base call sequence of cut off according to the left end of the current
-	 * selection.
+	 * Tries to set the left border where the base call sequence is cut off according to the left end of the current
+	 * selection. If the left cut position is changed, the first sequence position is moved accordingly, so that the
+	 * visible part of the pherogram still correctly aligns to the editable sequence.
 	 * <p>
-	 * Note that this method does not test of the sequence this area is attached to, is contained in the selection.
-	 * It just relies in the selection columns. 
+	 * If the right cut position would be located left of the left cut position after this operation, it will
+	 * be moved to {@code baseCallIndex} as well. 
+	 * <p>
+	 * Note that this method does not test if the sequence, this area is attached to, is contained in the selection.
+	 * It just relies on the selected columns. It will not perform any changes on the editable sequence (e.g. deleting
+	 * the cut off tokens) or delete distortions in the cut off area. Such operations need to be implemented in 
+	 * application code if necessary, e.g. by calling {@link PherogramAlignmentModel#deleteCutOffDistortions()}.
 	 * 
-	 * @return {@code true} if the left cut position was changed according to the selection, {@code false} if that was
-	 *         not possible because the current left end of the selection lies outside of the pherogram
+	 * @return {@code true} if the right cut position was changed according to the selection (or the right cut position), 
+	 *         {@code false} if that was not possible because the current right end of the selection lies outside of the 
+	 *         pherogram
+	 * @see PherogramAlignmentModel#deleteCutOffDistortions()
 	 */
 	public boolean setLeftCutPositionBySelection() {
 		int pos = getPherogramAlignmentModel().baseCallIndexByEditableIndex(
 				getOwner().getOwner().getSelection().getFirstColumn()).getBefore();
-		boolean result = (pos != PherogramAlignmentRelation.OUT_OF_RANGE); 
+		boolean result = pos != PherogramAlignmentRelation.OUT_OF_RANGE; 
 		if (result) {
+			setFirstSeqPos(getFirstSeqPos() + pos - getLeftCutPosition());
 			setLeftCutPosition(pos);
 		}
 		return result;
@@ -257,27 +285,53 @@ public class PherogramArea extends DataArea implements PherogramComponent {
 	}
 
 
+	/**
+	 * Defines a new right border where the pherogram is cut off.
+	 * <p>
+	 * If the left cut position would be located right of the right cut position after this operation, it will
+	 * be moved to {@code baseCallIndex} as well. 
+	 * 
+	 * @param baseCallIndex the new first invisible index in the base call sequence
+	 * @throws IndexOutOfBoundsException if {@code baseCallIndex} is not between 0 and the last base call index
+	 */
 	@Override
 	public void setRightCutPosition(int baseCallIndex) {
-		rightCutPosition = baseCallIndex;
-		repaint();
+		if (Math2.isBetween(baseCallIndex, 0, getPherogramModel().getSequenceLength() - 1)) {
+			rightCutPosition = baseCallIndex;
+			if (getLeftCutPosition() > getRightCutPosition()) {
+				setLeftCutPosition(baseCallIndex);  // Calls repaint
+			}
+			else {
+				repaint();
+			}
+		}
+		else {
+			throw new IndexOutOfBoundsException("The base call index " + baseCallIndex + " is not contained in this pherogram.");
+		}
 	}
-
-
+	
+	
 	/**
-	 * Tries to set the right border where the base call sequence of cut off according to the right end of the current
+	 * Tries to set the right border where the base call sequence is cut off according to the right end of the current
 	 * selection.
 	 * <p>
-	 * Note that this method does not test of the sequence this area is attached to, is contained in the selection.
-	 * It just relies in the selection columns. 
+	 * If the left cut position would be located right of the right cut position after this operation, it will
+	 * be moved to {@code baseCallIndex} as well. 
+	 * <p>
+	 * Note that this method does not test if the sequence, this area is attached to, is contained in the selection.
+	 * It just relies on the selected columns. It will not perform any changes on the editable sequence (e.g. deleting
+	 * the cut off tokens) or delete distortions in the cut off area. Such operations need to be implemented in 
+	 * application code if necessary, e.g. by calling {@link PherogramAlignmentModel#deleteCutOffDistortions()}.
 	 * 
-	 * @return {@code true} if the right cut position was changed according to the selection, {@code false} if that was
-	 *         not possible because the current right end of the selection lies outside of the pherogram
+	 * @return {@code true} if the right cut position was changed according to the selection (or the right cut position), 
+	 *         {@code false} if that was not possible because the current right end of the selection lies outside of the 
+	 *         pherogram
+	 * @see PherogramAlignmentModel#deleteCutOffDistortions()
 	 */
 	public boolean setRightCutPositionBySelection() {
 		int pos = getPherogramAlignmentModel().baseCallIndexByEditableIndex(
 				getOwner().getOwner().getSelection().getLastColumn()).getAfter();
-		boolean result = (pos != PherogramAlignmentRelation.OUT_OF_RANGE); 
+		boolean result = pos != PherogramAlignmentRelation.OUT_OF_RANGE; 
 		if (result) {
 			setRightCutPosition(pos);
 		}
@@ -357,7 +411,6 @@ public class PherogramArea extends DataArea implements PherogramComponent {
 						getPherogramAlignmentModel().addShiftChange(getPherogramAlignmentModel().baseCallIndexByEditableIndex(
 								Math.max(0, e.getStartIndex() + tokensBefore + addend)).getBeforeValidIndex(), tokensInside);
 					}
-					repaint();  // Needs to be done if this edit does not lead to a resize of the component.
 					break;
 				case DELETION:
 					setFirstSeqPos(getFirstSeqPos() - tokensBefore);
@@ -365,7 +418,6 @@ public class PherogramArea extends DataArea implements PherogramComponent {
 						getPherogramAlignmentModel().addShiftChange(getPherogramAlignmentModel().baseCallIndexByEditableIndex(
 								e.getStartIndex() + tokensBefore).getAfterValidIndex(), -e.getAffectedTokens().size());
 					}
-					repaint();  // Needs to be done if this edit does not lead to a resize of the component.
 					break;
 				case REPLACEMENT:  // Nothing to do (Replacements differing in length are not allowed.)
 					break;  //TODO If a token is replaced by a gap a shift change would have to be added. (Solve this problem when gap displaying is generally implemented for all data areas.)
