@@ -114,5 +114,14 @@ public class SwingTest extends EditableAlignmentTest {
 			}
 		});
 		testMenu.add(cutPherogramRightMenuItem);
+		
+		JMenuItem mntmReverseComplement = new JMenuItem("Reverse complement");
+		mntmReverseComplement.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				int sequenceID = getAlignmentArea().getSequenceOrder().idByIndex(getAlignmentArea().getSelection().getFirstRow());
+				((PherogramArea)getAlignmentArea().getDataAreas().getSequenceAreas(sequenceID).get(0)).reverseComplement();
+			}
+		});
+		testMenu.add(mntmReverseComplement);
 	}
 }
