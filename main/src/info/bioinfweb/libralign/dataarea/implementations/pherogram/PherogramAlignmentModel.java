@@ -25,7 +25,6 @@ import java.util.List;
 import java.util.ListIterator;
 
 import info.bioinfweb.commons.Math2;
-import info.bioinfweb.libralign.dataarea.DataAreaModel;
 import info.bioinfweb.libralign.model.AlignmentModel;
 import info.bioinfweb.libralign.model.concatenated.ConcatenatedAlignmentModel;
 import info.bioinfweb.libralign.pherogram.PherogramUtils;
@@ -284,7 +283,7 @@ public class PherogramAlignmentModel {
   		shiftChangeList.add(listIndex, new ShiftChange(baseCallIndex, shiftChange));
   		combineThreeShiftChanges(listIndex);
   	}
-  	//printShiftChangeList();
+  	printShiftChangeList();
   	getOwner().repaint();
   }
   
@@ -424,6 +423,25 @@ public class PherogramAlignmentModel {
 		}
 		getOwner().setFirstSeqPos(getOwner().getFirstSeqPos() + firstPosShift);	
 		// Repainting and flagging recalculation of maxLengthBeforeStart/AfterEnd is performed by calling methods of PherogramArea and is not repeated here for performance reasons.
+	}
+	
+	
+	protected void reverseComplement() {
+		List<ShiftChange> newList = new ArrayList<ShiftChange>(shiftChangeList.size());
+		
+		ListIterator<ShiftChange> iterator = shiftChangeList.listIterator(shiftChangeList.size());
+		while (iterator.hasPrevious()) {
+			ShiftChange change = iterator.previous();
+			int shiftInDistortion = 0;
+			if (change.shiftChange < 0) {
+				shiftInDistortion = change.shiftChange;
+			}
+			change.baseCallIndex = getOwner().getPherogramModel().getSequenceLength() - change.baseCallIndex + shiftInDistortion;
+			newList.add(change);
+		}
+		
+		shiftChangeList.clear();
+		shiftChangeList.addAll(newList);  // shiftChangeList = newList; would be easier, but problematic, if references to the list are currently stored by any application objects.
 	}
 
 

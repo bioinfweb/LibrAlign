@@ -218,9 +218,30 @@ public class PherogramArea extends DataArea implements PherogramComponent {
 	}
   
 	
+  /**
+   * Reverse complements the displayed pherogram, including its cut positions and distortions.
+   * <p>
+   * The editable sequence is not changed by this method and needs to reverse complemented independently.
+   * The implementation of this needs to make sure to replace all tokens using 
+   * {@link AlignmentModel#setTokenAt(int, int, Object)} or {@link AlignmentModel#setTokenAt(int, int, Object)}
+   * and not use insertion and deletion methods for this. Otherwise new invalid distortions would be created
+   * in the pherogram.
+   * 
+   * @see info.bioinfweb.libralign.pherogram.PherogramComponent#reverseComplement()
+   */
   @Override
 	public void reverseComplement() {
-		throw new InternalError("not implemented");
+		pherogramModel = pherogramModel.reverseComplement();
+		
+		int oldLeftCutPosition = leftCutPosition;
+		leftCutPosition = pherogramModel.getSequenceLength() - rightCutPosition;
+		rightCutPosition = pherogramModel.getSequenceLength() - oldLeftCutPosition;
+		
+		getPherogramAlignmentModel().reverseComplement();
+		
+		getList().getOwner().setLocalMaxLengthBeforeAfterStartRecalculate();  // Could happen if cut lengths at the beginning and end differ.
+		getOwner().getOwner().assignSizeToAll();
+		repaint();  // Necessary in SWT, if no resize happened. 
 	}
 
 
