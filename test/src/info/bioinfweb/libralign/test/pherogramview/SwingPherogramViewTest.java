@@ -23,6 +23,11 @@ import java.awt.BorderLayout;
 import java.awt.EventQueue;
 
 import javax.swing.JFrame;
+import javax.swing.JMenuBar;
+import javax.swing.JMenu;
+import javax.swing.JMenuItem;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
 
 
 
@@ -67,6 +72,20 @@ public class SwingPherogramViewTest extends AbstractPherogramViewTest {
 		
 		try {
 			frame.getContentPane().add(getPherogramView().createSwingComponent(), BorderLayout.CENTER);
+			
+			JMenuBar menuBar = new JMenuBar();
+			frame.setJMenuBar(menuBar);
+			
+			JMenu mnTest = new JMenu("Test");
+			menuBar.add(mnTest);
+			
+			JMenuItem mntmReverseComplement = new JMenuItem("Reverse complement");
+			mntmReverseComplement.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					getPherogramView().getTraceCurveView().reverseComplement();
+				}
+			});
+			mnTest.add(mntmReverseComplement);
 		}
 		catch (Exception e) {
 			e.printStackTrace();
