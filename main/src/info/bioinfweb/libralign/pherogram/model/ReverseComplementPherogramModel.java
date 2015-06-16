@@ -19,16 +19,24 @@
 package info.bioinfweb.libralign.pherogram.model;
 
 
-import info.bioinfweb.libralign.model.AlignmentModel;
-
 import org.biojava3.core.sequence.compound.NucleotideCompound;
 
 
 
+/**
+ * Pherogram model that allows to view another model instance reverse complemented.
+ * 
+ * @author Ben St&ouml;ver
+ */
 public class ReverseComplementPherogramModel implements PherogramModel {
 	private PherogramModel source;
 
 	
+	/**
+	 * Creates a new instance of this class.
+	 * 
+	 * @param source the model to be viewed reverse complemented
+	 */
 	public ReverseComplementPherogramModel(PherogramModel source) {
 		super();
 		this.source = source;

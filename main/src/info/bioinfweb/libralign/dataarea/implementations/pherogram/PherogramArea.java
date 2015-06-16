@@ -218,7 +218,13 @@ public class PherogramArea extends DataArea implements PherogramComponent {
 	}
   
 	
-  /**
+  @Override
+	public void reverseComplement() {
+		throw new InternalError("not implemented");
+	}
+
+
+	/**
    * Returns a model instance defining the alignment of this pherogram onto the associated sequence
    * in the alignment.
    * 

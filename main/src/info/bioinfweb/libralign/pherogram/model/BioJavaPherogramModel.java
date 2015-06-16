@@ -172,6 +172,6 @@ public class BioJavaPherogramModel implements PherogramModel {
    */
   @Override
   public PherogramModel reverseComplement() {
-		return new BioJavaPherogramModel(chromatogram.reverseComplement());
+  	return new ReverseComplementPherogramModel(this);  // Reverse complementing BioJava model loses quality scores.
 	}
 }

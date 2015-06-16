@@ -39,6 +39,12 @@ public interface PherogramComponent {
 	 */
 	public PherogramModel getPherogramModel();
 	
+	/**
+	 * Reverse complements the underlying pherogram model and swaps the left and right cut positions 
+	 * accordingly.
+	 */
+	public void reverseComplement();
+	
 //	/**
 //	 * Returns if the vertical scale is calculated automatically depending on the currently visible part
 //	 * of the trace curve.
