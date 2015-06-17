@@ -19,8 +19,6 @@
 package info.bioinfweb.libralign.model.tokenset;
 
 
-import info.bioinfweb.libralign.model.AlignmentModel;
-
 import java.util.Iterator;
 
 

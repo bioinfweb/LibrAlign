@@ -114,12 +114,12 @@ main/src/info/bioinfweb/libralign/io/alignment/fasta/FASTAReader.java -text svne
 main/src/info/bioinfweb/libralign/io/package-info.java -text svneol=unset#text/plain
 main/src/info/bioinfweb/libralign/model/AlignmentModel.java -text svneol=unset#text/plain
 main/src/info/bioinfweb/libralign/model/AlignmentModelChangeListener.java -text svneol=unset#text/plain
+main/src/info/bioinfweb/libralign/model/AlignmentModelUtils.java -text
 main/src/info/bioinfweb/libralign/model/AlignmentModelWriteType.java -text svneol=unset#text/plain
 main/src/info/bioinfweb/libralign/model/BasicSequenceDataView.java -text svneol=unset#text/plain
 main/src/info/bioinfweb/libralign/model/SequenceAccess.java -text svneol=unset#text/plain
 main/src/info/bioinfweb/libralign/model/SequenceAccessDataProvider.java -text svneol=unset#text/plain
 main/src/info/bioinfweb/libralign/model/SequenceDataView.java -text svneol=unset#text/plain
-main/src/info/bioinfweb/libralign/model/SequenceUtils.java -text
 main/src/info/bioinfweb/libralign/model/adapters/AbstractSequenceDataAdapter.class -text
 main/src/info/bioinfweb/libralign/model/adapters/AbstractSequenceDataAdapter.java -text svneol=unset#text/plain
 main/src/info/bioinfweb/libralign/model/adapters/AbstractSingleSequenceDataAdapter.class -text

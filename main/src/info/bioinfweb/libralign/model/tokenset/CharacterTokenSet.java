@@ -19,6 +19,7 @@
 package info.bioinfweb.libralign.model.tokenset;
 
 
+import info.bioinfweb.commons.bio.SequenceUtils;
 import info.bioinfweb.jphyloio.events.TokenSetType;
 
 
@@ -64,6 +65,65 @@ public class CharacterTokenSet extends AbstractTokenSet<Character> {
 		super(tokenSet.getType());
 		addAll(tokenSet);
 		getKeyMap().putAll(tokenSet.getKeyMap());
+	}
+	
+	
+	private static CharacterTokenSet createNucleotideInstance(TokenSetType type) {
+		CharacterTokenSet result = new CharacterTokenSet(type);
+		result.addAll(SequenceUtils.getNucleotideCharacters());
+		result.add(DEFAULT_GAP_REPRESENTATION);
+		return result;
+	}
+	
+	
+	/**
+	 * Returns a new instance of this class containing all nucleotide tokens, including both 
+	 * {@code 'T'} and {@code 'U'}, the gap token ({@code '-'}) and all IUPAC ambiguity codes.
+	 * 
+	 * @return the new instance
+	 */
+	public static CharacterTokenSet newNucleotideInstance() {
+		return createNucleotideInstance(TokenSetType.NUCLEOTIDE);
+	}
+	
+	
+	/**
+	 * Returns a new instance of this class containing all nucleotide tokens, including  
+	 * {@code 'T'} and not {@code 'U'}, the gap token ({@code '-'}) and all IUPAC ambiguity codes.
+	 * 
+	 * @return the new instance
+	 */
+	public static CharacterTokenSet newDNAInstance() {
+		CharacterTokenSet result = createNucleotideInstance(TokenSetType.DNA);
+		result.remove('U');
+		return result;
+	}
+	
+	
+	/**
+	 * Returns a new instance of this class containing all nucleotide tokens, including  
+	 * {@code 'U'} and not {@code 'T'}, the gap token ({@code '-'}) and all IUPAC ambiguity codes.
+	 * 
+	 * @return the new instance
+	 */
+	public static CharacterTokenSet newRNAInstance() {
+		CharacterTokenSet result = createNucleotideInstance(TokenSetType.DNA);
+		result.remove('T');
+		return result;
+	}
+	
+	
+	/**
+	 * Returns a new instance of this class containing all amino acid tokens (one letter codes), 
+	 * including the gap token ({@code '-'}) and ambiguity codes.
+	 * 
+	 * @return the new instance
+	 */
+	public static CharacterTokenSet newAminoAcidInstance() {
+		CharacterTokenSet result = new CharacterTokenSet(TokenSetType.AMINO_ACID);
+		result.addAll(SequenceUtils.getAminoAcidOneLetterCodes());
+		result.add(DEFAULT_GAP_REPRESENTATION);
+		return result;
 	}
 	
 	

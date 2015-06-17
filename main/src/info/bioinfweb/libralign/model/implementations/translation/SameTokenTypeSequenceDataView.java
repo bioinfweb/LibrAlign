@@ -92,14 +92,14 @@ public abstract class SameTokenTypeSequenceDataView<T> extends AbstractSequenceD
 
 
 	@Override
-	public void appendTokenAt(int sequenceID, T token) throws AlignmentSourceNotWritableException {
-		getUnderlyingProvider().appendTokenAt(sequenceID, token);
+	public void appendToken(int sequenceID, T token) throws AlignmentSourceNotWritableException {
+		getUnderlyingProvider().appendToken(sequenceID, token);
 	}
 
 
 	@Override
-	public void appendTokensAt(int sequenceID, Collection<? extends T> tokens) throws AlignmentSourceNotWritableException {
-		getUnderlyingProvider().appendTokensAt(sequenceID, tokens);
+	public void appendTokens(int sequenceID, Collection<? extends T> tokens) throws AlignmentSourceNotWritableException {
+		getUnderlyingProvider().appendTokens(sequenceID, tokens);
 	}
 
 

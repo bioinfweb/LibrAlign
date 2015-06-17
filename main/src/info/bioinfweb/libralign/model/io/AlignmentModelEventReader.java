@@ -222,7 +222,7 @@ public class AlignmentModelEventReader implements JPhyloIOEventListener {
 		for (String stringRepresentation : event.getCharacterValues()) {
 			tokens.add(factory.createToken(currentModel, stringRepresentation));
 		}
-		((AlignmentModel<Object>)currentModel).appendTokensAt(id, tokens);  //TODO Should currentModel have Object as its generic type?
+		((AlignmentModel<Object>)currentModel).appendTokens(id, tokens);  //TODO Should currentModel have Object as its generic type?
 	}
 
 

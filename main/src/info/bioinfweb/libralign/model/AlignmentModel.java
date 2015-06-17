@@ -283,7 +283,7 @@ public interface AlignmentModel<T> {
 	 * 
 	 * @throws AlignmentSourceNotWritableException if the underlying data source is not writable for tokens
 	 */
-	public void appendTokenAt(int sequenceID, T token) throws AlignmentSourceNotWritableException;
+	public void appendToken(int sequenceID, T token) throws AlignmentSourceNotWritableException;
 	
 	/**
 	 * Appends a sequence of tokens starting at the end of the current sequence.
@@ -293,7 +293,7 @@ public interface AlignmentModel<T> {
 	 * 
 	 * @throws AlignmentSourceNotWritableException if the underlying data source is not writable for tokens
 	 */
-	public void appendTokensAt(int sequenceID, Collection<? extends T> tokens) throws AlignmentSourceNotWritableException;
+	public void appendTokens(int sequenceID, Collection<? extends T> tokens) throws AlignmentSourceNotWritableException;
 
 	/**
 	 * Inserts a token at the specified position. All tokens located behind the specified index are moved 
