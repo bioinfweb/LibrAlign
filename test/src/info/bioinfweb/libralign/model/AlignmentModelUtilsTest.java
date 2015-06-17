@@ -28,6 +28,12 @@ import org.junit.* ;
 
 
 
+/**
+ * Contains test cases for {@link AlignmentModelUtils}.
+ * 
+ * @author Ben St&ouml;ver
+ * @since 0.4.0
+ */
 public class AlignmentModelUtilsTest {
 	@Test
 	public void test_reverseComplement() {
