@@ -115,11 +115,21 @@ public class SelectionModel {
 	}
 	
 	
+	/**
+	 * Returns the current column position of the alignment cursor.
+	 * 
+	 * @return the index of the column where the cursor is currently located
+	 */
 	public int getCursorColumn() {
 		return cursor.getColumn();
 	}
 	
 	
+	/**
+	 * Returns the topmost row included in the current alignment cursor.
+	 * 
+	 * @return the index of topmost row where the cursor is currently located
+	 */
 	public int getCursorRow() {
 		return cursor.getRow();
 	}
@@ -136,11 +146,21 @@ public class SelectionModel {
 	}
 	
 	
+	/**
+	 * Returns the column where the current selection was started.
+	 * 
+	 * @return the column which was first added to the current selection
+	 */
 	public int getStartColumn() {
 		return cursorStartColumn;
 	}
 	
 	
+	/**
+	 * Returns the row where the current selection was started.
+	 * 
+	 * @return the row which was first added to the current selection
+	 */
 	public int getStartRow() {
 		return cursorStartRow;
 	}
@@ -232,6 +252,11 @@ public class SelectionModel {
 	
 	
 	/**
+	 * Extends the current selection to include the specified cell and positions the cursor there.
+	 * <p>
+	 * The end of the selection does not necessarily have to be on the bottom right side of the selected 
+	 * rectangle, but can be at any side.
+	 * 
 	 * @param column - the new cursor position
 	 * @param row - the new cursor position
 	 */
@@ -288,6 +313,9 @@ public class SelectionModel {
 	}
 
 	
+	/**
+	 * Selects all cells in the alignment.
+	 */
 	public void selectAll() {
 		columnSelection.selectAll();
 		rowSelection.selectAll();
@@ -316,6 +344,11 @@ public class SelectionModel {
 	}
 	
 	
+	/**
+	 * Returns the index of the first column that is contained in the selection.
+	 * 
+	 * @return the index of the first selected column or the cursor position if the selection is empty
+	 */
 	public int getFirstColumn() {
 		if (columnSelection.isEmpty()) {
 			return getCursorColumn();
@@ -326,6 +359,11 @@ public class SelectionModel {
 	}
 
 
+	/**
+	 * Returns the index of the the last column that is contained in the selection.
+	 * 
+	 * @return the index of the last selected column or the cursor position if the selection is empty
+	 */
 	public int getLastColumn() {
 		if (columnSelection.isEmpty()) {
 			return getCursorColumn();
@@ -336,6 +374,11 @@ public class SelectionModel {
 	}
 
 
+	/**
+	 * Returns the index of the the first row that is contained in the selection.
+	 * 
+	 * @return the index of the first selected row or the topmost cursor row if the selection is empty
+	 */
 	public int getFirstRow() {
 		if (rowSelection.isEmpty()) {
 			return getCursorRow();
@@ -346,6 +389,11 @@ public class SelectionModel {
 	}
 
 
+	/**
+	 * Returns the index of the the last row that is contained in the selection.
+	 * 
+	 * @return the index of the first selected row or the bottommost cursor row if the selection is empty
+	 */
 	public int getLastRow() {
 		if (rowSelection.isEmpty()) {
 			return getCursorRow() + getCursorHeight() - 1;
@@ -367,12 +415,20 @@ public class SelectionModel {
 	}
 	
 	
+	/**
+	 * Clears the current selection. (The cursor height will not be influenced by this operation.)
+	 */
 	public void clear() {
 		columnSelection.clear();
 		rowSelection.clear();
 	}
 	
 	
+	/**
+	 * Checks if any columns or rows are currently selected.
+	 * 
+	 * @return {@code true} if any cells are currently contained in the selection, {@code false} otherwise
+	 */
 	public boolean isEmpty() {
 		return columnSelection.isEmpty() && rowSelection.isEmpty();
 	}
