@@ -21,6 +21,7 @@ package info.bioinfweb.libralign.model;
 
 import info.bioinfweb.commons.bio.SequenceUtils;
 import info.bioinfweb.commons.collections.PackedObjectArrayList;
+import info.bioinfweb.libralign.dataarea.implementations.pherogram.PherogramArea;
 import info.bioinfweb.libralign.model.tokenset.TokenSet;
 
 import java.util.ArrayList;
@@ -36,10 +37,27 @@ import java.util.List;
  * @since 0.4.0
  */
 public class AlignmentModelUtils {
+	/**
+	 * Converts a character sequence to a sequence of tokens. Each character in {@code sequence} is considered
+	 * to be a valid token representation in the specified set.
+	 * 
+	 * @param sequence the character sequence to be converted
+	 * @param tokenSet the token set used to create token objects
+	 * @return the sequence of tokens created from {@code sequence}
+	 * @throws IllegalArgumentException if a character in {@code sequence} is not a valid token representation
+	 *         in {@code tokenSet}
+	 */
 	public static <T> List<T> charSequenceToTokenList(CharSequence sequence, TokenSet<T> tokenSet) {
 		List<T> result = new ArrayList<T>(sequence.length());
 		for (int i = 0; i < sequence.length(); i++) {
-			result.add(tokenSet.tokenByRepresentation(Character.toString(sequence.charAt(i))));
+			T token = tokenSet.tokenByRepresentation(Character.toString(sequence.charAt(i)));
+			if (token == null) {
+				throw new IllegalArgumentException("There was no token for the string representation \"" + sequence.charAt(i) + 
+						"\" found in the specified token set.");
+			}
+			else {
+				result.add(token);
+			}
 		}
 		return result;
 	}
@@ -54,6 +72,7 @@ public class AlignmentModelUtils {
 	 * @param sequenceID the ID of the sequence to be reverse complemented
 	 * @param start the first position of the subsequence to be reverse complemented
 	 * @param end the first position behind the subsequence to be reverse complemented
+	 * @see PherogramArea#reverseComplement()
 	 */
 	public static <T> void reverseComplement(AlignmentModel<T> model, int sequenceID, int start, int end) {
 		TokenSet<T> tokenSet = model.getTokenSet();

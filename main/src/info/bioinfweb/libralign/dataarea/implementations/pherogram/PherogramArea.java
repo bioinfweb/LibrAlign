@@ -26,6 +26,7 @@ import info.bioinfweb.libralign.alignmentarea.content.AlignmentContentArea;
 import info.bioinfweb.libralign.dataarea.DataArea;
 import info.bioinfweb.libralign.dataarea.DataAreaListType;
 import info.bioinfweb.libralign.model.AlignmentModel;
+import info.bioinfweb.libralign.model.AlignmentModelUtils;
 import info.bioinfweb.libralign.model.concatenated.ConcatenatedAlignmentModel;
 import info.bioinfweb.libralign.model.events.SequenceChangeEvent;
 import info.bioinfweb.libralign.model.events.SequenceRenamedEvent;
@@ -227,6 +228,7 @@ public class PherogramArea extends DataArea implements PherogramComponent {
    * and not use insertion and deletion methods for this. Otherwise new invalid distortions would be created
    * in the pherogram.
    * 
+   * @see AlignmentModelUtils#reverseComplement(AlignmentModel, int)
    * @see info.bioinfweb.libralign.pherogram.PherogramComponent#reverseComplement()
    */
   @Override

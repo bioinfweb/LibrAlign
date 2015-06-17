@@ -271,6 +271,7 @@ public interface AlignmentModel<T> {
 	 * @param tokens - the new tokens for the specified position
 	 * 
 	 * @throws AlignmentSourceNotWritableException if the underlying data source is not writable for tokens
+	 * @see AlignmentModelUtils#charSequenceToTokenList(CharSequence, TokenSet)
 	 */
 	public void setTokensAt(int sequenceID, int beginIndex, Collection<? extends T> tokens) 
 			throws AlignmentSourceNotWritableException;
@@ -292,6 +293,7 @@ public interface AlignmentModel<T> {
 	 * @param tokens - the new tokens for the specified position
 	 * 
 	 * @throws AlignmentSourceNotWritableException if the underlying data source is not writable for tokens
+	 * @see AlignmentModelUtils#charSequenceToTokenList(CharSequence, TokenSet)
 	 */
 	public void appendTokens(int sequenceID, Collection<? extends T> tokens) throws AlignmentSourceNotWritableException;
 
@@ -318,6 +320,7 @@ public interface AlignmentModel<T> {
 	 * @param tokens - the new tokens for the specified position
 	 * 
 	 * @throws AlignmentSourceNotWritableException if the underlying data source is not writable for tokens
+	 * @see AlignmentModelUtils#charSequenceToTokenList(CharSequence, TokenSet)
 	 */
 	public void insertTokensAt(int sequenceID, int beginIndex, Collection<? extends T> tokens) throws AlignmentSourceNotWritableException;
 	
