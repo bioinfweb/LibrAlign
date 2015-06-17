@@ -219,14 +219,14 @@ public class PherogramAlignmentModel {
   }
   
   
-  private void printShiftChangeList() {
-  	Iterator<ShiftChange> iterator = shiftChangeIterator();
-  	while (iterator.hasNext()) {
-  		ShiftChange shiftChange = iterator.next();
-  		System.out.print("(" + shiftChange.baseCallIndex + ": " + shiftChange.shiftChange + "), ");
-  	}
-  	System.out.println();
-  }
+//  private void printShiftChangeList() {
+//  	Iterator<ShiftChange> iterator = shiftChangeIterator();
+//  	while (iterator.hasNext()) {
+//  		ShiftChange shiftChange = iterator.next();
+//  		System.out.print("(" + shiftChange.baseCallIndex + ": " + shiftChange.shiftChange + "), ");
+//  	}
+//  	System.out.println();
+//  }
 
   
   private int combineTwoShiftChanges(int firstIndex) {
@@ -283,7 +283,7 @@ public class PherogramAlignmentModel {
   		shiftChangeList.add(listIndex, new ShiftChange(baseCallIndex, shiftChange));
   		combineThreeShiftChanges(listIndex);
   	}
-  	printShiftChangeList();
+  	//printShiftChangeList();
   	getOwner().repaint();
   }
   
