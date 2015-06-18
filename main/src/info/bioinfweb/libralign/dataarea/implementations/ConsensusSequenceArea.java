@@ -20,10 +20,13 @@ package info.bioinfweb.libralign.dataarea.implementations;
 
 
 import info.bioinfweb.commons.bio.SequenceUtils;
+import info.bioinfweb.commons.graphics.FontCalculator;
+import info.bioinfweb.commons.graphics.GraphicsUtils;
 import info.bioinfweb.commons.tic.TICPaintEvent;
 import info.bioinfweb.jphyloio.events.TokenSetType;
 import info.bioinfweb.libralign.alignmentarea.AlignmentArea;
 import info.bioinfweb.libralign.alignmentarea.content.AlignmentContentArea;
+import info.bioinfweb.libralign.alignmentarea.tokenpainter.SingleColorTokenPainter;
 import info.bioinfweb.libralign.alignmentarea.tokenpainter.TokenPainter;
 import info.bioinfweb.libralign.dataarea.DataArea;
 import info.bioinfweb.libralign.dataarea.DataAreaListType;
@@ -35,6 +38,8 @@ import info.bioinfweb.libralign.model.tokenset.AbstractTokenSet;
 import info.bioinfweb.libralign.model.tokenset.TokenSet;
 import info.bioinfweb.libralign.multiplealignments.MultipleAlignmentsContainer;
 
+import java.awt.Color;
+import java.awt.Font;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
 import java.awt.SystemColor;
@@ -217,11 +222,22 @@ public class ConsensusSequenceArea extends DataArea {
 			for (FractionInfo fraction : factions) {
 				g.setColor(painter.getColor(fraction.representation));
 				double height = getHeight() * fraction.fraction;
-				g.fill(new Rectangle2D.Double(x, y, width, height));
+				Rectangle2D area = new Rectangle2D.Double(x, y, width, height); 
+				g.fill(area);
+				
+				Font font = FontCalculator.getInstance().fontToFitRectangle(area, SingleColorTokenPainter.FONT_SIZE_FACTOR, 
+						fraction.representation, Font.SANS_SERIF, Font.PLAIN, SingleColorTokenPainter.MIN_FONT_SIZE);
+				if (font != null) {
+					g.setColor(Color.BLACK);  //TODO parameterize?
+					g.setFont(font);
+					GraphicsUtils.drawStringInRectangle(g, area, fraction.representation);
+				}
+				
 				y += height;
 			}
 
 			// Paint token:
+
 //			SequenceArea.paintCompound(getOwner().getOwner(), event.getGraphics(),
 //					compoundSet.getCompoundForString("" + score.getConsensusBase()), x, sequenceY, false);
 
