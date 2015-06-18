@@ -252,6 +252,28 @@ public class ConsensusSequenceArea extends DataArea {
 	public Set<DataAreaListType> validLocations() {
 		return EnumSet.of(DataAreaListType.TOP, DataAreaListType.BOTTOM);
 	}
+	
+	
+	/**
+	 * Returns the string representation of the most frequent token at the specified column.
+	 * It the specified column contains no tokens, the gap representation is returned.
+	 * 
+	 * @return the string representation of a token from {@link #getLabeledAlignmentModel()}
+	 */
+	@SuppressWarnings({"rawtypes", "unchecked"})
+	public String getConsensusToken(int column) {
+		List<FractionInfo> fractions = getFractions(column);
+		TokenSet tokenSet = getLabeledAlignmentModel().getTokenSet();
+  	String result = tokenSet.representationByToken(tokenSet.getGapToken());  // This way makes sure that a custom token representation is used. 
+  	double max = -1;
+  	for (FractionInfo fraction : fractions) {
+			if (fraction.fraction > max) {
+				result = fraction.representation;
+				max = fraction.fraction;
+			}
+		}
+  	return result;
+	}
 
 
 	private void refreshConsensus() {
