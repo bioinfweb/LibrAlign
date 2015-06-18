@@ -121,7 +121,7 @@ public class CharacterTokenSet extends AbstractTokenSet<Character> {
 	 */
 	public static CharacterTokenSet newAminoAcidInstance() {
 		CharacterTokenSet result = new CharacterTokenSet(TokenSetType.AMINO_ACID);
-		result.addAll(SequenceUtils.getAminoAcidOneLetterCodes());
+		result.addAll(SequenceUtils.getAminoAcidOneLetterCodes(true));
 		result.add(DEFAULT_GAP_REPRESENTATION);
 		return result;
 	}
