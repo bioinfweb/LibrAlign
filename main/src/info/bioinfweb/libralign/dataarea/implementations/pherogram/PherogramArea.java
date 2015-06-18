@@ -326,11 +326,13 @@ public class PherogramArea extends DataArea implements PherogramComponent {
 				updateChangedCutPosition();
 			}
 			
-			if (baseCallIndex < oldBaseCallIndex) {
-				copyBaseCallSequence(baseCallIndex, oldBaseCallIndex);  // Needs to be called after all changes are performed in order to calculate correct indices.
-			}
-			else if (oldEditableIndex < newEditableIndex) {
-				setGaps(oldEditableIndex, newEditableIndex - oldEditableIndex);
+			if (!getOwner().getOwner().getAlignmentModel().isTokensReadOnly()) {
+				if (baseCallIndex < oldBaseCallIndex) {
+					copyBaseCallSequence(baseCallIndex, oldBaseCallIndex);  // Needs to be called after all changes are performed in order to calculate correct indices.
+				}
+				else if (oldEditableIndex < newEditableIndex) {
+					setGaps(oldEditableIndex, newEditableIndex - oldEditableIndex);
+				}
 			}
 		}
 		else {
@@ -398,11 +400,13 @@ public class PherogramArea extends DataArea implements PherogramComponent {
 				updateChangedCutPosition();
 			}
 			
-			if (oldValue < baseCallIndex) {
-				copyBaseCallSequence(oldValue, baseCallIndex);  // Needs to be called after all changes are performed in order to calculate correct indices.
-			}
-			else if (newEditableIndex < oldEditableIndex) {
-				setGaps(newEditableIndex, oldEditableIndex - newEditableIndex);
+			if (!getOwner().getOwner().getAlignmentModel().isTokensReadOnly()) {
+				if (oldValue < baseCallIndex) {
+					copyBaseCallSequence(oldValue, baseCallIndex);  // Needs to be called after all changes are performed in order to calculate correct indices.
+				}
+				else if (newEditableIndex < oldEditableIndex) {
+					setGaps(newEditableIndex, oldEditableIndex - newEditableIndex);
+				}
 			}
 		}
 		else {

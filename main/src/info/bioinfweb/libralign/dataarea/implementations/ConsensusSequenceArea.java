@@ -19,27 +19,33 @@
 package info.bioinfweb.libralign.dataarea.implementations;
 
 
-import info.bioinfweb.commons.bio.AmbiguityBaseScore;
+import info.bioinfweb.commons.bio.SequenceUtils;
 import info.bioinfweb.commons.tic.TICPaintEvent;
+import info.bioinfweb.jphyloio.events.TokenSetType;
 import info.bioinfweb.libralign.alignmentarea.AlignmentArea;
 import info.bioinfweb.libralign.alignmentarea.content.AlignmentContentArea;
+import info.bioinfweb.libralign.alignmentarea.tokenpainter.TokenPainter;
 import info.bioinfweb.libralign.dataarea.DataArea;
 import info.bioinfweb.libralign.dataarea.DataAreaListType;
 import info.bioinfweb.libralign.model.AlignmentModel;
 import info.bioinfweb.libralign.model.events.SequenceChangeEvent;
 import info.bioinfweb.libralign.model.events.SequenceRenamedEvent;
 import info.bioinfweb.libralign.model.events.TokenChangeEvent;
+import info.bioinfweb.libralign.model.tokenset.AbstractTokenSet;
+import info.bioinfweb.libralign.model.tokenset.TokenSet;
 import info.bioinfweb.libralign.multiplealignments.MultipleAlignmentsContainer;
 
 import java.awt.Graphics2D;
+import java.awt.RenderingHints;
 import java.awt.SystemColor;
+import java.awt.geom.Rectangle2D;
+import java.util.ArrayList;
 import java.util.EnumSet;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
-
-import org.biojava3.core.sequence.compound.NucleotideCompound;
 
 
 
@@ -52,9 +58,20 @@ import org.biojava3.core.sequence.compound.NucleotideCompound;
 public class ConsensusSequenceArea extends DataArea {
 	public static final float DEFAULT_HEIGHT_FACTOR = 3f;
 
+	
+	private static class FractionInfo {
+		public String representation;
+		public double fraction;
+		
+		public FractionInfo(String representation, double fraction) {
+			super();
+			this.representation = representation;
+			this.fraction = fraction;
+		}
+	}
+	
 
-	private TreeMap<String, AmbiguityBaseScore> mapByBase;
-	private final Map<Integer, AmbiguityBaseScore> scores;
+	private final Map<Integer, List<FractionInfo>> fractionsMap;
 
 
 	/**
@@ -78,7 +95,7 @@ public class ConsensusSequenceArea extends DataArea {
 	 * {@link #setAlignmentModel(AlignmentModel)}.
 	 *
 	 * @param owner the alignment area that will be containing the returned data area instance
-	 * @param labeledAlignmentArea the alignment area containg the alignment model that shall provide the
+	 * @param labeledAlignmentArea the alignment area containing the alignment model that shall provide the
 	 *        source data for the consensus sequence (Should only be different from {@code owner.getOwner()}
 	 *        if the new instance will be placed in a different alignment area than the sequence data in a
 	 *        scenario with a {@link MultipleAlignmentsContainer}.)
@@ -86,52 +103,86 @@ public class ConsensusSequenceArea extends DataArea {
 	 */
 	public ConsensusSequenceArea(AlignmentContentArea owner, AlignmentArea labeledAlignmentArea) {
 		super(owner, labeledAlignmentArea);
-		createMap();
-		scores = new TreeMap<Integer, AmbiguityBaseScore>();  // Saves scores between change events of the provider.
+		fractionsMap = new TreeMap<Integer, List<FractionInfo>>();  // Saves scores between change events of the provider.
 		assignSize();
 	}
 
-
-	private void createMap() {  //TODO Use ConsensusSequenceCreator instead when implementation is adjusted.
-		mapByBase = new TreeMap<String, AmbiguityBaseScore>();
-		mapByBase.put("A", new AmbiguityBaseScore(1, 0, 0, 0));
-		mapByBase.put("T", new AmbiguityBaseScore(0, 1, 0, 0));
-		mapByBase.put("C", new AmbiguityBaseScore(0, 0, 1, 0));
-		mapByBase.put("G", new AmbiguityBaseScore(0, 0, 0, 1));
-		mapByBase.put("Y", new AmbiguityBaseScore(0, 1, 1, 0, 1));
-		mapByBase.put("R", new AmbiguityBaseScore(1, 0, 0, 1, 1));
-		mapByBase.put("W", new AmbiguityBaseScore(1, 1, 0, 0, 1));
-		mapByBase.put("S", new AmbiguityBaseScore(0, 0, 1, 1, 1));
-		mapByBase.put("K", new AmbiguityBaseScore(0, 1, 0, 1, 1));
-		mapByBase.put("M", new AmbiguityBaseScore(1, 0, 1, 0, 1));
-		mapByBase.put("B", new AmbiguityBaseScore(0, 1, 1, 1, 1));
-		mapByBase.put("D", new AmbiguityBaseScore(1, 1, 0, 1, 1));
-		mapByBase.put("H", new AmbiguityBaseScore(1, 1, 1, 0, 1));
-		mapByBase.put("V", new AmbiguityBaseScore(1, 0, 1, 1, 1));
-		mapByBase.put("N", new AmbiguityBaseScore(1, 1, 1, 1, 1));
-		mapByBase.put("-", new AmbiguityBaseScore(0, 0, 0, 0));
+	
+	private <T> String getRepresentation(AlignmentModel<T> model, int sequenceID, int column) {
+		if (model.getSequenceLength(sequenceID) > column) {  // Sequences may have different lengths.
+			T token = model.getTokenAt(sequenceID, column);
+			if (!model.getTokenSet().isGapToken(token)) {
+				return model.getTokenSet().representationByToken(token);
+			}
+		}
+		return Character.toString(AbstractTokenSet.DEFAULT_GAP_REPRESENTATION);
 	}
-
-
-	public AmbiguityBaseScore getScore(int column) {
-		AmbiguityBaseScore score = scores.get(column);
-		if (score == null) {
-			score = new AmbiguityBaseScore(0, 0, 0, 0);
-			Iterator<Integer> iterator = getLabeledAlignmentModel().sequenceIDIterator();
-			while (iterator.hasNext()) {
-				int id = iterator.next();
-				if (getLabeledAlignmentModel().getSequenceLength(id) > column) {
-					AmbiguityBaseScore addend = mapByBase.get(((NucleotideCompound)getLabeledAlignmentModel().getTokenAt(id, column)).getBase());
-					if (addend != null) {
-						score.add(addend);
+	
+	
+	@SuppressWarnings({"rawtypes", "unchecked"})
+	private List<FractionInfo> getFractions(int column) {
+		List<FractionInfo> fractions = fractionsMap.get(column);
+		if (fractions == null) {
+			fractions = new ArrayList<ConsensusSequenceArea.FractionInfo>();
+			
+			AlignmentModel model = getLabeledAlignmentModel();
+			TokenSet tokenSet = model.getTokenSet();
+			Iterator<Integer> iterator = model.sequenceIDIterator();
+			if (tokenSet.getType().isNucleotide() || tokenSet.getType().equals(TokenSetType.AMINO_ACID)) {
+				Map<Character, Double> frequencies;
+				
+				if (tokenSet.getType().isNucleotide()) {
+					char[] tokens = new char[model.getSequenceCount()];
+					int row = 0;
+					while (iterator.hasNext()) {
+						tokens[row] =	getRepresentation(model, iterator.next(), column).charAt(0);
+						row++;
 					}
+					frequencies = SequenceUtils.nucleotideFrequencies(tokens);
+				}
+				else {  // Amino acid
+					String[] tokens = new String[model.getSequenceCount()];
+					int row = 0;
+					while (iterator.hasNext()) {
+						tokens[row] =	getRepresentation(model, iterator.next(), column);
+						row++;
+					}
+					frequencies = SequenceUtils.aminoAcidFrequencies(tokens);
+				}
+				
+				for (Character c : frequencies.keySet()) {
+					fractions.add(new FractionInfo(c.toString(), frequencies.get(c)));
 				}
 			}
-			score.rescale(1);
+			else {  //TODO Implement special treatment (e.g. calculating the mean value) for discrete values one day?
+		  	Map<String, Double> frequencies = new TreeMap<String, Double>();
+		  	double sum = 0.0;
+		  	while (iterator.hasNext()) {
+					int sequenceID = iterator.next();
+					if (model.getSequenceLength(sequenceID) > column) {  // Sequences may have different lengths.
+						Object token = model.getTokenAt(sequenceID, column);
+						if (!tokenSet.isGapToken(token)) {
+							String representation = tokenSet.representationByToken(token);
+							Double frequency = frequencies.get(representation);
+							if (frequency == null) {
+								frequency = 0.0;
+							}
+							frequencies.put(representation, frequency + 1);
+							sum += 1;
+						}
+					}
+		  	}
+		  	
+		  	for (String representation : frequencies.keySet()) {
+					fractions.add(new FractionInfo(representation, frequencies.get(representation) / sum));
+				}
+			}
+			
+			fractionsMap.put(column, fractions);
 		}
-		return score;
+		return fractions;
 	}
-
+	
 
 	@Override
 	public int getHeight() {
@@ -146,7 +197,6 @@ public class ConsensusSequenceArea extends DataArea {
 		g.setColor(SystemColor.menu);
 		g.fill(event.getRectangle());
 
-
 		// Determine area to be painted:
 		int firstIndex = Math.max(0, getLabeledAlignmentArea().getContentArea().columnByPaintX((int)event.getRectangle().getMinX()));
 		int lastIndex = getLabeledAlignmentArea().getContentArea().columnByPaintX((int)event.getRectangle().getMaxX());
@@ -155,34 +205,28 @@ public class ConsensusSequenceArea extends DataArea {
 			lastIndex = lastColumn;
 		}
 
-		//TODO Refactor nucleotide independent:
 		// Paint output:
-//		Map<String, Color> map = getOwner().getOwner().getColorSchema().getNucleotideColorMap();
-//    Color[] bgColors = new Color[]{map.get("A"), map.get("T"), map.get("C"), map.get("G")};
-//
-//		AlignmentAmbiguityNucleotideCompoundSet compoundSet =
-//				AlignmentAmbiguityNucleotideCompoundSet.getAlignmentAmbiguityNucleotideCompoundSet();
-//		g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-//  	float x = firstIndex * getOwner().getOwner().getCompoundWidth() + getOwner().getOwner().getDataAreas().getGlobalMaxLengthBeforeStart();
-//		float sequenceY = getHeight() - getOwner().getOwner().getCompoundHeight();
-//		final float barWidth = getOwner().getOwner().getCompoundWidth() / 4;
-//		for (int i = firstIndex; i <= lastIndex; i++) {
-//			// Paint bars:
-//			float barX = x;
-//			AmbiguityBaseScore score = getScore(i);
-//			for (int j = 0; j < 4; j++) {
-//				float barHeight = sequenceY * (float)score.getScoreByIndex(j);
-//				g.setColor(bgColors[j]);
-//				g.fill(new Rectangle2D.Float(barX, sequenceY - barHeight, barWidth, barHeight));
-//				barX += barWidth;
-//			}
-//
-//			// Paint token:
+		g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+  	double x = getLabeledAlignmentArea().getContentArea().paintXByColumn(firstIndex);
+		for (int column = firstIndex; column <= lastIndex; column++) {
+			// Paint bars:
+			TokenPainter painter = getLabeledAlignmentArea().getPaintSettings().getTokenPainterList().painterByColumn(column);
+			double y = 0;
+			double width = getLabeledAlignmentArea().getPaintSettings().getTokenWidth(column);
+			List<FractionInfo> factions = getFractions(column);
+			for (FractionInfo fraction : factions) {
+				g.setColor(painter.getColor(fraction.representation));
+				double height = getHeight() * fraction.fraction;
+				g.fill(new Rectangle2D.Double(x, y, width, height));
+				y += height;
+			}
+
+			// Paint token:
 //			SequenceArea.paintCompound(getOwner().getOwner(), event.getGraphics(),
 //					compoundSet.getCompoundForString("" + score.getConsensusBase()), x, sequenceY, false);
-//
-//	    x += getOwner().getOwner().getCompoundWidth();
-//    }
+
+	    x += width;
+    }
 	}
 
 
@@ -193,7 +237,7 @@ public class ConsensusSequenceArea extends DataArea {
 
 
 	private void refreshConsensus() {
-		scores.clear();  // Each score is recalculated the next time it is requested.
+		fractionsMap.clear();  // Each score is recalculated the next time it is requested.
 		assignSize();
 		repaint();
 	}

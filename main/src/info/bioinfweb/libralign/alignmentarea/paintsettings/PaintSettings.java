@@ -273,7 +273,7 @@ public class PaintSettings {
 			int index;
 			if (getOwner().getAlignmentModel() instanceof ConcatenatedAlignmentModel) {
 				throw new InternalError("not implemented");
-				// index = ?;   //TODO Which painter should define the height?
+				// index = ?;   //TODO Which painter should define the height? All tokens have the same height anyway although the different painters may prefer different heights.
 			}
 			else {
 				index = 0;

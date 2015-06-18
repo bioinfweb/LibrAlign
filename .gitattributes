@@ -94,6 +94,7 @@ main/src/info/bioinfweb/libralign/dataarea/implementations/charset/CharSetArea.j
 main/src/info/bioinfweb/libralign/dataarea/implementations/charset/CharSetDataModel.java -text svneol=unset#text/plain
 main/src/info/bioinfweb/libralign/dataarea/implementations/charset/CharSetEventReader.java -text svneol=unset#text/plain
 main/src/info/bioinfweb/libralign/dataarea/implementations/charset/CharSetNameArea.java -text svneol=unset#text/plain
+main/src/info/bioinfweb/libralign/dataarea/implementations/charset/package-info.java -text svneol=unset#text/plain
 main/src/info/bioinfweb/libralign/dataarea/implementations/package-info.java -text svneol=unset#text/plain
 main/src/info/bioinfweb/libralign/dataarea/implementations/pherogram/PherogramAlignmentModel.java -text svneol=unset#text/plain
 main/src/info/bioinfweb/libralign/dataarea/implementations/pherogram/PherogramAlignmentRelation.java -text svneol=unset#text/plain
