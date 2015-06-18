@@ -220,11 +220,13 @@ public class ConsensusSequenceArea extends DataArea {
 			double width = getLabeledAlignmentArea().getPaintSettings().getTokenWidth(column);
 			List<FractionInfo> factions = getFractions(column);
 			for (FractionInfo fraction : factions) {
+				// Paint background:
 				g.setColor(painter.getColor(fraction.representation));
 				double height = getHeight() * fraction.fraction;
 				Rectangle2D area = new Rectangle2D.Double(x, y, width, height); 
 				g.fill(area);
 				
+				// Paint token representation:
 				Font font = FontCalculator.getInstance().fontToFitRectangle(area, SingleColorTokenPainter.FONT_SIZE_FACTOR, 
 						fraction.representation, Font.SANS_SERIF, Font.PLAIN, SingleColorTokenPainter.MIN_FONT_SIZE);
 				if (font != null) {
