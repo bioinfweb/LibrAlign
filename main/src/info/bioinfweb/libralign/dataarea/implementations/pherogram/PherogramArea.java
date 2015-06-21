@@ -36,7 +36,7 @@ import info.bioinfweb.libralign.pherogram.PherogramComponent;
 import info.bioinfweb.libralign.pherogram.PherogramFormats;
 import info.bioinfweb.libralign.pherogram.PherogramPainter;
 import info.bioinfweb.libralign.pherogram.distortion.ScaledPherogramDistortion;
-import info.bioinfweb.libralign.pherogram.model.PherogramModel;
+import info.bioinfweb.libralign.pherogram.provider.PherogramProvider;
 import info.bioinfweb.libralign.pherogram.view.PherogramView;
 
 import java.awt.Color;
@@ -61,7 +61,7 @@ public class PherogramArea extends DataArea implements PherogramComponent {
 	public static final int DEFAULT_HEIGHT_FACTOR = 5;
 	
 	
-	private PherogramModel pherogramModel;
+	private PherogramProvider pherogramModel;
 	private PherogramAlignmentModel pherogramAlignmentModel = new PherogramAlignmentModel(this);
 	private int firstSeqPos;
 	private int leftCutPosition;
@@ -77,7 +77,7 @@ public class PherogramArea extends DataArea implements PherogramComponent {
 	 * @param owner - the alignment area that will be containing the returned data area instance
 	 * @param pherogram - the provider for the pherogram data to be displayed by the returned instance
 	 */
-	public PherogramArea(AlignmentContentArea owner, PherogramModel pherogram) {
+	public PherogramArea(AlignmentContentArea owner, PherogramProvider pherogram) {
 		super(owner, owner.getOwner());  // Pherogram areas are always directly attached to their sequences. 
 		this.pherogramModel = pherogram;
 		verticalScale = getHeight();
@@ -214,7 +214,7 @@ public class PherogramArea extends DataArea implements PherogramComponent {
 
 
 	@Override
-	public PherogramModel getPherogramModel() {
+	public PherogramProvider getPherogramModel() {
 		return pherogramModel;
 	}
   

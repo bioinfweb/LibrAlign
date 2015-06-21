@@ -31,7 +31,7 @@ import info.bioinfweb.libralign.dataarea.implementations.pherogram.PherogramArea
 import info.bioinfweb.libralign.pherogram.PherogramFormats.QualityOutputType;
 import info.bioinfweb.libralign.pherogram.distortion.GapPattern;
 import info.bioinfweb.libralign.pherogram.distortion.PherogramDistortion;
-import info.bioinfweb.libralign.pherogram.model.PherogramModel;
+import info.bioinfweb.libralign.pherogram.provider.PherogramProvider;
 import info.bioinfweb.libralign.pherogram.view.PherogramTraceCurveView;
 
 
@@ -88,7 +88,7 @@ public class PherogramPainter {
 				paintY = paintAnnotation(g, owner.getPherogramModel().getQuality(nucleotide, index), paintX, paintY);
 			}
 			else {  // QualityOutputType.ALL
-				for (NucleotideCompound qualityNucleotide: PherogramModel.TRACE_CURVE_NUCLEOTIDES) {
+				for (NucleotideCompound qualityNucleotide: PherogramProvider.TRACE_CURVE_NUCLEOTIDES) {
 					g.setColor(getNucleotideColor(qualityNucleotide.getUpperedBase()));
 					paintY = paintAnnotation(g, owner.getPherogramModel().getQuality(qualityNucleotide, index), paintX, paintY);
 				}
@@ -98,7 +98,7 @@ public class PherogramPainter {
 			g.setColor(formats.getProbabilityColor());
 			g.setFont(formats.getAnnotationFont());
 			
-			for (String label: PherogramModel.PROBABILITY_LABELS) {
+			for (String label: PherogramProvider.PROBABILITY_LABELS) {
 				paintY = paintAnnotation(g, owner.getPherogramModel().getAnnotation(label, index), paintX, paintY);
 			}
 		}
@@ -165,7 +165,7 @@ public class PherogramPainter {
 	
 	
 	/**
-	 * Returns the height that is used to paint the trace curves. Since the trace data in {@link PherogramModel}
+	 * Returns the height that is used to paint the trace curves. Since the trace data in {@link PherogramProvider}
 	 * is normalized to 1.0, the returned value is equal to the vertical scale value of the owning pherogram component
 	 * ({@link PherogramComponent#getVerticalScale()}).
 	 * 
@@ -196,7 +196,7 @@ public class PherogramPainter {
 		startX = Math.max(startX, 0);
 		endX = Math.min(endX + 1, owner.getPherogramModel().getTraceLength());
 		
-		for (NucleotideCompound nucleotide: PherogramModel.TRACE_CURVE_NUCLEOTIDES) {
+		for (NucleotideCompound nucleotide: PherogramProvider.TRACE_CURVE_NUCLEOTIDES) {
 			Path2D path = new Path2D.Double();
 			double x = paintX;
 			path.moveTo(x, paintY + height - 
@@ -333,7 +333,7 @@ public class PherogramPainter {
 			PherogramDistortion distortion, double compoundWidth) {
 		
 		final double height = calculateTraceCurvesHeight();
-		for (NucleotideCompound nucleotide: PherogramModel.TRACE_CURVE_NUCLEOTIDES) {
+		for (NucleotideCompound nucleotide: PherogramProvider.TRACE_CURVE_NUCLEOTIDES) {
 			int startTraceIndex = PherogramUtils.getFirstTracePosition(owner.getPherogramModel(), firstBaseCallIndex);
 			Path2D path = new Path2D.Double();
 			path.moveTo(x + distortion.getPaintStartX(firstBaseCallIndex), 

@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package info.bioinfweb.libralign.pherogram.model;
+package info.bioinfweb.libralign.pherogram.provider;
 
 
 import java.util.List;
@@ -36,7 +36,7 @@ import info.bioinfweb.libralign.pherogram.PherogramUtils;
  * @author Ben St&ouml;ver
  * @since 0.1.0
  */
-public interface PherogramModel extends DataModel {
+public interface PherogramProvider extends DataModel {
 	/** A list of the nucleotides A, T, C and G to which trace curves exist in a trace file from Sanger sequencing. */ 
   public static final List<NucleotideCompound> TRACE_CURVE_NUCLEOTIDES = PherogramUtils.createTraceCurveNucleotideList();
   
@@ -128,4 +128,4 @@ public interface PherogramModel extends DataModel {
 	 * 
 	 * @return another instance with a possibly shared data source 
 	 */
-	public PherogramModel reverseComplement();}
+	public PherogramProvider reverseComplement();}

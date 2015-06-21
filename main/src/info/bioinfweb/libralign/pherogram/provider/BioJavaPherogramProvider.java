@@ -16,12 +16,10 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package info.bioinfweb.libralign.pherogram.model;
+package info.bioinfweb.libralign.pherogram.provider;
 
 
 import info.bioinfweb.commons.bio.biojava3.core.sequence.BioJava1SymbolTranslator;
-import info.bioinfweb.commons.bio.biojava3.core.sequence.compound.NoGapDNACompoundSet;
-import info.bioinfweb.libralign.model.AlignmentModel;
 
 import java.util.Map;
 import java.util.NoSuchElementException;
@@ -39,7 +37,7 @@ import org.biojava3.core.sequence.compound.NucleotideCompound;
 
 /**
  * Adapter class that provides the contents of any implementation of {@link Chromatogram} from BioJava 1
- * as a {@link PherogramModel}.
+ * as a {@link PherogramProvider}.
  * <p>
  * You can use this class together with {@link ChromatogramFactory} to load ABI or SCF files into LibrAlign.
  * Note that base call indices in LibrAlign start with 0 whereas the BioJava indices in the underlying
@@ -49,7 +47,7 @@ import org.biojava3.core.sequence.compound.NucleotideCompound;
  * 
  * @author Ben St&ouml;ver
  */
-public class BioJavaPherogramModel implements PherogramModel {
+public class BioJavaPherogramProvider implements PherogramProvider {
 	public static final String QUALITY_LABEL_PREFIX = "quality-";
 	
 	
@@ -63,7 +61,7 @@ public class BioJavaPherogramModel implements PherogramModel {
 	 * 
 	 * @param chromatogram - the BioJava pherogram instance
 	 */
-	public BioJavaPherogramModel(Chromatogram chromatogram) {
+	public BioJavaPherogramProvider(Chromatogram chromatogram) {
 		super();
 		this.chromatogram = chromatogram;
 		maxTraceValue = chromatogram.getMax();
@@ -171,7 +169,7 @@ public class BioJavaPherogramModel implements PherogramModel {
    * @return a new instance of this class
    */
   @Override
-  public PherogramModel reverseComplement() {
-  	return new ReverseComplementPherogramModel(this);  // Reverse complementing BioJava model loses quality scores.
+  public PherogramProvider reverseComplement() {
+  	return new ReverseComplementPherogramProvider(this);  // Reverse complementing BioJava model loses quality scores.
 	}
 }

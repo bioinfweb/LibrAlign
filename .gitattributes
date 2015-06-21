@@ -240,11 +240,12 @@ main/src/info/bioinfweb/libralign/pherogram/distortion/PherogramDistortion.java 
 main/src/info/bioinfweb/libralign/pherogram/distortion/ScaledPherogramDistortion.java -text svneol=unset#text/plain
 main/src/info/bioinfweb/libralign/pherogram/distortion/UnscaledPherogramDistortion.java -text svneol=unset#text/plain
 main/src/info/bioinfweb/libralign/pherogram/distortion/package-info.java -text svneol=unset#text/plain
-main/src/info/bioinfweb/libralign/pherogram/model/BioJavaPherogramModel.java -text svneol=unset#text/plain
-main/src/info/bioinfweb/libralign/pherogram/model/PherogramModel.java -text svneol=unset#text/plain
-main/src/info/bioinfweb/libralign/pherogram/model/ReverseComplementPherogramModel.java -text svneol=unset#text/plain
 main/src/info/bioinfweb/libralign/pherogram/model/package-info.java -text svneol=unset#text/plain
 main/src/info/bioinfweb/libralign/pherogram/package-info.java -text svneol=unset#text/plain
+main/src/info/bioinfweb/libralign/pherogram/provider/BioJavaPherogramProvider.java -text svneol=unset#text/plain
+main/src/info/bioinfweb/libralign/pherogram/provider/PherogramProvider.java -text svneol=unset#text/plain
+main/src/info/bioinfweb/libralign/pherogram/provider/ReverseComplementPherogramProvider.java -text svneol=unset#text/plain
+main/src/info/bioinfweb/libralign/pherogram/provider/package-info.java -text svneol=unset#text/plain
 main/src/info/bioinfweb/libralign/pherogram/view/PherogramHeadingView.java -text svneol=unset#text/plain
 main/src/info/bioinfweb/libralign/pherogram/view/PherogramTraceCurveView.java -text svneol=unset#text/plain
 main/src/info/bioinfweb/libralign/pherogram/view/PherogramView.java -text svneol=unset#text/plain

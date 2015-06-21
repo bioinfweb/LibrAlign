@@ -19,7 +19,7 @@
 package info.bioinfweb.libralign.pherogram;
 
 
-import info.bioinfweb.libralign.pherogram.model.PherogramModel;
+import info.bioinfweb.libralign.pherogram.provider.PherogramProvider;
 
 import java.awt.Color;
 
@@ -35,9 +35,9 @@ public interface PherogramComponent {
 	/**
 	 * Returns the underlying class providing the pherogram data.
 	 * 
-	 * @return the underlying implementation of {@link PherogramModel}
+	 * @return the underlying implementation of {@link PherogramProvider}
 	 */
-	public PherogramModel getPherogramModel();
+	public PherogramProvider getPherogramModel();
 	
 	/**
 	 * Reverse complements the underlying pherogram model and swaps the left and right cut positions 

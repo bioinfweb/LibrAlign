@@ -31,8 +31,8 @@ import info.bioinfweb.libralign.dataarea.implementations.pherogram.PherogramArea
 import info.bioinfweb.libralign.pherogram.PherogramComponent;
 import info.bioinfweb.libralign.pherogram.PherogramFormats;
 import info.bioinfweb.libralign.pherogram.PherogramPainter;
-import info.bioinfweb.libralign.pherogram.model.PherogramModel;
-import info.bioinfweb.libralign.pherogram.model.ReverseComplementPherogramModel;
+import info.bioinfweb.libralign.pherogram.provider.PherogramProvider;
+import info.bioinfweb.libralign.pherogram.provider.ReverseComplementPherogramProvider;
 
 
 
@@ -48,7 +48,7 @@ import info.bioinfweb.libralign.pherogram.model.ReverseComplementPherogramModel;
  * @see PherogramArea
  */
 public class PherogramTraceCurveView extends TICComponent implements PherogramComponent {
-	private PherogramModel pherogramModel;
+	private PherogramProvider pherogramModel;
 	private int leftCutPosition = 0;
 	private int rightCutPosition = 0;
 	private double horizontalScale = 1.0;
@@ -64,7 +64,7 @@ public class PherogramTraceCurveView extends TICComponent implements PherogramCo
 
 
 	@Override
-	public PherogramModel getPherogramModel() {
+	public PherogramProvider getPherogramModel() {
 		return pherogramModel;
 	}
 
@@ -101,7 +101,7 @@ public class PherogramTraceCurveView extends TICComponent implements PherogramCo
 		}
 	}
 	
-	public void setProvider(PherogramModel pherogram) {
+	public void setProvider(PherogramProvider pherogram) {
 		this.pherogramModel = pherogram;
 		leftCutPosition = 0;
 		rightCutPosition = pherogram.getSequenceLength();

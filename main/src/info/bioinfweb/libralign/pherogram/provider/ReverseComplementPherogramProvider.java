@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package info.bioinfweb.libralign.pherogram.model;
+package info.bioinfweb.libralign.pherogram.provider;
 
 
 import org.biojava3.core.sequence.compound.NucleotideCompound;
@@ -28,8 +28,8 @@ import org.biojava3.core.sequence.compound.NucleotideCompound;
  * 
  * @author Ben St&ouml;ver
  */
-public class ReverseComplementPherogramModel implements PherogramModel {
-	private PherogramModel source;
+public class ReverseComplementPherogramProvider implements PherogramProvider {
+	private PherogramProvider source;
 
 	
 	/**
@@ -37,7 +37,7 @@ public class ReverseComplementPherogramModel implements PherogramModel {
 	 * 
 	 * @param source the model to be viewed reverse complemented
 	 */
-	public ReverseComplementPherogramModel(PherogramModel source) {
+	public ReverseComplementPherogramProvider(PherogramProvider source) {
 		super();
 		this.source = source;
 	}
@@ -102,7 +102,7 @@ public class ReverseComplementPherogramModel implements PherogramModel {
 	 * @return the instance specified in the constructor
 	 */
 	@Override
-	public PherogramModel reverseComplement() {
+	public PherogramProvider reverseComplement() {
 		return source;
 	}
 }
