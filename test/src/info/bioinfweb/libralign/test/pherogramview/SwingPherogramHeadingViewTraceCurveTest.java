@@ -20,7 +20,7 @@ package info.bioinfweb.libralign.test.pherogramview;
 
 
 import info.bioinfweb.libralign.pherogram.PherogramFormats.QualityOutputType;
-import info.bioinfweb.libralign.pherogram.model.BioJavaPherogramModel;
+import info.bioinfweb.libralign.pherogram.provider.BioJavaPherogramProvider;
 import info.bioinfweb.libralign.pherogram.view.PherogramHeadingView;
 import info.bioinfweb.libralign.pherogram.view.PherogramTraceCurveView;
 
@@ -47,7 +47,7 @@ public class SwingPherogramHeadingViewTraceCurveTest extends AbstractPherogramVi
 			pherogramView = new PherogramTraceCurveView();
 //		pherogramView.setProvider(new BioJavaPherogramProvider(ChromatogramFactory.create(
 //		new File("data\\pherograms\\Test_pel1PCR_Pel2Wdhg_PCR-7-A_1.ab1"))));
-  		pherogramView.setProvider(new BioJavaPherogramModel(ChromatogramFactory.create(
+  		pherogramView.setProvider(new BioJavaPherogramProvider(ChromatogramFactory.create(
 	      	new File("data\\pherograms\\Test_qualityScore.scf"))));
 			pherogramView.setHorizontalScale(1);			
 			pherogramView.setVerticalScale(100);

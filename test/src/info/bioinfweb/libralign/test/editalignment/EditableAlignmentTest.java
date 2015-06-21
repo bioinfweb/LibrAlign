@@ -30,7 +30,7 @@ import info.bioinfweb.libralign.model.implementations.ArrayListAlignmentModel;
 import info.bioinfweb.libralign.model.implementations.PackedAlignmentModel;
 import info.bioinfweb.libralign.model.tokenset.BioJavaTokenSet;
 import info.bioinfweb.libralign.model.tokenset.TokenSet;
-import info.bioinfweb.libralign.pherogram.model.BioJavaPherogramModel;
+import info.bioinfweb.libralign.pherogram.provider.BioJavaPherogramProvider;
 
 import java.io.File;
 import java.io.IOException;
@@ -81,7 +81,7 @@ public class EditableAlignmentTest {
 			try {
 				provider.addSequence("C");
 				id = provider.sequenceIDByName("C");
-				BioJavaPherogramModel pherogramProvider = new BioJavaPherogramModel(ChromatogramFactory.create(
+				BioJavaPherogramProvider pherogramProvider = new BioJavaPherogramProvider(ChromatogramFactory.create(
 		      	new File("data/pherograms/Test_qualityScore.scf")));
 	
 				// Copy base call sequence into alignment:
@@ -123,7 +123,7 @@ public class EditableAlignmentTest {
 			String name = newSequenceName();
 			provider.addSequence(name);
 			int id = provider.sequenceIDByName(name);
-			BioJavaPherogramModel pherogramProvider = new BioJavaPherogramModel(ChromatogramFactory.create(
+			BioJavaPherogramProvider pherogramProvider = new BioJavaPherogramProvider(ChromatogramFactory.create(
 	      	new File("data/pherograms/Test_qualityScore.scf")));
 
 			// Copy base call sequence into alignment:

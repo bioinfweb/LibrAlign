@@ -39,7 +39,7 @@ import info.bioinfweb.libralign.model.AlignmentModel;
 import info.bioinfweb.libralign.model.implementations.BioJavaAlignmentModel;
 import info.bioinfweb.libralign.model.tokenset.BioJavaTokenSet;
 import info.bioinfweb.libralign.multiplealignments.MultipleAlignmentsContainer;
-import info.bioinfweb.libralign.pherogram.model.BioJavaPherogramModel;
+import info.bioinfweb.libralign.pherogram.provider.BioJavaPherogramProvider;
 
 import org.biojava.bio.chromatogram.ChromatogramFactory;
 import org.biojava3.core.sequence.DNASequence;
@@ -79,7 +79,7 @@ public class AbstractApplication {
 			MultipleAlignmentsContainer result = new MultipleAlignmentsContainer();
 			
 			// Create models:
-			BioJavaPherogramModel pherogramProvider = new BioJavaPherogramModel(ChromatogramFactory.create(
+			BioJavaPherogramProvider pherogramProvider = new BioJavaPherogramProvider(ChromatogramFactory.create(
 	      	new File("data\\pherograms\\Test_qualityScore.scf")));
 			
 			Alignment<DNASequence, NucleotideCompound> alignment = 
