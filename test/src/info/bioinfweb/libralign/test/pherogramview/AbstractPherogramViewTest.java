@@ -24,6 +24,7 @@ import java.io.File;
 import org.biojava.bio.chromatogram.ChromatogramFactory;
 
 import info.bioinfweb.libralign.pherogram.PherogramFormats.QualityOutputType;
+import info.bioinfweb.libralign.pherogram.model.PherogramComponentModel;
 import info.bioinfweb.libralign.pherogram.provider.BioJavaPherogramProvider;
 import info.bioinfweb.libralign.pherogram.view.PherogramView;
 
@@ -37,8 +38,8 @@ public class AbstractPherogramViewTest {
 		if (pherogramView == null) {
 			try {
 				pherogramView = new PherogramView();
-	  		pherogramView.getTraceCurveView().setProvider(new BioJavaPherogramProvider(ChromatogramFactory.create(
-		      	new File("data\\pherograms\\Test_qualityScore.scf"))));
+	  		pherogramView.getTraceCurveView().setModel(new PherogramComponentModel(new BioJavaPherogramProvider(
+	  				ChromatogramFactory.create(new File("data\\pherograms\\Test_qualityScore.scf")))));
 				pherogramView.getTraceCurveView().setHorizontalScale(1);			
 				pherogramView.getTraceCurveView().setVerticalScale(100);
 				pherogramView.getTraceCurveView().getFormats().setQualityOutputType(QualityOutputType.ALL);

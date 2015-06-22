@@ -22,6 +22,9 @@ package info.bioinfweb.libralign.dataarea.implementations.pherogram;
 import static org.junit.Assert.* ;
 import info.bioinfweb.libralign.alignmentarea.AlignmentArea;
 import info.bioinfweb.libralign.alignmentarea.content.AlignmentContentArea;
+import info.bioinfweb.libralign.pherogram.model.PherogramAlignmentRelation;
+import info.bioinfweb.libralign.pherogram.model.PherogramAreaModel;
+import info.bioinfweb.libralign.pherogram.model.ShiftChange;
 import info.bioinfweb.libralign.pherogram.provider.BioJavaPherogramProvider;
 
 import java.io.File;
@@ -55,13 +58,13 @@ public class PherogramAlignmentModelTest {
 	public void test_editableIndexByBaseCallIndex() {
 		try {
 			AlignmentContentArea alignmentContentArea = new AlignmentArea().getContentArea();
-			PherogramArea pherogramArea = new PherogramArea(alignmentContentArea, new BioJavaPherogramProvider(ChromatogramFactory.create(
-	      	new File("data\\pherograms\\Test_qualityScore.scf"))));
-			pherogramArea.setFirstSeqPos(10);
-			pherogramArea.setLeftCutPosition(5);
-			pherogramArea.setRightCutPosition(55);
+			PherogramArea pherogramArea = new PherogramArea(alignmentContentArea, new PherogramAreaModel(new BioJavaPherogramProvider(
+					ChromatogramFactory.create(new File("data\\pherograms\\Test_qualityScore.scf")))));
+			pherogramArea.getModel().setFirstSeqPos(10);
+			pherogramArea.getModel().setLeftCutPosition(5);
+			pherogramArea.getModel().setRightCutPosition(55);
 			
-			PherogramAlignmentModel model = new PherogramAlignmentModel(pherogramArea);
+			PherogramAreaModel model = pherogramArea.getModel();
 		  model.setShiftChange(10, 2);
 		  model.setShiftChange(20, -2);
 		  
@@ -117,13 +120,13 @@ public class PherogramAlignmentModelTest {
 	public void test_baseCallIndexByEditableIndex() {
 		try {
 			AlignmentContentArea alignmentContentArea = new AlignmentArea().getContentArea();
-			PherogramArea pherogramArea = new PherogramArea(alignmentContentArea, new BioJavaPherogramProvider(ChromatogramFactory.create(
-	      	new File("data\\pherograms\\Test_qualityScore.scf"))));
-			pherogramArea.setFirstSeqPos(10);
-			pherogramArea.setLeftCutPosition(4);
-			pherogramArea.setRightCutPosition(54);
+			PherogramArea pherogramArea = new PherogramArea(alignmentContentArea, new PherogramAreaModel(new BioJavaPherogramProvider(
+					ChromatogramFactory.create(new File("data\\pherograms\\Test_qualityScore.scf")))));
+			pherogramArea.getModel().setFirstSeqPos(10);
+			pherogramArea.getModel().setLeftCutPosition(4);
+			pherogramArea.getModel().setRightCutPosition(54);
 			
-			PherogramAlignmentModel model = new PherogramAlignmentModel(pherogramArea);
+			PherogramAreaModel model = pherogramArea.getModel();
 		  model.setShiftChange(9, 2);
 		  model.setShiftChange(19, -2);
 		  
@@ -170,13 +173,13 @@ public class PherogramAlignmentModelTest {
 	public void test_shiftChangeIteratorByBaseCallIndex() {
 		try {
 			AlignmentContentArea alignmentContentArea = new AlignmentArea().getContentArea();
-			PherogramArea pherogramArea = new PherogramArea(alignmentContentArea, new BioJavaPherogramProvider(ChromatogramFactory.create(
-	      	new File("data\\pherograms\\Test_qualityScore.scf"))));
-			pherogramArea.setFirstSeqPos(10);
-			pherogramArea.setLeftCutPosition(5);
-			pherogramArea.setRightCutPosition(55);
+			PherogramArea pherogramArea = new PherogramArea(alignmentContentArea, new PherogramAreaModel(new BioJavaPherogramProvider(
+					ChromatogramFactory.create(new File("data\\pherograms\\Test_qualityScore.scf")))));
+			pherogramArea.getModel().setFirstSeqPos(10);
+			pherogramArea.getModel().setLeftCutPosition(5);
+			pherogramArea.getModel().setRightCutPosition(55);
 			
-			PherogramAlignmentModel model = new PherogramAlignmentModel(pherogramArea);
+			PherogramAreaModel model = pherogramArea.getModel();
 		  model.setShiftChange(10, 2);
 		  model.setShiftChange(20, -2);
 		  
@@ -211,13 +214,13 @@ public class PherogramAlignmentModelTest {
 	public void test_shiftAtBaseCallIndex() {
 		try {
 			AlignmentContentArea alignmentContentArea = new AlignmentArea().getContentArea();
-			PherogramArea pherogramArea = new PherogramArea(alignmentContentArea, new BioJavaPherogramProvider(ChromatogramFactory.create(
-	      	new File("data\\pherograms\\Test_qualityScore.scf"))));
-			pherogramArea.setFirstSeqPos(10);
-			pherogramArea.setLeftCutPosition(5);
-			pherogramArea.setRightCutPosition(55);
+			PherogramArea pherogramArea = new PherogramArea(alignmentContentArea, new PherogramAreaModel(new BioJavaPherogramProvider(
+					ChromatogramFactory.create(new File("data\\pherograms\\Test_qualityScore.scf")))));
+			pherogramArea.getModel().setFirstSeqPos(10);
+			pherogramArea.getModel().setLeftCutPosition(5);
+			pherogramArea.getModel().setRightCutPosition(55);
 			
-			PherogramAlignmentModel model = new PherogramAlignmentModel(pherogramArea);
+			PherogramAreaModel model = pherogramArea.getModel();
 		  model.setShiftChange(10, 2);
 		  model.setShiftChange(20, -2);
 		  

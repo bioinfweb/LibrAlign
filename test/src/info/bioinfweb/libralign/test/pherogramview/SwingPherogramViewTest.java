@@ -82,7 +82,7 @@ public class SwingPherogramViewTest extends AbstractPherogramViewTest {
 			JMenuItem mntmReverseComplement = new JMenuItem("Reverse complement");
 			mntmReverseComplement.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
-					getPherogramView().getTraceCurveView().reverseComplement();
+					getPherogramView().getTraceCurveView().getModel().reverseComplement();
 				}
 			});
 			mnTest.add(mntmReverseComplement);

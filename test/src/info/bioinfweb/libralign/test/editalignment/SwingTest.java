@@ -119,7 +119,7 @@ public class SwingTest extends EditableAlignmentTest {
 		mntmReverseComplement.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				int sequenceID = getAlignmentArea().getSequenceOrder().idByIndex(getAlignmentArea().getSelection().getFirstRow());
-				((PherogramArea)getAlignmentArea().getDataAreas().getSequenceAreas(sequenceID).get(0)).reverseComplement();
+				((PherogramArea)getAlignmentArea().getDataAreas().getSequenceAreas(sequenceID).get(0)).getModel().reverseComplement();
 			}
 		});
 		testMenu.add(mntmReverseComplement);

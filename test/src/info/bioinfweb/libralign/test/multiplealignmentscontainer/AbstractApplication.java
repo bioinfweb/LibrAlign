@@ -39,6 +39,7 @@ import info.bioinfweb.libralign.model.AlignmentModel;
 import info.bioinfweb.libralign.model.implementations.BioJavaAlignmentModel;
 import info.bioinfweb.libralign.model.tokenset.BioJavaTokenSet;
 import info.bioinfweb.libralign.multiplealignments.MultipleAlignmentsContainer;
+import info.bioinfweb.libralign.pherogram.model.PherogramAreaModel;
 import info.bioinfweb.libralign.pherogram.provider.BioJavaPherogramProvider;
 
 import org.biojava.bio.chromatogram.ChromatogramFactory;
@@ -126,13 +127,13 @@ public class AbstractApplication {
 			mainArea.setAlignmentModel(sequenceProvider, false);
 			mainArea.getPaintSettings().getTokenPainterList().set(0, new NucleotideTokenPainter());
 			
-			PherogramArea pherogramArea = new PherogramArea(mainArea.getContentArea(), pherogramProvider);
+			PherogramArea pherogramArea = new PherogramArea(mainArea.getContentArea(), new PherogramAreaModel(pherogramProvider));
 			mainArea.getDataAreas().getSequenceAreas(sequenceProvider.sequenceIDByName("Sequence 4")).add(pherogramArea);
-			pherogramArea.setFirstSeqPos(34 + 5);
-			pherogramArea.setLeftCutPosition(34);
-			pherogramArea.setRightCutPosition(820);
-			pherogramArea.getPherogramAlignmentModel().setShiftChange(38, -1);
-			pherogramArea.getPherogramAlignmentModel().setShiftChange(49, 2);
+			pherogramArea.getModel().setFirstSeqPos(5);
+			pherogramArea.getModel().setLeftCutPosition(34);
+			pherogramArea.getModel().setRightCutPosition(820);
+			pherogramArea.getModel().setShiftChange(38, -1);
+			pherogramArea.getModel().setShiftChange(49, 2);
 			
 			result.getAlignmentAreas().add(mainArea);
 			

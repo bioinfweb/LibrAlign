@@ -30,6 +30,7 @@ import info.bioinfweb.libralign.model.implementations.ArrayListAlignmentModel;
 import info.bioinfweb.libralign.model.implementations.PackedAlignmentModel;
 import info.bioinfweb.libralign.model.tokenset.BioJavaTokenSet;
 import info.bioinfweb.libralign.model.tokenset.TokenSet;
+import info.bioinfweb.libralign.pherogram.model.PherogramAreaModel;
 import info.bioinfweb.libralign.pherogram.provider.BioJavaPherogramProvider;
 
 import java.io.File;
@@ -90,7 +91,7 @@ public class EditableAlignmentTest {
 				}
 				
 				// Add data area:
-				PherogramArea pherogramArea = new PherogramArea(alignmentArea.getContentArea(), pherogramProvider);
+				PherogramArea pherogramArea = new PherogramArea(alignmentArea.getContentArea(), new PherogramAreaModel(pherogramProvider));
 				//pherogramArea.setFirstSeqPos(1);
 				//pherogramArea.setLeftCutPosition(1);
 				alignmentArea.getDataAreas().getSequenceAreas(id).add(pherogramArea);
@@ -133,7 +134,7 @@ public class EditableAlignmentTest {
 			}
 			
 			// Add data area:
-			PherogramArea pherogramArea = new PherogramArea(alignmentArea.getContentArea(), pherogramProvider);
+			PherogramArea pherogramArea = new PherogramArea(alignmentArea.getContentArea(), new PherogramAreaModel(pherogramProvider));
 			alignmentArea.getDataAreas().getSequenceAreas(id).add(pherogramArea);
 		}
 		catch (UnsupportedChromatogramFormatException | IOException e) {
