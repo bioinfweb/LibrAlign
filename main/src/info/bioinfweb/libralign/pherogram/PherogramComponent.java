@@ -19,7 +19,7 @@
 package info.bioinfweb.libralign.pherogram;
 
 
-import info.bioinfweb.libralign.pherogram.provider.PherogramProvider;
+import info.bioinfweb.libralign.pherogram.model.PherogramComponentModel;
 
 import java.awt.Color;
 
@@ -33,18 +33,12 @@ import java.awt.Color;
  */
 public interface PherogramComponent {
 	/**
-	 * Returns the underlying class providing the pherogram data.
+	 * Returns the model providing the base call sequence, the trace curves and the cut positions.
 	 * 
-	 * @return the underlying implementation of {@link PherogramProvider}
+	 * @return the model instance or {@code null} if not model has been specified yet
 	 */
-	public PherogramProvider getPherogramModel();
-	
-	/**
-	 * Reverse complements the underlying pherogram model and swaps the left and right cut positions 
-	 * accordingly.
-	 */
-	public void reverseComplement();
-	
+	public PherogramComponentModel getModel();
+
 //	/**
 //	 * Returns if the vertical scale is calculated automatically depending on the currently visible part
 //	 * of the trace curve.
@@ -98,33 +92,4 @@ public interface PherogramComponent {
 	 * @see #setBaseCallLineColor(Color)
 	 */
 	public void setFormats(PherogramFormats layout);
-	
-	/**
-	 * Returns the first base call index of the pherogram which has not been cut off.
-	 * 
-	 * @return a base call index > 0
-	 */
-	public int getLeftCutPosition();
-	
-	/**
-	 * Sets a new cut position for the left border of the visible part of the pherogram.
-	 * 
-	 * @param baseCallIndex - the index of the first nucleotide in the base call sequence that shall be visible
-	 */
-	public void setLeftCutPosition(int baseCallIndex);
-	
-	/**
-	 * Returns the first base call index of the pherogram that has been cut off (so that the length of the visible
-	 * area of the pherogram can be calculated as {@code getRightCutPosition() - }{@link #getLeftCutPosition()}).
-	 * 
-	 * @return a base call index >= {@link #getLeftCutPosition()}
-	 */
-	public int getRightCutPosition();
-	
-	/**
-	 * Sets a new cut position for the right border of the visible part of the pherogram.
-	 * 
-	 * @param baseCallIndex - the index of the first nucleotide after the visible part in the base call sequence
-	 */
-	public void setRightCutPosition(int baseCallIndex);
 }

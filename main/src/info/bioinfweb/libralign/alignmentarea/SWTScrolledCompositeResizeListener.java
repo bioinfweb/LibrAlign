@@ -93,8 +93,6 @@ public class SWTScrolledCompositeResizeListener implements ControlListener {
 		if (isHideHorizontalBar()) {
 			height += scrolledComposite.getHorizontalBar().getSize().y + scrolledComposite.getBorderWidth(); 
 		}
-		//System.out.println(width + " " + isHideVerticalBar() + " " + height + " " + bounds.height + " " + isHideHorizontalBar());
 		scrolledComposite.setBounds(0, 0, width, height);
-		//System.out.println("  " + container.getBounds() + " " + scrolledComposite.getContent().getSize());
 	}
 }

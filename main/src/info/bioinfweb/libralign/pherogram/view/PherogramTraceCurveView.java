@@ -21,6 +21,7 @@ package info.bioinfweb.libralign.pherogram.view;
 
 import java.awt.Dimension;
 import java.awt.RenderingHints;
+import java.beans.PropertyChangeEvent;
 
 import info.bioinfweb.commons.Math2;
 import info.bioinfweb.commons.collections.SimpleSequenceInterval;
@@ -31,8 +32,10 @@ import info.bioinfweb.libralign.dataarea.implementations.pherogram.PherogramArea
 import info.bioinfweb.libralign.pherogram.PherogramComponent;
 import info.bioinfweb.libralign.pherogram.PherogramFormats;
 import info.bioinfweb.libralign.pherogram.PherogramPainter;
-import info.bioinfweb.libralign.pherogram.provider.PherogramProvider;
-import info.bioinfweb.libralign.pherogram.provider.ReverseComplementPherogramProvider;
+import info.bioinfweb.libralign.pherogram.model.PherogramComponentModel;
+import info.bioinfweb.libralign.pherogram.model.PherogramComponentModelListener;
+import info.bioinfweb.libralign.pherogram.model.PherogramCutPositionChangeEvent;
+import info.bioinfweb.libralign.pherogram.model.PherogramProviderChangeEvent;
 
 
 
@@ -48,35 +51,34 @@ import info.bioinfweb.libralign.pherogram.provider.ReverseComplementPherogramPro
  * @see PherogramArea
  */
 public class PherogramTraceCurveView extends TICComponent implements PherogramComponent {
-	private PherogramProvider pherogramModel;
-	private int leftCutPosition = 0;
-	private int rightCutPosition = 0;
+	private PherogramComponentModel model;
 	private double horizontalScale = 1.0;
 	private double verticalScale = 100.0;
 	private PherogramFormats formats = new PherogramFormats();
 	private PherogramPainter painter = new PherogramPainter(this);
 	private PherogramHeadingView headingView = null;
 	
+	private final PherogramComponentModelListener MODEL_LISTENER = new PherogramComponentModelListener() {
+		@Override
+		public void pherogramProviderChange(PherogramProviderChangeEvent event) {
+			updateUI();
+		}
+
+		@Override
+		public void leftCutPositionChange(PherogramCutPositionChangeEvent event) {
+			repaintAll();
+		}
+
+		@Override
+		public void rightCutPositionChange(PherogramCutPositionChangeEvent event) {
+			repaintAll();
+		}
+	}; 
+	
 	
 	public PherogramTraceCurveView() {
 		super();
   }
-
-
-	@Override
-	public PherogramProvider getPherogramModel() {
-		return pherogramModel;
-	}
-
-	
-	@Override
-	public void reverseComplement() {
-		pherogramModel = pherogramModel.reverseComplement();
-		int oldLeftCutPosition = leftCutPosition;
-		leftCutPosition = pherogramModel.getSequenceLength() - rightCutPosition;
-		rightCutPosition = pherogramModel.getSequenceLength() - oldLeftCutPosition;
-		repaintAll();  // assignSize() should not necessary. 
-	}
 
 
 	/**
@@ -101,37 +103,27 @@ public class PherogramTraceCurveView extends TICComponent implements PherogramCo
 		}
 	}
 	
-	public void setProvider(PherogramProvider pherogram) {
-		this.pherogramModel = pherogram;
-		leftCutPosition = 0;
-		rightCutPosition = pherogram.getSequenceLength();
-		updateUI();
+	
+	@Override
+	public PherogramComponentModel getModel() {
+		return model;
 	}
 
 
-	@Override
-	public int getLeftCutPosition() {
-		return leftCutPosition;
-	}
-
-
-	@Override
-	public void setLeftCutPosition(int baseCallIndex) {
-		leftCutPosition = baseCallIndex;
-		repaint();
-	}
-
-
-	@Override
-	public int getRightCutPosition() {
-		return rightCutPosition;
-	}
-
-
-	@Override
-	public void setRightCutPosition(int baseCallIndex) {
-		rightCutPosition = baseCallIndex;
-		repaint();
+	public void setModel(PherogramComponentModel model) {
+		if (model != this.model) {
+			if (model == null) {
+				throw new NullPointerException("Specifying a null model is not allowed.");
+			}
+			else {
+				if (this.model != null) {
+					this.model.removeListener(MODEL_LISTENER);
+				}
+				this.model = model;
+				updateUI();
+				this.model.addListener(MODEL_LISTENER);
+			}
+		}
 	}
 
 
@@ -194,8 +186,8 @@ public class PherogramTraceCurveView extends TICComponent implements PherogramCo
 
 
 	public int getWidth() {
-		if (getPherogramModel() != null) {
-			return (int)Math2.roundUp(getPherogramModel().getTraceLength() * getHorizontalScale());
+		if (getModel() != null) {
+			return (int)Math2.roundUp(getModel().getPherogramProvider().getTraceLength() * getHorizontalScale());
 		}
 		else {
 			return 0;

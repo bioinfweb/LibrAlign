@@ -19,14 +19,12 @@
 package info.bioinfweb.libralign.dataarea.implementations.pherogram;
 
 
-import info.bioinfweb.commons.Math2;
 import info.bioinfweb.commons.collections.SimpleSequenceInterval;
 import info.bioinfweb.commons.tic.TICPaintEvent;
 import info.bioinfweb.libralign.alignmentarea.content.AlignmentContentArea;
 import info.bioinfweb.libralign.dataarea.DataArea;
 import info.bioinfweb.libralign.dataarea.DataAreaListType;
 import info.bioinfweb.libralign.model.AlignmentModel;
-import info.bioinfweb.libralign.model.AlignmentModelUtils;
 import info.bioinfweb.libralign.model.concatenated.ConcatenatedAlignmentModel;
 import info.bioinfweb.libralign.model.events.SequenceChangeEvent;
 import info.bioinfweb.libralign.model.events.SequenceRenamedEvent;
@@ -36,7 +34,12 @@ import info.bioinfweb.libralign.pherogram.PherogramComponent;
 import info.bioinfweb.libralign.pherogram.PherogramFormats;
 import info.bioinfweb.libralign.pherogram.PherogramPainter;
 import info.bioinfweb.libralign.pherogram.distortion.ScaledPherogramDistortion;
-import info.bioinfweb.libralign.pherogram.provider.PherogramProvider;
+import info.bioinfweb.libralign.pherogram.model.PherogramAlignmentRelation;
+import info.bioinfweb.libralign.pherogram.model.PherogramAreaModel;
+import info.bioinfweb.libralign.pherogram.model.PherogramComponentModelListener;
+import info.bioinfweb.libralign.pherogram.model.PherogramCutPositionChangeEvent;
+import info.bioinfweb.libralign.pherogram.model.PherogramProviderChangeEvent;
+import info.bioinfweb.libralign.pherogram.view.PherogramTraceCurveView;
 import info.bioinfweb.libralign.pherogram.view.PherogramView;
 
 import java.awt.Color;
@@ -61,33 +64,90 @@ public class PherogramArea extends DataArea implements PherogramComponent {
 	public static final int DEFAULT_HEIGHT_FACTOR = 5;
 	
 	
-	private PherogramProvider pherogramModel;
-	private PherogramAlignmentModel pherogramAlignmentModel = new PherogramAlignmentModel(this);
-	private int firstSeqPos;
-	private int leftCutPosition;
-	private int rightCutPosition;
+	private PherogramAreaModel model;
+	private boolean updateEditableSequence = true;
 	private double verticalScale;
 	private PherogramFormats formats = new PherogramFormats();
 	private PherogramPainter painter = new PherogramPainter(this);
+
+	private final PherogramComponentModelListener MODEL_LISTENER = new PherogramComponentModelListener() {
+		@Override
+		public void pherogramProviderChange(PherogramProviderChangeEvent event) {
+			getLabeledAlignmentArea().getDataAreas().setLocalMaxLengthBeforeAfterRecalculate();  // Could happen if cut lengths at the beginning and end differ.
+			getOwner().getOwner().assignSizeToAll();
+			repaint();  // Necessary in SWT, if no resize happened. 
+		}
+
+		
+		@Override
+		public void leftCutPositionChange(PherogramCutPositionChangeEvent event) {
+			updateChangedCutPosition();
+			
+			if (isUpdateEditableSequence() && !getOwner().getOwner().getAlignmentModel().isTokensReadOnly()) {
+				if (event.getNewBaseCallIndex() < event.getOldBaseCallIndex()) {
+					copyBaseCallSequence(event.getNewBaseCallIndex(), event.getOldBaseCallIndex());  // Needs to be called after all changes are performed in order to calculate correct indices.
+				}
+				else {
+					int oldEditableIndex = event.getOldEditableIndex().getBefore();
+					int newEditableIndex = event.getNewEditableIndex().getBefore();
+					if (oldEditableIndex < newEditableIndex) {
+						setGaps(oldEditableIndex, newEditableIndex - oldEditableIndex);
+					}
+				}
+			}
+		}
+
+		
+		@Override
+		public void rightCutPositionChange(PherogramCutPositionChangeEvent event) {
+			updateChangedCutPosition();
+			
+			if (isUpdateEditableSequence() && !getOwner().getOwner().getAlignmentModel().isTokensReadOnly()) {
+				if (event.getOldBaseCallIndex() < event.getNewBaseCallIndex()) {
+					copyBaseCallSequence(event.getOldBaseCallIndex(), event.getNewBaseCallIndex());  // Needs to be called after all changes are performed in order to calculate correct indices.
+				}
+				else {
+					int oldEditableIndex = event.getOldEditableIndex().getBefore();
+					if (event.getOldBaseCallIndex() == getModel().getPherogramProvider().getSequenceLength()) {
+						oldEditableIndex++;  // corresponding is OUT_OF_RANGE and "before" is one left.  
+					}
+					int newEditableIndex = event.getNewEditableIndex().getCorresponding();
+					if (newEditableIndex < oldEditableIndex) {
+						setGaps(newEditableIndex, oldEditableIndex - newEditableIndex);
+					}
+				}
+			}
+		}
+	}; 
 	
 	
 	/**
 	 * Creates a new instance of this class.
 	 * 
-	 * @param owner - the alignment area that will be containing the returned data area instance
-	 * @param pherogram - the provider for the pherogram data to be displayed by the returned instance
+	 * @param owner the alignment area that will be containing the returned data area instance
+	 * @param model the provider for the pherogram data to be displayed by the returned instance (Note that each
+	 *        instance of this class needs a separate model instance. {@code model} can anyway be shared with instances
+	 *        of {@link PherogramTraceCurveView}.)
+	 * @throws IllegalArgumentException if {@code model} is already owned by another pherogram area 
 	 */
-	public PherogramArea(AlignmentContentArea owner, PherogramProvider pherogram) {
-		super(owner, owner.getOwner());  // Pherogram areas are always directly attached to their sequences. 
-		this.pherogramModel = pherogram;
-		verticalScale = getHeight();
-		leftCutPosition = 0;
-		rightCutPosition = pherogram.getSequenceLength();
+	public PherogramArea(AlignmentContentArea owner, PherogramAreaModel model) {
+		super(owner, owner.getOwner());  // Pherogram areas are always directly attached to their sequences.
+		if (model.getOwner() == null) {
+			model.setOwner(this);
+		}
+		if (model.getOwner() != this) {
+			throw new IllegalArgumentException("The specified model is already associated with another pherogram area.");
+		}
+		else {
+			this.model = model;
+			model.addListener(MODEL_LISTENER);
+			verticalScale = getHeight();
+		}
 	}
 	
 	
 	protected SimpleSequenceInterval calculatePaintRange(TICPaintEvent e) {
-		PherogramAlignmentRelation lowerBorderRelation = getPherogramAlignmentModel().baseCallIndexByEditableIndex(
+		PherogramAlignmentRelation lowerBorderRelation = getModel().baseCallIndexByEditableIndex(
 				getLabeledAlignmentArea().getContentArea().columnByPaintX(e.getRectangle().x) - 2);  // - 2 because two (expiremetally obtained) half visible column should be painted. (Why are this two?) 
 		int lowerBorder;
 		if (lowerBorderRelation.getCorresponding() == PherogramAlignmentRelation.GAP) {
@@ -97,14 +157,14 @@ public class PherogramArea extends DataArea implements PherogramComponent {
 			lowerBorder = 0;
 		}
 
-		PherogramAlignmentRelation upperBorderRelation = getPherogramAlignmentModel().baseCallIndexByEditableIndex(
+		PherogramAlignmentRelation upperBorderRelation = getModel().baseCallIndexByEditableIndex(
 				getLabeledAlignmentArea().getContentArea().columnByPaintX(e.getRectangle().x + e.getRectangle().width) + 2);  // + 1 + 1 because BioJava indices start with 1 and one half visible column should be painted.
 		int upperBorder;
 		if (upperBorderRelation.getCorresponding() == PherogramAlignmentRelation.GAP) {
 			upperBorder = upperBorderRelation.getAfter();
 		}
 		else {  // OUT_OF_RANGE or valid index
-			upperBorder = getPherogramModel().getSequenceLength() - 1; 
+			upperBorder = getModel().getPherogramProvider().getSequenceLength() - 1; 
 		}
 
 		return new SimpleSequenceInterval(lowerBorder, upperBorder);
@@ -116,8 +176,10 @@ public class PherogramArea extends DataArea implements PherogramComponent {
 		Graphics2D g = e.getGraphics();
 		g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 		
-		double leftX = getLabeledAlignmentArea().getContentArea().paintXByColumn(getPherogramAlignmentModel().editableIndexByBaseCallIndex(getLeftCutPosition()).getBefore()); // getAfter());
-		double rightX = getLabeledAlignmentArea().getContentArea().paintXByColumn(getPherogramAlignmentModel().editableIndexByBaseCallIndex(getRightCutPosition() - 1).getAfter() + 1);
+		double leftX = getLabeledAlignmentArea().getContentArea().paintXByColumn(
+				getModel().editableIndexByBaseCallIndex(getModel().getLeftCutPosition()).getBefore()); // getAfter());
+		double rightX = getLabeledAlignmentArea().getContentArea().paintXByColumn(
+				getModel().editableIndexByBaseCallIndex(getModel().getRightCutPosition() - 1).getAfter() + 1);
 		
 		// Draw cut off background:
 		g.setColor(getFormats().getCutBackgroundColor());
@@ -141,10 +203,10 @@ public class PherogramArea extends DataArea implements PherogramComponent {
 		g.fill(new Rectangle2D.Double(leftX, e.getRectangle().y, rightX - leftX, e.getRectangle().height));
 
 		SimpleSequenceInterval paintRange = calculatePaintRange(e);
-		double x = getLabeledAlignmentArea().getContentArea().paintXByColumn(getFirstSeqPos() - getLeftCutPosition());
+		double x = getLabeledAlignmentArea().getContentArea().paintXByColumn(getModel().getFirstSeqPos() - getModel().getLeftCutPosition());
 		double y = 0; 
 		double height = getHeight();
-		ScaledPherogramDistortion distortion = getPherogramAlignmentModel().createPherogramDistortion();
+		ScaledPherogramDistortion distortion = getModel().createPherogramDistortion();
 		
 		// Paint gaps:
 		if (getLabeledAlignmentArea().getAlignmentModel() instanceof ConcatenatedAlignmentModel) {
@@ -183,96 +245,63 @@ public class PherogramArea extends DataArea implements PherogramComponent {
 	}
 
 
-	/**
-	 * Returns the position in the sequence this pherogram is attached to where the output of the visible part
-	 * of the pherogram starts.
-	 * 
-	 * @return a valid index in the sequence carrying this data area 
-	 */
-	public int getFirstSeqPos() {
-		return firstSeqPos;
-	}
-
-
-	/**
-	 * Sets the index in the sequence this pherogram is attached to where the displaying of the visible part 
-	 * of the pherogram starts. 
-	 * 
-	 * @param firstSeqPos - the new index
-	 */
-	public void setFirstSeqPos(int firstSeqPos) {
-		if (Math2.isBetween(firstSeqPos, 0,  //TODO Also check right cut position to match the sequence end?
-				getLabeledAlignmentArea().getAlignmentModel().getSequenceLength(getList().getLocation().getSequenceID()) - 1)) {
-			
-			this.firstSeqPos = firstSeqPos;
-			getList().getOwner().setLocalMaxLengthBeforeAfterStartRecalculate();
-		}
-		else {
-			throw new IndexOutOfBoundsException(firstSeqPos + " is not a valid index to attach this pherogram to.");
-		}
-	}
-
-
 	@Override
-	public PherogramProvider getPherogramModel() {
-		return pherogramModel;
+	public PherogramAreaModel getModel() {
+		return model;
 	}
   
 	
   /**
-   * Reverse complements the displayed pherogram, including its cut positions and distortions.
+   * Indicates whether the editable sequence should be updated if the cut positions of the model
+   * are modified. 
    * <p>
-   * The editable sequence is not changed by this method and needs to reverse complemented independently.
-   * The implementation of this needs to make sure to replace all tokens using 
-   * {@link AlignmentModel#setTokenAt(int, int, Object)} or {@link AlignmentModel#setTokenAt(int, int, Object)}
-   * and not use insertion and deletion methods for this. Otherwise new invalid distortions would be created
-   * in the pherogram.
+   * Note that such updates only affect parts of the editable sequence that are or were associated with 
+   * the cut off parts of the pherogram. In a reverse complement operation the editable sequence between
+   * the cut positions will never be updated. This needs to be done in application code e.g. by calling
+   * {@link #copyBaseCallSequence(int, int)}. 
    * 
-   * @see AlignmentModelUtils#reverseComplement(AlignmentModel, int)
-   * @see info.bioinfweb.libralign.pherogram.PherogramComponent#reverseComplement()
+   * @return {@code true} if updated in the editable sequence are performed automatically, {@code false} otherwise
+   * @see #copyBaseCallSequence(int, int)
    */
-  @Override
-	public void reverseComplement() {
-		pherogramModel = pherogramModel.reverseComplement();
-		
-		int oldLeftCutPosition = leftCutPosition;
-		leftCutPosition = pherogramModel.getSequenceLength() - rightCutPosition;
-		rightCutPosition = pherogramModel.getSequenceLength() - oldLeftCutPosition;
-		
-		getPherogramAlignmentModel().reverseComplement();
-		
-		getList().getOwner().setLocalMaxLengthBeforeAfterStartRecalculate();  // Could happen if cut lengths at the beginning and end differ.
-		getOwner().getOwner().assignSizeToAll();
-		repaint();  // Necessary in SWT, if no resize happened. 
+  public boolean isUpdateEditableSequence() {
+		return updateEditableSequence;
 	}
 
 
 	/**
-   * Returns a model instance defining the alignment of this pherogram onto the associated sequence
-   * in the alignment.
-   * 
-   * @return the model instance currently used
-   */
-  public PherogramAlignmentModel getPherogramAlignmentModel() {
-  	return pherogramAlignmentModel;
-  }
-  
-  
-  private void updateChangedCutPosition() {
-		getPherogramAlignmentModel().deleteCutOffDistortions();
-		getList().getOwner().setLocalMaxLengthBeforeAfterStartRecalculate();
+	 * Specifies whether updated of the editable sequence shall be performed by this class automatically,
+	 * if the cut positions in the underlying model are changed.
+	 * 
+	 * @param updateEditableSequence Specify {@code true} here, if automatic updated shall be performed from
+	 *        now on or {@code false} if the editable sequence shall be left unchanged from now on 
+	 */
+	public void setUpdateEditableSequence(boolean updateEditableSequence) {
+		this.updateEditableSequence = updateEditableSequence;
+	}
+
+
+	private void updateChangedCutPosition() {
+		getLabeledAlignmentArea().getDataAreas().setLocalMaxLengthBeforeAfterRecalculate();
 		repaint();
   }
   
   
+  /**
+   * Copies a part of the base call sequence from the underlying model to the editable sequence this data
+   * area is attached to.
+   * 
+   * @param startBaseCallIndex the index of the first position in the base call sequence to be copied 
+   * @param endBaseCallIndex the index after the last position of the base call sequence to be copied
+   * @see #isUpdateEditableSequence()
+   */
   @SuppressWarnings({"rawtypes", "unchecked"})
 	public void copyBaseCallSequence(int startBaseCallIndex, int endBaseCallIndex) {
   	int sequenceID = getList().getLocation().getSequenceID();
   	AlignmentModel model = getLabeledAlignmentModel();
   	TokenSet tokenSet = model.getTokenSet();
   	for (int baseCallIndex = startBaseCallIndex; baseCallIndex < endBaseCallIndex; baseCallIndex++) {
-  		String base = getPherogramModel().getBaseCall(baseCallIndex).getBase().toUpperCase();
-			int editableIndex = getPherogramAlignmentModel().editableIndexByBaseCallIndex(baseCallIndex).getCorresponding();
+  		String base = getModel().getPherogramProvider().getBaseCall(baseCallIndex).getBase().toUpperCase();
+			int editableIndex = getModel().editableIndexByBaseCallIndex(baseCallIndex).getCorresponding();
   		if ((editableIndex >= 0) && (!base.equals(tokenSet.representationByToken(model.getTokenAt(sequenceID, editableIndex))))) {
   			model.setTokenAt(sequenceID, editableIndex, tokenSet.tokenByRepresentation(base));
   		}
@@ -291,54 +320,48 @@ public class PherogramArea extends DataArea implements PherogramComponent {
   }
 
 
-	@Override
-	public int getLeftCutPosition() {
-		return leftCutPosition;
-	}
-
-
-	/**
-	 * Defines a new left border where the pherogram is cut off. Pherogram distortions in cut off areas are
-	 * automatically deleted by this method. The tokens at newly aligned positions in the editable sequence 
-	 * are replaced by the tokens from the base call sequence, if a the cut position was moved left. 
-	 * <p>
-	 * If the  left cut position is changed, the first sequence position is moved accordingly, so that the 
-	 * visible part of the pherogram still correctly aligns to the editable sequence. If the right cut 
-	 * position would be located left of the left cut position after this operation, it will be moved to 
-	 * {@code baseCallIndex} as well. 
-	 * 
-	 * @param baseCallIndex the new first visible index in the base call sequence
-	 * @throws IndexOutOfBoundsException if {@code baseCallIndex} is not between 0 and the last base call index
-	 */
-	@Override
-	public void setLeftCutPosition(int baseCallIndex) {
-		if (Math2.isBetween(baseCallIndex, 0, getPherogramModel().getSequenceLength() - 1)) {
-			int oldBaseCallIndex = leftCutPosition;
-			int oldEditableIndex = getPherogramAlignmentModel().editableIndexByBaseCallIndex(leftCutPosition).getBefore();  // Needs to be stored before any distortions are deleted.
-			int newEditableIndex = getPherogramAlignmentModel().editableIndexByBaseCallIndex(baseCallIndex).getBefore();  // Needs to be stored before any distortions are deleted.
-
-			setFirstSeqPos(getFirstSeqPos() + baseCallIndex - getLeftCutPosition());
-			leftCutPosition = baseCallIndex;
-			if (getLeftCutPosition() > getRightCutPosition()) {
-				setRightCutPosition(baseCallIndex);  // Calls updateChangedCutPosition().
-			}
-			else {
-				updateChangedCutPosition();
-			}
-			
-			if (!getOwner().getOwner().getAlignmentModel().isTokensReadOnly()) {
-				if (baseCallIndex < oldBaseCallIndex) {
-					copyBaseCallSequence(baseCallIndex, oldBaseCallIndex);  // Needs to be called after all changes are performed in order to calculate correct indices.
-				}
-				else if (oldEditableIndex < newEditableIndex) {
-					setGaps(oldEditableIndex, newEditableIndex - oldEditableIndex);
-				}
-			}
-		}
-		else {
-			throw new IndexOutOfBoundsException("The base call index " + baseCallIndex + " is not contained in this pherogram.");
-		}
-	}
+//	/**
+//	 * Defines a new left border where the pherogram is cut off. Pherogram distortions in cut off areas are
+//	 * automatically deleted by this method. The tokens at newly aligned positions in the editable sequence 
+//	 * are replaced by the tokens from the base call sequence, if a the cut position was moved left. 
+//	 * <p>
+//	 * If the  left cut position is changed, the first sequence position is moved accordingly, so that the 
+//	 * visible part of the pherogram still correctly aligns to the editable sequence. If the right cut 
+//	 * position would be located left of the left cut position after this operation, it will be moved to 
+//	 * {@code baseCallIndex} as well. 
+//	 * 
+//	 * @param baseCallIndex the new first visible index in the base call sequence
+//	 * @throws IndexOutOfBoundsException if {@code baseCallIndex} is not between 0 and the last base call index
+//	 */
+//	@Override
+//	public void setLeftCutPosition(int baseCallIndex) {
+//		if (Math2.isBetween(baseCallIndex, 0, getPherogramModel().getSequenceLength() - 1)) {
+//			int oldBaseCallIndex = leftCutPosition;
+//			int oldEditableIndex = getModel().editableIndexByBaseCallIndex(leftCutPosition).getBefore();  // Needs to be stored before any distortions are deleted.
+//			int newEditableIndex = getModel().editableIndexByBaseCallIndex(baseCallIndex).getBefore();  // Needs to be stored before any distortions are deleted.
+//
+//			setFirstSeqPos(getFirstSeqPos() + baseCallIndex - getLeftCutPosition());
+//			leftCutPosition = baseCallIndex;
+//			if (getLeftCutPosition() > getRightCutPosition()) {
+//				setRightCutPosition(baseCallIndex);  // Calls updateChangedCutPosition().
+//			}
+//			else {
+//				updateChangedCutPosition();
+//			}
+//			
+//			if (!getOwner().getOwner().getAlignmentModel().isTokensReadOnly()) {
+//				if (baseCallIndex < oldBaseCallIndex) {
+//					copyBaseCallSequence(baseCallIndex, oldBaseCallIndex);  // Needs to be called after all changes are performed in order to calculate correct indices.
+//				}
+//				else if (oldEditableIndex < newEditableIndex) {
+//					setGaps(oldEditableIndex, newEditableIndex - oldEditableIndex);
+//				}
+//			}
+//		}
+//		else {
+//			throw new IndexOutOfBoundsException("The base call index " + baseCallIndex + " is not contained in this pherogram.");
+//		}
+//	}
 	
 	
 	/**
@@ -355,64 +378,58 @@ public class PherogramArea extends DataArea implements PherogramComponent {
 	 *         pherogram
 	 */
 	public boolean setLeftCutPositionBySelection() {
-		int pos = getPherogramAlignmentModel().baseCallIndexByEditableIndex(
+		int pos = getModel().baseCallIndexByEditableIndex(
 				getOwner().getOwner().getSelection().getFirstColumn()).getBefore();
 		boolean result = pos != PherogramAlignmentRelation.OUT_OF_RANGE; 
 		if (result) {
-			setLeftCutPosition(pos);
+			getModel().setLeftCutPosition(pos);
 		}
 		return result;
 	}
 
 
-	@Override
-	public int getRightCutPosition() {
-		return rightCutPosition;
-	}
-
-
-	/**
-	 * Defines a new right border where the pherogram is cut off.Pherogram distortions in cut off areas are
-	 * automatically deleted by this method. The tokens at newly aligned positions in the editable sequence 
-	 * are replaced by the tokens from the base call sequence, if a the cut position was moved right.
-	 * <p>
-	 * If the left cut position would be located right of the right cut position after this operation, it will
-	 * be moved to {@code baseCallIndex} as well. 
-	 * 
-	 * @param baseCallIndex the new first invisible index in the base call sequence
-	 * @throws IndexOutOfBoundsException if {@code baseCallIndex} is not between 0 and the last base call index
-	 */
-	@Override
-	public void setRightCutPosition(int baseCallIndex) {
-		if (Math2.isBetween(baseCallIndex, 0, getPherogramModel().getSequenceLength() - 1)) {
-			int oldValue = rightCutPosition;
-			int oldEditableIndex = getPherogramAlignmentModel().editableIndexByBaseCallIndex(rightCutPosition).getBefore();  // Needs to be stored before any distortions are deleted.
-			if (rightCutPosition == getPherogramModel().getSequenceLength()) {
-				oldEditableIndex++;  // corresponding is OUT_OF_RANGE and "before" is one left.  
-			}
-			int newEditableIndex = getPherogramAlignmentModel().editableIndexByBaseCallIndex(baseCallIndex).getCorresponding();  // Needs to be stored before any distortions are deleted.
-			
-			rightCutPosition = baseCallIndex;
-			if (getLeftCutPosition() > getRightCutPosition()) {
-				setLeftCutPosition(baseCallIndex);  // Calls updateChangedCutPosition().
-			}
-			else {
-				updateChangedCutPosition();
-			}
-			
-			if (!getOwner().getOwner().getAlignmentModel().isTokensReadOnly()) {
-				if (oldValue < baseCallIndex) {
-					copyBaseCallSequence(oldValue, baseCallIndex);  // Needs to be called after all changes are performed in order to calculate correct indices.
-				}
-				else if (newEditableIndex < oldEditableIndex) {
-					setGaps(newEditableIndex, oldEditableIndex - newEditableIndex);
-				}
-			}
-		}
-		else {
-			throw new IndexOutOfBoundsException("The base call index " + baseCallIndex + " is not contained in this pherogram.");
-		}
-	}
+//	/**
+//	 * Defines a new right border where the pherogram is cut off.Pherogram distortions in cut off areas are
+//	 * automatically deleted by this method. The tokens at newly aligned positions in the editable sequence 
+//	 * are replaced by the tokens from the base call sequence, if a the cut position was moved right.
+//	 * <p>
+//	 * If the left cut position would be located right of the right cut position after this operation, it will
+//	 * be moved to {@code baseCallIndex} as well. 
+//	 * 
+//	 * @param baseCallIndex the new first invisible index in the base call sequence
+//	 * @throws IndexOutOfBoundsException if {@code baseCallIndex} is not between 0 and the last base call index
+//	 */
+//	@Override
+//	public void setRightCutPosition(int baseCallIndex) {
+//		if (Math2.isBetween(baseCallIndex, 0, getPherogramModel().getSequenceLength() - 1)) {
+//			int oldValue = rightCutPosition;
+//			int oldEditableIndex = getModel().editableIndexByBaseCallIndex(rightCutPosition).getBefore();  // Needs to be stored before any distortions are deleted.
+//			if (rightCutPosition == getPherogramModel().getSequenceLength()) {
+//				oldEditableIndex++;  // corresponding is OUT_OF_RANGE and "before" is one left.  
+//			}
+//			int newEditableIndex = getModel().editableIndexByBaseCallIndex(baseCallIndex).getCorresponding();  // Needs to be stored before any distortions are deleted.
+//			
+//			rightCutPosition = baseCallIndex;
+//			if (getLeftCutPosition() > getRightCutPosition()) {
+//				setLeftCutPosition(baseCallIndex);  // Calls updateChangedCutPosition().
+//			}
+//			else {
+//				updateChangedCutPosition();
+//			}
+//			
+//			if (!getOwner().getOwner().getAlignmentModel().isTokensReadOnly()) {
+//				if (oldValue < baseCallIndex) {
+//					copyBaseCallSequence(oldValue, baseCallIndex);  // Needs to be called after all changes are performed in order to calculate correct indices.
+//				}
+//				else if (newEditableIndex < oldEditableIndex) {
+//					setGaps(newEditableIndex, oldEditableIndex - newEditableIndex);
+//				}
+//			}
+//		}
+//		else {
+//			throw new IndexOutOfBoundsException("The base call index " + baseCallIndex + " is not contained in this pherogram.");
+//		}
+//	}
 	
 	
 	/**
@@ -424,15 +441,18 @@ public class PherogramArea extends DataArea implements PherogramComponent {
 	 * attached to, is contained in the selection. It just relies on the selected columns.
 	 * 
 	 * @return {@code true} if the right cut position was changed according to the selection (or the right cut position), 
-	 *         {@code false} if that was not possible because the current right end of the selection lies outside of the 
-	 *         pherogram
+	 *         {@code false} if that was not possible
 	 */
 	public boolean setRightCutPositionBySelection() {
-		int pos = getPherogramAlignmentModel().baseCallIndexByEditableIndex(
-				getOwner().getOwner().getSelection().getLastColumn()).getAfter();
-		boolean result = pos != PherogramAlignmentRelation.OUT_OF_RANGE; 
+		PherogramAlignmentRelation relation = getModel().baseCallIndexByEditableIndex(
+				getOwner().getOwner().getSelection().getLastColumn()); 
+		int pos = relation.getAfter();
+		if (pos == PherogramAlignmentRelation.OUT_OF_RANGE) {
+			pos = relation.getBefore() + 1;  // Set cut position behind the end of the pherogram.
+		}
+		boolean result = pos != PherogramAlignmentRelation.OUT_OF_RANGE;  //TODO This would only be possible, if the pherogram would not be attached to the sequence and can be removed? 
 		if (result) {
-			setRightCutPosition(pos);
+			getModel().setRightCutPosition(pos);
 		}
 		return result;
 	}
@@ -464,16 +484,16 @@ public class PherogramArea extends DataArea implements PherogramComponent {
 
 	@Override
 	public int getLengthBeforeStart() {
-		return Math.max(0, getLabeledAlignmentArea().getContentArea().paintXByColumn(getPherogramAlignmentModel().baseCallIndexByEditableIndex(0).getAfter()));
+		return Math.max(0, getLabeledAlignmentArea().getContentArea().paintXByColumn(getModel().baseCallIndexByEditableIndex(0).getAfter()));
 	}
 
 
 	@Override
 	public int getLengthAfterEnd() {
-		int lastEditableIndex = getPherogramAlignmentModel().editableIndexByBaseCallIndex(getRightCutPosition() - 1).getAfter();
+		int lastEditableIndex = getModel().editableIndexByBaseCallIndex(getModel().getRightCutPosition() - 1).getAfter();
 		double lengthOfOutputAfterAlignmentStart = getLabeledAlignmentArea().getContentArea().paintXByColumn(lastEditableIndex) + 
-				(1 + getPherogramModel().getSequenceLength() - getRightCutPosition()) *  
-				getOwner().getOwner().getPaintSettings().getTokenWidth(Math.max(0, getFirstSeqPos())) - getLengthBeforeStart();  // Math.max(0, ...) is used because this method might be called during the execution of setter cut position method, when other properties are not yet adjusted.  
+				(1 + getModel().getPherogramProvider().getSequenceLength() - getModel().getRightCutPosition()) *  
+				getOwner().getOwner().getPaintSettings().getTokenWidth(Math.max(0, getModel().getFirstSeqPos())) - getLengthBeforeStart();  // Math.max(0, ...) is used because this method might be called during the execution of setter cut position method, when other properties are not yet adjusted.  
 		return Math.max(0, (int)Math.round(lengthOfOutputAfterAlignmentStart - getOwner().getOwner().getLocalMaximumNeededAlignmentWidth()));
 	}
 
@@ -500,29 +520,29 @@ public class PherogramArea extends DataArea implements PherogramComponent {
 				(e.getSequenceID() == getList().getLocation().getSequenceID())) {
 			
 			int addend = getLabeledAlignmentArea().getEditSettings().isInsertLeftInDataArea() ? -1 : 0;
-			int lastSeqPos = getPherogramAlignmentModel().editableIndexByBaseCallIndex(getRightCutPosition() - 1).getAfter() 
+			int lastSeqPos = getModel().editableIndexByBaseCallIndex(getModel().getRightCutPosition() - 1).getAfter() 
 					- addend;
 			if (e.getStartIndex() <= lastSeqPos) {  // Do not process edits behind the pherogram.
-				int tokensBefore = Math.min(e.getAffectedTokens().size(), Math.max(0, getFirstSeqPos() - e.getStartIndex() - addend));
+				int tokensBefore = Math.min(e.getAffectedTokens().size(), Math.max(0, getModel().getFirstSeqPos() - e.getStartIndex() - addend));
 				int tokensAfter = Math.max(0, e.getAffectedTokens().size() - Math.max(0, lastSeqPos - e.getStartIndex()) + addend);
 				int tokensInside = e.getAffectedTokens().size() - tokensBefore - tokensAfter;
 				
 				switch (e.getType()) {
 					case INSERTION:
 						if (tokensBefore > 0) {
-							setFirstSeqPos(getFirstSeqPos() + tokensBefore);
+							getModel().setFirstSeqPos(getModel().getFirstSeqPos() + tokensBefore);
 						}
 						if (tokensInside > 0) {
-							getPherogramAlignmentModel().addShiftChange(getPherogramAlignmentModel().baseCallIndexByEditableIndex(
+							getModel().addShiftChange(getModel().baseCallIndexByEditableIndex(
 									Math.max(0, e.getStartIndex() + tokensBefore + addend)).getBeforeValidIndex(), tokensInside);
 						}
 						break;
 					case DELETION:
 						if (tokensBefore > 0) {
-							setFirstSeqPos(getFirstSeqPos() - tokensBefore);
+							getModel().setFirstSeqPos(getModel().getFirstSeqPos() - tokensBefore);
 						}
 						if (tokensInside > 0) {
-							getPherogramAlignmentModel().addShiftChange(getPherogramAlignmentModel().baseCallIndexByEditableIndex(
+							getModel().addShiftChange(getModel().baseCallIndexByEditableIndex(
 									e.getStartIndex() + tokensBefore).getAfterValidIndex(), -e.getAffectedTokens().size());
 						}
 						break;

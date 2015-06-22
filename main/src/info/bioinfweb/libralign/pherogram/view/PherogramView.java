@@ -33,7 +33,7 @@ import info.bioinfweb.libralign.dataarea.implementations.pherogram.PherogramArea
 
 
 /**
- * GUI component that displays a scrollable pherogram with undistorted trace curves, its base base call sequence and 
+ * GUI component that displays a scrollable pherogram with undistorted trace curves, its base call sequence and 
  * nucleotide probabilities.
  * <p>
  * This component is the combination of {@link PherogramTraceCurveView} and {@link PherogramHeadingView} in according

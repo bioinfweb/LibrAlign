@@ -194,7 +194,7 @@ public class DataAreaModel {
 	 * LibrAlign does not recalculate these values on every call for performance reasons. Usually application code 
 	 * will not have to call this method directly.
 	 */
-	public void setLocalMaxLengthBeforeAfterStartRecalculate() {
+	public void setLocalMaxLengthBeforeAfterRecalculate() {
 		localMaxLengthBeforeStart = AlignmentLabelArea.RECALCULATE_VALUE;
     localMaxLengthAfterEnd = AlignmentLabelArea.RECALCULATE_VALUE;
 	}

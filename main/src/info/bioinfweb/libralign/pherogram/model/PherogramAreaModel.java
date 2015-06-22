@@ -1,14 +1,14 @@
 /*
  * LibrAlign - A GUI library for displaying and editing multiple sequence alignments and attached data
- * Copyright (C) 2014-2015  Ben Stöver
+ * Copyright (C) 2014 - 2015  Ben Stöver
  * <http://bioinfweb.info/LibrAlign>
  * 
- * This program is free software: you can redistribute it and/or modify
+ * This file is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
  * 
- * This program is distributed in the hope that it will be useful,
+ * This file is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
@@ -16,60 +16,152 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package info.bioinfweb.libralign.dataarea.implementations.pherogram;
+package info.bioinfweb.libralign.pherogram.model;
 
+
+import info.bioinfweb.commons.Math2;
+import info.bioinfweb.libralign.dataarea.implementations.pherogram.PherogramArea;
+import info.bioinfweb.libralign.model.AlignmentModel;
+import info.bioinfweb.libralign.model.concatenated.ConcatenatedAlignmentModel;
+import info.bioinfweb.libralign.model.data.DataModel;
+import info.bioinfweb.libralign.pherogram.PherogramUtils;
+import info.bioinfweb.libralign.pherogram.distortion.GapPattern;
+import info.bioinfweb.libralign.pherogram.distortion.ScaledPherogramDistortion;
+import info.bioinfweb.libralign.pherogram.provider.PherogramProvider;
+import info.bioinfweb.libralign.pherogram.view.PherogramTraceCurveView;
 
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
 
-import info.bioinfweb.commons.Math2;
-import info.bioinfweb.libralign.model.AlignmentModel;
-import info.bioinfweb.libralign.model.concatenated.ConcatenatedAlignmentModel;
-import info.bioinfweb.libralign.pherogram.PherogramUtils;
-import info.bioinfweb.libralign.pherogram.distortion.GapPattern;
-import info.bioinfweb.libralign.pherogram.distortion.ScaledPherogramDistortion;
 
 
-
-/**
- * Stores data defining the alignment between a pherogram and the sequence in an alignment area it is associated with.
- * 
- * @author Ben St&ouml;ver
- */
-public class PherogramAlignmentModel {
+public class PherogramAreaModel extends PherogramComponentModel implements DataModel {
 	private PherogramArea owner;
+	private int firstSeqPos;
 	private List<ShiftChange> shiftChangeList = new ArrayList<ShiftChange>();
   
 	
 	/**
 	 * Creates a new instance of this class.
+	 * <p>
+	 * Note that some methods of this class may throw {@link NullPointerException}s as long as no owner
+	 * has been provided using {@link #setOwner(PherogramArea)}. Note that each {@link PherogramArea}
+	 * needs to have its own model instance. It is not possible to share an instance between several
+	 * pherogram areas. Anyway an unlimited number of instances of {@link PherogramTraceCurveView}
+	 * can use an instance if this class at the same time and in addition to one pherogram model.
 	 * 
-	 * @param owner the pherogram area relying on this model
-	 * @throws NullPointerException if {@code owner} is {@code null}
+	 * @param pherogramProvider the pherogram provider
+	 * @throws NullPointerException if {@code null} is specified for {@code pherogramProvider}
 	 */
-	public PherogramAlignmentModel(PherogramArea owner) {
-		super();
-		if (owner == null) {
-			throw new NullPointerException("The provided owner argument must not be null.");
-		}
-		else {
-			this.owner = owner;
-		}
+	public PherogramAreaModel(PherogramProvider provider) {
+		super(provider);
 	}
 
 
 	/**
+	 * Creates a new instance based on the specified pherogram component model instance. (The underlying pherogram 
+	 * provider instance is shared and not deep copied.)
+	 * <p>
+	 * Note that some methods of this class may throw {@link NullPointerException}s as long as no owner
+	 * has been provided using {@link #setOwner(PherogramArea)}. Note that each {@link PherogramArea}
+	 * needs to have its own model instance. It is not possible to share an instance between several
+	 * pherogram areas. Anyway an unlimited number of instances of {@link PherogramTraceCurveView}
+	 * can use an instance if this class at the same time and in addition to one pherogram model.
+	 * 
+	 * @param model the source pherogram component model
+	 * @throws NullPointerException if {@code null} is specified for {@code model}
+	 */
+	public PherogramAreaModel(PherogramComponentModel model) {
+		super(model);
+	}
+	
+	
+	/**
 	 * The pherogram area associated with this model.
 	 * 
-	 * @return the associated data area (never {@code null})
+	 * @return the associated data area
 	 */
 	public PherogramArea getOwner() {
 		return owner;
 	}
 
 	
+	/**
+	 * Specifies a new owning pherogram area for this instance. This method will usually not need to be called
+	 * from application code directly, since it is called in the constructor of {@link PherogramArea}.
+	 * <p>
+	 * Note that specifying a different pherogram area here, than the one that currently uses this instance
+	 * is illegal and can lead to unexpected behavior of the displaying pherogram area.
+	 * 
+	 * @param owner the pherogram area that uses this model
+	 * @throws NullPointerException if {@code null} is specified for {@code owner}
+	 */
+	public void setOwner(PherogramArea owner) {
+		if (owner != null) {
+			this.owner = owner;
+		}
+		else {
+			throw new NullPointerException("The owner of this instance must not be set to null.");
+		}
+	}
+
+
+	/**
+	 * Returns the position in the sequence this pherogram is attached to where the output of the visible part
+	 * of the pherogram starts.
+	 * 
+	 * @return a valid index in the sequence carrying this data area 
+	 */
+	public int getFirstSeqPos() {
+		return firstSeqPos;
+	}
+
+
+	/**
+	 * Sets the index in the sequence this pherogram is attached to where the displaying of the visible part 
+	 * of the pherogram starts. 
+	 * 
+	 * @param firstSeqPos - the new index
+	 */
+	public void setFirstSeqPos(int firstSeqPos) {
+		if ((getOwner().getList() == null) ||  // Range check is only performed, if the position of the data area is already set. 
+				Math2.isBetween(firstSeqPos, 0,  //TODO Also check right cut position to match the sequence end?
+						getOwner().getLabeledAlignmentModel().getSequenceLength(getOwner().getList().getLocation().getSequenceID()) - 1)) {
+			
+			this.firstSeqPos = firstSeqPos;
+			getOwner().getLabeledAlignmentArea().getDataAreas().setLocalMaxLengthBeforeAfterRecalculate();
+		}
+		else {
+			throw new IndexOutOfBoundsException(firstSeqPos + " is not a valid index to attach this pherogram to.");
+		}
+	}
+
+
+	@Override
+	protected PherogramAlignmentRelation getAlignmentRelation(int baseCallIndex) {
+		return editableIndexByBaseCallIndex(baseCallIndex);
+	}
+
+
+	@Override
+	protected void onSetLeftCutPosition(int oldBaseCallIndex, int newBaseCallIndex) {
+		setFirstSeqPos(getFirstSeqPos() + newBaseCallIndex - oldBaseCallIndex);
+		if (newBaseCallIndex < getRightCutPosition()) {  // Avoid deleting again, if setRightCutPosition() was anyway already called and performed that operation.
+			deleteCutOffDistortions();
+		}
+	}
+
+
+	@Override
+	protected void onSetRightCutPosition(int oldBaseCallIndex, int newBaseCallIndex) {
+		if (getLeftCutPosition() < newBaseCallIndex) {  // Avoid deleting again, if setLeftCutPosition() was anyway already called and performed that operation.
+			deleteCutOffDistortions();
+		}
+	}
+
+
 	@SuppressWarnings({"rawtypes", "unchecked"})
 	private boolean isGap(int editableIndex) {
 		AlignmentModel model = getOwner().getOwner().getOwner().getAlignmentModel();
@@ -89,16 +181,16 @@ public class PherogramAlignmentModel {
 	public PherogramAlignmentRelation editableIndexByBaseCallIndex(int baseCallIndex) {
   	if (baseCallIndex < 0) {
   		return new PherogramAlignmentRelation(PherogramAlignmentRelation.OUT_OF_RANGE, PherogramAlignmentRelation.OUT_OF_RANGE, 
-  				1 - getOwner().getLeftCutPosition() + getOwner().getFirstSeqPos(), shiftChangeList.listIterator());
+  				1 - getLeftCutPosition() + getFirstSeqPos(), shiftChangeList.listIterator());
   	}
-  	else if (baseCallIndex >= getOwner().getPherogramModel().getSequenceLength()) {
+  	else if (baseCallIndex >= getPherogramProvider().getSequenceLength()) {
   		return new PherogramAlignmentRelation(
-  				editableIndexByBaseCallIndex(getOwner().getPherogramModel().getSequenceLength() - 1).getCorresponding(), 
+  				editableIndexByBaseCallIndex(getPherogramProvider().getSequenceLength() - 1).getCorresponding(), 
   				PherogramAlignmentRelation.OUT_OF_RANGE, PherogramAlignmentRelation.OUT_OF_RANGE, 
   				shiftChangeList.listIterator(shiftChangeList.size()));  // Iterator positioned behind the last element of the list.
   	}
     else {
-    	int resultPos = baseCallIndex - getOwner().getLeftCutPosition() + getOwner().getFirstSeqPos();
+    	int resultPos = baseCallIndex - getLeftCutPosition() + getFirstSeqPos();
     	
     	ListIterator<ShiftChange> iterator = shiftChangeList.listIterator();
     	if (!shiftChangeList.isEmpty()) {
@@ -134,7 +226,7 @@ public class PherogramAlignmentModel {
   
   
   public PherogramAlignmentRelation baseCallIndexByEditableIndex(int editableIndex) {
-  	int resultPos = editableIndex - getOwner().getFirstSeqPos() + getOwner().getLeftCutPosition();
+  	int resultPos = editableIndex - getFirstSeqPos() + getLeftCutPosition();
   	
   	ListIterator<ShiftChange> iterator = shiftChangeList.listIterator();
   	if (!shiftChangeList.isEmpty()) {
@@ -156,7 +248,7 @@ public class PherogramAlignmentModel {
     				}
     				if (resultPos == shiftChangeEntry.baseCallIndex + shiftChangeEntry.shiftChange - 1) {
     					afterPos = shiftChangeEntry.baseCallIndex + 1;  // Last editable position in the distortion is the gap.
-    					if (afterPos >= getOwner().getPherogramModel().getSequenceLength()) {
+    					if (afterPos >= getPherogramProvider().getSequenceLength()) {
     						afterPos = PherogramAlignmentRelation.OUT_OF_RANGE;
     					}
     				}
@@ -178,8 +270,8 @@ public class PherogramAlignmentModel {
   		return new PherogramAlignmentRelation(PherogramAlignmentRelation.OUT_OF_RANGE, PherogramAlignmentRelation.OUT_OF_RANGE, 0, 
   				iterator);
   	}
-  	else if (resultPos >= getOwner().getPherogramModel().getSequenceLength()) {
-  		return new PherogramAlignmentRelation(getOwner().getPherogramModel().getSequenceLength() - 1, 
+  	else if (resultPos >= getPherogramProvider().getSequenceLength()) {
+  		return new PherogramAlignmentRelation(getPherogramProvider().getSequenceLength() - 1, 
   				PherogramAlignmentRelation.OUT_OF_RANGE, PherogramAlignmentRelation.OUT_OF_RANGE, iterator);
   	}
   	else {
@@ -405,10 +497,10 @@ public class PherogramAlignmentModel {
 		int firstPosShift = 0;
 		while (iterator.hasNext()) {
 			ShiftChange change = iterator.next();
-			if (change.getBaseCallIndex() < getOwner().getLeftCutPosition()) {
-				int overlap = change.getBaseCallIndex() - change.getShiftChange() - getOwner().getLeftCutPosition();  // Value is only valid if shift change is negative, otherwise an overlap is anyway impossible because it cannot span multiple editable positions.
+			if (change.getBaseCallIndex() < getLeftCutPosition()) {
+				int overlap = change.getBaseCallIndex() - change.getShiftChange() - getLeftCutPosition();  // Value is only valid if shift change is negative, otherwise an overlap is anyway impossible because it cannot span multiple editable positions.
 				if ((change.getShiftChange() < 0) && (overlap > 0)) {  // Split up distortion that spans the cut position.
-					change.baseCallIndex = getOwner().getLeftCutPosition();  // New overlaps with neighboring entries because of this operation are not possible, if there were none before.
+					change.baseCallIndex = getLeftCutPosition();  // New overlaps with neighboring entries because of this operation are not possible, if there were none before.
 					change.shiftChange += overlap;
 					firstPosShift -= overlap;
 				}
@@ -417,16 +509,19 @@ public class PherogramAlignmentModel {
 					iterator.remove();
 				}
 			}
-			else if (change.getBaseCallIndex() >= getOwner().getRightCutPosition()) {  // No overlaps as in the left case are possible here.
+			else if (change.getBaseCallIndex() >= getRightCutPosition()) {  // No overlaps as in the left case are possible here.
 				iterator.remove();
 			}
 		}
-		getOwner().setFirstSeqPos(getOwner().getFirstSeqPos() + firstPosShift);	
+		setFirstSeqPos(getFirstSeqPos() + firstPosShift);	
 		// Repainting and flagging recalculation of maxLengthBeforeStart/AfterEnd is performed by calling methods of PherogramArea and is not repeated here for performance reasons.
 	}
 	
 	
-	protected void reverseComplement() {
+	@Override
+	public void reverseComplement() {
+		super.reverseComplement();
+		
 		List<ShiftChange> newList = new ArrayList<ShiftChange>(shiftChangeList.size());
 		
 		ListIterator<ShiftChange> iterator = shiftChangeList.listIterator(shiftChangeList.size());
@@ -436,7 +531,7 @@ public class PherogramAlignmentModel {
 			if (change.shiftChange < 0) {
 				shiftInDistortion = change.shiftChange;
 			}
-			change.baseCallIndex = getOwner().getPherogramModel().getSequenceLength() - change.baseCallIndex + shiftInDistortion;
+			change.baseCallIndex = getPherogramProvider().getSequenceLength() - change.baseCallIndex + shiftInDistortion;
 			newList.add(change);
 		}
 		
@@ -446,7 +541,7 @@ public class PherogramAlignmentModel {
 
 
 	public ScaledPherogramDistortion createPherogramDistortion() {
-		ScaledPherogramDistortion result = new ScaledPherogramDistortion(getOwner().getPherogramModel().getSequenceLength());
+		ScaledPherogramDistortion result = new ScaledPherogramDistortion(getPherogramProvider().getSequenceLength());
   	
 		int startTraceIndex = 0;  //getTracePosition(startBaseCallIndex);
 		Iterator<ShiftChange> shiftChangeIterator = shiftChangeIterator();
@@ -462,7 +557,7 @@ public class PherogramAlignmentModel {
 		int stepWidth = 1;
 		int editPosPerBaseCallPos = 1;
 		double baseCallPaintX = 0; //0.5 * compoundWidth;
-		for (int baseCallIndex = 0; baseCallIndex < getOwner().getPherogramModel().getSequenceLength(); baseCallIndex += stepWidth) {
+		for (int baseCallIndex = 0; baseCallIndex < getPherogramProvider().getSequenceLength(); baseCallIndex += stepWidth) {
 			// Treat possible gaps:
 			if ((shiftChange != null) && (baseCallIndex == shiftChange.getBaseCallIndex())) {
 				if (shiftChange.getShiftChange() < 0) {  // Deletion in editable sequence
@@ -489,7 +584,7 @@ public class PherogramAlignmentModel {
 			}
 			
 			// Calculate scale and initialize variables:
-			int endTraceIndex = PherogramUtils.getFirstTracePosition(getOwner().getPherogramModel(), baseCallIndex + stepWidth);
+			int endTraceIndex = PherogramUtils.getFirstTracePosition(getPherogramProvider(), baseCallIndex + stepWidth);
 			result.setHorizontalScale(baseCallIndex, editPosPerBaseCallPos * compoundWidth / (double)(endTraceIndex - startTraceIndex));
 
 			// Calculate paint positions:
@@ -517,5 +612,5 @@ public class PherogramAlignmentModel {
 		}
   	
   	return result;
-  }
+  }	
 }

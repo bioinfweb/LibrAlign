@@ -1,6 +1,6 @@
 /*
  * LibrAlign - A GUI library for displaying and editing multiple sequence alignments and attached data
- * Copyright (C) 2014-2015  Ben Stöver
+ * Copyright (C) 2014 - 2015  Ben Stöver
  * <http://bioinfweb.info/LibrAlign>
  * 
  * This file is free software: you can redistribute it and/or modify
@@ -16,35 +16,33 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package info.bioinfweb.libralign.dataarea.implementations.pherogram;
+package info.bioinfweb.libralign.pherogram.model;
+
+
+import javax.swing.event.ChangeEvent;
 
 
 
 /**
- * Used by {@link PherogramAlignmentModel} to model which position in the base call sequence corresponds to which
- * position in the editable alignment sequence.
+ * All events indicating changes in an instance of {@link PherogramComponentModel} should be inherited
+ * from this class.
  * 
  * @author Ben St&ouml;ver
- * @since 0.2.0
+ * @since 0.4.0
  */
-public class ShiftChange {
-	protected int baseCallIndex = 0;
-	protected int shiftChange = 0;
-
-
-	public ShiftChange(int baseCallIndex, int shiftChange) {
-		super();
-		this.baseCallIndex = baseCallIndex;
-		this.shiftChange = shiftChange;
+public class PherogramComponentModelChangeEvent extends ChangeEvent{
+	/**
+	 * Creates a new instance of this class.
+	 * 
+	 * @param source the model where the change occurred
+	 */ 
+	public PherogramComponentModelChangeEvent(PherogramComponentModel source) {
+		super(source);
 	}
-
-
-	public int getBaseCallIndex() {
-		return baseCallIndex;
-	}
-
-
-	public int getShiftChange() {
-		return shiftChange;
+	
+	
+	@Override
+	public PherogramComponentModel getSource() {
+		return (PherogramComponentModel)super.getSource();
 	}
 }

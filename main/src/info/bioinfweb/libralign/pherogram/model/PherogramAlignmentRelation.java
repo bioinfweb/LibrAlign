@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package info.bioinfweb.libralign.dataarea.implementations.pherogram;
+package info.bioinfweb.libralign.pherogram.model;
 
 
 import java.util.ListIterator;
@@ -52,11 +52,6 @@ public class PherogramAlignmentRelation {
 	private ListIterator<ShiftChange> iterator;
   
   
-	public PherogramAlignmentRelation() {
-		super();
-	}
-
-
 	public PherogramAlignmentRelation(int before, int corresponding, int after, ListIterator<ShiftChange> iterator) {
 		super();
 		this.before = before;

@@ -96,10 +96,7 @@ main/src/info/bioinfweb/libralign/dataarea/implementations/charset/CharSetEventR
 main/src/info/bioinfweb/libralign/dataarea/implementations/charset/CharSetNameArea.java -text svneol=unset#text/plain
 main/src/info/bioinfweb/libralign/dataarea/implementations/charset/package-info.java -text svneol=unset#text/plain
 main/src/info/bioinfweb/libralign/dataarea/implementations/package-info.java -text svneol=unset#text/plain
-main/src/info/bioinfweb/libralign/dataarea/implementations/pherogram/PherogramAlignmentModel.java -text svneol=unset#text/plain
-main/src/info/bioinfweb/libralign/dataarea/implementations/pherogram/PherogramAlignmentRelation.java -text svneol=unset#text/plain
 main/src/info/bioinfweb/libralign/dataarea/implementations/pherogram/PherogramArea.java -text svneol=unset#text/plain
-main/src/info/bioinfweb/libralign/dataarea/implementations/pherogram/ShiftChange.java -text svneol=unset#text/plain
 main/src/info/bioinfweb/libralign/dataarea/implementations/pherogram/package-info.java -text svneol=unset#text/plain
 main/src/info/bioinfweb/libralign/dataarea/package-info.java -text svneol=unset#text/plain
 main/src/info/bioinfweb/libralign/editsettings/EditSettings.java -text svneol=unset#text/plain
@@ -240,6 +237,14 @@ main/src/info/bioinfweb/libralign/pherogram/distortion/PherogramDistortion.java 
 main/src/info/bioinfweb/libralign/pherogram/distortion/ScaledPherogramDistortion.java -text svneol=unset#text/plain
 main/src/info/bioinfweb/libralign/pherogram/distortion/UnscaledPherogramDistortion.java -text svneol=unset#text/plain
 main/src/info/bioinfweb/libralign/pherogram/distortion/package-info.java -text svneol=unset#text/plain
+main/src/info/bioinfweb/libralign/pherogram/model/PherogramAlignmentRelation.java -text svneol=unset#text/plain
+main/src/info/bioinfweb/libralign/pherogram/model/PherogramAreaModel.java -text svneol=unset#text/plain
+main/src/info/bioinfweb/libralign/pherogram/model/PherogramComponentModel.java -text svneol=unset#text/plain
+main/src/info/bioinfweb/libralign/pherogram/model/PherogramComponentModelChangeEvent.java -text svneol=unset#text/plain
+main/src/info/bioinfweb/libralign/pherogram/model/PherogramComponentModelListener.java -text svneol=unset#text/plain
+main/src/info/bioinfweb/libralign/pherogram/model/PherogramCutPositionChangeEvent.java -text svneol=unset#text/plain
+main/src/info/bioinfweb/libralign/pherogram/model/PherogramProviderChangeEvent.java -text svneol=unset#text/plain
+main/src/info/bioinfweb/libralign/pherogram/model/ShiftChange.java -text svneol=unset#text/plain
 main/src/info/bioinfweb/libralign/pherogram/model/package-info.java -text svneol=unset#text/plain
 main/src/info/bioinfweb/libralign/pherogram/package-info.java -text svneol=unset#text/plain
 main/src/info/bioinfweb/libralign/pherogram/provider/BioJavaPherogramProvider.java -text svneol=unset#text/plain
