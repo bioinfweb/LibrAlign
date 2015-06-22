@@ -38,6 +38,7 @@ import info.bioinfweb.libralign.dataarea.implementations.charset.CharSetDataMode
 import info.bioinfweb.libralign.dataarea.implementations.pherogram.PherogramArea;
 import info.bioinfweb.libralign.model.implementations.BioJavaAlignmentModel;
 import info.bioinfweb.libralign.model.tokenset.BioJavaTokenSet;
+import info.bioinfweb.libralign.pherogram.model.PherogramAreaModel;
 import info.bioinfweb.libralign.pherogram.provider.BioJavaPherogramProvider;
 
 import org.biojava.bio.chromatogram.ChromatogramFactory;
@@ -109,12 +110,13 @@ public class AbstractTestApplication {
 			
 			result.getDataAreas().getTopAreas().add(createCharSetArea(result.getContentArea()));
 			
-			PherogramArea pherogramArea = new PherogramArea(result.getContentArea(), pherogramProvider);
-			pherogramArea.setFirstSeqPos(34 + 5);
-			pherogramArea.setLeftCutPosition(34);
-			pherogramArea.setRightCutPosition(820);
-			pherogramArea.getPherogramAlignmentModel().setShiftChange(38, -1);
-			pherogramArea.getPherogramAlignmentModel().setShiftChange(49, 2);
+			PherogramArea pherogramArea = new PherogramArea(result.getContentArea(), new PherogramAreaModel(pherogramProvider));
+			PherogramAreaModel model = pherogramArea.getModel();
+			model.setFirstSeqPos(5);
+			model.setLeftCutPosition(34);
+			model.setRightCutPosition(820);
+			model.setShiftChange(38, -1);
+			model.setShiftChange(49, 2);
 			result.getDataAreas().getSequenceAreas(sequenceProvider.sequenceIDByName("Sequence 4")).add(pherogramArea);
 			
 			result.getDataAreas().getBottomAreas().add(new ConsensusSequenceArea(result.getContentArea()));
