@@ -28,7 +28,7 @@ import info.bioinfweb.libralign.dataarea.implementations.pherogram.PherogramArea
  * @author Ben St&ouml;ver
  * @since 0.4.0
  */
-public class PherogramCutPositionChangeEvent extends PherogramComponentModelChangeEvent {
+public class PherogramCutPositionChangeEvent extends PherogramModelChangeEvent {
 	private int oldBaseCallIndex;
 	private int newBaseCallIndex;
 	private PherogramAlignmentRelation oldEditableIndex;
@@ -39,15 +39,17 @@ public class PherogramCutPositionChangeEvent extends PherogramComponentModelChan
 	 * Creates a new instance of this class.
 	 * 
 	 * @param source the model where the change occurred
+	 * @param moreEventsUpcoming Specify {@code true} here if the currently terminated operation is going to
+	 *        fire additional events for other affected properties or {@code false} otherwise.
 	 * @param oldBaseCallIndex the previous cut position
 	 * @param newBaseCallIndex the current (new) cut position
 	 * @param oldEditableIndex the relation to the index in the editable sequence corresponding to {@code oldBaseCallIndex}
 	 * @param newEditableIndex the relation to the index in the editable sequence corresponding to {@code newBaseCallIndex}
 	 */
-	public PherogramCutPositionChangeEvent(PherogramComponentModel source, int oldBaseCallIndex, int newBaseCallIndex, 
+	public PherogramCutPositionChangeEvent(PherogramComponentModel source, boolean moreEventsUpcoming, int oldBaseCallIndex, int newBaseCallIndex, 
 			PherogramAlignmentRelation oldEditableIndex,	PherogramAlignmentRelation newEditableIndex) {
 		
-		super(source);
+		super(source, moreEventsUpcoming);
 		this.oldBaseCallIndex = oldBaseCallIndex;
 		this.newBaseCallIndex = newBaseCallIndex;
 		this.oldEditableIndex = oldEditableIndex;

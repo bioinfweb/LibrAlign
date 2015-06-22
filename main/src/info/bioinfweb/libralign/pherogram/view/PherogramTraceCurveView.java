@@ -35,6 +35,7 @@ import info.bioinfweb.libralign.pherogram.PherogramPainter;
 import info.bioinfweb.libralign.pherogram.model.PherogramComponentModel;
 import info.bioinfweb.libralign.pherogram.model.PherogramComponentModelListener;
 import info.bioinfweb.libralign.pherogram.model.PherogramCutPositionChangeEvent;
+import info.bioinfweb.libralign.pherogram.model.PherogramFirstSeqPosChangeEvent;
 import info.bioinfweb.libralign.pherogram.model.PherogramProviderChangeEvent;
 
 
@@ -66,13 +67,20 @@ public class PherogramTraceCurveView extends TICComponent implements PherogramCo
 
 		@Override
 		public void leftCutPositionChange(PherogramCutPositionChangeEvent event) {
-			repaintAll();
+			if (!event.isMoreEventsUpcoming()) {
+				repaintAll();
+			}
 		}
 
 		@Override
 		public void rightCutPositionChange(PherogramCutPositionChangeEvent event) {
-			repaintAll();
+			if (!event.isMoreEventsUpcoming()) {
+				repaintAll();
+			}
 		}
+
+		@Override
+		public void firstSequencePositionChange(PherogramFirstSeqPosChangeEvent event) {}  // nothing to do
 	}; 
 	
 	

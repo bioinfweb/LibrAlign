@@ -41,6 +41,7 @@ public class PherogramAreaModel extends PherogramComponentModel implements DataM
 	private PherogramArea owner;
 	private int firstSeqPos;
 	private List<ShiftChange> shiftChangeList = new ArrayList<ShiftChange>();
+	private boolean firstSeqPosUpdateOngoing = false;
   
 	
 	/**
@@ -137,8 +138,8 @@ public class PherogramAreaModel extends PherogramComponentModel implements DataM
 			throw new IndexOutOfBoundsException(firstSeqPos + " is not a valid index to attach this pherogram to.");
 		}
 	}
-
-
+	
+	
 	@Override
 	protected PherogramAlignmentRelation getAlignmentRelation(int baseCallIndex) {
 		return editableIndexByBaseCallIndex(baseCallIndex);
@@ -147,9 +148,11 @@ public class PherogramAreaModel extends PherogramComponentModel implements DataM
 
 	@Override
 	protected void onSetLeftCutPosition(int oldBaseCallIndex, int newBaseCallIndex) {
-		setFirstSeqPos(getFirstSeqPos() + newBaseCallIndex - oldBaseCallIndex);
-		if (newBaseCallIndex < getRightCutPosition()) {  // Avoid deleting again, if setRightCutPosition() was anyway already called and performed that operation.
-			deleteCutOffDistortions();
+		if (!firstSeqPosUpdateOngoing) {
+			setFirstSeqPos(getFirstSeqPos() + newBaseCallIndex - oldBaseCallIndex);
+			if (newBaseCallIndex < getRightCutPosition()) {  // Avoid deleting again, if setRightCutPosition() was anyway already called and performed that operation.
+				deleteCutOffDistortions();
+			}
 		}
 	}
 
@@ -158,6 +161,28 @@ public class PherogramAreaModel extends PherogramComponentModel implements DataM
 	protected void onSetRightCutPosition(int oldBaseCallIndex, int newBaseCallIndex) {
 		if (getLeftCutPosition() < newBaseCallIndex) {  // Avoid deleting again, if setLeftCutPosition() was anyway already called and performed that operation.
 			deleteCutOffDistortions();
+		}
+	}
+
+
+	/**
+	 * Allows to specify a new first sequence and left cut position at the same time. This method shall be used
+	 * if both valid values for both properties are defined (e.g. in an external data source like a file) and
+	 * {@code firstSeqPos} shall not be moved accordingly when {@code leftCutPos} is set, like it is done in
+	 * {@link #setLeftCutPosition(int)}.
+	 * 
+	 * @param firstSeqPos the new index in the editable sequence to which the first nucleotide of the base call
+	 *        sequence that is not cut off is aligned  
+	 * @param leftCutPos the new left cut position
+	 */
+	public void setFirstSeqLeftCutPos(int firstSeqPos, int leftCutPos) {
+		setFirstSeqPos(firstSeqPos);
+		try {
+			firstSeqPosUpdateOngoing = true;
+			setLeftCutPosition(leftCutPos);
+		}
+		finally {
+			firstSeqPosUpdateOngoing = false;
 		}
 	}
 

@@ -32,7 +32,7 @@ import info.bioinfweb.libralign.pherogram.provider.ReverseComplementPherogramPro
  * @author Ben St&ouml;ver
  * @since 0.4.0
  */
-public class PherogramProviderChangeEvent extends PherogramComponentModelChangeEvent {
+public class PherogramProviderChangeEvent extends PherogramModelChangeEvent {
 	private PherogramProvider oldProvider;
 	private PherogramProvider newProvider;
 	private boolean reverseComplemented;
@@ -42,16 +42,18 @@ public class PherogramProviderChangeEvent extends PherogramComponentModelChangeE
 	 * Creates a new instance of this class.
 	 * 
 	 * @param source the model where the change occurred
+	 * @param moreEventsUpcoming Specify {@code true} here if the currently terminated operation is going to
+	 *        fire additional events for other affected properties or {@code false} otherwise.
 	 * @param oldProvider the pherogram provider that was replaced (or edited)
 	 * @param newProvider the pherogram provider that replaced the previous one or the same as {@code oldProvider}
 	 *        if the contents if provider were changed and the provider instance remains the same
 	 * @param reverseComplemented indicates whether this provider change occurred because the model was reverse complemented
 	 *        (In that case one of the providers will usually be an instance of {@link ReverseComplementPherogramProvider}.)
 	 */
-	public PherogramProviderChangeEvent(PherogramComponentModel source, PherogramProvider oldProvider, PherogramProvider newProvider,
-			boolean reverseComplemented) {
+	public PherogramProviderChangeEvent(PherogramComponentModel source,	boolean moreEventsUpcoming, 
+			PherogramProvider oldProvider, PherogramProvider newProvider, boolean reverseComplemented) {
 		
-		super(source);
+		super(source, moreEventsUpcoming);
 		this.oldProvider = oldProvider;
 		this.newProvider = newProvider;
 		this.reverseComplemented = reverseComplemented;

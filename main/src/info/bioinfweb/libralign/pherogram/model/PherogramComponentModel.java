@@ -123,12 +123,13 @@ public class PherogramComponentModel {
 		leftCutPosition = pherogramProvider.getSequenceLength() - rightCutPosition;
 		rightCutPosition = pherogramProvider.getSequenceLength() - oldLeftCutPosition;
 		
-		firePherogramProviderChanged(oldProvider, true);
+		firePherogramProviderChanged(oldProvider, true, 
+				(leftCutPosition != oldLeftCutPosition) || (rightCutPosition != oldRightCutPosition));
 		if (leftCutPosition != oldLeftCutPosition) {
-			fireLeftCutPositionChanged(oldLeftCutPosition, oldLeftEditableIndex);
+			fireLeftCutPositionChanged(oldLeftCutPosition, oldLeftEditableIndex, rightCutPosition != oldRightCutPosition);
 		}
 		if (rightCutPosition != oldRightCutPosition) {
-			fireRightCutPositionChanged(oldRightCutPosition, oldRightEditableIndex);
+			fireRightCutPositionChanged(oldRightCutPosition, oldRightEditableIndex, false);
 		}
 	}
 
@@ -145,7 +146,8 @@ public class PherogramComponentModel {
 			PherogramProvider oldProvider = this.pherogramProvider;
 			this.pherogramProvider = pherogramProvider;
 			
-			firePherogramProviderChanged(oldProvider, false);
+			firePherogramProviderChanged(oldProvider, false, 
+					(getLeftCutPosition() != 0) || (getRightCutPosition() != pherogramProvider.getSequenceLength()));
 			setLeftCutPosition(0);
 			setRightCutPosition(pherogramProvider.getSequenceLength());
 		}
@@ -176,9 +178,15 @@ public class PherogramComponentModel {
 	
 	/**
 	 * Sets a new cut position for the left border of the visible part of the pherogram.
+	 * <p>
+	 * If this method is called on an instance of {@link PherogramAreaModel} the property
+	 * {@link PherogramAreaModel#getFirstSeqPos()} is moved accordingly, so that the pherogram does not move
+	 * relative to the sequence. If this shall be avoided {@link PherogramAreaModel#setFirstSeqLeftCutPos(int, int)}
+	 * should be used instead.
 	 * 
 	 * @param baseCallIndex - the index of the first nucleotide in the base call sequence that shall be visible
 	 * @throws IndexOutOfBoundsException if {@code baseCallIndex} is not between 0 and and {@link #getRightCutPosition()}
+	 * @see PherogramAreaModel#setFirstSeqLeftCutPos(int, int)
 	 */
 	public void setLeftCutPosition(int baseCallIndex) {
 		if (leftCutPosition != baseCallIndex) {
@@ -192,7 +200,7 @@ public class PherogramComponentModel {
 					setRightCutPosition(leftCutPosition);  // Calls PherogramArea.deleteCutOffDistortions() if this instance is of type PherogramArea.
 				}
 				
-				fireLeftCutPositionChanged(oldValue, oldEditableIndex);
+				fireLeftCutPositionChanged(oldValue, oldEditableIndex, false);
 			}
 			else {
 				throw new IndexOutOfBoundsException("The left cut position (" + baseCallIndex + 
@@ -241,7 +249,7 @@ public class PherogramComponentModel {
 					setLeftCutPosition(rightCutPosition);  // Calls PherogramArea.deleteCutOffDistortions() if this instance is of type PherogramArea.
 				}
 				
-				fireRightCutPositionChanged(oldValue, oldEditableIndex);
+				fireRightCutPositionChanged(oldValue, oldEditableIndex, false);
 			}
 			else {
 				throw new IndexOutOfBoundsException("The right cut position (" + baseCallIndex + 
@@ -267,26 +275,33 @@ public class PherogramComponentModel {
 	}
 	
 	
-	protected void fireLeftCutPositionChanged(int oldValue, PherogramAlignmentRelation oldEditableIndex) {
-		PherogramCutPositionChangeEvent event = new PherogramCutPositionChangeEvent(this, oldValue, leftCutPosition, 
-				oldEditableIndex, getAlignmentRelation(leftCutPosition));
+	protected void fireLeftCutPositionChanged(int oldValue, PherogramAlignmentRelation oldEditableIndex, 
+			boolean moreEventsUpcoming) {
+		
+		PherogramCutPositionChangeEvent event = new PherogramCutPositionChangeEvent(this, moreEventsUpcoming, 
+				oldValue, leftCutPosition, oldEditableIndex, getAlignmentRelation(leftCutPosition));
 		for (PherogramComponentModelListener listener : listeners) {
 			listener.leftCutPositionChange(event);
 		}
 	}
 	
 	
-	protected void fireRightCutPositionChanged(int oldValue, PherogramAlignmentRelation oldEditableIndex) {
-		PherogramCutPositionChangeEvent event = new PherogramCutPositionChangeEvent(this, oldValue, rightCutPosition, 
-				oldEditableIndex, getAlignmentRelation(rightCutPosition));
+	protected void fireRightCutPositionChanged(int oldValue, PherogramAlignmentRelation oldEditableIndex, 
+			boolean moreEventsUpcoming) {
+		
+		PherogramCutPositionChangeEvent event = new PherogramCutPositionChangeEvent(this, moreEventsUpcoming, 
+				oldValue, rightCutPosition,	oldEditableIndex, getAlignmentRelation(rightCutPosition));
 		for (PherogramComponentModelListener listener : listeners) {
 			listener.rightCutPositionChange(event);
 		}
 	}
 	
 	
-	protected void firePherogramProviderChanged(PherogramProvider oldProvider, boolean reverseComplemented) {
-		PherogramProviderChangeEvent event = new PherogramProviderChangeEvent(this, oldProvider, pherogramProvider, reverseComplemented);
+	protected void firePherogramProviderChanged(PherogramProvider oldProvider, boolean reverseComplemented, 
+			boolean moreEventsUpcoming) {
+		
+		PherogramProviderChangeEvent event = new PherogramProviderChangeEvent(this, moreEventsUpcoming, 
+				oldProvider, pherogramProvider, reverseComplemented);
 		for (PherogramComponentModelListener listener : listeners) {
 			listener.pherogramProviderChange(event);
 		}

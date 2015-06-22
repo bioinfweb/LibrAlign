@@ -240,9 +240,10 @@ main/src/info/bioinfweb/libralign/pherogram/distortion/package-info.java -text s
 main/src/info/bioinfweb/libralign/pherogram/model/PherogramAlignmentRelation.java -text svneol=unset#text/plain
 main/src/info/bioinfweb/libralign/pherogram/model/PherogramAreaModel.java -text svneol=unset#text/plain
 main/src/info/bioinfweb/libralign/pherogram/model/PherogramComponentModel.java -text svneol=unset#text/plain
-main/src/info/bioinfweb/libralign/pherogram/model/PherogramComponentModelChangeEvent.java -text svneol=unset#text/plain
 main/src/info/bioinfweb/libralign/pherogram/model/PherogramComponentModelListener.java -text svneol=unset#text/plain
 main/src/info/bioinfweb/libralign/pherogram/model/PherogramCutPositionChangeEvent.java -text svneol=unset#text/plain
+main/src/info/bioinfweb/libralign/pherogram/model/PherogramFirstSeqPosChangeEvent.java -text svneol=unset#text/plain
+main/src/info/bioinfweb/libralign/pherogram/model/PherogramModelChangeEvent.java -text svneol=unset#text/plain
 main/src/info/bioinfweb/libralign/pherogram/model/PherogramProviderChangeEvent.java -text svneol=unset#text/plain
 main/src/info/bioinfweb/libralign/pherogram/model/ShiftChange.java -text svneol=unset#text/plain
 main/src/info/bioinfweb/libralign/pherogram/model/package-info.java -text svneol=unset#text/plain

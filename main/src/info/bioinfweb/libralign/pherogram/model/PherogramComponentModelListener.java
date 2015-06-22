@@ -55,4 +55,14 @@ public interface PherogramComponentModelListener {
 	 * @param event object the event describing this event
 	 */
 	public void rightCutPositionChange(PherogramCutPositionChangeEvent event);
+	
+	/**
+	 * This method is called, if the {@link PherogramAreaModel#getFirstSeqPos()} was changed.
+	 * <p>
+	 * Note that this event will only be fired by instances of {@link PherogramAreaModel} and never
+	 * by an instance of {@link PherogramComponentModel}.
+	 * 
+	 * @param event object the event describing this event
+	 */
+	public void firstSequencePositionChange(PherogramFirstSeqPosChangeEvent event);
 }

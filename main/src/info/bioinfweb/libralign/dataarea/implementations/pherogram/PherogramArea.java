@@ -38,6 +38,7 @@ import info.bioinfweb.libralign.pherogram.model.PherogramAlignmentRelation;
 import info.bioinfweb.libralign.pherogram.model.PherogramAreaModel;
 import info.bioinfweb.libralign.pherogram.model.PherogramComponentModelListener;
 import info.bioinfweb.libralign.pherogram.model.PherogramCutPositionChangeEvent;
+import info.bioinfweb.libralign.pherogram.model.PherogramFirstSeqPosChangeEvent;
 import info.bioinfweb.libralign.pherogram.model.PherogramProviderChangeEvent;
 import info.bioinfweb.libralign.pherogram.view.PherogramTraceCurveView;
 import info.bioinfweb.libralign.pherogram.view.PherogramView;
@@ -75,13 +76,17 @@ public class PherogramArea extends DataArea implements PherogramComponent {
 		public void pherogramProviderChange(PherogramProviderChangeEvent event) {
 			getLabeledAlignmentArea().getDataAreas().setLocalMaxLengthBeforeAfterRecalculate();  // Could happen if cut lengths at the beginning and end differ.
 			getOwner().getOwner().assignSizeToAll();
-			repaint();  // Necessary in SWT, if no resize happened. 
+			if (!event.isMoreEventsUpcoming()) {
+				repaint();  // Necessary in SWT, if no resize happened. 
+			}
 		}
 
 		
 		@Override
 		public void leftCutPositionChange(PherogramCutPositionChangeEvent event) {
-			updateChangedCutPosition();
+			if (!event.isMoreEventsUpcoming()) {
+				updateChangedPosition();
+			}
 			
 			if (isUpdateEditableSequence() && !getOwner().getOwner().getAlignmentModel().isTokensReadOnly()) {
 				if (event.getNewBaseCallIndex() < event.getOldBaseCallIndex()) {
@@ -100,7 +105,9 @@ public class PherogramArea extends DataArea implements PherogramComponent {
 		
 		@Override
 		public void rightCutPositionChange(PherogramCutPositionChangeEvent event) {
-			updateChangedCutPosition();
+			if (!event.isMoreEventsUpcoming()) {
+				updateChangedPosition();
+			}
 			
 			if (isUpdateEditableSequence() && !getOwner().getOwner().getAlignmentModel().isTokensReadOnly()) {
 				if (event.getOldBaseCallIndex() < event.getNewBaseCallIndex()) {
@@ -116,6 +123,14 @@ public class PherogramArea extends DataArea implements PherogramComponent {
 						setGaps(newEditableIndex, oldEditableIndex - newEditableIndex);
 					}
 				}
+			}
+		}
+
+
+		@Override
+		public void firstSequencePositionChange(PherogramFirstSeqPosChangeEvent event) {
+			if (!event.isMoreEventsUpcoming()) {
+				updateChangedPosition();
 			}
 		}
 	}; 
@@ -280,7 +295,7 @@ public class PherogramArea extends DataArea implements PherogramComponent {
 	}
 
 
-	private void updateChangedCutPosition() {
+	private void updateChangedPosition() {
 		getLabeledAlignmentArea().getDataAreas().setLocalMaxLengthBeforeAfterRecalculate();
 		repaint();
   }
