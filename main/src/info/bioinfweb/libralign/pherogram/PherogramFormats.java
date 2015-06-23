@@ -49,14 +49,14 @@ public class PherogramFormats {
 	 * @author Ben St&ouml;ver
 	 */
 	public static enum QualityOutputType {
-		/** Displays quality values for all four nucleotides. */
-		ALL, 
+		/** Does not display any quality values. */
+		NONE,
 		
 		/** Displays only the quality value for the nucleotide that has been called. */
 		MAXIMUM, 
 		
-		/** Does not display any quality values. */
-		NONE;
+		/** Displays quality values for all four nucleotides. */
+		ALL; 
 	}
 	
 	
