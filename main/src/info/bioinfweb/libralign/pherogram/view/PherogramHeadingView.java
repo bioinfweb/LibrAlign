@@ -61,8 +61,7 @@ public class PherogramHeadingView extends TICComponent {
 		PherogramPainter painter = getTraceCurveView().getPainter();
 		e.getGraphics().setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 		
-		e.getGraphics().setColor(formats.getBackgroundColor());
-		e.getGraphics().fillRect(e.getRectangle().x, e.getRectangle().y, e.getRectangle().width, e.getRectangle().height);
+		painter.paintUncaledBackground(e.getGraphics(), e.getRectangle(), getTraceCurveView().getHorizontalScale());
 		SimpleSequenceInterval paintRange = getTraceCurveView().calculatePaintRange(e);
 		
 		e.getGraphics().setFont(formats.getIndexFont());

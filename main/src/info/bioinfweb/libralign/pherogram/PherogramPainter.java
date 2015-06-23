@@ -21,16 +21,19 @@ package info.bioinfweb.libralign.pherogram;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
+import java.awt.Rectangle;
 import java.awt.geom.Path2D;
 import java.awt.geom.Rectangle2D;
 
 import org.biojava3.core.sequence.compound.NucleotideCompound;
 
+import info.bioinfweb.commons.Math2;
 import info.bioinfweb.commons.bio.biojava3.core.sequence.compound.AlignmentAmbiguityNucleotideCompoundSet;
 import info.bioinfweb.libralign.dataarea.implementations.pherogram.PherogramArea;
 import info.bioinfweb.libralign.pherogram.PherogramFormats.QualityOutputType;
 import info.bioinfweb.libralign.pherogram.distortion.GapPattern;
 import info.bioinfweb.libralign.pherogram.distortion.PherogramDistortion;
+import info.bioinfweb.libralign.pherogram.model.PherogramComponentModel;
 import info.bioinfweb.libralign.pherogram.provider.PherogramProvider;
 import info.bioinfweb.libralign.pherogram.view.PherogramTraceCurveView;
 
@@ -108,6 +111,35 @@ public class PherogramPainter {
 	
 	private void paintBaseCallText(Graphics2D g, String text, double paintX, double paintY) {
 		g.drawString(text, (float)(paintX - 0.5 * g.getFontMetrics().stringWidth(text)), (float)(paintY + g.getFont().getSize()));
+	}
+	
+	
+	public void paintUncaledBackground(Graphics2D g, Rectangle visibleRect, double horizontalScale) {
+		// Draw cut off background:
+		g.setColor(owner.getFormats().getCutBackgroundColor());
+		PherogramProvider provider = owner.getModel().getPherogramProvider();
+		double endX = visibleRect.x + visibleRect.width;
+		double leftX = visibleRect.x;
+		if (owner.getModel().getLeftCutPosition() > 0) {
+			leftX = Math.max((provider.getBaseCallPosition(owner.getModel().getLeftCutPosition() - 1) + 
+					provider.getBaseCallPosition(owner.getModel().getLeftCutPosition())) / 2.0 * horizontalScale, leftX);
+			if (leftX >= visibleRect.x) {
+				g.fill(new Rectangle2D.Double(visibleRect.x, visibleRect.y, leftX, visibleRect.height));
+			}
+		}
+		double rightX = endX;
+		if (Math2.isBetween(owner.getModel().getRightCutPosition(), 0, provider.getSequenceLength() - 1)) {  // Otherwise one of the calls of getBaseCallPosition() would be out of range. 
+			rightX = Math.min((provider.getBaseCallPosition(owner.getModel().getRightCutPosition() - 1) + 
+					provider.getBaseCallPosition(owner.getModel().getRightCutPosition())) / 2.0 * horizontalScale, rightX);
+			if (rightX < endX) {
+				g.fill(new Rectangle2D.Double(rightX, visibleRect.y, 
+						endX - rightX, visibleRect.height));
+			}
+		}
+
+		// Draw center background:
+		g.setColor(owner.getFormats().getBackgroundColor());
+		g.fill(new Rectangle2D.Double(leftX, visibleRect.y, rightX - leftX, visibleRect.height));
 	}
 	
 	
@@ -222,27 +254,24 @@ public class PherogramPainter {
 	public void paintUnscaledBaseCallLines(int startX, int endX, Graphics2D g, double paintX, double paintY, double height,
 			double horizontalScale) {
 		
-		PherogramProvider provider = owner.getModel().getPherogramProvider();
+		PherogramComponentModel model = owner.getModel();
+		PherogramProvider provider = model.getPherogramProvider();
 		int index = 0;
-		while ((index < provider.getSequenceLength()) && 
-				(provider.getBaseCallPosition(index) < startX)) {
-			
+		while ((index < provider.getSequenceLength()) && (provider.getBaseCallPosition(index) < startX)) {
 			index++;			
 		}
 		
 		if (index < provider.getSequenceLength()) {
-			while ((index < provider.getSequenceLength()) && 
-					(provider.getBaseCallPosition(index) <= endX)) {
-				
+			while ((index < provider.getSequenceLength()) && (provider.getBaseCallPosition(index) <= endX)) {
 	  		double x = paintX + (provider.getBaseCallPosition(index) - startX) * horizontalScale;
-	  		Path2D path = new  Path2D.Double();
+	  		Path2D path = new Path2D.Double();
 	  		path.moveTo(x, paintY);
 	  		path.lineTo(x, paintY + height);
 				g.draw(path);
 				
 				index++;			
 			}
-    }		
+    }
 	}
 	
 	
@@ -252,11 +281,9 @@ public class PherogramPainter {
 		PherogramProvider provider = owner.getModel().getPherogramProvider();
 		int baseCallIndex = firstBaseCallIndex;
 		if (baseCallIndex < provider.getSequenceLength()) {
-			while ((baseCallIndex < provider.getSequenceLength()) && 
-					(baseCallIndex <= lastBaseCallIndex)) {
-				
+			while ((baseCallIndex < provider.getSequenceLength()) && (baseCallIndex <= lastBaseCallIndex)) {
 	  		double x = startX + distortion.getPaintCenterX(baseCallIndex);
-	  		Path2D path = new  Path2D.Double();
+	  		Path2D path = new Path2D.Double();
 	  		path.moveTo(x, startY);
 	  		path.lineTo(x, startY + height);
 				g.draw(path);

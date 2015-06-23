@@ -21,7 +21,8 @@ package info.bioinfweb.libralign.pherogram.view;
 
 import java.awt.Dimension;
 import java.awt.RenderingHints;
-import java.beans.PropertyChangeEvent;
+import java.awt.geom.Rectangle2D;
+import java.awt.geom.Rectangle2D.Double;
 
 import info.bioinfweb.commons.Math2;
 import info.bioinfweb.commons.collections.SimpleSequenceInterval;
@@ -37,6 +38,7 @@ import info.bioinfweb.libralign.pherogram.model.PherogramComponentModelListener;
 import info.bioinfweb.libralign.pherogram.model.PherogramCutPositionChangeEvent;
 import info.bioinfweb.libralign.pherogram.model.PherogramFirstSeqPosChangeEvent;
 import info.bioinfweb.libralign.pherogram.model.PherogramProviderChangeEvent;
+import info.bioinfweb.libralign.pherogram.provider.PherogramProvider;
 
 
 
@@ -219,9 +221,8 @@ public class PherogramTraceCurveView extends TICComponent implements PherogramCo
 	@Override
 	public void paint(TICPaintEvent e) {
 		e.getGraphics().setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-		e.getGraphics().setColor(getFormats().getBackgroundColor());
-		e.getGraphics().fillRect(e.getRectangle().x, e.getRectangle().y, e.getRectangle().width, e.getRectangle().height);
-
+		getPainter().paintUncaledBackground(e.getGraphics(), e.getRectangle(), getHorizontalScale());
+		
 		SimpleSequenceInterval paintRange = calculatePaintRange(e);
 		if (getFormats().isShowBaseCallLines()) {
 			e.getGraphics().setColor(getFormats().getBaseCallLineColor());
