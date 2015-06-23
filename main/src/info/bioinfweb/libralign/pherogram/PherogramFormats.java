@@ -265,11 +265,23 @@ public class PherogramFormats {
 	 * trace curve output) shall be painted. The pherogram will be repainted after setting the property.
 	 *
 	 * @param showBaseCallLines - Specify {@code true} here if lines shall be painted or {@code false} if not.
+	 * @see #toggleShowBaseCallLines()
 	 */
 	public void setShowBaseCallLines(boolean showBaseCallLines) {
 		final boolean oldValue = this.showBaseCallLines;
 		this.showBaseCallLines = showBaseCallLines;
 		propertyChangeSupport.firePropertyChange("showBaseCallLines", oldValue, showBaseCallLines);
+	}
+
+
+	/**
+	 * Toggles whether base call lines (vertical lines at each base call position in the background of the 
+	 * trace curve output) shall be painted.
+	 * 
+	 * @see #setShowBaseCallLines(boolean)
+	 */
+	public void toggleShowBaseCallLines() {
+		setShowBaseCallLines(!isShowBaseCallLines());
 	}
 
 
@@ -385,11 +397,23 @@ public class PherogramFormats {
 	 * 
 	 * @param showProbabilityValues - Specify {@code true} here if the values shall be displayed from now on or 
 	 *        {@code false} otherwise.
+	 * @see #toggleShowProbabilityValues()
 	 */
 	public void setShowProbabilityValues(boolean showProbabilityValues) {
 		final boolean oldValue = this.showProbabilityValues;
 		this.showProbabilityValues = showProbabilityValues;
 		propertyChangeSupport.firePropertyChange("showProbabilityValues", oldValue, showProbabilityValues);
+	}
+	
+	
+	/**
+	 * Toggles whether probability values (substitution, overcall and undercall) should be displayed
+	 * in the pherogram heading.
+	 * 
+	 * @see #setShowProbabilityValues(boolean)
+	 */
+	public void toggleShowProbabilityValues() {
+		setShowProbabilityValues(!isShowProbabilityValues());
 	}
 
 

@@ -47,6 +47,8 @@ import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
 import java.awt.geom.Rectangle2D;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.EnumSet;
@@ -68,9 +70,10 @@ public class PherogramArea extends DataArea implements PherogramComponent {
 	private PherogramAreaModel model;
 	private boolean updateEditableSequence = true;
 	private double verticalScale;
-	private PherogramFormats formats = new PherogramFormats();
+	private PherogramFormats formats;
 	private PherogramPainter painter = new PherogramPainter(this);
 
+	
 	private final PherogramComponentModelListener MODEL_LISTENER = new PherogramComponentModelListener() {
 		@Override
 		public void pherogramProviderChange(PherogramProviderChangeEvent event) {
@@ -133,6 +136,15 @@ public class PherogramArea extends DataArea implements PherogramComponent {
 				updateChangedPosition();
 			}
 		}
+	};
+	
+
+	private final PropertyChangeListener FORMATS_LISTENER = new PropertyChangeListener() {
+		@Override
+		public void propertyChange(PropertyChangeEvent event) {
+			getOwner().getOwner().assignSizeToAll();
+			repaint();  // Necessary for SWT if there was no size change.
+		}
 	}; 
 	
 	
@@ -156,6 +168,8 @@ public class PherogramArea extends DataArea implements PherogramComponent {
 		else {
 			this.model = model;
 			model.addListener(MODEL_LISTENER);
+			formats = new PherogramFormats();
+			formats.addPropertyChangeListener(FORMATS_LISTENER);
 			verticalScale = getHeight();
 		}
 	}

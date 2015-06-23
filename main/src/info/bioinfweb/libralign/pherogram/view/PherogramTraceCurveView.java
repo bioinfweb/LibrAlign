@@ -23,6 +23,8 @@ import java.awt.Dimension;
 import java.awt.RenderingHints;
 import java.awt.geom.Rectangle2D;
 import java.awt.geom.Rectangle2D.Double;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 
 import info.bioinfweb.commons.Math2;
 import info.bioinfweb.commons.collections.SimpleSequenceInterval;
@@ -57,7 +59,7 @@ public class PherogramTraceCurveView extends TICComponent implements PherogramCo
 	private PherogramComponentModel model;
 	private double horizontalScale = 1.0;
 	private double verticalScale = 100.0;
-	private PherogramFormats formats = new PherogramFormats();
+	private PherogramFormats formats;
 	private PherogramPainter painter = new PherogramPainter(this);
 	private PherogramHeadingView headingView = null;
 	
@@ -86,8 +88,21 @@ public class PherogramTraceCurveView extends TICComponent implements PherogramCo
 	}; 
 	
 	
+	private final PropertyChangeListener FORMATS_LISTENER = new PropertyChangeListener() {
+		@Override
+		public void propertyChange(PropertyChangeEvent event) {
+			if (getHeadingView() != null) {
+				getHeadingView().assignSize();
+				getHeadingView().repaint();  // Necessary for SWT if there was no size change.
+			}
+		}
+	}; 
+	
+	
 	public PherogramTraceCurveView() {
 		super();
+		formats = new PherogramFormats();
+		formats.addPropertyChangeListener(FORMATS_LISTENER);
   }
 
 
