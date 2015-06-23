@@ -38,8 +38,11 @@ public class AbstractPherogramViewTest {
 		if (pherogramView == null) {
 			try {
 				pherogramView = new PherogramView();
-	  		pherogramView.getTraceCurveView().setModel(new PherogramComponentModel(new BioJavaPherogramProvider(
-	  				ChromatogramFactory.create(new File("data\\pherograms\\Test_qualityScore.scf")))));
+				PherogramComponentModel model = new PherogramComponentModel(new BioJavaPherogramProvider(
+	  				ChromatogramFactory.create(new File("data\\pherograms\\Test_qualityScore.scf"))));
+	  		pherogramView.getTraceCurveView().setModel(model);
+				model.setLeftCutPosition(14);
+				model.setRightCutPosition(model.getPherogramProvider().getSequenceLength() - 6);
 				pherogramView.getTraceCurveView().setHorizontalScale(1);			
 				pherogramView.getTraceCurveView().setVerticalScale(100);
 				pherogramView.getTraceCurveView().getFormats().setQualityOutputType(QualityOutputType.ALL);
