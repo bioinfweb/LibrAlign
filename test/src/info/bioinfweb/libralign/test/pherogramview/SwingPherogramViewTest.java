@@ -94,6 +94,14 @@ public class SwingPherogramViewTest extends AbstractPherogramViewTest {
 				}
 			});
 			mnTest.add(mntmToggleShowProbability);
+			
+			JMenuItem mntmChangeQualityOutput = new JMenuItem("Change quality output type");
+			mntmChangeQualityOutput.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					getPherogramView().getTraceCurveView().getFormats().changeQualityOutputType();
+				}
+			});
+			mnTest.add(mntmChangeQualityOutput);
 		}
 		catch (Exception e) {
 			e.printStackTrace();

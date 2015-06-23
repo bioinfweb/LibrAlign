@@ -133,5 +133,14 @@ public class SwingTest extends EditableAlignmentTest {
 			}
 		});
 		testMenu.add(mntmToggleShowProbability);
+		
+		JMenuItem mntmChangeQualityOutput = new JMenuItem("Change quality output");
+		mntmChangeQualityOutput.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				int sequenceID = getAlignmentArea().getSequenceOrder().idByIndex(getAlignmentArea().getSelection().getFirstRow());
+				((PherogramArea)getAlignmentArea().getDataAreas().getSequenceAreas(sequenceID).get(0)).getFormats().changeQualityOutputType();
+			}
+		});
+		testMenu.add(mntmChangeQualityOutput);
 	}
 }
