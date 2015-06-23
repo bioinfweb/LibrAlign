@@ -21,8 +21,6 @@ package info.bioinfweb.libralign.pherogram.view;
 
 import java.awt.Dimension;
 import java.awt.RenderingHints;
-import java.awt.geom.Rectangle2D;
-import java.awt.geom.Rectangle2D.Double;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
@@ -40,7 +38,6 @@ import info.bioinfweb.libralign.pherogram.model.PherogramComponentModelListener;
 import info.bioinfweb.libralign.pherogram.model.PherogramCutPositionChangeEvent;
 import info.bioinfweb.libralign.pherogram.model.PherogramFirstSeqPosChangeEvent;
 import info.bioinfweb.libralign.pherogram.model.PherogramProviderChangeEvent;
-import info.bioinfweb.libralign.pherogram.provider.PherogramProvider;
 
 
 

@@ -366,6 +366,22 @@ public class PherogramFormats {
 		this.qualityOutputType = qualityOutputType;
 		propertyChangeSupport.firePropertyChange("qualityOutputType", oldValue, qualityOutputType);
 	}
+	
+	
+	/**
+	 * Changes the current quality output type to the next value in the order defined by {@link QualityOutputType}. 
+	 * If the end of the {@code enum} has been reached this method will start with the first value again.
+	 * 
+	 * @see #setQualityOutputType(QualityOutputType)
+	 */
+	public void changeQualityOutputType() {
+		int index = getQualityOutputType().ordinal() + 1;
+		QualityOutputType[] values = QualityOutputType.values();
+		if (index >= values.length) {
+			index = 0;
+		}
+		setQualityOutputType(values[index]);
+	}
 
 	
 	public double qualityOutputHeight() {
