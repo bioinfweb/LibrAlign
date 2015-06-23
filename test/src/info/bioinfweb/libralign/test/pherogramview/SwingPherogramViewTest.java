@@ -86,6 +86,14 @@ public class SwingPherogramViewTest extends AbstractPherogramViewTest {
 				}
 			});
 			mnTest.add(mntmReverseComplement);
+			
+			JMenuItem mntmToggleShowProbability = new JMenuItem("Toggle show probability values");
+			mntmToggleShowProbability.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					getPherogramView().getTraceCurveView().getFormats().toggleShowProbabilityValues();
+				}
+			});
+			mnTest.add(mntmToggleShowProbability);
 		}
 		catch (Exception e) {
 			e.printStackTrace();

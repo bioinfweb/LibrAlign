@@ -123,5 +123,15 @@ public class SwingTest extends EditableAlignmentTest {
 			}
 		});
 		testMenu.add(mntmReverseComplement);
+		testMenu.addSeparator();
+		
+		JMenuItem mntmToggleShowProbability = new JMenuItem("Toggle show probability values");
+		mntmToggleShowProbability.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				int sequenceID = getAlignmentArea().getSequenceOrder().idByIndex(getAlignmentArea().getSelection().getFirstRow());
+				((PherogramArea)getAlignmentArea().getDataAreas().getSequenceAreas(sequenceID).get(0)).getFormats().toggleShowProbabilityValues();
+			}
+		});
+		testMenu.add(mntmToggleShowProbability);
 	}
 }

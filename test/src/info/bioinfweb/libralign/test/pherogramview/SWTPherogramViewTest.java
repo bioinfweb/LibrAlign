@@ -26,6 +26,10 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.widgets.Menu;
+import org.eclipse.swt.widgets.MenuItem;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
 
 
 
@@ -76,5 +80,23 @@ public class SWTPherogramViewTest extends AbstractPherogramViewTest {
 		shell.setLayout(new FillLayout(SWT.VERTICAL));
 		
 		getPherogramView().createSWTWidget(shell, SWT.NONE);
+		
+		Menu menu = new Menu(shell, SWT.BAR);
+		shell.setMenuBar(menu);
+		
+		MenuItem mntmTest_1 = new MenuItem(menu, SWT.CASCADE);
+		mntmTest_1.setText("Test");
+		
+		Menu menu_1 = new Menu(mntmTest_1);
+		mntmTest_1.setMenu(menu_1);
+		
+		MenuItem mntmToggleShowProbability = new MenuItem(menu_1, SWT.NONE);
+		mntmToggleShowProbability.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent arg0) {
+				getPherogramView().getTraceCurveView().getFormats().toggleShowProbabilityValues();
+			}
+		});
+		mntmToggleShowProbability.setText("Toggle show probability values");
 	}
 }
