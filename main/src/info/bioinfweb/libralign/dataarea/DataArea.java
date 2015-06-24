@@ -20,15 +20,11 @@ package info.bioinfweb.libralign.dataarea;
 
 
 import java.awt.Dimension;
-import java.beans.PropertyChangeEvent;
 import java.util.Set;
 
 import info.bioinfweb.libralign.alignmentarea.AlignmentArea;
 import info.bioinfweb.libralign.alignmentarea.content.AlignmentContentArea;
 import info.bioinfweb.libralign.alignmentarea.content.AlignmentSubArea;
-import info.bioinfweb.libralign.alignmentarea.paintsettings.PaintSettingsListener;
-import info.bioinfweb.libralign.alignmentarea.paintsettings.TokenPainterListEvent;
-import info.bioinfweb.libralign.alignmentarea.paintsettings.TokenPainterReplacedEvent;
 import info.bioinfweb.libralign.model.AlignmentModel;
 import info.bioinfweb.libralign.model.AlignmentModelChangeListener;
 import info.bioinfweb.libralign.multiplealignments.MultipleAlignmentsContainer;
@@ -41,7 +37,7 @@ import info.bioinfweb.libralign.multiplealignments.MultipleAlignmentsContainer;
  * @author Ben St&ouml;ver
  * @since 0.0.0
  */
-public abstract class DataArea extends AlignmentSubArea implements AlignmentModelChangeListener, PaintSettingsListener {
+public abstract class DataArea extends AlignmentSubArea implements AlignmentModelChangeListener {
 	private AlignmentArea labeledAlignmentArea;
 	private DataAreaList list = null;
 	private boolean visible = true;
@@ -193,25 +189,5 @@ public abstract class DataArea extends AlignmentSubArea implements AlignmentMode
 	@Override
 	public Dimension getSize() {
 		return new Dimension(getOwner().getOwner().getGlobalMaxNeededWidth(),	getHeight());  
-	}
-
-
-	@Override
-	public void propertyChange(PropertyChangeEvent event) {
-		if (event.getPropertyName().startsWith("zoom")) {
-			assignSize();
-		}
-	}
-
-
-	@Override
-	public void tokenPainterReplaced(TokenPainterReplacedEvent event) {
-		assignSize();
-	}
-
-
-	@Override
-	public void tokenPainterListChange(TokenPainterListEvent event) {
-		assignSize();
 	}
 }

@@ -21,6 +21,7 @@ package info.bioinfweb.libralign.alignmentarea;
 
 import java.awt.Dimension;
 import java.awt.Rectangle;
+import java.beans.PropertyChangeEvent;
 import java.util.Iterator;
 
 import javax.swing.JComponent;
@@ -36,6 +37,9 @@ import info.bioinfweb.libralign.alignmentarea.content.AlignmentSubArea;
 import info.bioinfweb.libralign.alignmentarea.label.AlignmentLabelArea;
 import info.bioinfweb.libralign.alignmentarea.order.SequenceOrder;
 import info.bioinfweb.libralign.alignmentarea.paintsettings.PaintSettings;
+import info.bioinfweb.libralign.alignmentarea.paintsettings.PaintSettingsListener;
+import info.bioinfweb.libralign.alignmentarea.paintsettings.TokenPainterListEvent;
+import info.bioinfweb.libralign.alignmentarea.paintsettings.TokenPainterReplacedEvent;
 import info.bioinfweb.libralign.alignmentarea.selection.SelectionModel;
 import info.bioinfweb.libralign.dataarea.DataAreaChangeEvent;
 import info.bioinfweb.libralign.dataarea.DataAreaModel;
@@ -67,7 +71,7 @@ public class AlignmentArea extends TICComponent implements AlignmentModelChangeL
 	private AlignmentModel<?> alignmentModel = null;
 	private SequenceOrder sequenceOrder = new SequenceOrder(this);
 	private DataAreaModel dataAreas = new DataAreaModel(this);
-	private PaintSettings paintSettings = new PaintSettings(this);
+	private PaintSettings paintSettings;
 	private EditSettings editSettings;
 	private SelectionModel selection = new SelectionModel(this);
 
@@ -76,6 +80,23 @@ public class AlignmentArea extends TICComponent implements AlignmentModelChangeL
 	private AlignmentLabelArea alignmentLabelArea;
 	private boolean allowVerticalScrolling = true;
 	private Rectangle lastCursorRectangle = null;
+	
+	private PaintSettingsListener PAINT_SETTINGS_LISTERNER = new PaintSettingsListener() {
+		@Override
+		public void propertyChange(PropertyChangeEvent event) {
+			assignSizeToAll();
+		}
+		
+		@Override
+		public void tokenPainterReplaced(TokenPainterReplacedEvent event) {
+			assignSizeToAll();
+		}
+		
+		@Override
+		public void tokenPainterListChange(TokenPainterListEvent event) {
+			assignSizeToAll();
+		}
+	};
 	
 	
 	/**
@@ -109,6 +130,9 @@ public class AlignmentArea extends TICComponent implements AlignmentModelChangeL
 		alignmentLabelArea = new AlignmentLabelArea(this);  // Must be called after alignmentContentArea has been created.
 
 		dataAreas.addListener(this);
+		
+		paintSettings = new PaintSettings(this);
+		paintSettings.addListener(PAINT_SETTINGS_LISTERNER);
 	}
 
 

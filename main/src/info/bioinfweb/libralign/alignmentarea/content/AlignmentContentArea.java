@@ -19,11 +19,15 @@
 package info.bioinfweb.libralign.alignmentarea.content;
 
 
+import info.bioinfweb.commons.SystemUtils;
 import info.bioinfweb.commons.tic.TICComponent;
 import info.bioinfweb.commons.tic.TICPaintEvent;
+import info.bioinfweb.commons.tic.input.TICMouseWheelEvent;
+import info.bioinfweb.commons.tic.input.TICMouseWheelListener;
 import info.bioinfweb.libralign.alignmentarea.AlignmentArea;
 import info.bioinfweb.libralign.alignmentarea.ToolkitSpecificAlignmentArea;
 import info.bioinfweb.libralign.alignmentarea.label.AlignmentLabelArea;
+import info.bioinfweb.libralign.alignmentarea.paintsettings.PaintSettings;
 import info.bioinfweb.libralign.alignmentarea.selection.SelectionChangeEvent;
 import info.bioinfweb.libralign.alignmentarea.selection.SelectionListener;
 import info.bioinfweb.libralign.alignmentarea.selection.SelectionModel;
@@ -57,6 +61,9 @@ import org.eclipse.swt.widgets.Composite;
  * @see AlignmentLabelArea
  */
 public class AlignmentContentArea extends TICComponent {
+	private static final double ZOOM_PER_CLICK = 0.1;
+	
+	
 	private final AlignmentArea owner;
 
 
@@ -71,6 +78,29 @@ public class AlignmentContentArea extends TICComponent {
 	public AlignmentContentArea(AlignmentArea owner) {
 		super();
 		this.owner = owner;
+		addMouseWheelListener(new TICMouseWheelListener() {
+			@Override
+			public boolean mouseWheelMoved(TICMouseWheelEvent event) {
+				if ((event.isMetaDown() && SystemUtils.IS_OS_MAC) || (event.isControlDown() && !SystemUtils.IS_OS_MAC)) {
+					double change = event.getPreciseWheelRotation() * ZOOM_PER_CLICK;
+					PaintSettings settings = getOwner().getPaintSettings();
+					
+					double zoomX = settings.getZoomX();
+					if (settings.isChangeZoomXOnMouseWheel()) {
+						zoomX -= change;
+					}
+					double zoomY = settings.getZoomY();
+					if (settings.isChangeZoomYOnMouseWheel()) {
+						zoomY -= change;
+					}
+					settings.setZoom(zoomX, zoomY);
+					return true;
+				}
+				else {
+					return false;  // Forward event to parent JScrollPane to scroll.
+				}
+			}
+		});
   }
 
 

@@ -597,11 +597,4 @@ public class PherogramArea extends DataArea implements PherogramComponent {
 //	@Override
 	public <T, U> void afterProviderChanged(AlignmentModel<T> previous,	AlignmentModel<U> current) {}  
 	// This event is currently not passed to sequence attached areas.
-
-
-	@Override
-	public void propertyChange(PropertyChangeEvent event) {
-		super.propertyChange(event);  // Calls assignSize().
-		
-	}
 }

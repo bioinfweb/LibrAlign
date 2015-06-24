@@ -51,6 +51,8 @@ public class PaintSettings {
 	private Color selectionColor = SystemColor.textHighlight;
 	private double zoomX = 1;
 	private double zoomY = 1;
+	private boolean changeZoomXOnMouseWheel = true;
+	private boolean changeZoomYOnMouseWheel = true;
 	private Set<PaintSettingsListener> listeners = new HashSet<PaintSettingsListener>();
 	
 	
@@ -149,11 +151,21 @@ public class PaintSettings {
 	}
 
 
+	/**
+	 * Returns the vertical zoom factor in an alignment area, that e.g. determines the token width. 
+	 * 
+	 * @return the zoom factor where {@code 1.0} indicates 100 % zoom (original size)
+	 */
 	public double getZoomX() {
 		return zoomX;
 	}
 
 
+	/**
+	 * Returns the horizontal zoom factor in an alignment area, that e.g. determines the token width. 
+	 * 
+	 * @return the zoom factor where {@code 1.0} indicates 100 % zoom (original size)
+	 */
 	public double getZoomY() {
 		return zoomY;
 	}
@@ -183,6 +195,44 @@ public class PaintSettings {
 	}
 	
 	
+	/**
+	 * Indicates whether the horizontal zoom factor shall be changed, if the user moves the mouse wheel
+	 * while pressing the control button (or meta button on Macs). 
+	 * 
+	 * @return {@code true} if the zoom will be changed, {@code false} otherwise
+	 */
+	public boolean isChangeZoomXOnMouseWheel() {
+		return changeZoomXOnMouseWheel;
+	}
+
+
+	public void setChangeZoomXOnMouseWheel(boolean zoomXOnMouseWheel) {
+		if (this.changeZoomXOnMouseWheel != zoomXOnMouseWheel) {
+			this.changeZoomXOnMouseWheel = zoomXOnMouseWheel;
+			firePropertyChanged("zoomXOnMouseWheel", !zoomXOnMouseWheel, zoomXOnMouseWheel);
+		}
+	}
+
+
+	/**
+	 * Indicates whether the vertical zoom factor shall be changed, if the user moves the mouse wheel
+	 * while pressing the control button (or meta button on Macs). 
+	 * 
+	 * @return {@code true} if the zoom will be changed, {@code false} otherwise
+	 */
+	public boolean isChangeZoomYOnMouseWheel() {
+		return changeZoomYOnMouseWheel;
+	}
+
+
+	public void setChangeZoomYOnMouseWheel(boolean zoomYOnMouseWheel) {
+		if (this.changeZoomYOnMouseWheel != zoomYOnMouseWheel) {
+			this.changeZoomYOnMouseWheel = zoomYOnMouseWheel;
+			firePropertyChanged("zoomYOnMouseWheel", !zoomYOnMouseWheel, zoomYOnMouseWheel);
+		}
+	}
+
+
 	/**
 	 * Returns the width of the column with the specified index.
 	 * 

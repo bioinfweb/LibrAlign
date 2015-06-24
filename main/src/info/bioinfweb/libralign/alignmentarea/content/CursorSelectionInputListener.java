@@ -75,7 +75,7 @@ public class CursorSelectionInputListener extends TICMouseAdapter implements TIC
 
 
 	@Override
-	public void mousePressed(TICMouseEvent event) {
+	public boolean mousePressed(TICMouseEvent event) {
 		setSwingFocus(event);  // Necessary for Swing components to react to keyboard events.
 		if (event.getClickCount() > 1) {
 			// Handle double click events here
@@ -84,20 +84,22 @@ public class CursorSelectionInputListener extends TICMouseAdapter implements TIC
 			Point columnRow = calculateColumnRow((SequenceArea)event.getSource(), event.getComponentX(), event.getComponentY());
 			getOwner().getSelection().setNewCursorPosition(columnRow.x, columnRow.y, 1);  // Height is always set to 1 on a mouse click.
 		}
+		return true;  // Forwarding to parent is not necessary.
 	}
 
 
 	@Override
-	public void mouseDragged(TICMouseEvent event) {
+	public boolean mouseDragged(TICMouseEvent event) {
 		if ((event.isMouseButton1Down()) && (event.getSource() instanceof SequenceArea)) {
 			Point columnRow = calculateColumnRow((SequenceArea)event.getSource(), event.getComponentX(), event.getComponentY());
 			getOwner().getSelection().setSelectionEnd(columnRow.x, columnRow.y);
 		}
+		return true;  // Forwarding to parent is not necessary.
 	}
 
 	
 	@Override
-	public void keyPressed(TICKeyEvent event) {
+	public boolean keyPressed(TICKeyEvent event) {
 		SelectionModel selection = getOwner().getSelection();
 		AlignmentModel provider = getOwner().getAlignmentModel();
 		switch (event.getKeyCode()) {
@@ -234,9 +236,12 @@ public class CursorSelectionInputListener extends TICMouseAdapter implements TIC
 				}
 				break;
 		}
-	}
+		return true;  // Forwarding to parent is not necessary.
+}
 
 
 	@Override
-	public void keyReleased(TICKeyEvent event) {}
+	public boolean keyReleased(TICKeyEvent event) {
+		return true;  // Forwarding to parent is not necessary.
+	}
 }
