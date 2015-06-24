@@ -37,6 +37,13 @@ import java.util.ListIterator;
 
 
 
+/**
+ * The data area model of a {@link PherogramArea} containing the pherogram source, as well as cut positions, 
+ * the column where the pherogram is attached to the editable sequence and pherogram distortion information.
+ * 
+ * @author Ben St&ouml;ver
+ * @since 0.4.0
+ */
 public class PherogramAreaModel extends PherogramComponentModel implements DataModel {
 	private PherogramArea owner;
 	private int firstSeqPos;
@@ -563,8 +570,8 @@ public class PherogramAreaModel extends PherogramComponentModel implements DataM
 		shiftChangeList.clear();
 		shiftChangeList.addAll(newList);  // shiftChangeList = newList; would be easier, but problematic, if references to the list are currently stored by any application objects.
 	}
-
-
+	
+	
 	public ScaledPherogramDistortion createPherogramDistortion() {
 		ScaledPherogramDistortion result = new ScaledPherogramDistortion(getPherogramProvider().getSequenceLength());
   	
@@ -578,7 +585,7 @@ public class PherogramAreaModel extends PherogramComponentModel implements DataM
 		if (getOwner().getOwner().getOwner().getAlignmentModel() instanceof ConcatenatedAlignmentModel) {
 			throw new InternalError("Support for concatenated models not yet implemented.");
 		}
-		final double compoundWidth = getOwner().getOwner().getOwner().getPaintSettings().getTokenWidth(0);  //TODO Use index of an aligned column to determine correct width also for concatenated models.
+		final double compoundWidth = getOwner().getEditableTokenWidth();
 		int stepWidth = 1;
 		int editPosPerBaseCallPos = 1;
 		double baseCallPaintX = 0; //0.5 * compoundWidth;

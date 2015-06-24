@@ -19,12 +19,18 @@
 package info.bioinfweb.libralign.pherogram;
 
 
+import info.bioinfweb.commons.beans.PropertyChangeEventForwarder;
 import info.bioinfweb.commons.graphics.GraphicsUtils;
+import info.bioinfweb.commons.graphics.ZoomableFont;
 import info.bioinfweb.libralign.alignmentarea.content.SequenceColorSchema;
+import info.bioinfweb.libralign.alignmentarea.paintsettings.PaintSettings;
+import info.bioinfweb.libralign.dataarea.implementations.pherogram.PherogramArea;
 import info.bioinfweb.libralign.pherogram.view.PherogramHeadingView;
+import info.bioinfweb.libralign.pherogram.view.PherogramTraceCurveView;
 
 import java.awt.Color;
 import java.awt.Font;
+import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 
@@ -35,9 +41,11 @@ import java.beans.PropertyChangeSupport;
  * It is used by implementations of {@link PherogramComponent} and {@link PherogramHeadingView} to format
  * their output.
  * <p>
- * Note that the associated pherogram components are not automatically repainted when a property of
- * an instance of this class is changed. Changes will only be visible if the according components are
- * repainted by the application after a property has been changed.
+ * Changes to all properties can be tracked using {@link PropertyChangeListener}s during runtime. Note that
+ * separate listeners could be added to  the nested {@link ZoomableFont} objects, but their events are also
+ * forwarded to listeners registered with this objects. The forwarded events then have the font property name
+ * as a prefix (e.g. {@code "baseCallFont.name"} if the {@code "name"} property of {@link #getBaseCallFont()}
+ * was changed). 
  * 
  * @author Ben St&ouml;ver
  * @since 0.1.0
@@ -70,6 +78,7 @@ public class PherogramFormats {
 	public static final double FONT_HEIGHT_FACTOR = 1.2;
 	
 	
+	private PherogramComponent owner;
 	private SequenceColorSchema nucleotideColorSchema;
 	private Color backgroundColor;
 	private Color cutBackgroundColor;
@@ -77,20 +86,35 @@ public class PherogramFormats {
 	private Color baseCallLineColor;
 	private Color cutBaseCallLineColor;
 	private boolean showBaseCallLines = true;
-	private Font baseCallFont = new Font(Font.DIALOG, Font.BOLD, 12);
-	private Font indexFont = new Font(Font.DIALOG, Font.PLAIN, 8);
-	private Font annotationFont = new Font(Font.DIALOG, Font.PLAIN, 8);
+	private ZoomableFont baseCallFont;
+	private ZoomableFont indexFont;
+	private ZoomableFont annotationFont;
 	private QualityOutputType qualityOutputType = QualityOutputType.MAXIMUM;
 	private boolean showProbabilityValues = false;
 	private Color probabilityColor;
 	private PropertyChangeSupport propertyChangeSupport = new PropertyChangeSupport(this);
 	
+	private PropertyChangeListener PROPERTY_CHANGE_FORWARDER = new PropertyChangeListener() {
+		@Override
+		public void propertyChange(PropertyChangeEvent event) {
+			propertyChangeSupport.firePropertyChange(event);
+		}
+	};
+	
+	
+	private ZoomableFont createFont(String prefix, int style, double size) {
+		ZoomableFont result = new ZoomableFont(Font.DIALOG, style, size);
+		result.addPropertyChangeListener(new PropertyChangeEventForwarder(prefix, PROPERTY_CHANGE_FORWARDER));
+		return result;
+	}
+	
 	
 	/**
 	 * Creates a new instance of this class with default values.
 	 */
-	public PherogramFormats() {
+	public PherogramFormats(PherogramComponent owner) {
 		super();
+		this.owner = owner;
 		
 		nucleotideColorSchema = new SequenceColorSchema();
 		backgroundColor = getNucleotideColorSchema().getDefaultBgColor();
@@ -99,6 +123,20 @@ public class PherogramFormats {
 		baseCallLineColor =  GraphicsUtils.moveColorToCenter(backgroundColor, BASE_CALL_LINE_COLOR_FACTOR);
 		cutBaseCallLineColor =  GraphicsUtils.moveColorToCenter(cutBackgroundColor, BASE_CALL_LINE_COLOR_FACTOR);
 		probabilityColor = GraphicsUtils.getContrastColor(Color.BLACK, headingBackgroundColor, 30);
+
+		baseCallFont = createFont("baseCallFont.", Font.BOLD, 15);
+		indexFont = createFont("indexFont.", Font.PLAIN, 10);
+		annotationFont = createFont("annotationFont.", Font.PLAIN, 10);
+	}
+
+
+	/**
+	 * Returns the owning trace curve view or pherogram data area using this instance.
+	 * 
+	 * @return the owning object
+	 */
+	public PherogramComponent getOwner() {
+		return owner;
 	}
 
 
@@ -290,20 +328,8 @@ public class PherogramFormats {
 	 * 
 	 * @return the font object that is used
 	 */
-	public Font getBaseCallFont() {
+	public ZoomableFont getBaseCallFont() {
 		return baseCallFont;
-	}
-
-
-	/**
-	 * Sets a new font used to print the characters of the base call sequence.
-	 * 
-	 * @param baseCallFont - the new font
-	 */
-	public void setBaseCallFont(Font baseCallFont) {
-		final Font oldFont = this.baseCallFont;
-		this.baseCallFont = baseCallFont;
-		propertyChangeSupport.firePropertyChange("baseCallFont", oldFont, baseCallFont);
 	}
 
 
@@ -312,20 +338,8 @@ public class PherogramFormats {
 	 * 
 	 * @return the font object that is used
 	 */
-	public Font getIndexFont() {
+	public ZoomableFont getIndexFont() {
 		return indexFont;
-	}
-
-
-	/**
-	 * Sets a new font used to print the the nucleotide indices.
-	 * 
-	 * @param baseCallFont - the new font
-	 */
-	public void setIndexFont(Font indexFont) {
-		final Font oldFont = this.indexFont;
-		this.indexFont = indexFont;
-		propertyChangeSupport.firePropertyChange("indexFont", oldFont, indexFont);
 	}
 
 
@@ -334,20 +348,8 @@ public class PherogramFormats {
 	 * 
 	 * @return the font object that is used
 	 */
-	public Font getAnnotationFont() {
+	public ZoomableFont getAnnotationFont() {
 		return annotationFont;
-	}
-
-
-	/**
-	 * Sets a new font used to print the base call quality scores and probability values.
-	 * 
-	 * @param annotationFont - the new font
-	 */
-	public void setAnnotationFont(Font annotationFont) {
-		final Font oldFont = this.annotationFont;
-		this.annotationFont = annotationFont;
-		propertyChangeSupport.firePropertyChange("annotationFont", oldFont, annotationFont);
 	}
 
 
@@ -384,12 +386,18 @@ public class PherogramFormats {
 	}
 
 	
+	/**
+	 * Returns the height of the quality score output depending on the current output type for the current 
+	 * zoom factor.
+	 * 
+	 * @return the height needed to display the quality output
+	 */
 	public double qualityOutputHeight() {
 		switch (getQualityOutputType()) {
 			case ALL:
-				return 4 * getAnnotationFont().getSize() * FONT_HEIGHT_FACTOR;
+				return 4 * getAnnotationFont().createFont(calculateFontZoomFactor()).getSize2D() * FONT_HEIGHT_FACTOR;
 			case MAXIMUM:
-				return getAnnotationFont().getSize() * FONT_HEIGHT_FACTOR;
+				return getAnnotationFont().createFont(calculateFontZoomFactor()).getSize2D() * FONT_HEIGHT_FACTOR;
 			default:
 				return 0;
 		}
@@ -452,6 +460,33 @@ public class PherogramFormats {
 		final Color oldColor = this.probabilityColor;
 		this.probabilityColor = probabilityColor;
 		propertyChangeSupport.firePropertyChange("probabilityColor", oldColor, probabilityColor);
+	}
+	
+	
+	/**
+	 * Calculates the factor to multiply font heights with to fit to the current size of the owning component.
+	 * 
+	 * @throws IllegalStateException if the owner is neither an instance of {@link PherogramArea} or
+	 *         {@link PherogramTraceCurveView}
+	 */
+	public double calculateFontZoomFactor() {
+		if (getOwner() instanceof PherogramArea) {
+			PherogramArea area = (PherogramArea)getOwner();
+			PaintSettings paintSettings = area.getOwner().getOwner().getPaintSettings();
+			return Math.min(paintSettings.getZoomY(),
+					(area.getEditableTokenWidth() / area.getOwner().getOwner().getPaintSettings().getTokenHeight()) * 
+					paintSettings.getZoomY());
+		}
+		else if (getOwner() instanceof PherogramTraceCurveView) {
+			throw new InternalError("not implemented");
+//			PherogramTraceCurveView view = (PherogramTraceCurveView)getOwner();
+//			return Math.min(view.getHorizontalScale(),
+//					view.getVerticalScale());  //TODO Multiply getVerticalScale() by according factor.
+		}
+		else {
+			throw new IllegalStateException("Reading the zoom from an owner of type " + getOwner().getClass() + 
+					" is not supported by this implementation.");
+		}
 	}
 
 

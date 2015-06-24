@@ -83,13 +83,4 @@ public interface PherogramComponent {
 	 * @return the layout object containing color and font definitions
 	 */
 	public PherogramFormats getFormats();
-
-	/**
-	 * Sets a new format object that is used to paint the displayed pherogram.
-	 * 
-	 * @param colorSchema - the new color schema to be used
-	 * @see #setBackgroundColor(Color)
-	 * @see #setBaseCallLineColor(Color)
-	 */
-	public void setFormats(PherogramFormats layout);
 }

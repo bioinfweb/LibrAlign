@@ -261,7 +261,7 @@ public class PaintSettings {
 	
 	
 	/**
-	 * Returns the height of tokens displayed in this alignment.
+	 * Returns the height of tokens displayed in this alignment recognizing the current value of {@link #getZoomY()}.
 	 * 
 	 * @return the height in pixels
 	 */

@@ -79,14 +79,15 @@ public class PherogramPainter {
 		PherogramFormats formats = owner.getFormats();
 		PherogramProvider provider = owner.getModel().getPherogramProvider();
 		NucleotideCompound nucleotide = provider.getBaseCall(index);
+		double fontZoom = formats.calculateFontZoomFactor();
 		
-		g.setFont(formats.getBaseCallFont());
+		g.setFont(formats.getBaseCallFont().createFont(fontZoom));
 		g.setColor(getNucleotideColor(nucleotide.getUpperedBase()));
 		paintBaseCallText(g, nucleotide.getUpperedBase(), paintX, paintY);
 		
 		paintY += g.getFont().getSize() * PherogramFormats.FONT_HEIGHT_FACTOR;
 		if (!formats.getQualityOutputType().equals(QualityOutputType.NONE)) {
-			g.setFont(formats.getAnnotationFont());
+			g.setFont(formats.getAnnotationFont().createFont(fontZoom));
 			if (formats.getQualityOutputType().equals(QualityOutputType.MAXIMUM)) {
 				// Color is already set correctly by the nucleotide output.
 				paintY = paintAnnotation(g, provider.getQuality(nucleotide, index), paintX, paintY);
@@ -100,7 +101,7 @@ public class PherogramPainter {
 		}
 		if (formats.isShowProbabilityValues()) {
 			g.setColor(formats.getProbabilityColor());
-			g.setFont(formats.getAnnotationFont());
+			g.setFont(formats.getAnnotationFont().createFont(fontZoom));
 			
 			for (String label: PherogramProvider.PROBABILITY_LABELS) {
 				paintY = paintAnnotation(g, provider.getAnnotation(label, index), paintX, paintY);

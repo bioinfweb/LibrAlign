@@ -44,6 +44,7 @@ import info.bioinfweb.libralign.pherogram.view.PherogramTraceCurveView;
 import info.bioinfweb.libralign.pherogram.view.PherogramView;
 
 import java.awt.Color;
+import java.awt.Font;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
 import java.awt.geom.Rectangle2D;
@@ -168,7 +169,7 @@ public class PherogramArea extends DataArea implements PherogramComponent {
 		else {
 			this.model = model;
 			model.addListener(MODEL_LISTENER);
-			formats = new PherogramFormats();
+			formats = new PherogramFormats(this);
 			formats.addPropertyChangeListener(FORMATS_LISTENER);
 			verticalScale = getHeight();
 		}
@@ -235,6 +236,7 @@ public class PherogramArea extends DataArea implements PherogramComponent {
 		double x = getLabeledAlignmentArea().getContentArea().paintXByColumn(getModel().getFirstSeqPos() - getModel().getLeftCutPosition());
 		double y = 0; 
 		double height = getHeight();
+		double fontZoom = getFormats().calculateFontZoomFactor();
 		ScaledPherogramDistortion distortion = getModel().createPherogramDistortion();
 		
 		// Paint gaps:
@@ -249,14 +251,15 @@ public class PherogramArea extends DataArea implements PherogramComponent {
 		if (getFormats().isShowBaseCallLines()) {
 			g.setColor(getFormats().getBaseCallLineColor());
 			painter.paintBaseCallLines(g, paintRange.getFirstPos(), paintRange.getLastPos(), x, y, 
-					getHeight(), distortion);
+					height, distortion);
 		}
 
     // Paint indices:
-		g.setFont(getFormats().getIndexFont());
+		Font indexFont = getFormats().getIndexFont().createFont(fontZoom); 
+		g.setFont(indexFont);
 		g.setColor(Color.BLACK);
 		painter.paintBaseCallIndices(g, paintRange.getFirstPos(), paintRange.getLastPos(), x, y, distortion, tokenWidth);
-		y += getFormats().getIndexFont().getSize() * PherogramFormats.FONT_HEIGHT_FACTOR;
+		y += indexFont.getSize2D() * PherogramFormats.FONT_HEIGHT_FACTOR;
 		
 		// Paint base calls and probabilities:
 		painter.paintBaseCalls(g, paintRange.getFirstPos(), paintRange.getLastPos(), x, y, distortion);
@@ -505,9 +508,14 @@ public class PherogramArea extends DataArea implements PherogramComponent {
 	}
 
 
-	@Override
-	public void setFormats(PherogramFormats formats) {
-		this.formats = formats;
+	/**
+	 * Returns the width of the token in the editable sequence at {@link #getFirstSeqPos()}, considering the 
+	 * current zoom factor. 
+	 * 
+	 * @return the width of a token in the associated part of the editable sequence
+	 */
+	public double getEditableTokenWidth() {
+		return getOwner().getOwner().getPaintSettings().getTokenWidth(getModel().getFirstSeqPos());
 	}
 
 
@@ -586,7 +594,14 @@ public class PherogramArea extends DataArea implements PherogramComponent {
 	}
 
 
-	@Override
+//	@Override
 	public <T, U> void afterProviderChanged(AlignmentModel<T> previous,	AlignmentModel<U> current) {}  
 	// This event is currently not passed to sequence attached areas.
+
+
+	@Override
+	public void propertyChange(PropertyChangeEvent event) {
+		super.propertyChange(event);  // Calls assignSize().
+		
+	}
 }
