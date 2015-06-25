@@ -41,9 +41,9 @@ import javax.swing.ScrollPaneConstants;
  */
 public class SwingAlignmentArea extends JScrollPane implements ToolkitSpecificAlignmentArea {
 	private static Action VOID_ACTION = new AbstractAction() {
-				@Override
-				public void actionPerformed(ActionEvent e) {}
-			};
+		@Override
+		public void actionPerformed(ActionEvent e) {}
+	};
 
 
 	private AlignmentArea independentComponent;

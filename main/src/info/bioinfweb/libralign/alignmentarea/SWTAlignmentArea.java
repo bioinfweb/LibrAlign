@@ -96,6 +96,12 @@ public class SWTAlignmentArea extends Composite implements ToolkitSpecificAlignm
 		layout.marginWidth = 0;
 		layout.marginHeight = 0;
 		setLayout(layout);
+		addControlListener(new ControlAdapter() {
+			@Override
+			public void controlResized(ControlEvent e) {
+				layout();
+			}
+		});
 		
 		// Label components:
 		labelContainer = new Composite(this, SWT.NONE);
@@ -142,12 +148,11 @@ public class SWTAlignmentArea extends Composite implements ToolkitSpecificAlignm
 					@Override
 					public void controlResized(ControlEvent e) {
 						Dimension size = getIndependentComponent().getLabelArea().getSize();
-						int borderWidth = 2 * (labelContainer.getBorderWidth() + labelScroller.getBorderWidth());
 						GridData data = (GridData)labelContainer.getLayoutData();
-						data.widthHint = size.width + borderWidth;
-						data.heightHint = size.height + borderWidth;  // If the label area would scroll the height must not be changed in here.
+						data.widthHint = size.width + 2 * (labelContainer.getBorderWidth() + labelScroller.getBorderWidth());
+						data.heightHint = getClientArea().height;  // AlignmentLabelArea will be scrolled vertically.
 						labelContainer.setLayoutData(data);
-						labelContainer.setSize(data.widthHint, data.heightHint);
+						layout();
 					}
 				};
 		labelArea.addControlListener(labelAreaResizeListener);
