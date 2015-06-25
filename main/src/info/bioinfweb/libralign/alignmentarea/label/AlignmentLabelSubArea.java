@@ -20,12 +20,10 @@ package info.bioinfweb.libralign.alignmentarea.label;
 
 
 import java.awt.Dimension;
-import java.awt.Font;
 
 import info.bioinfweb.libralign.alignmentarea.AlignmentArea;
 import info.bioinfweb.libralign.alignmentarea.RowLayoutTICComponent;
 import info.bioinfweb.libralign.alignmentarea.content.AlignmentSubArea;
-import info.bioinfweb.libralign.alignmentarea.tokenpainter.SingleColorTokenPainter;
 
 
 

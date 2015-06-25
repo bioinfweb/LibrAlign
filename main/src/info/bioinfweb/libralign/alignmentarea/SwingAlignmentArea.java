@@ -33,6 +33,8 @@ import javax.swing.ScrollPaneConstants;
 
 /**
  * The Swing component rendering the top central or bottom part of an {@link AlignmentArea}.
+ * <p>
+ * This class is meant for internal use by {@link AlignmentArea} and should not be instantiated directly.   
  * 
  * @author Ben St&ouml;ver
  * @since 0.2.0

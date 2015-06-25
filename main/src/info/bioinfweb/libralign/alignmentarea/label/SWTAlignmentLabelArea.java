@@ -22,13 +22,8 @@ package info.bioinfweb.libralign.alignmentarea.label;
 import java.util.Iterator;
 
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.ControlAdapter;
-import org.eclipse.swt.events.ControlEvent;
 import org.eclipse.swt.widgets.Composite;
 
-import info.bioinfweb.commons.tic.input.TICMouseAdapter;
-import info.bioinfweb.commons.tic.input.TICMouseEvent;
-import info.bioinfweb.libralign.alignmentarea.SWTAlignmentArea;
 import info.bioinfweb.libralign.alignmentarea.content.AlignmentSubArea;
 import info.bioinfweb.libralign.alignmentarea.content.SWTAlignmentContentArea;
 import info.bioinfweb.libralign.alignmentarea.rowsarea.SWTAlignmentRowsArea;

@@ -19,7 +19,6 @@
 package info.bioinfweb.libralign.alignmentarea.label;
 
 
-import java.awt.Dimension;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
 import java.awt.SystemColor;
