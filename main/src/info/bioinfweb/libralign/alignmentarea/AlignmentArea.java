@@ -82,19 +82,30 @@ public class AlignmentArea extends TICComponent implements AlignmentModelChangeL
 	private Rectangle lastCursorRectangle = null;
 	
 	private PaintSettingsListener PAINT_SETTINGS_LISTERNER = new PaintSettingsListener() {
+		private void updateSize() {
+			getLabelArea().setLocalMaxWidthRecalculate();  // Needs to be called before assignSizeToAll().
+			assignSizeToAll();
+		}
+		
+		
 		@Override
 		public void propertyChange(PropertyChangeEvent event) {
-			assignSizeToAll();
+			if (event.getPropertyName().startsWith("zoom")) {
+				updateSize();
+			}
+			repaint();
 		}
 		
 		@Override
 		public void tokenPainterReplaced(TokenPainterReplacedEvent event) {
-			assignSizeToAll();
+			updateSize();
+			repaint();  // Necessary in SWT if the size did not change.
 		}
 		
 		@Override
 		public void tokenPainterListChange(TokenPainterListEvent event) {
-			assignSizeToAll();
+			updateSize();
+			repaint();  // Necessary in SWT if the size did not change.
 		}
 	};
 	

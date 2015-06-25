@@ -61,8 +61,6 @@ public abstract class TextLabelArea extends AlignmentLabelSubArea {
 
 	@Override
 	public int getNeededWidth() {
-		System.out.println(Math2.roundUp(FontCalculator.getInstance().getWidth(getOwner().getOwner().getPaintSettings().getTokenHeightFont(),
-				getText())) +	2 * AlignmentLabelArea.BORDER_WIDTH);
 		return Math2.roundUp(FontCalculator.getInstance().getWidth(getOwner().getOwner().getPaintSettings().getTokenHeightFont(),
 				getText())) +	2 * AlignmentLabelArea.BORDER_WIDTH;
 	}
