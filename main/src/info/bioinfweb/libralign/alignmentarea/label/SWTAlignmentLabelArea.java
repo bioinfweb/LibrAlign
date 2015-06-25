@@ -41,7 +41,9 @@ import info.bioinfweb.libralign.alignmentarea.rowsarea.SWTAlignmentRowsArea;
  * @author Ben St&ouml;ver
  * @since 0.3.0
  */
-public class SWTAlignmentLabelArea extends SWTAlignmentRowsArea implements ToolkitSpecificAlignmentLabelArea {
+public class SWTAlignmentLabelArea extends SWTAlignmentRowsArea<AlignmentLabelSubArea> 
+		implements ToolkitSpecificAlignmentLabelArea {
+	
 	private AlignmentLabelArea independentComponent;
 
 	

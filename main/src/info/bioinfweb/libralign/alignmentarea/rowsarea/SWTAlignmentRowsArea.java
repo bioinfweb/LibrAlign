@@ -19,6 +19,12 @@
 package info.bioinfweb.libralign.alignmentarea.rowsarea;
 
 
+import java.util.Arrays;
+import java.util.Iterator;
+
+import info.bioinfweb.libralign.alignmentarea.RowLayoutTICComponent;
+import info.bioinfweb.libralign.alignmentarea.content.AlignmentSubArea;
+import info.bioinfweb.libralign.alignmentarea.content.AlignmentSubAreaIterator;
 import info.bioinfweb.libralign.alignmentarea.content.SWTAlignmentContentArea;
 import info.bioinfweb.libralign.alignmentarea.label.SWTAlignmentLabelArea;
 
@@ -35,7 +41,9 @@ import org.eclipse.swt.widgets.Control;
  * @author Ben St&ouml;ver
  * @since 0.3.0
  */
-public abstract class SWTAlignmentRowsArea extends Composite implements ToolkitSpecificAlignmentRowsArea {
+public abstract class SWTAlignmentRowsArea<C extends RowLayoutTICComponent>  extends Composite 
+		implements ToolkitSpecificAlignmentRowsArea<C> {
+	
 	/**
 	 * Creates a new instance of this class with {@link RowLayout}.
 	 * 
@@ -59,6 +67,12 @@ public abstract class SWTAlignmentRowsArea extends Composite implements ToolkitS
 	}	
 
 	
+	@Override
+	public Iterator<C> subAreaIterator() {
+		return new AlignmentSubAreaIterator<C>(Arrays.asList(getChildren()).iterator()); 
+	}
+
+
 	@Override
 	public void repaint() {
 		redraw();

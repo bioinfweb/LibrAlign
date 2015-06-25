@@ -19,7 +19,10 @@
 package info.bioinfweb.libralign.alignmentarea.rowsarea;
 
 
+import java.util.Iterator;
+
 import info.bioinfweb.commons.tic.toolkit.ToolkitComponent;
+import info.bioinfweb.libralign.alignmentarea.RowLayoutTICComponent;
 
 
 
@@ -30,10 +33,12 @@ import info.bioinfweb.commons.tic.toolkit.ToolkitComponent;
  * @author Ben St&ouml;ver
  * @since 0.3.0
  */
-public interface ToolkitSpecificAlignmentRowsArea extends ToolkitComponent {
+public interface ToolkitSpecificAlignmentRowsArea<C extends RowLayoutTICComponent> extends ToolkitComponent {
   /**
    * Recreates the components displaying sequences and data areas in the alignment according to
    * the current model information. 
    */
   public void reinsertSubelements();
+  
+	public Iterator<C> subAreaIterator();
 }

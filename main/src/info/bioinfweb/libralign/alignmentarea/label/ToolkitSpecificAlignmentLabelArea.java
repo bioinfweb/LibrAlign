@@ -29,6 +29,6 @@ import info.bioinfweb.libralign.alignmentarea.rowsarea.ToolkitSpecificAlignmentR
  * @author Ben St&ouml;ver
  * @since 0.3.0
  */
-public interface ToolkitSpecificAlignmentLabelArea extends ToolkitSpecificAlignmentRowsArea {
+public interface ToolkitSpecificAlignmentLabelArea extends ToolkitSpecificAlignmentRowsArea<AlignmentLabelSubArea> {
 	
 }

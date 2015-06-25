@@ -19,8 +19,6 @@
 package info.bioinfweb.libralign.alignmentarea.content;
 
 
-import java.util.Iterator;
-
 import info.bioinfweb.libralign.alignmentarea.ToolkitSpecificAlignmentArea;
 import info.bioinfweb.libralign.alignmentarea.rowsarea.ToolkitSpecificAlignmentRowsArea;
 import info.bioinfweb.libralign.dataarea.DataAreaList;
@@ -34,9 +32,7 @@ import info.bioinfweb.libralign.dataarea.DataAreaList;
  * @author Ben St&ouml;ver
  * @since 0.3.0
  */
-public interface ToolkitSpecificAlignmentContentArea extends ToolkitSpecificAlignmentRowsArea {
-	public Iterator<AlignmentSubArea> subAreaIterator();
-	
+public interface ToolkitSpecificAlignmentContentArea extends ToolkitSpecificAlignmentRowsArea<AlignmentSubArea> {
 	/**
 	 * Returns the child component containing the specified y-coordinate.
 	 * 

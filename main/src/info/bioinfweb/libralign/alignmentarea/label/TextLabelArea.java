@@ -23,9 +23,7 @@ import info.bioinfweb.commons.Math2;
 import info.bioinfweb.commons.graphics.FontCalculator;
 import info.bioinfweb.commons.tic.TICPaintEvent;
 import info.bioinfweb.libralign.alignmentarea.content.AlignmentSubArea;
-import info.bioinfweb.libralign.alignmentarea.tokenpainter.SingleColorTokenPainter;
 
-import java.awt.Font;
 import java.awt.FontMetrics;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
@@ -63,6 +61,8 @@ public abstract class TextLabelArea extends AlignmentLabelSubArea {
 
 	@Override
 	public int getNeededWidth() {
+		System.out.println(Math2.roundUp(FontCalculator.getInstance().getWidth(getOwner().getOwner().getPaintSettings().getTokenHeightFont(),
+				getText())) +	2 * AlignmentLabelArea.BORDER_WIDTH);
 		return Math2.roundUp(FontCalculator.getInstance().getWidth(getOwner().getOwner().getPaintSettings().getTokenHeightFont(),
 				getText())) +	2 * AlignmentLabelArea.BORDER_WIDTH;
 	}

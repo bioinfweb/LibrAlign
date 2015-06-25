@@ -39,7 +39,7 @@ import javax.swing.Scrollable;
  * @author Ben St&ouml;ver
  * @since 0.3.0
  */
-public class SwingAlignmentContentArea extends SwingAlignmentRowsArea implements Scrollable, ToolkitSpecificAlignmentContentArea {
+public class SwingAlignmentContentArea extends SwingAlignmentRowsArea<AlignmentSubArea> implements Scrollable, ToolkitSpecificAlignmentContentArea {
   private AlignmentContentArea independentComponent;
 	private SequenceAreaMap sequenceAreaMap;
 	
@@ -93,12 +93,6 @@ public class SwingAlignmentContentArea extends SwingAlignmentRowsArea implements
 		}
 	}
 	
-
-	@Override
-	public Iterator<AlignmentSubArea> subAreaIterator() {
-		return new AlignmentSubAreaIterator(Arrays.asList(getComponents()).iterator()); 
-	}
-
 
 	@Override
 	public AlignmentSubArea getAreaByY(int y) {

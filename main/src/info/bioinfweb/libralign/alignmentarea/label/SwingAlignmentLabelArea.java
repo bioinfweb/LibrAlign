@@ -32,7 +32,9 @@ import info.bioinfweb.libralign.alignmentarea.rowsarea.SwingAlignmentRowsArea;
  * @author Ben St&ouml;ver
  * @since 0.3.0
  */
-public class SwingAlignmentLabelArea extends SwingAlignmentRowsArea implements ToolkitSpecificAlignmentLabelArea {
+public class SwingAlignmentLabelArea extends SwingAlignmentRowsArea<AlignmentLabelSubArea> 
+		implements ToolkitSpecificAlignmentLabelArea {
+	
 	private AlignmentLabelArea independentComponent;
 	
 	

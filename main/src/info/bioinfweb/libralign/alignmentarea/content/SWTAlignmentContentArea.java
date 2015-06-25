@@ -27,7 +27,6 @@ import info.bioinfweb.libralign.dataarea.DataArea;
 import info.bioinfweb.libralign.dataarea.DataAreaList;
 import info.bioinfweb.libralign.dataarea.DataAreaModel;
 
-import java.awt.geom.Dimension2D;
 import java.util.Arrays;
 import java.util.Iterator;
 
@@ -46,7 +45,9 @@ import org.eclipse.swt.widgets.Control;
  * @author Ben St&ouml;ver
  * @since 0.3.0
  */
-public class SWTAlignmentContentArea extends SWTAlignmentRowsArea implements ToolkitSpecificAlignmentContentArea {
+public class SWTAlignmentContentArea extends SWTAlignmentRowsArea<AlignmentSubArea> 
+		implements ToolkitSpecificAlignmentContentArea {
+	
 	private AlignmentContentArea independentComponent;
 	private SequenceAreaMap sequenceAreaMap;
 
@@ -89,12 +90,6 @@ public class SWTAlignmentContentArea extends SWTAlignmentRowsArea implements Too
 			height += size.y;
 		}
 		setSize(width, height);
-	}
-
-
-	@Override
-	public Iterator<AlignmentSubArea> subAreaIterator() {
-		return new AlignmentSubAreaIterator(Arrays.asList(getChildren()).iterator()); 
 	}
 
 
