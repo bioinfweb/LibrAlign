@@ -86,11 +86,11 @@ public class AlignmentContentArea extends TICComponent {
 					PaintSettings settings = getOwner().getPaintSettings();
 					
 					double zoomX = settings.getZoomX();
-					if (settings.isChangeZoomXOnMouseWheel()) {
+					if (settings.isChangeZoomXOnMouseWheel() && (zoomX - change >= 0)) {
 						zoomX -= change;
 					}
 					double zoomY = settings.getZoomY();
-					if (settings.isChangeZoomYOnMouseWheel()) {
+					if (settings.isChangeZoomYOnMouseWheel() && (zoomY - change >= 0)) {
 						zoomY -= change;
 					}
 					settings.setZoom(zoomX, zoomY);

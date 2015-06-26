@@ -180,6 +180,7 @@ public class PaintSettings {
 	 * repaint and resize operations.
 	 * 
 	 * @param zoomX the new horizontal zoom factor
+	 * @throws IllegalArgumentException if a zoom factor <= 0 is specified
 	 * @see #setZoom(double, double)
 	 * @see #setChangeZoomXOnMouseWheel(boolean)
 	 */
@@ -196,6 +197,7 @@ public class PaintSettings {
 	 * repaint and resize operations.
 	 * 
 	 * @param zoomY the new vertical zoom factor
+	 * @throws IllegalArgumentException if a zoom factor <= 0 is specified
 	 * @see #setZoom(double, double)
 	 * @see #setChangeZoomYOnMouseWheel(boolean)
 	 */
@@ -210,11 +212,16 @@ public class PaintSettings {
 	 * 
 	 * @param zoomX the new horizontal zoom factor
 	 * @param zoomY the new vertical zoom factor
+	 * @throws IllegalArgumentException if a zoom factor <= 0 is specified
 	 * @see #setChangeZoomXOnMouseWheel(boolean)
 	 * @see #setChangeZoomYOnMouseWheel(boolean)
 	 */
 	public void setZoom(double zoomX, double zoomY) {
 		if ((this.zoomX != zoomX) || (this.zoomY != zoomY)) {
+			if ((zoomX <= 0) || (zoomY <= 0)) {
+				throw new IllegalArgumentException("Zoom factors must always be greater than zero.");
+			}
+			
 			double oldZoomX = zoomX;
 			double oldZoomY = zoomY;
 			
