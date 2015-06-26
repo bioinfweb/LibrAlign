@@ -72,7 +72,7 @@ public class PherogramPainter {
 		double fontZoom = formats.calculateFontZoomFactor();
 		
 		g.setFont(formats.getBaseCallFont().createFont(fontZoom));
-		g.setColor(formats.getNucleotideColor(nucleotide.getUpperedBase()));
+		g.setColor(formats.getNucleotideColor(nucleotide.getUpperedBase().charAt(0)));
 		paintBaseCallText(g, nucleotide.getUpperedBase(), paintX, paintY);
 		
 		paintY += g.getFont().getSize() * PherogramFormats.FONT_HEIGHT_FACTOR;
@@ -84,7 +84,7 @@ public class PherogramPainter {
 			}
 			else {  // QualityOutputType.ALL
 				for (NucleotideCompound qualityNucleotide: PherogramProvider.TRACE_CURVE_NUCLEOTIDES) {
-					g.setColor(formats.getNucleotideColor(qualityNucleotide.getUpperedBase()));
+					g.setColor(formats.getNucleotideColor(qualityNucleotide.getUpperedBase().charAt(0)));
 					paintY = paintAnnotation(g, provider.getQuality(qualityNucleotide, index), paintX, paintY);
 				}
 			}
@@ -234,7 +234,7 @@ public class PherogramPainter {
 						provider.getTraceValue(nucleotide, traceX) * owner.getVerticalScale());  //TODO curveTo() could be used alternatively.
 			}
 
-			g.setColor(owner.getFormats().getNucleotideColor("" + nucleotide.toString().charAt(0)));
+			g.setColor(owner.getFormats().getNucleotideColor(nucleotide.toString().charAt(0)));
 			g.draw(path);
 		}
 		
@@ -402,7 +402,7 @@ public class PherogramPainter {
 			}
 
 			// Paint trace curve path:
-			g.setColor(owner.getFormats().getNucleotideColor("" + nucleotide.toString().charAt(0)));
+			g.setColor(owner.getFormats().getNucleotideColor(nucleotide.toString().charAt(0)));
 			g.draw(path);
 		}
 		
@@ -410,10 +410,10 @@ public class PherogramPainter {
 	}
 	
 	
-	public void paintGaps(Graphics2D g, int firstBaseCallIndex, int lastBaseCallIndex, double startX, double startY, double height, 
-			PherogramDistortion distortion, double compoundWidth) {
+	public void paintGaps(Graphics2D g, int firstBaseCallIndex, int lastBaseCallIndex, double startX, double startY, 
+			double height, PherogramDistortion distortion, double compoundWidth) {
 		
-		g.setColor(owner.getFormats().getNucleotideColor( "" + AbstractTokenSet.DEFAULT_GAP_REPRESENTATION));
+		g.setColor(owner.getFormats().getNucleotideColor(AbstractTokenSet.DEFAULT_GAP_REPRESENTATION));
 		
 		for (int baseCallIndex = firstBaseCallIndex; baseCallIndex <= lastBaseCallIndex; baseCallIndex++) {
 			if (distortion.getGapPattern(baseCallIndex) != null) {

@@ -276,18 +276,34 @@ public class PherogramFormats {
 	 * @param nucleotide the token representation (nucleotide characters or the gap or unknown character are valid here)
 	 * @return the color determined by the algorithm described above.
 	 */
-	public Color getNucleotideColor(String nucleotide) {
+	public Color getNucleotideColor(char nucleotide) {
 		Color result = null;
 		if (owner instanceof PherogramArea) {
-			result = ((PherogramArea)owner).getAccordingTokenPainter().getColor(nucleotide);
+			result = ((PherogramArea)owner).getAccordingTokenPainter().getColor(Character.toString(nucleotide));
 		}
 		if (result == null) {
-			result = nucleotideColorMap.get(nucleotide);
+			result = nucleotideColorMap.get(Character.toString(nucleotide));
 		}
 		if (result == null) {
 			result = getProbabilityColor();
 		}
 		return result;
+	}
+	
+	
+	/**
+	 * Sets a new color for a nucleotide representation in the internal color map of this instance.
+	 * <p>
+	 * Note that that color is only used if this instance is owned by a {@link PherogramTraceCurveView}
+	 * or if the token painter associated with the owning {@link PherogramArea} does not specify an
+	 * according color.
+	 * 
+	 * @param nucleotide the nucleotide (or gap, ...) representation 
+	 * @param color the color to put in the map
+	 */
+	public void setNucleotideColor(char nucleotide, Color color) {
+		propertyChangeSupport.firePropertyChange("nucleotideColor." + nucleotide, 
+				nucleotideColorMap.put(Character.toString(nucleotide), color), color);
 	}
 	
 	
