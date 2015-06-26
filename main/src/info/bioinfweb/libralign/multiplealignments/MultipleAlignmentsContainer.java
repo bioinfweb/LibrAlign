@@ -54,8 +54,9 @@ public class MultipleAlignmentsContainer extends TICComponent {
 	private AlignmentAreaList alignmentAreas = new AlignmentAreaList(this);
 	private EditSettings editSettings = new EditSettings();
 	private boolean distributeRemainingSpace = false;
+	private boolean synchronizeZoomX = true;
+	private boolean synchronizeZoomY = true;
 
-	
 	/**
 	 * Use the returned instance to change the alignment areas contained in this container.
 	 * 
@@ -99,6 +100,58 @@ public class MultipleAlignmentsContainer extends TICComponent {
 	public void setDistributeRemainingSpace(boolean distributeRemainingSpace) {
 		this.distributeRemainingSpace = distributeRemainingSpace;
 		redistributeHeight();
+	}
+
+
+	/**
+	 * Determines whether all alignment areas in this container should have the same horizontal zoom factor.
+	 * 
+	 * @return {@code true} if synchronizing is enabled, {@code false} if each alignment area can have its
+	 *         own zoom factor
+	 */
+	public boolean isSynchronizeZoomX() {
+		return synchronizeZoomX;
+	}
+
+
+	/**
+	 * Allows to specify whether all alignment areas in this container should have the same horizontal zoom 
+	 * factor.
+	 * <p>
+	 * If set to {@code true} a zoom change in one area happens, the zoom of all other contained areas will
+	 * automatically be set accordingly. 
+	 * 
+	 * @param synchronizeZoomX Specify {@code true} here to enable zoom synchronizing or {@code false} to
+	 *        disable it
+	 */
+	public void setSynchronizeZoomX(boolean synchronizeZoomX) {
+		this.synchronizeZoomX = synchronizeZoomX;
+	}
+
+
+	/**
+	 * Determines whether all alignment areas in this container should have the same vertical zoom factor.
+	 * 
+	 * @return {@code true} if synchronizing is enabled, {@code false} if each alignment area can have its
+	 *         own zoom factor
+	 */
+	public boolean isSynchronizeZoomY() {
+		return synchronizeZoomY;
+	}
+
+
+	/**
+	 * Allows to specify whether all alignment areas in this container should have the same vertical zoom 
+	 * factor.
+	 * <p>
+	 * If set to {@code true} a zoom change in one area happens, the zoom of all other contained areas will
+	 * automatically be set accordingly. 
+	 * 
+	 * @param synchronizeZoomX Specify {@code true} here to enable zoom synchronizing or {@code false} to
+	 *        disable it
+	 */
+	public void setSynchronizeZoomY(boolean synchronizeZoomY) {
+		this.synchronizeZoomY = synchronizeZoomY;
 	}
 
 

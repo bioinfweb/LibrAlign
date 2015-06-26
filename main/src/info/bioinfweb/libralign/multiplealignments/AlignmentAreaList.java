@@ -21,7 +21,6 @@ package info.bioinfweb.libralign.multiplealignments;
 
 import info.bioinfweb.commons.collections.observable.ObservableList;
 import info.bioinfweb.libralign.alignmentarea.AlignmentArea;
-import info.bioinfweb.libralign.alignmentarea.paintsettings.PaintSettings;
 import info.bioinfweb.libralign.alignmentarea.paintsettings.PaintSettingsSynchronizer;
 
 import java.util.ArrayList;
@@ -93,6 +92,7 @@ public class AlignmentAreaList extends ObservableList<AlignmentArea> {
 			alignmentArea.getAlignmentModel().getChangeListeners().add(multipleAlignmentListener);
 		}
 		alignmentArea.getDataAreas().addListener(multipleAlignmentListener);
+		alignmentArea.getPaintSettings().addListener(multipleAlignmentListener);
 	}
 
 	
@@ -101,6 +101,7 @@ public class AlignmentAreaList extends ObservableList<AlignmentArea> {
 			alignmentArea.getAlignmentModel().getChangeListeners().remove(multipleAlignmentListener);
 		}
 		alignmentArea.getDataAreas().removeListener(multipleAlignmentListener);
+		alignmentArea.getPaintSettings().removeListener(multipleAlignmentListener);
 	}
 
 	
