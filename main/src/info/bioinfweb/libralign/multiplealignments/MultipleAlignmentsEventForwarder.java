@@ -137,6 +137,7 @@ public class MultipleAlignmentsEventForwarder implements AlignmentModelChangeLis
 							area.getPaintSettings().setZoomX((Double)event.getNewValue());
 						}
 					}
+					getOwner().redistributeHeight();
 				}
 				else if (event.getPropertyName().equals("zoomY") && getOwner().isSynchronizeZoomY()) {
 					for (AlignmentArea area : getOwner().getAlignmentAreas()) {
@@ -144,6 +145,13 @@ public class MultipleAlignmentsEventForwarder implements AlignmentModelChangeLis
 							area.getPaintSettings().setZoomY((Double)event.getNewValue());
 						}
 					}
+
+					// Set size again, because global value might have increased with the last element.
+					for (AlignmentArea area : getOwner().getAlignmentAreas()) {
+						area.getLabelArea().assignSize();
+					}
+					
+					getOwner().redistributeHeight();
 				}
 			}
 			finally {
