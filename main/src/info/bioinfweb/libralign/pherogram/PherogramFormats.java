@@ -298,12 +298,19 @@ public class PherogramFormats {
 	 * or if the token painter associated with the owning {@link PherogramArea} does not specify an
 	 * according color.
 	 * 
-	 * @param nucleotide the nucleotide (or gap, ...) representation 
-	 * @param color the color to put in the map
+	 * @param nucleotide the nucleotide (or gap, ...) representation
+	 * @param color the color to put in the map (Specify {@code null} here to remove the association for
+	 *        {@code nucleotide} from the map.)
 	 */
 	public void setNucleotideColor(char nucleotide, Color color) {
-		propertyChangeSupport.firePropertyChange("nucleotideColor." + nucleotide, 
-				nucleotideColorMap.put(Character.toString(nucleotide), color), color);
+		Color oldValue;
+		if (color == null) {
+			oldValue = nucleotideColorMap.remove(Character.toString(nucleotide));
+		}
+		else {
+			oldValue = nucleotideColorMap.put(Character.toString(nucleotide), color);
+		}
+		propertyChangeSupport.firePropertyChange("nucleotideColor." + nucleotide, oldValue, color);
 	}
 	
 	
