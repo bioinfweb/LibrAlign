@@ -201,7 +201,7 @@ public class AlignmentContentArea extends TICComponent {
 	/**
 	 * Returns the left most x-coordinate of the area the specified column is painted in relative to the
 	 * component on which the sequences are painted. Use this method to convert between cell indices and
-	 * paint coordinates.
+	 * paint coordinates. This method takes the current horizontal zoom factor into account.
 	 *
 	 * @param column - the column painted at the returned x-position
 	 * @return a value >= 0
@@ -212,8 +212,9 @@ public class AlignmentContentArea extends TICComponent {
   			throw new InternalError("not implemented");  //TODO Implement and consider that different alignment parts may have different token widths here.
   		}
   		else {
-  			return (int)(column * getOwner().getPaintSettings().getTokenPainterList().painterByColumn(0).getPreferredWidth()) +
-  			    getOwner().getDataAreas().getGlobalMaxLengthBeforeStart();  //TODO Catch IllegalStateException?
+  			return (int)Math.round(column * 
+  					getOwner().getPaintSettings().getTokenPainterList().painterByColumn(0).getPreferredWidth() * 
+  					getOwner().getPaintSettings().getZoomX()) +  getOwner().getDataAreas().getGlobalMaxLengthBeforeStart();  //TODO Catch IllegalStateException?
   		}
 	  }
 	  else {
