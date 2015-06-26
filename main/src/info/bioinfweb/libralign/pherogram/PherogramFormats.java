@@ -79,6 +79,7 @@ public class PherogramFormats {
 	/** Used to determine the line spacing around base calls, indices or probabilities. */
 	public static final double FONT_HEIGHT_FACTOR = 1.2;
 	
+	private static final double VIEW_FONT_HEIGHT_FACTOR = 0.8;
 	
 	private PherogramComponent owner;
 	private Color backgroundColor;
@@ -481,10 +482,7 @@ public class PherogramFormats {
 					paintSettings.getZoomY());
 		}
 		else if (getOwner() instanceof PherogramTraceCurveView) {
-			throw new InternalError("not implemented");
-//			PherogramTraceCurveView view = (PherogramTraceCurveView)getOwner();
-//			return Math.min(view.getHorizontalScale(),
-//					view.getVerticalScale());  //TODO Multiply getVerticalScale() by according factor.
+			return ((PherogramTraceCurveView)getOwner()).getHorizontalScale() * VIEW_FONT_HEIGHT_FACTOR;
 		}
 		else {
 			throw new IllegalStateException("Reading the zoom from an owner of type " + getOwner().getClass() + 
