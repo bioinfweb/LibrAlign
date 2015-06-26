@@ -19,29 +19,49 @@
 package info.bioinfweb.libralign.alignmentarea.paintsettings;
 
 
-import java.util.EventObject;
 
-
-
-/**
- * Event object indicating a change in an instance of {@link TokenPainterList}.
- * 
- * @author Ben St&ouml;ver
- * @since 0.4.0
- */
-public class TokenPainterListEvent extends EventObject {
-	/**
-	 * Creates a new instance of this class.
-	 * 
-	 * @param source the list object where the change took place
-	 */
-	public TokenPainterListEvent(TokenPainterList source) {
+public class ZoomChangeEvent extends PaintSettingsEvent {
+	private double oldZoomX;
+	private double newZoomX;
+	private double oldZoomY;
+	private double newZoomY;
+	
+	
+	public ZoomChangeEvent(PaintSettings source, double oldZoomX,	double newZoomX, double oldZoomY, double newZoomY) {
 		super(source);
+		this.oldZoomX = oldZoomX;
+		this.newZoomX = newZoomX;
+		this.oldZoomY = oldZoomY;
+		this.newZoomY = newZoomY;
 	}
 
+
+	public double getOldZoomX() {
+		return oldZoomX;
+	}
+
+
+	public double getNewZoomX() {
+		return newZoomX;
+	}
 	
-	@Override
-	public TokenPainterList getSource() {
-		return (TokenPainterList)super.getSource();
+	
+	public boolean isZoomXChange() {
+		return oldZoomX != newZoomX;
+	}
+
+
+	public double getOldZoomY() {
+		return oldZoomY;
+	}
+
+
+	public double getNewZoomY() {
+		return newZoomY;
+	}
+	
+	
+	public boolean isZoomYChange() {
+		return oldZoomY != newZoomY;
 	}
 }

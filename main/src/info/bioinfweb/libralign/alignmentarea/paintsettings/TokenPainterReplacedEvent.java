@@ -28,7 +28,7 @@ import info.bioinfweb.libralign.alignmentarea.tokenpainter.TokenPainter;
  * @author Ben St&ouml;ver
  * @since 0.4.0
  */
-public class TokenPainterReplacedEvent extends TokenPainterListEvent {
+public class TokenPainterReplacedEvent extends PaintSettingsEvent {
 	private TokenPainter previousPainter;
 	private TokenPainter newPainter;
 	private int index;
@@ -42,7 +42,7 @@ public class TokenPainterReplacedEvent extends TokenPainterListEvent {
 	 * @param newPainter the painter that replaces the previous one
 	 * @param index the index where the painter has been replaced
 	 */
-	public TokenPainterReplacedEvent(TokenPainterList source,	TokenPainter previousPainter, TokenPainter newPainter, int index) {
+	public TokenPainterReplacedEvent(PaintSettings source,	TokenPainter previousPainter, TokenPainter newPainter, int index) {
 		super(source);
 		this.previousPainter = previousPainter;
 		this.newPainter = newPainter;

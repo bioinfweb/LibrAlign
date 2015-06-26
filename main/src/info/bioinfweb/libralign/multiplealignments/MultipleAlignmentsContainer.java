@@ -54,9 +54,8 @@ public class MultipleAlignmentsContainer extends TICComponent {
 	private AlignmentAreaList alignmentAreas = new AlignmentAreaList(this);
 	private EditSettings editSettings = new EditSettings();
 	private boolean distributeRemainingSpace = false;
-	private boolean synchronizeZoomX = true;
-	private boolean synchronizeZoomY = true;
 
+	
 	/**
 	 * Use the returned instance to change the alignment areas contained in this container.
 	 * 
@@ -100,58 +99,6 @@ public class MultipleAlignmentsContainer extends TICComponent {
 	public void setDistributeRemainingSpace(boolean distributeRemainingSpace) {
 		this.distributeRemainingSpace = distributeRemainingSpace;
 		redistributeHeight();
-	}
-
-
-	/**
-	 * Determines whether all alignment areas in this container should have the same horizontal zoom factor.
-	 * 
-	 * @return {@code true} if synchronizing is enabled, {@code false} if each alignment area can have its
-	 *         own zoom factor
-	 */
-	public boolean isSynchronizeZoomX() {
-		return synchronizeZoomX;
-	}
-
-
-	/**
-	 * Allows to specify whether all alignment areas in this container should have the same horizontal zoom 
-	 * factor.
-	 * <p>
-	 * If set to {@code true} a zoom change in one area happens, the zoom of all other contained areas will
-	 * automatically be set accordingly. 
-	 * 
-	 * @param synchronizeZoomX Specify {@code true} here to enable zoom synchronizing or {@code false} to
-	 *        disable it
-	 */
-	public void setSynchronizeZoomX(boolean synchronizeZoomX) {
-		this.synchronizeZoomX = synchronizeZoomX;
-	}
-
-
-	/**
-	 * Determines whether all alignment areas in this container should have the same vertical zoom factor.
-	 * 
-	 * @return {@code true} if synchronizing is enabled, {@code false} if each alignment area can have its
-	 *         own zoom factor
-	 */
-	public boolean isSynchronizeZoomY() {
-		return synchronizeZoomY;
-	}
-
-
-	/**
-	 * Allows to specify whether all alignment areas in this container should have the same vertical zoom 
-	 * factor.
-	 * <p>
-	 * If set to {@code true} a zoom change in one area happens, the zoom of all other contained areas will
-	 * automatically be set accordingly. 
-	 * 
-	 * @param synchronizeZoomX Specify {@code true} here to enable zoom synchronizing or {@code false} to
-	 *        disable it
-	 */
-	public void setSynchronizeZoomY(boolean synchronizeZoomY) {
-		this.synchronizeZoomY = synchronizeZoomY;
 	}
 
 
@@ -287,9 +234,9 @@ public class MultipleAlignmentsContainer extends TICComponent {
 	
 	/**
 	 * Returns a set of property names that are synchronized between the paint setting objects of the alignment areas
-	 * contained in this container. By default this set is empty. Application code can add names to define single paint
-	 * settings as global. (Such a property will than be changed in all alignment areas of this container, as soon as it 
-	 * is modified in one of them.)
+	 * contained in this container. By default all properties are synchronized. Application code can  add names to define 
+	 * single paint settings as global. (Such a property will than be changed in all alignment areas of this container, 
+	 * as soon as it is modified in one of them.)
 	 * <p>
 	 * Note that all simple properties of {@link PaintSettings} can be added here, but it is not possible to synchronize
 	 * token painters.
@@ -299,5 +246,13 @@ public class MultipleAlignmentsContainer extends TICComponent {
 	 */
 	public Set<String> getPaintSettingsToSynchronize() {
 		return getAlignmentAreas().getPaintSettingsSynchronizer().getPropertiesToSynchronizes();
+	}
+	
+	
+	/**
+	 * Sets all properties of {@link PaintSettings} to be synchronized between all alignment areas in this container.
+	 */
+	public void setAllPaintSettingPropertiesToSynchronize() {
+		getAlignmentAreas().getPaintSettingsSynchronizer().addAllProperties();
 	}
 }

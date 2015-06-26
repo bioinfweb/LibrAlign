@@ -35,6 +35,17 @@ import java.beans.PropertyChangeListener;
  */
 public interface PaintSettingsListener extends PropertyChangeListener {
 	/**
+	 * Called if the {@link PaintSettings#getZoomX()} or {@link PaintSettings#getZoomY()} or both changed.
+	 * <p>
+	 * Zoom changes are indicated by a separate event type instead of 
+	 * {@link #propertyChange(java.beans.PropertyChangeEvent)}, to avoid separate events (and e.g. multiple
+	 * repaint operations) if both zoom factors are changed in one operation.  
+	 * 
+	 * @param event the object describing the event
+	 */
+	public void zoomChange(ZoomChangeEvent event);
+	
+	/**
 	 * Indicating that a token painter at a certain position in the token painter list was replaced.
 	 * <p>
 	 * Note that this event is only fired if a direct replace happened and not if a more complex list change
@@ -52,5 +63,5 @@ public interface PaintSettingsListener extends PropertyChangeListener {
 	 * 
 	 * @param event the object describing the event
 	 */
-	public void tokenPainterListChange(TokenPainterListEvent event);
+	public void tokenPainterListChange(PaintSettingsEvent event);
 }

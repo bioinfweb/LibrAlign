@@ -92,7 +92,6 @@ public class AlignmentAreaList extends ObservableList<AlignmentArea> {
 			alignmentArea.getAlignmentModel().getChangeListeners().add(multipleAlignmentListener);
 		}
 		alignmentArea.getDataAreas().addListener(multipleAlignmentListener);
-		alignmentArea.getPaintSettings().addListener(multipleAlignmentListener);
 	}
 
 	
@@ -101,7 +100,6 @@ public class AlignmentAreaList extends ObservableList<AlignmentArea> {
 			alignmentArea.getAlignmentModel().getChangeListeners().remove(multipleAlignmentListener);
 		}
 		alignmentArea.getDataAreas().removeListener(multipleAlignmentListener);
-		alignmentArea.getPaintSettings().removeListener(multipleAlignmentListener);
 	}
 
 	

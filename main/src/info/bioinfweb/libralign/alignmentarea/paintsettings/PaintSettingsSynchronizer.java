@@ -23,6 +23,8 @@ import info.bioinfweb.libralign.alignmentarea.AlignmentArea;
 import info.bioinfweb.libralign.multiplealignments.AlignmentAreaList;
 import info.bioinfweb.libralign.multiplealignments.MultipleAlignmentsContainer;
 
+import java.awt.Color;
+import java.awt.SystemColor;
 import java.beans.PropertyChangeEvent;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Set;
@@ -34,9 +36,11 @@ import org.apache.commons.beanutils.BeanUtils;
 
 /**
  * Class for internal use with {@link MultipleAlignmentsContainer} to synchronize single paint setting properties
- * between different alignment areas in such a container. Application developers who want to define single paint 
+ * between different alignment areas in a container. Application developers who want to define single paint 
  * settings as global must modify {@link MultipleAlignmentsContainer#getPaintSettingsToSynchronize()} instead of 
  * using this class directly.
+ * <p>
+ * This class does not synchronize any token painters. 
  * <p>
  * <b>Warning:</b> This class is for internal use in LibrAlign only and should not be referenced in application code
  * directly. API stability is not guaranteed for this class for any release of LibrAlign (no matter if the major version
@@ -50,11 +54,13 @@ import org.apache.commons.beanutils.BeanUtils;
 public class PaintSettingsSynchronizer implements PaintSettingsListener {
 	private AlignmentAreaList owner;
 	private Set<String> propertiesToSynchronizes = new TreeSet<String>();
+	private boolean changeIsOngoing = false;
 	
 	
 	public PaintSettingsSynchronizer(AlignmentAreaList owner) {
 		super();
 		this.owner = owner;
+		addAllProperties();
 	}
 
 
@@ -63,33 +69,102 @@ public class PaintSettingsSynchronizer implements PaintSettingsListener {
 	}
 
 
+	/**
+	 * Application code should never call this method (or use this class) directly, but use 
+	 * {@link MultipleAlignmentsContainer#getPaintSettingsToSynchronize()} instead.
+	 * 
+	 * @return a set of properties that are synchronized by this object.
+	 */
 	public Set<String> getPropertiesToSynchronizes() {
 		return propertiesToSynchronizes;
 	}
 	
 	
+	/**
+	 * Application code should never call this method (or use this class) directly, but use 
+	 * {@link MultipleAlignmentsContainer#setAllPaintSettingPropertiesToSynchronize()} instead.
+	 */
+	public void addAllProperties() {
+		getPropertiesToSynchronizes().add("cursorColor");
+		getPropertiesToSynchronizes().add("cursorLineWidth");
+		getPropertiesToSynchronizes().add("selectionColor");
+		getPropertiesToSynchronizes().add("zoomX");
+		getPropertiesToSynchronizes().add("zoomY");
+		getPropertiesToSynchronizes().add("changeZoomXOnMouseWheel");
+		getPropertiesToSynchronizes().add("changeZoomYOnMouseWheel");
+	}
+	
+	
 	@Override
 	public void propertyChange(PropertyChangeEvent event) {
-		if (getPropertiesToSynchronizes().contains(event.getPropertyName())) {
-			for (AlignmentArea area : getOwner()) {
-				if (!event.getSource().equals(area.getPaintSettings())) {
-					try {
-						BeanUtils.setProperty(area.getPaintSettings(), event.getPropertyName(), event.getNewValue());
-					} 
-					catch (IllegalAccessException e) {
-						throw new InternalError(e.getMessage());
-					} 
-					catch (InvocationTargetException e) {
-						throw new InternalError(e.getMessage());
+		if (getPropertiesToSynchronizes().contains(event.getPropertyName()) && !changeIsOngoing) {
+			changeIsOngoing = true;
+			try {
+				for (AlignmentArea area : getOwner()) {
+					if (!event.getSource().equals(area.getPaintSettings())) {
+						try {
+							BeanUtils.setProperty(area.getPaintSettings(), event.getPropertyName(), event.getNewValue());
+						} 
+						catch (IllegalAccessException e) {
+							throw new InternalError(e.getMessage());
+						} 
+						catch (InvocationTargetException e) {
+							throw new InternalError(e.getMessage());
+						}
 					}
 				}
+			}
+			finally {
+				changeIsOngoing = false;
 			}
 		}
 	}
 	
-	@Override
-	public void tokenPainterReplaced(TokenPainterReplacedEvent event) {}
 	
 	@Override
-	public void tokenPainterListChange(TokenPainterListEvent event) {}
+	public void zoomChange(ZoomChangeEvent event) {
+		if ((getPropertiesToSynchronizes().contains("zoomX") || getPropertiesToSynchronizes().contains("zoomY"))
+				&& !changeIsOngoing) {
+			
+			changeIsOngoing = true;
+			try {
+				for (AlignmentArea area : getOwner()) {
+					if (!event.getSource().equals(area.getPaintSettings())) {
+						PaintSettings settings = area.getPaintSettings();
+						
+						double zoomX = settings.getZoomX();
+						if (getPropertiesToSynchronizes().contains("zoomX")) {
+							zoomX = event.getNewZoomX();
+						}
+						double zoomY = settings.getZoomY();
+						if (getPropertiesToSynchronizes().contains("zoomY")) {
+							zoomY = event.getNewZoomY();
+						}
+						
+						settings.setZoom(zoomX, zoomY);
+					}
+				}
+				
+				if (getPropertiesToSynchronizes().contains("zoomY")) {
+					// Set size again, because global value might have increased with the last element.
+					for (AlignmentArea area : getOwner()) {
+						area.getLabelArea().assignSize();
+					}
+					
+					getOwner().getOwner().redistributeHeight();
+				}
+			}
+			finally {
+				changeIsOngoing = false;
+			}
+		}
+	}
+
+
+	@Override
+	public void tokenPainterReplaced(TokenPainterReplacedEvent event) {}
+
+	
+	@Override
+	public void tokenPainterListChange(PaintSettingsEvent event) {}
 }

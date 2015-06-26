@@ -52,7 +52,8 @@ public class PaintSettings {
 	private double zoomX = 1;
 	private double zoomY = 1;
 	private boolean changeZoomXOnMouseWheel = true;
-	private boolean changeZoomYOnMouseWheel = true;
+	private boolean changeZoomYOnMouseWheel = true;  
+	// If new properties are added here, they also need to be added in PaintSettingsSynchronizer.addAllProperties() and possibly AlignmentArea.PAINT_SETTINGS_LISTERNER.propertyChange().
 	private Set<PaintSettingsListener> listeners = new HashSet<PaintSettingsListener>();
 	
 	
@@ -171,26 +172,60 @@ public class PaintSettings {
 	}
 
 
+	/**
+	 * Allows to specify a new horizontal zoom factor.
+	 * <p>
+	 * Note that {@link #setZoom(double, double)} should always be preferred (when both properties
+	 * are to be set) over calling both single parameter setters in sequence to avoid unnecessary
+	 * repaint and resize operations.
+	 * 
+	 * @param zoomX the new horizontal zoom factor
+	 * @see #setZoom(double, double)
+	 * @see #setChangeZoomXOnMouseWheel(boolean)
+	 */
 	public void setZoomX(double zoomX) {
 		setZoom(zoomX, getZoomY());
 	}
 	
 	
+	/**
+	 * Allows to specify a new vertical zoom factor.
+	 * <p>
+	 * Note that {@link #setZoom(double, double)} should always be preferred (when both properties
+	 * are to be set) over calling both single parameter setters in sequence to avoid unnecessary
+	 * repaint and resize operations.
+	 * 
+	 * @param zoomY the new vertical zoom factor
+	 * @see #setZoom(double, double)
+	 * @see #setChangeZoomYOnMouseWheel(boolean)
+	 */
 	public void setZoomY(double zoomY) {
 		setZoom(getZoomX(), zoomY);
 	}
 	
 	
+	/**
+	 * Allows to specify a new horizontal and vertical zoom factor in a single operation. Only one event
+	 * indicating both changes will be fired.
+	 * 
+	 * @param zoomX the new horizontal zoom factor
+	 * @param zoomY the new vertical zoom factor
+	 * @see #setChangeZoomXOnMouseWheel(boolean)
+	 * @see #setChangeZoomYOnMouseWheel(boolean)
+	 */
 	public void setZoom(double zoomX, double zoomY) {
-		if (this.zoomX != zoomX) {
-			double oldValue = zoomX;
-			this.zoomX = zoomX;
-			firePropertyChanged("zoomX", oldValue, zoomX);
-		}
-		if (this.zoomY != zoomY) {
-			double oldValue = zoomY;
-			this.zoomY = zoomY;
-			firePropertyChanged("zoomY", oldValue, zoomY);
+		if ((this.zoomX != zoomX) || (this.zoomY != zoomY)) {
+			double oldZoomX = zoomX;
+			double oldZoomY = zoomY;
+			
+			if (this.zoomX != zoomX) {
+				this.zoomX = zoomX;
+			}
+			if (this.zoomY != zoomY) {
+				this.zoomY = zoomY;
+			}
+			
+			fireZoomChange(oldZoomX, oldZoomY);
 		}
 	}
 	
@@ -374,8 +409,16 @@ public class PaintSettings {
 	}
 	
 	
+	protected void fireZoomChange(double oldZoomX, double oldZoomY) {
+		ZoomChangeEvent event = new ZoomChangeEvent(this, oldZoomX, getZoomX(), oldZoomY, getZoomY());
+		for (PaintSettingsListener listener : listeners) {
+			listener.zoomChange(event);
+		}
+	}
+	
+	
 	protected void fireTokenPainterReplaced(TokenPainter previousPainter, TokenPainter newPainter, int index) {
-		TokenPainterReplacedEvent event = new TokenPainterReplacedEvent(getTokenPainterList(), previousPainter, newPainter, index);
+		TokenPainterReplacedEvent event = new TokenPainterReplacedEvent(this, previousPainter, newPainter, index);
 		for (PaintSettingsListener listener : listeners) {
 			listener.tokenPainterReplaced(event);
 		}
@@ -383,7 +426,7 @@ public class PaintSettings {
 	
 	
 	protected void fireTokenPainterListChange() {
-		TokenPainterListEvent event = new TokenPainterListEvent(getTokenPainterList());
+		PaintSettingsEvent event = new PaintSettingsEvent(this);
 		for (PaintSettingsListener listener : listeners) {
 			listener.tokenPainterListChange(event);
 		}

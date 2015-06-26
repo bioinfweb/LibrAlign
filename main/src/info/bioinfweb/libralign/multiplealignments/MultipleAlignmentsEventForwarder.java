@@ -19,13 +19,7 @@
 package info.bioinfweb.libralign.multiplealignments;
 
 
-import java.beans.PropertyChangeEvent;
-
 import info.bioinfweb.libralign.alignmentarea.AlignmentArea;
-import info.bioinfweb.libralign.alignmentarea.paintsettings.PaintSettings;
-import info.bioinfweb.libralign.alignmentarea.paintsettings.PaintSettingsListener;
-import info.bioinfweb.libralign.alignmentarea.paintsettings.TokenPainterListEvent;
-import info.bioinfweb.libralign.alignmentarea.paintsettings.TokenPainterReplacedEvent;
 import info.bioinfweb.libralign.dataarea.DataAreaChangeEvent;
 import info.bioinfweb.libralign.dataarea.DataAreaModelListener;
 import info.bioinfweb.libralign.model.AlignmentModelChangeListener;
@@ -43,11 +37,8 @@ import info.bioinfweb.libralign.model.events.TokenChangeEvent;
  * @author Ben St&ouml;ver
  * @since 0.3.0
  */
-public class MultipleAlignmentsEventForwarder implements AlignmentModelChangeListener, DataAreaModelListener,
-		PaintSettingsListener {
-	
+public class MultipleAlignmentsEventForwarder implements AlignmentModelChangeListener, DataAreaModelListener {
 	private MultipleAlignmentsContainer owner;
-	private boolean zoomSyncOngoing = false;
 
 	
 	public MultipleAlignmentsEventForwarder(MultipleAlignmentsContainer owner) {
@@ -124,47 +115,4 @@ public class MultipleAlignmentsEventForwarder implements AlignmentModelChangeLis
 			}
 		}
 	}
-	
-	
-	@Override
-	public void propertyChange(PropertyChangeEvent event) {
-		if (!zoomSyncOngoing) {
-			zoomSyncOngoing = true;
-			try {
-				if (event.getPropertyName().equals("zoomX") && getOwner().isSynchronizeZoomX()) {
-					for (AlignmentArea area : getOwner().getAlignmentAreas()) {
-						if (!area.equals(((PaintSettings)event.getSource()).getOwner())) {
-							area.getPaintSettings().setZoomX((Double)event.getNewValue());
-						}
-					}
-					getOwner().redistributeHeight();
-				}
-				else if (event.getPropertyName().equals("zoomY") && getOwner().isSynchronizeZoomY()) {
-					for (AlignmentArea area : getOwner().getAlignmentAreas()) {
-						if (!area.equals(((PaintSettings)event.getSource()).getOwner())) {
-							area.getPaintSettings().setZoomY((Double)event.getNewValue());
-						}
-					}
-
-					// Set size again, because global value might have increased with the last element.
-					for (AlignmentArea area : getOwner().getAlignmentAreas()) {
-						area.getLabelArea().assignSize();
-					}
-					
-					getOwner().redistributeHeight();
-				}
-			}
-			finally {
-				zoomSyncOngoing = false;
-			}
-		}
-	}
-	
-	
-	@Override
-	public void tokenPainterReplaced(TokenPainterReplacedEvent event) {}
-	
-	
-	@Override
-	public void tokenPainterListChange(TokenPainterListEvent event) {}
 }

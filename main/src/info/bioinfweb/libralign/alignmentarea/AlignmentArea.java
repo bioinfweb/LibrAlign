@@ -19,6 +19,7 @@
 package info.bioinfweb.libralign.alignmentarea;
 
 
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Rectangle;
 import java.beans.PropertyChangeEvent;
@@ -38,8 +39,9 @@ import info.bioinfweb.libralign.alignmentarea.label.AlignmentLabelArea;
 import info.bioinfweb.libralign.alignmentarea.order.SequenceOrder;
 import info.bioinfweb.libralign.alignmentarea.paintsettings.PaintSettings;
 import info.bioinfweb.libralign.alignmentarea.paintsettings.PaintSettingsListener;
-import info.bioinfweb.libralign.alignmentarea.paintsettings.TokenPainterListEvent;
+import info.bioinfweb.libralign.alignmentarea.paintsettings.PaintSettingsEvent;
 import info.bioinfweb.libralign.alignmentarea.paintsettings.TokenPainterReplacedEvent;
+import info.bioinfweb.libralign.alignmentarea.paintsettings.ZoomChangeEvent;
 import info.bioinfweb.libralign.alignmentarea.selection.SelectionModel;
 import info.bioinfweb.libralign.dataarea.DataAreaChangeEvent;
 import info.bioinfweb.libralign.dataarea.DataAreaModel;
@@ -87,15 +89,21 @@ public class AlignmentArea extends TICComponent implements AlignmentModelChangeL
 			assignSizeToAll();
 		}
 		
-		
 		@Override
 		public void propertyChange(PropertyChangeEvent event) {
-			if (event.getPropertyName().startsWith("zoom")) {
-				updateSize();
+			if (event.getPropertyName().equals("cursorColor") || event.getPropertyName().equals("cursorLineWidth") ||
+					event.getPropertyName().equals("selectionColor")) {
+				
+				repaint();
 			}
-			repaint();
 		}
 		
+		@Override
+		public void zoomChange(ZoomChangeEvent event) {
+			updateSize();
+			repaint();  // Necessary in SWT if the size did not change.
+		}
+
 		@Override
 		public void tokenPainterReplaced(TokenPainterReplacedEvent event) {
 			updateSize();
@@ -103,7 +111,7 @@ public class AlignmentArea extends TICComponent implements AlignmentModelChangeL
 		}
 		
 		@Override
-		public void tokenPainterListChange(TokenPainterListEvent event) {
+		public void tokenPainterListChange(PaintSettingsEvent event) {
 			updateSize();
 			repaint();  // Necessary in SWT if the size did not change.
 		}
