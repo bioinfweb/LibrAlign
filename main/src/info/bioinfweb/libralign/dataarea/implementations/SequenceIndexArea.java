@@ -51,6 +51,10 @@ import java.util.Set;
  * <p>
  * You would usually use this component in the head area of an {@link AlignmentArea} but it is possible to
  * insert it at any position.
+ * <p>
+ * The labeling interval if this area is calculated from the space needed to label the highest index in the
+ * associated alignment model. Note that due to rounding effects the label interval may vary by one depending
+ * on the zoom factor.
  *
  * @author Ben St&ouml;ver
  * @since 0.2.0
@@ -69,7 +73,7 @@ public class SequenceIndexArea extends DataArea {
 	public static final double LABELED_DASH_LENGTH_FACTOR = 1f;
 
 	/** The distance of the labels to the border of the component */
-	public static final double LABEL_TOP_DISTANCE_FACTOR = 0.5f;
+	public static final double LABEL_TOP_DISTANCE_FACTOR = 0.55f;  // With 0.5 digits get cut off at the top end for some zoom factors.
 
 	/** The distance of the labels to their dash  */
 	public static final double LABEL_LEFT_DISTANCE_FACTOR = 0.2f;
@@ -150,10 +154,10 @@ public class SequenceIndexArea extends DataArea {
       while (x <= visibleRect.x + visibleRect.width) {
     		// Text output
     		double dashLength = DASH_LENGTH_FACTOR * getHeight();
-    		long compoundIndex = Math.round((x - maxLengthBeforeStart) / compoundWidth);
+    		long compoundIndex = Math2.roundUp((x - maxLengthBeforeStart) / compoundWidth);  // If Math.round() is used, intervals are not constant, if values like 2.4999999999 occur.
     		if ((compoundIndex - 1) % labelInterval == 0) {  // BioJava indices start with 1
     			g.drawString("" + (compoundIndex + getFirstIndex() - 1), (int)(x + labelLeftDistance),
-    					(int)(LABEL_TOP_DISTANCE_FACTOR * getHeight()));
+    					(int)Math2.roundUp(LABEL_TOP_DISTANCE_FACTOR * getHeight()));
     			dashLength = LABELED_DASH_LENGTH_FACTOR * getHeight();
     		}
 
