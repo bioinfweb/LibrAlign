@@ -22,8 +22,8 @@ package info.bioinfweb.libralign.pherogram;
 import info.bioinfweb.commons.beans.PropertyChangeEventForwarder;
 import info.bioinfweb.commons.graphics.GraphicsUtils;
 import info.bioinfweb.commons.graphics.ZoomableFont;
-import info.bioinfweb.libralign.alignmentarea.content.SequenceColorSchema;
 import info.bioinfweb.libralign.alignmentarea.paintsettings.PaintSettings;
+import info.bioinfweb.libralign.alignmentarea.tokenpainter.NucleotideTokenPainter;
 import info.bioinfweb.libralign.dataarea.implementations.pherogram.PherogramArea;
 import info.bioinfweb.libralign.pherogram.view.PherogramHeadingView;
 import info.bioinfweb.libralign.pherogram.view.PherogramTraceCurveView;
@@ -33,6 +33,8 @@ import java.awt.Font;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
+import java.util.Map;
+import java.util.TreeMap;
 
 
 
@@ -79,12 +81,12 @@ public class PherogramFormats {
 	
 	
 	private PherogramComponent owner;
-	private SequenceColorSchema nucleotideColorSchema;
 	private Color backgroundColor;
 	private Color cutBackgroundColor;
 	private Color headingBackgroundColor;
 	private Color baseCallLineColor;
 	private Color cutBaseCallLineColor;
+	private Map<String, Color> nucleotideColorMap;
 	private boolean showBaseCallLines = true;
 	private ZoomableFont baseCallFont;
 	private ZoomableFont indexFont;
@@ -116,13 +118,15 @@ public class PherogramFormats {
 		super();
 		this.owner = owner;
 		
-		nucleotideColorSchema = new SequenceColorSchema();
-		backgroundColor = getNucleotideColorSchema().getDefaultBgColor();
+		backgroundColor = Color.LIGHT_GRAY.brighter();
 		headingBackgroundColor = backgroundColor;
 		cutBackgroundColor = GraphicsUtils.moveColorToCenter(backgroundColor, CUT_COLOR_FACTOR);
 		baseCallLineColor =  GraphicsUtils.moveColorToCenter(backgroundColor, BASE_CALL_LINE_COLOR_FACTOR);
 		cutBaseCallLineColor =  GraphicsUtils.moveColorToCenter(cutBackgroundColor, BASE_CALL_LINE_COLOR_FACTOR);
 		probabilityColor = GraphicsUtils.getContrastColor(Color.BLACK, headingBackgroundColor, 30);
+		
+		nucleotideColorMap = new TreeMap<String, Color>();
+		NucleotideTokenPainter.putNucleotideColors(nucleotideColorMap);
 
 		baseCallFont = createFont("baseCallFont.", Font.BOLD, 15);
 		indexFont = createFont("indexFont.", Font.PLAIN, 10);
@@ -137,33 +141,6 @@ public class PherogramFormats {
 	 */
 	public PherogramComponent getOwner() {
 		return owner;
-	}
-
-
-	/**
-	 * Returns the color schema that is used to paint the trace curves and base call sequence of the displayed
-	 * pherogram.
-	 * 
-	 * @return the color schema object
-	 */
-	public SequenceColorSchema getNucleotideColorSchema() {
-		return nucleotideColorSchema;
-	}
-
-
-	/**
-	 * Sets a new color schema that is used to paint the trace curves and base call sequence of the displayed
-	 * pherogram.
-	 * <p>
-	 * Note that this schema does not include pherogram specific color properties which can be set as separate
-	 * properties.
-	 * 
-	 * @param colorSchema - the new color schema to be used
-	 */
-	public void setNucleotideColorSchema(SequenceColorSchema nucleotideColorSchema) {
-		final SequenceColorSchema oldSchema = this.nucleotideColorSchema;
-		this.nucleotideColorSchema = nucleotideColorSchema;
-		propertyChangeSupport.firePropertyChange("nucleotideColorSchema", oldSchema, nucleotideColorSchema);
 	}
 
 
@@ -287,6 +264,32 @@ public class PherogramFormats {
 	}
 
 
+	/**
+	 * Returns the color associated with the specified token representation.
+	 * <p>
+	 * If this instance is owned by a {@link PherogramArea}, this method will first try to determine the color
+	 * from the associated token painter. If that produces no result, it will return a default color from its
+	 * own nucleotide color map. If that map has no entry for the specified representation as well, 
+	 * {@link #getProbabilityColor()} will be returned as the default color.
+	 * 
+	 * @param nucleotide the token representation (nucleotide characters or the gap or unknown character are valid here)
+	 * @return the color determined by the algorithm described above.
+	 */
+	public Color getNucleotideColor(String nucleotide) {
+		Color result = null;
+		if (owner instanceof PherogramArea) {
+			result = ((PherogramArea)owner).getAccordingTokenPainter().getColor(nucleotide);
+		}
+		if (result == null) {
+			result = nucleotideColorMap.get(nucleotide);
+		}
+		if (result == null) {
+			result = getProbabilityColor();
+		}
+		return result;
+	}
+	
+	
 	/**
 	 * Determines if base call lines (vertical lines at each base call position in the background of the trace 
 	 * curve output) shall be painted.

@@ -22,6 +22,7 @@ package info.bioinfweb.libralign.dataarea.implementations.pherogram;
 import info.bioinfweb.commons.collections.SimpleSequenceInterval;
 import info.bioinfweb.commons.tic.TICPaintEvent;
 import info.bioinfweb.libralign.alignmentarea.content.AlignmentContentArea;
+import info.bioinfweb.libralign.alignmentarea.tokenpainter.TokenPainter;
 import info.bioinfweb.libralign.dataarea.DataArea;
 import info.bioinfweb.libralign.dataarea.DataAreaListType;
 import info.bioinfweb.libralign.model.AlignmentModel;
@@ -516,6 +517,11 @@ public class PherogramArea extends DataArea implements PherogramComponent {
 	 */
 	public double getEditableTokenWidth() {
 		return getOwner().getOwner().getPaintSettings().getTokenWidth(getModel().getFirstSeqPos());
+	}
+	
+	
+	public TokenPainter getAccordingTokenPainter() {
+		return getOwner().getOwner().getPaintSettings().getTokenPainterList().painterByColumn(getModel().getFirstSeqPos());
 	}
 
 

@@ -22,6 +22,7 @@ package info.bioinfweb.libralign.alignmentarea.tokenpainter;
 import info.bioinfweb.commons.bio.SequenceUtils;
 
 import java.awt.Color;
+import java.util.Map;
 
 
 
@@ -37,25 +38,25 @@ public class NucleotideTokenPainter extends AbstractBioPolymerTokenPainter {
 	 */
 	public NucleotideTokenPainter() {
 		super();
-		putNucleotideColors();
+		putNucleotideColors(getBackgroundColorMap());
 	}
 	
 	
-	private void putNucleotideColor(String nucleotide, Color color) {
-		getBackgroundColorMap().put(nucleotide.toUpperCase(), color);
-		getBackgroundColorMap().put(nucleotide.toLowerCase(), color);
+	private static void putNucleotideColor(Map<String, Color> map, String nucleotide, Color color) {
+		map.put(nucleotide.toUpperCase(), color);
+		map.put(nucleotide.toLowerCase(), color);
 	}
 	
 	
-	protected void putNucleotideColors() {
+	public static void putNucleotideColors(Map<String, Color> map) {
 		Color colorTU = new Color(230, 90, 90);
-		putNucleotideColor("A", new Color(90, 228, 93));
-		putNucleotideColor("T", colorTU);
-		putNucleotideColor("U", colorTU);
-		putNucleotideColor("C", new Color(90, 90, 230));
-		putNucleotideColor("G", new Color(226, 230, 90));
-		putNucleotideColor("-", Color.GRAY);
-		putNucleotideColor("?", Color.GRAY.brighter());
+		putNucleotideColor(map, "A", new Color(90, 228, 93));
+		putNucleotideColor(map, "T", colorTU);
+		putNucleotideColor(map, "U", colorTU);
+		putNucleotideColor(map, "C", new Color(90, 90, 230));
+		putNucleotideColor(map, "G", new Color(226, 230, 90));
+		putNucleotideColor(map, "-", Color.GRAY);
+		putNucleotideColor(map, "?", Color.GRAY.brighter());
 	}
 	
 	

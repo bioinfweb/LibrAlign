@@ -19,7 +19,6 @@
 package info.bioinfweb.libralign.pherogram;
 
 
-import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
 import java.awt.geom.Path2D;
@@ -28,8 +27,8 @@ import java.awt.geom.Rectangle2D;
 import org.biojava3.core.sequence.compound.NucleotideCompound;
 
 import info.bioinfweb.commons.Math2;
-import info.bioinfweb.commons.bio.biojava3.core.sequence.compound.AlignmentAmbiguityNucleotideCompoundSet;
 import info.bioinfweb.libralign.dataarea.implementations.pherogram.PherogramArea;
+import info.bioinfweb.libralign.model.tokenset.AbstractTokenSet;
 import info.bioinfweb.libralign.pherogram.PherogramFormats.QualityOutputType;
 import info.bioinfweb.libralign.pherogram.distortion.GapPattern;
 import info.bioinfweb.libralign.pherogram.distortion.PherogramDistortion;
@@ -58,15 +57,6 @@ public class PherogramPainter {
 	}
 
 	
-	private Color getNucleotideColor(String nucleotide) {
-		Color color = owner.getFormats().getNucleotideColorSchema().getNucleotideColorMap().get(nucleotide); 
-		if (color == null) {
-			color = owner.getFormats().getNucleotideColorSchema().getFontColor();
-		}
-		return color;
-	}
-	
-	
 	private double paintAnnotation(Graphics2D g, int annotation, double paintX, double paintY) {
 		if (annotation >= 0) {
 			paintBaseCallText(g, "" + annotation, paintX, paintY);
@@ -82,7 +72,7 @@ public class PherogramPainter {
 		double fontZoom = formats.calculateFontZoomFactor();
 		
 		g.setFont(formats.getBaseCallFont().createFont(fontZoom));
-		g.setColor(getNucleotideColor(nucleotide.getUpperedBase()));
+		g.setColor(formats.getNucleotideColor(nucleotide.getUpperedBase()));
 		paintBaseCallText(g, nucleotide.getUpperedBase(), paintX, paintY);
 		
 		paintY += g.getFont().getSize() * PherogramFormats.FONT_HEIGHT_FACTOR;
@@ -94,7 +84,7 @@ public class PherogramPainter {
 			}
 			else {  // QualityOutputType.ALL
 				for (NucleotideCompound qualityNucleotide: PherogramProvider.TRACE_CURVE_NUCLEOTIDES) {
-					g.setColor(getNucleotideColor(qualityNucleotide.getUpperedBase()));
+					g.setColor(formats.getNucleotideColor(qualityNucleotide.getUpperedBase()));
 					paintY = paintAnnotation(g, provider.getQuality(qualityNucleotide, index), paintX, paintY);
 				}
 			}
@@ -244,7 +234,7 @@ public class PherogramPainter {
 						provider.getTraceValue(nucleotide, traceX) * owner.getVerticalScale());  //TODO curveTo() could be used alternatively.
 			}
 
-			g.setColor(owner.getFormats().getNucleotideColorSchema().getNucleotideColorMap().get("" + nucleotide.toString().charAt(0)));
+			g.setColor(owner.getFormats().getNucleotideColor("" + nucleotide.toString().charAt(0)));
 			g.draw(path);
 		}
 		
@@ -412,8 +402,7 @@ public class PherogramPainter {
 			}
 
 			// Paint trace curve path:
-			g.setColor(owner.getFormats().getNucleotideColorSchema().getNucleotideColorMap().get(
-					"" + nucleotide.toString().charAt(0)));
+			g.setColor(owner.getFormats().getNucleotideColor("" + nucleotide.toString().charAt(0)));
 			g.draw(path);
 		}
 		
@@ -424,8 +413,7 @@ public class PherogramPainter {
 	public void paintGaps(Graphics2D g, int firstBaseCallIndex, int lastBaseCallIndex, double startX, double startY, double height, 
 			PherogramDistortion distortion, double compoundWidth) {
 		
-		g.setColor(owner.getFormats().getNucleotideColorSchema().getNucleotideColorMap().get(
-				"" + AlignmentAmbiguityNucleotideCompoundSet.GAP_CHARACTER));
+		g.setColor(owner.getFormats().getNucleotideColor( "" + AbstractTokenSet.DEFAULT_GAP_REPRESENTATION));
 		
 		for (int baseCallIndex = firstBaseCallIndex; baseCallIndex <= lastBaseCallIndex; baseCallIndex++) {
 			if (distortion.getGapPattern(baseCallIndex) != null) {
