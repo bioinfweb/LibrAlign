@@ -19,6 +19,7 @@
 package info.bioinfweb.libralign.actions;
 
 
+import info.bioinfweb.commons.collections.CollectionUtils;
 import info.bioinfweb.libralign.alignmentarea.AlignmentArea;
 import info.bioinfweb.libralign.alignmentarea.content.AlignmentContentArea;
 import info.bioinfweb.libralign.alignmentarea.selection.SelectionModel;
@@ -27,6 +28,7 @@ import info.bioinfweb.libralign.model.exception.AlignmentSourceNotWritableExcept
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 
 
 
@@ -105,9 +107,9 @@ public class AlignmentActionProvider<T> {
 		try {
 			if (selection.isEmpty()) {
 				for (int row = selection.getCursorRow(); row < selection.getCursorRow() + selection.getCursorHeight(); row++) {
-					if (selection.getCursorColumn() < getModel().getSequenceLength(getAlignmentArea().getSequenceOrder().idByIndex(row))) {
-						getModel().removeTokenAt(getAlignmentArea().getSequenceOrder().idByIndex(row),
-								selection.getCursorColumn());
+					int sequenceID = getAlignmentArea().getSequenceOrder().idByIndex(row);
+					if (selection.getCursorColumn() < getModel().getSequenceLength(sequenceID)) {
+						getModel().removeTokenAt(sequenceID, selection.getCursorColumn());
 						result = true;
 				  }
 				}
@@ -135,28 +137,42 @@ public class AlignmentActionProvider<T> {
 	 *         {@code false} otherwise
 	 */
 	public boolean deleteBackwards() {
+		boolean result = false;
 		SelectionModel selection = getAlignmentArea().getSelection();
 		try {
 			if (selection.isEmpty()) {
 				if (selection.getCursorColumn() > 0) {
 					for (int row = selection.getCursorRow(); row < selection.getCursorRow() + selection.getCursorHeight(); row++) {
-						getModel().removeTokenAt(getAlignmentArea().getSequenceOrder().idByIndex(row),
-								selection.getCursorColumn() - 1);
+						int sequenceID = getAlignmentArea().getSequenceOrder().idByIndex(row);
+						if (selection.getCursorColumn() < getModel().getSequenceLength(sequenceID)) {
+							getModel().removeTokenAt(sequenceID, selection.getCursorColumn() - 1);
+							result = true;
+						}
 					}
 					selection.setNewCursorColumn(selection.getCursorColumn() - 1);  // Move cursor backwards
-				}
-				else {
-					return false;
 				}
 			}
 			else {
 				deleteSelection(selection);
+				result = true;
 			}
 		}
-		catch (AlignmentSourceNotWritableException e) {
-			return false;
+		catch (AlignmentSourceNotWritableException e) {}  // Nothing to do, since result is false by default.
+		return result;
+	}
+	
+	
+	private void elongateSequence(int sequenceID, int newLength) {
+		int additionalLength = newLength - getModel().getSequenceLength(sequenceID);
+		if (additionalLength > 0) {
+			T gapToken = getModel().getTokenSet().getGapToken();
+			Collection<T> tokens = new ArrayList<T>(additionalLength);
+			for (int i = 0; i < additionalLength; i++) {
+				tokens.add(gapToken);
+			}
+			
+			getModel().appendTokens(sequenceID, tokens);
 		}
-		return true;
 	}
 
 
@@ -187,8 +203,9 @@ public class AlignmentActionProvider<T> {
 			}
 
 			for (int row = selection.getCursorRow(); row < selection.getCursorRow() + selection.getCursorHeight(); row++) {
-				getModel().insertTokensAt(getAlignmentArea().getSequenceOrder().idByIndex(row),
-						selection.getFirstColumn(), tokens);
+				int sequenceID = getAlignmentArea().getSequenceOrder().idByIndex(row);
+				elongateSequence(sequenceID, selection.getFirstColumn());
+				getModel().insertTokensAt(sequenceID,	selection.getFirstColumn(), tokens);
 			}
 			selection.setNewCursorColumn(selection.getFirstColumn() + tokenCount);  // Move cursor forward
 		}
@@ -218,15 +235,18 @@ public class AlignmentActionProvider<T> {
 		SelectionModel selection = getAlignmentArea().getSelection();
 		try {
 			for (int row = selection.getCursorRow(); row < selection.getCursorRow() + selection.getCursorHeight(); row++) {
+				int sequenceID = getAlignmentArea().getSequenceOrder().idByIndex(row);
+				
 				// Remove possible additional tokens:
-				if (selection.getWidth() > 1) {
-					getModel().removeTokensAt(getAlignmentArea().getSequenceOrder().idByIndex(row),
-							selection.getFirstColumn() + 1, selection.getFirstColumn() + selection.getWidth());
+				int sequenceLength = getModel().getSequenceLength(sequenceID);
+				if ((selection.getWidth() > 1) && (sequenceLength > selection.getFirstColumn())) {
+					getModel().removeTokensAt(sequenceID,	selection.getFirstColumn() + 1, 
+							Math.min(sequenceLength, selection.getFirstColumn() + selection.getWidth()));
 				}
 
 				// Overwrite first token:
-				getModel().setTokenAt(getAlignmentArea().getSequenceOrder().idByIndex(row),
-						selection.getFirstColumn(), token);
+				elongateSequence(sequenceID, selection.getFirstColumn() + 1);
+				getModel().setTokenAt(sequenceID,	selection.getFirstColumn(), token);
 			}
 			selection.setNewCursorColumn(selection.getFirstColumn() + 1);  // Move cursor forward
 		}

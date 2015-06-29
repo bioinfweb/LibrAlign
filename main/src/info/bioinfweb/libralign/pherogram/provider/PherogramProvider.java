@@ -128,4 +128,5 @@ public interface PherogramProvider extends DataModel {
 	 * 
 	 * @return another instance with a possibly shared data source 
 	 */
-	public PherogramProvider reverseComplement();}
+	public PherogramProvider reverseComplement();
+}
