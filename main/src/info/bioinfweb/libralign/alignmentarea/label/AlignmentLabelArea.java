@@ -122,6 +122,17 @@ public class AlignmentLabelArea extends TICComponent {
 	public Dimension getSize() {
 		return new Dimension(getGlobalMaximumNeededWidth(),	getOwner().getContentArea().getSize().height);  // If references starting from owner would be used here, there would be problems in initialization order.
 	}
+	
+	
+	public void assignSizeToAll() {
+		if (hasToolkitComponent()) {
+			Iterator<AlignmentLabelSubArea> iterator = getToolkitComponent().subAreaIterator();
+			while (iterator.hasNext()) {
+				iterator.next().assignSize();
+			}
+		}
+		assignSize();
+	}
 
 
 	@Override

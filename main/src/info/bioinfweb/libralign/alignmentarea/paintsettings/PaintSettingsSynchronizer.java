@@ -23,8 +23,6 @@ import info.bioinfweb.libralign.alignmentarea.AlignmentArea;
 import info.bioinfweb.libralign.multiplealignments.AlignmentAreaList;
 import info.bioinfweb.libralign.multiplealignments.MultipleAlignmentsContainer;
 
-import java.awt.Color;
-import java.awt.SystemColor;
 import java.beans.PropertyChangeEvent;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Set;
@@ -148,7 +146,7 @@ public class PaintSettingsSynchronizer implements PaintSettingsListener {
 				if (getPropertiesToSynchronizes().contains("zoomY")) {
 					// Set size again, because global value might have increased with the last element.
 					for (AlignmentArea area : getOwner()) {
-						area.getLabelArea().assignSize();
+						area.getLabelArea().assignSizeToAll();
 					}
 					
 					getOwner().getOwner().redistributeHeight();
