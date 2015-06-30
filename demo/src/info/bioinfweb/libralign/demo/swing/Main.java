@@ -21,6 +21,7 @@ package info.bioinfweb.libralign.demo.swing;
 
 import info.bioinfweb.libralign.alignmentarea.AlignmentArea;
 import info.bioinfweb.libralign.demo.AbstractTestApplication;
+import info.bioinfweb.tic.SwingComponentFactory;
 
 import java.awt.EventQueue;
 
@@ -86,7 +87,7 @@ public class Main extends AbstractTestApplication {
 		alignmentArea = createAlignmentArea();
 		//alignmentArea.setScrollHeadArea(true);
 		//alignmentArea.setScrollBottomArea(true);
-		JComponent alignmentPanel = alignmentArea.createSwingComponent();
+		JComponent alignmentPanel = SwingComponentFactory.getInstance().getSwingComponent(alignmentArea);
 		GridBagConstraints gbc_scrollPane = new GridBagConstraints();
 		gbc_scrollPane.fill = GridBagConstraints.BOTH;
 		gbc_scrollPane.gridx = 0;

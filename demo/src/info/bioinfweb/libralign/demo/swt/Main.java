@@ -21,6 +21,7 @@ package info.bioinfweb.libralign.demo.swt;
 
 import info.bioinfweb.libralign.alignmentarea.AlignmentArea;
 import info.bioinfweb.libralign.demo.AbstractTestApplication;
+import info.bioinfweb.tic.SWTComponentFactory;
 
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
@@ -84,7 +85,7 @@ public class Main extends AbstractTestApplication {
 		alignmentArea = createAlignmentArea();
 		//alignmentArea.setScrollBottomArea(true);
 		//alignmentArea.setScrollHeadArea(true);
-		alignmentArea.createSWTWidget(shell, SWT.NONE);
+		SWTComponentFactory.getInstance().getSWTComponent(alignmentArea, shell, SWT.NONE);
 		//alignmentArea.getToolkitComponent().redistributeHeight();
 	}
 }
