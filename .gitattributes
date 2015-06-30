@@ -253,6 +253,18 @@ main/info.bioinfweb.libralign.swing/src/info/bioinfweb/libralign/alignmentarea/l
 main/info.bioinfweb.libralign.swing/src/info/bioinfweb/libralign/alignmentarea/rowsarea/SwingAlignmentRowsArea.java -text svneol=unset#text/plain
 main/info.bioinfweb.libralign.swing/src/info/bioinfweb/libralign/multiplealignments/SwingMultipleAlignmentsContainer.java -text svneol=unset#text/plain
 main/info.bioinfweb.libralign.swing/src/info/bioinfweb/libralign/pherogram/view/SwingPhergramView.java -text svneol=unset#text/plain
+main/info.bioinfweb.libralign.swt/.classpath -text svneol=unset#text/plain
+main/info.bioinfweb.libralign.swt/.project -text svneol=unset#text/plain
+main/info.bioinfweb.libralign.swt/.settings/org.eclipse.jdt.core.prefs -text svneol=unset#text/plain
+main/info.bioinfweb.libralign.swt/lib/swt.jar -text
+main/info.bioinfweb.libralign.swt/src/info/bioinfweb/libralign/alignmentarea/RowLayoutSWTComponent.java -text svneol=unset#text/plain
+main/info.bioinfweb.libralign.swt/src/info/bioinfweb/libralign/alignmentarea/SWTAlignmentArea.java -text svneol=unset#text/plain
+main/info.bioinfweb.libralign.swt/src/info/bioinfweb/libralign/alignmentarea/SWTScrolledCompositeResizeListener.java -text svneol=unset#text/plain
+main/info.bioinfweb.libralign.swt/src/info/bioinfweb/libralign/alignmentarea/content/SWTAlignmentContentArea.java -text svneol=unset#text/plain
+main/info.bioinfweb.libralign.swt/src/info/bioinfweb/libralign/alignmentarea/label/SWTAlignmentLabelArea.java -text svneol=unset#text/plain
+main/info.bioinfweb.libralign.swt/src/info/bioinfweb/libralign/alignmentarea/rowsarea/SWTAlignmentRowsArea.java -text svneol=unset#text/plain
+main/info.bioinfweb.libralign.swt/src/info/bioinfweb/libralign/multiplealignments/SWTMultipleAlignmentsContainer.java -text svneol=unset#text/plain
+main/info.bioinfweb.libralign.swt/src/info/bioinfweb/libralign/pherogram/view/SWTPhergramView.java -text svneol=unset#text/plain
 test/.classpath -text svneol=unset#text/plain
 test/.project -text svneol=unset#text/plain
 test/.settings/org.eclipse.jdt.core.prefs -text svneol=unset#text/plain
