@@ -19,7 +19,7 @@
 package info.bioinfweb.libralign.pherogram.view;
 
 
-import info.bioinfweb.commons.tic.toolkit.ToolkitComponent;
+import info.bioinfweb.tic.toolkit.ToolkitComponent;
 
 
 

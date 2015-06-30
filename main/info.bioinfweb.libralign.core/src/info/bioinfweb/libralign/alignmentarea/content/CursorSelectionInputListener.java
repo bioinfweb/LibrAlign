@@ -25,12 +25,12 @@ import java.awt.event.KeyEvent;
 
 import javax.swing.JComponent;
 
-import info.bioinfweb.commons.tic.TargetToolkit;
-import info.bioinfweb.commons.tic.input.TICKeyEvent;
-import info.bioinfweb.commons.tic.input.TICKeyListener;
-import info.bioinfweb.commons.tic.input.TICMouseAdapter;
-import info.bioinfweb.commons.tic.input.TICMouseEvent;
-import info.bioinfweb.commons.tic.input.TICMouseListener;
+import info.bioinfweb.tic.TargetToolkit;
+import info.bioinfweb.tic.input.TICKeyEvent;
+import info.bioinfweb.tic.input.TICKeyListener;
+import info.bioinfweb.tic.input.TICMouseAdapter;
+import info.bioinfweb.tic.input.TICMouseEvent;
+import info.bioinfweb.tic.input.TICMouseListener;
 import info.bioinfweb.libralign.actions.AlignmentActionProvider;
 import info.bioinfweb.libralign.alignmentarea.AlignmentArea;
 import info.bioinfweb.libralign.alignmentarea.selection.SelectionModel;

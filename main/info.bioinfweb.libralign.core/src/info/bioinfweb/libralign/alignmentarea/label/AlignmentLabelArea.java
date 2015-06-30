@@ -26,8 +26,8 @@ import javax.swing.JComponent;
 
 import org.eclipse.swt.widgets.Composite;
 
-import info.bioinfweb.commons.tic.TICComponent;
-import info.bioinfweb.commons.tic.TICPaintEvent;
+import info.bioinfweb.tic.TICComponent;
+import info.bioinfweb.tic.TICPaintEvent;
 import info.bioinfweb.libralign.alignmentarea.AlignmentArea;
 import info.bioinfweb.libralign.alignmentarea.content.AlignmentSubArea;
 import info.bioinfweb.libralign.multiplealignments.MultipleAlignmentsContainer;

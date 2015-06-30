@@ -26,7 +26,7 @@ import java.util.EnumSet;
 import java.util.Iterator;
 import java.util.Set;
 
-import info.bioinfweb.commons.tic.TICPaintEvent;
+import info.bioinfweb.tic.TICPaintEvent;
 import info.bioinfweb.libralign.alignmentarea.AlignmentArea;
 import info.bioinfweb.libralign.alignmentarea.content.AlignmentContentArea;
 import info.bioinfweb.libralign.alignmentarea.label.AlignmentLabelArea;

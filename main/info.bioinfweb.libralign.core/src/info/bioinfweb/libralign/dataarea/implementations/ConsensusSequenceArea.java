@@ -22,7 +22,7 @@ package info.bioinfweb.libralign.dataarea.implementations;
 import info.bioinfweb.commons.bio.SequenceUtils;
 import info.bioinfweb.commons.graphics.FontCalculator;
 import info.bioinfweb.commons.graphics.GraphicsUtils;
-import info.bioinfweb.commons.tic.TICPaintEvent;
+import info.bioinfweb.tic.TICPaintEvent;
 import info.bioinfweb.jphyloio.events.TokenSetType;
 import info.bioinfweb.libralign.alignmentarea.AlignmentArea;
 import info.bioinfweb.libralign.alignmentarea.content.AlignmentContentArea;

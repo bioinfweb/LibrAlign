@@ -21,7 +21,7 @@ package info.bioinfweb.libralign.alignmentarea.label;
 
 import info.bioinfweb.commons.Math2;
 import info.bioinfweb.commons.graphics.FontCalculator;
-import info.bioinfweb.commons.tic.TICPaintEvent;
+import info.bioinfweb.tic.TICPaintEvent;
 import info.bioinfweb.libralign.alignmentarea.content.AlignmentSubArea;
 
 import java.awt.FontMetrics;

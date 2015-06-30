@@ -20,7 +20,7 @@ package info.bioinfweb.libralign.dataarea.implementations.pherogram;
 
 
 import info.bioinfweb.commons.collections.SimpleSequenceInterval;
-import info.bioinfweb.commons.tic.TICPaintEvent;
+import info.bioinfweb.tic.TICPaintEvent;
 import info.bioinfweb.libralign.alignmentarea.content.AlignmentContentArea;
 import info.bioinfweb.libralign.alignmentarea.tokenpainter.TokenPainter;
 import info.bioinfweb.libralign.dataarea.DataArea;

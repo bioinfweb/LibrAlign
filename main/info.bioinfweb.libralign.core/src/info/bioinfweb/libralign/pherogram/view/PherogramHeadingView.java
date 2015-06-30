@@ -26,8 +26,8 @@ import java.awt.RenderingHints;
 
 import info.bioinfweb.commons.Math2;
 import info.bioinfweb.commons.collections.SimpleSequenceInterval;
-import info.bioinfweb.commons.tic.TICComponent;
-import info.bioinfweb.commons.tic.TICPaintEvent;
+import info.bioinfweb.tic.TICComponent;
+import info.bioinfweb.tic.TICPaintEvent;
 import info.bioinfweb.libralign.pherogram.PherogramFormats;
 import info.bioinfweb.libralign.pherogram.PherogramPainter;
 

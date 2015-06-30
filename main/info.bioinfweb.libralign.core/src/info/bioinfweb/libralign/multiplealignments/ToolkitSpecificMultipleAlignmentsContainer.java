@@ -19,7 +19,7 @@
 package info.bioinfweb.libralign.multiplealignments;
 
 
-import info.bioinfweb.commons.tic.toolkit.ToolkitComponent;
+import info.bioinfweb.tic.toolkit.ToolkitComponent;
 
 
 

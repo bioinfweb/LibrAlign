@@ -20,10 +20,10 @@ package info.bioinfweb.libralign.alignmentarea.content;
 
 
 import info.bioinfweb.commons.SystemUtils;
-import info.bioinfweb.commons.tic.TICComponent;
-import info.bioinfweb.commons.tic.TICPaintEvent;
-import info.bioinfweb.commons.tic.input.TICMouseWheelEvent;
-import info.bioinfweb.commons.tic.input.TICMouseWheelListener;
+import info.bioinfweb.tic.TICComponent;
+import info.bioinfweb.tic.TICPaintEvent;
+import info.bioinfweb.tic.input.TICMouseWheelEvent;
+import info.bioinfweb.tic.input.TICMouseWheelListener;
 import info.bioinfweb.libralign.alignmentarea.AlignmentArea;
 import info.bioinfweb.libralign.alignmentarea.ToolkitSpecificAlignmentArea;
 import info.bioinfweb.libralign.alignmentarea.label.AlignmentLabelArea;

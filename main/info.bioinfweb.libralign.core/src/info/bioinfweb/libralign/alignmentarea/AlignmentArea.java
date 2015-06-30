@@ -27,12 +27,9 @@ import java.util.Iterator;
 
 import javax.swing.JComponent;
 
-import org.eclipse.swt.graphics.Point;
-import org.eclipse.swt.widgets.Composite;
-
 import info.bioinfweb.commons.Math2;
-import info.bioinfweb.commons.tic.TICComponent;
-import info.bioinfweb.commons.tic.TICPaintEvent;
+import info.bioinfweb.tic.TICComponent;
+import info.bioinfweb.tic.TICPaintEvent;
 import info.bioinfweb.libralign.alignmentarea.content.AlignmentContentArea;
 import info.bioinfweb.libralign.alignmentarea.content.AlignmentSubArea;
 import info.bioinfweb.libralign.alignmentarea.label.AlignmentLabelArea;
@@ -381,6 +378,18 @@ public class AlignmentArea extends TICComponent implements AlignmentModelChangeL
 	}
 	
 	
+	@Override
+	protected String getSWTComponentClassName() {
+		return "info.bioinfweb.libralign.alignmentarea.SwingAlignmentArea";
+	}
+
+
+	@Override
+	protected String getSwingComponentClassName() {
+		return "info.bioinfweb.libralign.alignmentarea.SWTAlignmentArea";
+	}
+
+
 	@Override
 	protected JComponent doCreateSwingComponent() {
 		return new SwingAlignmentArea(this);

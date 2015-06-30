@@ -19,8 +19,8 @@
 package info.bioinfweb.libralign.alignmentarea.content;
 
 
-import info.bioinfweb.commons.tic.TICComponent;
-import info.bioinfweb.commons.tic.toolkit.ToolkitComponent;
+import info.bioinfweb.tic.TICComponent;
+import info.bioinfweb.tic.toolkit.ToolkitComponent;
 import info.bioinfweb.libralign.alignmentarea.RowLayoutTICComponent;
 
 import java.util.Iterator;

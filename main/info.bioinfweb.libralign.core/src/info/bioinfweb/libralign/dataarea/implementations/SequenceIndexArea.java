@@ -21,7 +21,7 @@ package info.bioinfweb.libralign.dataarea.implementations;
 
 import info.bioinfweb.commons.Math2;
 import info.bioinfweb.commons.collections.ListChangeType;
-import info.bioinfweb.commons.tic.TICPaintEvent;
+import info.bioinfweb.tic.TICPaintEvent;
 import info.bioinfweb.libralign.alignmentarea.AlignmentArea;
 import info.bioinfweb.libralign.alignmentarea.content.AlignmentContentArea;
 import info.bioinfweb.libralign.dataarea.DataArea;

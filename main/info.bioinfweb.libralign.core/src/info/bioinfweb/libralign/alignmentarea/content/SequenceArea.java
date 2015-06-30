@@ -29,7 +29,7 @@ import java.awt.geom.Line2D;
 import java.awt.geom.Rectangle2D;
 
 import info.bioinfweb.commons.Math2;
-import info.bioinfweb.commons.tic.TICPaintEvent;
+import info.bioinfweb.tic.TICPaintEvent;
 import info.bioinfweb.libralign.alignmentarea.AlignmentArea;
 import info.bioinfweb.libralign.alignmentarea.label.AlignmentLabelArea;
 import info.bioinfweb.libralign.alignmentarea.label.AlignmentLabelSubArea;
