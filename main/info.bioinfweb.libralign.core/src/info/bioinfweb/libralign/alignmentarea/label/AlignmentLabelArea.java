@@ -22,10 +22,6 @@ package info.bioinfweb.libralign.alignmentarea.label;
 import java.awt.Dimension;
 import java.util.Iterator;
 
-import javax.swing.JComponent;
-
-import org.eclipse.swt.widgets.Composite;
-
 import info.bioinfweb.tic.TICComponent;
 import info.bioinfweb.tic.TICPaintEvent;
 import info.bioinfweb.libralign.alignmentarea.AlignmentArea;
@@ -140,14 +136,14 @@ public class AlignmentLabelArea extends TICComponent {
 
 
 	@Override
-	protected JComponent doCreateSwingComponent() {
-		return new SwingAlignmentLabelArea(this);
+	protected String getSwingComponentClassName() {
+		return "info.bioinfweb.libralign.alignmentarea.label.SwingAlignmentLabelArea";
 	}
 
 
 	@Override
-	protected Composite doCreateSWTWidget(Composite parent, int style) {
-		return new SWTAlignmentLabelArea(parent, style, this);
+	protected String getSWTComponentClassName() {
+		return "info.bioinfweb.libralign.alignmentarea.label.SWTAlignmentLabelArea";
 	}
 
 

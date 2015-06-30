@@ -41,10 +41,6 @@ import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Rectangle;
 
-import javax.swing.JComponent;
-
-import org.eclipse.swt.widgets.Composite;
-
 
 
 /**
@@ -150,34 +146,20 @@ public class AlignmentContentArea extends TICComponent {
 
 
 	@Override
-	protected JComponent doCreateSwingComponent() {
-		SwingAlignmentContentArea result = new SwingAlignmentContentArea(this);
-		addCursorScrollListener();
-		return result;
+	protected String getSwingComponentClassName() {
+		return "info.bioinfweb.libralign.alignmentarea.content.SwingAlignmentContentArea";
 	}
 
 
 	@Override
-	protected Composite doCreateSWTWidget(Composite parent, int style) {
-		SWTAlignmentContentArea result = new SWTAlignmentContentArea(parent, style, this);
-		addCursorScrollListener();
-		return result;
+	protected String getSWTComponentClassName() {
+		return "info.bioinfweb.libralign.alignmentarea.content.SWTAlignmentContentArea";
 	}
 
 
 	@Override
 	public ToolkitSpecificAlignmentContentArea getToolkitComponent() {
 		return (ToolkitSpecificAlignmentContentArea)super.getToolkitComponent();
-	}
-
-
-	private void addCursorScrollListener() {
-		getOwner().getSelection().addSelectionListener(new SelectionListener() {
-					@Override
-					public void selectionChanged(SelectionChangeEvent event) {
-						getOwner().scrollCursorToVisible();
-					}
-				});
 	}
 
 
@@ -264,7 +246,8 @@ public class AlignmentContentArea extends TICComponent {
 	 */
 	public int paintYByRow(int row) {
 		row = Math.max(0, Math.min(getOwner().getAlignmentModel().getSequenceCount() - 1, row));
-    return getToolkitComponent().getSequenceAreaByID(getOwner().getSequenceOrder().idByIndex(row)).getLocationInParent().y;
+    return getToolkitComponent().getSequenceAreaByID(getOwner().getSequenceOrder().idByIndex(row)).
+    		getToolkitComponent().getLocationInParent().y;
 	}
 
 
@@ -278,13 +261,20 @@ public class AlignmentContentArea extends TICComponent {
 	 *         area before the call of this method
 	 */
 	public int alignmentPartY(SequenceArea sequenceArea, int relativeY) {
-		switch (sequenceArea.getCurrentToolkit()) {  // SequenceAreas need to be direct children of the ToolkitSpecificAlignmentPartAreas for this method to work.
-			case SWING:
-				return ((Component)sequenceArea.getToolkitComponent()).getLocation().y + relativeY;
-			case SWT:
-				return ((Composite)sequenceArea.getToolkitComponent()).getLocation().y + relativeY;
-			default:
-				throw new IllegalStateException("No Swing or SWT component of the specfied sequence area has yet been created.");
+		if (sequenceArea.hasToolkitComponent()) {
+			return sequenceArea.getToolkitComponent().getLocationInParent().y + relativeY;  // SequenceAreas need to be direct children of the ToolkitSpecificAlignmentPartAreas for this method to work.
 		}
+		else {
+			throw new IllegalStateException("No Swing or SWT component of the specified sequence area has yet been created.");
+		}
+		
+//		switch (sequenceArea.getCurrentToolkit()) {  // SequenceAreas need to be direct children of the ToolkitSpecificAlignmentPartAreas for this method to work.
+//			case SWING:
+//				return ((Component)sequenceArea.getToolkitComponent()).getLocation().y + relativeY;
+//			case SWT:
+//				return ((Composite)sequenceArea.getToolkitComponent()).getLocation().y + relativeY;
+//			default:
+//				throw new IllegalStateException("No Swing or SWT component of the specified sequence area has yet been created.");
+//		}
 	}
 }

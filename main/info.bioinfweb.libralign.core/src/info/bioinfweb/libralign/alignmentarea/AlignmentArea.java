@@ -19,13 +19,10 @@
 package info.bioinfweb.libralign.alignmentarea;
 
 
-import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Rectangle;
 import java.beans.PropertyChangeEvent;
 import java.util.Iterator;
-
-import javax.swing.JComponent;
 
 import info.bioinfweb.commons.Math2;
 import info.bioinfweb.tic.TICComponent;
@@ -39,6 +36,8 @@ import info.bioinfweb.libralign.alignmentarea.paintsettings.PaintSettingsListene
 import info.bioinfweb.libralign.alignmentarea.paintsettings.PaintSettingsEvent;
 import info.bioinfweb.libralign.alignmentarea.paintsettings.TokenPainterReplacedEvent;
 import info.bioinfweb.libralign.alignmentarea.paintsettings.ZoomChangeEvent;
+import info.bioinfweb.libralign.alignmentarea.selection.SelectionChangeEvent;
+import info.bioinfweb.libralign.alignmentarea.selection.SelectionListener;
 import info.bioinfweb.libralign.alignmentarea.selection.SelectionModel;
 import info.bioinfweb.libralign.dataarea.DataAreaChangeEvent;
 import info.bioinfweb.libralign.dataarea.DataAreaModel;
@@ -72,7 +71,7 @@ public class AlignmentArea extends TICComponent implements AlignmentModelChangeL
 	private DataAreaModel dataAreas = new DataAreaModel(this);
 	private PaintSettings paintSettings;
 	private EditSettings editSettings;
-	private SelectionModel selection = new SelectionModel(this);
+	private SelectionModel selection;
 
 	private MultipleAlignmentsContainer container = null;
 	private AlignmentContentArea alignmentContentArea;
@@ -149,6 +148,14 @@ public class AlignmentArea extends TICComponent implements AlignmentModelChangeL
 		
 		paintSettings = new PaintSettings(this);
 		paintSettings.addListener(PAINT_SETTINGS_LISTERNER);
+		
+		selection = new SelectionModel(this);
+		selection.addSelectionListener(new SelectionListener() {
+					@Override
+					public void selectionChanged(SelectionChangeEvent event) {
+						scrollCursorToVisible();
+					}
+				});
 	}
 
 
@@ -379,38 +386,14 @@ public class AlignmentArea extends TICComponent implements AlignmentModelChangeL
 	
 	
 	@Override
-	protected String getSWTComponentClassName() {
+	protected String getSwingComponentClassName() {
 		return "info.bioinfweb.libralign.alignmentarea.SwingAlignmentArea";
 	}
 
 
 	@Override
-	protected String getSwingComponentClassName() {
+	protected String getSWTComponentClassName() {
 		return "info.bioinfweb.libralign.alignmentarea.SWTAlignmentArea";
-	}
-
-
-	@Override
-	protected JComponent doCreateSwingComponent() {
-		return new SwingAlignmentArea(this);
-	}
-
-
-	@Override
-	protected Composite doCreateSWTWidget(Composite parent, int style) {
-		return new SWTAlignmentArea(parent, style, this, false);  // Possible hiding of horizontal scroll bar needs to be adjusted later on.
-	}
-
-
-	@Override
-	public SWTAlignmentArea createSWTWidget(Composite parent, int style) {
-		return (SWTAlignmentArea)super.createSWTWidget(parent, style);
-	}
-
-
-	@Override
-	public SwingAlignmentArea createSwingComponent() {
-		return (SwingAlignmentArea)super.createSwingComponent();
 	}
 
 
@@ -432,15 +415,12 @@ public class AlignmentArea extends TICComponent implements AlignmentModelChangeL
 	 */
 	@Override
 	public Dimension getSize() {
-		// Just returns the size already set to the toolkit component because the size of an alignment area is determined just by the layout manager and not dependent of the alignment and data area size. 
-		switch (getCurrentToolkit()) {
-			case SWING:
-				return ((JComponent)getToolkitComponent()).getSize();
-			case SWT:
-				Point point = ((Composite)getToolkitComponent()).getSize();
-				return new Dimension(point.x, point.y);
-			default:
-			  return new Dimension(0, 0);
+		// Just returns the size already set to the toolkit component because the size of an alignment area is determined just by the layout manager and not dependent of the alignment and data area size.
+		if (hasToolkitComponent()) {
+			return getToolkitComponent().getToolkitSize();
+		}
+		else {
+			return new Dimension(0, 0);
 		}
 	}
 	

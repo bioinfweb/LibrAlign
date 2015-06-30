@@ -21,11 +21,6 @@ package info.bioinfweb.libralign.pherogram.view;
 
 import java.awt.Dimension;
 
-import javax.swing.JComponent;
-
-import org.eclipse.swt.graphics.Point;
-import org.eclipse.swt.widgets.Composite;
-
 import info.bioinfweb.tic.TICComponent;
 import info.bioinfweb.tic.TICPaintEvent;
 import info.bioinfweb.libralign.dataarea.implementations.pherogram.PherogramArea;
@@ -85,14 +80,12 @@ public class PherogramView extends TICComponent {
 
 	@Override
 	public Dimension getSize() {
-		switch (getCurrentToolkit()) {
-			case SWING:
-				return ((JComponent)getToolkitComponent()).getPreferredSize();  //TODO correct size?
-			case SWT:
-				Point point = ((Composite)getToolkitComponent()).getSize();
-				return new Dimension(point.x, point.y);
-			default:
-			  return new Dimension(0, 0);
+		// Just returns the size already set to the toolkit component because the size of an alignment area is determined just by the layout manager and not dependent of the alignment and data area size.
+		if (hasToolkitComponent()) {
+			return getToolkitComponent().getToolkitSize();
+		}
+		else {
+			return new Dimension(0, 0);
 		}
 	}
 	
@@ -102,25 +95,13 @@ public class PherogramView extends TICComponent {
 
 
 	@Override
-	protected Composite doCreateSWTWidget(Composite parent, int style) {
-		return new SWTPhergramView(parent, style, this);
+	protected String getSwingComponentClassName() {
+		return "info.bioinfweb.libralign.pherogram.view.SwingPhergramView";
 	}
 
 
 	@Override
-	protected JComponent doCreateSwingComponent() {
-		return new SwingPhergramView(this);
-	}
-	
-	
-	@Override
-	public SWTPhergramView createSWTWidget(Composite parent, int style) {
-		return (SWTPhergramView)super.createSWTWidget(parent, style);
-	}
-
-
-	@Override
-	public SwingPhergramView createSwingComponent() {
-		return (SwingPhergramView)super.createSwingComponent();
+	protected String getSWTComponentClassName() {
+		return "info.bioinfweb.libralign.pherogram.view.SWTPhergramView";
 	}
 }

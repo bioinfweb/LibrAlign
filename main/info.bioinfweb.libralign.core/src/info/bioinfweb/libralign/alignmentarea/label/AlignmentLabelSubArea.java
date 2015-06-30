@@ -22,8 +22,8 @@ package info.bioinfweb.libralign.alignmentarea.label;
 import java.awt.Dimension;
 
 import info.bioinfweb.libralign.alignmentarea.AlignmentArea;
-import info.bioinfweb.libralign.alignmentarea.RowLayoutTICComponent;
 import info.bioinfweb.libralign.alignmentarea.content.AlignmentSubArea;
+import info.bioinfweb.tic.TICComponent;
 
 
 
@@ -33,7 +33,7 @@ import info.bioinfweb.libralign.alignmentarea.content.AlignmentSubArea;
  * @author Ben St&ouml;ver
  * @since 0.3.0
  */
-public abstract class AlignmentLabelSubArea extends RowLayoutTICComponent {
+public abstract class AlignmentLabelSubArea extends TICComponent {
 	private AlignmentLabelArea owner;
 	private AlignmentSubArea labeledSubArea;
 	

@@ -21,7 +21,6 @@ package info.bioinfweb.libralign.alignmentarea.content;
 
 import info.bioinfweb.tic.TICComponent;
 import info.bioinfweb.tic.toolkit.ToolkitComponent;
-import info.bioinfweb.libralign.alignmentarea.RowLayoutTICComponent;
 
 import java.util.Iterator;
 
@@ -33,7 +32,7 @@ import java.util.Iterator;
  * @author Ben St&ouml;ver
  * @since 0.3.0
  */
-public class AlignmentSubAreaIterator<C extends RowLayoutTICComponent> implements Iterator<C> {
+public class AlignmentSubAreaIterator<C extends TICComponent> implements Iterator<C> {
 	private Iterator iterator;
 
 
@@ -53,10 +52,7 @@ public class AlignmentSubAreaIterator<C extends RowLayoutTICComponent> implement
 	public C next() {
 		Object component = iterator.next();
 		if (component instanceof ToolkitComponent) {
-			TICComponent ticComponent = ((ToolkitComponent)component).getIndependentComponent();
-			if (ticComponent instanceof RowLayoutTICComponent) {  // Theoretically C would have to checked, which would only be possible with a Class parameter.
-				return (C)ticComponent;
-			}
+			return (C)((ToolkitComponent)component).getIndependentComponent();  // Checking C would only be possible with a Class parameter.
 		}
 		throw new ClassCastException("A child component of an invalid type was found.");
 	}

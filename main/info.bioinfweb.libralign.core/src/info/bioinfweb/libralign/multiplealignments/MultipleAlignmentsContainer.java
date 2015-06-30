@@ -22,11 +22,6 @@ package info.bioinfweb.libralign.multiplealignments;
 import java.awt.Dimension;
 import java.util.Set;
 
-import javax.swing.JComponent;
-
-import org.eclipse.swt.graphics.Point;
-import org.eclipse.swt.widgets.Composite;
-
 import info.bioinfweb.commons.Math2;
 import info.bioinfweb.tic.TICComponent;
 import info.bioinfweb.tic.TICPaintEvent;
@@ -103,39 +98,25 @@ public class MultipleAlignmentsContainer extends TICComponent {
 
 
 	@Override
-	protected Composite doCreateSWTWidget(Composite parent, int style) {
-		return new SWTMultipleAlignmentsContainer(parent, style, this);
+	protected String getSwingComponentClassName() {
+		return "info.bioinfweb.libralign.multiplealignments.SwingMultipleAlignmentsContainer";
 	}
 
 
 	@Override
-	protected JComponent doCreateSwingComponent() {
-		return new SwingMultipleAlignmentsContainer(this);
-	}
-
-
-	@Override
-	public SWTMultipleAlignmentsContainer createSWTWidget(Composite parent, int style) {
-		return (SWTMultipleAlignmentsContainer)super.createSWTWidget(parent, style);
-	}
-
-
-	@Override
-	public SwingMultipleAlignmentsContainer createSwingComponent() {
-		return (SwingMultipleAlignmentsContainer)super.createSwingComponent();
+	protected String getSWTComponentClassName() {
+		return "info.bioinfweb.libralign.multiplealignments.SWTMultipleAlignmentsContainer";
 	}
 
 
 	@Override
 	public Dimension getSize() {
-		switch (getCurrentToolkit()) {
-			case SWING:
-				return ((JComponent)getToolkitComponent()).getPreferredSize();  //TODO correct size?
-			case SWT:
-				Point point = ((Composite)getToolkitComponent()).getSize();
-				return new Dimension(point.x, point.y);
-			default:
-			  return new Dimension(0, 0);
+		// Just returns the size already set to the toolkit component because the size of an alignment area is determined just by the layout manager and not dependent of the alignment and data area size.
+		if (hasToolkitComponent()) {
+			return getToolkitComponent().getToolkitSize();
+		}
+		else {
+			return new Dimension(0, 0);
 		}
 	}
 
