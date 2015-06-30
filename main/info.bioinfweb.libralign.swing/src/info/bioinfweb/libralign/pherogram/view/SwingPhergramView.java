@@ -19,7 +19,12 @@
 package info.bioinfweb.libralign.pherogram.view;
 
 
+import info.bioinfweb.tic.SwingComponentFactory;
+import info.bioinfweb.tic.TargetToolkit;
+import info.bioinfweb.tic.toolkit.SwingComponentTools;
+
 import java.awt.Dimension;
+import java.awt.Point;
 
 import javax.swing.JScrollPane;
 import javax.swing.ScrollPaneConstants;
@@ -47,8 +52,9 @@ public class SwingPhergramView extends JScrollPane implements ToolkitIndependent
 		setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);
 		setBorder(null);
 
-		setViewportView(getIndependentComponent().getTraceCurveView().createSwingComponent());
-		setColumnHeaderView(getIndependentComponent().getHeadingView().createSwingComponent());
+		SwingComponentFactory factory = SwingComponentFactory.getInstance();
+		setViewportView(factory.getSwingComponent(getIndependentComponent().getTraceCurveView()));
+		setColumnHeaderView(factory.getSwingComponent(getIndependentComponent().getHeadingView()));
 	}
 	
 
@@ -58,6 +64,36 @@ public class SwingPhergramView extends JScrollPane implements ToolkitIndependent
 	}
 
 
+	@Override
+	public Dimension getToolkitSize() {
+		return getSize();
+	}
+
+
+	@Override
+	public Dimension getMaximumSize() {
+		return SwingComponentTools.getMaximumSize(this, super.getMaximumSize());
+	}
+
+
+	@Override
+	public void assignSize() {
+		SwingComponentTools.assignSize(this);
+	}
+
+
+	@Override
+	public TargetToolkit getTargetToolkit() {
+		return TargetToolkit.SWING;
+	}
+
+
+	@Override
+	public Point getLocationInParent() {
+		return getLocation();
+	}
+
+	
 	@Override
 	public Dimension getPreferredSize() {
 		Dimension traceCurveSize = getIndependentComponent().getTraceCurveView().getSize(); 

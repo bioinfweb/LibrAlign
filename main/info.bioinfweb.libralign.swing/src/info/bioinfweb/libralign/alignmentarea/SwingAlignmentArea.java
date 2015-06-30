@@ -19,10 +19,15 @@
 package info.bioinfweb.libralign.alignmentarea;
 
 
+import java.awt.Dimension;
+import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 
 import info.bioinfweb.libralign.alignmentarea.content.SwingAlignmentContentArea;
+import info.bioinfweb.tic.SwingComponentFactory;
+import info.bioinfweb.tic.TargetToolkit;
+import info.bioinfweb.tic.toolkit.SwingComponentTools;
 
 import javax.swing.AbstractAction;
 import javax.swing.Action;
@@ -68,8 +73,8 @@ public class SwingAlignmentArea extends JScrollPane implements ToolkitSpecificAl
 		setBorder(null);
 		removeArrowKeyBindings();
 		
-		setViewportView(getIndependentComponent().getContentArea().createSwingComponent());
-		setRowHeaderView(getIndependentComponent().getLabelArea().createSwingComponent());  // Swing component of content area must already exist when this is called.
+		setViewportView(SwingComponentFactory.getInstance().getSwingComponent(getIndependentComponent().getContentArea()));
+		setRowHeaderView(SwingComponentFactory.getInstance().getSwingComponent(getIndependentComponent().getLabelArea()));  // Swing component of content area must already exist when this is called.
 	}
 
 
@@ -82,6 +87,36 @@ public class SwingAlignmentArea extends JScrollPane implements ToolkitSpecificAl
 	  getActionMap().put("unitScrollUp", VOID_ACTION);
 		getActionMap().put("unitScrollRight", VOID_ACTION);
 	  getActionMap().put("unitScrollDown", VOID_ACTION);
+	}
+	
+	
+	@Override
+	public Dimension getToolkitSize() {
+		return getSize();
+	}
+
+
+	@Override
+	public Dimension getMaximumSize() {
+		return SwingComponentTools.getMaximumSize(this, super.getMaximumSize());
+	}
+
+
+	@Override
+	public void assignSize() {
+		SwingComponentTools.assignSize(this);
+	}
+
+
+	@Override
+	public TargetToolkit getTargetToolkit() {
+		return TargetToolkit.SWING;
+	}
+
+
+	@Override
+	public Point getLocationInParent() {
+		return getLocation();
 	}
 	
 	

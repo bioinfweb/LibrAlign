@@ -24,10 +24,11 @@ import java.awt.Rectangle;
 import java.util.Arrays;
 import java.util.Iterator;
 
-import info.bioinfweb.libralign.alignmentarea.RowLayoutTICComponent;
 import info.bioinfweb.libralign.alignmentarea.content.AlignmentSubAreaIterator;
 import info.bioinfweb.libralign.alignmentarea.content.SwingAlignmentContentArea;
 import info.bioinfweb.libralign.alignmentarea.label.SwingAlignmentLabelArea;
+import info.bioinfweb.tic.TICComponent;
+import info.bioinfweb.tic.toolkit.AbstractSwingComponent;
 
 import javax.swing.BoxLayout;
 import javax.swing.JComponent;
@@ -41,11 +42,11 @@ import javax.swing.Scrollable;
  * @author Ben St&ouml;ver
  * @since 0.3.0
  */
-public abstract class SwingAlignmentRowsArea<C extends RowLayoutTICComponent> extends JComponent 
+public abstract class SwingAlignmentRowsArea<C extends TICComponent> extends AbstractSwingComponent 
 		implements Scrollable, ToolkitSpecificAlignmentRowsArea<C> {
 	
-	public SwingAlignmentRowsArea() {
-		super();
+	public SwingAlignmentRowsArea(TICComponent owner) {
+		super(owner);
 		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 		// reinsertSubelements() cannot be called here, because necessary fields need to be initialized by the implementing class first.
 	}

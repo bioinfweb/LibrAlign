@@ -23,6 +23,7 @@ import java.util.Iterator;
 
 import info.bioinfweb.libralign.alignmentarea.content.AlignmentSubArea;
 import info.bioinfweb.libralign.alignmentarea.rowsarea.SwingAlignmentRowsArea;
+import info.bioinfweb.tic.SwingComponentFactory;
 
 
 
@@ -35,24 +36,20 @@ import info.bioinfweb.libralign.alignmentarea.rowsarea.SwingAlignmentRowsArea;
 public class SwingAlignmentLabelArea extends SwingAlignmentRowsArea<AlignmentLabelSubArea> 
 		implements ToolkitSpecificAlignmentLabelArea {
 	
-	private AlignmentLabelArea independentComponent;
-	
-	
 	/**
 	 * Creates a new instance of this class.
 	 * 
 	 * @param independentComponent - the toolkit independent component associated with the new instance
 	 */
 	public SwingAlignmentLabelArea(AlignmentLabelArea independentComponent) {
-		super();
-		this.independentComponent = independentComponent;
+		super(independentComponent);
 		reinsertSubelements();
 	}
 
 
 	@Override
 	public AlignmentLabelArea getIndependentComponent() {
-		return independentComponent;
+		return (AlignmentLabelArea)super.getIndependentComponent();
 	}
 	
 
@@ -62,8 +59,9 @@ public class SwingAlignmentLabelArea extends SwingAlignmentRowsArea<AlignmentLab
 			removeAll();
 			Iterator<AlignmentSubArea> iterator = 
 					getIndependentComponent().getOwner().getContentArea().getToolkitComponent().subAreaIterator();
+			SwingComponentFactory factory = SwingComponentFactory.getInstance();
 			while (iterator.hasNext()) {
-				add(iterator.next().getLabelSubArea().createSwingComponent());
+				add(factory.getSwingComponent(iterator.next().getLabelSubArea()));
 			}
 		}
 		else {

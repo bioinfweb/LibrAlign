@@ -28,10 +28,10 @@ import java.util.List;
 
 import info.bioinfweb.libralign.alignmentarea.AlignmentArea;
 import info.bioinfweb.libralign.alignmentarea.SwingAlignmentArea;
-import info.bioinfweb.libralign.alignmentarea.ToolkitSpecificAlignmentArea;
+import info.bioinfweb.tic.SwingComponentFactory;
+import info.bioinfweb.tic.toolkit.AbstractSwingComponent;
 
 import javax.swing.BoxLayout;
-import javax.swing.JComponent;
 import javax.swing.JScrollBar;
 import javax.swing.JSplitPane;
 
@@ -43,15 +43,17 @@ import javax.swing.JSplitPane;
  * @author Ben St&oumol;ver
  * @since 0.1.0
  */
-public class SwingMultipleAlignmentsContainer extends JComponent implements ToolkitSpecificMultipleAlignmentsContainer {
+public class SwingMultipleAlignmentsContainer extends AbstractSwingComponent implements ToolkitSpecificMultipleAlignmentsContainer {
 	public static final int NEEDED_BORDER_WIDTH = 1;
 	
 	
 	private final AdjustmentListener SCROLL_SYNC_LISTENER = new AdjustmentListener() {
 				@Override
 				public void adjustmentValueChanged(AdjustmentEvent e) {
+					SwingComponentFactory factory = SwingComponentFactory.getInstance();
 					for (int i = 0; i < getIndependentComponent().getAlignmentAreas().size(); i++) {
-						JScrollBar scrollBar = getIndependentComponent().getAlignmentAreas().get(i).createSwingComponent().getHorizontalScrollBar(); 
+						JScrollBar scrollBar = ((SwingAlignmentArea)factory.getSwingComponent(
+								getIndependentComponent().getAlignmentAreas().get(i))).getHorizontalScrollBar(); 
 						if (scrollBar != e.getSource()) {
 							scrollBar.getModel().setValue(e.getValue());
 						}
@@ -62,7 +64,6 @@ public class SwingMultipleAlignmentsContainer extends JComponent implements Tool
 			};
 
 			
-	private MultipleAlignmentsContainer independentComponent;
 	private List<JSplitPane> splitPanes = new ArrayList<JSplitPane>();
 	
 	
@@ -73,8 +74,7 @@ public class SwingMultipleAlignmentsContainer extends JComponent implements Tool
 	 *        in a Swing GUI
 	 */
 	public SwingMultipleAlignmentsContainer(MultipleAlignmentsContainer independentComponent) {
-		super();
-		this.independentComponent = independentComponent;
+		super(independentComponent);
 		initGUI();
 	}
 	
@@ -93,6 +93,12 @@ public class SwingMultipleAlignmentsContainer extends JComponent implements Tool
 	}
 	
 	
+	@Override
+	public MultipleAlignmentsContainer getIndependentComponent() {
+		return (MultipleAlignmentsContainer)super.getIndependentComponent();
+	}
+
+
 	/**
 	 * Creates the specified number of nested split panes. (If the list contains more split panes than {@code count}
 	 * the additional ones are removed.)
@@ -128,7 +134,8 @@ public class SwingMultipleAlignmentsContainer extends JComponent implements Tool
 
 
 	private SwingAlignmentArea createAlignmentArea(int index, boolean hideHorizintalScrollBar) {
-  	SwingAlignmentArea result = getIndependentComponent().getAlignmentAreas().get(index).createSwingComponent();
+  	SwingAlignmentArea result = (SwingAlignmentArea)SwingComponentFactory.getInstance().getSwingComponent(
+  			getIndependentComponent().getAlignmentAreas().get(index));
   	result.setHideHorizontalScrollBar(hideHorizintalScrollBar);
   	return result;
 	}
@@ -138,9 +145,10 @@ public class SwingMultipleAlignmentsContainer extends JComponent implements Tool
 	public void adoptChildAreas() {
 		// Remove components and listeners:
 		removeAll();
+		SwingComponentFactory factory = SwingComponentFactory.getInstance();
 		for (int i = 0; i < getIndependentComponent().getAlignmentAreas().size(); i++) {
-			getIndependentComponent().getAlignmentAreas().get(i).createSwingComponent().getHorizontalScrollBar().
-					removeAdjustmentListener(SCROLL_SYNC_LISTENER); 
+			((SwingAlignmentArea)factory.getSwingComponent(getIndependentComponent().getAlignmentAreas().get(i))).
+					getHorizontalScrollBar().removeAdjustmentListener(SCROLL_SYNC_LISTENER); 
 		}		
 		
 		// Create split panes and add components:
@@ -160,21 +168,15 @@ public class SwingMultipleAlignmentsContainer extends JComponent implements Tool
 		else {
 			splitPanes.clear();
 			if (getIndependentComponent().getAlignmentAreas().size() == 1) {
-				add(getIndependentComponent().getAlignmentAreas().get(0).createSwingComponent());
+				add(SwingComponentFactory.getInstance().getSwingComponent(getIndependentComponent().getAlignmentAreas().get(0)));
 		  }
 		}
 
 		// Add scroll synchronize listeners:
 		for (int i = 0; i < getIndependentComponent().getAlignmentAreas().size(); i++) {
-			getIndependentComponent().getAlignmentAreas().get(i).createSwingComponent().getHorizontalScrollBar().addAdjustmentListener(
-					SCROLL_SYNC_LISTENER); 
+			((SwingAlignmentArea)factory.getSwingComponent(getIndependentComponent().getAlignmentAreas().get(i))).
+					getHorizontalScrollBar().addAdjustmentListener(SCROLL_SYNC_LISTENER); 
 		}		
-	}
-
-
-	@Override
-	public MultipleAlignmentsContainer getIndependentComponent() {
-		return independentComponent;
 	}
 
 

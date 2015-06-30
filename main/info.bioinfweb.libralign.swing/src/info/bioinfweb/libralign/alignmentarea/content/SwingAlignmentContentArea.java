@@ -20,9 +20,9 @@ package info.bioinfweb.libralign.alignmentarea.content;
 
 
 import java.awt.Component;
-import java.util.Arrays;
 import java.util.Iterator;
 
+import info.bioinfweb.tic.SwingComponentFactory;
 import info.bioinfweb.tic.TICComponent;
 import info.bioinfweb.tic.toolkit.ToolkitComponent;
 import info.bioinfweb.libralign.alignmentarea.rowsarea.SwingAlignmentRowsArea;
@@ -40,13 +40,11 @@ import javax.swing.Scrollable;
  * @since 0.3.0
  */
 public class SwingAlignmentContentArea extends SwingAlignmentRowsArea<AlignmentSubArea> implements Scrollable, ToolkitSpecificAlignmentContentArea {
-  private AlignmentContentArea independentComponent;
 	private SequenceAreaMap sequenceAreaMap;
 	
 	
 	public SwingAlignmentContentArea(AlignmentContentArea independentComponent) {
-		super();
-		this.independentComponent = independentComponent;
+		super(independentComponent);
 		sequenceAreaMap = new SequenceAreaMap(independentComponent);
 		reinsertSubelements();
 	}
@@ -54,7 +52,7 @@ public class SwingAlignmentContentArea extends SwingAlignmentRowsArea<AlignmentS
 	
 	@Override
 	public AlignmentContentArea getIndependentComponent() {
-		return independentComponent;
+		return (AlignmentContentArea)super.getIndependentComponent();
 	}
 	
 
@@ -71,10 +69,11 @@ public class SwingAlignmentContentArea extends SwingAlignmentRowsArea<AlignmentS
 		
 		addDataAreaList(getIndependentComponent().getOwner().getDataAreas().getTopAreas());
 		
+		SwingComponentFactory factory = SwingComponentFactory.getInstance();
 		Iterator<Integer> idIterator = getIndependentComponent().getOwner().getSequenceOrder().idIterator();
 		while (idIterator.hasNext()) {
 			Integer id = idIterator.next();
-			add(sequenceAreaMap.get(id).createSwingComponent());
+			add(factory.getSwingComponent(sequenceAreaMap.get(id)));
 			addDataAreaList(getIndependentComponent().getOwner().getDataAreas().getSequenceAreas(id));
 		}
 		
@@ -84,11 +83,12 @@ public class SwingAlignmentContentArea extends SwingAlignmentRowsArea<AlignmentS
 	
 	@Override
 	public void addDataAreaList(DataAreaList list) {
+		SwingComponentFactory factory = SwingComponentFactory.getInstance();
 		Iterator<DataArea> iterator = list.iterator();
 		while (iterator.hasNext()) {
 			DataArea dataArea = iterator.next();
 			if (dataArea.isVisible()) {
-				add(dataArea.createSwingComponent());
+				add(factory.getSwingComponent(dataArea));
 			}
 		}
 	}
