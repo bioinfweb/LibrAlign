@@ -370,18 +370,20 @@ public class AlignmentArea extends TICComponent implements AlignmentModelChangeL
 	
 	
 	public void scrollCursorToVisible() {
-		Rectangle visibleRectangle = getToolkitComponent().getVisibleAlignmentRect();
-		Rectangle currentRectangle = getContentArea().getCursorRectangle();
-		Rectangle scrollRectangle = new Rectangle(currentRectangle);
-		int dy = currentRectangle.height - visibleRectangle.height;
-		if ((dy > 0) && (lastCursorRectangle != null)) {
-			scrollRectangle.height -= dy;
-			if (lastCursorRectangle.y == currentRectangle.y) {  // Not moved upwards (= downwards).
-				scrollRectangle.y += dy;
+		if (hasToolkitComponent()) {
+			Rectangle visibleRectangle = getToolkitComponent().getVisibleAlignmentRect();
+			Rectangle currentRectangle = getContentArea().getCursorRectangle();
+			Rectangle scrollRectangle = new Rectangle(currentRectangle);
+			int dy = currentRectangle.height - visibleRectangle.height;
+			if ((dy > 0) && (lastCursorRectangle != null)) {
+				scrollRectangle.height -= dy;
+				if (lastCursorRectangle.y == currentRectangle.y) {  // Not moved upwards (= downwards).
+					scrollRectangle.y += dy;
+				}
 			}
+			getToolkitComponent().scrollAlignmentRectToVisible(scrollRectangle);
+			lastCursorRectangle = currentRectangle;
 		}
-		getToolkitComponent().scrollAlignmentRectToVisible(scrollRectangle);
-		lastCursorRectangle = currentRectangle;
 	}
 	
 	
