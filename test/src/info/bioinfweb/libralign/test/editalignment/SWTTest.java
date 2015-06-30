@@ -19,6 +19,8 @@
 package info.bioinfweb.libralign.test.editalignment;
 
 
+import info.bioinfweb.tic.SWTComponentFactory;
+
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.layout.FillLayout;
@@ -70,7 +72,7 @@ public class SWTTest extends EditableAlignmentTest {
 		shell.setText("SWT editable alignment test");
 		shell.setLayout(new FillLayout(SWT.VERTICAL));
 		
-		getAlignmentArea().createSWTWidget(shell, SWT.NONE);
+		SWTComponentFactory.getInstance().getSWTComponent(getAlignmentArea(), shell, SWT.NONE);
 	}
 	
 	

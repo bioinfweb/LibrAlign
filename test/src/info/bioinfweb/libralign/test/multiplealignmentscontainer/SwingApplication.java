@@ -20,6 +20,7 @@ package info.bioinfweb.libralign.test.multiplealignmentscontainer;
 
 
 import info.bioinfweb.libralign.multiplealignments.MultipleAlignmentsContainer;
+import info.bioinfweb.tic.SwingComponentFactory;
 
 import java.awt.EventQueue;
 
@@ -85,7 +86,7 @@ public class SwingApplication extends AbstractApplication {
 		alignmentsContainer = createAlignmentsContainer();
 		//alignmentArea.setScrollHeadArea(true);
 		//alignmentArea.setScrollBottomArea(true);
-		JComponent alignmentPanel = alignmentsContainer.createSwingComponent();
+		JComponent alignmentPanel = SwingComponentFactory.getInstance().getSwingComponent(alignmentsContainer);
 		GridBagConstraints gbc_scrollPane = new GridBagConstraints();
 		gbc_scrollPane.fill = GridBagConstraints.BOTH;
 		gbc_scrollPane.gridx = 0;

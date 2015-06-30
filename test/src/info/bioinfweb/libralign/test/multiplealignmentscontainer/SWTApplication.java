@@ -20,6 +20,7 @@ package info.bioinfweb.libralign.test.multiplealignmentscontainer;
 
 
 import info.bioinfweb.libralign.multiplealignments.MultipleAlignmentsContainer;
+import info.bioinfweb.tic.SWTComponentFactory;
 
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
@@ -80,6 +81,6 @@ public class SWTApplication extends AbstractApplication {
 		shell.setLayout(new FillLayout(SWT.HORIZONTAL));
 		
 		alignmentsContainer = createAlignmentsContainer();
-		alignmentsContainer.createSWTWidget(shell, SWT.NONE);
+		SWTComponentFactory.getInstance().getSWTComponent(alignmentsContainer, shell, SWT.NONE);
 	}
 }

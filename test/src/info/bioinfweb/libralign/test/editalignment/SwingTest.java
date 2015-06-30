@@ -20,6 +20,7 @@ package info.bioinfweb.libralign.test.editalignment;
 
 
 import info.bioinfweb.libralign.dataarea.implementations.pherogram.PherogramArea;
+import info.bioinfweb.tic.SwingComponentFactory;
 
 import java.awt.BorderLayout;
 import java.awt.EventQueue;
@@ -73,7 +74,8 @@ public class SwingTest extends EditableAlignmentTest {
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.setTitle("Swing editable alignment test");
 		
-		frame.getContentPane().add(getAlignmentArea().createSwingComponent(), BorderLayout.CENTER);
+		frame.getContentPane().add(SwingComponentFactory.getInstance().getSwingComponent(getAlignmentArea()), 
+				BorderLayout.CENTER);
 		
 		JMenuBar mainMenu = new JMenuBar();
 		frame.setJMenuBar(mainMenu);

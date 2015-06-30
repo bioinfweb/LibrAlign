@@ -23,6 +23,7 @@ import info.bioinfweb.libralign.pherogram.PherogramFormats.QualityOutputType;
 import info.bioinfweb.libralign.pherogram.provider.BioJavaPherogramProvider;
 import info.bioinfweb.libralign.pherogram.view.PherogramHeadingView;
 import info.bioinfweb.libralign.pherogram.view.PherogramTraceCurveView;
+import info.bioinfweb.tic.SwingComponentFactory;
 
 import java.awt.BorderLayout;
 import java.awt.EventQueue;
@@ -95,8 +96,9 @@ public class SwingPherogramHeadingViewTraceCurveTest extends AbstractPherogramVi
 		
 		try {
 			JScrollPane scrollPane = new JScrollPane();
-			scrollPane.setViewportView(getPherogramComponent().createSwingComponent());
-			scrollPane.setColumnHeaderView(new PherogramHeadingView(getPherogramComponent()).createSwingComponent());
+			SwingComponentFactory factory = SwingComponentFactory.getInstance();
+			scrollPane.setViewportView(factory.getSwingComponent(getPherogramComponent()));
+			scrollPane.setColumnHeaderView(factory.getSwingComponent(new PherogramHeadingView(getPherogramComponent())));
 
 			frame.getContentPane().add(scrollPane, BorderLayout.CENTER);
 		}

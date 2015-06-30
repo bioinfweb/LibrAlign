@@ -19,6 +19,8 @@
 package info.bioinfweb.libralign.test.pherogramview;
 
 
+import info.bioinfweb.tic.SWTComponentFactory;
+
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.SWT;
@@ -76,7 +78,7 @@ public class SWTPherogramViewTest extends AbstractPherogramViewTest {
 		shell.setText("SWT PherogramView Test");
 		shell.setLayout(new FillLayout(SWT.VERTICAL));
 		
-		getPherogramView().createSWTWidget(shell, SWT.NONE);
+		SWTComponentFactory.getInstance().getSWTComponent(getPherogramView(), shell, SWT.NONE);
 		
 		Menu menu = new Menu(shell, SWT.BAR);
 		shell.setMenuBar(menu);

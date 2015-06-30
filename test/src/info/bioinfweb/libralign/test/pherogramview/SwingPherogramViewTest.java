@@ -19,6 +19,8 @@
 package info.bioinfweb.libralign.test.pherogramview;
 
 
+import info.bioinfweb.tic.SwingComponentFactory;
+
 import java.awt.BorderLayout;
 import java.awt.EventQueue;
 
@@ -26,6 +28,7 @@ import javax.swing.JFrame;
 import javax.swing.JMenuBar;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
+
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 
@@ -71,7 +74,7 @@ public class SwingPherogramViewTest extends AbstractPherogramViewTest {
 		frame.setTitle("Swing PherogramView Test");
 		
 		try {
-			frame.getContentPane().add(getPherogramView().createSwingComponent(), BorderLayout.CENTER);
+			frame.getContentPane().add(SwingComponentFactory.getInstance().getSwingComponent(getPherogramView()), BorderLayout.CENTER);
 			
 			JMenuBar menuBar = new JMenuBar();
 			frame.setJMenuBar(menuBar);

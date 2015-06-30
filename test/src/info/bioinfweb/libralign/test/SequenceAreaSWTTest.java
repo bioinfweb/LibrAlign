@@ -22,6 +22,7 @@ package info.bioinfweb.libralign.test;
 import info.bioinfweb.libralign.alignmentarea.AlignmentArea;
 import info.bioinfweb.libralign.alignmentarea.content.SequenceArea;
 import info.bioinfweb.libralign.demo.AbstractTestApplication;
+import info.bioinfweb.tic.SWTComponentFactory;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.ScrolledComposite;
@@ -83,7 +84,7 @@ public class SequenceAreaSWTTest extends AbstractTestApplication {
 		SequenceArea sequenceArea = new SequenceArea(alignmentArea.getContentArea(), 
 				alignmentArea.getAlignmentModel().sequenceIDByName("Sequence 1"));
 		
-		Composite sequenceComposite = sequenceArea.createSWTWidget(scrolledComposite, SWT.NONE);
+		Composite sequenceComposite = SWTComponentFactory.getInstance().getSWTComponent(sequenceArea, scrolledComposite, SWT.NONE);
 		scrolledComposite.setContent(sequenceComposite);
 		scrolledComposite.setMinSize(sequenceComposite.computeSize(SWT.DEFAULT, SWT.DEFAULT));
 	}
