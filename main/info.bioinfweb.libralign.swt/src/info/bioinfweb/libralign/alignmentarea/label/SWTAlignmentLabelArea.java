@@ -27,6 +27,7 @@ import org.eclipse.swt.widgets.Composite;
 import info.bioinfweb.libralign.alignmentarea.content.AlignmentSubArea;
 import info.bioinfweb.libralign.alignmentarea.content.SWTAlignmentContentArea;
 import info.bioinfweb.libralign.alignmentarea.rowsarea.SWTAlignmentRowsArea;
+import info.bioinfweb.tic.SWTComponentFactory;
 
 
 
@@ -39,9 +40,6 @@ import info.bioinfweb.libralign.alignmentarea.rowsarea.SWTAlignmentRowsArea;
 public class SWTAlignmentLabelArea extends SWTAlignmentRowsArea<AlignmentLabelSubArea> 
 		implements ToolkitSpecificAlignmentLabelArea {
 	
-	private AlignmentLabelArea independentComponent;
-
-	
 	/**
 	 * Creates a new instance of this class.
    * <p>
@@ -53,16 +51,15 @@ public class SWTAlignmentLabelArea extends SWTAlignmentRowsArea<AlignmentLabelSu
 	 * @param style - the SWT style value
 	 * @param independentComponent - the toolkit independent component that uses this instance
 	 */
-	public SWTAlignmentLabelArea(Composite parent, int style,	AlignmentLabelArea independentComponent) {
-		super(parent, style);
-		this.independentComponent = independentComponent;
+	public SWTAlignmentLabelArea(AlignmentLabelArea independentComponent, Composite parent, int style) {
+		super(independentComponent, parent, style);
 		reinsertSubelements();
 	}
 
 
 	@Override
 	public AlignmentLabelArea getIndependentComponent() {
-		return independentComponent;
+		return (AlignmentLabelArea)super.getIndependentComponent();
 	}
 
 
@@ -77,11 +74,12 @@ public class SWTAlignmentLabelArea extends SWTAlignmentRowsArea<AlignmentLabelSu
 	public void reinsertSubelements() {
 		if (getIndependentComponent().getOwner().getContentArea().hasToolkitComponent()) {
 			removeAll();
+			SWTComponentFactory factory = SWTComponentFactory.getInstance();
 			Iterator<AlignmentSubArea> iterator = 
 					getIndependentComponent().getOwner().getContentArea().getToolkitComponent().subAreaIterator();
 			while (iterator.hasNext()) {
-				final AlignmentLabelSubArea subArea = iterator.next().getLabelSubArea(); 
-				subArea.createSWTWidget(this, SWT.NONE);
+				final AlignmentLabelSubArea subArea = iterator.next().getLabelSubArea();
+				factory.getSWTComponent(subArea, this, SWT.NONE);
 				subArea.assignSize();
 			}
 			getIndependentComponent().assignSize(); 

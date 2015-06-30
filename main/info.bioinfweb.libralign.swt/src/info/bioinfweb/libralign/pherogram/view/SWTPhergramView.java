@@ -22,6 +22,7 @@ package info.bioinfweb.libralign.pherogram.view;
 import java.awt.Dimension;
 
 import info.bioinfweb.commons.swt.ScrolledCompositeSyncListener;
+import info.bioinfweb.tic.SWTComponentFactory;
 import info.bioinfweb.tic.toolkit.AbstractSWTComposite;
 import info.bioinfweb.libralign.alignmentarea.SWTScrolledCompositeResizeListener;
 
@@ -50,8 +51,8 @@ public class SWTPhergramView extends AbstractSWTComposite implements ToolkitInde
 	private SWTScrolledCompositeResizeListener traceCurveResizeListener;
 
 	
-	public SWTPhergramView(Composite parent, int style, PherogramView ticComponent) {
-		super(parent, style, ticComponent);
+	public SWTPhergramView(PherogramView ticComponent, Composite parent, int style) {
+		super(ticComponent, parent, style);
 		init();
 	}
 	
@@ -78,13 +79,15 @@ public class SWTPhergramView extends AbstractSWTComposite implements ToolkitInde
 		layout.marginWidth = 0;
 		layout.marginHeight = 0;
 		setLayout(layout);
+		SWTComponentFactory factory = SWTComponentFactory.getInstance();
 		
 		// Label components:
 		headingContainer = new Composite(this, SWT.NONE);
 		headingContainer.setLayoutData(createGridData(false));
 		headingScroller = new ScrolledComposite(headingContainer,	SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL);
 		headingScroller.setAlwaysShowScrollBars(true);
-		headingScroller.setContent(getIndependentComponent().getHeadingView().createSWTWidget(headingScroller, SWT.NONE));
+		headingScroller.setContent(factory.getSWTComponent(
+				getIndependentComponent().getHeadingView(), headingScroller, SWT.NONE));
 		headingResizeListener = new SWTScrolledCompositeResizeListener(headingContainer, headingScroller, false, true);
 		headingContainer.addControlListener(headingResizeListener);  // Must not be called before both fields are initialized.
 		
@@ -93,7 +96,8 @@ public class SWTPhergramView extends AbstractSWTComposite implements ToolkitInde
 		traceCurveContainer.setLayoutData(createGridData(true));
 		traceCurveScroller = new ScrolledComposite(traceCurveContainer, SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL);
 		traceCurveScroller.setAlwaysShowScrollBars(true);
-		traceCurveScroller.setContent(getIndependentComponent().getTraceCurveView().createSWTWidget(traceCurveScroller, SWT.NONE));
+		traceCurveScroller.setContent(factory.getSWTComponent(
+				getIndependentComponent().getTraceCurveView(), traceCurveScroller, SWT.NONE));
 		traceCurveResizeListener = new SWTScrolledCompositeResizeListener(traceCurveContainer, traceCurveScroller, false, false); 
 		traceCurveContainer.addControlListener(traceCurveResizeListener);  // Must not be called before both fields are initialized.
 		

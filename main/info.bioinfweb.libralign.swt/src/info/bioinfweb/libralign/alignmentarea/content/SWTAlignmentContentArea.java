@@ -20,6 +20,7 @@ package info.bioinfweb.libralign.alignmentarea.content;
 
 
 import info.bioinfweb.commons.Math2;
+import info.bioinfweb.tic.SWTComponentFactory;
 import info.bioinfweb.tic.TICComponent;
 import info.bioinfweb.tic.toolkit.ToolkitComponent;
 import info.bioinfweb.libralign.alignmentarea.rowsarea.SWTAlignmentRowsArea;
@@ -48,14 +49,11 @@ import org.eclipse.swt.widgets.Control;
 public class SWTAlignmentContentArea extends SWTAlignmentRowsArea<AlignmentSubArea> 
 		implements ToolkitSpecificAlignmentContentArea {
 	
-	private AlignmentContentArea independentComponent;
 	private SequenceAreaMap sequenceAreaMap;
 
 	
-	public SWTAlignmentContentArea(Composite parentComposite, int style, AlignmentContentArea independentComponent) {
-		super(parentComposite, style);
-		this.independentComponent = independentComponent;
-		
+	public SWTAlignmentContentArea(AlignmentContentArea independentComponent, Composite parentComposite, int style) {  //TODO Is this constructor found in the factory, if a supertype of TICComponent is used?
+		super(independentComponent, parentComposite, style);
 		sequenceAreaMap = new SequenceAreaMap(getIndependentComponent());
 		reinsertSubelements();
   }
@@ -63,17 +61,18 @@ public class SWTAlignmentContentArea extends SWTAlignmentRowsArea<AlignmentSubAr
 	
 	@Override
 	public AlignmentContentArea getIndependentComponent() {
-		return independentComponent;
+		return (AlignmentContentArea)super.getIndependentComponent();
 	}
 
 
 	@Override
 	public void addDataAreaList(DataAreaList list) {
 		Iterator<DataArea> iterator = list.iterator();
+		SWTComponentFactory factory = SWTComponentFactory.getInstance();
 		while (iterator.hasNext()) {
 			DataArea dataArea = iterator.next();
 			if (dataArea.isVisible()) {
-				dataArea.createSWTWidget(this, SWT.NONE);
+				factory.getSWTComponent(dataArea, this, SWT.NONE);
 				dataArea.assignSize();
 			}
 		}
@@ -117,10 +116,11 @@ public class SWTAlignmentContentArea extends SWTAlignmentRowsArea<AlignmentSubAr
 
 		addDataAreaList(dataAreaModel.getTopAreas());
 
+		SWTComponentFactory factory = SWTComponentFactory.getInstance();
 		Iterator<Integer> idIterator = getIndependentComponent().getOwner().getSequenceOrder().idIterator();
 		while (idIterator.hasNext()) {
 			Integer id = idIterator.next();
-			sequenceAreaMap.get(id).createSWTWidget(this, SWT.NONE);
+			factory.getSWTComponent(sequenceAreaMap.get(id), this, SWT.NONE);
 			sequenceAreaMap.get(id).assignSize();
 			addDataAreaList(dataAreaModel.getSequenceAreas(id));
 		}

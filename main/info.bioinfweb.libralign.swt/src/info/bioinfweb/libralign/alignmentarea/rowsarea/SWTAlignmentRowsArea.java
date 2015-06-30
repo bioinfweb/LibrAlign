@@ -22,11 +22,12 @@ package info.bioinfweb.libralign.alignmentarea.rowsarea;
 import java.util.Arrays;
 import java.util.Iterator;
 
-import info.bioinfweb.libralign.alignmentarea.RowLayoutSWTComponent;
 import info.bioinfweb.libralign.alignmentarea.content.AlignmentSubArea;
 import info.bioinfweb.libralign.alignmentarea.content.AlignmentSubAreaIterator;
 import info.bioinfweb.libralign.alignmentarea.content.SWTAlignmentContentArea;
 import info.bioinfweb.libralign.alignmentarea.label.SWTAlignmentLabelArea;
+import info.bioinfweb.tic.TICComponent;
+import info.bioinfweb.tic.toolkit.AbstractSWTComposite;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.RowLayout;
@@ -41,7 +42,7 @@ import org.eclipse.swt.widgets.Control;
  * @author Ben St&ouml;ver
  * @since 0.3.0
  */
-public abstract class SWTAlignmentRowsArea<C extends RowLayoutSWTComponent>  extends Composite 
+public abstract class SWTAlignmentRowsArea<C extends TICComponent> extends AbstractSWTComposite 
 		implements ToolkitSpecificAlignmentRowsArea<C> {
 	
 	/**
@@ -50,8 +51,8 @@ public abstract class SWTAlignmentRowsArea<C extends RowLayoutSWTComponent>  ext
 	 * @param parent - the parent composite
 	 * @param style - the SWT component style
 	 */
-	public SWTAlignmentRowsArea(Composite parent, int style) {
-		super(parent, style);
+	public SWTAlignmentRowsArea(TICComponent owner, Composite parent, int style) {
+		super(owner, parent, style);
 		
 		RowLayout rowLayout = new RowLayout();
 		rowLayout.wrap = false;

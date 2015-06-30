@@ -23,6 +23,8 @@ import info.bioinfweb.commons.swt.ScrolledCompositeSyncListener;
 import info.bioinfweb.libralign.alignmentarea.AlignmentArea;
 import info.bioinfweb.libralign.alignmentarea.SWTAlignmentArea;
 import info.bioinfweb.libralign.alignmentarea.ToolkitSpecificAlignmentArea;
+import info.bioinfweb.tic.SWTComponentFactory;
+import info.bioinfweb.tic.toolkit.AbstractSWTComposite;
 
 import java.util.Iterator;
 
@@ -43,17 +45,17 @@ import org.eclipse.swt.layout.FillLayout;
  * @author Ben St&ouml;ver
  * @since 0.2.0
  */
-public class SWTMultipleAlignmentsContainer extends Composite implements ToolkitSpecificMultipleAlignmentsContainer {
+public class SWTMultipleAlignmentsContainer extends AbstractSWTComposite 
+		implements ToolkitSpecificMultipleAlignmentsContainer {
+	
 	public static final int NEEDED_BORDER_WIDTH = 3;
 	
 	
-	private MultipleAlignmentsContainer independentComponent;
 	private SashForm sashForm;
 	
 
-	public SWTMultipleAlignmentsContainer(Composite parent, int style, MultipleAlignmentsContainer independentComponent) {
-		super(parent, style);
-		this.independentComponent = independentComponent;		
+	public SWTMultipleAlignmentsContainer(MultipleAlignmentsContainer independentComponent, Composite parent, int style) {
+		super(independentComponent, parent, style);
 		init();
 	}
 	
@@ -84,9 +86,10 @@ public class SWTMultipleAlignmentsContainer extends Composite implements Toolkit
 		sashForm.setSashWidth(AlignmentArea.DIVIDER_WIDTH);
 		
 		// Create areas:
+		SWTComponentFactory factory = SWTComponentFactory.getInstance();
 		Iterator<AlignmentArea> iterator = getIndependentComponent().getAlignmentAreas().iterator();
 		while (iterator.hasNext()) {
-			SWTAlignmentArea area = iterator.next().createSWTWidget(sashForm, SWT.NONE);
+			SWTAlignmentArea area = (SWTAlignmentArea)factory.getSWTComponent(iterator.next(), sashForm, SWT.NONE);
 			area.setHideHorizontalScrollBar(iterator.hasNext());  // Show scroll bar only in the lowest area.
 		}
 		
@@ -136,7 +139,7 @@ public class SWTMultipleAlignmentsContainer extends Composite implements Toolkit
 
 	@Override
 	public MultipleAlignmentsContainer getIndependentComponent() {
-		return independentComponent;
+		return (MultipleAlignmentsContainer)super.getIndependentComponent();
 	}
 
 
