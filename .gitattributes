@@ -244,6 +244,15 @@ main/info.bioinfweb.libralign.core/src/info/bioinfweb/libralign/pherogram/view/P
 main/info.bioinfweb.libralign.core/src/info/bioinfweb/libralign/pherogram/view/PherogramView.java -text svneol=unset#text/plain
 main/info.bioinfweb.libralign.core/src/info/bioinfweb/libralign/pherogram/view/ToolkitIndependentPhergramView.java -text svneol=unset#text/plain
 main/info.bioinfweb.libralign.core/src/info/bioinfweb/libralign/pherogram/view/package-info.java -text svneol=unset#text/plain
+main/info.bioinfweb.libralign.swing/.classpath -text svneol=unset#text/plain
+main/info.bioinfweb.libralign.swing/.project -text svneol=unset#text/plain
+main/info.bioinfweb.libralign.swing/.settings/org.eclipse.jdt.core.prefs -text svneol=unset#text/plain
+main/info.bioinfweb.libralign.swing/src/info/bioinfweb/libralign/alignmentarea/SwingAlignmentArea.java -text svneol=unset#text/plain
+main/info.bioinfweb.libralign.swing/src/info/bioinfweb/libralign/alignmentarea/content/SwingAlignmentContentArea.java -text svneol=unset#text/plain
+main/info.bioinfweb.libralign.swing/src/info/bioinfweb/libralign/alignmentarea/label/SwingAlignmentLabelArea.java -text svneol=unset#text/plain
+main/info.bioinfweb.libralign.swing/src/info/bioinfweb/libralign/alignmentarea/rowsarea/SwingAlignmentRowsArea.java -text svneol=unset#text/plain
+main/info.bioinfweb.libralign.swing/src/info/bioinfweb/libralign/multiplealignments/SwingMultipleAlignmentsContainer.java -text svneol=unset#text/plain
+main/info.bioinfweb.libralign.swing/src/info/bioinfweb/libralign/pherogram/view/SwingPhergramView.java -text svneol=unset#text/plain
 test/.classpath -text svneol=unset#text/plain
 test/.project -text svneol=unset#text/plain
 test/.settings/org.eclipse.jdt.core.prefs -text svneol=unset#text/plain
