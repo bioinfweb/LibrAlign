@@ -20,12 +20,10 @@ package info.bioinfweb.libralign.model.factory;
 
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 import info.bioinfweb.commons.bio.CharacterStateType;
 import info.bioinfweb.commons.collections.ParameterMap;
-import info.bioinfweb.jphyloio.events.SingleTokenDefinitionEvent;
 
 
 
@@ -80,10 +78,10 @@ public class NewAlignmentModelParameterMap extends ParameterMap {
 	 * @return the list of according single token definition events (Maybe empty but is never {@code null}.)
 	 */
 	@SuppressWarnings("unchecked")
-	public List<SingleTokenDefinitionEvent> getDefinedTokens() {
-		List<SingleTokenDefinitionEvent> result = (List<SingleTokenDefinitionEvent>)get(KEY_DEFINED_TOKENS);
+	public List<TokenDefinition> getDefinedTokens() {
+		List<TokenDefinition> result = (List<TokenDefinition>)get(KEY_DEFINED_TOKENS);
 		if (result == null) {
-			result = new ArrayList<SingleTokenDefinitionEvent>();
+			result = new ArrayList<TokenDefinition>();
 			put(KEY_DEFINED_TOKENS, result);
 		}
 		return result;

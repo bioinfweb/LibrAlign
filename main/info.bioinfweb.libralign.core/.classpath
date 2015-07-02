@@ -5,7 +5,6 @@
 	<classpathentry kind="lib" path="/_Lib/bin" sourcepath="/_Lib/core"/>
 	<classpathentry kind="lib" path="lib/commons-lang3-3.1.jar"/>
 	<classpathentry kind="lib" path="lib/NeXML.jar"/>
-	<classpathentry kind="lib" path="/JPhyloIO/bin" sourcepath="/JPhyloIO/src"/>
 	<classpathentry kind="lib" path="lib/commons-beanutils-1.9.2.jar"/>
 	<classpathentry kind="lib" path="/info.bioinfweb.tic.core/bin"/>
 	<classpathentry kind="output" path="bin"/>

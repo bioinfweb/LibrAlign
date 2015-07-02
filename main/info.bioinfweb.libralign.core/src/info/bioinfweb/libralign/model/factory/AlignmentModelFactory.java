@@ -20,7 +20,6 @@ package info.bioinfweb.libralign.model.factory;
 
 
 import info.bioinfweb.libralign.model.AlignmentModel;
-import info.bioinfweb.libralign.model.io.AlignmentDataReader;
 import info.bioinfweb.libralign.model.tokenset.TokenSet;
 
 

@@ -101,7 +101,6 @@ main/info.bioinfweb.libralign.core/src/info/bioinfweb/libralign/dataarea/impleme
 main/info.bioinfweb.libralign.core/src/info/bioinfweb/libralign/dataarea/implementations/charset/CharSet.java -text svneol=unset#text/plain
 main/info.bioinfweb.libralign.core/src/info/bioinfweb/libralign/dataarea/implementations/charset/CharSetArea.java -text svneol=unset#text/plain
 main/info.bioinfweb.libralign.core/src/info/bioinfweb/libralign/dataarea/implementations/charset/CharSetDataModel.java -text svneol=unset#text/plain
-main/info.bioinfweb.libralign.core/src/info/bioinfweb/libralign/dataarea/implementations/charset/CharSetEventReader.java -text svneol=unset#text/plain
 main/info.bioinfweb.libralign.core/src/info/bioinfweb/libralign/dataarea/implementations/charset/CharSetNameArea.java -text svneol=unset#text/plain
 main/info.bioinfweb.libralign.core/src/info/bioinfweb/libralign/dataarea/implementations/charset/package-info.java -text svneol=unset#text/plain
 main/info.bioinfweb.libralign.core/src/info/bioinfweb/libralign/dataarea/implementations/package-info.java -text svneol=unset#text/plain
@@ -113,12 +112,6 @@ main/info.bioinfweb.libralign.core/src/info/bioinfweb/libralign/editsettings/Edi
 main/info.bioinfweb.libralign.core/src/info/bioinfweb/libralign/editsettings/EditSettingsListener.java -text svneol=unset#text/plain
 main/info.bioinfweb.libralign.core/src/info/bioinfweb/libralign/editsettings/WorkingMode.java -text svneol=unset#text/plain
 main/info.bioinfweb.libralign.core/src/info/bioinfweb/libralign/editsettings/package-info.java -text svneol=unset#text/plain
-main/info.bioinfweb.libralign.core/src/info/bioinfweb/libralign/io/alignment/AbstractAlignmentReader.java -text svneol=unset#text/plain
-main/info.bioinfweb.libralign.core/src/info/bioinfweb/libralign/io/alignment/AbstractAlignmentWriter.java -text svneol=unset#text/plain
-main/info.bioinfweb.libralign.core/src/info/bioinfweb/libralign/io/alignment/AlignmentReader.java -text svneol=unset#text/plain
-main/info.bioinfweb.libralign.core/src/info/bioinfweb/libralign/io/alignment/AlignmentWriter.java -text svneol=unset#text/plain
-main/info.bioinfweb.libralign.core/src/info/bioinfweb/libralign/io/alignment/fasta/FASTAReader.java -text svneol=unset#text/plain
-main/info.bioinfweb.libralign.core/src/info/bioinfweb/libralign/io/package-info.java -text svneol=unset#text/plain
 main/info.bioinfweb.libralign.core/src/info/bioinfweb/libralign/model/AlignmentModel.java -text svneol=unset#text/plain
 main/info.bioinfweb.libralign.core/src/info/bioinfweb/libralign/model/AlignmentModelChangeListener.java -text svneol=unset#text/plain
 main/info.bioinfweb.libralign.core/src/info/bioinfweb/libralign/model/AlignmentModelUtils.java -text
@@ -169,6 +162,7 @@ main/info.bioinfweb.libralign.core/src/info/bioinfweb/libralign/model/exception/
 main/info.bioinfweb.libralign.core/src/info/bioinfweb/libralign/model/factory/AlignmentModelFactory.java -text svneol=unset#text/plain
 main/info.bioinfweb.libralign.core/src/info/bioinfweb/libralign/model/factory/NewAlignmentModelParameterMap.java -text svneol=unset#text/plain
 main/info.bioinfweb.libralign.core/src/info/bioinfweb/libralign/model/factory/StringAlignmentModelFactory.java -text svneol=unset#text/plain
+main/info.bioinfweb.libralign.core/src/info/bioinfweb/libralign/model/factory/TokenDefinition.java -text svneol=unset#text/plain
 main/info.bioinfweb.libralign.core/src/info/bioinfweb/libralign/model/factory/continuous/AbstractContinuousAlignmentModelFactory.java -text svneol=unset#text/plain
 main/info.bioinfweb.libralign.core/src/info/bioinfweb/libralign/model/factory/continuous/DoubleAlignmentModelFactory.java -text svneol=unset#text/plain
 main/info.bioinfweb.libralign.core/src/info/bioinfweb/libralign/model/factory/continuous/FloatAlignmentModelFactory.java -text svneol=unset#text/plain
@@ -205,11 +199,6 @@ main/info.bioinfweb.libralign.core/src/info/bioinfweb/libralign/model/implementa
 main/info.bioinfweb.libralign.core/src/info/bioinfweb/libralign/model/implementations/translation/RNASequenceDataView.java -text svneol=unset#text/plain
 main/info.bioinfweb.libralign.core/src/info/bioinfweb/libralign/model/implementations/translation/SameTokenTypeSequenceDataView.java -text svneol=unset#text/plain
 main/info.bioinfweb.libralign.core/src/info/bioinfweb/libralign/model/implementations/translation/package-info.java -text svneol=unset#text/plain
-main/info.bioinfweb.libralign.core/src/info/bioinfweb/libralign/model/io/AbstractDataModelEventReader.java -text svneol=unset#text/plain
-main/info.bioinfweb.libralign.core/src/info/bioinfweb/libralign/model/io/AlignmentDataReader.java -text svneol=unset#text/plain
-main/info.bioinfweb.libralign.core/src/info/bioinfweb/libralign/model/io/AlignmentModelEventReader.java -text svneol=unset#text/plain
-main/info.bioinfweb.libralign.core/src/info/bioinfweb/libralign/model/io/DataModelEventReader.java -text svneol=unset#text/plain
-main/info.bioinfweb.libralign.core/src/info/bioinfweb/libralign/model/io/DataModelReadInfo.java -text svneol=unset#text/plain
 main/info.bioinfweb.libralign.core/src/info/bioinfweb/libralign/model/package-info.java -text svneol=unset#text/plain
 main/info.bioinfweb.libralign.core/src/info/bioinfweb/libralign/model/tokenset/AbstractTokenSet.java -text svneol=unset#text/plain
 main/info.bioinfweb.libralign.core/src/info/bioinfweb/libralign/model/tokenset/CharacterTokenSet.java -text svneol=unset#text/plain
