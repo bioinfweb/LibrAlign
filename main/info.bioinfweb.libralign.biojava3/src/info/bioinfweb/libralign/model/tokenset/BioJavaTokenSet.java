@@ -23,9 +23,12 @@ import info.bioinfweb.commons.bio.CharacterStateType;
 import info.bioinfweb.commons.bio.biojava3.core.sequence.compound.AlignmentAmbiguityNucleotideCompoundSet;
 import info.bioinfweb.commons.collections.CollectionUtils;
 
+import java.awt.event.KeyEvent;
 import java.util.AbstractSet;
 import java.util.ConcurrentModificationException;
 import java.util.Iterator;
+
+import javax.swing.KeyStroke;
 
 import org.biojava3.core.sequence.template.Compound;
 import org.biojava3.core.sequence.template.CompoundSet;
@@ -91,16 +94,16 @@ public class BioJavaTokenSet<C extends Compound> extends AbstractSet<C> implemen
 
 
 	@Override
-	public C tokenByKeyChar(char key) {  //TODO Possibly use key map again, like in AbstractTokenSet. (This implementation is temporary.)
+	public C tokenByKeyStroke(KeyStroke key) {  //TODO Possibly use key map again, like in AbstractTokenSet. (This implementation is temporary.)
 		Iterator<C> iterator = iterator();
 		while (iterator.hasNext()) {
 			C token = iterator.next();
-			if (representationByToken(token).charAt(0) == key) {
+			if (representationByToken(token).charAt(0) == key.getKeyChar()) {
 				return token;
 			}
 		}
-		if ((spaceForGap) && (key == ' ')) {
-			return tokenByKeyChar(AlignmentAmbiguityNucleotideCompoundSet.GAP_CHARACTER);
+		if ((spaceForGap) && (key.getKeyCode() == KeyEvent.VK_SPACE)) {
+			return getGapToken();
 		}
 		return null;
 	}
