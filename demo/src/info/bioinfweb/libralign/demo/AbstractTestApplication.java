@@ -22,10 +22,10 @@ package info.bioinfweb.libralign.demo;
 import java.awt.Color;
 import java.io.File;
 
+import info.bioinfweb.commons.bio.CharacterStateType;
 import info.bioinfweb.commons.bio.biojava3.alignment.SimpleAlignment;
 import info.bioinfweb.commons.bio.biojava3.alignment.template.Alignment;
 import info.bioinfweb.commons.bio.biojava3.core.sequence.compound.AlignmentAmbiguityNucleotideCompoundSet;
-import info.bioinfweb.jphyloio.events.TokenSetType;
 import info.bioinfweb.libralign.alignmentarea.AlignmentArea;
 import info.bioinfweb.libralign.alignmentarea.content.AlignmentContentArea;
 import info.bioinfweb.libralign.alignmentarea.selection.SelectionType;
@@ -97,7 +97,7 @@ public class AbstractTestApplication {
 			
 			BioJavaAlignmentModel<DNASequence, NucleotideCompound> sequenceProvider = 
 					new BioJavaAlignmentModel<DNASequence, NucleotideCompound>(
-							new BioJavaTokenSet<NucleotideCompound>(TokenSetType.NUCLEOTIDE,
+							new BioJavaTokenSet<NucleotideCompound>(CharacterStateType.NUCLEOTIDE,
 									AlignmentAmbiguityNucleotideCompoundSet.getAlignmentAmbiguityNucleotideCompoundSet(), false),
 							alignment);
 			
