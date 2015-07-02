@@ -220,7 +220,10 @@ public class CursorSelectionInputListener extends TICMouseAdapter implements TIC
 				}
 				else {
 					Object token = provider.getTokenSet().tokenByKeyChar(event.getKeyCharacter());
-					//System.out.println(event.getKeyCharacter() + " " + token);
+					if (token == null) {
+						token = provider.getTokenSet().tokenByRepresentation(Character.toString(event.getKeyCharacter()));
+					}
+					
 					if (token != null) {
 						if (getOwner().getEditSettings().isInsert()) {
 							if (!actionProvider.insertToken(token)) {

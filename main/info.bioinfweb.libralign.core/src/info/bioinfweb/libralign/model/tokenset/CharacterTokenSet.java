@@ -134,19 +134,31 @@ public class CharacterTokenSet extends AbstractTokenSet<Character> {
 	 */
 	@Override
 	public String representationByToken(Character token) {
-		return token.toString();
+		if ((token != null) && contains(token)) {
+			return token.toString();
+		}
+		else {
+			return "";
+		}
 	}
 
 	
 	/**
-	 * Just returns the first character of {@code representation}.
+	 * Returns the first character of {@code representation} if that character is contained in this set.
 	 * 
 	 * @param representation the string representation of the token (This would usually be the token itself in this class.)
+	 * @return the token or {@code null} if no according token is contained in this set
 	 * @see info.bioinfweb.libralign.model.tokenset.TokenSet#tokenByRepresentation(java.lang.String)
 	 */
 	@Override
 	public Character tokenByRepresentation(String representation) {
-		return representation.charAt(0);
+		char c = representation.charAt(0);
+		if (contains(c)) {
+			return c;
+		}
+		else {
+			return null;
+		}
 	}
 
 

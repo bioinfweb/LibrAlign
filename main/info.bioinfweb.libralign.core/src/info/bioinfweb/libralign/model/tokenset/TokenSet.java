@@ -68,7 +68,8 @@ public interface TokenSet<T> extends Set<T>, Cloneable {
 	 * of the returned string to represent a token.
 	 * 
 	 * @param token - the token associated with the representation
-	 * @return a string which is at least one character long
+	 * @return a string which is at least one character long an empty string if no token in this set has the
+	 *         specified representation
 	 */
 	public String representationByToken(T token);
 	
