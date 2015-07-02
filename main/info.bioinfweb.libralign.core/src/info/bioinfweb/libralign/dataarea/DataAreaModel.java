@@ -19,6 +19,7 @@
 package info.bioinfweb.libralign.dataarea;
 
 
+import info.bioinfweb.commons.Math2;
 import info.bioinfweb.commons.collections.ListChangeType;
 import info.bioinfweb.libralign.alignmentarea.AlignmentArea;
 import info.bioinfweb.libralign.alignmentarea.label.AlignmentLabelArea;
@@ -177,7 +178,8 @@ public class DataAreaModel {
 	 */
 	public int getLocalMaxLengthBeforeStart() {
 		if (localMaxLengthBeforeStart == AlignmentLabelArea.RECALCULATE_VALUE) {
-			localMaxLengthBeforeStart = Math.max(getTopAreas().getMaxLengthBeforeStart(), getBottomAreas().getMaxLengthBeforeStart());
+			localMaxLengthBeforeStart = Math.max((int)Math2.roundUp(getOwner().getPaintSettings().getCursorLineWidth() / 2),
+					Math.max(getTopAreas().getMaxLengthBeforeStart(), getBottomAreas().getMaxLengthBeforeStart()));
 			Iterator<Integer> iterator = sequenceAreaLists.keySet().iterator();
 			while (iterator.hasNext()) {
 				localMaxLengthBeforeStart = Math.max(localMaxLengthBeforeStart, getSequenceAreas(iterator.next()).getMaxLengthBeforeStart());
@@ -230,7 +232,8 @@ public class DataAreaModel {
    */
   public int getLocalMaxLengthAfterEnd() {
     if (localMaxLengthAfterEnd == AlignmentLabelArea.RECALCULATE_VALUE) {
-      localMaxLengthAfterEnd = Math.max(getTopAreas().getMaxLengthAfterEnd(), getBottomAreas().getMaxLengthAfterEnd());
+      localMaxLengthAfterEnd = Math.max((int)Math2.roundUp(getOwner().getPaintSettings().getCursorLineWidth() / 2), 
+      		Math.max(getTopAreas().getMaxLengthAfterEnd(), getBottomAreas().getMaxLengthAfterEnd()));
       Iterator<Integer> iterator = sequenceAreaLists.keySet().iterator();
       while (iterator.hasNext()) {
         localMaxLengthAfterEnd = Math.max(localMaxLengthAfterEnd, getSequenceAreas(iterator.next()).getMaxLengthAfterEnd());

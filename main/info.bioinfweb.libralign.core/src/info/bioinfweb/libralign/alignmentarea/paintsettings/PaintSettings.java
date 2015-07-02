@@ -276,23 +276,15 @@ public class PaintSettings {
 
 
 	/**
-	 * Returns the width of the column with the specified index.
+	 * Returns the width of the column with the specified index. If the index is out of bounds (the specified column 
+	 * does not exist in the alignment model) or no alignment model is defined in the owning alignment area, the token 
+	 * width of the default token painter is returned. 
 	 * 
 	 * @param columnIndex the index of the column to determine the width from
 	 * @return the width of column in pixels
-	 * @throws IllegalStateException if this instance does not have an alignment model
-	 * @throws IndexOutOfBoundsException if the specified column does not exist in the alignment model
 	 */
 	public double getTokenWidth(int columnIndex) {
-		if (!getOwner().hasAlignmentModel()) {
-			throw new IllegalStateException("There is no associated alignment model defined that specifies any columns.");
-		}
-		else if ((columnIndex < 0) || (columnIndex >= getOwner().getAlignmentModel().getMaxSequenceLength())) {
-			throw new IndexOutOfBoundsException("A column with the index " + columnIndex + " does not exist in the current model.");
-		}
-		else {
-			return getTokenPainterList().painterByColumn(columnIndex).getPreferredWidth() * getZoomX();
-		}
+		return getTokenPainterList().painterByColumn(columnIndex).getPreferredWidth() * getZoomX();
 	}
 	
 	

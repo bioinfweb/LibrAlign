@@ -90,6 +90,9 @@ public class AlignmentArea extends TICComponent implements AlignmentModelChangeL
 			if (event.getPropertyName().equals("cursorColor") || event.getPropertyName().equals("cursorLineWidth") ||
 					event.getPropertyName().equals("selectionColor")) {
 				
+				if (event.getPropertyName().equals("cursorLineWidth")) {
+					getDataAreas().setLocalMaxLengthBeforeAfterRecalculate();
+				}
 				repaint();
 			}
 		}
