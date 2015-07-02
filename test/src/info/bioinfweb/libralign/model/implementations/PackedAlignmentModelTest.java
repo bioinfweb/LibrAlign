@@ -16,37 +16,24 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package info.bioinfweb.libralign.model;
+package info.bioinfweb.libralign.model.implementations;
 
 
 import static org.junit.Assert.*;
 
 
-import info.bioinfweb.libralign.model.adapters.CharSequenceAdapter;
-import info.bioinfweb.libralign.model.implementations.PackedAlignmentModel;
 import info.bioinfweb.libralign.model.tokenset.CharacterTokenSet;
 
 import org.junit.* ;
 
 
 
-/**
- * Contains test cases for {@link AlignmentModelUtils}.
- * 
- * @author Ben St&ouml;ver
- * @since 0.4.0
- */
-public class AlignmentModelUtilsTest {
-	@Test
-	public void test_reverseComplement() {
-		AlignmentModel<Character> model = new PackedAlignmentModel<Character>(CharacterTokenSet.newNucleotideInstance());
+public class PackedAlignmentModelTest {
+	@Test 
+	public void testEmptyModel() {
+		PackedAlignmentModel<Character> model = new PackedAlignmentModel(CharacterTokenSet.newDNAInstance());
 		model.addSequence("A");
 		int sequenceID = model.sequenceIDByName("A");
-		model.appendTokens(sequenceID, AlignmentModelUtils.charSequenceToTokenList("ACGGT-ACT", model.getTokenSet()));
-		
-		AlignmentModelUtils.reverseComplement(model, sequenceID, 2, 8);
-		
-		CharSequenceAdapter<Character> adapter = new CharSequenceAdapter<Character>(model, true);
-		assertEquals("ACGT-ACCT", adapter.getSequence(sequenceID).toString());
+		assertEquals(0, model.getSequenceLength(sequenceID));
 	}
 }
