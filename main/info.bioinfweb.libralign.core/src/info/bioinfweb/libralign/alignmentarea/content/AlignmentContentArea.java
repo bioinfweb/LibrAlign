@@ -28,8 +28,6 @@ import info.bioinfweb.libralign.alignmentarea.AlignmentArea;
 import info.bioinfweb.libralign.alignmentarea.ToolkitSpecificAlignmentArea;
 import info.bioinfweb.libralign.alignmentarea.label.AlignmentLabelArea;
 import info.bioinfweb.libralign.alignmentarea.paintsettings.PaintSettings;
-import info.bioinfweb.libralign.alignmentarea.selection.SelectionChangeEvent;
-import info.bioinfweb.libralign.alignmentarea.selection.SelectionListener;
 import info.bioinfweb.libralign.alignmentarea.selection.SelectionModel;
 import info.bioinfweb.libralign.dataarea.DataArea;
 import info.bioinfweb.libralign.dataarea.DataAreaListType;
@@ -37,7 +35,6 @@ import info.bioinfweb.libralign.dataarea.DataAreaLocation;
 import info.bioinfweb.libralign.model.concatenated.ConcatenatedAlignmentModel;
 import info.bioinfweb.libralign.multiplealignments.MultipleAlignmentsContainer;
 
-import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Rectangle;
 
@@ -164,7 +161,8 @@ public class AlignmentContentArea extends TICComponent {
 
 
 	/**
-	 * Returns the column containing the specified x coordinate.
+	 * Returns the column containing the specified x coordinate. If the coordinate lies behind the last column,
+	 * the number of columns + 1 is returned.
 	 *
 	 * @param x - the paint coordinate
 	 * @return the alignment column
@@ -174,7 +172,7 @@ public class AlignmentContentArea extends TICComponent {
 			throw new InternalError("not implemented");  //TODO Implement and consider that different alignment parts may have different token widths here.
 		}
 		else {
-			return Math.max(0, Math.min(getOwner().getGlobalMaxSequenceLength() - 1,
+			return Math.max(0, Math.min(getOwner().getGlobalMaxSequenceLength(),
 					(int)((x - getOwner().getDataAreas().getGlobalMaxLengthBeforeStart()) / getOwner().getPaintSettings().getTokenWidth(0))));  //TODO Catch IllegalStateException?
 		}
 	}
