@@ -6,6 +6,9 @@ demo/data/Test_qualityScore.scf -text
 demo/src/info/bioinfweb/libralign/demo/AbstractTestApplication.java -text svneol=unset#text/plain
 demo/src/info/bioinfweb/libralign/demo/swing/Main.java -text svneol=unset#text/plain
 demo/src/info/bioinfweb/libralign/demo/swt/Main.java -text svneol=unset#text/plain
+main/info.bioinfweb.libralign.biojava1/.classpath -text svneol=unset#text/plain
+main/info.bioinfweb.libralign.biojava1/.project -text svneol=unset#text/plain
+main/info.bioinfweb.libralign.biojava1/.settings/org.eclipse.jdt.core.prefs -text svneol=unset#text/plain
 main/info.bioinfweb.libralign.core/.classpath -text svneol=unset#text/plain
 main/info.bioinfweb.libralign.core/.project -text svneol=unset#text/plain
 main/info.bioinfweb.libralign.core/.settings/org.eclipse.jdt.core.prefs -text svneol=unset#text/plain
