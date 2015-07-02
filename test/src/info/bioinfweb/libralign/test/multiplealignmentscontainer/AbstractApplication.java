@@ -91,7 +91,7 @@ public class AbstractApplication {
 			
 			StringBuffer seqBuffer = new StringBuffer(pherogramProvider.getSequenceLength());
 			for (int i = 0; i < pherogramProvider.getSequenceLength(); i++) {
-				seqBuffer.append(pherogramProvider.getBaseCall(i).getUpperedBase());
+				seqBuffer.append(pherogramProvider.getBaseCall(i));
 			}
 			alignment.add("Sequence 4", new DNASequence("-----" + seqBuffer.substring(0, 38) + 
 					seqBuffer.substring(39, 49) + "-A" + seqBuffer.substring(49)));  // One A is deleted for shift change specified below. 

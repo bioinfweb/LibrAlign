@@ -87,7 +87,7 @@ public class EditableAlignmentTest {
 	
 				// Copy base call sequence into alignment:
 				for (int i = 0; i < pherogramProvider.getSequenceLength(); i++) {
-					provider.insertTokenAt(id, i, tokenSet.tokenByKeyChar(pherogramProvider.getBaseCall(i).getUpperedBase().charAt(0)));
+					provider.insertTokenAt(id, i, tokenSet.tokenByKeyChar(pherogramProvider.getBaseCall(i)));
 				}
 				
 				// Add data area:
@@ -129,8 +129,7 @@ public class EditableAlignmentTest {
 
 			// Copy base call sequence into alignment:
 			for (int i = 0; i < pherogramProvider.getSequenceLength(); i++) {
-				provider.insertTokenAt(id, i, provider.getTokenSet().tokenByKeyChar(
-						pherogramProvider.getBaseCall(i).getUpperedBase().charAt(0)));
+				provider.insertTokenAt(id, i, provider.getTokenSet().tokenByKeyChar(pherogramProvider.getBaseCall(i)));
 			}
 			
 			// Add data area:
