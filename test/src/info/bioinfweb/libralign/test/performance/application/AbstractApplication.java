@@ -23,8 +23,8 @@ import java.io.File;
 
 import org.biojava3.core.sequence.compound.NucleotideCompound;
 
+import info.bioinfweb.commons.bio.CharacterStateType;
 import info.bioinfweb.commons.bio.biojava3.core.sequence.compound.AlignmentAmbiguityNucleotideCompoundSet;
-import info.bioinfweb.jphyloio.events.TokenSetType;
 import info.bioinfweb.libralign.alignmentarea.AlignmentArea;
 import info.bioinfweb.libralign.dataarea.implementations.SequenceIndexArea;
 import info.bioinfweb.libralign.io.alignment.AlignmentReader;
@@ -42,7 +42,7 @@ public class AbstractApplication {
 	protected AlignmentArea getAlignmentArea() {
 		if (alignmentArea == null) {
 			AlignmentModel<NucleotideCompound> provider = new PackedAlignmentModel<NucleotideCompound>(
-					new BioJavaTokenSet<NucleotideCompound>(TokenSetType.NUCLEOTIDE,
+					new BioJavaTokenSet<NucleotideCompound>(CharacterStateType.NUCLEOTIDE,
 							AlignmentAmbiguityNucleotideCompoundSet.getAlignmentAmbiguityNucleotideCompoundSet(), false));
 			
 			AlignmentReader reader = new FASTAReader();

@@ -20,10 +20,10 @@ package info.bioinfweb.libralign.alignmentarea.order;
 
 
 import static org.junit.Assert.* ;
+import info.bioinfweb.commons.bio.CharacterStateType;
 import info.bioinfweb.commons.bio.biojava3.alignment.SimpleAlignment;
 import info.bioinfweb.commons.bio.biojava3.alignment.template.Alignment;
 import info.bioinfweb.commons.bio.biojava3.core.sequence.compound.AlignmentAmbiguityNucleotideCompoundSet;
-import info.bioinfweb.jphyloio.events.TokenSetType;
 import info.bioinfweb.libralign.alignmentarea.AlignmentArea;
 
 
@@ -54,7 +54,7 @@ public class SequenceOrderTest {
 		
 		AlignmentArea alignmentArea = new AlignmentArea();
 		alignmentArea.setAlignmentModel(new BioJavaAlignmentModel<DNASequence, NucleotideCompound>(
-				new BioJavaTokenSet<NucleotideCompound>(TokenSetType.NUCLEOTIDE,
+				new BioJavaTokenSet<NucleotideCompound>(CharacterStateType.NUCLEOTIDE,
 						AlignmentAmbiguityNucleotideCompoundSet.getAlignmentAmbiguityNucleotideCompoundSet(), true),
 				alignment), false);
 		return new SequenceOrder(alignmentArea);

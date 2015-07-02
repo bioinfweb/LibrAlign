@@ -19,7 +19,7 @@
 package info.bioinfweb.libralign.test.editalignment;
 
 
-import info.bioinfweb.jphyloio.events.TokenSetType;
+import info.bioinfweb.commons.bio.CharacterStateType;
 import info.bioinfweb.libralign.alignmentarea.AlignmentArea;
 import info.bioinfweb.libralign.alignmentarea.content.AlignmentContentArea;
 import info.bioinfweb.libralign.alignmentarea.tokenpainter.NucleotideTokenPainter;
@@ -53,7 +53,7 @@ public class EditableAlignmentTest {
 			AlignmentContentArea contentArea = alignmentArea.getContentArea();
 			
 			TokenSet<NucleotideCompound> tokenSet = new BioJavaTokenSet<NucleotideCompound>(
-					TokenSetType.NUCLEOTIDE, new DNACompoundSet(), true);
+					CharacterStateType.NUCLEOTIDE, new DNACompoundSet(), true);
 			AlignmentModel<NucleotideCompound> provider = new ArrayListAlignmentModel<NucleotideCompound>(tokenSet);
 			//AlignmentModel<NucleotideCompound> provider = new PackedAlignmentModel<NucleotideCompound>(tokenSet);
 			
