@@ -10,8 +10,6 @@
 	<classpathentry kind="lib" path="/info.bioinfweb.tic.core/bin"/>
 	<classpathentry kind="lib" path="/info.bioinfweb.tic.swing/bin"/>
 	<classpathentry kind="lib" path="/info.bioinfweb.tic.swt/bin"/>
-	<classpathentry kind="lib" path="/info.bioinfweb.libralign.core/lib/biojava3-alignment-3.0.7.jar"/>
-	<classpathentry kind="lib" path="/info.bioinfweb.libralign.core/lib/biojava3-core-3.0.7.jar"/>
 	<classpathentry kind="lib" path="/info.bioinfweb.libralign.core/lib/commons-beanutils-1.9.2.jar"/>
 	<classpathentry kind="lib" path="/info.bioinfweb.libralign.core/lib/commons-lang3-3.1.jar"/>
 	<classpathentry kind="lib" path="/info.bioinfweb.libralign.core/lib/NeXML.jar"/>
@@ -19,5 +17,8 @@
 	<classpathentry kind="lib" path="/info.bioinfweb.libralign.biojava1/bin"/>
 	<classpathentry kind="lib" path="/info.bioinfweb.libralign.biojava1/lib/core-1.9.2.jar"/>
 	<classpathentry kind="lib" path="/info.bioinfweb.libralign.biojava1/lib/sequencing-1.9.2.jar"/>
+	<classpathentry kind="lib" path="/info.bioinfweb.libralign.biojava3/bin"/>
+	<classpathentry kind="lib" path="/info.bioinfweb.libralign.biojava3/lib/biojava3-alignment-3.1.0.jar"/>
+	<classpathentry kind="lib" path="/info.bioinfweb.libralign.biojava3/lib/biojava3-core-3.1.0.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
