@@ -18,6 +18,9 @@
  */
 package info.bioinfweb.libralign.model.tokenset.continuous;
 
+
+import javax.swing.KeyStroke;
+
 import info.bioinfweb.libralign.model.tokenset.AbstractTokenSet;
 
 
@@ -36,8 +39,8 @@ public class FloatTokenSet extends AbstractContinuousSet<Float> {
 	
 	
 	@Override
-	public Float tokenByKeyChar(char key) {
-		return tokenByRepresentation(Character.toString(key));
+	public Float tokenByKeyStroke(KeyStroke key) {
+		return tokenByRepresentation(Character.toString(key.getKeyChar()));
 	}
 
 	

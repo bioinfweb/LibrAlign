@@ -24,6 +24,7 @@ import java.awt.Toolkit;
 import java.awt.event.KeyEvent;
 
 import javax.swing.JComponent;
+import javax.swing.KeyStroke;
 
 import info.bioinfweb.tic.TargetToolkit;
 import info.bioinfweb.tic.input.TICKeyEvent;
@@ -219,7 +220,8 @@ public class CursorSelectionInputListener extends TICMouseAdapter implements TIC
 					selection.selectAll();
 				}
 				else {
-					Object token = provider.getTokenSet().tokenByKeyChar(event.getKeyCharacter());
+					Object token = provider.getTokenSet().tokenByKeyStroke(
+							KeyStroke.getKeyStroke(event.getKeyCharacter(), event.getModifiers()));
 					if (token == null) {
 						token = provider.getTokenSet().tokenByRepresentation(Character.toString(event.getKeyCharacter()));
 					}

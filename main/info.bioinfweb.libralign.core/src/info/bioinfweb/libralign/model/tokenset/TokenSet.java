@@ -27,6 +27,8 @@ import info.bioinfweb.libralign.model.adapters.StringAdapter;
 
 import java.util.Set;
 
+import javax.swing.KeyStroke;
+
 
 
 /**
@@ -49,16 +51,17 @@ import java.util.Set;
  */
 public interface TokenSet<T> extends Set<T>, Cloneable {
 	/**
-	 * Returns the token from this set that is associated with the specified key character. This key can be 
+	 * Returns the token from this set that is associated with the specified key stroke. This key can be 
 	 * pressed to insert the specified token into an {@link AlignmentArea}. 
 	 * <p>
 	 * Note that the key character is only used by {@link AlignmentArea} if it does not collide with a default
 	 * keyboard action. (Usually the key character can be any lower or upper case letter or digit.)
 	 * 
-	 * @param key - the character the user can press to insert the returned token into an {@link AlignmentArea}
+	 * @param key - the key stroke (key code and shift mask) the user can press to insert the returned token 
+	 *        into an {@link AlignmentArea}
 	 * @return the associated token (sequence element) or {@code null} if none is defined
 	 */
-	public T tokenByKeyChar(char key);
+	public T tokenByKeyStroke(KeyStroke key);
 	
 	/**
 	 * Returns the representation string of the specified token that shall be displayed in an 

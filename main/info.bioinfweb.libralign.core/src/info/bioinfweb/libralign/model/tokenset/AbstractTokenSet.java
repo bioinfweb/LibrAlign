@@ -25,6 +25,8 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.TreeMap;
 
+import javax.swing.KeyStroke;
+
 
 
 /**
@@ -45,7 +47,7 @@ public abstract class AbstractTokenSet<T> extends HashSet<T> implements TokenSet
 	
 	
 	private CharacterStateType type;
-	private Map<Character, T> keyMap = new TreeMap<Character, T>();
+	private Map<KeyStroke, T> keyMap = new TreeMap<KeyStroke, T>();
 	
 	
 	/**
@@ -77,7 +79,7 @@ public abstract class AbstractTokenSet<T> extends HashSet<T> implements TokenSet
 
 
 	@Override
-	public T tokenByKeyChar(char key) {
+	public T tokenByKeyStroke(KeyStroke key) {
 		return keyMap.get(key);
 	}
 
@@ -88,7 +90,7 @@ public abstract class AbstractTokenSet<T> extends HashSet<T> implements TokenSet
 	 * @return an instance of {@link TreeMap} in the current implementation (Note that this might change in 
 	 *         future versions.)
 	 */
-	protected Map<Character, T> getKeyMap() {
+	protected Map<KeyStroke, T> getKeyMap() {
 		return keyMap;
 	}
 
@@ -119,6 +121,6 @@ public abstract class AbstractTokenSet<T> extends HashSet<T> implements TokenSet
 	
 	
 	protected void addSpaceKeyForGaps() {
-		getKeyMap().put(' ', tokenByKeyChar(DEFAULT_GAP_REPRESENTATION));
+		getKeyMap().put(KeyStroke.getKeyStroke(' '), getGapToken());
 	}
 }

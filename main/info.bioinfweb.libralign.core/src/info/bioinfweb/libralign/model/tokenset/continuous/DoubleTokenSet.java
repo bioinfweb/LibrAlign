@@ -18,6 +18,9 @@
  */
 package info.bioinfweb.libralign.model.tokenset.continuous;
 
+
+import javax.swing.KeyStroke;
+
 import info.bioinfweb.libralign.model.tokenset.AbstractTokenSet;
 
 
@@ -36,8 +39,8 @@ public class DoubleTokenSet extends AbstractContinuousSet<Double> {
 	
 	
 	@Override
-	public Double tokenByKeyChar(char key) {
-		return tokenByRepresentation(Character.toString(key));
+	public Double tokenByKeyStroke(KeyStroke key) {
+		return tokenByRepresentation(Character.toString(key.getKeyChar()));
 	}
 
 	
