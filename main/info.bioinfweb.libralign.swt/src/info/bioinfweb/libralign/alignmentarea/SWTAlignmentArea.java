@@ -22,8 +22,12 @@ package info.bioinfweb.libralign.alignmentarea;
 import java.awt.Dimension;
 import java.awt.Rectangle;
 
+import javax.swing.JComponent;
+
 import info.bioinfweb.commons.swt.ScrolledCompositeSyncListener;
+import info.bioinfweb.libralign.alignmentarea.content.AlignmentContentArea;
 import info.bioinfweb.libralign.alignmentarea.content.SWTAlignmentContentArea;
+import info.bioinfweb.libralign.alignmentarea.content.SequenceArea;
 import info.bioinfweb.libralign.alignmentarea.label.SWTAlignmentLabelArea;
 import info.bioinfweb.libralign.multiplealignments.SWTMultipleAlignmentsContainer;
 import info.bioinfweb.tic.SWTComponentFactory;
@@ -34,6 +38,8 @@ import org.eclipse.swt.custom.ScrolledComposite;
 import org.eclipse.swt.events.ControlAdapter;
 import org.eclipse.swt.events.ControlEvent;
 import org.eclipse.swt.events.ControlListener;
+import org.eclipse.swt.events.MouseAdapter;
+import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
@@ -126,6 +132,19 @@ public class SWTAlignmentArea extends AbstractSWTComposite implements ToolkitSpe
 		SWTAlignmentContentArea contentArea =	(SWTAlignmentContentArea)factory.getSWTComponent(
 				getIndependentComponent().getContentArea(), contentScroller, SWT.NONE);
 		contentScroller.setContent(contentArea);
+		contentScroller.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseDown(MouseEvent event) {  // Sets the focus to an according sequence area, if the user clicks outside of the content area and moves the cursor.
+				AlignmentContentArea contentArea = getIndependentComponent().getContentArea();
+				int row = contentArea.rowByPaintY(event.y); 
+				SequenceArea sequenceArea = contentArea.getToolkitComponent().getSequenceAreaByID(
+						getIndependentComponent().getSequenceOrder().idByIndex(row));
+				if (sequenceArea != null) {
+					getIndependentComponent().getSelection().setNewCursorPosition(contentArea.columnByPaintX(event.x), row);
+					((Composite)sequenceArea.getToolkitComponent()).setFocus();
+				}
+			}
+		});
 		contentResizeListener = new SWTScrolledCompositeResizeListener(contentContainer, contentScroller, false, 
 				hideHorizontalScrollBar); 
 		contentContainer.addControlListener(contentResizeListener);  // Must not be called before both fields are initialized.
