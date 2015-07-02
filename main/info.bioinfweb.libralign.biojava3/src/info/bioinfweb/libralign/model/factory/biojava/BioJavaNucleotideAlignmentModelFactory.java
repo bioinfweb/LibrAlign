@@ -28,6 +28,7 @@ import info.bioinfweb.jphyloio.events.SingleTokenDefinitionEvent;
 import info.bioinfweb.libralign.model.AlignmentModel;
 import info.bioinfweb.libralign.model.factory.AlignmentModelFactory;
 import info.bioinfweb.libralign.model.factory.NewAlignmentModelParameterMap;
+import info.bioinfweb.libralign.model.factory.TokenDefinition;
 import info.bioinfweb.libralign.model.implementations.PackedAlignmentModel;
 import info.bioinfweb.libralign.model.tokenset.BioJavaTokenSet;
 
@@ -58,9 +59,9 @@ public class BioJavaNucleotideAlignmentModelFactory implements AlignmentModelFac
 			}
 		}
 		ModifiableNucleotideCompoundSet nucleotideCompoundSet = new ModifiableNucleotideCompoundSet();
-		for (SingleTokenDefinitionEvent tokenDefinition : parameterMap.getDefinedTokens()) {
-			if (nucleotideCompoundSet.getCompoundForString(tokenDefinition.getTokenName()) == null) {
-				nucleotideCompoundSet.addNucleotideCompound(tokenDefinition.getTokenName(), tokenDefinition.getTokenName());
+		for (TokenDefinition tokenDefinition : parameterMap.getDefinedTokens()) {
+			if (nucleotideCompoundSet.getCompoundForString(tokenDefinition.getRepresentation()) == null) {
+				nucleotideCompoundSet.addNucleotideCompound(tokenDefinition.getRepresentation(), tokenDefinition.getRepresentation());
 			}
 		}
 		BioJavaTokenSet<NucleotideCompound> nucleotideTokenSet = new BioJavaTokenSet<NucleotideCompound>(type, nucleotideCompoundSet, true);  //TODO Use BioJava 4 tokens here/ Should this class really be bound to BioJava?
