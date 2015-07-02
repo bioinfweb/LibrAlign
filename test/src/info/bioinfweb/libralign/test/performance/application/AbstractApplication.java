@@ -27,8 +27,6 @@ import info.bioinfweb.commons.bio.CharacterStateType;
 import info.bioinfweb.commons.bio.biojava3.core.sequence.compound.AlignmentAmbiguityNucleotideCompoundSet;
 import info.bioinfweb.libralign.alignmentarea.AlignmentArea;
 import info.bioinfweb.libralign.dataarea.implementations.SequenceIndexArea;
-import info.bioinfweb.libralign.io.alignment.AlignmentReader;
-import info.bioinfweb.libralign.io.alignment.fasta.FASTAReader;
 import info.bioinfweb.libralign.model.AlignmentModel;
 import info.bioinfweb.libralign.model.implementations.PackedAlignmentModel;
 import info.bioinfweb.libralign.model.tokenset.BioJavaTokenSet;
@@ -40,27 +38,29 @@ public class AbstractApplication {
 
 	
 	protected AlignmentArea getAlignmentArea() {
-		if (alignmentArea == null) {
-			AlignmentModel<NucleotideCompound> provider = new PackedAlignmentModel<NucleotideCompound>(
-					new BioJavaTokenSet<NucleotideCompound>(CharacterStateType.NUCLEOTIDE,
-							AlignmentAmbiguityNucleotideCompoundSet.getAlignmentAmbiguityNucleotideCompoundSet(), false));
-			
-			AlignmentReader reader = new FASTAReader();
-			try {
-				reader.read(new File("D:\\Users\\BenStoever\\ownCloud\\Dokumente\\Projekte\\LibrAlign\\Testdaten\\Performance\\Alignment_8_134217728.fasta"), provider);
-				// Alignment_8_268435456.fasta is the first file that is too long to be displayed (Alignment_8_134217728.fasta works with
-				// default compound width). The sequence components are just not set visible (without any exception). (The reason should be 
-				// that the component width would be higher than Integer.MAX_VALUE.) Loading of the the data took 200298 ms, which is a 
-				// linear complexity.
-				alignmentArea = new AlignmentArea();
-				alignmentArea.getDataAreas().getTopAreas().add(new SequenceIndexArea(alignmentArea.getContentArea()));
-				alignmentArea.setAlignmentModel(provider, false);
-			}
-			catch (Exception e) {
-				e.printStackTrace();
-				throw new InternalError(e);
-			}
-		}
-		return alignmentArea;
+		throw new InternalError("not implemented");
+//		if (alignmentArea == null) {
+//			AlignmentModel<NucleotideCompound> provider = new PackedAlignmentModel<NucleotideCompound>(
+//					new BioJavaTokenSet<NucleotideCompound>(CharacterStateType.NUCLEOTIDE,
+//							AlignmentAmbiguityNucleotideCompoundSet.getAlignmentAmbiguityNucleotideCompoundSet(), false));
+//			
+//			
+//			AlignmentReader reader = new FASTAReader();
+//			try {
+//				reader.read(new File("D:\\Users\\BenStoever\\ownCloud\\Dokumente\\Projekte\\LibrAlign\\Testdaten\\Performance\\Alignment_8_134217728.fasta"), provider);
+//				// Alignment_8_268435456.fasta is the first file that is too long to be displayed (Alignment_8_134217728.fasta works with
+//				// default compound width). The sequence components are just not set visible (without any exception). (The reason should be 
+//				// that the component width would be higher than Integer.MAX_VALUE.) Loading of the the data took 200298 ms, which is a 
+//				// linear complexity.
+//				alignmentArea = new AlignmentArea();
+//				alignmentArea.getDataAreas().getTopAreas().add(new SequenceIndexArea(alignmentArea.getContentArea()));
+//				alignmentArea.setAlignmentModel(provider, false);
+//			}
+//			catch (Exception e) {
+//				e.printStackTrace();
+//				throw new InternalError(e);
+//			}
+//		}
+//		return alignmentArea;
 	}
 }
