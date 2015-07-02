@@ -15,6 +15,17 @@ main/info.bioinfweb.libralign.biojava1/src/info/bioinfweb/libralign/pherogram/pr
 main/info.bioinfweb.libralign.biojava3/.classpath -text svneol=unset#text/plain
 main/info.bioinfweb.libralign.biojava3/.project -text svneol=unset#text/plain
 main/info.bioinfweb.libralign.biojava3/.settings/org.eclipse.jdt.core.prefs -text svneol=unset#text/plain
+main/info.bioinfweb.libralign.biojava3/lib/biojava3-alignment-3.1.0.jar -text
+main/info.bioinfweb.libralign.biojava3/lib/biojava3-core-3.1.0.jar -text
+main/info.bioinfweb.libralign.biojava3/src/info/bioinfweb/libralign/model/adapters/BioJavaSequenceAdapter.java -text svneol=unset#text/plain
+main/info.bioinfweb.libralign.biojava3/src/info/bioinfweb/libralign/model/adapters/SingleBioJavaSequenceAdapter.java -text svneol=unset#text/plain
+main/info.bioinfweb.libralign.biojava3/src/info/bioinfweb/libralign/model/factory/biojava/BioJavaAminoAcidAligmentModelFactory.java -text svneol=unset#text/plain
+main/info.bioinfweb.libralign.biojava3/src/info/bioinfweb/libralign/model/factory/biojava/BioJavaNucleotideAlignmentModelFactory.java -text svneol=unset#text/plain
+main/info.bioinfweb.libralign.biojava3/src/info/bioinfweb/libralign/model/factory/biojava/package-info.java -text svneol=unset#text/plain
+main/info.bioinfweb.libralign.biojava3/src/info/bioinfweb/libralign/model/implementations/BioJavaAlignmentModel.java -text svneol=unset#text/plain
+main/info.bioinfweb.libralign.biojava3/src/info/bioinfweb/libralign/model/implementations/translation/BioJava3DNASequenceDataView.java -text svneol=unset#text/plain
+main/info.bioinfweb.libralign.biojava3/src/info/bioinfweb/libralign/model/implementations/translation/BioJava3RNASequenceDataView.java -text svneol=unset#text/plain
+main/info.bioinfweb.libralign.biojava3/src/info/bioinfweb/libralign/model/tokenset/BioJavaTokenSet.java -text svneol=unset#text/plain
 main/info.bioinfweb.libralign.biojava4/.classpath -text svneol=unset#text/plain
 main/info.bioinfweb.libralign.biojava4/.project -text svneol=unset#text/plain
 main/info.bioinfweb.libralign.biojava4/.settings/org.eclipse.jdt.core.prefs -text svneol=unset#text/plain
