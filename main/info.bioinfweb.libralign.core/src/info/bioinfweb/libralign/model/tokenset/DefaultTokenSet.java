@@ -47,8 +47,13 @@ public class DefaultTokenSet<T> extends AbstractTokenSet<T> {
 
 	@Override
 	public String representationByToken(T token) {
-		if ((token != null) && contains(token)) {
-			return token.toString();
+		if (contains(token)) {
+			if (token == null) {
+				return "null";
+			}
+			else {
+				return token.toString();
+			}
 		}
 		else {
 			return "";
