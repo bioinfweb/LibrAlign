@@ -21,6 +21,7 @@ package info.bioinfweb.libralign.model.tokenset;
 
 import info.bioinfweb.commons.bio.CharacterStateType;
 
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.TreeMap;
@@ -47,7 +48,7 @@ public abstract class AbstractTokenSet<T> extends HashSet<T> implements TokenSet
 	
 	
 	private CharacterStateType type;
-	private Map<KeyStroke, T> keyMap = new TreeMap<KeyStroke, T>();
+	private Map<KeyStroke, T> keyMap = new HashMap<KeyStroke, T>();
 	
 	
 	/**
