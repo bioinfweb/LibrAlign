@@ -20,7 +20,6 @@ package info.bioinfweb.libralign.model.tokenset;
 
 
 import info.bioinfweb.commons.bio.CharacterStateType;
-import info.bioinfweb.commons.bio.biojava3.core.sequence.compound.AlignmentAmbiguityNucleotideCompoundSet;
 import info.bioinfweb.commons.collections.CollectionUtils;
 
 import java.awt.event.KeyEvent;
@@ -183,6 +182,18 @@ public class BioJavaTokenSet<C extends Compound> extends AbstractSet<C> implemen
 	@Override
 	public C getGapToken() {
 		return compoundSet.getCompoundForString(Character.toString(AbstractTokenSet.DEFAULT_GAP_REPRESENTATION));
+	}
+
+
+	@Override
+	public boolean isSpaceForGap() {
+		return spaceForGap;
+	}
+
+
+	@Override
+	public void setSpaceForGap(boolean spaceForGap) {
+		this.spaceForGap = spaceForGap;
 	}
 
 
