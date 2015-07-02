@@ -63,20 +63,20 @@ public class EditableAlignmentTest {
 			// Test sequence:
 			provider.addSequence("A");
 			int id = provider.sequenceIDByName("A");
-			provider.insertTokenAt(id, 0, tokenSet.tokenByKeyChar('A'));
-			provider.insertTokenAt(id, 1, tokenSet.tokenByKeyChar('C'));
-			provider.insertTokenAt(id, 2, tokenSet.tokenByKeyChar('G'));
-			provider.insertTokenAt(id, 3, tokenSet.tokenByKeyChar('-'));
-			provider.insertTokenAt(id, 4, tokenSet.tokenByKeyChar('T'));
+			provider.insertTokenAt(id, 0, tokenSet.tokenByRepresentation("A"));
+			provider.insertTokenAt(id, 1, tokenSet.tokenByRepresentation("C"));
+			provider.insertTokenAt(id, 2, tokenSet.tokenByRepresentation("G"));
+			provider.insertTokenAt(id, 3, tokenSet.tokenByRepresentation("-"));
+			provider.insertTokenAt(id, 4, tokenSet.tokenByRepresentation("T"));
 			
 			// Another test sequence:
 			provider.addSequence("B");
 			id = provider.sequenceIDByName("B");
-			provider.insertTokenAt(id, 0, tokenSet.tokenByKeyChar('A'));
-			provider.insertTokenAt(id, 1, tokenSet.tokenByKeyChar('C'));
-			provider.insertTokenAt(id, 2, tokenSet.tokenByKeyChar('G'));
-			provider.insertTokenAt(id, 3, tokenSet.tokenByKeyChar('G'));
-			provider.insertTokenAt(id, 4, tokenSet.tokenByKeyChar('T'));
+			provider.insertTokenAt(id, 0, tokenSet.tokenByRepresentation("A"));
+			provider.insertTokenAt(id, 1, tokenSet.tokenByRepresentation("C"));
+			provider.insertTokenAt(id, 2, tokenSet.tokenByRepresentation("G"));
+			provider.insertTokenAt(id, 3, tokenSet.tokenByRepresentation("G"));
+			provider.insertTokenAt(id, 4, tokenSet.tokenByRepresentation("T"));
 			
 			// Test sequence with pherogram:
 			try {
@@ -87,7 +87,7 @@ public class EditableAlignmentTest {
 	
 				// Copy base call sequence into alignment:
 				for (int i = 0; i < pherogramProvider.getSequenceLength(); i++) {
-					provider.insertTokenAt(id, i, tokenSet.tokenByKeyChar(pherogramProvider.getBaseCall(i)));
+					provider.insertTokenAt(id, i, tokenSet.tokenByRepresentation(Character.toString(pherogramProvider.getBaseCall(i))));
 				}
 				
 				// Add data area:
@@ -129,7 +129,7 @@ public class EditableAlignmentTest {
 
 			// Copy base call sequence into alignment:
 			for (int i = 0; i < pherogramProvider.getSequenceLength(); i++) {
-				provider.insertTokenAt(id, i, provider.getTokenSet().tokenByKeyChar(pherogramProvider.getBaseCall(i)));
+				provider.insertTokenAt(id, i, provider.getTokenSet().tokenByRepresentation(Character.toString(pherogramProvider.getBaseCall(i))));
 			}
 			
 			// Add data area:
