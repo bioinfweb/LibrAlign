@@ -307,6 +307,7 @@ test/src/info/bioinfweb/libralign/test/editalignment/EditableAlignmentTest.java 
 test/src/info/bioinfweb/libralign/test/editalignment/SWTTest.java -text svneol=unset#text/plain
 test/src/info/bioinfweb/libralign/test/editalignment/SwingTest.java -text svneol=unset#text/plain
 test/src/info/bioinfweb/libralign/test/empty/AbstractEmptyAlignmentTest.java -text svneol=unset#text/plain
+test/src/info/bioinfweb/libralign/test/empty/SWTEmptyAlignmentTest.java -text svneol=unset#text/plain
 test/src/info/bioinfweb/libralign/test/empty/SwingEmptyAlignmentTest.java -text svneol=unset#text/plain
 test/src/info/bioinfweb/libralign/test/multiplealignmentscontainer/AbstractApplication.java -text svneol=unset#text/plain
 test/src/info/bioinfweb/libralign/test/multiplealignmentscontainer/SWTApplication.java -text svneol=unset#text/plain
