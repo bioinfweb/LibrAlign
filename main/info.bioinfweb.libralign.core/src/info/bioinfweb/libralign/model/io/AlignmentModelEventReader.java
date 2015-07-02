@@ -19,13 +19,13 @@
 package info.bioinfweb.libralign.model.io;
 
 
+import info.bioinfweb.commons.bio.CharacterStateType;
 import info.bioinfweb.jphyloio.JPhyloIOEventListener;
 import info.bioinfweb.jphyloio.JPhyloIOEventReader;
 import info.bioinfweb.jphyloio.events.CharacterSetEvent;
 import info.bioinfweb.jphyloio.events.JPhyloIOEvent;
 import info.bioinfweb.jphyloio.events.SequenceTokensEvent;
 import info.bioinfweb.jphyloio.events.TokenSetDefinitionEvent;
-import info.bioinfweb.jphyloio.events.TokenSetType;
 import info.bioinfweb.libralign.model.AlignmentModel;
 import info.bioinfweb.libralign.model.concatenated.ConcatenatedAlignmentModel;
 import info.bioinfweb.libralign.model.factory.AlignmentModelFactory;
@@ -49,7 +49,7 @@ import java.util.TreeMap;
  */
 public class AlignmentModelEventReader implements JPhyloIOEventListener {
 	private final AlignmentModelFactory defaultFactory;
-	private final Map<TokenSetType, AlignmentModelFactory> factoryMap;
+	private final Map<CharacterStateType, AlignmentModelFactory> factoryMap;
 	private AlignmentModel<?> currentModel = null;
 	private final List<AlignmentModel<?>> completedModels = new ArrayList<AlignmentModel<?>>();
 	private final Map<String, CharacterSetEvent> charSetEvents = new TreeMap<String, CharacterSetEvent>();
@@ -62,7 +62,7 @@ public class AlignmentModelEventReader implements JPhyloIOEventListener {
 	 */
 	public AlignmentModelEventReader() {
 		this(new StringAlignmentModelFactory());
-		getFactoryMap().put(TokenSetType.CONTINUOUS, new DoubleAlignmentModelFactory());
+		getFactoryMap().put(CharacterStateType.CONTINUOUS, new DoubleAlignmentModelFactory());
 	}
 
 
@@ -74,7 +74,7 @@ public class AlignmentModelEventReader implements JPhyloIOEventListener {
 	 *        set types which are not defined in the factory map
 	 */
 	public AlignmentModelEventReader(AlignmentModelFactory<?> defaultFactory) {
-		this(defaultFactory, new EnumMap<TokenSetType, AlignmentModelFactory>(TokenSetType.class));
+		this(defaultFactory, new EnumMap<CharacterStateType, AlignmentModelFactory>(CharacterStateType.class));
 	}
 
 
@@ -85,7 +85,7 @@ public class AlignmentModelEventReader implements JPhyloIOEventListener {
 	 *        which are not defined in the factory map
 	 * @param factoryMap a map of alignment model factories for different character state (token) set types
 	 */
-	public AlignmentModelEventReader(AlignmentModelFactory defaultFactory, Map<TokenSetType, AlignmentModelFactory> factoryMap) {
+	public AlignmentModelEventReader(AlignmentModelFactory defaultFactory, Map<CharacterStateType, AlignmentModelFactory> factoryMap) {
 		super();
 		this.defaultFactory = defaultFactory;
 		this.factoryMap = factoryMap;
@@ -110,7 +110,7 @@ public class AlignmentModelEventReader implements JPhyloIOEventListener {
 	 * @return the map of factories
 	 * @see #getDefaultFactory()
 	 */
-	public Map<TokenSetType, AlignmentModelFactory> getFactoryMap() {
+	public Map<CharacterStateType, AlignmentModelFactory> getFactoryMap() {
 		return factoryMap;
 	}
 
@@ -124,9 +124,9 @@ public class AlignmentModelEventReader implements JPhyloIOEventListener {
 	 * @param factory the alignment model factory to be used for all nucleotide token set types
 	 */
 	public void setNucleotideFactories(AlignmentModelFactory factory) {
-		getFactoryMap().put(TokenSetType.NUCLEOTIDE, factory);
-		getFactoryMap().put(TokenSetType.DNA, factory);
-		getFactoryMap().put(TokenSetType.RNA, factory);
+		getFactoryMap().put(CharacterStateType.NUCLEOTIDE, factory);
+		getFactoryMap().put(CharacterStateType.DNA, factory);
+		getFactoryMap().put(CharacterStateType.RNA, factory);
 	}
 
 
@@ -207,7 +207,7 @@ public class AlignmentModelEventReader implements JPhyloIOEventListener {
 		// Ensure model instance:
 		if (currentModel == null) {
 			if (currentParameterMap.getCharacterStateSetType() == null) {
-				currentParameterMap.setCharacterStateSetType(TokenSetType.UNKNOWN);
+				currentParameterMap.setCharacterStateSetType(CharacterStateType.UNKNOWN);
 			}
 			currentModel = factory.createNewModel(currentParameterMap);
 		}

@@ -19,7 +19,7 @@
 package info.bioinfweb.libralign.model.tokenset;
 
 
-import info.bioinfweb.jphyloio.events.TokenSetType;
+import info.bioinfweb.commons.bio.CharacterStateType;
 import info.bioinfweb.libralign.alignmentarea.AlignmentArea;
 import info.bioinfweb.libralign.model.AlignmentModel;
 import info.bioinfweb.libralign.model.adapters.CharSequenceAdapter;
@@ -111,7 +111,7 @@ public interface TokenSet<T> extends Set<T>, Cloneable {
 	 * 
 	 * @return the token set type
 	 */
-	public TokenSetType getType();
+	public CharacterStateType getType();
 	
 	/**
 	 * Tests if the specified token represents a gap. 

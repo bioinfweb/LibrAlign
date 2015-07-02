@@ -19,7 +19,7 @@
 package info.bioinfweb.libralign.model.tokenset;
 
 
-import info.bioinfweb.jphyloio.events.TokenSetType;
+import info.bioinfweb.commons.bio.CharacterStateType;
 
 
 
@@ -40,7 +40,7 @@ public class DefaultTokenSet<T> extends AbstractTokenSet<T> {
 	 * 
 	 * @param type the token type of the new instance
 	 */
-	public DefaultTokenSet(TokenSetType type) {
+	public DefaultTokenSet(CharacterStateType type) {
 		super(type);
 	}
 

@@ -19,7 +19,7 @@
 package info.bioinfweb.libralign.model.tokenset.continuous;
 
 
-import info.bioinfweb.jphyloio.events.TokenSetType;
+import info.bioinfweb.commons.bio.CharacterStateType;
 import info.bioinfweb.libralign.model.tokenset.AbstractTokenSet;
 import info.bioinfweb.libralign.model.tokenset.TokenSet;
 
@@ -211,8 +211,8 @@ public abstract class AbstractContinuousSet<T> implements TokenSet<T> {
 
 	
 	@Override
-	public TokenSetType getType() {
-		return TokenSetType.CONTINUOUS;
+	public CharacterStateType getType() {
+		return CharacterStateType.CONTINUOUS;
 	}
 
 

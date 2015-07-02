@@ -19,8 +19,8 @@
 package info.bioinfweb.libralign.model.tokenset;
 
 
+import info.bioinfweb.commons.bio.CharacterStateType;
 import info.bioinfweb.commons.bio.SequenceUtils;
-import info.bioinfweb.jphyloio.events.TokenSetType;
 
 
 
@@ -36,7 +36,7 @@ public class CharacterTokenSet extends AbstractTokenSet<Character> {
 	 * 
 	 * @param type the token type of the new instance (Only a discrete type would make sense for this class.)
 	 */
-	public CharacterTokenSet(TokenSetType type) {
+	public CharacterTokenSet(CharacterStateType type) {
 		super(type);
 	}
 
@@ -48,7 +48,7 @@ public class CharacterTokenSet extends AbstractTokenSet<Character> {
 	 * @param type the token type of the new instance (Only a discrete type would make sense for this class.)
 	 * @param tokens - a sequence containing the tokens to be contained in this set 
 	 */
-	public CharacterTokenSet(TokenSetType type, CharSequence tokens) {
+	public CharacterTokenSet(CharacterStateType type, CharSequence tokens) {
 		super(type);
 		for (int i = 0; i < tokens.length(); i++) {
 			add(tokens.charAt(i));
@@ -68,7 +68,7 @@ public class CharacterTokenSet extends AbstractTokenSet<Character> {
 	}
 	
 	
-	private static CharacterTokenSet createNucleotideInstance(TokenSetType type) {
+	private static CharacterTokenSet createNucleotideInstance(CharacterStateType type) {
 		CharacterTokenSet result = new CharacterTokenSet(type);
 		result.addAll(SequenceUtils.getNucleotideCharacters());
 		result.add(DEFAULT_GAP_REPRESENTATION);
@@ -83,7 +83,7 @@ public class CharacterTokenSet extends AbstractTokenSet<Character> {
 	 * @return the new instance
 	 */
 	public static CharacterTokenSet newNucleotideInstance() {
-		return createNucleotideInstance(TokenSetType.NUCLEOTIDE);
+		return createNucleotideInstance(CharacterStateType.NUCLEOTIDE);
 	}
 	
 	
@@ -94,7 +94,7 @@ public class CharacterTokenSet extends AbstractTokenSet<Character> {
 	 * @return the new instance
 	 */
 	public static CharacterTokenSet newDNAInstance() {
-		CharacterTokenSet result = createNucleotideInstance(TokenSetType.DNA);
+		CharacterTokenSet result = createNucleotideInstance(CharacterStateType.DNA);
 		result.remove('U');
 		return result;
 	}
@@ -107,7 +107,7 @@ public class CharacterTokenSet extends AbstractTokenSet<Character> {
 	 * @return the new instance
 	 */
 	public static CharacterTokenSet newRNAInstance() {
-		CharacterTokenSet result = createNucleotideInstance(TokenSetType.DNA);
+		CharacterTokenSet result = createNucleotideInstance(CharacterStateType.DNA);
 		result.remove('T');
 		return result;
 	}
@@ -120,7 +120,7 @@ public class CharacterTokenSet extends AbstractTokenSet<Character> {
 	 * @return the new instance
 	 */
 	public static CharacterTokenSet newAminoAcidInstance() {
-		CharacterTokenSet result = new CharacterTokenSet(TokenSetType.AMINO_ACID);
+		CharacterTokenSet result = new CharacterTokenSet(CharacterStateType.AMINO_ACID);
 		result.addAll(SequenceUtils.getAminoAcidOneLetterCodes(true));
 		result.add(DEFAULT_GAP_REPRESENTATION);
 		return result;
