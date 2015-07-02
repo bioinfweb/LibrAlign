@@ -43,6 +43,9 @@ import java.util.Iterator;
  * @param <T> the type of tokens represented by this set
  */
 public abstract class AbstractContinuousSet<T> implements TokenSet<T> {
+	private boolean spaceForGap = true;
+	
+	
 	/**
 	 * This method is not supported by this implementation and will always throw an {@link UnsupportedOperationException}.
 	 * 
@@ -213,6 +216,18 @@ public abstract class AbstractContinuousSet<T> implements TokenSet<T> {
 	@Override
 	public CharacterStateType getType() {
 		return CharacterStateType.CONTINUOUS;
+	}
+
+
+	@Override
+	public boolean isSpaceForGap() {
+		return spaceForGap;
+	}
+
+
+	@Override
+	public void setSpaceForGap(boolean spaceForGap) {
+		this.spaceForGap = spaceForGap;
 	}
 
 

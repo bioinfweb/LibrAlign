@@ -21,6 +21,7 @@ package info.bioinfweb.libralign.model.tokenset;
 
 import info.bioinfweb.commons.bio.CharacterStateType;
 
+import java.awt.event.KeyEvent;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -49,6 +50,7 @@ public abstract class AbstractTokenSet<T> extends HashSet<T> implements TokenSet
 	
 	private CharacterStateType type;
 	private Map<KeyStroke, T> keyMap = new HashMap<KeyStroke, T>();
+	private boolean spaceForGap = true;
 	
 	
 	/**
@@ -81,7 +83,11 @@ public abstract class AbstractTokenSet<T> extends HashSet<T> implements TokenSet
 
 	@Override
 	public T tokenByKeyStroke(KeyStroke key) {
-		return keyMap.get(key);
+		T result = keyMap.get(key);
+		if (isSpaceForGap() && (result == null) && (key.getKeyCode() == KeyEvent.VK_SPACE)) {
+			result = getGapToken();
+		}
+		return result;
 	}
 
 
@@ -111,6 +117,18 @@ public abstract class AbstractTokenSet<T> extends HashSet<T> implements TokenSet
 	@Override
 	public T getGapToken() {
 		return tokenByRepresentation(Character.toString(DEFAULT_GAP_REPRESENTATION));
+	}
+
+
+	@Override
+	public boolean isSpaceForGap() {
+		return spaceForGap;
+	}
+
+
+	@Override
+	public void setSpaceForGap(boolean spaceForGap) {
+		this.spaceForGap = spaceForGap;
 	}
 
 

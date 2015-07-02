@@ -138,6 +138,23 @@ public interface TokenSet<T> extends Set<T>, Cloneable {
 	public T getGapToken();
 	
 	/**
+	 * Determines whether {@link #tokenByKeyStroke(KeyStroke)} shall return the gap token, if the space bar is
+	 * pressed, even if that key stroke is not associated with that token.
+	 * 
+	 * @return {@code true} if the gap token shall always be returned, {@code false} otherwise.
+	 */
+	public boolean isSpaceForGap();
+	
+	/**
+	 * Allows to specify whether {@link #tokenByKeyStroke(KeyStroke)} shall return the gap token, if the space 
+	 * bar is pressed, even if that key stroke is not associated with that token.
+	 * 
+	 * @param spaceForGap Specify {@code true} here, if the gap token shall always be returned, {@code false} 
+	 *        otherwise.
+	 */
+	public void setSpaceForGap(boolean spaceForGap);
+	
+	/**
 	 * Returns a deep copy of this instance. Implementing this method is important when creating custom
 	 * implementations of this interface, because other classes in LibrAlign use this method internally. 
 	 * 

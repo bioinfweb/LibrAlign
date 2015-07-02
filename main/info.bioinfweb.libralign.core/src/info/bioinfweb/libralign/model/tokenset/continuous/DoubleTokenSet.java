@@ -19,6 +19,8 @@
 package info.bioinfweb.libralign.model.tokenset.continuous;
 
 
+import java.awt.event.KeyEvent;
+
 import javax.swing.KeyStroke;
 
 import info.bioinfweb.libralign.model.tokenset.AbstractTokenSet;
@@ -40,7 +42,11 @@ public class DoubleTokenSet extends AbstractContinuousSet<Double> {
 	
 	@Override
 	public Double tokenByKeyStroke(KeyStroke key) {
-		return tokenByRepresentation(Character.toString(key.getKeyChar()));
+		Double result = tokenByRepresentation(Character.toString(key.getKeyChar()));
+		if (isSpaceForGap() && (result == null) && (key.getKeyCode() == KeyEvent.VK_SPACE)) {
+			result = getGapToken();
+		}
+		return result;
 	}
 
 	
