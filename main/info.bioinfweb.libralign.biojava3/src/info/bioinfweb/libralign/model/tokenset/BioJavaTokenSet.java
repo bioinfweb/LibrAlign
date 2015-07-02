@@ -19,9 +19,9 @@
 package info.bioinfweb.libralign.model.tokenset;
 
 
+import info.bioinfweb.commons.bio.CharacterStateType;
 import info.bioinfweb.commons.bio.biojava3.core.sequence.compound.AlignmentAmbiguityNucleotideCompoundSet;
 import info.bioinfweb.commons.collections.CollectionUtils;
-import info.bioinfweb.jphyloio.events.TokenSetType;
 
 import java.util.AbstractSet;
 import java.util.ConcurrentModificationException;
@@ -44,7 +44,7 @@ import org.biojava3.core.sequence.template.CompoundSet;
 public class BioJavaTokenSet<C extends Compound> extends AbstractSet<C> implements TokenSet<C> {
 	private CompoundSet<C> compoundSet;
 	private boolean spaceForGap;
-	private TokenSetType type;
+	private CharacterStateType type;
 	
 	
 	/**
@@ -72,7 +72,7 @@ public class BioJavaTokenSet<C extends Compound> extends AbstractSet<C> implemen
 	 * @param compoundSet - the BioJava compound set containing the compounds to be copied into the new instance
 	 * @param spaceForGap determines whether the space key shall be associated with gap symbol 
 	 */
-	public BioJavaTokenSet(TokenSetType type, CompoundSet<C> compoundSet, boolean spaceForGap) {
+	public BioJavaTokenSet(CharacterStateType type, CompoundSet<C> compoundSet, boolean spaceForGap) {
 		super();
 		this.type = type;
 		this.compoundSet = compoundSet;
@@ -158,7 +158,7 @@ public class BioJavaTokenSet<C extends Compound> extends AbstractSet<C> implemen
 
 
 	@Override
-	public TokenSetType getType() {
+	public CharacterStateType getType() {
 		return type;
 	}
 
