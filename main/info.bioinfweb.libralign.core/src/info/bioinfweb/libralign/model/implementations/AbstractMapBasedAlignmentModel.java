@@ -31,8 +31,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
-import org.biojava.bio.seq.Sequence;
-
 
 
 /**
@@ -50,7 +48,7 @@ import org.biojava.bio.seq.Sequence;
  * @see SequenceOrder
  * @see AlignmentArea
  *
- * @param <S> - the type of the sequence objects (e.g. {@link Sequence} or {@link List})
+ * @param <S> - the type of the sequence objects (e.g. a BioJava sequence type or {@link List})
  * @param <T> - the type of sequence elements (tokens) the implementing provider object works with
  */
 public abstract class AbstractMapBasedAlignmentModel<S, T> extends AbstractAlignmentModel<T> {

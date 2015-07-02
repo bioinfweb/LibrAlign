@@ -24,9 +24,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
-import org.biojava.bio.seq.Sequence;
-
-import info.bioinfweb.commons.collections.ListChangeType;
 import info.bioinfweb.libralign.model.SequenceAccessDataProvider;
 import info.bioinfweb.libralign.model.AlignmentModelWriteType;
 import info.bioinfweb.libralign.model.events.SequenceChangeEvent;
@@ -42,7 +39,7 @@ import info.bioinfweb.libralign.model.tokenset.TokenSet;
  * @author Ben St&ouml;ver
  * @since 0.1.0
  *
- * @param <S> - the type of the sequence objects (e.g. {@link Sequence} or {@link String})
+ * @param <S> - the type of the sequence objects (e.g. a BioJava sequence type or {@link String})
  * @param <T> - the type of sequence elements (tokens) the implementing provider object works with
  */
 public abstract class AbstractUnmodifyableAlignmentModel<S, T>

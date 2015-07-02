@@ -333,7 +333,7 @@ public class PherogramArea extends DataArea implements PherogramComponent {
   	AlignmentModel model = getLabeledAlignmentModel();
   	TokenSet tokenSet = model.getTokenSet();
   	for (int baseCallIndex = startBaseCallIndex; baseCallIndex < endBaseCallIndex; baseCallIndex++) {
-  		String base = getModel().getPherogramProvider().getBaseCall(baseCallIndex).getBase().toUpperCase();
+  		String base = Character.toString(getModel().getPherogramProvider().getBaseCall(baseCallIndex)).toUpperCase();
 			int editableIndex = getModel().editableIndexByBaseCallIndex(baseCallIndex).getCorresponding();
   		if ((editableIndex >= 0) && (!base.equals(tokenSet.representationByToken(model.getTokenAt(sequenceID, editableIndex))))) {
   			model.setTokenAt(sequenceID, editableIndex, tokenSet.tokenByRepresentation(base));

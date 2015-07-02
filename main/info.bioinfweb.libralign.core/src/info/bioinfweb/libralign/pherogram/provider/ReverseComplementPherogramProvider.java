@@ -19,7 +19,7 @@
 package info.bioinfweb.libralign.pherogram.provider;
 
 
-import org.biojava3.core.sequence.compound.NucleotideCompound;
+import info.bioinfweb.commons.bio.SequenceUtils;
 
 
 
@@ -44,8 +44,8 @@ public class ReverseComplementPherogramProvider implements PherogramProvider {
 
 
 	@Override
-	public double getTraceValue(NucleotideCompound nucleotide, int x) {
-		return source.getTraceValue((NucleotideCompound)nucleotide.getComplement(), source.getTraceLength() - x - 1);
+	public double getTraceValue(char nucleotide, int x) {
+		return source.getTraceValue(SequenceUtils.complement(nucleotide), source.getTraceLength() - x - 1);
 	}
 
 
@@ -56,7 +56,7 @@ public class ReverseComplementPherogramProvider implements PherogramProvider {
 
 
 	@Override
-	public double getMaxTraceValue(NucleotideCompound nucleotide) {
+	public double getMaxTraceValue(char nucleotide) {
 		return source.getMaxTraceValue(nucleotide);
 	}
 
@@ -67,8 +67,8 @@ public class ReverseComplementPherogramProvider implements PherogramProvider {
 	
 
 	@Override
-	public NucleotideCompound getBaseCall(int baseIndex) {
-		return (NucleotideCompound)source.getBaseCall(convertBaseIndex(baseIndex)).getComplement();
+	public char getBaseCall(int baseIndex) {
+		return SequenceUtils.complement(source.getBaseCall(convertBaseIndex(baseIndex)));
 	}
 
 
@@ -79,8 +79,8 @@ public class ReverseComplementPherogramProvider implements PherogramProvider {
 
 
 	@Override
-	public int getQuality(NucleotideCompound nucleotide, int baseIndex) {
-		return source.getQuality((NucleotideCompound)nucleotide.getComplement(), convertBaseIndex(baseIndex));
+	public int getQuality(char nucleotide, int baseIndex) {
+		return source.getQuality(SequenceUtils.complement(nucleotide), convertBaseIndex(baseIndex));
 	}
 
 

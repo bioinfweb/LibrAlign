@@ -19,9 +19,7 @@
 package info.bioinfweb.libralign.pherogram.provider;
 
 
-import java.util.List;
-
-import org.biojava3.core.sequence.compound.NucleotideCompound;
+import java.util.Set;
 
 import info.bioinfweb.libralign.dataarea.implementations.pherogram.PherogramArea;
 import info.bioinfweb.libralign.model.data.DataModel;
@@ -38,7 +36,7 @@ import info.bioinfweb.libralign.pherogram.PherogramUtils;
  */
 public interface PherogramProvider extends DataModel {
 	/** A list of the nucleotides A, T, C and G to which trace curves exist in a trace file from Sanger sequencing. */ 
-  public static final List<NucleotideCompound> TRACE_CURVE_NUCLEOTIDES = PherogramUtils.createTraceCurveNucleotideList();
+  public static final Set<Character> TRACE_CURVE_NUCLEOTIDES = PherogramUtils.createTraceCurveNucleotideList();
   
 	/** Label to be used with {@link #getAnnotation(String, int)} to determine the substitution probability */
 	public static final String LABEL_SUBSTITUTION_PROBABILITY = "substitution-probability";
@@ -50,7 +48,7 @@ public interface PherogramProvider extends DataModel {
 	public static final String LABEL_UNDERCALL_PROBABILITY = "undercall-probability";
 
 	/** A list that allows to iterate over all probability labels. */
-	public static final List<String> PROBABILITY_LABELS = PherogramUtils.createProbabilityLabelsList();
+	public static final Set<String> PROBABILITY_LABELS = PherogramUtils.createProbabilityLabelsList();
 
   
 	/**
@@ -61,7 +59,7 @@ public interface PherogramProvider extends DataModel {
 	 *        {@link #getTraceLength()}{@code - 1}.)
 	 * @return the stored trace value at this position normalized between 0 and 1
 	 */
-	public double getTraceValue(NucleotideCompound nucleotide, int x);
+	public double getTraceValue(char nucleotide, int x);
 	
 	/**
 	 * Returns the length of the stored trace. (The length depends on the read length and sampling rate.)
@@ -77,7 +75,7 @@ public interface PherogramProvider extends DataModel {
 	 * @param nucleotide - the type of trace curve (A, T, C or G)
 	 * @return a floating point value between 0 and 1
 	 */
-	public double getMaxTraceValue(NucleotideCompound nucleotide);
+	public double getMaxTraceValue(char nucleotide);
 	
 	/**
 	 * Returns a base from the DNA sequence associated with the stored trace. 
@@ -86,7 +84,7 @@ public interface PherogramProvider extends DataModel {
 	 *        from the index of the base in the associated sequence in the alignment. Indices start with 0.)
 	 * @return a DNA base or an ambiguity code
 	 */
-	public NucleotideCompound getBaseCall(int baseIndex);
+	public char getBaseCall(int baseIndex);
 	
 	/**
 	 * Returns the position in the trace where the base at the specified index was observed.
@@ -104,7 +102,7 @@ public interface PherogramProvider extends DataModel {
 	 * @param baseIndex - the index of the base call position to which the quality score belongs (Indices start with 0.)
 	 * @return the quality score or -1 if no value is stored at the specified position for the specified nucleotide
 	 */
-	public int getQuality(NucleotideCompound nucleotide, int baseIndex);
+	public int getQuality(char nucleotide, int baseIndex);
 	
 	/**
 	 * Returns the specified annotation (e.g. substitution probability) associated with the base call at 

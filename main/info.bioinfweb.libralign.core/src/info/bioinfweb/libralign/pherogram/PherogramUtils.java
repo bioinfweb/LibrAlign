@@ -21,11 +21,8 @@ package info.bioinfweb.libralign.pherogram;
 
 import info.bioinfweb.libralign.pherogram.provider.PherogramProvider;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import org.biojava3.core.sequence.compound.DNACompoundSet;
-import org.biojava3.core.sequence.compound.NucleotideCompound;
+import java.util.TreeSet;
+import java.util.Set;
 
 
 
@@ -57,19 +54,18 @@ public class PherogramUtils {
 	}
 	
 	
-  public static List<NucleotideCompound> createTraceCurveNucleotideList() {
-  	List<NucleotideCompound> result = new ArrayList<NucleotideCompound>(4);
-  	DNACompoundSet set = DNACompoundSet.getDNACompoundSet();
-  	result.add(set.getCompoundForString("A"));
-  	result.add(set.getCompoundForString("T"));
-  	result.add(set.getCompoundForString("C"));
-  	result.add(set.getCompoundForString("G"));
+  public static Set<Character> createTraceCurveNucleotideList() {
+  	Set<Character> result = new TreeSet<Character>();
+  	result.add('A');
+  	result.add('T');
+  	result.add('C');
+  	result.add('G');
   	return result;
   }
 
   
-  public static List<String> createProbabilityLabelsList() {
-  	List<String> result = new ArrayList<String>(3);
+  public static Set<String> createProbabilityLabelsList() {
+  	Set<String> result = new TreeSet<String>();
   	result.add(PherogramProvider.LABEL_SUBSTITUTION_PROBABILITY);
   	result.add(PherogramProvider.LABEL_OVERCALL_PROBABILITY);
   	result.add(PherogramProvider.LABEL_UNDERCALL_PROBABILITY);

@@ -68,12 +68,12 @@ public class PherogramPainter {
 	private void paintBaseCallData(Graphics2D g, int index, double paintX, double paintY) {
 		PherogramFormats formats = owner.getFormats();
 		PherogramProvider provider = owner.getModel().getPherogramProvider();
-		NucleotideCompound nucleotide = provider.getBaseCall(index);
+		char nucleotide = Character.toUpperCase(provider.getBaseCall(index));
 		double fontZoom = formats.calculateFontZoomFactor();
 		
 		g.setFont(formats.getBaseCallFont().createFont(fontZoom));
-		g.setColor(formats.getNucleotideColor(nucleotide.getUpperedBase().charAt(0)));
-		paintBaseCallText(g, nucleotide.getUpperedBase(), paintX, paintY);
+		g.setColor(formats.getNucleotideColor(nucleotide));
+		paintBaseCallText(g, Character.toString(nucleotide), paintX, paintY);
 		
 		paintY += g.getFont().getSize() * PherogramFormats.FONT_HEIGHT_FACTOR;
 		if (!formats.getQualityOutputType().equals(QualityOutputType.NONE)) {
@@ -83,8 +83,8 @@ public class PherogramPainter {
 				paintY = paintAnnotation(g, provider.getQuality(nucleotide, index), paintX, paintY);
 			}
 			else {  // QualityOutputType.ALL
-				for (NucleotideCompound qualityNucleotide: PherogramProvider.TRACE_CURVE_NUCLEOTIDES) {
-					g.setColor(formats.getNucleotideColor(qualityNucleotide.getUpperedBase().charAt(0)));
+				for (Character qualityNucleotide: PherogramProvider.TRACE_CURVE_NUCLEOTIDES) {
+					g.setColor(formats.getNucleotideColor(qualityNucleotide));
 					paintY = paintAnnotation(g, provider.getQuality(qualityNucleotide, index), paintX, paintY);
 				}
 			}
@@ -222,7 +222,7 @@ public class PherogramPainter {
 		startX = Math.max(startX, 0);
 		endX = Math.min(endX + 1, provider.getTraceLength());
 		
-		for (NucleotideCompound nucleotide: PherogramProvider.TRACE_CURVE_NUCLEOTIDES) {
+		for (Character nucleotide: PherogramProvider.TRACE_CURVE_NUCLEOTIDES) {
 			Path2D path = new Path2D.Double();
 			double x = paintX;
 			path.moveTo(x, paintY + height - 
@@ -359,7 +359,7 @@ public class PherogramPainter {
 		
 		PherogramProvider provider = owner.getModel().getPherogramProvider();
 		final double height = calculateTraceCurvesHeight();
-		for (NucleotideCompound nucleotide: PherogramProvider.TRACE_CURVE_NUCLEOTIDES) {
+		for (Character nucleotide: PherogramProvider.TRACE_CURVE_NUCLEOTIDES) {
 			int startTraceIndex = PherogramUtils.getFirstTracePosition(provider, firstBaseCallIndex);
 			Path2D path = new Path2D.Double();
 			path.moveTo(x + distortion.getPaintStartX(firstBaseCallIndex), 
