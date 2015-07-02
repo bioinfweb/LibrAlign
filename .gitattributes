@@ -29,6 +29,8 @@ main/info.bioinfweb.libralign.biojava3/src/info/bioinfweb/libralign/model/tokens
 main/info.bioinfweb.libralign.biojava4/.classpath -text svneol=unset#text/plain
 main/info.bioinfweb.libralign.biojava4/.project -text svneol=unset#text/plain
 main/info.bioinfweb.libralign.biojava4/.settings/org.eclipse.jdt.core.prefs -text svneol=unset#text/plain
+main/info.bioinfweb.libralign.biojava4/lib/biojava-alignment-4.1.0.jar -text
+main/info.bioinfweb.libralign.biojava4/lib/biojava-core-4.1.0.jar -text
 main/info.bioinfweb.libralign.core/.classpath -text svneol=unset#text/plain
 main/info.bioinfweb.libralign.core/.project -text svneol=unset#text/plain
 main/info.bioinfweb.libralign.core/.settings/org.eclipse.jdt.core.prefs -text svneol=unset#text/plain
