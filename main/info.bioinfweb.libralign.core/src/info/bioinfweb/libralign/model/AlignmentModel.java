@@ -22,10 +22,6 @@ package info.bioinfweb.libralign.model;
 import java.util.Collection;
 import java.util.Iterator;
 
-import org.biojava3.core.sequence.compound.AminoAcidCompound;
-import org.biojava3.core.sequence.compound.CodonCompound;
-import org.biojava3.core.sequence.compound.NucleotideCompound;
-
 import info.bioinfweb.libralign.alignmentarea.content.AlignmentContentArea;
 import info.bioinfweb.libralign.model.adapters.AbstractSequenceDataAdapter;
 import info.bioinfweb.libralign.model.exception.AlignmentSourceNotWritableException;
@@ -218,30 +214,7 @@ public interface AlignmentModel<T> {
   public Collection<AlignmentModelChangeListener> getChangeListeners();
 
 	/**
-	 * Returns the token to be displayed at the specified position. Depending on the return value of
-	 * {@link #getDataType()} the returned object should be an instance of the following classes:
-	 * <table>
-	 *   <tr>
-	 *     <th>Data type</th>
-	 *     <th>Returned instance</th>
-	 *   </tr>
-	 *   <tr>
-	 *     <td>{@link AlignmentSourceDataType#NUCLEOTIDE}</td>
-	 *     <td>{@link NucleotideCompound}</td>
-	 *   </tr>
-	 *   <tr>
-	 *     <td>{@link AlignmentSourceDataType#CODON}</td>
-	 *     <td>{@link CodonCompound}</td>
-	 *   </tr>
-	 *   <tr>
-	 *     <td>{@link AlignmentSourceDataType#AMINO_ACID}</td>
-	 *     <td>{@link AminoAcidCompound}</td>
-	 *   </tr>
-	 *   <tr>
-	 *     <td>{@link AlignmentSourceDataType#OTHER}</td>
-	 *     <td>{@link Object}</td>
-	 *   </tr>
-	 * </table>
+	 * Returns the token at the specified position.
 	 * 
 	 * @param sequenceID - the identifier the sequence where the token is contained
 	 * @param index - the index of the element contained in the specified sequence (The first element has the index 0.)

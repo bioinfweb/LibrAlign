@@ -24,8 +24,6 @@ import java.awt.Rectangle;
 import java.awt.geom.Path2D;
 import java.awt.geom.Rectangle2D;
 
-import org.biojava3.core.sequence.compound.NucleotideCompound;
-
 import info.bioinfweb.commons.Math2;
 import info.bioinfweb.libralign.dataarea.implementations.pherogram.PherogramArea;
 import info.bioinfweb.libralign.model.tokenset.AbstractTokenSet;

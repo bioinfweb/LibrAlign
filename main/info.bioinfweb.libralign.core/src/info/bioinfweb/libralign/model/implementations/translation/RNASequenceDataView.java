@@ -21,10 +21,6 @@ package info.bioinfweb.libralign.model.implementations.translation;
 
 import info.bioinfweb.libralign.model.AlignmentModel;
 
-import org.biojava3.core.sequence.compound.DNACompoundSet;
-import org.biojava3.core.sequence.compound.NucleotideCompound;
-
-
 
 
 /**
@@ -34,9 +30,8 @@ import org.biojava3.core.sequence.compound.NucleotideCompound;
  * @author Ben St&ouml;ver
  * @since 0.1.0
  */
-public class RNASequenceDataView extends SameTokenTypeSequenceDataView<NucleotideCompound> {
-	private static final NucleotideCompound URACIL = 
-			DNACompoundSet.getDNACompoundSet().getCompoundForString("U");
+public class RNASequenceDataView extends SameTokenTypeSequenceDataView<Character> {
+	private static final char URACIL = 'U';
 	
 	
 	/**
@@ -44,15 +39,15 @@ public class RNASequenceDataView extends SameTokenTypeSequenceDataView<Nucleotid
 	 * 
 	 * @param underlyingProvider - the underlying provider to be viewed
 	 */
-	public RNASequenceDataView(AlignmentModel<NucleotideCompound> underlyingProvider) {
+	public RNASequenceDataView(AlignmentModel<Character> underlyingProvider) {
 		super(underlyingProvider);
 		getTokenSet().add(URACIL);  // Just to be sure.
 	}
 
 	
 	@Override
-	public NucleotideCompound translateToken(NucleotideCompound token) {
-		if (token.getUpperedBase() == "T") {
+	public Character translateToken(Character token) {
+		if ((token != null) && token.equals('T')) {
 			return URACIL;
 		}
 		else {

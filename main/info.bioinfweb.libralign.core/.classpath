@@ -8,7 +8,5 @@
 	<classpathentry kind="lib" path="/JPhyloIO/bin" sourcepath="/JPhyloIO/src"/>
 	<classpathentry kind="lib" path="lib/commons-beanutils-1.9.2.jar"/>
 	<classpathentry kind="lib" path="/info.bioinfweb.tic.core/bin"/>
-	<classpathentry kind="lib" path="lib/biojava3-alignment-3.0.7.jar"/>
-	<classpathentry kind="lib" path="lib/biojava3-core-3.0.7.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

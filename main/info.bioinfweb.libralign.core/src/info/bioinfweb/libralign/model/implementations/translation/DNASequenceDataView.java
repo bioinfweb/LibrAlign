@@ -19,9 +19,6 @@
 package info.bioinfweb.libralign.model.implementations.translation;
 
 
-import org.biojava3.core.sequence.compound.DNACompoundSet;
-import org.biojava3.core.sequence.compound.NucleotideCompound;
-
 import info.bioinfweb.libralign.model.AlignmentModel;
 
 
@@ -33,9 +30,8 @@ import info.bioinfweb.libralign.model.AlignmentModel;
  * @author Ben St&ouml;ver
  * @since 0.1.0
  */
-public class DNASequenceDataView extends SameTokenTypeSequenceDataView<NucleotideCompound> {
-	private static final NucleotideCompound THYMINE = 
-			DNACompoundSet.getDNACompoundSet().getCompoundForString("T");
+public class DNASequenceDataView extends SameTokenTypeSequenceDataView<Character> {
+	private static final char THYMINE = 'T';
 	
 	
 	/**
@@ -43,15 +39,15 @@ public class DNASequenceDataView extends SameTokenTypeSequenceDataView<Nucleotid
 	 * 
 	 * @param underlyingProvider - the underlying provider to be viewed
 	 */
-	public DNASequenceDataView(AlignmentModel<NucleotideCompound> underlyingProvider) {
+	public DNASequenceDataView(AlignmentModel<Character> underlyingProvider) {
 		super(underlyingProvider);
 		getTokenSet().add(THYMINE);  // Just to be sure.
 	}
 
 	
 	@Override
-	public NucleotideCompound translateToken(NucleotideCompound token) {
-		if (token.getUpperedBase() == "U") {
+	public Character translateToken(Character token) {
+		if ((token != null) && token.equals('U')) {
 			return THYMINE;
 		}
 		else {

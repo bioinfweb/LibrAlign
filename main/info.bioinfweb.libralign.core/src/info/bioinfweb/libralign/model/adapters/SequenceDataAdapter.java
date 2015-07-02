@@ -19,8 +19,6 @@
 package info.bioinfweb.libralign.model.adapters;
 
 
-import org.biojava3.core.sequence.template.Sequence;
-
 import info.bioinfweb.libralign.model.BasicSequenceDataView;
 import info.bioinfweb.libralign.model.SequenceAccess;
 import info.bioinfweb.libralign.model.AlignmentModel;
@@ -30,7 +28,7 @@ import info.bioinfweb.libralign.model.AlignmentModel;
 /**
  * Classes implementing this interface provide access to the data provided by an implementation of
  * {@link AlignmentModel} in a different way (e.g. as a set of {@link CharSequence}s or
- * BioJava {@link Sequence}s).
+ * BioJava sequences).
  * 
  * @author Ben St&ouml;ver
  * @since 0.1.0
