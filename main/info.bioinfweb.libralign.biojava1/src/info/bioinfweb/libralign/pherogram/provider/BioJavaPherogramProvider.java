@@ -43,6 +43,7 @@ import org.biojava.bio.symbol.IntegerAlphabet;
  * Trace indices (x-values) start with 0 in LibrAlign and in BioJava.
  * 
  * @author Ben St&ouml;ver
+ * @bioinfweb.module info.bioinfweb.libralign.biojava1
  */
 public class BioJavaPherogramProvider implements PherogramProvider {
 	public static final String QUALITY_LABEL_PREFIX = "quality-";
