@@ -95,13 +95,9 @@ public class SWTMultipleAlignmentsContainer extends AbstractSWTComposite
 		
 		// Set size of areas (Widths of one area can depend on a lower area which is not known at creation time.):
 		for (AlignmentArea area : getIndependentComponent().getAlignmentAreas()) {
-			area.getContentArea().assignSize();
-			area.getLabelArea().assignSize();
-			area.assignSize();  //TODO Create method that calls assignSize() on all child components?
+			area.getLabelArea().setLocalMaxWidthRecalculate();
+			area.assignSizeToAll();
 		}
-		
-		//TODO Distribute height (possible in independentComponent?)
-		//sashForm.setWeights(new int[]{1, 2, 1});  //TODO Adjust
 	}
 
 
