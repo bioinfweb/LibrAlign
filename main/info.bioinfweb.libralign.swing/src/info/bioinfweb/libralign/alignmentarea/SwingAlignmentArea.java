@@ -23,8 +23,6 @@ import java.awt.Dimension;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
@@ -69,13 +67,15 @@ public class SwingAlignmentArea extends JScrollPane implements ToolkitSpecificAl
 		addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {  // Sets the focus to an according sequence area, if the user clicks outside of the content area and moves the cursor.
-				AlignmentContentArea contentArea = getIndependentComponent().getContentArea();
-				int row = contentArea.rowByPaintY(e.getY()); 
-				SequenceArea sequenceArea = contentArea.getToolkitComponent().getSequenceAreaByID(
-						getIndependentComponent().getSequenceOrder().idByIndex(row));
-				if (sequenceArea != null) {
-					getIndependentComponent().getSelection().setNewCursorPosition(contentArea.columnByPaintX(e.getX()), row);
-					((JComponent)sequenceArea.getToolkitComponent()).requestFocusInWindow();
+				if (getIndependentComponent().hasAlignmentModel()) {
+					AlignmentContentArea contentArea = getIndependentComponent().getContentArea();
+					int row = contentArea.rowByPaintY(e.getY()); 
+					SequenceArea sequenceArea = contentArea.getToolkitComponent().getSequenceAreaByID(
+							getIndependentComponent().getSequenceOrder().idByIndex(row));
+					if (sequenceArea != null) {
+						getIndependentComponent().getSelection().setNewCursorPosition(contentArea.columnByPaintX(e.getX()), row);
+						((JComponent)sequenceArea.getToolkitComponent()).requestFocusInWindow();
+					}
 				}
 			}
 		});
