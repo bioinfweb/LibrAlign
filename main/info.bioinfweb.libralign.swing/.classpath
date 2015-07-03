@@ -2,9 +2,9 @@
 <classpath>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.6"/>
-	<classpathentry kind="lib" path="/_Lib/bin" sourcepath="/_Lib/core"/>
 	<classpathentry kind="lib" path="/info.bioinfweb.libralign.core/bin"/>
 	<classpathentry kind="lib" path="/info.bioinfweb.tic.core/bin"/>
 	<classpathentry kind="lib" path="/info.bioinfweb.tic.swing/bin"/>
+	<classpathentry kind="lib" path="/info.bioinfweb.commons.core/bin" sourcepath="/info.bioinfweb.commons.core/src"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
