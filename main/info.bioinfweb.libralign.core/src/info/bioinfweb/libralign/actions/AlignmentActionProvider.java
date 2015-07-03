@@ -19,7 +19,6 @@
 package info.bioinfweb.libralign.actions;
 
 
-import info.bioinfweb.commons.collections.CollectionUtils;
 import info.bioinfweb.libralign.alignmentarea.AlignmentArea;
 import info.bioinfweb.libralign.alignmentarea.content.AlignmentContentArea;
 import info.bioinfweb.libralign.alignmentarea.selection.SelectionModel;
@@ -28,7 +27,6 @@ import info.bioinfweb.libralign.model.exception.AlignmentSourceNotWritableExcept
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 
 
 
