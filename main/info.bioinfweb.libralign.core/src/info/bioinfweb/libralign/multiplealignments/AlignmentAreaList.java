@@ -80,7 +80,7 @@ public class AlignmentAreaList extends ObservableList<AlignmentArea> {
 	}
 	
 	
-	private void adoptToListChanges() {  //TODO Should this method better be in the owner?
+	private void adoptToListChanges() {
 		if (getOwner().hasToolkitComponent()) {
 			getOwner().getToolkitComponent().adoptChildAreas();
 		}
