@@ -337,7 +337,7 @@ public class AlignmentArea extends TICComponent implements AlignmentModelChangeL
 			else {
 				int length = getAlignmentModel().getMaxSequenceLength(); 
 				if (length > 0) {
-					return length * getPaintSettings().getTokenPainterList().painterByColumn(0).getPreferredWidth();
+					return length * getPaintSettings().getTokenWidth(0);
 				}
 			}
 		}
