@@ -130,11 +130,11 @@ public class CharSetArea extends DataArea {
 			g.setColor(charSet.getColor());
 			double x = contentArea.paintXByColumn(firstIndex);
 			for (int index = firstIndex; index <= lastIndex; index++) {
+				double width = paintSettings.getTokenWidth(index);
 				if (charSet.contains(index)) {
-					double width = paintSettings.getTokenWidth(index);
 					g.fill(new Rectangle2D.Double(x, y + borderHeight, width, height));
-					x += width;
 				}
+				x += width;
 			}
 			y += paintSettings.getTokenHeight();
 		}
