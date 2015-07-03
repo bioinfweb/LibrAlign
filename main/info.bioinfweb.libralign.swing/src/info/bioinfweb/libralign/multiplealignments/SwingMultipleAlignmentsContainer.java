@@ -42,6 +42,7 @@ import javax.swing.JSplitPane;
  * 
  * @author Ben St&oumol;ver
  * @since 0.1.0
+ * @bioinfweb.module info.bioinfweb.libralign.swing
  */
 public class SwingMultipleAlignmentsContainer extends AbstractSwingComponent implements ToolkitSpecificMultipleAlignmentsContainer {
 	public static final int NEEDED_BORDER_WIDTH = 1;

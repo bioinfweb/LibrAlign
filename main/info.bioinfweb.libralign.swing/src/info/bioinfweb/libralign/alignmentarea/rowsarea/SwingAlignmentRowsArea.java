@@ -31,7 +31,6 @@ import info.bioinfweb.tic.TICComponent;
 import info.bioinfweb.tic.toolkit.AbstractSwingComponent;
 
 import javax.swing.BoxLayout;
-import javax.swing.JComponent;
 import javax.swing.Scrollable;
 
 
@@ -41,6 +40,7 @@ import javax.swing.Scrollable;
  * 
  * @author Ben St&ouml;ver
  * @since 0.3.0
+ * @bioinfweb.module info.bioinfweb.libralign.swing
  */
 public abstract class SwingAlignmentRowsArea<C extends TICComponent> extends AbstractSwingComponent 
 		implements Scrollable, ToolkitSpecificAlignmentRowsArea<C> {

@@ -48,6 +48,7 @@ import javax.swing.ScrollPaneConstants;
  * 
  * @author Ben St&ouml;ver
  * @since 0.2.0
+ * @bioinfweb.module info.bioinfweb.libralign.swing
  */
 public class SwingAlignmentArea extends JScrollPane implements ToolkitSpecificAlignmentArea {
 	private static Action VOID_ACTION = new AbstractAction() {

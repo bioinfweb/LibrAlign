@@ -36,6 +36,7 @@ import javax.swing.ScrollPaneConstants;
  * 
  * @author Ben St&ouml;ver
  * @since 0.3.0
+ * @bioinfweb.module info.bioinfweb.libralign.swing
  */
 public class SwingPhergramView extends JScrollPane implements ToolkitIndependentPhergramView {
 	private PherogramView independentComponent;

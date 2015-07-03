@@ -38,6 +38,7 @@ import javax.swing.Scrollable;
  * 
  * @author Ben St&ouml;ver
  * @since 0.3.0
+ * @bioinfweb.module info.bioinfweb.libralign.swing
  */
 public class SwingAlignmentContentArea extends SwingAlignmentRowsArea<AlignmentSubArea> implements Scrollable, ToolkitSpecificAlignmentContentArea {
 	private SequenceAreaMap sequenceAreaMap;
