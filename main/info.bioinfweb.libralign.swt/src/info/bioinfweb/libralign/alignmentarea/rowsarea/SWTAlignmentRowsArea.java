@@ -22,7 +22,6 @@ package info.bioinfweb.libralign.alignmentarea.rowsarea;
 import java.util.Arrays;
 import java.util.Iterator;
 
-import info.bioinfweb.libralign.alignmentarea.content.AlignmentSubArea;
 import info.bioinfweb.libralign.alignmentarea.content.AlignmentSubAreaIterator;
 import info.bioinfweb.libralign.alignmentarea.content.SWTAlignmentContentArea;
 import info.bioinfweb.libralign.alignmentarea.label.SWTAlignmentLabelArea;
@@ -41,6 +40,7 @@ import org.eclipse.swt.widgets.Control;
  * 
  * @author Ben St&ouml;ver
  * @since 0.3.0
+ * @bioinfweb.module info.bioinfweb.libralign.swt
  */
 public abstract class SWTAlignmentRowsArea<C extends TICComponent> extends AbstractSWTComposite 
 		implements ToolkitSpecificAlignmentRowsArea<C> {

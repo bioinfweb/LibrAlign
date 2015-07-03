@@ -44,6 +44,7 @@ import org.eclipse.swt.layout.FillLayout;
  * 
  * @author Ben St&ouml;ver
  * @since 0.2.0
+ * @bioinfweb.module info.bioinfweb.libralign.swt
  */
 public class SWTMultipleAlignmentsContainer extends AbstractSWTComposite 
 		implements ToolkitSpecificMultipleAlignmentsContainer {

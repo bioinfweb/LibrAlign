@@ -36,6 +36,7 @@ import info.bioinfweb.tic.SWTComponentFactory;
  * 
  * @author Ben St&ouml;ver
  * @since 0.3.0
+ * @bioinfweb.module info.bioinfweb.libralign.swt
  */
 public class SWTAlignmentLabelArea extends SWTAlignmentRowsArea<AlignmentLabelSubArea> 
 		implements ToolkitSpecificAlignmentLabelArea {

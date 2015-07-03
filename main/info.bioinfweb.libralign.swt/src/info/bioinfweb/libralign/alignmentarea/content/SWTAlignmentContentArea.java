@@ -28,7 +28,6 @@ import info.bioinfweb.libralign.dataarea.DataArea;
 import info.bioinfweb.libralign.dataarea.DataAreaList;
 import info.bioinfweb.libralign.dataarea.DataAreaModel;
 
-import java.util.Arrays;
 import java.util.Iterator;
 
 import org.eclipse.swt.SWT;
@@ -45,6 +44,7 @@ import org.eclipse.swt.widgets.Control;
  * 
  * @author Ben St&ouml;ver
  * @since 0.3.0
+ * @bioinfweb.module info.bioinfweb.libralign.swt
  */
 public class SWTAlignmentContentArea extends SWTAlignmentRowsArea<AlignmentSubArea> 
 		implements ToolkitSpecificAlignmentContentArea {

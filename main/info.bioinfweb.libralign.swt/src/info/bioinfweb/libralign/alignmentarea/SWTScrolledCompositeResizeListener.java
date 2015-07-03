@@ -33,6 +33,7 @@ import org.eclipse.swt.widgets.Composite;
  * 
  * @author Ben St&ouml;ver
  * @since 0.2.0
+ * @bioinfweb.module info.bioinfweb.libralign.swt
  */
 public class SWTScrolledCompositeResizeListener implements ControlListener {
 	private Composite container;

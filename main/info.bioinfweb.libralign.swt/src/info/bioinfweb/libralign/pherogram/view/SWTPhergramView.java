@@ -41,6 +41,7 @@ import org.eclipse.swt.widgets.Composite;
  * 
  * @author Ben St&ouml;ver
  * @since 0.3.0
+ * @bioinfweb.module info.bioinfweb.libralign.swt
  */
 public class SWTPhergramView extends AbstractSWTComposite implements ToolkitIndependentPhergramView {
 	private Composite headingContainer;
