@@ -81,7 +81,7 @@ public class AlignmentArea extends TICComponent implements AlignmentModelChangeL
 	
 	private PaintSettingsListener PAINT_SETTINGS_LISTERNER = new PaintSettingsListener() {
 		private void updateSize() {
-			getLabelArea().setLocalMaxWidthRecalculate();  // Needs to be called before assignSizeToAll().
+			getLabelArea().setLocalMaxWidthRecalculateToAll();  // Needs to be called before assignSizeToAll().
 			assignSizeToAll();
 		}
 		
@@ -466,7 +466,7 @@ public class AlignmentArea extends TICComponent implements AlignmentModelChangeL
 	@Override
 	public <T> void afterSequenceChange(SequenceChangeEvent<T> e) {
 		if (e.getSource().equals(getAlignmentModel())) {
-			getLabelArea().setLocalMaxWidthRecalculate();  // Needs to be called before assignSizeToAll().
+			getLabelArea().setLocalMaxWidthRecalculateToAll();  // Needs to be called before assignSizeToAll().
 			getSequenceOrder().refreshFromSource();
 			if (hasToolkitComponent()) {
 				reinsertSubelements();
@@ -481,7 +481,7 @@ public class AlignmentArea extends TICComponent implements AlignmentModelChangeL
 	@Override
 	public <T> void afterSequenceRenamed(SequenceRenamedEvent<T> e) {
 		if (e.getSource().equals(getAlignmentModel())) {
-			getLabelArea().setLocalMaxWidthRecalculate();  // Needs to be called before assignSizeToAll().
+			getLabelArea().setLocalMaxWidthRecalculateToAll();  // Needs to be called before assignSizeToAll().
 		}
 		getDataAreas().getSequenceDataChangeListener().afterSequenceRenamed(e);
 		assignSizeToAll();  // Other label areas might also have to adopt their width.
@@ -500,7 +500,7 @@ public class AlignmentArea extends TICComponent implements AlignmentModelChangeL
 
 	@Override
 	public <T, U> void afterProviderChanged(AlignmentModel<T> previous, AlignmentModel<U> current) {
-		getLabelArea().setLocalMaxWidthRecalculate();  // Needs to be called before assignSizeToAll().
+		getLabelArea().setLocalMaxWidthRecalculateToAll();  // Needs to be called before assignSizeToAll().
 		//TODO Remove some data areas? (Some might be data specific (e.g. pherograms), some not (e.g. consensus sequence).)
 		getDataAreas().getSequenceDataChangeListener().afterProviderChanged(previous, current);
 		assignSizeToAll();  //TODO reinsertSubements()?

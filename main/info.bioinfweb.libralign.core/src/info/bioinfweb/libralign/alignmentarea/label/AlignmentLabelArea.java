@@ -93,6 +93,18 @@ public class AlignmentLabelArea extends TICComponent {
 	}
 	
 	
+	public void setLocalMaxWidthRecalculateToAll() {
+		if (getOwner().hasContainer()) {
+			for (AlignmentArea alignmentArea : getOwner().getContainer().getAlignmentAreas()) {
+				alignmentArea.getLabelArea().setLocalMaxWidthRecalculate();
+			}
+		}
+		else {
+			setLocalMaxWidthRecalculate();
+		}
+	}
+	
+	
 	/**
 	 * Returns the maximum needed width to label the alignment calculated over all alignments contained in the parent
 	 * {@link MultipleAlignmentsContainer}. If the parent alignment area is not contained in such a container, the
