@@ -88,7 +88,16 @@ public class AlignmentLabelArea extends TICComponent {
 	}
 	
 	
-	protected void setLocalMaxWidthRecalculate() {
+	/**
+	 * Flags the needed width to display all labels to be recalculated the next time it is accessed.
+	 * <p>
+	 * Note that this method only marks the needed width of this area to be recalculated. 
+	 * {@link #setLocalMaxWidthRecalculateToAll()} should always be called instead, unless this method
+	 * is called manually for all areas inside an {@link MultipleAlignmentsContainer}.
+	 * <p>
+	 * Application code will usually not have to call this method directly.
+	 */
+	public void setLocalMaxWidthRecalculate() {
 		localMaxNeededWidth = RECALCULATE_VALUE;
 	}
 	
