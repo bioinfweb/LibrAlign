@@ -20,10 +20,6 @@ package info.bioinfweb.libralign.alignmentarea.content;
 
 
 import info.bioinfweb.commons.SystemUtils;
-import info.bioinfweb.tic.TICComponent;
-import info.bioinfweb.tic.TICPaintEvent;
-import info.bioinfweb.tic.input.TICMouseWheelEvent;
-import info.bioinfweb.tic.input.TICMouseWheelListener;
 import info.bioinfweb.libralign.alignmentarea.AlignmentArea;
 import info.bioinfweb.libralign.alignmentarea.ToolkitSpecificAlignmentArea;
 import info.bioinfweb.libralign.alignmentarea.label.AlignmentLabelArea;
@@ -34,6 +30,10 @@ import info.bioinfweb.libralign.dataarea.DataAreaListType;
 import info.bioinfweb.libralign.dataarea.DataAreaLocation;
 import info.bioinfweb.libralign.model.concatenated.ConcatenatedAlignmentModel;
 import info.bioinfweb.libralign.multiplealignments.MultipleAlignmentsContainer;
+import info.bioinfweb.tic.TICComponent;
+import info.bioinfweb.tic.TICPaintEvent;
+import info.bioinfweb.tic.input.TICMouseWheelEvent;
+import info.bioinfweb.tic.input.TICMouseWheelListener;
 
 import java.awt.Dimension;
 import java.awt.Rectangle;
@@ -55,8 +55,8 @@ import java.awt.Rectangle;
  */
 public class AlignmentContentArea extends TICComponent {
 	private static final double ZOOM_PER_CLICK = 0.1;
-	
-	
+
+
 	private final AlignmentArea owner;
 
 
@@ -77,7 +77,7 @@ public class AlignmentContentArea extends TICComponent {
 				if ((event.isMetaDown() && SystemUtils.IS_OS_MAC) || (event.isControlDown() && !SystemUtils.IS_OS_MAC)) {
 					double change = event.getPreciseWheelRotation() * ZOOM_PER_CLICK;
 					PaintSettings settings = getOwner().getPaintSettings();
-					
+
 					double zoomX = settings.getZoomX();
 					if (settings.isChangeZoomXOnMouseWheel() && (zoomX - change >= 0)) {
 						zoomX -= change;
@@ -192,8 +192,8 @@ public class AlignmentContentArea extends TICComponent {
   			throw new InternalError("not implemented");  //TODO Implement and consider that different alignment parts may have different token widths here.
   		}
   		else {
-  			return (int)Math.round(column * 
-  					getOwner().getPaintSettings().getTokenPainterList().painterByColumn(0).getPreferredWidth() * 
+  			return (int)Math.round(column *
+  					getOwner().getPaintSettings().getTokenPainterList().painterByColumn(0).getPreferredWidth() *
   					getOwner().getPaintSettings().getZoomX()) +  getOwner().getDataAreas().getGlobalMaxLengthBeforeStart();  //TODO Catch IllegalStateException?
   		}
 	  }
@@ -225,8 +225,11 @@ public class AlignmentContentArea extends TICComponent {
 		else if (y < 0) {
 			return 0;
 		}
-		else {
+		else if (getOwner().hasAlignmentModel()) {
 			return getOwner().getAlignmentModel().getSequenceCount() - 1;
+		}
+		else {
+		    return 0;
 		}
 	}
 
@@ -265,14 +268,5 @@ public class AlignmentContentArea extends TICComponent {
 		else {
 			throw new IllegalStateException("No Swing or SWT component of the specified sequence area has yet been created.");
 		}
-		
-//		switch (sequenceArea.getCurrentToolkit()) {  // SequenceAreas need to be direct children of the ToolkitSpecificAlignmentPartAreas for this method to work.
-//			case SWING:
-//				return ((Component)sequenceArea.getToolkitComponent()).getLocation().y + relativeY;
-//			case SWT:
-//				return ((Composite)sequenceArea.getToolkitComponent()).getLocation().y + relativeY;
-//			default:
-//				throw new IllegalStateException("No Swing or SWT component of the specified sequence area has yet been created.");
-//		}
 	}
 }
