@@ -39,6 +39,7 @@ import org.biojava3.core.sequence.template.Sequence;
  * 
  * @author Ben St&ouml;ver
  * @since 0.1.0
+ * @bioinfweb.module info.bioinfweb.libralign.biojava3
  *
  * @param <T> - the token type used by the underlying provider
  * @param <C> - the compound class to be used in the returned sequences

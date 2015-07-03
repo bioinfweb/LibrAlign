@@ -44,6 +44,7 @@ import org.biojava3.core.sequence.template.SequenceView;
  * 
  * @author Ben St&ouml;ver
  * @since 0.1.0
+ * @bioinfweb.module info.bioinfweb.libralign.biojava3
  *
  * @param <T> - the token type of the underlying data source
  * @param <C> - the compound type of the provided BioJava sequences

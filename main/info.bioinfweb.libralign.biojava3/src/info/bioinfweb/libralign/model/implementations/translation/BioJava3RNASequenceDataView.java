@@ -33,6 +33,7 @@ import org.biojava3.core.sequence.compound.NucleotideCompound;
  * 
  * @author Ben St&ouml;ver
  * @since 0.1.0
+ * @bioinfweb.module info.bioinfweb.libralign.biojava3
  */
 public class BioJava3RNASequenceDataView extends SameTokenTypeSequenceDataView<NucleotideCompound> {
 	private static final NucleotideCompound URACIL = 

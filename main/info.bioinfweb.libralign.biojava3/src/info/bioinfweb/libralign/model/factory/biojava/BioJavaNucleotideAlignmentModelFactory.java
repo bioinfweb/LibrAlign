@@ -24,7 +24,6 @@ import org.biojava3.core.sequence.template.CompoundSet;
 
 import info.bioinfweb.commons.bio.CharacterStateType;
 import info.bioinfweb.commons.bio.biojava3.core.sequence.compound.AlignmentAmbiguityNucleotideCompoundSet;
-import info.bioinfweb.jphyloio.events.SingleTokenDefinitionEvent;
 import info.bioinfweb.libralign.model.AlignmentModel;
 import info.bioinfweb.libralign.model.factory.AlignmentModelFactory;
 import info.bioinfweb.libralign.model.factory.NewAlignmentModelParameterMap;
@@ -34,6 +33,12 @@ import info.bioinfweb.libralign.model.tokenset.BioJavaTokenSet;
 
 
 
+/**
+ * Alignment model factory for models representing nucleotides as BioJava {@link NucleotideCompound} objects.
+ * 
+ * @author Ben St&ouml;ver
+ * @bioinfweb.module info.bioinfweb.libralign.biojava3
+ */
 public class BioJavaNucleotideAlignmentModelFactory implements AlignmentModelFactory<NucleotideCompound> {
 	public static final int DEFAULT_NUCLEOTIDE_CHARACTER_STATE_COUNT = 32;  // Nucleotide, ambiguity codes and special characters make up more than 16.
 	

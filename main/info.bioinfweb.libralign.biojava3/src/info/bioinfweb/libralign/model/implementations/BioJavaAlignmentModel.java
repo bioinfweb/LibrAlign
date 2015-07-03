@@ -43,6 +43,7 @@ import info.bioinfweb.libralign.model.tokenset.TokenSet;
  * 
  * @author Ben St&ouml;ver
  * @since 0.0.0
+ * @bioinfweb.module info.bioinfweb.libralign.biojava3
  *
  * @param <C> - the compound type used by the underlying sequence object
  */

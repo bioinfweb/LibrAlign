@@ -40,6 +40,7 @@ import org.biojava3.core.sequence.template.CompoundSet;
  * 
  * @author Ben St&ouml;ver
  * @since 0.4.0
+ * @bioinfweb.module info.bioinfweb.libralign.biojava3
  * 
  * @param <C> - the compound type of the compounds contained in this set
  */

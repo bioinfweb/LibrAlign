@@ -32,6 +32,12 @@ import org.biojava3.core.sequence.compound.AminoAcidCompoundSet;
 
 
 
+/**
+ * Alignment model factory for models representing amino acids as BioJava {@link AminoAcidCompound} objects.
+ * 
+ * @author Ben St&ouml;ver
+ * @bioinfweb.module info.bioinfweb.libralign.biojava3
+ */
 public class BioJavaAminoAcidAligmentModelFactory implements AlignmentModelFactory<AminoAcidCompound> {
 	@Override
 	public AlignmentModel<AminoAcidCompound> createNewModel(NewAlignmentModelParameterMap parameterMap) {
