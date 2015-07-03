@@ -12,7 +12,6 @@
 	<classpathentry kind="lib" path="/info.bioinfweb.tic.swt/bin"/>
 	<classpathentry kind="lib" path="/info.bioinfweb.libralign.core/lib/commons-beanutils-1.9.2.jar"/>
 	<classpathentry kind="lib" path="/info.bioinfweb.libralign.core/lib/commons-lang3-3.1.jar"/>
-	<classpathentry kind="lib" path="/info.bioinfweb.libralign.core/lib/NeXML.jar"/>
 	<classpathentry kind="lib" path="/info.bioinfweb.libralign.swt/lib/swt.jar"/>
 	<classpathentry kind="lib" path="/info.bioinfweb.libralign.biojava1/bin"/>
 	<classpathentry kind="lib" path="/info.bioinfweb.libralign.biojava1/lib/core-1.9.2.jar"/>
