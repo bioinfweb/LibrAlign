@@ -88,7 +88,7 @@ public class AlignmentLabelArea extends TICComponent {
 	}
 	
 	
-	public void setLocalMaxWidthRecalculate() {
+	protected void setLocalMaxWidthRecalculate() {
 		localMaxNeededWidth = RECALCULATE_VALUE;
 	}
 	
