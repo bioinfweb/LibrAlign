@@ -44,8 +44,8 @@ import org.biojava3.core.sequence.template.Sequence;
  * @param <T> - the token type used by the underlying provider
  * @param <C> - the compound class to be used in the returned sequences
  */
-public class BioJavaSequenceAdapter<T, C extends Compound> extends AbstractSequenceDataAdapter<T> 
-    implements SequenceDataAdapter<SingleBioJavaSequenceAdapter<T, C>, T> {
+public class BioJava3SequenceAdapter<T, C extends Compound> extends AbstractSequenceDataAdapter<T> 
+    implements SequenceDataAdapter<SingleBioJava3SequenceAdapter<T, C>, T> {
 
 	private CompoundSet<C> compoundSet;
 
@@ -56,7 +56,7 @@ public class BioJavaSequenceAdapter<T, C extends Compound> extends AbstractSeque
 	 * @param provider - the sequence data provider that contains the sequences to be viewed
 	 * @param compoundSet - the compound set to be used for the translation
    */
-	public BioJavaSequenceAdapter(AlignmentModel<T> underlyingProvider, CompoundSet<C> compoundSet) {
+	public BioJava3SequenceAdapter(AlignmentModel<T> underlyingProvider, CompoundSet<C> compoundSet) {
 		super(underlyingProvider);
 		this.compoundSet = compoundSet;
 	}
@@ -80,8 +80,8 @@ public class BioJavaSequenceAdapter<T, C extends Compound> extends AbstractSeque
 	 * @return a sequence as an {@link Sequence} object
 	 */
 	@Override
-	public SingleBioJavaSequenceAdapter<T, C> getSequence(int sequenceID) {
-		return new SingleBioJavaSequenceAdapter<T, C>(getUnderlyingProvider(), sequenceID, getCompoundSet());
+	public SingleBioJava3SequenceAdapter<T, C> getSequence(int sequenceID) {
+		return new SingleBioJava3SequenceAdapter<T, C>(getUnderlyingProvider(), sequenceID, getCompoundSet());
 	}
 
 	
@@ -93,8 +93,8 @@ public class BioJavaSequenceAdapter<T, C extends Compound> extends AbstractSeque
 	 * @return a subsequence as an {@link Sequence} object
 	 */
 	@Override
-	public SingleBioJavaSequenceAdapter<T, C> getSubSequence(int sequenceID, int offset, int length) {
-		return new SingleBioJavaSequenceAdapter<T, C>(getUnderlyingProvider(), sequenceID, offset, length, 
+	public SingleBioJava3SequenceAdapter<T, C> getSubSequence(int sequenceID, int offset, int length) {
+		return new SingleBioJava3SequenceAdapter<T, C>(getUnderlyingProvider(), sequenceID, offset, length, 
 				getCompoundSet());
 	}
 	

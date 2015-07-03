@@ -44,7 +44,7 @@ import org.biojava3.core.sequence.template.CompoundSet;
  * 
  * @param <C> - the compound type of the compounds contained in this set
  */
-public class BioJavaTokenSet<C extends Compound> extends AbstractSet<C> implements TokenSet<C> {
+public class BioJava3TokenSet<C extends Compound> extends AbstractSet<C> implements TokenSet<C> {
 	private CompoundSet<C> compoundSet;
 	private boolean spaceForGap;
 	private CharacterStateType type;
@@ -55,7 +55,7 @@ public class BioJavaTokenSet<C extends Compound> extends AbstractSet<C> implemen
 	 * 
 	 * @param tokenSet - the instance to be cloned
 	 */
-	public BioJavaTokenSet(BioJavaTokenSet<C> tokenSet) {
+	public BioJava3TokenSet(BioJava3TokenSet<C> tokenSet) {
 		super();
 		this.type = tokenSet.type;
 		this.compoundSet = tokenSet.compoundSet;
@@ -75,7 +75,7 @@ public class BioJavaTokenSet<C extends Compound> extends AbstractSet<C> implemen
 	 * @param compoundSet - the BioJava compound set containing the compounds to be copied into the new instance
 	 * @param spaceForGap determines whether the space key shall be associated with gap symbol 
 	 */
-	public BioJavaTokenSet(CharacterStateType type, CompoundSet<C> compoundSet, boolean spaceForGap) {
+	public BioJava3TokenSet(CharacterStateType type, CompoundSet<C> compoundSet, boolean spaceForGap) {
 		super();
 		this.type = type;
 		this.compoundSet = compoundSet;
@@ -204,7 +204,7 @@ public class BioJavaTokenSet<C extends Compound> extends AbstractSet<C> implemen
 	 * @return a deep copy of this object
 	 */
 	@Override
-	public BioJavaTokenSet<C> clone() {
-		return new BioJavaTokenSet<C>(this);
+	public BioJava3TokenSet<C> clone() {
+		return new BioJava3TokenSet<C>(this);
 	}
 }

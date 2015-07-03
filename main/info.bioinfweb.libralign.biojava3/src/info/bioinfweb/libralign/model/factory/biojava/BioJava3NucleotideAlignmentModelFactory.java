@@ -29,7 +29,7 @@ import info.bioinfweb.libralign.model.factory.AlignmentModelFactory;
 import info.bioinfweb.libralign.model.factory.NewAlignmentModelParameterMap;
 import info.bioinfweb.libralign.model.factory.TokenDefinition;
 import info.bioinfweb.libralign.model.implementations.PackedAlignmentModel;
-import info.bioinfweb.libralign.model.tokenset.BioJavaTokenSet;
+import info.bioinfweb.libralign.model.tokenset.BioJava3TokenSet;
 
 
 
@@ -39,7 +39,7 @@ import info.bioinfweb.libralign.model.tokenset.BioJavaTokenSet;
  * @author Ben St&ouml;ver
  * @bioinfweb.module info.bioinfweb.libralign.biojava3
  */
-public class BioJavaNucleotideAlignmentModelFactory implements AlignmentModelFactory<NucleotideCompound> {
+public class BioJava3NucleotideAlignmentModelFactory implements AlignmentModelFactory<NucleotideCompound> {
 	public static final int DEFAULT_NUCLEOTIDE_CHARACTER_STATE_COUNT = 32;  // Nucleotide, ambiguity codes and special characters make up more than 16.
 	
 	
@@ -69,7 +69,7 @@ public class BioJavaNucleotideAlignmentModelFactory implements AlignmentModelFac
 				nucleotideCompoundSet.addNucleotideCompound(tokenDefinition.getRepresentation(), tokenDefinition.getRepresentation());
 			}
 		}
-		BioJavaTokenSet<NucleotideCompound> nucleotideTokenSet = new BioJavaTokenSet<NucleotideCompound>(type, nucleotideCompoundSet, true);  //TODO Use BioJava 4 tokens here/ Should this class really be bound to BioJava?
+		BioJava3TokenSet<NucleotideCompound> nucleotideTokenSet = new BioJava3TokenSet<NucleotideCompound>(type, nucleotideCompoundSet, true);  //TODO Use BioJava 4 tokens here/ Should this class really be bound to BioJava?
 		
 		// Create model:
 		return new PackedAlignmentModel<NucleotideCompound>(nucleotideTokenSet,
@@ -81,7 +81,7 @@ public class BioJavaNucleotideAlignmentModelFactory implements AlignmentModelFac
 	@Override
 	public NucleotideCompound createToken(AlignmentModel<NucleotideCompound> alignmentModel, String tokenRepresentation) {
 		// TODO Should the functionality of creating new tokens be moved to TokenSet (similar like in CompoundSet)?
-		CompoundSet<NucleotideCompound> compoundSet = ((BioJavaTokenSet<NucleotideCompound>)alignmentModel.getTokenSet()).getCompoundSet();
+		CompoundSet<NucleotideCompound> compoundSet = ((BioJava3TokenSet<NucleotideCompound>)alignmentModel.getTokenSet()).getCompoundSet();
 		NucleotideCompound result = compoundSet.getCompoundForString(tokenRepresentation);
 		if (result == null) {
 			((ModifiableNucleotideCompoundSet)compoundSet).addNucleotideCompound(tokenRepresentation, tokenRepresentation);  // Tokens that are already present should not be actual nucleotides that have a complement.

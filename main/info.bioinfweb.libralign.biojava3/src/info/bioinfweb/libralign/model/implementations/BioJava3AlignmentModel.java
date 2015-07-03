@@ -47,7 +47,7 @@ import info.bioinfweb.libralign.model.tokenset.TokenSet;
  *
  * @param <C> - the compound type used by the underlying sequence object
  */
-public class BioJavaAlignmentModel<S extends Sequence<C>, C extends Compound>
+public class BioJava3AlignmentModel<S extends Sequence<C>, C extends Compound>
     extends AbstractAlignmentModel<C> implements SequenceAccessDataProvider<S, C> {
 
 	public static final String DEFAULT_SEQUENCE_NAME_PREFIX = "Sequence";
@@ -73,7 +73,7 @@ public class BioJavaAlignmentModel<S extends Sequence<C>, C extends Compound>
 	 * @param tokenSet - the set of allowed tokens in the sequences
 	 * @param alignment - the object containing the source data
 	 */
-	public BioJavaAlignmentModel(TokenSet<C> tokenSet, Alignment<S, C> alignment) {
+	public BioJava3AlignmentModel(TokenSet<C> tokenSet, Alignment<S, C> alignment) {
 		super(tokenSet);
 		this.alignment = alignment;
 		setMapEntries();
@@ -97,7 +97,7 @@ public class BioJavaAlignmentModel<S extends Sequence<C>, C extends Compound>
 	 * @param tokenSet - the set of allowed tokens in the sequences
 	 * @param profile - the object containing the source data
 	 */
-	public BioJavaAlignmentModel(TokenSet<C> tokenSet, Profile<S, C> profile) {
+	public BioJava3AlignmentModel(TokenSet<C> tokenSet, Profile<S, C> profile) {
 		super(tokenSet);
 		
 		alignment = new SimpleAlignment<S, C>();
@@ -122,7 +122,7 @@ public class BioJavaAlignmentModel<S extends Sequence<C>, C extends Compound>
 	 * @param tokenSet - the set of allowed tokens in the sequences
 	 * @param map - the object containing the source data
 	 */
-	public BioJavaAlignmentModel(TokenSet<C> tokenSet, Map<String, S> map) {
+	public BioJava3AlignmentModel(TokenSet<C> tokenSet, Map<String, S> map) {
 		super(tokenSet);
 		
 		alignment = new SimpleAlignment<S, C>();

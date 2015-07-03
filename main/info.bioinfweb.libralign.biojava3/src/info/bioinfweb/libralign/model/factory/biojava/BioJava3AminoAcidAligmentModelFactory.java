@@ -25,7 +25,7 @@ import info.bioinfweb.libralign.model.exception.InvalidTokenException;
 import info.bioinfweb.libralign.model.factory.AlignmentModelFactory;
 import info.bioinfweb.libralign.model.factory.NewAlignmentModelParameterMap;
 import info.bioinfweb.libralign.model.implementations.PackedAlignmentModel;
-import info.bioinfweb.libralign.model.tokenset.BioJavaTokenSet;
+import info.bioinfweb.libralign.model.tokenset.BioJava3TokenSet;
 
 import org.biojava3.core.sequence.compound.AminoAcidCompound;
 import org.biojava3.core.sequence.compound.AminoAcidCompoundSet;
@@ -38,10 +38,10 @@ import org.biojava3.core.sequence.compound.AminoAcidCompoundSet;
  * @author Ben St&ouml;ver
  * @bioinfweb.module info.bioinfweb.libralign.biojava3
  */
-public class BioJavaAminoAcidAligmentModelFactory implements AlignmentModelFactory<AminoAcidCompound> {
+public class BioJava3AminoAcidAligmentModelFactory implements AlignmentModelFactory<AminoAcidCompound> {
 	@Override
 	public AlignmentModel<AminoAcidCompound> createNewModel(NewAlignmentModelParameterMap parameterMap) {
-		return new PackedAlignmentModel<AminoAcidCompound>(new BioJavaTokenSet<AminoAcidCompound>(
+		return new PackedAlignmentModel<AminoAcidCompound>(new BioJava3TokenSet<AminoAcidCompound>(
 				CharacterStateType.AMINO_ACID, new AminoAcidCompoundSet(), true));  //TODO Throw exception for other token types in parameterMap?
 		// BioJava does not support adding new amino acid definitions to single compound sets. Therefore token definitions in the 
 		// file and possible token counts are ignored.

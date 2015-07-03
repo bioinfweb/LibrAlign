@@ -49,7 +49,7 @@ import org.biojava3.core.sequence.template.SequenceView;
  * @param <T> - the token type of the underlying data source
  * @param <C> - the compound type of the provided BioJava sequences
  */
-public class SingleBioJavaSequenceAdapter<T, C extends Compound> 
+public class SingleBioJava3SequenceAdapter<T, C extends Compound> 
     extends AbstractSingleSequenceDataAdapter<T> implements Sequence<C> {
 	
 	public static final NucleotideCompound UNKNOWN_NUCLEOTIDE_COMPOUND = 
@@ -72,7 +72,7 @@ public class SingleBioJavaSequenceAdapter<T, C extends Compound>
 	 * @param length - the length of the subsequence to be viewed
 	 * @param compoundSet - the compound set to be used for the translation
 	 */
-	public SingleBioJavaSequenceAdapter(AlignmentModel<T> underlyingProvider, int sequenceID, int offset,
+	public SingleBioJava3SequenceAdapter(AlignmentModel<T> underlyingProvider, int sequenceID, int offset,
 			int length, CompoundSet<C> compoundSet) {
 		
 		super(underlyingProvider, sequenceID, offset, length);
@@ -92,7 +92,7 @@ public class SingleBioJavaSequenceAdapter<T, C extends Compound>
 	 * @param unknownCompound - the compound that will be inserted into the BioJava sequence if no according 
 	 *        compound to the token in the underlying data source can be found in {@code compoundSet}
 	 */
-	public SingleBioJavaSequenceAdapter(AlignmentModel<T> underlyingProvider, int sequenceID, int offset,
+	public SingleBioJava3SequenceAdapter(AlignmentModel<T> underlyingProvider, int sequenceID, int offset,
 			int length, CompoundSet<C> compoundSet, C unknownCompound) {
 		
 		super(underlyingProvider, sequenceID, offset, length);
@@ -109,7 +109,7 @@ public class SingleBioJavaSequenceAdapter<T, C extends Compound>
 	 * @param sequenceID - the ID used in {@code provider} of the sequence to be viewed
 	 * @param compoundSet - the compound set to be used for the translation
 	 */
-	public SingleBioJavaSequenceAdapter(AlignmentModel<T> underlyingProvider, int sequenceID, 
+	public SingleBioJava3SequenceAdapter(AlignmentModel<T> underlyingProvider, int sequenceID, 
 			CompoundSet<C> compoundSet) {
 		
 		super(underlyingProvider, sequenceID);
@@ -127,7 +127,7 @@ public class SingleBioJavaSequenceAdapter<T, C extends Compound>
 	 * @param unknownCompound - the compound that will be inserted into the BioJava sequence if no according 
 	 *        compound to the token in the underlying data source can be found in {@code compoundSet}
 	 */
-	public SingleBioJavaSequenceAdapter(AlignmentModel<T> underlyingProvider, int sequenceID, 
+	public SingleBioJava3SequenceAdapter(AlignmentModel<T> underlyingProvider, int sequenceID, 
 			CompoundSet<C> compoundSet, C unknownCompound) {
 		
 		super(underlyingProvider, sequenceID);
