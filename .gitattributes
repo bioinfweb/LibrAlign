@@ -245,6 +245,7 @@ main/info.bioinfweb.libralign.core/src/info/bioinfweb/libralign/pherogram/view/p
 main/info.bioinfweb.libralign.io/.classpath -text svneol=unset#text/plain
 main/info.bioinfweb.libralign.io/.project -text svneol=unset#text/plain
 main/info.bioinfweb.libralign.io/.settings/org.eclipse.jdt.core.prefs -text svneol=unset#text/plain
+main/info.bioinfweb.libralign.io/lib/NeXML.jar -text
 main/info.bioinfweb.libralign.io/src/info/bioinfweb/libralign/dataarea/implementations/charset/CharSetEventReader.java -text svneol=unset#text/plain
 main/info.bioinfweb.libralign.io/src/info/bioinfweb/libralign/model/io/AbstractDataModelEventReader.java -text svneol=unset#text/plain
 main/info.bioinfweb.libralign.io/src/info/bioinfweb/libralign/model/io/AlignmentDataReader.java -text svneol=unset#text/plain
