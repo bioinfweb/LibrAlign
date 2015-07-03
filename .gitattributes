@@ -35,7 +35,6 @@ main/info.bioinfweb.libralign.core/.classpath -text svneol=unset#text/plain
 main/info.bioinfweb.libralign.core/.project -text svneol=unset#text/plain
 main/info.bioinfweb.libralign.core/.settings/org.eclipse.jdt.core.prefs -text svneol=unset#text/plain
 main/info.bioinfweb.libralign.core/.settings/org.eclipse.jdt.ui.prefs -text svneol=unset#text/plain
-main/info.bioinfweb.libralign.core/lib/NeXML.jar -text
 main/info.bioinfweb.libralign.core/lib/commons-beanutils-1.9.2.jar -text
 main/info.bioinfweb.libralign.core/lib/commons-lang3-3.1.jar -text
 main/info.bioinfweb.libralign.core/src/info/bioinfweb/libralign/actions/AlignmentActionProvider.java -text svneol=unset#text/plain
