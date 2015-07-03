@@ -36,8 +36,8 @@ import info.bioinfweb.libralign.dataarea.implementations.charset.CharSet;
 import info.bioinfweb.libralign.dataarea.implementations.charset.CharSetArea;
 import info.bioinfweb.libralign.dataarea.implementations.charset.CharSetDataModel;
 import info.bioinfweb.libralign.dataarea.implementations.pherogram.PherogramArea;
-import info.bioinfweb.libralign.model.implementations.BioJavaAlignmentModel;
-import info.bioinfweb.libralign.model.tokenset.BioJavaTokenSet;
+import info.bioinfweb.libralign.model.implementations.BioJava3AlignmentModel;
+import info.bioinfweb.libralign.model.tokenset.BioJava3TokenSet;
 import info.bioinfweb.libralign.pherogram.model.PherogramAreaModel;
 import info.bioinfweb.libralign.pherogram.provider.BioJavaPherogramProvider;
 
@@ -95,9 +95,9 @@ public class AbstractTestApplication {
 
 			alignment.add("Sequence 5", new DNASequence("ATCGTAGATCGTAGATGGTAGATCGTAGATCGT---TCGTAGATCGTAG"));
 			
-			BioJavaAlignmentModel<DNASequence, NucleotideCompound> sequenceProvider = 
-					new BioJavaAlignmentModel<DNASequence, NucleotideCompound>(
-							new BioJavaTokenSet<NucleotideCompound>(CharacterStateType.NUCLEOTIDE,
+			BioJava3AlignmentModel<DNASequence, NucleotideCompound> sequenceProvider = 
+					new BioJava3AlignmentModel<DNASequence, NucleotideCompound>(
+							new BioJava3TokenSet<NucleotideCompound>(CharacterStateType.NUCLEOTIDE,
 									AlignmentAmbiguityNucleotideCompoundSet.getAlignmentAmbiguityNucleotideCompoundSet(), false),
 							alignment);
 			
