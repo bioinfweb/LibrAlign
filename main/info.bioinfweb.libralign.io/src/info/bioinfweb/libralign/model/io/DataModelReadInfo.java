@@ -32,6 +32,7 @@ import info.bioinfweb.libralign.model.data.DataModel;
  * 
  * @author Ben St&ouml;ver
  * @since 0.4.0
+ * @bioinfweb.module info.bioinfweb.libralign.io
  *
  * @param <M> the type of data model that was read
  */

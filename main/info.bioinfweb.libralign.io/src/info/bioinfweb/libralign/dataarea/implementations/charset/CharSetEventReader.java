@@ -44,7 +44,8 @@ import info.bioinfweb.libralign.model.io.DataModelReadInfo;
  * models, because different sets may be defined for each alignment block in the file. If this
  * MrBayes extension is not used all character sets (also from separate {@code SETS} blocks
  * will be stored in one global model, which will be the only returned instance.
- * 
+ *
+ * @bioinfweb.module info.bioinfweb.libralign.io
  * @author Ben St&ouml;ver
  * @since 0.4.0
  */

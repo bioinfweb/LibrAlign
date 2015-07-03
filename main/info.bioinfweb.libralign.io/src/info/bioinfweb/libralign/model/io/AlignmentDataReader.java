@@ -35,6 +35,7 @@ import info.bioinfweb.libralign.model.factory.AlignmentModelFactory;
  * 
  * @author Ben St&ouml;ver
  * @since 0.4.0
+ * @bioinfweb.module info.bioinfweb.libralign.io
  */
 public class AlignmentDataReader {
 	private JPhyloIOEventReader eventReader;
@@ -131,8 +132,8 @@ public class AlignmentDataReader {
 	
 	/**
 	 * Processes all events from the underlying <i>JPhyloIO</i> event stream. The resulting models
-	 * can be accessed by {@link #getCompletedModels()} or by the according data model readers, if 
-	 * specified before calling this method.
+	 * can be accessed by {@link AlignmentModelEventReader#getCompletedModels()} or by the according 
+	 * data model readers, if specified before calling this method.
 	 * 
 	 * @throws Exception if an exception was thrown by {@link JPhyloIOEventReader#next()}.
 	 */

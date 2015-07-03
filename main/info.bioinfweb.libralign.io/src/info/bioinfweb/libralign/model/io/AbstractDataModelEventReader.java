@@ -34,6 +34,7 @@ import info.bioinfweb.libralign.model.data.DataModelFactory;
  * 
  * @author Ben St&ouml;ver
  * @since 0.4.0
+ * @bioinfweb.module info.bioinfweb.libralign.io
  */
 public abstract class AbstractDataModelEventReader<M extends DataModel> implements DataModelEventReader<M> {
 	private AlignmentDataReader mainReader;
@@ -45,6 +46,7 @@ public abstract class AbstractDataModelEventReader<M extends DataModel> implemen
 	/**
 	 * Creates a new instance of this class.
 	 * 
+	 * @param mainReader the associates main reader instance forwarding to this reader
 	 * @param factory the factory to be used to create new data model instance during reading
 	 */
 	public AbstractDataModelEventReader(AlignmentDataReader mainReader, DataModelFactory<M> factory) {

@@ -32,13 +32,14 @@ import info.bioinfweb.libralign.model.data.DataModelFactory;
  * implementations of {@link DataModel}.
  * <p>
  * All implementations should accept an instance of {@link DataModel} as a constructor parameter that
- * will than be returned by {@link #getModel()}. Implementing classes should not allow to change the model
+ * will than be returned by {@link #getModels()}. Implementing classes should not allow to change the model
  * during runtime, since changing the model between two calls of 
  * {@link #processEvent(info.bioinfweb.jphyloio.JPhyloIOEventReader, info.bioinfweb.jphyloio.events.JPhyloIOEvent)}
  * should be avoided.
  * 
  * @author Ben St&ouml;ver
  * @since 0.4.0
+ * @bioinfweb.module info.bioinfweb.libralign.io
  *
  * @param <M> the type of data model to read by this reader
  */

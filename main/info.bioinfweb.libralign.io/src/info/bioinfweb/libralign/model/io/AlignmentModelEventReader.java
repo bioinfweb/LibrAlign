@@ -48,6 +48,7 @@ import java.util.TreeMap;
  *
  * @author Ben St&ouml;ver
  * @since 0.4.0
+ * @bioinfweb.module info.bioinfweb.libralign.io
  */
 public class AlignmentModelEventReader implements JPhyloIOEventListener {
 	private final AlignmentModelFactory defaultFactory;
@@ -119,7 +120,7 @@ public class AlignmentModelEventReader implements JPhyloIOEventListener {
 
 	/**
 	 * Sets the specified map for all nucleotide factories (identified with the keys
-	 * {@link TokenSetType#NUCLEOTIDE}, {@link TokenSetType#DNA}, {@link TokenSetType#RNA}).
+	 * {@link CharacterStateType#NUCLEOTIDE}, {@link CharacterStateType#DNA}, {@link CharacterStateType#RNA}).
 	 * <p>
 	 * Previously defined factories for the according types are replaced by this operation.
 	 *
@@ -140,7 +141,6 @@ public class AlignmentModelEventReader implements JPhyloIOEventListener {
 	 *
 	 * @return the current alignment model or {@code null} if the current stream position is not between an
 	 *         alignment start and end event
-	 * @see AlignmentDataReader#getCompletedModels()
 	 */
 	public AlignmentModel<?> getCurrentModel() {
 		return currentModel;
@@ -192,7 +192,6 @@ public class AlignmentModelEventReader implements JPhyloIOEventListener {
 	 * event stream until now.
 	 *
 	 * @return the list of models (may be empty, but is never {@code null})
-	 * @see #getCurrentAlignmentModel()
 	 */
 	public List<AlignmentModel<?>> getCompletedModels() {
 		return completedModels;
