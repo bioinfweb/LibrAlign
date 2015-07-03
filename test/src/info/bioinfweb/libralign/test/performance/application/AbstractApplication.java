@@ -29,7 +29,7 @@ import info.bioinfweb.libralign.alignmentarea.AlignmentArea;
 import info.bioinfweb.libralign.dataarea.implementations.SequenceIndexArea;
 import info.bioinfweb.libralign.model.AlignmentModel;
 import info.bioinfweb.libralign.model.implementations.PackedAlignmentModel;
-import info.bioinfweb.libralign.model.tokenset.BioJavaTokenSet;
+import info.bioinfweb.libralign.model.tokenset.BioJava3TokenSet;
 
 
 
@@ -41,7 +41,7 @@ public class AbstractApplication {
 		throw new InternalError("not implemented");
 //		if (alignmentArea == null) {
 //			AlignmentModel<NucleotideCompound> provider = new PackedAlignmentModel<NucleotideCompound>(
-//					new BioJavaTokenSet<NucleotideCompound>(CharacterStateType.NUCLEOTIDE,
+//					new BioJava3TokenSet<NucleotideCompound>(CharacterStateType.NUCLEOTIDE,
 //							AlignmentAmbiguityNucleotideCompoundSet.getAlignmentAmbiguityNucleotideCompoundSet(), false));
 //			
 //			

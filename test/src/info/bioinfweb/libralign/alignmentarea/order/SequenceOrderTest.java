@@ -30,8 +30,8 @@ import info.bioinfweb.libralign.alignmentarea.AlignmentArea;
 
 
 import info.bioinfweb.libralign.model.AlignmentModel;
-import info.bioinfweb.libralign.model.implementations.BioJavaAlignmentModel;
-import info.bioinfweb.libralign.model.tokenset.BioJavaTokenSet;
+import info.bioinfweb.libralign.model.implementations.BioJava3AlignmentModel;
+import info.bioinfweb.libralign.model.tokenset.BioJava3TokenSet;
 
 import org.biojava3.core.sequence.DNASequence;
 import org.biojava3.core.sequence.compound.NucleotideCompound;
@@ -53,8 +53,8 @@ public class SequenceOrderTest {
 		alignment.add("Sequence B", new DNASequence("ATG--CT"));
 		
 		AlignmentArea alignmentArea = new AlignmentArea();
-		alignmentArea.setAlignmentModel(new BioJavaAlignmentModel<DNASequence, NucleotideCompound>(
-				new BioJavaTokenSet<NucleotideCompound>(CharacterStateType.NUCLEOTIDE,
+		alignmentArea.setAlignmentModel(new BioJava3AlignmentModel<DNASequence, NucleotideCompound>(
+				new BioJava3TokenSet<NucleotideCompound>(CharacterStateType.NUCLEOTIDE,
 						AlignmentAmbiguityNucleotideCompoundSet.getAlignmentAmbiguityNucleotideCompoundSet(), true),
 				alignment), false);
 		return new SequenceOrder(alignmentArea);
