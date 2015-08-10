@@ -28,5 +28,6 @@
 	<classpathentry kind="lib" path="/info.bioinfweb.commons.core/bin" sourcepath="/info.bioinfweb.commons.core/src"/>
 	<classpathentry kind="lib" path="/info.bioinfweb.commons.experimental/bin"/>
 	<classpathentry kind="lib" path="/info.bioinfweb.commons.testing/bin"/>
+	<classpathentry kind="lib" path="/info.bioinfweb.commons.swt/bin"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
