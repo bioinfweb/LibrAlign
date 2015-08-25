@@ -384,7 +384,7 @@ public class SelectionModel {
 			return getCursorRow();
 		}
 		else {
-			return columnSelection.getFirstPos();
+			return rowSelection.getFirstPos();
 		}
 	}
 
@@ -392,14 +392,14 @@ public class SelectionModel {
 	/**
 	 * Returns the index of the the last row that is contained in the selection.
 	 * 
-	 * @return the index of the first selected row or the bottommost cursor row if the selection is empty
+	 * @return the index of the last selected row or the bottommost cursor row if the selection is empty
 	 */
 	public int getLastRow() {
 		if (rowSelection.isEmpty()) {
 			return getCursorRow() + getCursorHeight() - 1;
 		}
 		else {
-			return columnSelection.getLastPos();
+			return rowSelection.getLastPos();
 		}
 	}
 

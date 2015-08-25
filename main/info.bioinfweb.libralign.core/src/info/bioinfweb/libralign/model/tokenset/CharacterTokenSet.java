@@ -71,6 +71,12 @@ public class CharacterTokenSet extends AbstractTokenSet<Character> {
 	private static CharacterTokenSet createNucleotideInstance(CharacterStateType type) {
 		CharacterTokenSet result = new CharacterTokenSet(type);
 		result.addAll(SequenceUtils.getNucleotideCharacters());
+		if (CharacterStateType.DNA.equals(type)) {
+			result.remove('U');
+		}
+		else if (CharacterStateType.RNA.equals(type)) {
+			result.remove('T');
+		}
 		result.add(DEFAULT_GAP_REPRESENTATION);
 		return result;
 	}
