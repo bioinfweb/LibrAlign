@@ -76,11 +76,22 @@ public class AlignmentActionProvider<T> {
 	}
 
 
-	private void deleteSelection(SelectionModel selection) {
+	/**
+	 * Deletes the currently selected tokens.
+	 * <p>
+	 * This method is called internally by {@link #deleteBackwards()} and {@link #deleteForward()} if the selection
+	 * is not empty.
+	 */
+	public void deleteSelection() {
+		SelectionModel selection = getAlignmentArea().getSelection();
 		if (!selection.isEmpty()) {
 			for (int row = selection.getCursorRow(); row < selection.getCursorRow() + selection.getCursorHeight(); row++) {
-				getModel().removeTokensAt(getAlignmentArea().getSequenceOrder().idByIndex(row),
-						selection.getFirstColumn(), selection.getFirstColumn() + selection.getWidth());
+				int sequenceID = getAlignmentArea().getSequenceOrder().idByIndex(row);
+				int sequenceLength = getModel().getSequenceLength(sequenceID);
+				if (selection.getFirstColumn() < sequenceLength) {
+					getModel().removeTokensAt(sequenceID,
+							selection.getFirstColumn(), Math.min(sequenceLength, selection.getFirstColumn() + selection.getWidth()));
+				}
 			}
 			selection.setNewCursorColumn(selection.getFirstColumn());
 		}
@@ -113,7 +124,7 @@ public class AlignmentActionProvider<T> {
 				}
 			}
 			else {
-				deleteSelection(selection);
+				deleteSelection();
 				result = true;
 			}
 		}
@@ -151,7 +162,7 @@ public class AlignmentActionProvider<T> {
 				}
 			}
 			else {
-				deleteSelection(selection);
+				deleteSelection();
 				result = true;
 			}
 		}
