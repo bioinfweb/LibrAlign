@@ -47,13 +47,11 @@ import info.bioinfweb.libralign.model.AlignmentModel;
  */
 public class CursorSelectionInputListener extends TICMouseAdapter implements TICMouseListener, TICKeyListener {
 	private AlignmentArea owner;
-	private AlignmentActionProvider actionProvider;
 	
 	
 	public CursorSelectionInputListener(AlignmentArea owner) {
 		super();
 		this.owner = owner;
-		actionProvider = new AlignmentActionProvider(owner);
 	}
 
 
@@ -206,12 +204,12 @@ public class CursorSelectionInputListener extends TICMouseAdapter implements TIC
 				getOwner().getEditSettings().toggleInsert();
 				break;
 			case KeyEvent.VK_DELETE:  //TODO Allow to do something different on that key = unbind this event.
-				if (!actionProvider.deleteForward()) {
+				if (!getOwner().getActionProvider().deleteForward()) {
 					Toolkit.getDefaultToolkit().beep();
 				}
 				break;
 			case KeyEvent.VK_BACK_SPACE:  //TODO Allow to do something different on that key = unbind this event.
-				if (!actionProvider.deleteBackwards()) {
+				if (!getOwner().getActionProvider().deleteBackwards()) {
 					Toolkit.getDefaultToolkit().beep();
 				}
 				break;
@@ -228,12 +226,12 @@ public class CursorSelectionInputListener extends TICMouseAdapter implements TIC
 					
 					if (token != null) {
 						if (getOwner().getEditSettings().isInsert()) {
-							if (!actionProvider.insertToken(token)) {
+							if (!getOwner().getActionProvider().insertToken(token)) {
 								Toolkit.getDefaultToolkit().beep();
 							}
 						}
 						else {
-							if (!actionProvider.overwriteWithToken(token)) {
+							if (!getOwner().getActionProvider().overwriteWithToken(token)) {
 								Toolkit.getDefaultToolkit().beep();
 							}
 						}

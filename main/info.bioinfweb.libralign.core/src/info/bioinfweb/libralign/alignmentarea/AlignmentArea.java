@@ -27,6 +27,7 @@ import java.util.Iterator;
 import info.bioinfweb.commons.Math2;
 import info.bioinfweb.tic.TICComponent;
 import info.bioinfweb.tic.TICPaintEvent;
+import info.bioinfweb.libralign.actions.AlignmentActionProvider;
 import info.bioinfweb.libralign.alignmentarea.content.AlignmentContentArea;
 import info.bioinfweb.libralign.alignmentarea.content.AlignmentSubArea;
 import info.bioinfweb.libralign.alignmentarea.label.AlignmentLabelArea;
@@ -72,6 +73,7 @@ public class AlignmentArea extends TICComponent implements AlignmentModelChangeL
 	private PaintSettings paintSettings;
 	private EditSettings editSettings;
 	private SelectionModel selection;
+	private AlignmentActionProvider<Object> actionProvider = new AlignmentActionProvider<Object>(this);
 
 	private MultipleAlignmentsContainer container = null;
 	private AlignmentContentArea alignmentContentArea;
@@ -262,6 +264,17 @@ public class AlignmentArea extends TICComponent implements AlignmentModelChangeL
 	}
 
 	
+	/**
+	 * Tool object that implements business logic methods to manipulate the alignment model. All operations will
+	 * be performed on the current model of this alignment area.
+	 * 
+	 * @return the instance associated with this alignment area
+	 */
+	public AlignmentActionProvider<Object> getActionProvider() {
+		return actionProvider;
+	}
+
+
 	/**
 	 * Returns the container this object is contained in.
 	 * 
