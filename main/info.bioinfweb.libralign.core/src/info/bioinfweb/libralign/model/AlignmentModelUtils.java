@@ -21,7 +21,10 @@ package info.bioinfweb.libralign.model;
 
 import info.bioinfweb.commons.bio.SequenceUtils;
 import info.bioinfweb.commons.collections.PackedObjectArrayList;
+import info.bioinfweb.libralign.alignmentarea.AlignmentArea;
+import info.bioinfweb.libralign.alignmentarea.selection.SelectionModel;
 import info.bioinfweb.libralign.dataarea.implementations.pherogram.PherogramArea;
+import info.bioinfweb.libralign.model.tokenset.AbstractTokenSet;
 import info.bioinfweb.libralign.model.tokenset.TokenSet;
 
 import java.util.ArrayList;
@@ -101,5 +104,43 @@ public class AlignmentModelUtils {
 	 */
 	public static void reverseComplement(AlignmentModel<?> model, int sequenceID) {
 		reverseComplement(model, sequenceID, 0, model.getSequenceLength(sequenceID));
+	}
+	
+	
+	/**
+	 * Converts the current selection to a {@link String}.
+	 * 
+	 * @param area the alignment area containing the according alignment and selection model
+	 * @param separateBySpace Specify {@code true} here, if single token representations shall be separated by a
+	 *        space character, or {@code false} otherwise. ({@code true} should usually be specified, if token
+	 *        representations can be longer than one character.)
+	 * @return the string representation of the current selection or an empty string if nothing is selected
+	 */
+	public static String selectionAsString(AlignmentArea area, boolean separateBySpace) {
+  	SelectionModel selection = area.getSelection();
+  	if (!selection.isEmpty()) {
+  		StringBuilder selectedCharacters = new StringBuilder();
+  		AlignmentModel<?> alignmentModel = area.getAlignmentModel();
+  		for (int row = selection.getFirstRow(); row <= selection.getLastRow(); row++) {
+  			int id = area.getSequenceOrder().idByIndex(row);
+  			for (int column = selection.getFirstColumn(); column <= selection.getLastColumn(); column++) {
+  				if (alignmentModel.getSequenceLength(id) > column) {
+  					selectedCharacters.append(alignmentModel.getTokenAt(id, column));
+  				}
+  				else {  // Add gaps if selection is behind the end of the sequence.
+  					selectedCharacters.append(AbstractTokenSet.DEFAULT_GAP_REPRESENTATION);
+  				}
+  				
+  				if (separateBySpace && (row < selection.getLastRow())) {
+  					selectedCharacters.append(' ');
+  				}
+  			}
+  			if (row < selection.getLastRow()) {
+  				selectedCharacters.append(System.getProperty("line.separator"));
+      	}
+  		}
+  		return selectedCharacters.toString();
+  	}
+  	return "";
 	}
 }
