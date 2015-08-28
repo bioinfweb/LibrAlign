@@ -42,13 +42,17 @@ import java.util.List;
 public class AlignmentModelUtils {
 	/**
 	 * Converts a character sequence to a sequence of tokens. Each character in {@code sequence} is considered
-	 * to be a valid token representation in the specified set.
+	 * to be a valid token representation in the specified set.#
+	 * <p>
+	 * Note that {@link CharSequenceTokenScanner} is a more powerful alternative to this method that also allows
+	 * longer token representations and handled invalid representations.
 	 * 
 	 * @param sequence the character sequence to be converted
 	 * @param tokenSet the token set used to create token objects
 	 * @return the sequence of tokens created from {@code sequence}
 	 * @throws IllegalArgumentException if a character in {@code sequence} is not a valid token representation
 	 *         in {@code tokenSet}
+	 * @see CharSequenceTokenScanner
 	 */
 	public static <T> List<T> charSequenceToTokenList(CharSequence sequence, TokenSet<T> tokenSet) {
 		List<T> result = new ArrayList<T>(sequence.length());
