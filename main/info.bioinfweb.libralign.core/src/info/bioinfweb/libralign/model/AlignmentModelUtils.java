@@ -24,6 +24,7 @@ import info.bioinfweb.commons.collections.PackedObjectArrayList;
 import info.bioinfweb.libralign.alignmentarea.AlignmentArea;
 import info.bioinfweb.libralign.alignmentarea.selection.SelectionModel;
 import info.bioinfweb.libralign.dataarea.implementations.pherogram.PherogramArea;
+import info.bioinfweb.libralign.model.exception.InvalidTokenRepresentationException;
 import info.bioinfweb.libralign.model.tokenset.AbstractTokenSet;
 import info.bioinfweb.libralign.model.tokenset.TokenSet;
 
@@ -44,8 +45,9 @@ public class AlignmentModelUtils {
 	 * Converts a character sequence to a sequence of tokens. Each character in {@code sequence} is considered
 	 * to be a valid token representation in the specified set.#
 	 * <p>
-	 * Note that {@link CharSequenceTokenScanner} is a more powerful alternative to this method that also allows
-	 * longer token representations and handled invalid representations.
+	 * Note that {@link CharSequenceTokenScanner} or {@link #charSequenceToTokenList(CharSequence, TokenSet, boolean, Object)}
+	 * are more powerful alternatives to this method that allow longer token representations and handled invalid 
+	 * representations.
 	 * 
 	 * @param sequence the character sequence to be converted
 	 * @param tokenSet the token set used to create token objects
@@ -53,6 +55,7 @@ public class AlignmentModelUtils {
 	 * @throws IllegalArgumentException if a character in {@code sequence} is not a valid token representation
 	 *         in {@code tokenSet}
 	 * @see CharSequenceTokenScanner
+	 * @see #charSequenceToTokenList(CharSequence, TokenSet, boolean, Object)
 	 */
 	public static <T> List<T> charSequenceToTokenList(CharSequence sequence, TokenSet<T> tokenSet) {
 		List<T> result = new ArrayList<T>(sequence.length());
@@ -65,6 +68,34 @@ public class AlignmentModelUtils {
 			else {
 				result.add(token);
 			}
+		}
+		return result;
+	}
+	
+	
+	/**
+	 * Convenience method that uses {@link CharSequenceTokenScanner} to parse all tokens contained in the specified 
+	 * string and returns these as a list.
+	 * 
+	 * @param sequence the sequence to parse tokens from
+	 * @param tokenSet the token set containing the tokens to be parsed
+	 * @param allowWhitespace Specify {@code true} here to allow whitespace between token representations or {@code false}
+	 *        if not. Note that specifying false will lead to a {@link IllegalArgumentException} if the specified token set
+	 *        contains representations longer than one character.
+	 * @param defaultToken a default token to be returned if invalid token representations are found (If {@code null}
+	 *        is specified here, {@link #next()} will throw an exception if an invalid representation is found.)
+	 * @throws IllegalArgumentException if {@code allowWhitespace} was set to {@code false} although {@code tokenSet}
+	 *         contains token representations that are longer than one character
+	 * @throws InvalidTokenRepresentationException if no according token can be found for a string representation and 
+	 *         no default token was defined 
+	 */
+	public static <T> List<T> charSequenceToTokenList(CharSequence sequence, TokenSet<T> tokenSet, 
+			boolean allowWhitespace, T defaultToken) {
+		
+		List<T> result = new ArrayList<T>();
+		CharSequenceTokenScanner<T> scanner = new CharSequenceTokenScanner<T>(sequence, tokenSet, allowWhitespace, defaultToken);
+		while (scanner.hasNext()) {
+			result.add(scanner.next());
 		}
 		return result;
 	}

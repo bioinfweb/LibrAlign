@@ -19,6 +19,8 @@
 package info.bioinfweb.libralign.model;
 
 
+import java.util.List;
+
 import info.bioinfweb.libralign.model.exception.InvalidTokenRepresentationException;
 import info.bioinfweb.libralign.model.tokenset.TokenSet;
 
@@ -158,7 +160,7 @@ public class CharSequenceTokenScanner<T> {
 	 * last call of the method.
 	 * 
 	 * @return the next token or {@code null} if the end of the underlying character sequence was reached.
-	 * @throws InvalidTokenRepresentationException if no token according token could be found for the current
+	 * @throws InvalidTokenRepresentationException if no according token could be found for the current
 	 *         string representation and no default token was defined 
 	 */
 	public T next() throws InvalidTokenRepresentationException {
