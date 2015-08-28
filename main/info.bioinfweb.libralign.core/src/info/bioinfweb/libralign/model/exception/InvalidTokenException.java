@@ -30,9 +30,23 @@ import info.bioinfweb.libralign.model.AlignmentModel;
  * @author Ben St&ouml;ver
  * @since 0.0.0
  */
-public class InvalidTokenException extends AlignmentDataProviderException {
+public class InvalidTokenException extends AlignmentModelException {
+	private Object token;
+	
+	
 	public InvalidTokenException(AlignmentModel<?> source, Object token) {
 		super(source, "The token " + token.toString() + " of type " + token.getClass().getName() + 
 				" cannot does not match the data type of the provider.");
+		this.token = token;
+	}
+
+
+	/**
+	 * Returns the invalid token that caused this exception.
+	 * 
+	 * @return the invalid token
+	 */
+	public Object getToken() {
+		return token;
 	}
 }

@@ -116,6 +116,7 @@ main/info.bioinfweb.libralign.core/src/info/bioinfweb/libralign/model/AlignmentM
 main/info.bioinfweb.libralign.core/src/info/bioinfweb/libralign/model/AlignmentModelUtils.java -text
 main/info.bioinfweb.libralign.core/src/info/bioinfweb/libralign/model/AlignmentModelWriteType.java -text svneol=unset#text/plain
 main/info.bioinfweb.libralign.core/src/info/bioinfweb/libralign/model/BasicSequenceDataView.java -text svneol=unset#text/plain
+main/info.bioinfweb.libralign.core/src/info/bioinfweb/libralign/model/CharSequenceTokenScanner.java -text svneol=unset#text/plain
 main/info.bioinfweb.libralign.core/src/info/bioinfweb/libralign/model/SequenceAccess.java -text svneol=unset#text/plain
 main/info.bioinfweb.libralign.core/src/info/bioinfweb/libralign/model/SequenceAccessDataProvider.java -text svneol=unset#text/plain
 main/info.bioinfweb.libralign.core/src/info/bioinfweb/libralign/model/SequenceDataView.java -text svneol=unset#text/plain
@@ -152,10 +153,11 @@ main/info.bioinfweb.libralign.core/src/info/bioinfweb/libralign/model/events/Seq
 main/info.bioinfweb.libralign.core/src/info/bioinfweb/libralign/model/events/TokenChangeEvent.java -text svneol=unset#text/plain
 main/info.bioinfweb.libralign.core/src/info/bioinfweb/libralign/model/events/package-info.class -text
 main/info.bioinfweb.libralign.core/src/info/bioinfweb/libralign/model/events/package-info.java -text svneol=unset#text/plain
-main/info.bioinfweb.libralign.core/src/info/bioinfweb/libralign/model/exception/AlignmentDataProviderException.java -text svneol=unset#text/plain
+main/info.bioinfweb.libralign.core/src/info/bioinfweb/libralign/model/exception/AlignmentModelException.java -text svneol=unset#text/plain
 main/info.bioinfweb.libralign.core/src/info/bioinfweb/libralign/model/exception/AlignmentSourceNotWritableException.java -text svneol=unset#text/plain
 main/info.bioinfweb.libralign.core/src/info/bioinfweb/libralign/model/exception/DuplicateSequenceNameException.java -text svneol=unset#text/plain
 main/info.bioinfweb.libralign.core/src/info/bioinfweb/libralign/model/exception/InvalidTokenException.java -text svneol=unset#text/plain
+main/info.bioinfweb.libralign.core/src/info/bioinfweb/libralign/model/exception/InvalidTokenRepresentationException.java -text svneol=unset#text/plain
 main/info.bioinfweb.libralign.core/src/info/bioinfweb/libralign/model/exception/SequenceNotFoundException.java -text svneol=unset#text/plain
 main/info.bioinfweb.libralign.core/src/info/bioinfweb/libralign/model/exception/package-info.java -text svneol=unset#text/plain
 main/info.bioinfweb.libralign.core/src/info/bioinfweb/libralign/model/factory/AlignmentModelFactory.java -text svneol=unset#text/plain

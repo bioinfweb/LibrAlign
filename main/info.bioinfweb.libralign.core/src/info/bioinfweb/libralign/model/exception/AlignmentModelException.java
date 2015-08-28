@@ -29,17 +29,17 @@ import info.bioinfweb.libralign.model.AlignmentModel;
  * @author Ben St&ouml;ver
  * @since 0.0.0
  */
-public class AlignmentDataProviderException extends RuntimeException {
+public class AlignmentModelException extends RuntimeException {
 	private AlignmentModel<?> source;
 	
 	
-	public AlignmentDataProviderException(AlignmentModel<?> source) {
+	public AlignmentModelException(AlignmentModel<?> source) {
 		super();
 		this.source = source;
 	}
 
 	
-	public AlignmentDataProviderException(AlignmentModel<?> source, String message) {
+	public AlignmentModelException(AlignmentModel<?> source, String message) {
 		super(message);
 		this.source = source;
 	}

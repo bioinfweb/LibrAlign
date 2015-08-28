@@ -33,7 +33,7 @@ import info.bioinfweb.libralign.model.AlignmentModel;
  * @author Ben St&ouml;ver
  * @since 0.1.0
  */
-public class SequenceNotFoundException extends AlignmentDataProviderException {
+public class SequenceNotFoundException extends AlignmentModelException {
 	/**
 	 * Create a new instance of this class.
 	 * 

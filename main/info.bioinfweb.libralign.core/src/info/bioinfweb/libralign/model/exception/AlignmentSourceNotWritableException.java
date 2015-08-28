@@ -30,7 +30,7 @@ import info.bioinfweb.libralign.model.AlignmentModel;
  * @author Ben St&ouml;ver
  * @since 0.0.0
  */
-public class AlignmentSourceNotWritableException extends AlignmentDataProviderException {
+public class AlignmentSourceNotWritableException extends AlignmentModelException {
 	public AlignmentSourceNotWritableException(AlignmentModel<?> source) {
 		super(source, "The underlying data source is not writable.");
 	}

@@ -30,7 +30,7 @@ import info.bioinfweb.libralign.model.AlignmentModel;
  * @author Ben St&ouml;ver
  * @since 0.1.0
  */
-public class DuplicateSequenceNameException extends AlignmentDataProviderException {
+public class DuplicateSequenceNameException extends AlignmentModelException {
 	private String name;
 	
 	
