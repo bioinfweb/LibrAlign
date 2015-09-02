@@ -171,7 +171,14 @@ public class AlignmentActionProvider<T> {
 	}
 	
 	
-	private void elongateSequence(int sequenceID, int newLength) {
+	/**
+	 * Inserts trailing gaps into a sequence until it has the specified length.
+	 * 
+	 * @param sequenceID the ID of the sequence to be elongated
+	 * @param newLength the new length the sequence shall have
+	 * @return the number of trailing gaps that have been inserted
+	 */
+	public int elongateSequence(int sequenceID, int newLength) {
 		int additionalLength = newLength - getModel().getSequenceLength(sequenceID);
 		if (additionalLength > 0) {
 			T gapToken = getModel().getTokenSet().getGapToken();
@@ -181,6 +188,10 @@ public class AlignmentActionProvider<T> {
 			}
 			
 			getModel().appendTokens(sequenceID, tokens);
+			return additionalLength;
+		}
+		else {
+			return 0;
 		}
 	}
 
@@ -226,7 +237,7 @@ public class AlignmentActionProvider<T> {
 
 
 	/**
-	 * Overwrites the currently selected token(s) in each selected sequence with the specified tokens.
+	 * Overwrites the currently selected token(s) in each selected sequence with the specified token.
 	 * If no token is selected the token(s) right of the cursor are replaced.
 	 * <p>
 	 * If more than one token in each sequence is selected, the first one will be replaced by
