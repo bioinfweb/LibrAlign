@@ -300,11 +300,25 @@ public class AlignmentArea extends TICComponent implements AlignmentModelChangeL
 	}
 
 
+	/**
+	 * Determines whether this area should be displayed with its whole height insight a {@link MultipleAlignmentsContainer}
+	 * if there is enough space available.
+	 * 
+	 * @return {@code true} if this area does not need to be displayed with its whole width, {@code false} if scrolling should
+	 *         be avoided if possible
+	 */
 	public boolean isAllowVerticalScrolling() {
 		return allowVerticalScrolling;
 	}
 
 
+	/**
+	 * Allows to specify whether this area should be displayed with its whole height insight a {@link MultipleAlignmentsContainer}
+	 * if there is enough space available.
+	 * 
+	 * @param allowVerticalScrolling - Specify {@code true} here, if this area does not need to be displayed with its 
+	 *         whole width or {@code false} if scrolling should be avoided if possible.
+	 */
 	public void setAllowVerticalScrolling(boolean allowVerticalScrolling) {
 		this.allowVerticalScrolling = allowVerticalScrolling;
 		//TODO redistribute size
