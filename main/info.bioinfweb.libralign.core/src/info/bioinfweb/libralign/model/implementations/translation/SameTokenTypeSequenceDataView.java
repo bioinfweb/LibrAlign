@@ -71,7 +71,7 @@ public abstract class SameTokenTypeSequenceDataView<T> extends AbstractSequenceD
 	
 	@Override
 	public T getTokenAt(int sequenceID, int index) {
-		return translateToken(getUnderlyingProvider().getTokenAt(sequenceID, index));
+		return translateToken(getUnderlyingModel().getTokenAt(sequenceID, index));
 	}
 
 
@@ -79,7 +79,7 @@ public abstract class SameTokenTypeSequenceDataView<T> extends AbstractSequenceD
 	public void setTokenAt(int sequenceID, int index, T token)
 			throws AlignmentSourceNotWritableException {
 		
-		getUnderlyingProvider().setTokenAt(sequenceID, index, token);
+		getUnderlyingModel().setTokenAt(sequenceID, index, token);
 	}
 
 
@@ -87,19 +87,19 @@ public abstract class SameTokenTypeSequenceDataView<T> extends AbstractSequenceD
 	public void setTokensAt(int sequenceID, int beginIndex, Collection<? extends T> tokens)
 			throws AlignmentSourceNotWritableException {
 		
-		getUnderlyingProvider().setTokensAt(sequenceID, beginIndex, tokens);
+		getUnderlyingModel().setTokensAt(sequenceID, beginIndex, tokens);
 	}
 
 
 	@Override
 	public void appendToken(int sequenceID, T token) throws AlignmentSourceNotWritableException {
-		getUnderlyingProvider().appendToken(sequenceID, token);
+		getUnderlyingModel().appendToken(sequenceID, token);
 	}
 
 
 	@Override
 	public void appendTokens(int sequenceID, Collection<? extends T> tokens) throws AlignmentSourceNotWritableException {
-		getUnderlyingProvider().appendTokens(sequenceID, tokens);
+		getUnderlyingModel().appendTokens(sequenceID, tokens);
 	}
 
 
@@ -107,7 +107,7 @@ public abstract class SameTokenTypeSequenceDataView<T> extends AbstractSequenceD
 	public void insertTokenAt(int sequenceID, int index, T token)
 			throws AlignmentSourceNotWritableException {
 		
-		getUnderlyingProvider().insertTokenAt(sequenceID, index, token);
+		getUnderlyingModel().insertTokenAt(sequenceID, index, token);
 	}
 
 
@@ -115,7 +115,7 @@ public abstract class SameTokenTypeSequenceDataView<T> extends AbstractSequenceD
 	public void insertTokensAt(int sequenceID, int beginIndex, Collection<? extends T> tokens)
 			throws AlignmentSourceNotWritableException {
 		
-		getUnderlyingProvider().insertTokensAt(sequenceID, beginIndex, tokens);
+		getUnderlyingModel().insertTokensAt(sequenceID, beginIndex, tokens);
 	}
 
 
@@ -123,7 +123,7 @@ public abstract class SameTokenTypeSequenceDataView<T> extends AbstractSequenceD
 	public void removeTokenAt(int sequenceID, int index)
 			throws AlignmentSourceNotWritableException {
 		
-		getUnderlyingProvider().removeTokenAt(sequenceID, index);
+		getUnderlyingModel().removeTokenAt(sequenceID, index);
 	}
 
 
@@ -131,31 +131,31 @@ public abstract class SameTokenTypeSequenceDataView<T> extends AbstractSequenceD
 	public void removeTokensAt(int sequenceID, int beginIndex, int endIndex)
 			throws AlignmentSourceNotWritableException {
 		
-		getUnderlyingProvider().removeTokensAt(sequenceID, beginIndex, endIndex);
+		getUnderlyingModel().removeTokensAt(sequenceID, beginIndex, endIndex);
 	}
 
 
 	@Override
 	public int getSequenceLength(int sequenceID) {
-		return getUnderlyingProvider().getSequenceLength(sequenceID);
+		return getUnderlyingModel().getSequenceLength(sequenceID);
 	}
 
 
 	@Override
 	public int getMaxSequenceLength() {
-		return getUnderlyingProvider().getMaxSequenceLength();
+		return getUnderlyingModel().getMaxSequenceLength();
 	}
 
 
 	@Override
 	public AlignmentModelWriteType getWriteType() {
-		return getUnderlyingProvider().getWriteType();
+		return getUnderlyingModel().getWriteType();
 	}
 
 
 	@Override
 	public boolean isTokensReadOnly() {
-		return getUnderlyingProvider().isTokensReadOnly();
+		return getUnderlyingModel().isTokensReadOnly();
 	}
 
 
@@ -164,12 +164,12 @@ public abstract class SameTokenTypeSequenceDataView<T> extends AbstractSequenceD
 			throws AlignmentSourceNotWritableException,
 			DuplicateSequenceNameException, SequenceNotFoundException {
 		
-		return getUnderlyingProvider().renameSequence(sequenceID, newSequenceName);
+		return getUnderlyingModel().renameSequence(sequenceID, newSequenceName);
 	}
 
 
 	@Override
 	public Collection<AlignmentModelChangeListener> getChangeListeners() {
-		return getUnderlyingProvider().getChangeListeners();
+		return getUnderlyingModel().getChangeListeners();
 	}	
 }

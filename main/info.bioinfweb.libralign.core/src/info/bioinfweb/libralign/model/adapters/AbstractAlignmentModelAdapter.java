@@ -34,23 +34,23 @@ import info.bioinfweb.libralign.model.AlignmentModel;
  *
  * @param <T> - the token type used by the underlying provider
  */
-public class AbstractSequenceDataAdapter<T> implements BasicSequenceDataView<T> {
-	private AlignmentModel<T> underlyingProvider;
+public class AbstractAlignmentModelAdapter<T> implements BasicSequenceDataView<T> {
+	private AlignmentModel<T> underlyingModel;
 
 	
-	protected AbstractSequenceDataAdapter(AlignmentModel<T> underlyingProvider) {
+	protected AbstractAlignmentModelAdapter(AlignmentModel<T> underlyingProvider) {
 		super();
-		this.underlyingProvider = underlyingProvider;
+		this.underlyingModel = underlyingProvider;
 	}
 	
 
 	@Override
-	public AlignmentModel<T> getUnderlyingProvider() {
-		return underlyingProvider;
+	public AlignmentModel<T> getUnderlyingModel() {
+		return underlyingModel;
 	}
 
 	
-	public void setUnderlyingProvider(AlignmentModel<T> underlyingProvider) {
-		this.underlyingProvider = underlyingProvider;
+	public void setUnderlyingModel(AlignmentModel<T> underlyingProvider) {
+		this.underlyingModel = underlyingProvider;
 	}
 }

@@ -37,5 +37,5 @@ public interface BasicSequenceDataView<T> {
 	 * 
 	 * @return the underlying sequence data provider implementation
 	 */
-	public AlignmentModel<T> getUnderlyingProvider();
+	public AlignmentModel<T> getUnderlyingModel();
 }

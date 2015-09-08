@@ -33,7 +33,7 @@ import info.bioinfweb.libralign.model.AlignmentModel;
  *
  * @param <T>
  */
-public class AbstractSingleSequenceDataAdapter<T> extends AbstractSequenceDataAdapter<T> 
+public class AbstractSingleSequenceDataAdapter<T> extends AbstractAlignmentModelAdapter<T> 
     implements SingleSequenceDataAdapter<T> {
 	
 	private int sequenceID;
@@ -106,7 +106,7 @@ public class AbstractSingleSequenceDataAdapter<T> extends AbstractSequenceDataAd
 	@Override
 	public int getLength() {
 		return Math.min(length, 
-				Math.max(0, getUnderlyingProvider().getSequenceLength(getSequenceID()) - getOffset()));
+				Math.max(0, getUnderlyingModel().getSequenceLength(getSequenceID()) - getOffset()));
 	}
 	
 	

@@ -32,7 +32,7 @@ import info.bioinfweb.libralign.model.AlignmentModel;
  *
  * @param <T> - the token type used by the underlying provider
  */
-public class CharSequenceAdapter<T> extends AbstractSequenceDataAdapter<T> 
+public class CharSequenceAdapter<T> extends AbstractAlignmentModelAdapter<T> 
     implements SequenceDataAdapter<CharSequence, T> {
 	
 	private boolean cutLongRepresentations;
@@ -74,7 +74,7 @@ public class CharSequenceAdapter<T> extends AbstractSequenceDataAdapter<T>
 	 */
 	@Override
 	public CharSequence getSequence(int sequenceID) {
-		return new SingleCharSequenceAdapter<T>(getUnderlyingProvider(), sequenceID, isCutLongRepresentations());
+		return new SingleCharSequenceAdapter<T>(getUnderlyingModel(), sequenceID, isCutLongRepresentations());
 	}
 
 
@@ -89,7 +89,7 @@ public class CharSequenceAdapter<T> extends AbstractSequenceDataAdapter<T>
 	 */
 	@Override
 	public CharSequence getSubSequence(int sequenceID, int offset, int length) {
-		return new SingleCharSequenceAdapter<T>(getUnderlyingProvider(), sequenceID, offset, length, 
+		return new SingleCharSequenceAdapter<T>(getUnderlyingModel(), sequenceID, offset, length, 
 				isCutLongRepresentations());
 	}
 

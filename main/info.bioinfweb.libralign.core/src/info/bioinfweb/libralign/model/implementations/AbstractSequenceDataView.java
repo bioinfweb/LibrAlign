@@ -56,7 +56,7 @@ public abstract class AbstractSequenceDataView<T, U> implements SequenceDataView
 
 
 	@Override
-	public AlignmentModel<U> getUnderlyingProvider() {
+	public AlignmentModel<U> getUnderlyingModel() {
 		return underlyingProvider;
 	}
 

@@ -87,14 +87,14 @@ public class SwingSetTokensEdit<T> extends SwingTokenEdit<T> {
 
 	@Override
 	public void redo() throws CannotRedoException {
-		getProvider().getUnderlyingProvider().setTokensAt(sequenceID, beginIndex, tokens);
+		getProvider().getUnderlyingModel().setTokensAt(sequenceID, beginIndex, tokens);
 		super.redo();
 	}
 
 
 	@Override
 	public void undo() throws CannotUndoException {
-		getProvider().getUnderlyingProvider().setTokensAt(sequenceID, beginIndex, oldTokens);
+		getProvider().getUnderlyingModel().setTokensAt(sequenceID, beginIndex, oldTokens);
 		super.undo();
 	}
 

@@ -111,7 +111,7 @@ public abstract class SwingInsertRemoveTokensEdit<T> extends SwingTokenEdit<T> {
 	 * token(s) for deletions).
 	 */
 	protected void insert() {
-		getProvider().getUnderlyingProvider().insertTokensAt(sequenceID, beginIndex, tokens);
+		getProvider().getUnderlyingModel().insertTokensAt(sequenceID, beginIndex, tokens);
 	}
 	
 	
@@ -119,6 +119,6 @@ public abstract class SwingInsertRemoveTokensEdit<T> extends SwingTokenEdit<T> {
 	 * Performs the remove operation.
 	 */
 	protected void remove() {
-		getProvider().getUnderlyingProvider().removeTokensAt(sequenceID, beginIndex, beginIndex + tokens.size());
+		getProvider().getUnderlyingModel().removeTokensAt(sequenceID, beginIndex, beginIndex + tokens.size());
 	}
 }

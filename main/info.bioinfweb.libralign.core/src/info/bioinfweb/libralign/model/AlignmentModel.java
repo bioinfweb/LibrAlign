@@ -23,7 +23,7 @@ import java.util.Collection;
 import java.util.Iterator;
 
 import info.bioinfweb.libralign.alignmentarea.content.AlignmentContentArea;
-import info.bioinfweb.libralign.model.adapters.AbstractSequenceDataAdapter;
+import info.bioinfweb.libralign.model.adapters.AbstractAlignmentModelAdapter;
 import info.bioinfweb.libralign.model.exception.AlignmentSourceNotWritableException;
 import info.bioinfweb.libralign.model.exception.DuplicateSequenceNameException;
 import info.bioinfweb.libralign.model.exception.SequenceNotFoundException;
@@ -59,7 +59,7 @@ import info.bioinfweb.libralign.model.tokenset.TokenSet;
  * @see SequenceAccessDataProvider
  * @see AbstractAlignmentModel
  * @see AbstractMapBasedAlignmentModel
- * @see AbstractSequenceDataAdapter
+ * @see AbstractAlignmentModelAdapter
  *
  * @param <T> the type of sequence elements (tokens) the implementing model object works with
  */

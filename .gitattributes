@@ -120,8 +120,8 @@ main/info.bioinfweb.libralign.core/src/info/bioinfweb/libralign/model/CharSequen
 main/info.bioinfweb.libralign.core/src/info/bioinfweb/libralign/model/SequenceAccess.java -text svneol=unset#text/plain
 main/info.bioinfweb.libralign.core/src/info/bioinfweb/libralign/model/SequenceAccessDataProvider.java -text svneol=unset#text/plain
 main/info.bioinfweb.libralign.core/src/info/bioinfweb/libralign/model/SequenceDataView.java -text svneol=unset#text/plain
+main/info.bioinfweb.libralign.core/src/info/bioinfweb/libralign/model/adapters/AbstractAlignmentModelAdapter.java -text svneol=unset#text/plain
 main/info.bioinfweb.libralign.core/src/info/bioinfweb/libralign/model/adapters/AbstractSequenceDataAdapter.class -text
-main/info.bioinfweb.libralign.core/src/info/bioinfweb/libralign/model/adapters/AbstractSequenceDataAdapter.java -text svneol=unset#text/plain
 main/info.bioinfweb.libralign.core/src/info/bioinfweb/libralign/model/adapters/AbstractSingleSequenceDataAdapter.class -text
 main/info.bioinfweb.libralign.core/src/info/bioinfweb/libralign/model/adapters/AbstractSingleSequenceDataAdapter.java -text svneol=unset#text/plain
 main/info.bioinfweb.libralign.core/src/info/bioinfweb/libralign/model/adapters/BioJavaSequenceAdapter.class -text

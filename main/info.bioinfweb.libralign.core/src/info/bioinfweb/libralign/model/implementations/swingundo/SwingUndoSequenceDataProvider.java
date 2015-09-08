@@ -134,7 +134,7 @@ public class SwingUndoSequenceDataProvider<T> implements AlignmentModel<T>,
 	 * 
 	 * @return an instance of a class implementing {@link AlignmentModel}
 	 */
-	public AlignmentModel<T> getUnderlyingProvider() {
+	public AlignmentModel<T> getUnderlyingModel() {
 		return provider;
 	}
 

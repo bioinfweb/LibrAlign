@@ -101,8 +101,8 @@ public class SingleCharSequenceAdapter<T> extends AbstractSingleSequenceDataAdap
 	@Override
 	public char charAt(int index) throws InvalidUnderlyingTokenException, IndexOutOfBoundsException {
 		if (Math2.isBetween(index, 0, length() - 1)) {
-			T token = getUnderlyingProvider().getTokenAt(getSequenceID(), getOffset() + index); 
-			String representation = getUnderlyingProvider().getTokenSet().representationByToken(token);
+			T token = getUnderlyingModel().getTokenAt(getSequenceID(), getOffset() + index); 
+			String representation = getUnderlyingModel().getTokenSet().representationByToken(token);
 			if ((representation.length() == 1) || ((representation.length() > 0) && isCutLongRepresentations())) {
 				return representation.charAt(0);
 			}
@@ -130,7 +130,7 @@ public class SingleCharSequenceAdapter<T> extends AbstractSingleSequenceDataAdap
 	@Override
 	public CharSequence subSequence(int start, int end) {
 		if (Math2.isBetween(start, 0, end) && Math2.isBetween(end, start, length())) {
-			return new SingleCharSequenceAdapter<T>(getUnderlyingProvider(), getSequenceID(), start, end - start, 
+			return new SingleCharSequenceAdapter<T>(getUnderlyingModel(), getSequenceID(), start, end - start, 
 					isCutLongRepresentations());
 		}
 		else {
