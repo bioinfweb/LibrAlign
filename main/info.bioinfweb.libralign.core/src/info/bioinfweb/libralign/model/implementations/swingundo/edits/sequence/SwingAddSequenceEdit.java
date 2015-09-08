@@ -20,7 +20,7 @@ package info.bioinfweb.libralign.model.implementations.swingundo.edits.sequence;
 
 
 import info.bioinfweb.libralign.model.AlignmentModel;
-import info.bioinfweb.libralign.model.implementations.swingundo.SwingUndoSequenceDataProvider;
+import info.bioinfweb.libralign.model.implementations.swingundo.SwingUndoAlignmentModel;
 
 import javax.swing.undo.UndoableEdit;
 
@@ -32,7 +32,7 @@ import javax.swing.undo.UndoableEdit;
  * 
  * @author Ben St&oml;ver
  * @since 0.1.0
- * @see SwingUndoSequenceDataProvider
+ * @see SwingUndoAlignmentModel
  */
 public interface SwingAddSequenceEdit extends UndoableEdit {
   /**

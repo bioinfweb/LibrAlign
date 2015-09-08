@@ -19,7 +19,7 @@
 package info.bioinfweb.libralign.model.implementations.swingundo.edits.token;
 
 import info.bioinfweb.libralign.model.AlignmentModel;
-import info.bioinfweb.libralign.model.implementations.swingundo.SwingUndoSequenceDataProvider;
+import info.bioinfweb.libralign.model.implementations.swingundo.SwingUndoAlignmentModel;
 
 import javax.swing.undo.CannotRedoException;
 import javax.swing.undo.CannotUndoException;
@@ -32,10 +32,10 @@ import javax.swing.undo.CannotUndoException;
  * 
  * @author Ben St&oml;ver
  * @since 0.1.0
- * @see SwingUndoSequenceDataProvider
+ * @see SwingUndoAlignmentModel
  */
 public class SwingRemoveTokensEdit<T> extends SwingInsertRemoveTokensEdit<T> {
-	public SwingRemoveTokensEdit(SwingUndoSequenceDataProvider<T> provider, int sequenceID, int beginIndex, 
+	public SwingRemoveTokensEdit(SwingUndoAlignmentModel<T> provider, int sequenceID, int beginIndex, 
 			int endIndex) {
 	
 		super(provider, sequenceID, beginIndex, endIndex);

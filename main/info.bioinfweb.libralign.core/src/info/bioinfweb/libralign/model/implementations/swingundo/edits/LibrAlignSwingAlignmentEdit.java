@@ -20,20 +20,20 @@ package info.bioinfweb.libralign.model.implementations.swingundo.edits;
 
 
 import info.bioinfweb.commons.swing.AbstractDocumentEdit;
-import info.bioinfweb.libralign.model.implementations.swingundo.SwingUndoSequenceDataProvider;
+import info.bioinfweb.libralign.model.implementations.swingundo.SwingUndoAlignmentModel;
 
 
 
 /**
- * All edit objects created by {@link SwingUndoSequenceDataProvider} are inherited from this class which
+ * All edit objects created by {@link SwingUndoAlignmentModel} are inherited from this class which
  * implements basic functionality.
  * 
  * @author Ben St&ouml;ver
  * @since 0.1.0
- * @see SwingUndoSequenceDataProvider
+ * @see SwingUndoAlignmentModel
  */
 public abstract class LibrAlignSwingAlignmentEdit<T> extends AbstractDocumentEdit {
-  private SwingUndoSequenceDataProvider<T> provider;
+  private SwingUndoAlignmentModel<T> provider;
 
   
 	/**
@@ -41,7 +41,7 @@ public abstract class LibrAlignSwingAlignmentEdit<T> extends AbstractDocumentEdi
 	 * 
 	 * @param provider - the data provider creating this instance 
 	 */
-	public LibrAlignSwingAlignmentEdit(SwingUndoSequenceDataProvider<T> provider) {
+	public LibrAlignSwingAlignmentEdit(SwingUndoAlignmentModel<T> provider) {
 		super();
 		this.provider = provider;
 	}
@@ -50,15 +50,15 @@ public abstract class LibrAlignSwingAlignmentEdit<T> extends AbstractDocumentEdi
 	/**
 	 * Returns the data provider instance that created and uses this object.
 	 * 
-	 * @return an instance of {@link SwingUndoSequenceDataProvider}
+	 * @return an instance of {@link SwingUndoAlignmentModel}
 	 */
-	public SwingUndoSequenceDataProvider<T> getProvider() {
+	public SwingUndoAlignmentModel<T> getProvider() {
 		return provider;
 	}
 
 
 	/**
-	 * Delegates to {@link SwingUndoSequenceDataProvider#registerDocumentChange()} of the associated
+	 * Delegates to {@link SwingUndoAlignmentModel#registerDocumentChange()} of the associated
 	 * data provider.
 	 */
 	@Override

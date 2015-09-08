@@ -19,7 +19,7 @@
 package info.bioinfweb.libralign.model.implementations.swingundo.edits.sequence;
 
 
-import info.bioinfweb.libralign.model.implementations.swingundo.SwingUndoSequenceDataProvider;
+import info.bioinfweb.libralign.model.implementations.swingundo.SwingUndoAlignmentModel;
 import info.bioinfweb.libralign.model.implementations.swingundo.edits.LibrAlignSwingAlignmentEdit;
 
 
@@ -29,13 +29,13 @@ import info.bioinfweb.libralign.model.implementations.swingundo.edits.LibrAlignS
  * 
  * @author Ben St&ouml;ver
  * @since 0.1.0
- * @see SwingUndoSequenceDataProvider
+ * @see SwingUndoAlignmentModel
  */
 public abstract class SwingSequenceEdit<T> extends LibrAlignSwingAlignmentEdit<T> {
 	protected int sequenceID;
 
 	
-	public SwingSequenceEdit(SwingUndoSequenceDataProvider<T> provider, int sequenceID) {
+	public SwingSequenceEdit(SwingUndoAlignmentModel<T> provider, int sequenceID) {
 		super(provider);
 		this.sequenceID = sequenceID;
 	}

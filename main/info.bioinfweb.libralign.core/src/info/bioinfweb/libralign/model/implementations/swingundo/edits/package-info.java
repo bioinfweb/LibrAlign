@@ -1,6 +1,6 @@
 /**
  * Contains the edit objects used by  
- * {@link info.bioinfweb.libralign.model.implementations.swingundo.SwingUndoSequenceDataProvider}.
+ * {@link info.bioinfweb.libralign.model.implementations.swingundo.SwingUndoAlignmentModel}.
  * 
  * @author Ben St&ouml;ver
  */

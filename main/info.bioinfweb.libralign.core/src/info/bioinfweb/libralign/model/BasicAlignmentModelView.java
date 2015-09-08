@@ -31,7 +31,7 @@ package info.bioinfweb.libralign.model;
  *
  * @param <T> - the token type used by the underlying provider
  */
-public interface BasicSequenceDataView<T> {
+public interface BasicAlignmentModelView<T> {
 	/**
 	 * Returns the underlying sequence data provider that provides the data accessed with this object.
 	 * 

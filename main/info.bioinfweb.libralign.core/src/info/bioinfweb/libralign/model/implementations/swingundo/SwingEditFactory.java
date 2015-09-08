@@ -29,27 +29,27 @@ import javax.swing.undo.UndoableEdit;
 
 
 /**
- * Classes providing custom edit objects to an instance of {@link SwingUndoSequenceDataProvider} must
+ * Classes providing custom edit objects to an instance of {@link SwingUndoAlignmentModel} must
  * implement this interface.
  * <p>
  * The type of edit that shall be created can be obtained by the class type of the passed {@code edit}
  * objects. These objects provide getter methods that allow to access the relevant data. The returned object
  * might also be wrapper of the passed edit.
  * <p>
- * <b>Important:</b> Edit objects are executed by {@link SwingUndoSequenceDataProvider} and added to the linked 
+ * <b>Important:</b> Edit objects are executed by {@link SwingUndoAlignmentModel} and added to the linked 
  * {@link UndoManager} after it called one of the methods specified here, which means that implementing 
  * classes should not execute not add the the edits they return to the undo manager by themselves.
  * 
  * @author Ben St&ouml;ver
  * @since 0.1.0
- * @see SwingUndoSequenceDataProvider
+ * @see SwingUndoAlignmentModel
  */
 public interface SwingEditFactory<T> {
   /**
    * This method is called to create new edit objects (except if a new sequence shall be added).
    * 
    * @param edit - the default LibrAlign edit that would perform the requested operation.
-   * @return the edit object that shall be used by the calling instance of {@link SwingUndoSequenceDataProvider}
+   * @return the edit object that shall be used by the calling instance of {@link SwingUndoAlignmentModel}
    */
   public UndoableEdit createEdit(LibrAlignSwingAlignmentEdit<T> edit);	
 
@@ -57,7 +57,7 @@ public interface SwingEditFactory<T> {
    * This method is called if an edit object that inserts a new sequence shall be created.
    * 
    * @param edit - the default LibrAlign edit that would perform the requested operation.
-   * @return the edit object that shall be used by the calling instance of {@link SwingUndoSequenceDataProvider}
+   * @return the edit object that shall be used by the calling instance of {@link SwingUndoAlignmentModel}
    */
   public SwingAddSequenceEdit createAddSequenceEdit(SwingConcreteAddSequenceEdit<T> edit);	
 }

@@ -27,7 +27,7 @@ import javax.swing.undo.CannotRedoException;
 import javax.swing.undo.CannotUndoException;
 
 import info.bioinfweb.libralign.model.AlignmentModel;
-import info.bioinfweb.libralign.model.implementations.swingundo.SwingUndoSequenceDataProvider;
+import info.bioinfweb.libralign.model.implementations.swingundo.SwingUndoAlignmentModel;
 
 
 
@@ -37,7 +37,7 @@ import info.bioinfweb.libralign.model.implementations.swingundo.SwingUndoSequenc
  * 
  * @author Ben St&oml;ver
  * @since 0.1.0
- * @see SwingUndoSequenceDataProvider
+ * @see SwingUndoAlignmentModel
  */
 public class SwingSetTokensEdit<T> extends SwingTokenEdit<T> {
 	private Collection oldTokens;  // Raw type is necessary here, because the generic element type of the provider can't be determined during runtime and the class of the first token might be a subtype of the actual type.
@@ -52,7 +52,7 @@ public class SwingSetTokensEdit<T> extends SwingTokenEdit<T> {
 	 *        (The first element in the sequence has the index 0.)
 	 * @param tokens - the new tokens for the specified position
 	 */
-	public SwingSetTokensEdit(SwingUndoSequenceDataProvider<T> provider, int sequenceID,
+	public SwingSetTokensEdit(SwingUndoAlignmentModel<T> provider, int sequenceID,
 			int beginIndex, Collection<? extends T> tokens) {
 		
 		super(provider, sequenceID, beginIndex, tokens);
@@ -78,7 +78,7 @@ public class SwingSetTokensEdit<T> extends SwingTokenEdit<T> {
 	 *        (The first element in the sequence has the index 0.)
 	 * @param token - the new token for the specified position
 	 */
-	public SwingSetTokensEdit(SwingUndoSequenceDataProvider<T> provider, int sequenceID,
+	public SwingSetTokensEdit(SwingUndoAlignmentModel<T> provider, int sequenceID,
 			int index, T token) {
 		
 		this(provider, sequenceID, index, Collections.nCopies(1, token));

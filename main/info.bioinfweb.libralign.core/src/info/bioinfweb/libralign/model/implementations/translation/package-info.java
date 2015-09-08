@@ -1,5 +1,5 @@
 /**
- * Contains implementations of {@link info.bioinfweb.libralign.model.SequenceDataView}
+ * Contains implementations of {@link info.bioinfweb.libralign.model.AlignmentModelView}
  * which translate between different sets of tokens or different token types.
  * 
  * @author Ben St&ouml;ver

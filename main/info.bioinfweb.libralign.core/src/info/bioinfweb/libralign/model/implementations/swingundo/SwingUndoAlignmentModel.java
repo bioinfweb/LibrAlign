@@ -30,7 +30,7 @@ import info.bioinfweb.commons.swing.AbstractDocumentEdit;
 import info.bioinfweb.libralign.model.AlignmentModelChangeListener;
 import info.bioinfweb.libralign.model.AlignmentModel;
 import info.bioinfweb.libralign.model.AlignmentModelWriteType;
-import info.bioinfweb.libralign.model.SequenceDataView;
+import info.bioinfweb.libralign.model.AlignmentModelView;
 import info.bioinfweb.libralign.model.exception.AlignmentSourceNotWritableException;
 import info.bioinfweb.libralign.model.implementations.swingundo.edits.LibrAlignSwingAlignmentEdit;
 import info.bioinfweb.libralign.model.implementations.swingundo.edits.sequence.SwingAddSequenceEdit;
@@ -73,8 +73,8 @@ import info.bioinfweb.libralign.model.tokenset.TokenSet;
  * 
  * @param <T> - the type of sequence elements (tokens) the implementing provider object works with
  */
-public class SwingUndoSequenceDataProvider<T> implements AlignmentModel<T>, 
-    SequenceDataView<T, T> {
+public class SwingUndoAlignmentModel<T> implements AlignmentModel<T>, 
+    AlignmentModelView<T, T> {
 	
 	protected AlignmentModel<T> provider;
 	private UndoManager undoManager;
@@ -94,7 +94,7 @@ public class SwingUndoSequenceDataProvider<T> implements AlignmentModel<T>,
 	 *         (If only one of both is forbidden no exception will be thrown.)
 	 * @throws NullPointerException if {@code null} is specified for {@code undoManager}
 	 */
-	public SwingUndoSequenceDataProvider(AlignmentModel<T> provider, UndoManager undoManager, 
+	public SwingUndoAlignmentModel(AlignmentModel<T> provider, UndoManager undoManager, 
 			SwingEditFactory<T> editFactory) {
 		
 		super();
@@ -124,7 +124,7 @@ public class SwingUndoSequenceDataProvider<T> implements AlignmentModel<T>,
 	 *         (If only one of both is forbidden no exception will be thrown.)
 	 * @throws NullPointerException if {@code null} is specified for {@code undoManager}
 	 */
-	public SwingUndoSequenceDataProvider(AlignmentModel<T> provider, UndoManager undoManager) {
+	public SwingUndoAlignmentModel(AlignmentModel<T> provider, UndoManager undoManager) {
 		this(provider, undoManager, null);
 	}
 

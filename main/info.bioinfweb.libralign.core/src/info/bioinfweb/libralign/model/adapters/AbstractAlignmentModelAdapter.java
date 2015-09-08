@@ -19,13 +19,13 @@
 package info.bioinfweb.libralign.model.adapters;
 
 
-import info.bioinfweb.libralign.model.BasicSequenceDataView;
+import info.bioinfweb.libralign.model.BasicAlignmentModelView;
 import info.bioinfweb.libralign.model.AlignmentModel;
 
 
 
 /**
- * All classes implementing {@link BasicSequenceDataView}s can inherit from this class,
+ * All classes implementing {@link BasicAlignmentModelView}s can inherit from this class,
  * which implements the access to the underlying data source. Although this class is not abstract
  * it does not make sense creating instances of it directly since it implements no functionality.
  * 
@@ -34,7 +34,7 @@ import info.bioinfweb.libralign.model.AlignmentModel;
  *
  * @param <T> - the token type used by the underlying provider
  */
-public class AbstractAlignmentModelAdapter<T> implements BasicSequenceDataView<T> {
+public class AbstractAlignmentModelAdapter<T> implements BasicAlignmentModelView<T> {
 	private AlignmentModel<T> underlyingModel;
 
 	

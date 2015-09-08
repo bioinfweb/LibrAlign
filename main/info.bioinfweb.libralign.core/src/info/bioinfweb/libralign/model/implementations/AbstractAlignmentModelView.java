@@ -22,14 +22,14 @@ package info.bioinfweb.libralign.model.implementations;
 import java.util.Iterator;
 
 import info.bioinfweb.libralign.model.AlignmentModel;
-import info.bioinfweb.libralign.model.SequenceDataView;
+import info.bioinfweb.libralign.model.AlignmentModelView;
 import info.bioinfweb.libralign.model.exception.AlignmentSourceNotWritableException;
 import info.bioinfweb.libralign.model.tokenset.TokenSet;
 
 
 
 /**
- * Basic implementation of {@link SequenceDataView} which stores the underlying provider
+ * Basic implementation of {@link AlignmentModelView} which stores the underlying provider
  * in a property and delegates sequence specific methods (which are independent of the token
  * type) to the underlying provider.
  * 
@@ -38,7 +38,7 @@ import info.bioinfweb.libralign.model.tokenset.TokenSet;
  * @param <T> - the type of sequence elements (tokens) the implementing view works with
  * @param <U> - the type of sequence elements (tokens) the underlying provider works with
  */
-public abstract class AbstractSequenceDataView<T, U> implements SequenceDataView<T, U>{
+public abstract class AbstractAlignmentModelView<T, U> implements AlignmentModelView<T, U>{
   private AlignmentModel<U> underlyingProvider;
   private TokenSet<T> tokenSet;
 
@@ -48,7 +48,7 @@ public abstract class AbstractSequenceDataView<T, U> implements SequenceDataView
 	 * 
 	 * @param underlyingProvider - the underlying provider to be viewed
 	 */
-	public AbstractSequenceDataView(TokenSet<T> tokenSet, AlignmentModel<U> underlyingProvider) {
+	public AbstractAlignmentModelView(TokenSet<T> tokenSet, AlignmentModel<U> underlyingProvider) {
 		super();
 		this.tokenSet = tokenSet;
 		this.underlyingProvider = underlyingProvider;

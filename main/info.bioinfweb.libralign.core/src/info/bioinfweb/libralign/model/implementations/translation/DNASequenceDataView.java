@@ -30,7 +30,7 @@ import info.bioinfweb.libralign.model.AlignmentModel;
  * @author Ben St&ouml;ver
  * @since 0.1.0
  */
-public class DNASequenceDataView extends SameTokenTypeSequenceDataView<Character> {
+public class DNASequenceDataView extends SameTokenTypeAlignmentModelView<Character> {
 	private static final char THYMINE = 'T';
 	
 	

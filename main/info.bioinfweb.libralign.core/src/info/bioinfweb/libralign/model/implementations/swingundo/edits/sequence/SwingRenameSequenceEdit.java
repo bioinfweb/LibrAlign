@@ -23,7 +23,7 @@ import javax.swing.undo.CannotRedoException;
 import javax.swing.undo.CannotUndoException;
 
 import info.bioinfweb.libralign.model.AlignmentModel;
-import info.bioinfweb.libralign.model.implementations.swingundo.SwingUndoSequenceDataProvider;
+import info.bioinfweb.libralign.model.implementations.swingundo.SwingUndoAlignmentModel;
 
 
 
@@ -32,14 +32,14 @@ import info.bioinfweb.libralign.model.implementations.swingundo.SwingUndoSequenc
  * 
  * @author Ben St&oml;ver
  * @since 0.1.0
- * @see SwingUndoSequenceDataProvider
+ * @see SwingUndoAlignmentModel
  */
 public class SwingRenameSequenceEdit<T> extends SwingSequenceEdit<T> {
   private String newName;
 	private String oldName;
   
   
-  public SwingRenameSequenceEdit(SwingUndoSequenceDataProvider<T> provider, int sequenceID, String newName) {
+  public SwingRenameSequenceEdit(SwingUndoAlignmentModel<T> provider, int sequenceID, String newName) {
 		super(provider, sequenceID);
 		this.newName = newName;
 	}

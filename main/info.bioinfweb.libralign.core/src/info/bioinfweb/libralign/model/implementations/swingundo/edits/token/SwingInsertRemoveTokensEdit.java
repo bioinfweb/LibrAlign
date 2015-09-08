@@ -20,7 +20,7 @@ package info.bioinfweb.libralign.model.implementations.swingundo.edits.token;
 
 
 import info.bioinfweb.libralign.model.AlignmentModel;
-import info.bioinfweb.libralign.model.implementations.swingundo.SwingUndoSequenceDataProvider;
+import info.bioinfweb.libralign.model.implementations.swingundo.SwingUndoAlignmentModel;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -33,7 +33,7 @@ import java.util.Collections;
  * 
  * @author Ben St&ouml;ver
  * @since 0.1.0
- * @see SwingUndoSequenceDataProvider
+ * @see SwingUndoAlignmentModel
  */
 public abstract class SwingInsertRemoveTokensEdit<T> extends SwingTokenEdit<T> {
 	/**
@@ -45,7 +45,7 @@ public abstract class SwingInsertRemoveTokensEdit<T> extends SwingTokenEdit<T> {
 	 *        (The first element in the sequence has the index 0.)
 	 * @param tokens - the new tokens for the specified position
 	 */
-	public SwingInsertRemoveTokensEdit(SwingUndoSequenceDataProvider<T> provider, int sequenceID, int beginIndex, 
+	public SwingInsertRemoveTokensEdit(SwingUndoAlignmentModel<T> provider, int sequenceID, int beginIndex, 
 			Collection<? extends T> tokens) {
 
 		super(provider, sequenceID, beginIndex, tokens);
@@ -61,7 +61,7 @@ public abstract class SwingInsertRemoveTokensEdit<T> extends SwingTokenEdit<T> {
 	 *        (The first element in the sequence has the index 0.)
 	 * @param token - the new token for the specified position
 	 */
-	public SwingInsertRemoveTokensEdit(SwingUndoSequenceDataProvider<T> provider, int sequenceID, int index, 
+	public SwingInsertRemoveTokensEdit(SwingUndoAlignmentModel<T> provider, int sequenceID, int index, 
 			 T token) {
 
 		this(provider, sequenceID, index, Collections.nCopies(1, token));
@@ -78,7 +78,7 @@ public abstract class SwingInsertRemoveTokensEdit<T> extends SwingTokenEdit<T> {
 	 *        (The first element in the sequence has the index 0.)
 	 * @param endIndex - the index after the last element to be removed
 	 */
-	public SwingInsertRemoveTokensEdit(SwingUndoSequenceDataProvider<T> provider, int sequenceID, int beginIndex, 
+	public SwingInsertRemoveTokensEdit(SwingUndoAlignmentModel<T> provider, int sequenceID, int beginIndex, 
 			int endIndex) {
 
 		super(provider, sequenceID, beginIndex, null);
@@ -101,7 +101,7 @@ public abstract class SwingInsertRemoveTokensEdit<T> extends SwingTokenEdit<T> {
 	 * @param index - the index of the element to be removed 
 	 *        (The first element in the sequence has the index 0.)
 	 */
-	public SwingInsertRemoveTokensEdit(SwingUndoSequenceDataProvider<T> provider, int sequenceID, int index) {
+	public SwingInsertRemoveTokensEdit(SwingUndoAlignmentModel<T> provider, int sequenceID, int index) {
 		this(provider, sequenceID, index, index + 1);
 	}
 	

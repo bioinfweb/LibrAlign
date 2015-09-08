@@ -22,18 +22,18 @@ package info.bioinfweb.libralign.model.implementations.translation;
 import info.bioinfweb.libralign.model.AlignmentModelChangeListener;
 import info.bioinfweb.libralign.model.AlignmentModel;
 import info.bioinfweb.libralign.model.AlignmentModelWriteType;
-import info.bioinfweb.libralign.model.SequenceDataView;
+import info.bioinfweb.libralign.model.AlignmentModelView;
 import info.bioinfweb.libralign.model.exception.AlignmentSourceNotWritableException;
 import info.bioinfweb.libralign.model.exception.DuplicateSequenceNameException;
 import info.bioinfweb.libralign.model.exception.SequenceNotFoundException;
-import info.bioinfweb.libralign.model.implementations.AbstractSequenceDataView;
+import info.bioinfweb.libralign.model.implementations.AbstractAlignmentModelView;
 
 import java.util.Collection;
 
 
 
 /**
- * Abstract base class for implementations of {@link SequenceDataView} that simply replace a set
+ * Abstract base class for implementations of {@link AlignmentModelView} that simply replace a set
  * of tokens by other tokens of the same type. It delegates all methods to the underlying provider
  * except {@link #getTokenAt(int, int)} which calls the abstract method {@link #translateToken(Object)}
  * to perform the actual translation.
@@ -49,13 +49,13 @@ import java.util.Collection;
  *
  * @param <T> - the token type used by the implementing class and the underlying provider
  */
-public abstract class SameTokenTypeSequenceDataView<T> extends AbstractSequenceDataView<T, T> {
+public abstract class SameTokenTypeAlignmentModelView<T> extends AbstractAlignmentModelView<T, T> {
 	/**
 	 * Creates a new instance of this class.
 	 * 
 	 * @param underlyingProvider - the underlying provider to be viewed
 	 */
-	public SameTokenTypeSequenceDataView(AlignmentModel<T> underlyingProvider) {
+	public SameTokenTypeAlignmentModelView(AlignmentModel<T> underlyingProvider) {
 		super(underlyingProvider.getTokenSet().clone(), underlyingProvider);
 	}
 

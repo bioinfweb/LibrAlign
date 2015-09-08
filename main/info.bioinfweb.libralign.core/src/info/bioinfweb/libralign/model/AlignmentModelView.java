@@ -30,4 +30,4 @@ package info.bioinfweb.libralign.model;
  * @param <T> - the type of sequence elements (tokens) the implementing view works with
  * @param <U> - the type of sequence elements (tokens) the underlying provider works with
  */
-public interface SequenceDataView<T, U> extends AlignmentModel<T>, BasicSequenceDataView<U> {}
+public interface AlignmentModelView<T, U> extends AlignmentModel<T>, BasicAlignmentModelView<U> {}

@@ -19,7 +19,7 @@
 package info.bioinfweb.libralign.model.implementations.swingundo.edits.token;
 
 
-import info.bioinfweb.libralign.model.implementations.swingundo.SwingUndoSequenceDataProvider;
+import info.bioinfweb.libralign.model.implementations.swingundo.SwingUndoAlignmentModel;
 import info.bioinfweb.libralign.model.implementations.swingundo.edits.LibrAlignSwingAlignmentEdit;
 
 import java.util.Collection;
@@ -32,7 +32,7 @@ import java.util.Collections;
  * 
  * @author Ben St&ouml;ver
  * @since 0.1.0
- * @see SwingUndoSequenceDataProvider
+ * @see SwingUndoAlignmentModel
  */
 public abstract class SwingTokenEdit<T> extends LibrAlignSwingAlignmentEdit<T> {
 	protected int sequenceID;
@@ -40,7 +40,7 @@ public abstract class SwingTokenEdit<T> extends LibrAlignSwingAlignmentEdit<T> {
 	protected Collection<? extends T> tokens;
 	
 	
-	public SwingTokenEdit(SwingUndoSequenceDataProvider<T> provider, int sequenceID, int beginIndex, 
+	public SwingTokenEdit(SwingUndoAlignmentModel<T> provider, int sequenceID, int beginIndex, 
 			Collection<? extends T> tokens) {
 		
 		super(provider);

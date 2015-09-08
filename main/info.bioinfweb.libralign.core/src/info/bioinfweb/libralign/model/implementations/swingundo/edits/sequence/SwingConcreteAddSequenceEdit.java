@@ -23,7 +23,7 @@ import javax.swing.undo.CannotRedoException;
 import javax.swing.undo.CannotUndoException;
 
 import info.bioinfweb.libralign.model.AlignmentModel;
-import info.bioinfweb.libralign.model.implementations.swingundo.SwingUndoSequenceDataProvider;
+import info.bioinfweb.libralign.model.implementations.swingundo.SwingUndoAlignmentModel;
 
 
 
@@ -32,13 +32,13 @@ import info.bioinfweb.libralign.model.implementations.swingundo.SwingUndoSequenc
  * 
  * @author Ben St&oml;ver
  * @since 0.1.0
- * @see SwingUndoSequenceDataProvider
+ * @see SwingUndoAlignmentModel
  */
 public class SwingConcreteAddSequenceEdit<T> extends SwingSequenceEdit<T> implements SwingAddSequenceEdit {
 	private String name;
 
 	
-	public SwingConcreteAddSequenceEdit(SwingUndoSequenceDataProvider<T> provider, String name) {
+	public SwingConcreteAddSequenceEdit(SwingUndoAlignmentModel<T> provider, String name) {
 		super(provider, -1);
 		this.name = name;
 	}

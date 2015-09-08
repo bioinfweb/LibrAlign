@@ -19,7 +19,7 @@
 package info.bioinfweb.libralign.model.adapters;
 
 
-import info.bioinfweb.libralign.model.BasicSequenceDataView;
+import info.bioinfweb.libralign.model.BasicAlignmentModelView;
 import info.bioinfweb.libralign.model.SequenceAccess;
 import info.bioinfweb.libralign.model.AlignmentModel;
 
@@ -36,7 +36,7 @@ import info.bioinfweb.libralign.model.AlignmentModel;
  * @param <S> - the type of sequence object that is returned by the implementation of this interface
  * @param <T> - the token type used by the underlying provider
  */
-public interface SequenceDataAdapter<S, T> extends BasicSequenceDataView<T>, SequenceAccess<S> {
+public interface SequenceDataAdapter<S, T> extends BasicAlignmentModelView<T>, SequenceAccess<S> {
 	/**
 	 * Returns a view or copy of a subsequence in the underlying data source.
 	 * 
