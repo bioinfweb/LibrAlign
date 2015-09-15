@@ -122,6 +122,11 @@ public class CharacterTokenSet extends AbstractTokenSet<Character> {
 	/**
 	 * Returns a new instance of this class containing all amino acid tokens (one letter codes), 
 	 * including the gap token ({@code '-'}) and ambiguity codes.
+	 * <p>
+	 * The returned instance can also be used to take up molecular character data from a stream, 
+	 * where the character type (amino acid or nucleotide) is not known, because all nucleotide
+	 * characters and ambiguity codes are also contained in the amino acid token set. (That is 
+	 * not the case the other way around.)
 	 * 
 	 * @return the new instance
 	 */

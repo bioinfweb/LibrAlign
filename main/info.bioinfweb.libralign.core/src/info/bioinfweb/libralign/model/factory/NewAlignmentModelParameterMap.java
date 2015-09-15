@@ -53,18 +53,24 @@ public class NewAlignmentModelParameterMap extends ParameterMap {
 	/** 
 	 * Key used to store a {@link Boolean} value defining whether the model to be created will be part 
 	 * of a concatenated alignment model.
+	 * <p>
+	 * This key is currently not in use, but is already defined for future support of concatenated alignment models.
 	 */
 	public static final String KEY_IS_PART_MODEL = KEY_PREFIX + "isPartModel";
 	
 	/** 
 	 * Key used to store the first column index of the model to be created in its parent concatenated 
 	 * alignment model. 
+	 * <p>
+	 * This key is currently not in use, but is already defined for future support of concatenated alignment models.
 	 */
 	public static final String KEY_START_INDEX = KEY_PREFIX + "startIndex";
 	
 	/** 
 	 * Key used to store the first column index after the end of the model to be created in its parent 
 	 * concatenated alignment model. 
+	 * <p>
+	 * This key is currently not in use, but is already defined for future support of concatenated alignment models.
 	 */
 	public static final String KEY_END_INDEX = KEY_PREFIX + "endIndex";
 	
