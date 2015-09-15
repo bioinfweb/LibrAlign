@@ -57,7 +57,7 @@ public class StringAlignmentModelFactory implements AlignmentModelFactory<String
 		// Create model:
 		long charStateCount = parameterMap.getLong(NewAlignmentModelParameterMap.KEY_CHARACTER_STATE_COUNT, -1);
 		if ((charStateCount == -1) || (charStateCount > Integer.MAX_VALUE)) {
-			return new ArrayListAlignmentModel<String>(discreteTokenSet);  //TODO Only tokens that have explicitly defined will be loaded that way.
+			return new ArrayListAlignmentModel<String>(discreteTokenSet);  //TODO Only tokens that have explicitly been defined will be loaded that way.
 		}
 		else {
 			return new PackedAlignmentModel<String>(discreteTokenSet, (int)charStateCount);

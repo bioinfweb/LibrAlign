@@ -35,12 +35,37 @@ import info.bioinfweb.commons.collections.ParameterMap;
  * @since 0.4.0
  */
 public class NewAlignmentModelParameterMap extends ParameterMap {
+	/** The prefix of predefined keys used in this map. */
 	public static final String KEY_PREFIX = "info.bioinfweb.libralign.alignmentModelFactory.";
+	
+	/** Key used to store the return value of {@link #getCharacterStateSetType()}. */
 	public static final String KEY_CHARACTER_STATE_SET_TYPE = KEY_PREFIX + "charStateSetType";
+	
+	/** Key used to store the return value of {@link #getDefinedTokens()}. */
 	public static final String KEY_DEFINED_TOKENS = KEY_PREFIX + "tokens";
-	public static final String KEY_CHARACTER_STATE_COUNT = KEY_PREFIX + "isPartModel";
+	
+	/** 
+	 * Key used to store an {@link Integer} or {@link Long} value defining the maximum number of states 
+	 * to be supported by the new model.  
+	 */
+	public static final String KEY_CHARACTER_STATE_COUNT = KEY_PREFIX + "charStateCount";
+	
+	/** 
+	 * Key used to store a {@link Boolean} value defining whether the model to be created will be part 
+	 * of a concatenated alignment model.
+	 */
 	public static final String KEY_IS_PART_MODEL = KEY_PREFIX + "isPartModel";
+	
+	/** 
+	 * Key used to store the first column index of the model to be created in its parent concatenated 
+	 * alignment model. 
+	 */
 	public static final String KEY_START_INDEX = KEY_PREFIX + "startIndex";
+	
+	/** 
+	 * Key used to store the first column index after the end of the model to be created in its parent 
+	 * concatenated alignment model. 
+	 */
 	public static final String KEY_END_INDEX = KEY_PREFIX + "endIndex";
 	
 	
