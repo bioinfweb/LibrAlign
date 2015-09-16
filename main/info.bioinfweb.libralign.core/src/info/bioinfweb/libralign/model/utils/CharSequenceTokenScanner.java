@@ -16,10 +16,8 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package info.bioinfweb.libralign.model;
+package info.bioinfweb.libralign.model.utils;
 
-
-import java.util.List;
 
 import info.bioinfweb.libralign.model.exception.InvalidTokenRepresentationException;
 import info.bioinfweb.libralign.model.tokenset.TokenSet;
@@ -27,7 +25,7 @@ import info.bioinfweb.libralign.model.tokenset.TokenSet;
 
 
 /**
- * A scanner that can subsequently parse token from a character sequence consisting of concatenated token
+ * A scanner that can subsequently parse tokens from a character sequence consisting of concatenated token
  * representations.
  * <p>
  * If token representations are allowed to be longer than one character, each representation must be separated 

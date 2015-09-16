@@ -30,6 +30,7 @@ import info.bioinfweb.libralign.model.exception.SequenceNotFoundException;
 import info.bioinfweb.libralign.model.implementations.AbstractMapBasedAlignmentModel;
 import info.bioinfweb.libralign.model.implementations.AbstractAlignmentModel;
 import info.bioinfweb.libralign.model.tokenset.TokenSet;
+import info.bioinfweb.libralign.model.utils.AlignmentModelUtils;
 
 
 

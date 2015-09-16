@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package info.bioinfweb.libralign.model;
+package info.bioinfweb.libralign.model.utils;
 
 
 import info.bioinfweb.commons.bio.SequenceUtils;
@@ -24,6 +24,7 @@ import info.bioinfweb.commons.collections.PackedObjectArrayList;
 import info.bioinfweb.libralign.alignmentarea.AlignmentArea;
 import info.bioinfweb.libralign.alignmentarea.selection.SelectionModel;
 import info.bioinfweb.libralign.dataarea.implementations.pherogram.PherogramArea;
+import info.bioinfweb.libralign.model.AlignmentModel;
 import info.bioinfweb.libralign.model.exception.InvalidTokenRepresentationException;
 import info.bioinfweb.libralign.model.tokenset.AbstractTokenSet;
 import info.bioinfweb.libralign.model.tokenset.TokenSet;
