@@ -21,7 +21,7 @@ package info.bioinfweb.libralign.model.implementations;
 
 import info.bioinfweb.libralign.alignmentarea.AlignmentArea;
 import info.bioinfweb.libralign.alignmentarea.order.SequenceOrder;
-import info.bioinfweb.libralign.model.SequenceAccessDataProvider;
+import info.bioinfweb.libralign.model.SequenceAccessAlignmentModel;
 import info.bioinfweb.libralign.model.events.SequenceChangeEvent;
 import info.bioinfweb.libralign.model.tokenset.TokenSet;
 
@@ -44,11 +44,11 @@ import java.util.TreeMap;
  * 
  * @author Ben St&ouml;ver
  * 
- * @see SequenceAccessDataProvider
+ * @see SequenceAccessAlignmentModel
  * @see SequenceOrder
  * @see AlignmentArea
  *
- * @param <S> - the type of the sequence objects (e.g. a BioJava sequence type or {@link List})
+ * @param <S> - the type of the sequence objects (e.g. a {@link List} implementation or a BioJava sequence type)
  * @param <T> - the type of sequence elements (tokens) the implementing provider object works with
  */
 public abstract class AbstractMapBasedAlignmentModel<S, T> extends AbstractAlignmentModel<T> {
@@ -60,15 +60,21 @@ public abstract class AbstractMapBasedAlignmentModel<S, T> extends AbstractAlign
 	 * Creates a new instance of this class with a custom map and list implementation.
 	 * 
 	 * @param tokenSet - the token set which is supported by the implementation
-	 * @param sequenceMap - the map instance used to assign sequences to their IDs
+	 * @param sequenceMap - the map instance used to assign sequences to their IDs (must be empty)
 	 * @param sequenceOrder - the list object defining the order of the sequences
 	 */
 	public AbstractMapBasedAlignmentModel(TokenSet<T> tokenSet, Map<Integer, S> sequenceMap, 
 			List<Integer> sequenceOrder) {
 		
 		super(tokenSet);
-		this.sequenceMap = sequenceMap;
-		this.sequenceOrder = sequenceOrder;
+		if (sequenceMap.isEmpty()) {
+			this.sequenceMap = sequenceMap;
+			this.sequenceOrder = sequenceOrder;
+		}
+		else {
+			throw new IllegalArgumentException("The passed sequence map is not empty. "
+					+ "(Elements in the map are not allowed because no IDs have been assigned yet.)");
+		}
 	}
 
 

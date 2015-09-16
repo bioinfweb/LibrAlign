@@ -27,7 +27,7 @@ import info.bioinfweb.libralign.model.adapters.SequenceDataAdapter;
  * Implementations of {@link AlignmentModel} or {@link SequenceDataAdapter} that provide access to
  * a sequence object representing a row in the alignment should implement this interface.
  * <p>
- * This interface can be considered as the overlap between {@link SequenceAccessDataProvider} and 
+ * This interface can be considered as the overlap between {@link SequenceAccessAlignmentModel} and 
  * {@link SequenceDataAdapter}, but could also be implemented by classes not implementing one of these
  * interfaces.
  * 
@@ -42,7 +42,7 @@ public interface SequenceAccess<S> {
 	 * <p>
 	 * If the implementing class also implements {@link SequenceDataAdapter} the returned object can be a view 
 	 * or copy of a sequence in the underlying data source depending in the return value of 
-	 * {@link SequenceDataAdapter#returnsCopies()}. If {@link SequenceAccessDataProvider} is implemented
+	 * {@link SequenceDataAdapter#returnsCopies()}. If {@link SequenceAccessAlignmentModel} is implemented
 	 * the object used to store the sequence data is returned.
 	 * 
 	 * @param sequenceID - the ID of the sequence to be returned

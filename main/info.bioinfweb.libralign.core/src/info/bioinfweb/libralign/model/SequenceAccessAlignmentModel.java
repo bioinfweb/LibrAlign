@@ -34,7 +34,7 @@ import info.bioinfweb.libralign.model.exception.AlignmentSourceNotWritableExcept
  * @param <S> - the type of the sequence objects (e.g. a BioJava sequence type or {@link String})
  * @param <T> - the type of sequence elements (tokens) the implementing provider object works with
  */
-public interface SequenceAccessDataProvider<S, T> extends AlignmentModel<T>, SequenceAccess<S> {
+public interface SequenceAccessAlignmentModel<S, T> extends AlignmentModel<T>, SequenceAccess<S> {
   /**
    * Adds a the specified sequence to the underlying data source and generates an ID for it.
    * 

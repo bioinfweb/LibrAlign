@@ -38,7 +38,7 @@ import info.bioinfweb.libralign.model.tokenset.TokenSet;
  * @param <T> - the type of sequence elements (tokens) the implementing view works with
  * @param <U> - the type of sequence elements (tokens) the underlying provider works with
  */
-public abstract class AbstractAlignmentModelView<T, U> implements AlignmentModelView<T, U>{
+public abstract class AbstractAlignmentModelView<T, U> implements AlignmentModelView<T, U> {
   private AlignmentModel<U> underlyingProvider;
   private TokenSet<T> tokenSet;
 

@@ -41,7 +41,7 @@ import info.bioinfweb.libralign.model.tokenset.TokenSet;
 
 
 /**
- * Implements general functionality for sequence data providers.
+ * Implements general functionality for alignment models.
  * 
  * @author Ben St&uml;ver
  * @since 0.0.0

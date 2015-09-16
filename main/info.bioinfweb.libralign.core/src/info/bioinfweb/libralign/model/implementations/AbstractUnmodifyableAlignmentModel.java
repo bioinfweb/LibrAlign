@@ -24,7 +24,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
-import info.bioinfweb.libralign.model.SequenceAccessDataProvider;
+import info.bioinfweb.libralign.model.SequenceAccessAlignmentModel;
 import info.bioinfweb.libralign.model.AlignmentModelWriteType;
 import info.bioinfweb.libralign.model.events.SequenceChangeEvent;
 import info.bioinfweb.libralign.model.exception.AlignmentSourceNotWritableException;
@@ -44,7 +44,7 @@ import info.bioinfweb.libralign.model.tokenset.TokenSet;
  */
 public abstract class AbstractUnmodifyableAlignmentModel<S, T>
     extends AbstractMapBasedAlignmentModel<S, T>
-    implements SequenceAccessDataProvider<S, T> {
+    implements SequenceAccessAlignmentModel<S, T> {
 	
 	/**
 	 * Creates a new instance of this class with a custom map and list implementation.

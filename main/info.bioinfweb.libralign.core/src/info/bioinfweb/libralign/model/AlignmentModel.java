@@ -52,12 +52,12 @@ import info.bioinfweb.libralign.model.utils.AlignmentModelUtils;
  * <p>
  * Note that this interface leafs it up to the implementation if the alignment data is organized in objects
  * storing whole sequences (rows) or another storage pattern. If your implementation uses sequence objects
- * consider implementing {@link SequenceAccessDataProvider}.
+ * consider implementing {@link SequenceAccessAlignmentModel}.
  * 
  * @author Ben St&ouml;ver
  * @since 0.0.0
  * 
- * @see SequenceAccessDataProvider
+ * @see SequenceAccessAlignmentModel
  * @see AbstractAlignmentModel
  * @see AbstractMapBasedAlignmentModel
  * @see AbstractAlignmentModelAdapter

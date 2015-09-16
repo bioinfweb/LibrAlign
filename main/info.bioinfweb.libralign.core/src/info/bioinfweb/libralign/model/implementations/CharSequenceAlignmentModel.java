@@ -19,7 +19,7 @@
 package info.bioinfweb.libralign.model.implementations;
 
 
-import info.bioinfweb.libralign.model.SequenceAccessDataProvider;
+import info.bioinfweb.libralign.model.SequenceAccessAlignmentModel;
 import info.bioinfweb.libralign.model.AlignmentModel;
 import info.bioinfweb.libralign.model.tokenset.TokenSet;
 
@@ -37,7 +37,7 @@ import info.bioinfweb.libralign.model.tokenset.TokenSet;
  * @since 0.1.0
  */
 public class CharSequenceAlignmentModel extends AbstractUnmodifyableAlignmentModel<CharSequence, Character>
-    implements SequenceAccessDataProvider<CharSequence, Character> {
+    implements SequenceAccessAlignmentModel<CharSequence, Character> {
 	
 	public CharSequenceAlignmentModel(TokenSet<Character> tokenSet) {
 		super(tokenSet);
