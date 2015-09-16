@@ -212,6 +212,7 @@ main/info.bioinfweb.libralign.core/src/info/bioinfweb/libralign/model/tokenset/c
 main/info.bioinfweb.libralign.core/src/info/bioinfweb/libralign/model/tokenset/continuous/package-info.java -text svneol=unset#text/plain
 main/info.bioinfweb.libralign.core/src/info/bioinfweb/libralign/model/utils/AlignmentModelUtils.java -text
 main/info.bioinfweb.libralign.core/src/info/bioinfweb/libralign/model/utils/CharSequenceTokenScanner.java -text svneol=unset#text/plain
+main/info.bioinfweb.libralign.core/src/info/bioinfweb/libralign/model/utils/DegapedIndexCalculator.java -text svneol=unset#text/plain
 main/info.bioinfweb.libralign.core/src/info/bioinfweb/libralign/model/utils/package-info.java -text svneol=unset#text/plain
 main/info.bioinfweb.libralign.core/src/info/bioinfweb/libralign/multiplealignments/AlignmentAreaList.java -text svneol=unset#text/plain
 main/info.bioinfweb.libralign.core/src/info/bioinfweb/libralign/multiplealignments/MultipleAlignmentsContainer.java -text svneol=unset#text/plain
