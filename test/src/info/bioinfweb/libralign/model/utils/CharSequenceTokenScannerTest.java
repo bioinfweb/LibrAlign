@@ -20,6 +20,8 @@ package info.bioinfweb.libralign.model.utils;
 
 
 import static org.junit.Assert.*;
+
+
 import info.bioinfweb.commons.bio.CharacterStateType;
 import info.bioinfweb.libralign.model.tokenset.CharacterTokenSet;
 import info.bioinfweb.libralign.model.tokenset.TokenSet;
