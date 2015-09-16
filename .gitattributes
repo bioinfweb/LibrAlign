@@ -62,7 +62,6 @@ main/info.bioinfweb.libralign.core/src/info/bioinfweb/libralign/alignmentarea/pa
 main/info.bioinfweb.libralign.core/src/info/bioinfweb/libralign/alignmentarea/paintsettings/PaintSettings.java -text svneol=unset#text/plain
 main/info.bioinfweb.libralign.core/src/info/bioinfweb/libralign/alignmentarea/paintsettings/PaintSettingsEvent.java -text svneol=unset#text/plain
 main/info.bioinfweb.libralign.core/src/info/bioinfweb/libralign/alignmentarea/paintsettings/PaintSettingsListener.java -text svneol=unset#text/plain
-main/info.bioinfweb.libralign.core/src/info/bioinfweb/libralign/alignmentarea/paintsettings/PaintSettingsSynchronizer.java -text svneol=unset#text/plain
 main/info.bioinfweb.libralign.core/src/info/bioinfweb/libralign/alignmentarea/paintsettings/TokenPainterList.java -text svneol=unset#text/plain
 main/info.bioinfweb.libralign.core/src/info/bioinfweb/libralign/alignmentarea/paintsettings/TokenPainterReplacedEvent.java -text svneol=unset#text/plain
 main/info.bioinfweb.libralign.core/src/info/bioinfweb/libralign/alignmentarea/paintsettings/ZoomChangeEvent.java -text svneol=unset#text/plain
@@ -217,6 +216,7 @@ main/info.bioinfweb.libralign.core/src/info/bioinfweb/libralign/model/utils/pack
 main/info.bioinfweb.libralign.core/src/info/bioinfweb/libralign/multiplealignments/AlignmentAreaList.java -text svneol=unset#text/plain
 main/info.bioinfweb.libralign.core/src/info/bioinfweb/libralign/multiplealignments/MultipleAlignmentsContainer.java -text svneol=unset#text/plain
 main/info.bioinfweb.libralign.core/src/info/bioinfweb/libralign/multiplealignments/MultipleAlignmentsEventForwarder.java -text
+main/info.bioinfweb.libralign.core/src/info/bioinfweb/libralign/multiplealignments/PaintSettingsSynchronizer.java -text svneol=unset#text/plain
 main/info.bioinfweb.libralign.core/src/info/bioinfweb/libralign/multiplealignments/ToolkitSpecificMultipleAlignmentsContainer.java -text svneol=unset#text/plain
 main/info.bioinfweb.libralign.core/src/info/bioinfweb/libralign/multiplealignments/package-info.java -text svneol=unset#text/plain
 main/info.bioinfweb.libralign.core/src/info/bioinfweb/libralign/package-info.java -text svneol=unset#text/plain

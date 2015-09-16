@@ -21,7 +21,6 @@ package info.bioinfweb.libralign.multiplealignments;
 
 import info.bioinfweb.commons.collections.observable.ObservableList;
 import info.bioinfweb.libralign.alignmentarea.AlignmentArea;
-import info.bioinfweb.libralign.alignmentarea.paintsettings.PaintSettingsSynchronizer;
 
 import java.util.ArrayList;
 import java.util.Collection;

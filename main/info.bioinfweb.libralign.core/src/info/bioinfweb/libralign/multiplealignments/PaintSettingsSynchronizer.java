@@ -16,12 +16,15 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package info.bioinfweb.libralign.alignmentarea.paintsettings;
+package info.bioinfweb.libralign.multiplealignments;
 
 
 import info.bioinfweb.libralign.alignmentarea.AlignmentArea;
-import info.bioinfweb.libralign.multiplealignments.AlignmentAreaList;
-import info.bioinfweb.libralign.multiplealignments.MultipleAlignmentsContainer;
+import info.bioinfweb.libralign.alignmentarea.paintsettings.PaintSettings;
+import info.bioinfweb.libralign.alignmentarea.paintsettings.PaintSettingsEvent;
+import info.bioinfweb.libralign.alignmentarea.paintsettings.PaintSettingsListener;
+import info.bioinfweb.libralign.alignmentarea.paintsettings.TokenPainterReplacedEvent;
+import info.bioinfweb.libralign.alignmentarea.paintsettings.ZoomChangeEvent;
 
 import java.beans.PropertyChangeEvent;
 import java.lang.reflect.InvocationTargetException;
@@ -49,7 +52,7 @@ import org.apache.commons.beanutils.BeanUtils;
  * @see PaintSettings
  * @see MultipleAlignmentsContainer#getPaintSettingsToSynchronize()
  */
-public class PaintSettingsSynchronizer implements PaintSettingsListener {
+class PaintSettingsSynchronizer implements PaintSettingsListener {
 	private AlignmentAreaList owner;
 	private Set<String> propertiesToSynchronizes = new TreeSet<String>();
 	private boolean changeIsOngoing = false;
