@@ -195,15 +195,16 @@ public abstract class AbstractAlignmentModel<T> implements AlignmentModel<T> {
 	/**
 	 * Removes a sequence from the map instances returned by {@link #getNameByIDMap()} and 
 	 * {@link AbstractAlignmentModel#getIDByNameMap()}. No events are fired and
-	 * {@link #doRemoveSequence(int)} is not called by this method. It is a tool method for
-	 * inherited classes that offer additional removal operations (e.g. in returned iterators)
-	 * which have to avoid a {@link ConcurrentModificationException}.
+	 * {@link #doRemoveSequence(int)} is not called by this method.
+	 * <p>
+	 * It is a tool method for inherited classes that offer additional removal operations 
+	 * (e.g. in returned iterators) which have to avoid a {@link ConcurrentModificationException}.
 	 * 
 	 * @param sequenceID - the ID associated with the sequence mapping that shall be removed 
 	 */
 	protected void removeSequenceNameMapping(int sequenceID) {
+		getIDByNameMap().remove(sequenceNameByID(sequenceID));  // Must happen first.
 		getNameByIDMap().remove(sequenceID);
-		getIDByNameMap().remove(sequenceNameByID(sequenceID));
 	}
 	
 	
