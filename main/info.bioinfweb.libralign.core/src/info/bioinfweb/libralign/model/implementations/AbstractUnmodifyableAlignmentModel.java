@@ -50,13 +50,14 @@ public abstract class AbstractUnmodifyableAlignmentModel<S, T>
 	 * Creates a new instance of this class with a custom map and list implementation.
 	 * 
 	 * @param tokenSet - the token set which is supported by the implementation
+	 * @param idManager the ID manager to be used by the new instance (maybe shared among multiple instances) 
 	 * @param sequenceMap - the map instance used to assign sequences to their IDs
 	 * @param sequenceOrder - the list object defining the order of the sequences
 	 */
-	public AbstractUnmodifyableAlignmentModel(TokenSet<T> tokenSet,	Map<Integer, S> sequenceMap, 
-			List<Integer> sequenceOrder) {
+	public AbstractUnmodifyableAlignmentModel(TokenSet<T> tokenSet, SequenceIDManager idManager,	
+			Map<Integer, S> sequenceMap, List<Integer> sequenceOrder) {
 		
-		super(tokenSet, sequenceMap, sequenceOrder);
+		super(tokenSet, idManager, sequenceMap, sequenceOrder);
 	}
 
 
@@ -64,10 +65,11 @@ public abstract class AbstractUnmodifyableAlignmentModel<S, T>
 	 * Creates a new instance of this class with a custom map and list implementation.
 	 * 
 	 * @param tokenSet - the token set which is supported by the implementation
+	 * @param idManager the ID manager to be used by the new instance (maybe shared among multiple instances) 
 	 * @param sequenceMap - the map instance used to assign sequences to their IDs
 	 */
-	public AbstractUnmodifyableAlignmentModel(TokenSet<T> tokenSet,	Map<Integer, S> sequenceMap) {
-		super(tokenSet, sequenceMap);
+	public AbstractUnmodifyableAlignmentModel(TokenSet<T> tokenSet, SequenceIDManager idManager, Map<Integer, S> sequenceMap) {
+		super(tokenSet, idManager, sequenceMap);
 	}
 
 
@@ -75,9 +77,10 @@ public abstract class AbstractUnmodifyableAlignmentModel<S, T>
 	 * Creates a new instance of this class relying on a {@link TreeMap}.
 	 * 
 	 * @param tokenSet - the token set which is supported by the implementation
+	 * @param idManager the ID manager to be used by the new instance (maybe shared among multiple instances) 
 	 */
-	public AbstractUnmodifyableAlignmentModel(TokenSet<T> tokenSet) {
-		super(tokenSet);
+	public AbstractUnmodifyableAlignmentModel(TokenSet<T> tokenSet, SequenceIDManager idManager) {
+		super(tokenSet, idManager);
 	}
 
 

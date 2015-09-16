@@ -44,15 +44,16 @@ public class PackedAlignmentModel<T> extends AbstractListAlignmentModel<T> {
 	
 	
 	/**
-	 * Creates a new instance of this class
+	 * Creates a new instance of this class.
 	 * 
 	 * @param tokenSet the token set to be used by this alignment model
+	 * @param idManager the ID manager to be used by the new instance (maybe shared among multiple instances) 
 	 * @param minTokenCount the minimal number of different tokens to be supported by the compression method
 	 *        of this model
 	 * @see #getMaxSequenceLength()
 	 */
-	public PackedAlignmentModel(TokenSet<T> tokenSet, int minTokenCount) {
-		super(tokenSet);
+	public PackedAlignmentModel(TokenSet<T> tokenSet, SequenceIDManager idManager, int minTokenCount) {
+		super(tokenSet, idManager);
 		if (tokenSet.size() > minTokenCount) {
 			throw new IllegalArgumentException(
 					"The specified token count must be greater or equal to the number of tokens in the specified set.");
@@ -60,6 +61,19 @@ public class PackedAlignmentModel<T> extends AbstractListAlignmentModel<T> {
 		else {
 			this.minTokenCount = minTokenCount;
 		}
+	}
+
+
+	/**
+	 * Creates a new instance of this class using its own ID manager.
+	 * 
+	 * @param tokenSet the token set to be used by this alignment model
+	 * @param minTokenCount the minimal number of different tokens to be supported by the compression method
+	 *        of this model
+	 * @see #getMaxSequenceLength()
+	 */
+	public PackedAlignmentModel(TokenSet<T> tokenSet, int minTokenCount) {
+		this(tokenSet, new SequenceIDManager(), minTokenCount);
 	}
 
 
@@ -72,9 +86,26 @@ public class PackedAlignmentModel<T> extends AbstractListAlignmentModel<T> {
 	 * information). 
 	 * 
 	 * @param tokenSet the token set to be used by this alignment model
+	 * @param idManager the ID manager to be used by the new instance (maybe shared among multiple instances) 
+	 */
+	public PackedAlignmentModel(TokenSet<T> tokenSet, SequenceIDManager idManager) {
+		this(tokenSet, idManager, tokenSet.size());
+	}
+
+
+	/**
+	 * Creates a new instance of this class with the maximum number of different tokens that is equal to the
+	 * number of tokens in the specified set. The returned instance uses its own ID manager.
+	 * <p>
+	 * Note that adding additional elements to the token set later on may cause problems if the returned 
+	 * instance cannot hold enough different types of tokens (see {@link #getMaxTokenCount()} for further 
+	 * information). 
+	 * 
+	 * @param tokenSet the token set to be used by this alignment model
+	 * @param idManager the ID manager to be used by the new instance (maybe shared among multiple instances) 
 	 */
 	public PackedAlignmentModel(TokenSet<T> tokenSet) {
-		this(tokenSet, tokenSet.size());
+		this(tokenSet, new SequenceIDManager(), tokenSet.size());
 	}
 
 

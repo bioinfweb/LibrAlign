@@ -39,8 +39,24 @@ import info.bioinfweb.libralign.model.tokenset.TokenSet;
 public class CharSequenceAlignmentModel extends AbstractUnmodifyableAlignmentModel<CharSequence, Character>
     implements SequenceAccessAlignmentModel<CharSequence, Character> {
 	
+	/**
+	 * Creates a new instance of this class using a possibly shared ID manager.
+	 * 
+	 * @param tokenSet - the token set which is supported by the implementation
+	 * @param idManager the ID manager to be used by the new instance (maybe shared among multiple instances) 
+	 */
+	public CharSequenceAlignmentModel(TokenSet<Character> tokenSet, SequenceIDManager idManager) {
+		super(tokenSet, idManager);
+	}
+
+
+	/**
+	 * Creates a new instance of this class using its own ID manager.
+	 * 
+	 * @param tokenSet - the token set which is supported by the implementation
+	 */
 	public CharSequenceAlignmentModel(TokenSet<Character> tokenSet) {
-		super(tokenSet);
+		this(tokenSet, new SequenceIDManager());
 	}
 
 

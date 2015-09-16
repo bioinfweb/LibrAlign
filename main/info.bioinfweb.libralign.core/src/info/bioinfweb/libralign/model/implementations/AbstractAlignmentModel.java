@@ -21,11 +21,8 @@ package info.bioinfweb.libralign.model.implementations;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.ConcurrentModificationException;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
-import java.util.TreeMap;
 
 import info.bioinfweb.libralign.model.AlignmentModelChangeListener;
 import info.bioinfweb.libralign.model.AlignmentModel;
@@ -34,8 +31,6 @@ import info.bioinfweb.libralign.model.events.SequenceChangeEvent;
 import info.bioinfweb.libralign.model.events.SequenceRenamedEvent;
 import info.bioinfweb.libralign.model.events.TokenChangeEvent;
 import info.bioinfweb.libralign.model.exception.AlignmentSourceNotWritableException;
-import info.bioinfweb.libralign.model.exception.DuplicateSequenceNameException;
-import info.bioinfweb.libralign.model.exception.SequenceNotFoundException;
 import info.bioinfweb.libralign.model.tokenset.TokenSet;
 
 
@@ -49,9 +44,7 @@ import info.bioinfweb.libralign.model.tokenset.TokenSet;
  * @param <T> - the type of sequence elements (tokens) the implementing provider object works with
  */
 public abstract class AbstractAlignmentModel<T> implements AlignmentModel<T> {
-	private Map<String, Integer> idByNameMap = new TreeMap<String, Integer>();
-	private Map<Integer, String> nameByIDMap = new TreeMap<Integer, String>();
-	private int nextID = 0;
+	private SequenceIDManager idManager = new SequenceIDManager();
 	private TokenSet<T> tokenSet;
 	private List<AlignmentModelChangeListener> changeListeners = new ArrayList<AlignmentModelChangeListener>();
 	private int maxSequenceLength = 0;
@@ -59,7 +52,7 @@ public abstract class AbstractAlignmentModel<T> implements AlignmentModel<T> {
 
 	
 	/**
-	 * Creates a new instance of this class.
+	 * Creates a new instance of this class with its own instance of {@link SequenceIDManager}.
 	 * 
 	 * @param tokenSet - the set of allowed tokens in the sequences of the implementing class
 	 */
@@ -68,6 +61,19 @@ public abstract class AbstractAlignmentModel<T> implements AlignmentModel<T> {
 		this.tokenSet =  tokenSet;
 	}
 	
+
+	/**
+	 * Creates a new instance of this class.
+	 * 
+	 * @param tokenSet the set of allowed tokens in the sequences of the implementing class
+	 * @param idManager the ID manager to be used by the new instance (maybe shared among multiple instances) 
+	 */
+	public AbstractAlignmentModel(TokenSet<T> tokenSet, SequenceIDManager idManager) {
+		super();
+		this.idManager = idManager;
+		this.tokenSet = tokenSet;
+	}
+
 
 	@Override
 	public TokenSet<T> getTokenSet() {
@@ -81,13 +87,8 @@ public abstract class AbstractAlignmentModel<T> implements AlignmentModel<T> {
 	}
 
 
-	protected Map<String, Integer> getIDByNameMap() {
-		return idByNameMap;
-	}
-
-
-	protected Map<Integer, String> getNameByIDMap() {
-		return nameByIDMap;
+	protected SequenceIDManager getIDManager() {
+		return idManager;
 	}
 
 
@@ -106,20 +107,16 @@ public abstract class AbstractAlignmentModel<T> implements AlignmentModel<T> {
 
 
 	/* (non-Javadoc)
-	 * @see info.bioinfweb.libralign.alignmentprovider.SequenceDataProvider#containsSequence(int)
-	 */
-	@Override
-	public boolean containsSequence(int sequenceID) {
-		return sequenceNameByID(sequenceID) != null;
-	}
-
-
-	/* (non-Javadoc)
 	 * @see info.bioinfweb.libralign.alignmentprovider.SequenceDataProvider#sequenceNameByID(int)
 	 */
 	@Override
   public String sequenceNameByID(int sequenceID) {
-  	return getNameByIDMap().get(sequenceID);
+		if (containsSequence(sequenceID)) {
+			return getIDManager().sequenceNameByID(sequenceID);
+		}
+		else {
+			return null;
+		}
   }
   
   
@@ -128,8 +125,8 @@ public abstract class AbstractAlignmentModel<T> implements AlignmentModel<T> {
 	 */
 	@Override
 	public int sequenceIDByName(String sequenceName) {
-		Integer result = getIDByNameMap().get(sequenceName);
-		if (result == null) {
+		Integer result = getIDManager().sequenceIDByName(sequenceName);
+		if ((result == null) || !containsSequence(result)) {
 			return NO_SEQUENCE_FOUND;
 		}
 		else {
@@ -138,17 +135,6 @@ public abstract class AbstractAlignmentModel<T> implements AlignmentModel<T> {
 	}
 
 
-	/**
-	 * Returns a new sequence identifier that has not been returned before.
-	 * 
-	 * @return a value greater or equal to zero
-	 */
-	protected int createNewID() {
-		nextID++;
-		return nextID - 1;
-	}
-	
-	
 	/**
 	 * This method is called by {@link #addSequence(String)} if {@link #isReadOnly()} returns {@code false}. 
 	 * Implementing classes should add the specified new sequence to their underlying data source in this
@@ -171,9 +157,7 @@ public abstract class AbstractAlignmentModel<T> implements AlignmentModel<T> {
 			throw new AlignmentSourceNotWritableException(this);
 		}
 		else {
-			int sequenceID = createNewID();
-			getIDByNameMap().put(sequenceName, sequenceID);
-			getNameByIDMap().put(sequenceID, sequenceName);
+			int sequenceID = getIDManager().addSequenceName(sequenceName);
 			doAddSequence(sequenceID, sequenceName);
 			fireAfterSequenceChange(SequenceChangeEvent.newInsertInstance(this, sequenceID));
 			return sequenceID;
@@ -192,22 +176,6 @@ public abstract class AbstractAlignmentModel<T> implements AlignmentModel<T> {
 	protected abstract void doRemoveSequence(int sequenceID);
 	
 	
-	/**
-	 * Removes a sequence from the map instances returned by {@link #getNameByIDMap()} and 
-	 * {@link AbstractAlignmentModel#getIDByNameMap()}. No events are fired and
-	 * {@link #doRemoveSequence(int)} is not called by this method.
-	 * <p>
-	 * It is a tool method for inherited classes that offer additional removal operations 
-	 * (e.g. in returned iterators) which have to avoid a {@link ConcurrentModificationException}.
-	 * 
-	 * @param sequenceID - the ID associated with the sequence mapping that shall be removed 
-	 */
-	protected void removeSequenceNameMapping(int sequenceID) {
-		getIDByNameMap().remove(sequenceNameByID(sequenceID));  // Must happen first.
-		getNameByIDMap().remove(sequenceID);
-	}
-	
-	
 	/* (non-Javadoc)
 	 * @see info.bioinfweb.libralign.alignmentprovider.SequenceDataProvider#removeSequence(int)
 	 */
@@ -219,7 +187,6 @@ public abstract class AbstractAlignmentModel<T> implements AlignmentModel<T> {
 		else {
 			boolean result = containsSequence(sequenceID);
 			if (result) {
-				removeSequenceNameMapping(sequenceID);
 				doRemoveSequence(sequenceID);
 				fireAfterSequenceChange(SequenceChangeEvent.newRemoveInstance(this, sequenceID));
 			}
@@ -292,22 +259,11 @@ public abstract class AbstractAlignmentModel<T> implements AlignmentModel<T> {
 		if (isSequencesReadOnly()) {
 			throw new AlignmentSourceNotWritableException(this);
 		}
-		else if (containsSequence(sequenceIDByName(newSequenceName))) {
-			throw new DuplicateSequenceNameException(this, newSequenceName);
-		}
 		else {
-		  String sequenceName = sequenceNameByID(sequenceID);
-		  if (sequenceName == null) {
-		  	throw new SequenceNotFoundException(this);
-		  }
-		  else {
-		  	getIDByNameMap().remove(sequenceName);
-		  	getIDByNameMap().put(newSequenceName, sequenceID);
-		  	getNameByIDMap().put(sequenceID, newSequenceName);
-		  	doRenameSequence(sequenceID, newSequenceName);
-				fireAfterSequenceChange(SequenceChangeEvent.newRemoveInstance(this, sequenceID));
-		  }
-			return sequenceName;
+	  	String oldSequenceName = getIDManager().renameSequence(sequenceID, newSequenceName, this);
+	  	doRenameSequence(sequenceID, newSequenceName);
+			fireAfterSequenceChange(SequenceChangeEvent.newRemoveInstance(this, sequenceID));
+			return oldSequenceName;
 		}
 	}
 

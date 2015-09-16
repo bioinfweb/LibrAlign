@@ -60,13 +60,14 @@ public abstract class AbstractMapBasedAlignmentModel<S, T> extends AbstractAlign
 	 * Creates a new instance of this class with a custom map and list implementation.
 	 * 
 	 * @param tokenSet - the token set which is supported by the implementation
+	 * @param idManager the ID manager to be used by the new instance (maybe shared among multiple instances) 
 	 * @param sequenceMap - the map instance used to assign sequences to their IDs (must be empty)
 	 * @param sequenceOrder - the list object defining the order of the sequences
 	 */
-	public AbstractMapBasedAlignmentModel(TokenSet<T> tokenSet, Map<Integer, S> sequenceMap, 
-			List<Integer> sequenceOrder) {
+	public AbstractMapBasedAlignmentModel(TokenSet<T> tokenSet, SequenceIDManager idManager, 
+			Map<Integer, S> sequenceMap, List<Integer> sequenceOrder) {
 		
-		super(tokenSet);
+		super(tokenSet, idManager);
 		if (sequenceMap.isEmpty()) {
 			this.sequenceMap = sequenceMap;
 			this.sequenceOrder = sequenceOrder;
@@ -82,10 +83,11 @@ public abstract class AbstractMapBasedAlignmentModel<S, T> extends AbstractAlign
 	 * Creates a new instance of this class with a custom map implementation.
 	 * 
 	 * @param tokenSet - the token set which is supported by the implementation
+	 * @param idManager the ID manager to be used by the new instance (maybe shared among multiple instances) 
 	 * @param sequenceMap - the map instance used to assign sequences to their IDs
 	 */
-	public AbstractMapBasedAlignmentModel(TokenSet<T> tokenSet,	Map<Integer, S> sequenceMap) {
-		this(tokenSet, sequenceMap, new ArrayList<Integer>());
+	public AbstractMapBasedAlignmentModel(TokenSet<T> tokenSet,	SequenceIDManager idManager, Map<Integer, S> sequenceMap) {
+		this(tokenSet, idManager, sequenceMap, new ArrayList<Integer>());
 	}
 
 
@@ -93,9 +95,10 @@ public abstract class AbstractMapBasedAlignmentModel<S, T> extends AbstractAlign
 	 * Creates a new instance of this class relying on a {@link TreeMap}.
 	 * 
 	 * @param tokenSet - the token set which is supported by the implementation
+	 * @param idManager the ID manager to be used by the new instance (maybe shared among multiple instances) 
 	 */
-	public AbstractMapBasedAlignmentModel(TokenSet<T> tokenSet) {
-		this(tokenSet, new TreeMap<Integer, S>());
+	public AbstractMapBasedAlignmentModel(TokenSet<T> tokenSet, SequenceIDManager idManager) {
+		this(tokenSet, idManager, new TreeMap<Integer, S>());
 	}
 
 
@@ -122,6 +125,12 @@ public abstract class AbstractMapBasedAlignmentModel<S, T> extends AbstractAlign
 	}
 
 
+	@Override
+	public boolean containsSequence(int sequenceID) {
+		return getSequenceMap().containsKey(sequenceID);
+	}
+
+
 	/**
 	 * Returns an iterator returned the IDs of the stored sequences in the order they were added 
 	 * to this model. 
@@ -135,7 +144,6 @@ public abstract class AbstractMapBasedAlignmentModel<S, T> extends AbstractAlign
 			
 					@Override
 					protected void doRemove() {
-						removeSequenceNameMapping(getCurrentID());
 						getSequenceMap().remove(getCurrentID());
 						fireAfterSequenceChange(SequenceChangeEvent.newRemoveInstance(getProvider(), getCurrentID()));
 					}

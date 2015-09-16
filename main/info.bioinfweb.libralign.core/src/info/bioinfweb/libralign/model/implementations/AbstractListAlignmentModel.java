@@ -56,9 +56,10 @@ public abstract class AbstractListAlignmentModel<T>
 	 * lists.
 	 * 
 	 * @param tokenSet - the token set which is supported by the implementation
+	 * @param idManager the ID manager to be used by the new instance (maybe shared among multiple instances) 
 	 */
-	public AbstractListAlignmentModel(TokenSet<T> tokenSet) {
-		this(tokenSet, DEFAULT_INITIAL_CAPACITY, true);
+	public AbstractListAlignmentModel(TokenSet<T> tokenSet, SequenceIDManager idManager) {
+		this(tokenSet, idManager, DEFAULT_INITIAL_CAPACITY, true);
 	}
 
 
@@ -66,14 +67,15 @@ public abstract class AbstractListAlignmentModel<T>
 	 * Creates a new instance of this class.
 	 * 
 	 * @param tokenSet - the token set which is supported by the implementation
+	 * @param idManager the ID manager to be used by the new instance (maybe shared among multiple instances) 
 	 * @param initialCapacity - the initial capacity newly generated array lists will have
 	 * @param useMaxLength - Specify {@code true} here if {@code initialCapacity} shall only be used if it 
 	 *        is lower than {@link #getMaxSequenceLength()} to create new sequence array lists.
 	 */
-	public AbstractListAlignmentModel(TokenSet<T> tokenSet, int initialCapacity, 
+	public AbstractListAlignmentModel(TokenSet<T> tokenSet, SequenceIDManager idManager, int initialCapacity, 
 			boolean useMaxLength) {
 		
-		super(tokenSet);
+		super(tokenSet, idManager);
 		this.initialCapacity = initialCapacity;
 		this.useMaxLength = useMaxLength;
 	}

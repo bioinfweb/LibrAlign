@@ -44,9 +44,22 @@ public class ArrayListAlignmentModel<T> extends AbstractListAlignmentModel<T> {
 	 * lists.
 	 * 
 	 * @param tokenSet - the token set which is supported by the implementation
+	 * @param idManager the ID manager to be used by the new instance (maybe shared among multiple instances) 
+	 */
+	public ArrayListAlignmentModel(TokenSet<T> tokenSet, SequenceIDManager idManager) {
+		super(tokenSet, idManager);
+	}
+
+
+	/**
+	 * Creates a new instance of this class using {@link #DEFAULT_INITIAL_CAPACITY} as the initial capacity
+	 * which is only used if it is lower than {@link #getMaxSequenceLength()} to create new sequence array 
+	 * lists. The returned instance uses its own ID manager.
+	 * 
+	 * @param tokenSet - the token set which is supported by the implementation
 	 */
 	public ArrayListAlignmentModel(TokenSet<T> tokenSet) {
-		super(tokenSet);
+		super(tokenSet, new SequenceIDManager());
 	}
 
 
@@ -54,14 +67,15 @@ public class ArrayListAlignmentModel<T> extends AbstractListAlignmentModel<T> {
 	 * Creates a new instance of this class.
 	 * 
 	 * @param tokenSet - the token set which is supported by the implementation
+	 * @param idManager the ID manager to be used by the new instance (maybe shared among multiple instances) 
 	 * @param initialCapacity - the initial capacity newly generated array lists will have
 	 * @param useMaxLength - Specify {@code true} here if {@code initialCapacity} shall only be used if it 
 	 *        is lower than {@link #getMaxSequenceLength()} to create new sequence array lists.
 	 */
-	public ArrayListAlignmentModel(TokenSet<T> tokenSet, int initialCapacity, 
+	public ArrayListAlignmentModel(TokenSet<T> tokenSet, SequenceIDManager idManager, int initialCapacity, 
 			boolean useMaxLength) {
 		
-		super(tokenSet, initialCapacity, useMaxLength);
+		super(tokenSet, idManager, initialCapacity, useMaxLength);
 	}
 
 
