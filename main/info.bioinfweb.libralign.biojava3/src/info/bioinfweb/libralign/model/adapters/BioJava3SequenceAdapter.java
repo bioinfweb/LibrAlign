@@ -44,7 +44,7 @@ import org.biojava3.core.sequence.template.Sequence;
  * @param <T> - the token type used by the underlying provider
  * @param <C> - the compound class to be used in the returned sequences
  */
-public class BioJava3SequenceAdapter<T, C extends Compound> extends AbstractSequenceDataAdapter<T> 
+public class BioJava3SequenceAdapter<T, C extends Compound> extends AbstractAlignmentModelAdapter<T> 
     implements SequenceDataAdapter<SingleBioJava3SequenceAdapter<T, C>, T> {
 
 	private CompoundSet<C> compoundSet;
@@ -81,7 +81,7 @@ public class BioJava3SequenceAdapter<T, C extends Compound> extends AbstractSequ
 	 */
 	@Override
 	public SingleBioJava3SequenceAdapter<T, C> getSequence(int sequenceID) {
-		return new SingleBioJava3SequenceAdapter<T, C>(getUnderlyingProvider(), sequenceID, getCompoundSet());
+		return new SingleBioJava3SequenceAdapter<T, C>(getUnderlyingModel(), sequenceID, getCompoundSet());
 	}
 
 	
@@ -94,7 +94,7 @@ public class BioJava3SequenceAdapter<T, C extends Compound> extends AbstractSequ
 	 */
 	@Override
 	public SingleBioJava3SequenceAdapter<T, C> getSubSequence(int sequenceID, int offset, int length) {
-		return new SingleBioJava3SequenceAdapter<T, C>(getUnderlyingProvider(), sequenceID, offset, length, 
+		return new SingleBioJava3SequenceAdapter<T, C>(getUnderlyingModel(), sequenceID, offset, length, 
 				getCompoundSet());
 	}
 	
@@ -108,7 +108,7 @@ public class BioJava3SequenceAdapter<T, C extends Compound> extends AbstractSequ
 	 */
 	public LightweightProfile<Sequence<C>, C> toLightweightProfile() {
 		MultipleSequenceAlignment<Sequence<C>, C> result = new MultipleSequenceAlignment<Sequence<C>, C>();
-		Iterator<Integer> iterator = getUnderlyingProvider().sequenceIDIterator();
+		Iterator<Integer> iterator = getUnderlyingModel().sequenceIDIterator();
 		while (iterator.hasNext()) {
 			result.addAlignedSequence(getSequence(iterator.next()));
 		}
@@ -127,7 +127,7 @@ public class BioJava3SequenceAdapter<T, C extends Compound> extends AbstractSequ
 	 */
 	public LightweightProfile<Sequence<C>, C> toLightweightProfile(SequenceOrder order) {
 		MultipleSequenceAlignment<Sequence<C>, C> result = new MultipleSequenceAlignment<Sequence<C>, C>();
-		for (int i = 0; i < getUnderlyingProvider().getSequenceCount(); i++) {
+		for (int i = 0; i < getUnderlyingModel().getSequenceCount(); i++) {
 			result.addAlignedSequence(getSequence(order.idByIndex(i)));
 		}
 		return result;

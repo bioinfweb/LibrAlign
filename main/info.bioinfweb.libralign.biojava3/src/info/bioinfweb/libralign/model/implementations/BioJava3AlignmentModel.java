@@ -31,7 +31,7 @@ import org.biojava3.core.sequence.template.Sequence;
 
 import info.bioinfweb.commons.bio.biojava3.alignment.SimpleAlignment;
 import info.bioinfweb.commons.bio.biojava3.alignment.template.Alignment;
-import info.bioinfweb.libralign.model.SequenceAccessDataProvider;
+import info.bioinfweb.libralign.model.SequenceAccessAlignmentModel;
 import info.bioinfweb.libralign.model.AlignmentModelWriteType;
 import info.bioinfweb.libralign.model.exception.AlignmentSourceNotWritableException;
 import info.bioinfweb.libralign.model.tokenset.TokenSet;
@@ -48,7 +48,7 @@ import info.bioinfweb.libralign.model.tokenset.TokenSet;
  * @param <C> - the compound type used by the underlying sequence object
  */
 public class BioJava3AlignmentModel<S extends Sequence<C>, C extends Compound>
-    extends AbstractAlignmentModel<C> implements SequenceAccessDataProvider<S, C> {
+    extends AbstractAlignmentModel<C> implements SequenceAccessAlignmentModel<S, C> {
 
 	public static final String DEFAULT_SEQUENCE_NAME_PREFIX = "Sequence";
 	
@@ -59,10 +59,7 @@ public class BioJava3AlignmentModel<S extends Sequence<C>, C extends Compound>
 	private void setMapEntries() {
 		Iterator<String> iterator = alignment.nameIterator();
 		while (iterator.hasNext()) {
-			String sequenceName = iterator.next();
-			int sequenceID = createNewID();
-			getIDByNameMap().put(sequenceName, sequenceID);
-			getNameByIDMap().put(sequenceID, sequenceName);
+			getIDManager().addSequenceName(iterator.next());
 		}
 	}
 	
@@ -132,6 +129,13 @@ public class BioJava3AlignmentModel<S extends Sequence<C>, C extends Compound>
 			alignment.add(name, map.get(name));
 		}
 		setMapEntries();
+	}
+
+
+	@Override
+	public boolean containsSequence(int sequenceID) {
+		String name = getIDManager().sequenceNameByID(sequenceID);
+		return (name != null) && alignment.containsName(name);
 	}
 
 

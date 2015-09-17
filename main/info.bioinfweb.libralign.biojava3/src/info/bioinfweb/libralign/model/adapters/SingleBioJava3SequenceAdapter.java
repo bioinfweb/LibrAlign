@@ -163,8 +163,8 @@ public class SingleBioJava3SequenceAdapter<T, C extends Compound>
 	 */
 	@Override
 	public C getCompoundAt(int index) {
-		T token = getUnderlyingProvider().getTokenAt(getSequenceID(), index);
-		String representation = getUnderlyingProvider().getTokenSet().representationByToken(token);
+		T token = getUnderlyingModel().getTokenAt(getSequenceID(), index);
+		String representation = getUnderlyingModel().getTokenSet().representationByToken(token);
 		C result = getCompoundSet().getCompoundForString(representation);
 		if (result != null) {
 			return result;

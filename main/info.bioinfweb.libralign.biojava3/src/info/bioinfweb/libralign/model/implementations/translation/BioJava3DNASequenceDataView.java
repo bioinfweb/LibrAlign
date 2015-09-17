@@ -34,7 +34,7 @@ import info.bioinfweb.libralign.model.AlignmentModel;
  * @since 0.1.0
  * @bioinfweb.module info.bioinfweb.libralign.biojava3
  */
-public class BioJava3DNASequenceDataView extends SameTokenTypeSequenceDataView<NucleotideCompound> {
+public class BioJava3DNASequenceDataView extends SameTokenTypeAlignmentModelView<NucleotideCompound> {
 	private static final NucleotideCompound THYMINE = 
 			DNACompoundSet.getDNACompoundSet().getCompoundForString("T");
 	

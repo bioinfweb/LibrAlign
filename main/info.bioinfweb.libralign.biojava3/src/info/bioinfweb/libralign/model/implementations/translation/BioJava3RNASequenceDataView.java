@@ -35,7 +35,7 @@ import org.biojava3.core.sequence.compound.NucleotideCompound;
  * @since 0.1.0
  * @bioinfweb.module info.bioinfweb.libralign.biojava3
  */
-public class BioJava3RNASequenceDataView extends SameTokenTypeSequenceDataView<NucleotideCompound> {
+public class BioJava3RNASequenceDataView extends SameTokenTypeAlignmentModelView<NucleotideCompound> {
 	private static final NucleotideCompound URACIL = 
 			DNACompoundSet.getDNACompoundSet().getCompoundForString("U");
 	
