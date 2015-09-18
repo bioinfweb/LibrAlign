@@ -44,10 +44,12 @@ import java.util.TreeMap;
 
 
 /**
- * Reads alignment models from a <i>JPhyloIO</i> event stream.
+ * Reads alignment models from a <i>JPhyloIO</i> event stream. Usually instances of this class will not be
+ * used directly in application code, but an instance of {@link AlignmentDataReader} would be used instead.
  *
  * @author Ben St&ouml;ver
  * @since 0.4.0
+ * @see AlignmentDataReader
  * @bioinfweb.module info.bioinfweb.libralign.io
  */
 public class AlignmentModelEventReader implements JPhyloIOEventListener {
