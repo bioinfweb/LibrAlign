@@ -113,7 +113,13 @@ public class SequenceIDManager {  //TODO What if the same name is added several 
    * @return the sequence ID or {@code -1} if no sequence with the specified name is contained in this model
    */
   public int sequenceIDByName(String sequenceName) {
-  	return idByNameMap.get(sequenceName);
+  	Integer result =  idByNameMap.get(sequenceName);
+  	if (result == null) {
+  		return -1;
+  	}
+  	else {
+  		return result;
+  	}
   }
 
   
