@@ -279,6 +279,8 @@ public class AlignmentModelEventReader implements JPhyloIOEventListener {
 				readTokens(event.asSequenceTokensEvent());
 				break;
 			case ALIGNMENT_START:
+				currentParameterMap = new NewAlignmentModelParameterMap();
+				break;
 			case DOCUMENT_END:
 			case ALIGNMENT_END:  // Fall through of above cases for convenience if alignment end event should be missing. (Should not be essential.)
 				currentParameterMap = null;
