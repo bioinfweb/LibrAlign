@@ -30,7 +30,7 @@ import info.bioinfweb.libralign.model.AlignmentModel;
  * @author Ben St&ouml;ver
  * @since 0.1.0
  */
-public class RNASequenceDataView extends SameTokenTypeAlignmentModelView<Character> {
+public class RNASequenceDataView extends AbstractTokenReplacementAlignmentModelView<Character> {
 	private static final char URACIL = 'U';
 	
 	

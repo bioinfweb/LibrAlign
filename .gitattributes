@@ -196,9 +196,9 @@ main/info.bioinfweb.libralign.core/src/info/bioinfweb/libralign/model/implementa
 main/info.bioinfweb.libralign.core/src/info/bioinfweb/libralign/model/implementations/swingundo/edits/token/SwingTokenEdit.java -text svneol=unset#text/plain
 main/info.bioinfweb.libralign.core/src/info/bioinfweb/libralign/model/implementations/swingundo/edits/token/package-info.java -text svneol=unset#text/plain
 main/info.bioinfweb.libralign.core/src/info/bioinfweb/libralign/model/implementations/swingundo/package-info.java -text svneol=unset#text/plain
+main/info.bioinfweb.libralign.core/src/info/bioinfweb/libralign/model/implementations/translation/AbstractTokenReplacementAlignmentModelView.java -text svneol=unset#text/plain
 main/info.bioinfweb.libralign.core/src/info/bioinfweb/libralign/model/implementations/translation/DNASequenceDataView.java -text svneol=unset#text/plain
 main/info.bioinfweb.libralign.core/src/info/bioinfweb/libralign/model/implementations/translation/RNASequenceDataView.java -text svneol=unset#text/plain
-main/info.bioinfweb.libralign.core/src/info/bioinfweb/libralign/model/implementations/translation/SameTokenTypeAlignmentModelView.java -text svneol=unset#text/plain
 main/info.bioinfweb.libralign.core/src/info/bioinfweb/libralign/model/implementations/translation/package-info.java -text svneol=unset#text/plain
 main/info.bioinfweb.libralign.core/src/info/bioinfweb/libralign/model/package-info.java -text svneol=unset#text/plain
 main/info.bioinfweb.libralign.core/src/info/bioinfweb/libralign/model/tokenset/AbstractTokenSet.java -text svneol=unset#text/plain

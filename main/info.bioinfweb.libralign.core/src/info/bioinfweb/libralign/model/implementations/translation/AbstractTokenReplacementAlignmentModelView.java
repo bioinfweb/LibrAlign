@@ -42,20 +42,22 @@ import java.util.Collection;
  * in that case {@link #getTokenAt(int, int)} would return a different token than the one passed to a 
  * previously call of {@link #setTokenAt(int, int, Object)} or {@link #insertTokenAt(int, int, Object)}
  * or similar methods called with the same index value.
- *  
+ * <p>
+ * Note that classes inherited from this class are not meant to apply length changes. There is no
+ * index conversion implemented in this class.
  * 
  * @author Ben St&ouml;ver
  * @since 0.1.0
  *
  * @param <T> - the token type used by the implementing class and the underlying provider
  */
-public abstract class SameTokenTypeAlignmentModelView<T> extends AbstractAlignmentModelView<T, T> {
+public abstract class AbstractTokenReplacementAlignmentModelView<T> extends AbstractAlignmentModelView<T, T> {
 	/**
 	 * Creates a new instance of this class.
 	 * 
 	 * @param underlyingProvider - the underlying provider to be viewed
 	 */
-	public SameTokenTypeAlignmentModelView(AlignmentModel<T> underlyingProvider) {
+	public AbstractTokenReplacementAlignmentModelView(AlignmentModel<T> underlyingProvider) {
 		super(underlyingProvider.getTokenSet().clone(), underlyingProvider);
 	}
 
@@ -170,6 +172,6 @@ public abstract class SameTokenTypeAlignmentModelView<T> extends AbstractAlignme
 
 	@Override
 	public Collection<AlignmentModelChangeListener> getChangeListeners() {
-		return getUnderlyingModel().getChangeListeners();
+		return getUnderlyingModel().getChangeListeners();  //TODO Does in make sense to forward these directly? Could indices have changed? Should new listeners really be registered in the underlying model?
 	}	
 }
