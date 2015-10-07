@@ -31,7 +31,7 @@ import java.util.Collection;
 
 
 /**
- * This class provider the business logic for user actions triggered through the view {@link AlignmentContentArea}
+ * This class provides the business logic for user actions triggered through the view {@link AlignmentContentArea}
  * to manipulate the associated models {@link AlignmentModel} and {@link SelectionModel}.
  *
  * @author Ben St&ouml;ver

@@ -55,10 +55,39 @@ import info.bioinfweb.libralign.multiplealignments.MultipleAlignmentsContainer;
 
 
 /**
- * GUI element of LibrAlign that displays an alignment including attached data views.
+ * Instances of this class act as GUI components that display a multiple sequence alignment including attached data areas.
+ * <p>
+ * {@code AlignmentArea} is one of the major GUI components in LibrAlign. It acts as a view in the model view controller 
+ * paradigm and works closely together with an instance of {@link AlignmentModel} which provides the data to be displayed.
+ * <p>
+ * It can be used as stand-alone components are can be contained in a {@link MultipleAlignmentsContainer}, which would be 
+ * returned by {@link #getContainer()} in this case. Instances of this class are {@link TICComponent}s. To use this class 
+ * in a GUI application, a toolkit specific version of it can be created using {@code SwingComponentFactory} or 
+ * {@code SWTComponentFactory} from <a href="http://bioinfweb.info/TIC">TIC</a>. See the
+ * <a href="http://bioinfweb.info/LibrAlign/Documentation/wiki/Working_with_toolkits">LibrAlign documentation</a> for details.
+ * <p>
+ * {@code AlignmentArea} has the following key properties:
+ * <ul>
+ *   <li>{@link #getSequenceOrder()} determines the order in which sequences are displayed.</li>
+ *   <li>{@link #getPaintSettings()} determines the way the contents are displayed.</li>
+ *   <li>{@link #getEditSettings()} determines if and how a user can edit the contents of this area.</li>
+ *   <li>{@link #getActionProvider()} provides the business logic for manipulating the contents of the associated 
+ *       model in response to user inputs depending on the current selection.</li>
+ *   <li>{@link #getSelection()} determines the cells of the alignment that are currently selected and the alignment 
+ *       cursor position.</li>
+ * </ul>
+ * <p>
+ * The implementation of {@code AlignmentArea} is distributed across {@link #getContentArea()} which displays the
+ * sequences and data areas and {@link #getLabelArea()} which displays there labels (on the left).
  * 
  * @author Ben St&ouml;ver
  * @since 0.0.0
+ * @bioinfweb.module info.bioinfweb.libralign.core
+ * 
+ * @see MultipleAlignmentsContainer
+ * @see AlignmentContentArea
+ * @see AlignmentLabelArea
+ * @see AlignmentModel
  */
 public class AlignmentArea extends TICComponent implements AlignmentModelChangeListener, DataAreaModelListener {
 	public static final int MIN_PART_AREA_HEIGHT = 5;
@@ -164,35 +193,49 @@ public class AlignmentArea extends TICComponent implements AlignmentModelChangeL
 	}
 
 
+	/**
+	 * Allows to determine whether this instance is currently associated with any alignment model.
+	 * 
+	 * @return {@code true} if an associated alignment model is present, {@code false} if no alignment model is specified.
+	 */
 	public boolean hasAlignmentModel() {
 		return getAlignmentModel() != null;
 	}
 	
 	
+	/**
+	 * Returns the alignment model providing the data displayed by this area.
+	 * 
+	 * @return the associated alignment model
+	 */
 	public AlignmentModel<?> getAlignmentModel() {
 		return alignmentModel;
 	}
 	
 	
+	/**
+	 * Returns the paint settings object associated with this instance. The returned object contains properties that
+	 * control the way the contents of this area are displayed.
+	 * 
+	 * @return the paint settings object used by this component
+	 */
 	public PaintSettings getPaintSettings() {
 		return paintSettings;
 	}
 
 
 	/**
-	 * Changes the sequence model used by this instance.
+	 * Changes the alignment model providing the data for this instance.
 	 * 
-	 * @param alignmentModel - the new data provider to use from now on
-	 * @param moveListeners - Specify {@code true} here, if you want the {@link AlignmentModelChangeListener}s
+	 * @param alignmentModel the new alignment model to use from now on
+	 * @param moveListeners Specify {@code true} here, if you want the {@link AlignmentModelChangeListener}s
 	 *        attached to the current model to be moved to the specified {@code alignmentModel},
 	 *        {@code false} if the listeners shall remain attached to the old model. (This instance
 	 *        is also registered as a listener and is always moved to the new object, no matter which value is
 	 *        specified here.)
 	 * @return the previous model that has been replaced or {@code null} if there was no model before
 	 */
-	public AlignmentModel<?> setAlignmentModel(AlignmentModel<?> alignmentModel, 
-			boolean moveListeners) {
-		
+	public AlignmentModel<?> setAlignmentModel(AlignmentModel<?> alignmentModel, boolean moveListeners) {
 		AlignmentModel<?> result = this.alignmentModel;
 		if (!alignmentModel.equals(this.alignmentModel)) {
 			if (this.alignmentModel != null) {
@@ -235,6 +278,12 @@ public class AlignmentArea extends TICComponent implements AlignmentModelChangeL
 	}
 	
 	
+	/**
+	 * Returns the sequence order object the determines the order in which the sequences of the associated
+	 * alignment model are displayed in this instance.
+	 * 
+	 * @return the associated sequence order object
+	 */
 	public SequenceOrder getSequenceOrder() {
 		return sequenceOrder;
 	}
@@ -251,13 +300,21 @@ public class AlignmentArea extends TICComponent implements AlignmentModelChangeL
 	}
 
 
+	/**
+	 * Returns the edit setting object used by this instance. Edit settings are properties that influence
+	 * the way a user can edit the contents of an alignment area and the data areas it contains.
+	 * 
+	 * @return the associated edit settings object
+	 */
 	public EditSettings getEditSettings() {
 		return editSettings;
 	}
 
 
 	/**
-	 * Returns the selection model used by this object.
+	 * Returns the selection model used by this instance.
+	 * 
+	 * @return the associated selection model
 	 */
 	public SelectionModel getSelection() {
 		return selection;
@@ -285,16 +342,34 @@ public class AlignmentArea extends TICComponent implements AlignmentModelChangeL
 	}
 	
 	
+	/**
+	 * Determines whether this instance is contained inside a {@link MultipleAlignmentsContainer}.
+	 * 
+	 * @return {@code true} if this area is part of a parent container or {@code false} if it is used as a 
+	 *         stand-alone component 
+	 */
 	public boolean hasContainer() {
 		return getContainer() != null;
 	}
 
 
+	/**
+	 * Returns the alignment content area used internally by this instance. Content areas display the sequences and 
+	 * data area, while data areas display their labels.
+	 * 
+	 * @return the alignment content area contained in this instance
+	 */
 	public AlignmentContentArea getContentArea() {
 		return alignmentContentArea;
 	}
 
 
+	/**
+	 * Returns the alignment label area used internally by this instance. Content areas display the sequences and 
+	 * data area, while data areas display their labels.
+	 * 
+	 * @return the alignment label area contained in this instance
+	 */
 	public AlignmentLabelArea getLabelArea() {
 		return alignmentLabelArea;
 	}
