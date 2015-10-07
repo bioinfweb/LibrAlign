@@ -131,7 +131,6 @@ public abstract class AbstractTokenReplacementAlignmentModelDecorator<T, U> exte
 	}
 
 
-	@Override
 	protected Collection<? extends T> convertUnderlyingTokens(int underlyingSequenceID, int underlyingIndex, 
 			Collection<? extends U> underlyingTokens) {
 		
@@ -152,7 +151,6 @@ public abstract class AbstractTokenReplacementAlignmentModelDecorator<T, U> exte
 	}
 	
 	
-	@Override
 	protected Collection<? extends U> convertDecoratedTokens(int viewedSequenceID, int viewedIndex, 
 			Collection<? extends T> viewedTokens) {
 		

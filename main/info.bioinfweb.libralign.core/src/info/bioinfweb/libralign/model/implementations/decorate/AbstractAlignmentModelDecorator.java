@@ -135,14 +135,6 @@ public abstract class AbstractAlignmentModelDecorator<T, U> extends AbstractAlig
 	}
 	
 	
-	protected abstract Collection<? extends T> convertUnderlyingTokens(int underlyingSequenceID, int underlyingIndex, 
-			Collection<? extends U> underlyingTokens);
-	
-	
-	protected abstract Collection<? extends U> convertDecoratedTokens(int viewedSequenceID, int viewedIndex, 
-			Collection<? extends T> viewedTokens);
-	
-	
 	/**
 	 * Converts a token change event from the underlying (decorated) model to a collection of according change 
 	 * events to be used with this decorator.
