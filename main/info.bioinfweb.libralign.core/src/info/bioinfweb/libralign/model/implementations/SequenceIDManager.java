@@ -90,7 +90,7 @@ public class SequenceIDManager {  //TODO What if the same name is added several 
 
   	String oldSequenceName = nameByIDMap.get(sequenceID);
 	  if (oldSequenceName == null) {
-	  	throw new SequenceNotFoundException(model);
+	  	throw new SequenceNotFoundException(model, sequenceID);
 	  }
 	  else if (!newSequenceName.equals(oldSequenceName)) {
   		if (idByNameMap.get(newSequenceName) == sequenceID) {

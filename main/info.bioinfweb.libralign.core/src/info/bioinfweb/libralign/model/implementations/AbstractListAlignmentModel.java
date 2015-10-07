@@ -23,6 +23,7 @@ import info.bioinfweb.libralign.model.AlignmentModel;
 import info.bioinfweb.libralign.model.AlignmentModelWriteType;
 import info.bioinfweb.libralign.model.events.TokenChangeEvent;
 import info.bioinfweb.libralign.model.exception.AlignmentSourceNotWritableException;
+import info.bioinfweb.libralign.model.exception.SequenceNotFoundException;
 import info.bioinfweb.libralign.model.tokenset.TokenSet;
 
 import java.util.ArrayList;
@@ -40,9 +41,7 @@ import java.util.List;
  *
  * @param <T> - the type of sequence elements (tokens) the implementing provider object works with
  */
-public abstract class AbstractListAlignmentModel<T> 
-    extends AbstractMapBasedAlignmentModel<List<T>, T> {
-	
+public abstract class AbstractListAlignmentModel<T> extends AbstractMapBasedAlignmentModel<List<T>, T> {
 	public static final int DEFAULT_INITIAL_CAPACITY = 256;
 	
 		
@@ -88,16 +87,27 @@ public abstract class AbstractListAlignmentModel<T>
 	
 	@Override
 	public T getTokenAt(int sequenceID, int index) {
-		return getSequence(sequenceID).get(index);
+		List<T> sequence = getSequence(sequenceID);
+		if (sequence != null) {
+			return sequence.get(index);
+		}
+		else {
+			throw new SequenceNotFoundException(this, sequenceID);
+		}
 	}
 	
 
 	@Override
 	public void setTokenAt(int sequenceID, int index, T token) throws AlignmentSourceNotWritableException {
-		T replacedToken = getSequence(sequenceID).get(index);
-		getSequence(sequenceID).set(index, token);
-		
-		fireAfterTokenChange(TokenChangeEvent.newReplaceInstance(this, sequenceID, index, replacedToken));
+		List<T> sequence = getSequence(sequenceID);
+		if (sequence != null) {
+			T replacedToken = sequence.get(index);
+			sequence.set(index, token);
+			fireAfterTokenChange(TokenChangeEvent.newReplaceInstance(this, sequenceID, index, replacedToken));
+		}
+		else {
+			throw new SequenceNotFoundException(this, sequenceID);
+		}
 	}
 
 	
@@ -106,25 +116,34 @@ public abstract class AbstractListAlignmentModel<T>
 			throws AlignmentSourceNotWritableException {
 
 		List<T> sequence = getSequence(sequenceID);
-		Collection<T> replacedTokens = new ArrayList<T>(tokens.size());
-		Iterator<? extends T> iterator = tokens.iterator();
-		int index = beginIndex;
-		while (iterator.hasNext()) {
-			replacedTokens.add(sequence.get(index));
-			sequence.set(index, iterator.next());
-			index++;
+		if (sequence != null) {
+			Collection<T> replacedTokens = new ArrayList<T>(tokens.size());
+			Iterator<? extends T> iterator = tokens.iterator();
+			int index = beginIndex;
+			while (iterator.hasNext()) {
+				replacedTokens.add(sequence.get(index));
+				sequence.set(index, iterator.next());
+				index++;
+			}
+			
+			fireAfterTokenChange(TokenChangeEvent.newReplaceInstance(this, sequenceID, beginIndex, replacedTokens));
 		}
-		
-		fireAfterTokenChange(TokenChangeEvent.newReplaceInstance(this, sequenceID, beginIndex, replacedTokens));
+		else {
+			throw new SequenceNotFoundException(this, sequenceID);
+		}
 	}
 
 	
 	@Override
-	public void insertTokenAt(int sequenceID, int index, T token)
-			throws AlignmentSourceNotWritableException {
-
-		getSequence(sequenceID).add(index, token);
-		fireAfterTokenChange(TokenChangeEvent.newInsertInstance(this, sequenceID, index, token));
+	public void insertTokenAt(int sequenceID, int index, T token)	throws AlignmentSourceNotWritableException {
+		List<T> sequence = getSequence(sequenceID);
+		if (sequence != null) {
+			sequence.add(index, token);
+			fireAfterTokenChange(TokenChangeEvent.newInsertInstance(this, sequenceID, index, token));
+		}
+		else {
+			throw new SequenceNotFoundException(this, sequenceID);
+		}
 	}
 
 	
@@ -132,17 +151,28 @@ public abstract class AbstractListAlignmentModel<T>
 	public void insertTokensAt(int sequenceID, int beginIndex, Collection<? extends T> tokens)
 			throws AlignmentSourceNotWritableException {
 
-		getSequence(sequenceID).addAll(beginIndex, tokens);
-		fireAfterTokenChange(TokenChangeEvent.newInsertInstance(this, sequenceID, beginIndex, tokens));
+		List<T> sequence = getSequence(sequenceID);
+		if (sequence != null) {
+			getSequence(sequenceID).addAll(beginIndex, tokens);
+			fireAfterTokenChange(TokenChangeEvent.newInsertInstance(this, sequenceID, beginIndex, tokens));
+		}
+		else {
+			throw new SequenceNotFoundException(this, sequenceID);
+		}
 	}
 
 	
 	@Override
 	public void removeTokenAt(int sequenceID, int index) throws AlignmentSourceNotWritableException {
 		List<T> sequence = getSequence(sequenceID);
-		T removedToken = sequence.get(index);
-		sequence.remove(index);
-		fireAfterTokenChange(TokenChangeEvent.newRemoveInstance(this, sequenceID, index, removedToken));
+		if (sequence != null) {
+			T removedToken = sequence.get(index);
+			sequence.remove(index);
+			fireAfterTokenChange(TokenChangeEvent.newRemoveInstance(this, sequenceID, index, removedToken));
+		}
+		else {
+			throw new SequenceNotFoundException(this, sequenceID);
+		}
 	}
 
 	
@@ -151,18 +181,29 @@ public abstract class AbstractListAlignmentModel<T>
 			throws AlignmentSourceNotWritableException {
 
 		List<T> sequence = getSequence(sequenceID);
-		Collection<T> removedTokens = new ArrayList<T>(endIndex - beginIndex);
-		List<T> subList = sequence.subList(beginIndex, endIndex);
-		removedTokens.addAll(subList);
-		subList.clear();
-		
-		fireAfterTokenChange(TokenChangeEvent.newRemoveInstance(this, sequenceID, beginIndex, removedTokens));
+		if (sequence != null) {
+			Collection<T> removedTokens = new ArrayList<T>(endIndex - beginIndex);
+			List<T> subList = sequence.subList(beginIndex, endIndex);
+			removedTokens.addAll(subList);
+			subList.clear();
+			
+			fireAfterTokenChange(TokenChangeEvent.newRemoveInstance(this, sequenceID, beginIndex, removedTokens));
+		}
+		else {
+			throw new SequenceNotFoundException(this, sequenceID);
+		}
 	}
 
 	
 	@Override
 	public int getSequenceLength(int sequenceID) {
-		return getSequence(sequenceID).size();
+		List<T> sequence = getSequence(sequenceID);
+		if (sequence != null) {
+			return sequence.size();
+		}
+		else {
+			return -1;
+		}
 	}
 
 	

@@ -21,6 +21,7 @@ package info.bioinfweb.libralign.model;
 
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.Set;
 
 import info.bioinfweb.libralign.alignmentarea.content.AlignmentContentArea;
 import info.bioinfweb.libralign.model.adapters.AbstractAlignmentModelAdapter;
@@ -28,7 +29,7 @@ import info.bioinfweb.libralign.model.exception.AlignmentSourceNotWritableExcept
 import info.bioinfweb.libralign.model.exception.DuplicateSequenceNameException;
 import info.bioinfweb.libralign.model.exception.SequenceNotFoundException;
 import info.bioinfweb.libralign.model.implementations.AbstractMapBasedAlignmentModel;
-import info.bioinfweb.libralign.model.implementations.AbstractAlignmentModel;
+import info.bioinfweb.libralign.model.implementations.AbstractUndecoratedAlignmentModel;
 import info.bioinfweb.libralign.model.tokenset.TokenSet;
 import info.bioinfweb.libralign.model.utils.AlignmentModelUtils;
 
@@ -58,7 +59,7 @@ import info.bioinfweb.libralign.model.utils.AlignmentModelUtils;
  * @since 0.0.0
  * 
  * @see SequenceAccessAlignmentModel
- * @see AbstractAlignmentModel
+ * @see AbstractUndecoratedAlignmentModel
  * @see AbstractMapBasedAlignmentModel
  * @see AbstractAlignmentModelAdapter
  *
@@ -212,7 +213,7 @@ public interface AlignmentModel<T> {
    * 
    * @return a collection object containing the listeners
    */
-  public Collection<AlignmentModelChangeListener> getChangeListeners();
+  public Set<AlignmentModelChangeListener> getChangeListeners();
 
 	/**
 	 * Returns the token at the specified position.
@@ -220,6 +221,9 @@ public interface AlignmentModel<T> {
 	 * @param sequenceID - the identifier the sequence where the token is contained
 	 * @param index - the index of the element contained in the specified sequence (The first element has the index 0.)
 	 * @return the token to be displayed in the GUI alignment view
+	 * @throws SequenceNotFoundException if no according sequence to the specified ID was found in this model
+	 * @throws IndexOutOfBoundsException if the specified index is below zero or greater or equal to the length of the
+	 *         specified sequence 
 	 */
 	public T getTokenAt(int sequenceID, int index);
 	
@@ -231,6 +235,10 @@ public interface AlignmentModel<T> {
 	 * @param token - the new token for the specified position
 	 * 
 	 * @throws AlignmentSourceNotWritableException if the underlying data source is not writable for tokens 
+	 * @throws SequenceNotFoundException if no according sequence to the specified ID was found in this model
+	 * @throws IndexOutOfBoundsException if the specified index is below zero or greater or equal to the length of the
+	 *         specified sequence (Note that not all implementations will throw this exception for indices above zero.
+	 *         Some may also elongate the sequence accordingly and will up the new positions with e.g. gaps.) 
 	 */
 	public void setTokenAt(int sequenceID, int index, T token) throws AlignmentSourceNotWritableException;
 
@@ -245,6 +253,7 @@ public interface AlignmentModel<T> {
 	 * @param tokens - the new tokens for the specified position
 	 * 
 	 * @throws AlignmentSourceNotWritableException if the underlying data source is not writable for tokens
+	 * @throws SequenceNotFoundException if no according sequence to the specified ID was found in this model
 	 * @see AlignmentModelUtils#charSequenceToTokenList(CharSequence, TokenSet)
 	 */
 	public void setTokensAt(int sequenceID, int beginIndex, Collection<? extends T> tokens) 
@@ -256,6 +265,7 @@ public interface AlignmentModel<T> {
 	 * @param sequenceID - the identifier the sequence in the alignment
 	 * @param token - the token to be inserted
 	 * 
+	 * @throws SequenceNotFoundException if no according sequence to the specified ID was found in this model
 	 * @throws AlignmentSourceNotWritableException if the underlying data source is not writable for tokens
 	 */
 	public void appendToken(int sequenceID, T token) throws AlignmentSourceNotWritableException;
@@ -266,6 +276,7 @@ public interface AlignmentModel<T> {
 	 * @param sequenceID - the identifier the sequence where the token is contained
 	 * @param tokens - the new tokens for the specified position
 	 * 
+	 * @throws SequenceNotFoundException if no according sequence to the specified ID was found in this model
 	 * @throws AlignmentSourceNotWritableException if the underlying data source is not writable for tokens
 	 * @see AlignmentModelUtils#charSequenceToTokenList(CharSequence, TokenSet)
 	 */
@@ -280,6 +291,7 @@ public interface AlignmentModel<T> {
 	 *        ({@code 0 <= elementIndex < sequenceLength}) 
 	 * @param token - the token to be inserted
 	 * 
+	 * @throws SequenceNotFoundException if no according sequence to the specified ID was found in this model
 	 * @throws AlignmentSourceNotWritableException if the underlying data source is not writable for tokens
 	 */
 	public void insertTokenAt(int sequenceID, int index, T token) throws AlignmentSourceNotWritableException;
@@ -293,6 +305,7 @@ public interface AlignmentModel<T> {
 	 *        (The first element in the sequence has the index 0.)
 	 * @param tokens - the new tokens for the specified position
 	 * 
+	 * @throws SequenceNotFoundException if no according sequence to the specified ID was found in this model
 	 * @throws AlignmentSourceNotWritableException if the underlying data source is not writable for tokens
 	 * @see AlignmentModelUtils#charSequenceToTokenList(CharSequence, TokenSet)
 	 */
@@ -304,6 +317,7 @@ public interface AlignmentModel<T> {
 	 * @param sequenceID - the identifier the sequence in the alignment
 	 * @param index - the index of the element to be removed (The first element has the index 0.)
 	 * 
+	 * @throws SequenceNotFoundException if no according sequence to the specified ID was found in this model
 	 * @throws AlignmentSourceNotWritableException if the underlying data source is not writable for tokens
 	 */
 	public void removeTokenAt(int sequenceID, int index) throws AlignmentSourceNotWritableException;
@@ -317,6 +331,7 @@ public interface AlignmentModel<T> {
 	 * @param beginIndex - the beginning index, inclusive
 	 * @param endIndex - the ending index, exclusive
 	 * 
+	 * @throws SequenceNotFoundException if no according sequence to the specified ID was found in this model
 	 * @throws AlignmentSourceNotWritableException if the underlying data source is not writable for tokens
 	 */
 	public void removeTokensAt(int sequenceID, int beginIndex, int endIndex) throws AlignmentSourceNotWritableException;

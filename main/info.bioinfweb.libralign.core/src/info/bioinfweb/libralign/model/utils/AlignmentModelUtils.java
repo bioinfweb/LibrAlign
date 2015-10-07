@@ -42,6 +42,10 @@ import java.util.List;
  * @since 0.4.0
  */
 public class AlignmentModelUtils {
+	public static final String THYMINE = "T";
+	public static final String URACILE= "U";
+	
+	
 	/**
 	 * Converts a character sequence to a sequence of tokens. Each character in {@code sequence} is considered
 	 * to be a valid token representation in the specified set.#

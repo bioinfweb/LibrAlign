@@ -21,6 +21,7 @@ package info.bioinfweb.libralign.model.implementations;
 
 import info.bioinfweb.libralign.model.SequenceAccessAlignmentModel;
 import info.bioinfweb.libralign.model.AlignmentModel;
+import info.bioinfweb.libralign.model.exception.SequenceNotFoundException;
 import info.bioinfweb.libralign.model.tokenset.TokenSet;
 
 
@@ -73,12 +74,24 @@ public class CharSequenceAlignmentModel extends AbstractUnmodifyableAlignmentMod
 
 	@Override
 	public int getSequenceLength(int sequenceID) {
-		return getSequence(sequenceID).length();
+		CharSequence sequence = getSequence(sequenceID);
+		if (sequence != null) {
+			return sequence.length();
+		}
+		else {
+			return -1;
+		}
 	}
 
 
 	@Override
 	public Character getTokenAt(int sequenceID, int index) {
-		return getSequence(sequenceID).charAt(index);
+		CharSequence sequence = getSequence(sequenceID);
+		if (sequence != null) {
+			return sequence.charAt(index);
+		}
+		else {
+			throw new SequenceNotFoundException(this, sequenceID);
+		}
 	}
 }

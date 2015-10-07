@@ -1,0 +1,293 @@
+/*
+ * LibrAlign - A GUI library for displaying and editing multiple sequence alignments and attached data
+ * Copyright (C) 2014-2015  Ben Stöver
+ * <http://bioinfweb.info/LibrAlign>
+ * 
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ */
+package info.bioinfweb.libralign.model.implementations.decorate;
+
+
+import java.util.Collection;
+import java.util.Iterator;
+
+import info.bioinfweb.commons.collections.ListChangeType;
+import info.bioinfweb.libralign.model.AlignmentModel;
+import info.bioinfweb.libralign.model.AlignmentModelChangeListener;
+import info.bioinfweb.libralign.model.AlignmentModelView;
+import info.bioinfweb.libralign.model.events.SequenceChangeEvent;
+import info.bioinfweb.libralign.model.events.SequenceRenamedEvent;
+import info.bioinfweb.libralign.model.events.TokenChangeEvent;
+import info.bioinfweb.libralign.model.exception.AlignmentSourceNotWritableException;
+import info.bioinfweb.libralign.model.implementations.AbstractAlignmentModel;
+import info.bioinfweb.libralign.model.tokenset.TokenSet;
+
+
+
+/**
+ * Basic implementation of {@link AlignmentModelView} which stores the underlying model
+ * in a property and delegates sequence specific methods (which are independent of the token
+ * type) to the underlying model.
+ * 
+ * @author Ben St&ouml;ver
+ *
+ * @param <T> the type of sequence elements (tokens) the implementing decorator works with
+ * @param <U> the type of sequence elements (tokens) the underlying model works with
+ */
+public abstract class AbstractAlignmentModelDecorator<T, U> extends AbstractAlignmentModel<T> implements AlignmentModelView<T, U> {
+  private AlignmentModel<U> underlyingModel;
+  private TokenSet<T> tokenSet;
+
+  
+	/**
+	 * Creates a new instance of this class.
+	 * 
+	 * @param underlyingModel - the underlying model to be viewed
+	 */
+	public AbstractAlignmentModelDecorator(TokenSet<T> tokenSet, AlignmentModel<U> underlyingModel) {
+		super();
+		this.tokenSet = tokenSet;
+		this.underlyingModel = underlyingModel;
+		underlyingModel.getChangeListeners().add(new AlignmentModelChangeListener() {
+			@Override
+			public <V> void afterTokenChange(TokenChangeEvent<V> e) {
+				for (TokenChangeEvent<T> event: convertTokenChangeEvent((TokenChangeEvent<U>)e)) {
+					fireAfterTokenChange(event);
+				}
+			}
+			
+			@Override
+			public <V> void afterSequenceRenamed(SequenceRenamedEvent<V> e) {
+				SequenceRenamedEvent<T> event = convertSequenceRenamedEvent((SequenceRenamedEvent<U>)e); 
+				if (event != null) {
+					fireAfterSequenceRenamed(event);
+				}
+			}
+			
+			@Override
+			public <V> void afterSequenceChange(SequenceChangeEvent<V> e) {
+				SequenceChangeEvent<T> event = convertSequenceChangeEvent((SequenceChangeEvent<U>)e); 
+				if (event != null) {
+					fireAfterSequenceChange(event);
+				}
+			}
+			
+			@Override
+			public <V, W> void afterProviderChanged(AlignmentModel<V> previous,	AlignmentModel<W> current) {
+				// TODO Does this have to be forwarded in any way? (Will this method be moved away from this listener anyway?)
+			}
+		});
+	}
+
+	
+	/**
+	 * Method used to convert a sequence ID from the underlying model to the according sequence ID used by the decorator.
+	 * This default implementation just returns the specified ID unchanged.
+	 * <p>
+	 * Inherited classes that use different IDs than their underlying model must overwrite this method. Otherwise
+	 * change events from the underlying model will not be converted correctly. The same applies if inherited classes
+	 * hide any of the underlying sequences. In this case, they must return -1 for calls with the ID of a hidden sequence. 
+	 * 
+	 * @param underlyingSequenceID the sequence ID used in the underlying model
+	 * @return the according sequence ID used by this view of -1 if the specified underlying sequence is hidden by
+	 *         this decorator 
+	 */
+	protected int convertUnderlyingSequenceID(int underlyingSequenceID) {
+		return underlyingSequenceID;
+	}
+	
+	
+	/**
+	 * Method used to convert a sequence ID used by the decorator to the according sequence ID used by the underlying model.
+	 * This default implementation just returns the specified ID unchanged.
+	 * <p>
+	 * Inherited classes that use different IDs than their underlying model must overwrite this method because numerous 
+	 * decorator methods rely on this conversion. The same applies if inherited classes add sequences to those contained 
+	 * in the underlying model. In this case, they must return -1 for calls with the ID of an additional sequence. 
+	 * 
+	 * @param decoratedSequenceID the sequence ID used in the underlying model
+	 * @return the according sequence ID used by this view of -1 if the specified decorated sequence is not present in
+	 *         the underlying model
+	 */
+	protected int convertDecoratedSequenceID(int decoratedSequenceID) {
+		return decoratedSequenceID;
+	}
+	
+	
+	protected int convertUnderlyingTokenIndex(int sequenceID, int underlyingIndex) {
+		return underlyingIndex;
+	}
+	
+	
+	protected int convertDecoratedTokenIndex(int sequenceID, int decoratedIndex) {
+		return decoratedIndex;
+	}
+	
+	
+	protected abstract Collection<? extends T> convertUnderlyingTokens(int underlyingSequenceID, int underlyingIndex, 
+			Collection<? extends U> underlyingTokens);
+	
+	
+	protected abstract Collection<? extends U> convertDecoratedTokens(int viewedSequenceID, int viewedIndex, 
+			Collection<? extends T> viewedTokens);
+	
+	
+	/**
+	 * Converts a token change event from the underlying (decorated) model to a collection of according change 
+	 * events to be used with this decorator.
+	 * <p>
+	 * Depending on which columns are added or hidden by the decorator implementation, an empty collection or
+	 * a collection containing more than one event may be returned. ({@code null} is not a valid return value.)  
+	 * 
+	 * @param event the event fired by the underlying model
+	 * @return a list (with zero or more elements) that describe the according changes in this decorator
+	 */
+	protected abstract Iterable<TokenChangeEvent<T>> convertTokenChangeEvent(TokenChangeEvent<U> event);
+	
+	
+	/**
+	 * Converts a {@link SequenceChangeEvent} event from the decorated instance to an event object compatible
+	 * with this instance.
+	 * <p>
+	 * This default implementation returns a new event object with this instance as its owner and a sequence ID 
+	 * converted using {@link #convertUnderlyingSequenceID(int)}. If the ID conversion returns -1, {@code null} is returned
+	 * by this method.
+	 * <p>
+	 * Inherited classes may overwrite this method to implement a different behavior, but in most cases it should
+	 * be sufficient to overwrite {@link #convertUnderlyingSequenceID(int)} to change the behavior of this method.
+	 * 
+	 * @param event the event from the underlying (decorated) model
+	 * @return a new converted event object or {@code null} if the specified underlying sequence is hidden by this decorator
+	 * @throws IllegalArgumentException if {@link SequenceChangeEvent#getType()} return anything else than
+	 *         {@link ListChangeType#INSERTION} or {@link ListChangeType#DELETION}. (Events fired by models
+	 *         of LibrAlign never have any other type.)
+	 */
+	protected SequenceChangeEvent<T> convertSequenceChangeEvent(SequenceChangeEvent<U> event) {
+		int decoratedID = convertUnderlyingSequenceID(event.getSequenceID());
+		if (decoratedID != -1) {
+			switch (event.getType()) {
+				case INSERTION:
+					return SequenceChangeEvent.newInsertInstance(this, decoratedID);
+				case DELETION:
+					return SequenceChangeEvent.newRemoveInstance(this, decoratedID);
+				default:  // Just in case more valid types are added in the future.
+					throw new IllegalArgumentException("The change type \"" + event.getType() + " is not supported.");
+			}
+		}
+		else {
+			return null;
+		}
+	}
+	
+
+	/**
+	 * Converts a {@link SequenceRenamedEvent} event from the decorated instance to an event object compatible
+	 * with this instance.
+	 * <p>
+	 * This default implementation returns a new event object with this instance as its owner, the same previous and
+	 * current name and a sequence ID converted using {@link #convertUnderlyingSequenceID(int)}. If the ID conversion returns -1, {@code null} is returned
+	 * by this method.
+	 * <p>
+	 * Inherited classes may overwrite this method to implement a different behavior, but in most cases it should
+	 * be sufficient to overwrite {@link #convertUnderlyingSequenceID(int)} to change the behavior of this method.
+	 * 
+	 * @param event the event from the underlying (decorated) model
+	 * @return a new converted event object or {@code null} if the specified underlying sequence is hidden by this decorator
+	 */
+	protected SequenceRenamedEvent<T> convertSequenceRenamedEvent(SequenceRenamedEvent<U> event) {
+		int decoratedID = convertUnderlyingSequenceID(event.getSequenceID());
+		if (decoratedID != -1) {
+			return new SequenceRenamedEvent<T>(this, decoratedID, event.getPreviousName(), event.getNewName());
+		}
+		else {
+			return null;
+		}
+	}
+	
+
+	@Override
+	public AlignmentModel<U> getUnderlyingModel() {
+		return underlyingModel;
+	}
+
+
+	@Override
+	public TokenSet<T> getTokenSet() {
+		return tokenSet;
+	}
+
+
+	@Override
+	public void setTokenSet(TokenSet<T> tokenSet) {
+		this.tokenSet = tokenSet;
+	}
+
+
+	/**
+	 * Replaces the decorated (underlying) model.
+	 * 
+	 * @param underlyingModel - the new underlying model
+	 */
+	protected void setUnderlyingModel(AlignmentModel<U> underlyingModel) {
+		this.underlyingModel = underlyingModel;
+	}
+
+
+	@Override
+	public boolean isSequencesReadOnly() {
+		return underlyingModel.isSequencesReadOnly();
+	}
+
+
+	@Override
+	public boolean containsSequence(int sequenceID) {
+		return underlyingModel.containsSequence(sequenceID);
+	}
+
+
+	@Override
+	public int sequenceIDByName(String sequenceName) {
+		return underlyingModel.sequenceIDByName(sequenceName);
+	}
+
+
+	@Override
+	public String sequenceNameByID(int sequenceID) {
+		return underlyingModel.sequenceNameByID(sequenceID);
+	}
+
+
+	@Override
+	public int addSequence(String sequenceName) throws AlignmentSourceNotWritableException {
+		return underlyingModel.addSequence(sequenceName);
+	}
+
+
+	@Override
+	public boolean removeSequence(int sequenceID)	throws AlignmentSourceNotWritableException {
+		return underlyingModel.removeSequence(sequenceID);
+	}
+
+
+	@Override
+	public Iterator<Integer> sequenceIDIterator() {
+		return underlyingModel.sequenceIDIterator();
+	}
+
+
+	@Override
+	public int getSequenceCount() {
+		return underlyingModel.getSequenceCount();
+	}
+}

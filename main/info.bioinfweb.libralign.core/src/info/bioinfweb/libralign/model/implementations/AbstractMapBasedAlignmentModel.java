@@ -51,7 +51,7 @@ import java.util.TreeMap;
  * @param <S> - the type of the sequence objects (e.g. a {@link List} implementation or a BioJava sequence type)
  * @param <T> - the type of sequence elements (tokens) the implementing provider object works with
  */
-public abstract class AbstractMapBasedAlignmentModel<S, T> extends AbstractAlignmentModel<T> {
+public abstract class AbstractMapBasedAlignmentModel<S, T> extends AbstractUndecoratedAlignmentModel<T> {
   private Map<Integer, S> sequenceMap;
   private List<Integer> sequenceOrder;  // Only necessary to save the order the sequences were added, because they might be sorted like this later on. The actual ordering will be done by a SequenceOrder object of the GUI.
 

@@ -22,6 +22,7 @@ package info.bioinfweb.libralign.model.implementations.swingundo;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Iterator;
+import java.util.Set;
 
 import javax.swing.undo.UndoManager;
 import javax.swing.undo.UndoableEdit;
@@ -385,7 +386,7 @@ public class SwingUndoAlignmentModel<T> implements AlignmentModel<T>,
 
 
 	@Override
-	public Collection<AlignmentModelChangeListener> getChangeListeners() {
+	public Set<AlignmentModelChangeListener> getChangeListeners() {
 		return provider.getChangeListeners();
 	}
 }
