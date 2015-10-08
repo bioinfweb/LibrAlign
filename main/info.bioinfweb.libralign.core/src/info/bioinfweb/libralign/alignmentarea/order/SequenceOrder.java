@@ -109,7 +109,8 @@ public class SequenceOrder {
 	 * Returns the unique identifier of the sequence displayed at the specified index
 	 * 
 	 * @param index - the index of the sequence (The first sequence has the index 0.)
-	 * @return the ID of the sequence in the data source 
+	 * @return the ID of the sequence in the data source
+	 * @throws IndexOutOfBoundsException if the specified index is below 0 or greater or equal to number of sequences.
 	 */
 	public int idByIndex(int index) {
 		return idList.get(index);

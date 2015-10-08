@@ -226,10 +226,10 @@ public class AlignmentContentArea extends TICComponent {
 			return 0;
 		}
 		else if (getOwner().hasAlignmentModel()) {
-			return getOwner().getAlignmentModel().getSequenceCount() - 1;
+			return Math.max(0, getOwner().getAlignmentModel().getSequenceCount() - 1);
 		}
 		else {
-		    return 0;
+			return 0;
 		}
 	}
 
