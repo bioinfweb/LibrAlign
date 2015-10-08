@@ -28,7 +28,7 @@ import java.util.List;
 
 
 /**
- * An abstract implementation of {@link AlignmentModel} using a map of array lists to store 
+ * An implementation of {@link AlignmentModel} using a map of array lists to store 
  * alignment data. The constructors offer different options to specify the initial capacity a new 
  * {@link ArrayList} instance.
  * 

@@ -19,7 +19,6 @@
 package info.bioinfweb.libralign.model.implementations.decorate;
 
 
-import java.util.Collection;
 import java.util.Iterator;
 
 import info.bioinfweb.commons.collections.ListChangeType;

@@ -32,6 +32,8 @@ import info.bioinfweb.libralign.model.tokenset.TokenSet;
 
 /**
  * Implements general functionality for alignment models that are not decorators of other models.
+ * <p>
+ * This mainly includes sequence ID management, token set storage and efficient max length calculation.
  * 
  * @author Ben St&uml;ver
  * @since 0.4.0
@@ -43,7 +45,7 @@ public abstract class AbstractUndecoratedAlignmentModel<T> extends AbstractAlign
 	private TokenSet<T> tokenSet;
 	private int maxSequenceLength = 0;
 	private boolean recalculateMaxSequenceLength = true; 
-
+	
 	
 	/**
 	 * Creates a new instance of this class with its own instance of {@link SequenceIDManager}.

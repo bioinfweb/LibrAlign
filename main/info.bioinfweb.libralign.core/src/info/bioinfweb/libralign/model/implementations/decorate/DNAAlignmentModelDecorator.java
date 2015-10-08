@@ -26,8 +26,8 @@ import info.bioinfweb.libralign.model.utils.AlignmentModelUtils;
 
 
 /**
- * Shows the underlying nucleotide data source as a DNA sequence, i.e. replaces all thymine tokens 
- * by uracil tokens.
+ * Shows the underlying nucleotide data source as a DNA sequence, i.e. replaces all uracil tokens 
+ * by thymine tokens.
  * 
  * @author Ben St&ouml;ver
  * @since 0.4.0

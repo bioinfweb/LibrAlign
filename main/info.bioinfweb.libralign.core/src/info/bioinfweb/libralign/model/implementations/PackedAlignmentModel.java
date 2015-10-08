@@ -28,7 +28,7 @@ import java.util.List;
 
 
 /**
- * A sequence data provider using a {@link PackedObjectArrayList} is the underlying data source.
+ * An alignment model using a {@link PackedObjectArrayList} as the underlying data source.
  * This class can be used to efficiently store large editable sequences, because it will usually use only
  * a small fraction of the space {@link ArrayListAlignmentModel} will use to store its tokens.
  * <p>
