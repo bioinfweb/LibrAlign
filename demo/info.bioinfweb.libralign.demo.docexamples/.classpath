@@ -5,5 +5,6 @@
 	<classpathentry kind="lib" path="/info.bioinfweb.commons.core/bin" sourcepath="/info.bioinfweb.commons.core/src"/>
 	<classpathentry kind="lib" path="/info.bioinfweb.libralign.core/bin" sourcepath="/info.bioinfweb.libralign.core/src"/>
 	<classpathentry kind="lib" path="/info.bioinfweb.tic.core/bin"/>
+	<classpathentry kind="lib" path="/info.bioinfweb.commons.bio/bin" sourcepath="/info.bioinfweb.commons.bio/src"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
