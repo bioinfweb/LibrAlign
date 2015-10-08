@@ -1,11 +1,11 @@
 * text=auto !eol
-demo/.classpath -text svneol=unset#text/plain
-demo/.project -text svneol=unset#text/plain
-demo/.settings/org.eclipse.jdt.core.prefs -text svneol=unset#text/plain
-demo/data/Test_qualityScore.scf -text
-demo/src/info/bioinfweb/libralign/demo/AbstractTestApplication.java -text svneol=unset#text/plain
-demo/src/info/bioinfweb/libralign/demo/swing/Main.java -text svneol=unset#text/plain
-demo/src/info/bioinfweb/libralign/demo/swt/Main.java -text svneol=unset#text/plain
+demo/info.bioinfweb.libralign.demo.applicationold/.classpath -text svneol=unset#text/plain
+demo/info.bioinfweb.libralign.demo.applicationold/.project -text svneol=unset#text/plain
+demo/info.bioinfweb.libralign.demo.applicationold/.settings/org.eclipse.jdt.core.prefs -text svneol=unset#text/plain
+demo/info.bioinfweb.libralign.demo.applicationold/data/Test_qualityScore.scf -text
+demo/info.bioinfweb.libralign.demo.applicationold/src/info/bioinfweb/libralign/demo/AbstractTestApplication.java -text svneol=unset#text/plain
+demo/info.bioinfweb.libralign.demo.applicationold/src/info/bioinfweb/libralign/demo/swing/Main.java -text svneol=unset#text/plain
+demo/info.bioinfweb.libralign.demo.applicationold/src/info/bioinfweb/libralign/demo/swt/Main.java -text svneol=unset#text/plain
 main/info.bioinfweb.libralign.biojava1/.classpath -text svneol=unset#text/plain
 main/info.bioinfweb.libralign.biojava1/.project -text svneol=unset#text/plain
 main/info.bioinfweb.libralign.biojava1/.settings/org.eclipse.jdt.core.prefs -text svneol=unset#text/plain
