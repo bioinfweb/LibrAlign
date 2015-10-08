@@ -68,9 +68,9 @@ public class SwingAlignmentArea extends JScrollPane implements ToolkitSpecificAl
 		addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {  // Sets the focus to an according sequence area, if the user clicks outside of the content area and moves the cursor.
-				if (getIndependentComponent().hasAlignmentModel()) {
+				if (getIndependentComponent().hasAlignmentModel() && (getIndependentComponent().getAlignmentModel().getSequenceCount() > 0)) {
 					AlignmentContentArea contentArea = getIndependentComponent().getContentArea();
-					int row = contentArea.rowByPaintY(e.getY()); 
+					int row = contentArea.rowByPaintY(e.getY());
 					SequenceArea sequenceArea = contentArea.getToolkitComponent().getSequenceAreaByID(
 							getIndependentComponent().getSequenceOrder().idByIndex(row));
 					if (sequenceArea != null) {
