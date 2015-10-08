@@ -39,7 +39,7 @@ import info.bioinfweb.libralign.model.utils.AlignmentModelUtils;
 public class CreateAlignmentModel {
 	public static void main(String[] args) {
 		// Create new model instance:
-		AlignmentModel<Character> model = new PackedAlignmentModel(CharacterTokenSet.newDNAInstance());
+		AlignmentModel<Character> model = new PackedAlignmentModel<Character>(CharacterTokenSet.newDNAInstance());
 		
 		// Add one sequence and add single tokens:
 		int id = model.addSequence("Seq1");
@@ -53,7 +53,7 @@ public class CreateAlignmentModel {
 		model.appendTokens(id, AlignmentModelUtils.charSequenceToTokenList("AT-G", model.getTokenSet()));
 		
 		
-		// Test output of alignment:
+		// Test output of the alignment:
 		Iterator<Integer> idIterator = model.sequenceIDIterator();
 		while (idIterator.hasNext()) {
 			id = idIterator.next();
