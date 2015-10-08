@@ -134,16 +134,16 @@ public class SWTAlignmentArea extends AbstractSWTComposite implements ToolkitSpe
 		contentScroller.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseDown(MouseEvent event) {  // Sets the focus to an according sequence area, if the user clicks outside of the content area and moves the cursor.
-                if (getIndependentComponent().hasAlignmentModel()) {
-    				AlignmentContentArea contentArea = getIndependentComponent().getContentArea();
-    				int row = contentArea.rowByPaintY(event.y);
-    				SequenceArea sequenceArea = contentArea.getToolkitComponent().getSequenceAreaByID(
-    						getIndependentComponent().getSequenceOrder().idByIndex(row));
-    				if (sequenceArea != null) {
-    					getIndependentComponent().getSelection().setNewCursorPosition(contentArea.columnByPaintX(event.x), row);
-    					((Composite)sequenceArea.getToolkitComponent()).setFocus();
-    				}
-                }
+				if (getIndependentComponent().hasAlignmentModel() && (getIndependentComponent().getAlignmentModel().getSequenceCount() > 0)) {
+    			AlignmentContentArea contentArea = getIndependentComponent().getContentArea();
+    			int row = contentArea.rowByPaintY(event.y);
+    			SequenceArea sequenceArea = contentArea.getToolkitComponent().getSequenceAreaByID(
+    					getIndependentComponent().getSequenceOrder().idByIndex(row));
+    			if (sequenceArea != null) {
+    				getIndependentComponent().getSelection().setNewCursorPosition(contentArea.columnByPaintX(event.x), row);
+    				((Composite)sequenceArea.getToolkitComponent()).setFocus();
+    			}
+				}
 			}
 		});
 		contentResizeListener = new SWTScrolledCompositeResizeListener(contentContainer, contentScroller, false,
