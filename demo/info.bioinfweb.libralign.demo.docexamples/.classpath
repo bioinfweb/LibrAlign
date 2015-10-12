@@ -10,5 +10,7 @@
 	<classpathentry kind="lib" path="/info.bioinfweb.libralign.swt/bin"/>
 	<classpathentry kind="lib" path="/info.bioinfweb.tic.swing/bin"/>
 	<classpathentry kind="lib" path="/info.bioinfweb.tic.swt/bin"/>
+	<classpathentry kind="lib" path="/info.bioinfweb.tic.swt/lib/swt.jar"/>
+	<classpathentry kind="lib" path="/info.bioinfweb.commons.swt/bin"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

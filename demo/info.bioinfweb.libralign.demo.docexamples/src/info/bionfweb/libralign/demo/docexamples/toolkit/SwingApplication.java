@@ -16,23 +16,29 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package info.bionfweb.libralign.demo.docexamples;
+package info.bionfweb.libralign.demo.docexamples.toolkit;
 
 
-import info.bioinfweb.libralign.alignmentarea.AlignmentArea;
-import info.bioinfweb.libralign.alignmentarea.tokenpainter.NucleotideTokenPainter;
-import info.bioinfweb.libralign.model.implementations.PackedAlignmentModel;
-import info.bioinfweb.libralign.model.tokenset.CharacterTokenSet;
+import info.bioinfweb.libralign.multiplealignments.MultipleAlignmentsContainer;
 import info.bioinfweb.tic.SwingComponentFactory;
 
 import java.awt.EventQueue;
 import java.awt.BorderLayout;
 
+import javax.swing.JComponent;
 import javax.swing.JFrame;
 
 
 
-public class BasicAlignmentAreaDemo {
+/**
+ * Example that demonstrates using LibrAlign GUI components in Swing applications.
+ * <p>
+ * This example is used in the 
+ * <a href="http://bioinfweb.info/LibrAlign/Documentation/wiki/Working_with_toolkits">LibrAlign documentation</a>.
+ * 
+ * @author Ben St&ouml;ver
+ */
+public class SwingApplication extends AbstractApplication {
 	private JFrame frame;
 	
 	
@@ -43,7 +49,7 @@ public class BasicAlignmentAreaDemo {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					BasicAlignmentAreaDemo window = new BasicAlignmentAreaDemo();
+					SwingApplication window = new SwingApplication();
 					window.frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -56,7 +62,7 @@ public class BasicAlignmentAreaDemo {
 	/**
 	 * Create the application.
 	 */
-	public BasicAlignmentAreaDemo() {
+	public SwingApplication() {
 		initialize();
 	}
 	
@@ -66,19 +72,17 @@ public class BasicAlignmentAreaDemo {
 	 */
 	private void initialize() {
 		frame = new JFrame();
-		frame.setBounds(100, 100, 450, 300);
+		frame.setBounds(100, 100, 300, 150);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frame.setTitle("Basic Swing demo");
+
+		// Create main container instance (TIC component):
+		MultipleAlignmentsContainer container = createContainer();
 		
-		frame.getContentPane().add(SwingComponentFactory.getInstance().getSwingComponent(createAlignmentArea()), BorderLayout.CENTER);
-	}
-	
-	
-	private AlignmentArea createAlignmentArea() {
-		AlignmentArea area = new AlignmentArea();
-		area.setAlignmentModel(new PackedAlignmentModel<Character>(CharacterTokenSet.newNucleotideInstance()), false);  // Define a model
+		// Create Swing-specific component from TIC component:
+		JComponent swingContainer = SwingComponentFactory.getInstance().getSwingComponent(container);
 		
-		area.getPaintSettings().getTokenPainterList().set(0, new NucleotideTokenPainter());  // Define how sequences shall be painted
-		
-		return area;
+		// Add Swing component to GUI:
+		frame.getContentPane().add(swingContainer, BorderLayout.CENTER);
 	}
 }
