@@ -20,8 +20,6 @@ package info.bioinfweb.libralign.multiplealignments;
 
 
 import java.awt.Component;
-import java.awt.DefaultKeyboardFocusManager;
-import java.awt.KeyboardFocusManager;
 import java.awt.event.AdjustmentEvent;
 import java.awt.event.AdjustmentListener;
 import java.awt.event.ComponentAdapter;
