@@ -19,6 +19,7 @@
 package info.bioinfweb.libralign.multiplealignments;
 
 
+import info.bioinfweb.commons.swt.SWTUtils;
 import info.bioinfweb.commons.swt.ScrolledCompositeSyncListener;
 import info.bioinfweb.libralign.alignmentarea.AlignmentArea;
 import info.bioinfweb.libralign.alignmentarea.SWTAlignmentArea;
@@ -170,6 +171,21 @@ public class SWTMultipleAlignmentsContainer extends AbstractSWTComposite
 				getHorizontalScrollbarHeight();
 		
   	getSashForm().setWeights(heights);
+	}
+
+
+	@Override
+	public AlignmentArea getFocusedAlignmentArea() {
+		Iterator<AlignmentArea> iterator = getIndependentComponent().getAlignmentAreas().iterator();
+		while (iterator.hasNext()) {
+			AlignmentArea area = iterator.next();
+			if (area.hasToolkitComponent()) {
+				if (SWTUtils.childHasFocus((Composite)area.getToolkitComponent())) {
+					return area;
+				}
+			}
+		}
+		return null;
 	}
 
 
