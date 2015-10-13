@@ -19,6 +19,7 @@
 package info.bioinfweb.libralign.multiplealignments;
 
 
+import info.bioinfweb.libralign.alignmentarea.AlignmentArea;
 import info.bioinfweb.tic.toolkit.ToolkitComponent;
 
 
@@ -57,4 +58,17 @@ public interface ToolkitSpecificMultipleAlignmentsContainer extends ToolkitCompo
    * @param heights - an array containing the heights for all alignment areas
    */
   public void setDividerLocations(int[] heights);
+  
+  /**
+   * Returns the alignment area contained in this component, that currently has the focus. (It is also possible,
+   * that a subcomponent if the returned area (e.g. a sequence or data area) has the focus.)
+   * <p>
+   * Note that application developers should use {@link MultipleAlignmentsContainer#getFocusedAlignmentArea()}
+   * instead of calling this method directly, because that method also checks, if a toolkit-specific component
+   * has already been created.
+   * 
+   * @return the focused alignment area in this component or {@code null} of the focus is not inside this container
+   * @see MultipleAlignmentsContainer#getFocusedAlignmentArea()
+   */
+  public AlignmentArea getFocusedAlignmentArea();
 }

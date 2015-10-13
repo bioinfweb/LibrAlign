@@ -22,6 +22,8 @@ package info.bioinfweb.libralign.multiplealignments;
 import java.awt.Dimension;
 import java.util.Set;
 
+import javax.swing.JRootPane;
+
 import info.bioinfweb.commons.Math2;
 import info.bioinfweb.tic.TICComponent;
 import info.bioinfweb.tic.TICPaintEvent;
@@ -145,70 +147,95 @@ public class MultipleAlignmentsContainer extends TICComponent {
 			// Calculate available and needed heights:
 			int availableHeight = getToolkitComponent().getAvailableHeight();  // Height that can be distributed among the scroll panes.
 			if (availableHeight > 0) {  // availableHeight 0 in the first call from SWT.
-			  	int maxNeededHeight = 0;  // Height needed for all areas to be fully visible.
-			  	int minNeededHeight = 0;  // Height needed only for the areas that do not allows scrolling to be fully visible.
-			  	for (int i = 0; i < getAlignmentAreas().size(); i++) {
-						int neededHeight = getToolkitComponent().getNeededHeight(i);
-						maxNeededHeight += neededHeight;
-						if (!getAlignmentAreas().get(i).isAllowVerticalScrolling()) {
-							minNeededHeight += neededHeight;
-						}
+		  	int maxNeededHeight = 0;  // Height needed for all areas to be fully visible.
+		  	int minNeededHeight = 0;  // Height needed only for the areas that do not allows scrolling to be fully visible.
+		  	for (int i = 0; i < getAlignmentAreas().size(); i++) {
+					int neededHeight = getToolkitComponent().getNeededHeight(i);
+					maxNeededHeight += neededHeight;
+					if (!getAlignmentAreas().get(i).isAllowVerticalScrolling()) {
+						minNeededHeight += neededHeight;
 					}
-			  	
-			  	// Calculate the visible fraction of the two types of areas:
-			  	boolean scrollAllComponents = (minNeededHeight > availableHeight);
-			  	float visibleFractionForNoScrolling;
-			  	float visibleFractionForScrolling;
-			  	if (maxNeededHeight <= availableHeight) {  // No area has to be scrolled.
-			  		visibleFractionForNoScrolling = 1.0f;
-			  		visibleFractionForScrolling = 1.0f;
-			  	}
-			  	else if (!scrollAllComponents) {  // Only the areas that allow scrolling have to be scrolled.
-			  		visibleFractionForNoScrolling = 1.0f;
-			  		visibleFractionForScrolling = (float)(availableHeight - minNeededHeight)  // remaining available height for areas that allow scrolling 
-			  				/ (float)(maxNeededHeight - minNeededHeight);  // needed height for areas that allow scrolling
-			  	}
-			  	else {  // All areas have to be scrolled.
-			  		visibleFractionForNoScrolling = (float)availableHeight / (float)maxNeededHeight;
-			  		visibleFractionForScrolling = visibleFractionForNoScrolling;
-			  	}
-			  	
-			  	// Set divider locations:
-			  	int usedHeight = 0;
-			  	int noOfScrollableComponents = 0;
-			  	int[] heights = new int[getAlignmentAreas().size()];
+				}
+		  	
+		  	// Calculate the visible fraction of the two types of areas:
+		  	boolean scrollAllComponents = (minNeededHeight > availableHeight);
+		  	float visibleFractionForNoScrolling;
+		  	float visibleFractionForScrolling;
+		  	if (maxNeededHeight <= availableHeight) {  // No area has to be scrolled.
+		  		visibleFractionForNoScrolling = 1.0f;
+		  		visibleFractionForScrolling = 1.0f;
+		  	}
+		  	else if (!scrollAllComponents) {  // Only the areas that allow scrolling have to be scrolled.
+		  		visibleFractionForNoScrolling = 1.0f;
+		  		visibleFractionForScrolling = (float)(availableHeight - minNeededHeight)  // remaining available height for areas that allow scrolling 
+		  				/ (float)(maxNeededHeight - minNeededHeight);  // needed height for areas that allow scrolling
+		  	}
+		  	else {  // All areas have to be scrolled.
+		  		visibleFractionForNoScrolling = (float)availableHeight / (float)maxNeededHeight;
+		  		visibleFractionForScrolling = visibleFractionForNoScrolling;
+		  	}
+		  	
+		  	// Set divider locations:
+		  	int usedHeight = 0;
+		  	int noOfScrollableComponents = 0;
+		  	int[] heights = new int[getAlignmentAreas().size()];
+		  	for (int i = 0; i < getAlignmentAreas().size(); i++) {
+		  		heights[i] = getToolkitComponent().getNeededHeight(i);
+		  		if (getAlignmentAreas().get(i).isAllowVerticalScrolling()) {
+		  			heights[i] = Math2.roundUp(heights[i] * visibleFractionForScrolling);
+		  			noOfScrollableComponents++;
+		  		}
+		  		else {
+		  			heights[i] = Math2.roundUp(heights[i] * visibleFractionForNoScrolling);
+		  		}
+		  			usedHeight += heights[i];
+				}
+		  	
+		  	// Distribute remaining height:
+		  	if (minNeededHeight > availableHeight) {  // All areas have to be scrolled.
+		  		noOfScrollableComponents = getAlignmentAreas().size();
+		  	}
+		  	availableHeight -= usedHeight; 
+		  	int lastIndex = heights.length - 1;
+		  	if (isDistributeRemainingSpace()) {
+			  	int availableHeightPerComponent = availableHeight / noOfScrollableComponents;
 			  	for (int i = 0; i < getAlignmentAreas().size(); i++) {
-			  		heights[i] = getToolkitComponent().getNeededHeight(i);
-			  		if (getAlignmentAreas().get(i).isAllowVerticalScrolling()) {
-			  			heights[i] = Math2.roundUp(heights[i] * visibleFractionForScrolling);
-			  			noOfScrollableComponents++;
+			  		if (scrollAllComponents || getAlignmentAreas().get(i).isAllowVerticalScrolling()) {
+			  			heights[i] += availableHeightPerComponent;
+			  			availableHeight -= availableHeightPerComponent;
+			  			lastIndex = i;
 			  		}
-			  		else {
-			  			heights[i] = Math2.roundUp(heights[i] * visibleFractionForNoScrolling);
-			  		}
-			  			usedHeight += heights[i];
-					}
-			  	
-			  	// Distribute remaining height:
-			  	if (minNeededHeight > availableHeight) {  // All areas have to be scrolled.
-			  		noOfScrollableComponents = getAlignmentAreas().size();
 			  	}
-			  	availableHeight -= usedHeight; 
-			  	int lastIndex = heights.length - 1;
-			  	if (isDistributeRemainingSpace()) {
-				  	int availableHeightPerComponent = availableHeight / noOfScrollableComponents;
-				  	for (int i = 0; i < getAlignmentAreas().size(); i++) {
-				  		if (scrollAllComponents || getAlignmentAreas().get(i).isAllowVerticalScrolling()) {
-				  			heights[i] += availableHeightPerComponent;
-				  			availableHeight -= availableHeightPerComponent;
-				  			lastIndex = i;
-				  		}
-				  	}
-			  	}
-			  	heights[lastIndex] += availableHeight;  // Last area might get more space due to rounding issues even if isDistributeRemainingSpace() returned true.
-			  	
-			  	getToolkitComponent().setDividerLocations(heights);
+		  	}
+		  	heights[lastIndex] += availableHeight;  // Last area might get more space due to rounding issues even if isDistributeRemainingSpace() returned true.
+		  	
+		  	getToolkitComponent().setDividerLocations(heights);
 			}
+		}
+	}
+	
+	
+  /**
+   * Returns the alignment area contained in this component, that currently has the focus. (It is also possible,
+   * that a subcomponent if the returned area (e.g. a sequence or data area) has the focus.)
+   * <p>
+   * Note that this method behaves slightly different in Swing and SWT. In Swing applications the components contained
+   * in an alignment area may loose their focus, if the user clicks on a menu entry (unless the {@link JRootPane} is not
+   * set unfocusable) or button. Therefore the focused alignment area may not be correctly determined inside an action 
+   * attached to another Swing component (e.g. a button or a menu item), because this component then has the focus. 
+   * This problem will not occur if an action is invoked using a keyboard shortcut.
+   * <p>
+   * In SWT applications the focused alignment area can usually still be determined, even if a button or menu item is 
+   * currently active. 
+   * 
+   * @return the focused alignment area in this component or {@code null} of the focus is not inside this container
+   */
+	public AlignmentArea getFocusedAlignmentArea() {
+		if (hasToolkitComponent()) {
+			return getToolkitComponent().getFocusedAlignmentArea();
+		}
+		else {
+			return null;
 		}
 	}
 	
