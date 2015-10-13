@@ -29,6 +29,15 @@ import javax.swing.JFrame;
 
 import java.awt.GridBagLayout;
 import java.awt.GridBagConstraints;
+import java.awt.Toolkit;
+
+import javax.swing.JMenuBar;
+import javax.swing.JMenu;
+import javax.swing.JMenuItem;
+import javax.swing.KeyStroke;
+
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
 
 
 
@@ -92,5 +101,20 @@ public class SwingApplication extends AbstractApplication {
 		gbc_scrollPane.gridx = 0;
 		gbc_scrollPane.gridy = 0;
 		frame.getContentPane().add(alignmentPanel, gbc_scrollPane);
+		
+		JMenuBar menuBar = new JMenuBar();
+		frame.setJMenuBar(menuBar);
+		
+		JMenu mnTest = new JMenu("Test");
+		menuBar.add(mnTest);
+		
+		JMenuItem mntmPrintFocusedAlignment = new JMenuItem("Print focused alignment area");
+		mntmPrintFocusedAlignment.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				System.out.println(alignmentsContainer.getFocusedAlignmentArea());
+			}
+		});
+		mntmPrintFocusedAlignment.setAccelerator(KeyStroke.getKeyStroke('F', Toolkit.getDefaultToolkit().getMenuShortcutKeyMask()));
+		mnTest.add(mntmPrintFocusedAlignment);
 	}
 }

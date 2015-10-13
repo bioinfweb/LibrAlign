@@ -26,6 +26,10 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.FillLayout;
+import org.eclipse.swt.widgets.Menu;
+import org.eclipse.swt.widgets.MenuItem;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
 
 
 
@@ -82,5 +86,23 @@ public class SWTApplication extends AbstractApplication {
 		
 		alignmentsContainer = createAlignmentsContainer();
 		SWTComponentFactory.getInstance().getSWTComponent(alignmentsContainer, shell, SWT.NONE);
+		
+		Menu menu = new Menu(shell, SWT.BAR);
+		shell.setMenuBar(menu);
+		
+		MenuItem mntmTest = new MenuItem(menu, SWT.CASCADE);
+		mntmTest.setText("Test");
+		
+		Menu menu_1 = new Menu(mntmTest);
+		mntmTest.setMenu(menu_1);
+		
+		MenuItem mntmPrintFocusedArea = new MenuItem(menu_1, SWT.NONE);
+		mntmPrintFocusedArea.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				System.out.println(alignmentsContainer.getFocusedAlignmentArea());
+			}
+		});
+		mntmPrintFocusedArea.setText("Print focused area");
 	}
 }

@@ -37,7 +37,10 @@ import info.bioinfweb.libralign.dataarea.implementations.charset.CharSetDataMode
 import info.bioinfweb.libralign.dataarea.implementations.pherogram.PherogramArea;
 import info.bioinfweb.libralign.model.AlignmentModel;
 import info.bioinfweb.libralign.model.implementations.BioJava3AlignmentModel;
+import info.bioinfweb.libralign.model.implementations.PackedAlignmentModel;
 import info.bioinfweb.libralign.model.tokenset.BioJava3TokenSet;
+import info.bioinfweb.libralign.model.tokenset.CharacterTokenSet;
+import info.bioinfweb.libralign.model.utils.AlignmentModelUtils;
 import info.bioinfweb.libralign.multiplealignments.MultipleAlignmentsContainer;
 import info.bioinfweb.libralign.pherogram.model.PherogramAreaModel;
 import info.bioinfweb.libralign.pherogram.provider.BioJavaPherogramProvider;
@@ -83,29 +86,28 @@ public class AbstractApplication {
 			BioJavaPherogramProvider pherogramProvider = new BioJavaPherogramProvider(ChromatogramFactory.create(
 	      	new File("data\\pherograms\\Test_qualityScore.scf")));
 			
-			Alignment<DNASequence, NucleotideCompound> alignment = 
-					new SimpleAlignment<DNASequence, NucleotideCompound>();
-			alignment.add("Sequence 1", new DNASequence("ATCGTAGATCGTAGATCGTAGATCGTAGATCGTAGATCGTAGATCGTAG"));
-			alignment.add("Sequence 2", new DNASequence("AT-GTTG"));
-			alignment.add("Sequence 3", new DNASequence("AT-GTAG"));
+			AlignmentModel<Character> model = new PackedAlignmentModel<Character>(CharacterTokenSet.newDNAInstance());
+			int id = model.addSequence("Sequence 1");
+			model.appendTokens(id, AlignmentModelUtils.charSequenceToTokenList("ATCGTAGATCGTAGATCGTAGATCGTAGATCGTAGATCGTAGATCGTAG", 
+					model.getTokenSet()));
+			id = model.addSequence("Sequence 2");
+			model.appendTokens(id, AlignmentModelUtils.charSequenceToTokenList("AT-GTTG",	model.getTokenSet()));
+			id = model.addSequence("Sequence 3");
+			model.appendTokens(id, AlignmentModelUtils.charSequenceToTokenList("AT-GTAG",	model.getTokenSet()));
 			
 			StringBuffer seqBuffer = new StringBuffer(pherogramProvider.getSequenceLength());
 			for (int i = 0; i < pherogramProvider.getSequenceLength(); i++) {
 				seqBuffer.append(pherogramProvider.getBaseCall(i));
 			}
-			alignment.add("Sequence 4", new DNASequence("-----" + seqBuffer.substring(0, 38) + 
-					seqBuffer.substring(39, 49) + "-A" + seqBuffer.substring(49)));  // One A is deleted for shift change specified below. 
-					//seqBuffer.substring(39, 49) + "--" + seqBuffer.substring(49)));  // One A is deleted for shift change specified below. 
+			id = model.addSequence("Sequence 4");
+			model.appendTokens(id, AlignmentModelUtils.charSequenceToTokenList("-----" + seqBuffer.substring(0, 38) + 
+					seqBuffer.substring(39, 49) + "-A" + seqBuffer.substring(49),	model.getTokenSet()));  // One A is deleted for shift change specified below.
 
-			alignment.add("Sequence 5", new DNASequence("ATCGTAGATCGTAGATGGTAGATCGTAGATCGT---TCGTAGATCGTAG"));
+			id = model.addSequence("Sequence 5");
+			model.appendTokens(id, AlignmentModelUtils.charSequenceToTokenList("ATCGTAGATCGTAGATGGTAGATCGTAGATCGT---TCGTAGATCGTAG",	
+					model.getTokenSet()));
 			
-			BioJava3AlignmentModel<DNASequence, NucleotideCompound> sequenceProvider = 
-					new BioJava3AlignmentModel<DNASequence, NucleotideCompound>(
-							new BioJava3TokenSet<NucleotideCompound>(CharacterStateType.NUCLEOTIDE,
-									AlignmentAmbiguityNucleotideCompoundSet.getAlignmentAmbiguityNucleotideCompoundSet(), false),
-							alignment);
-			
-			
+
 			// Create alignment areas:
 			AlignmentArea mainArea = new AlignmentArea(result);  // Needs to be created first to act as a reference for data areas.
 			
@@ -124,11 +126,11 @@ public class AbstractApplication {
 			// Alignment with pherograms:
 			mainArea.setAllowVerticalScrolling(true);
       			
-			mainArea.setAlignmentModel(sequenceProvider, false);
+			mainArea.setAlignmentModel(model, false);
 			mainArea.getPaintSettings().getTokenPainterList().set(0, new NucleotideTokenPainter());
 			
 			PherogramArea pherogramArea = new PherogramArea(mainArea.getContentArea(), new PherogramAreaModel(pherogramProvider));
-			mainArea.getDataAreas().getSequenceAreas(sequenceProvider.sequenceIDByName("Sequence 4")).add(pherogramArea);
+			mainArea.getDataAreas().getSequenceAreas(model.sequenceIDByName("Sequence 4")).add(pherogramArea);
 			pherogramArea.getModel().setFirstSeqPos(5);
 			pherogramArea.getModel().setLeftCutPosition(34);
 			pherogramArea.getModel().setRightCutPosition(820);
@@ -138,17 +140,14 @@ public class AbstractApplication {
 			result.getAlignmentAreas().add(mainArea);
 			
 			// Additional alignment with longer names (to test of other label areas adopt their width):
-			alignment =	new SimpleAlignment<DNASequence, NucleotideCompound>();
-			alignment.add("Another Sequence", new DNASequence("ATCGTAGATCGTAGATCGTAGATCGTAGATCGTAGATCGTAGATCGTAG"));
-			AlignmentModel<NucleotideCompound> sequenceProvider2 = 
-					new BioJava3AlignmentModel<DNASequence, NucleotideCompound>(
-							new BioJava3TokenSet<NucleotideCompound>(CharacterStateType.NUCLEOTIDE,
-									AlignmentAmbiguityNucleotideCompoundSet.getAlignmentAmbiguityNucleotideCompoundSet(), false),
-							alignment);
+			model = new PackedAlignmentModel<Character>(CharacterTokenSet.newDNAInstance());
+			id = model.addSequence("Another Sequence");
+			model.appendTokens(id, AlignmentModelUtils.charSequenceToTokenList("ATCGTAGATCGTAGATCGTAGATCGTAGATCGTAGATCGTAGATCGTAG", 
+					model.getTokenSet()));
 
 			area = new AlignmentArea(result);
 			area.setAllowVerticalScrolling(false);      			
-			area.setAlignmentModel(sequenceProvider2, false);
+			area.setAlignmentModel(model, false);
 			area.getPaintSettings().getTokenPainterList().set(0, new NucleotideTokenPainter());
 			result.getAlignmentAreas().add(area);
 			
