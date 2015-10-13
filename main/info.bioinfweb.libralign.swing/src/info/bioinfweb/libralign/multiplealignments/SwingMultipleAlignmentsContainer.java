@@ -19,13 +19,18 @@
 package info.bioinfweb.libralign.multiplealignments;
 
 
+import java.awt.Component;
+import java.awt.DefaultKeyboardFocusManager;
+import java.awt.KeyboardFocusManager;
 import java.awt.event.AdjustmentEvent;
 import java.awt.event.AdjustmentListener;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
+import info.bioinfweb.commons.swing.SwingUtils;
 import info.bioinfweb.libralign.alignmentarea.AlignmentArea;
 import info.bioinfweb.libralign.alignmentarea.SwingAlignmentArea;
 import info.bioinfweb.tic.SwingComponentFactory;
@@ -206,6 +211,21 @@ public class SwingMultipleAlignmentsContainer extends AbstractSwingComponent imp
 			splitPane.validate();  // If this is not called, splitPanes contained in other split panes that shrink the area they are contained in, ignore the new divider location.
 		}
   	// The last value in heights is not used by this method.
+	}
+
+
+	@Override
+	public AlignmentArea getFocusedAlignmentArea() {
+		Iterator<AlignmentArea> iterator = getIndependentComponent().getAlignmentAreas().iterator();
+		while (iterator.hasNext()) {
+			AlignmentArea area = iterator.next();
+			if (area.hasToolkitComponent()) {
+				if (SwingUtils.childHasFocus((Component)area.getToolkitComponent())) {
+					return area;
+				}
+			}
+		}
+		return null;
 	}
 
 
