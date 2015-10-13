@@ -16,12 +16,11 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package info.bioinfweb.libralign.model;
+package info.bioinfweb.libralign.model.utils;
 
 
 import static org.junit.Assert.*;
-
-
+import info.bioinfweb.libralign.model.AlignmentModel;
 import info.bioinfweb.libralign.model.adapters.CharSequenceAdapter;
 import info.bioinfweb.libralign.model.implementations.PackedAlignmentModel;
 import info.bioinfweb.libralign.model.tokenset.CharacterTokenSet;
