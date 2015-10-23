@@ -21,8 +21,13 @@ package info.bioinfweb.libralign.alignmentarea.content;
 
 import java.awt.Point;
 import java.awt.Toolkit;
+import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
+import java.util.HashMap;
+import java.util.Map;
 
+import javax.swing.AbstractAction;
+import javax.swing.Action;
 import javax.swing.JComponent;
 import javax.swing.KeyStroke;
 
@@ -53,7 +58,7 @@ public class CursorSelectionInputListener extends TICMouseAdapter implements TIC
 		this.owner = owner;
 	}
 
-
+	
 	public AlignmentArea getOwner() {
 		return owner;
 	}
@@ -98,146 +103,32 @@ public class CursorSelectionInputListener extends TICMouseAdapter implements TIC
 	
 	@Override
 	public boolean keyPressed(TICKeyEvent event) {
-		SelectionModel selection = getOwner().getSelection();
-		AlignmentModel<?> model = getOwner().getAlignmentModel();
-		switch (event.getKeyCode()) {
-			case KeyEvent.VK_LEFT:
-				if (event.isShiftDown()) {
-					if (selection.getCursorRow() < selection.getStartRow()) {  // Above selection start
-						selection.setSelectionEnd(selection.getCursorColumn() - 1, selection.getCursorRow());
-					}
-					else {  // Below selection start
-						selection.setSelectionEnd(selection.getCursorColumn() - 1, 
-								selection.getCursorRow() + selection.getCursorHeight() - 1);
-					}
-				}
-				else {
-					selection.setNewCursorColumn(selection.getCursorColumn() - 1);
-				}
-				break;
-			case KeyEvent.VK_RIGHT:
-				if (event.isShiftDown()) {
-					if (selection.getCursorRow() < selection.getStartRow()) {  // Above selection start
-						selection.setSelectionEnd(selection.getCursorColumn() + 1, selection.getCursorRow());
-					}
-					else {  // Below selection start
-						selection.setSelectionEnd(selection.getCursorColumn() + 1, 
-								selection.getCursorRow() + selection.getCursorHeight() - 1);
-					}
-				}
-				else {
-					selection.setNewCursorColumn(selection.getCursorColumn() + 1);
-				}
-				break;
-			case KeyEvent.VK_UP:
-				if (event.isShiftDown()) {
-					if (selection.getCursorRow() < selection.getStartRow()) {  // Above selection start
-						selection.setSelectionEnd(selection.getCursorColumn(), selection.getCursorRow() - 1);
-					}
-					else {  // Below selection start
-						selection.setSelectionEnd(selection.getCursorColumn(), selection.getCursorRow() + selection.getCursorHeight() - 2);
-					}
-				}
-				else {
-					selection.setNewCursorRow(selection.getCursorRow() - 1);
-				}
-				break;
-			case KeyEvent.VK_DOWN:
-				if (event.isShiftDown()) {
-					if (selection.getCursorRow() < selection.getStartRow()) {  // Above selection start
-						selection.setSelectionEnd(selection.getCursorColumn(), selection.getCursorRow() + 1);
-					}
-					else {  // Below selection start
-						selection.setSelectionEnd(selection.getCursorColumn(), selection.getCursorRow() + selection.getCursorHeight());  // - 1 + 1
-					}
-				}
-				else {
-					selection.setNewCursorRow(selection.getCursorRow() + 1);
-				}
-				break;
-			case KeyEvent.VK_HOME:
-				if (event.isShiftDown()) {
-					if (event.isMenuShortcutKeyDown()) {
-						selection.setSelectionEnd(0, 0);
-					}
-					else {
-						if (selection.getCursorRow() < selection.getStartRow()) {  // Above selection start
-							selection.setSelectionEnd(0, selection.getCursorRow());
-						}
-						else { // Below selection start
-							selection.setSelectionEnd(0, 
-									selection.getCursorRow() + selection.getCursorHeight() - 1);
-						}
-					}
-				}
-				else if (event.isMenuShortcutKeyDown()) {
-					selection.setNewCursorPosition(0, 0);
-				}
-				else {
-					selection.setNewCursorColumn(0);
-				}
-				break;
-			case KeyEvent.VK_END:
-				if (event.isShiftDown()) {
-					if (event.isMenuShortcutKeyDown()) {
-						selection.setSelectionEnd(model.getMaxSequenceLength(), model.getSequenceCount() - 1);
-					}
-					else {
-						if (selection.getCursorRow() < selection.getStartRow()) {  // Above selection start
-							selection.setSelectionEnd(model.getMaxSequenceLength(), selection.getCursorRow());
-						}
-						else { // Below selection start
-							selection.setSelectionEnd(model.getMaxSequenceLength(), 
-									selection.getCursorRow() + selection.getCursorHeight() - 1);
-						}
-					}
-				}
-				else if (event.isMenuShortcutKeyDown()) {
-					selection.setNewCursorPosition(model.getMaxSequenceLength(), model.getSequenceCount() - 1);
-				}
-				else {
-					selection.setNewCursorColumn(model.getMaxSequenceLength());
-				}
-				break;
-			case KeyEvent.VK_INSERT:  //TODO Allow to do something different on that key = unbind this event.
-				getOwner().getEditSettings().toggleInsert();
-				break;
-			case KeyEvent.VK_DELETE:  //TODO Allow to do something different on that key = unbind this event.
-				if (!getOwner().getActionProvider().deleteForward()) {
-					Toolkit.getDefaultToolkit().beep();
-				}
-				break;
-			case KeyEvent.VK_BACK_SPACE:  //TODO Allow to do something different on that key = unbind this event.
-				if (!getOwner().getActionProvider().deleteBackwards()) {
-					Toolkit.getDefaultToolkit().beep();
-				}
-				break;
-			default:
-				if (event.isMenuShortcutKeyDown() && (event.getKeyCode() == KeyEvent.VK_A)) {  // Select all
-					selection.selectAll();
-				}
-				else {
-					Object token = model.getTokenSet().tokenByKeyStroke(
-							KeyStroke.getKeyStroke(event.getKeyCharacter(), event.getModifiers()));
-					if (token == null) {
-						token = model.getTokenSet().tokenByRepresentation(Character.toString(event.getKeyCharacter()));
-					}
-					
-					if (token != null) {
-						if (getOwner().getEditSettings().isInsert()) {
-							if (!getOwner().getActionProvider().insertToken(token)) {
-								Toolkit.getDefaultToolkit().beep();
-							}
-						}
-						else {
-							if (!getOwner().getActionProvider().overwriteWithToken(token)) {
-								Toolkit.getDefaultToolkit().beep();
-							}
-						}
-					}
-				}
-				break;
+		KeyStroke keyStroke = KeyStroke.getKeyStroke(event.getKeyCode(), event.getModifiers());
+		Action action = getOwner().getContentArea().getActionMap().get(keyStroke);
+		if (action != null) {  // Execute action:
+			action.actionPerformed(new ActionEvent(this, action.hashCode(), "", System.currentTimeMillis(), event.getModifiers()));
 		}
+		else {  // Insert token:
+			AlignmentModel<?> model = getOwner().getAlignmentModel();
+			Object token = model.getTokenSet().tokenByKeyStroke(keyStroke);
+			if (token == null) {
+				token = model.getTokenSet().tokenByRepresentation(Character.toString(event.getKeyCharacter()));
+			}
+			
+			if (token != null) {
+				if (getOwner().getEditSettings().isInsert()) {
+					if (!getOwner().getActionProvider().insertToken(token)) {
+						Toolkit.getDefaultToolkit().beep();
+					}
+				}
+				else {
+					if (!getOwner().getActionProvider().overwriteWithToken(token)) {
+						Toolkit.getDefaultToolkit().beep();
+					}
+				}
+			}
+		}
+		
 		return true;  // Forwarding to parent is not necessary.
 	}
 

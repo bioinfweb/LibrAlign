@@ -28,6 +28,7 @@ import info.bioinfweb.libralign.alignmentarea.selection.SelectionModel;
 import info.bioinfweb.libralign.dataarea.DataArea;
 import info.bioinfweb.libralign.dataarea.DataAreaListType;
 import info.bioinfweb.libralign.dataarea.DataAreaLocation;
+import info.bioinfweb.libralign.model.AlignmentModel;
 import info.bioinfweb.libralign.model.concatenated.ConcatenatedAlignmentModel;
 import info.bioinfweb.libralign.multiplealignments.MultipleAlignmentsContainer;
 import info.bioinfweb.tic.TICComponent;
@@ -37,6 +38,15 @@ import info.bioinfweb.tic.input.TICMouseWheelListener;
 
 import java.awt.Dimension;
 import java.awt.Rectangle;
+import java.awt.Toolkit;
+import java.awt.event.ActionEvent;
+import java.awt.event.KeyEvent;
+import java.util.HashMap;
+import java.util.Map;
+
+import javax.swing.AbstractAction;
+import javax.swing.Action;
+import javax.swing.KeyStroke;
 
 
 
@@ -58,6 +68,7 @@ public class AlignmentContentArea extends TICComponent {
 
 
 	private final AlignmentArea owner;
+	private Map<KeyStroke, Action> actionMap = new HashMap<KeyStroke, Action>();
 
 
 	/**
@@ -71,6 +82,7 @@ public class AlignmentContentArea extends TICComponent {
 	public AlignmentContentArea(AlignmentArea owner) {
 		super();
 		this.owner = owner;
+		fillActionMap();
 		addMouseWheelListener(new TICMouseWheelListener() {
 			@Override
 			public boolean mouseWheelMoved(TICMouseWheelEvent event) {
@@ -97,8 +109,213 @@ public class AlignmentContentArea extends TICComponent {
   }
 
 
+	private void fillActionMap() {
+		actionMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_LEFT, KeyEvent.SHIFT_MASK), new AbstractAction() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				SelectionModel selection = getOwner().getSelection();
+				if (selection.getCursorRow() < selection.getStartRow()) {  // Above selection start
+					selection.setSelectionEnd(selection.getCursorColumn() - 1, selection.getCursorRow());
+				}
+				else {  // Below selection start
+					selection.setSelectionEnd(selection.getCursorColumn() - 1, 
+							selection.getCursorRow() + selection.getCursorHeight() - 1);
+				}
+			}
+		});
+		
+		actionMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_LEFT, 0), new AbstractAction() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				SelectionModel selection = getOwner().getSelection();
+				selection.setNewCursorColumn(selection.getCursorColumn() - 1);
+			}
+		});
+		
+		actionMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_RIGHT, KeyEvent.SHIFT_MASK), new AbstractAction() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				SelectionModel selection = getOwner().getSelection();
+				if (selection.getCursorRow() < selection.getStartRow()) {  // Above selection start
+					selection.setSelectionEnd(selection.getCursorColumn() + 1, selection.getCursorRow());
+				}
+				else {  // Below selection start
+					selection.setSelectionEnd(selection.getCursorColumn() + 1, 
+							selection.getCursorRow() + selection.getCursorHeight() - 1);
+				}
+			}
+		});
+
+		actionMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_RIGHT, 0), new AbstractAction() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				SelectionModel selection = getOwner().getSelection();
+				selection.setNewCursorColumn(selection.getCursorColumn() + 1);
+			}
+		});
+		
+		actionMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_UP, KeyEvent.SHIFT_MASK), new AbstractAction() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				SelectionModel selection = getOwner().getSelection();
+				if (selection.getCursorRow() < selection.getStartRow()) {  // Above selection start
+					selection.setSelectionEnd(selection.getCursorColumn(), selection.getCursorRow() - 1);
+				}
+				else {  // Below selection start
+					selection.setSelectionEnd(selection.getCursorColumn(), selection.getCursorRow() + selection.getCursorHeight() - 2);
+				}
+			}
+		});
+
+		actionMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_UP, 0), new AbstractAction() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				SelectionModel selection = getOwner().getSelection();
+				selection.setNewCursorRow(selection.getCursorRow() - 1);
+			}
+		});
+		
+		actionMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_DOWN, KeyEvent.SHIFT_MASK), new AbstractAction() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				SelectionModel selection = getOwner().getSelection();
+				if (selection.getCursorRow() < selection.getStartRow()) {  // Above selection start
+					selection.setSelectionEnd(selection.getCursorColumn(), selection.getCursorRow() + 1);
+				}
+				else {  // Below selection start
+					selection.setSelectionEnd(selection.getCursorColumn(), selection.getCursorRow() + selection.getCursorHeight());  // - 1 + 1
+				}
+			}
+		});
+
+		actionMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_DOWN, 0), new AbstractAction() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				SelectionModel selection = getOwner().getSelection();
+				selection.setNewCursorRow(selection.getCursorRow() + 1);
+			}
+		});
+
+		actionMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_HOME, KeyEvent.SHIFT_MASK + 
+				Toolkit.getDefaultToolkit().getMenuShortcutKeyMask()), new AbstractAction() {
+					@Override
+					public void actionPerformed(ActionEvent e) {
+						SelectionModel selection = getOwner().getSelection();
+						selection.setSelectionEnd(0, 0);
+					}
+				});
+
+		actionMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_HOME, KeyEvent.SHIFT_MASK), new AbstractAction() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				SelectionModel selection = getOwner().getSelection();
+				if (selection.getCursorRow() < selection.getStartRow()) {  // Above selection start
+					selection.setSelectionEnd(0, selection.getCursorRow());
+				}
+				else { // Below selection start
+					selection.setSelectionEnd(0, 
+							selection.getCursorRow() + selection.getCursorHeight() - 1);
+				}
+			}
+		});
+
+		actionMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_HOME, Toolkit.getDefaultToolkit().getMenuShortcutKeyMask()), 
+				new AbstractAction() {
+					@Override
+					public void actionPerformed(ActionEvent e) {
+						getOwner().getSelection().setNewCursorPosition(0, 0);
+					}
+				});
+
+		actionMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_HOME, 0), new AbstractAction() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				getOwner().getSelection().setNewCursorColumn(0);
+			}
+		});
+
+		actionMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_END, KeyEvent.SHIFT_MASK + 
+				Toolkit.getDefaultToolkit().getMenuShortcutKeyMask()), new AbstractAction() {
+					@Override
+					public void actionPerformed(ActionEvent e) {
+						AlignmentModel<?> model = getOwner().getAlignmentModel();
+						getOwner().getSelection().setSelectionEnd(model.getMaxSequenceLength(), model.getSequenceCount() - 1);
+					}
+				});
+
+		actionMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_END, KeyEvent.SHIFT_MASK), new AbstractAction() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				SelectionModel selection = getOwner().getSelection();
+				AlignmentModel<?> model = getOwner().getAlignmentModel();
+				if (selection.getCursorRow() < selection.getStartRow()) {  // Above selection start
+					selection.setSelectionEnd(model.getMaxSequenceLength(), selection.getCursorRow());
+				}
+				else { // Below selection start
+					selection.setSelectionEnd(model.getMaxSequenceLength(), 
+							selection.getCursorRow() + selection.getCursorHeight() - 1);
+				}
+			}
+		});
+
+		actionMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_END, Toolkit.getDefaultToolkit().getMenuShortcutKeyMask()), 
+				new AbstractAction() {
+					@Override
+					public void actionPerformed(ActionEvent e) {
+						AlignmentModel<?> model = getOwner().getAlignmentModel();
+						getOwner().getSelection().setNewCursorPosition(model.getMaxSequenceLength(), model.getSequenceCount() - 1);
+					}
+				});
+
+		actionMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_END, 0), new AbstractAction() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				getOwner().getSelection().setNewCursorColumn(getOwner().getAlignmentModel().getMaxSequenceLength());
+			}
+		});
+
+		actionMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_INSERT, 0), new AbstractAction() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				getOwner().getEditSettings().toggleInsert();
+			}
+		});
+
+		actionMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_DELETE, 0), new AbstractAction() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				if (!getOwner().getActionProvider().deleteForward()) {
+					Toolkit.getDefaultToolkit().beep();
+				}
+			}
+		});
+
+		actionMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_BACK_SPACE, 0), new AbstractAction() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				if (!getOwner().getActionProvider().deleteBackwards()) {
+					Toolkit.getDefaultToolkit().beep();
+				}
+			}
+		});
+		
+		actionMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_A, Toolkit.getDefaultToolkit().getMenuShortcutKeyMask()), 
+				new AbstractAction() {
+					@Override
+					public void actionPerformed(ActionEvent e) {
+						getOwner().getSelection().selectAll();
+					}
+				});
+	}
+	
+
 	public AlignmentArea getOwner() {
 		return owner;
+	}
+
+
+	public Map<KeyStroke, Action> getActionMap() {
+		return actionMap;
 	}
 
 
