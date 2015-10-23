@@ -32,7 +32,6 @@ import info.bioinfweb.tic.input.TICKeyListener;
 import info.bioinfweb.tic.input.TICMouseAdapter;
 import info.bioinfweb.tic.input.TICMouseEvent;
 import info.bioinfweb.tic.input.TICMouseListener;
-import info.bioinfweb.libralign.actions.AlignmentActionProvider;
 import info.bioinfweb.libralign.alignmentarea.AlignmentArea;
 import info.bioinfweb.libralign.alignmentarea.selection.SelectionModel;
 import info.bioinfweb.libralign.model.AlignmentModel;
@@ -100,14 +99,14 @@ public class CursorSelectionInputListener extends TICMouseAdapter implements TIC
 	@Override
 	public boolean keyPressed(TICKeyEvent event) {
 		SelectionModel selection = getOwner().getSelection();
-		AlignmentModel provider = getOwner().getAlignmentModel();
+		AlignmentModel<?> model = getOwner().getAlignmentModel();
 		switch (event.getKeyCode()) {
 			case KeyEvent.VK_LEFT:
 				if (event.isShiftDown()) {
 					if (selection.getCursorRow() < selection.getStartRow()) {  // Above selection start
 						selection.setSelectionEnd(selection.getCursorColumn() - 1, selection.getCursorRow());
 					}
-					else { // Below selection start
+					else {  // Below selection start
 						selection.setSelectionEnd(selection.getCursorColumn() - 1, 
 								selection.getCursorRow() + selection.getCursorHeight() - 1);
 					}
@@ -121,7 +120,7 @@ public class CursorSelectionInputListener extends TICMouseAdapter implements TIC
 					if (selection.getCursorRow() < selection.getStartRow()) {  // Above selection start
 						selection.setSelectionEnd(selection.getCursorColumn() + 1, selection.getCursorRow());
 					}
-					else { // Below selection start
+					else {  // Below selection start
 						selection.setSelectionEnd(selection.getCursorColumn() + 1, 
 								selection.getCursorRow() + selection.getCursorHeight() - 1);
 					}
@@ -181,23 +180,23 @@ public class CursorSelectionInputListener extends TICMouseAdapter implements TIC
 			case KeyEvent.VK_END:
 				if (event.isShiftDown()) {
 					if (event.isMenuShortcutKeyDown()) {
-						selection.setSelectionEnd(provider.getMaxSequenceLength(), provider.getSequenceCount() - 1);
+						selection.setSelectionEnd(model.getMaxSequenceLength(), model.getSequenceCount() - 1);
 					}
 					else {
 						if (selection.getCursorRow() < selection.getStartRow()) {  // Above selection start
-							selection.setSelectionEnd(provider.getMaxSequenceLength(), selection.getCursorRow());
+							selection.setSelectionEnd(model.getMaxSequenceLength(), selection.getCursorRow());
 						}
 						else { // Below selection start
-							selection.setSelectionEnd(provider.getMaxSequenceLength(), 
+							selection.setSelectionEnd(model.getMaxSequenceLength(), 
 									selection.getCursorRow() + selection.getCursorHeight() - 1);
 						}
 					}
 				}
 				else if (event.isMenuShortcutKeyDown()) {
-					selection.setNewCursorPosition(provider.getMaxSequenceLength(), provider.getSequenceCount() - 1);
+					selection.setNewCursorPosition(model.getMaxSequenceLength(), model.getSequenceCount() - 1);
 				}
 				else {
-					selection.setNewCursorColumn(provider.getMaxSequenceLength());
+					selection.setNewCursorColumn(model.getMaxSequenceLength());
 				}
 				break;
 			case KeyEvent.VK_INSERT:  //TODO Allow to do something different on that key = unbind this event.
@@ -218,10 +217,10 @@ public class CursorSelectionInputListener extends TICMouseAdapter implements TIC
 					selection.selectAll();
 				}
 				else {
-					Object token = provider.getTokenSet().tokenByKeyStroke(
+					Object token = model.getTokenSet().tokenByKeyStroke(
 							KeyStroke.getKeyStroke(event.getKeyCharacter(), event.getModifiers()));
 					if (token == null) {
-						token = provider.getTokenSet().tokenByRepresentation(Character.toString(event.getKeyCharacter()));
+						token = model.getTokenSet().tokenByRepresentation(Character.toString(event.getKeyCharacter()));
 					}
 					
 					if (token != null) {
@@ -240,7 +239,7 @@ public class CursorSelectionInputListener extends TICMouseAdapter implements TIC
 				break;
 		}
 		return true;  // Forwarding to parent is not necessary.
-}
+	}
 
 
 	@Override
