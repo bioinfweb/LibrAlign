@@ -22,11 +22,7 @@ package info.bioinfweb.libralign.alignmentarea.content;
 import java.awt.Point;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
-import java.awt.event.KeyEvent;
-import java.util.HashMap;
-import java.util.Map;
 
-import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.JComponent;
 import javax.swing.KeyStroke;
@@ -38,7 +34,6 @@ import info.bioinfweb.tic.input.TICMouseAdapter;
 import info.bioinfweb.tic.input.TICMouseEvent;
 import info.bioinfweb.tic.input.TICMouseListener;
 import info.bioinfweb.libralign.alignmentarea.AlignmentArea;
-import info.bioinfweb.libralign.alignmentarea.selection.SelectionModel;
 import info.bioinfweb.libralign.model.AlignmentModel;
 
 
@@ -106,7 +101,8 @@ public class CursorSelectionInputListener extends TICMouseAdapter implements TIC
 		KeyStroke keyStroke = KeyStroke.getKeyStroke(event.getKeyCode(), event.getModifiers());
 		Action action = getOwner().getContentArea().getActionMap().get(keyStroke);
 		if (action != null) {  // Execute action:
-			action.actionPerformed(new ActionEvent(this, action.hashCode(), "", System.currentTimeMillis(), event.getModifiers()));
+			action.actionPerformed(new ActionEvent(event.getSource(), ActionEvent.ACTION_PERFORMED, "", System.currentTimeMillis(), 
+					event.getModifiers()));
 		}
 		else {  // Insert token:
 			AlignmentModel<?> model = getOwner().getAlignmentModel();
