@@ -113,7 +113,7 @@ public class AlignmentAreaList extends ObservableList<AlignmentArea> {
 
 
 	@Override
-	protected void afterRemove(Collection<? extends AlignmentArea> removedElements) {
+	protected void afterRemove(int index, Collection<? extends AlignmentArea> removedElements) {
 		adoptToListChanges();
 		for (AlignmentArea alignmentArea : removedElements) {
 			removeListenerToAlignmentArea(alignmentArea);
