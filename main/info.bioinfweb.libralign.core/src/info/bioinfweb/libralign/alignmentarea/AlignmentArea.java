@@ -596,6 +596,7 @@ public class AlignmentArea extends TICComponent implements AlignmentModelChangeL
 		assignSizeToAll();
 		if (getContentArea().hasToolkitComponent()) {
 			getContentArea().getToolkitComponent().repaintSequenceAreas();  // Necessary when neither the selection changes nor the size of the sequence areas changed (e.g. when deleting right in a sequence with an attached pherogram with space before and after the alignment).
+			//TODO Wouldn't it be sufficient, if only the affected sequence area gets repainted?
 		}
 	}
 

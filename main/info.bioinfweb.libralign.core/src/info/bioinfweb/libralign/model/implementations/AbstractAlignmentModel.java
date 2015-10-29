@@ -54,7 +54,7 @@ public abstract class AbstractAlignmentModel<T> implements AlignmentModel<T> {
 	 * Informs all listeners that a sequence has been inserted, removed or replaced.
 	 */
 	protected void fireAfterSequenceChange(SequenceChangeEvent<T> e) {
-		Iterator<AlignmentModelChangeListener> iterator = changeListeners.iterator();
+		Iterator<AlignmentModelChangeListener> iterator = getChangeListeners().iterator();
 		while (iterator.hasNext()) {
 			iterator.next().afterSequenceChange(e);
 		}
@@ -65,7 +65,7 @@ public abstract class AbstractAlignmentModel<T> implements AlignmentModel<T> {
 	 * Informs all listeners that a sequence has been renamed.
 	 */
 	protected void fireAfterSequenceRenamed(SequenceRenamedEvent<T> e) {
-		Iterator<AlignmentModelChangeListener> iterator = changeListeners.iterator();
+		Iterator<AlignmentModelChangeListener> iterator = getChangeListeners().iterator();
 		while (iterator.hasNext()) {
 			iterator.next().afterSequenceRenamed(e);
 		}
@@ -76,7 +76,7 @@ public abstract class AbstractAlignmentModel<T> implements AlignmentModel<T> {
 	 * Informs all listeners that a sequence has been inserted, removed or replaced.
 	 */
 	protected void fireAfterTokenChange(TokenChangeEvent<T> e) {
-		Iterator<AlignmentModelChangeListener> iterator = changeListeners.iterator();
+		Iterator<AlignmentModelChangeListener> iterator = getChangeListeners().iterator();
 		while (iterator.hasNext()) {
 			iterator.next().afterTokenChange(e);
 		}
