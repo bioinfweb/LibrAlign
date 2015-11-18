@@ -170,10 +170,10 @@ public class DegapedIndexCalculator<T> {
 	
 			// Move right: (Only one of both loops will be used.)
 			while (originalIndex > info.originalIndex) {
-				info.originalIndex++;
 				if (!gapTokens.contains(model.getTokenAt(sequenceID, info.originalIndex))) {
 					info.degapedIndex++;
 				}
+				info.originalIndex++;
 			}
 			
 			return info.degapedIndex;
