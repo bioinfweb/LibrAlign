@@ -20,6 +20,7 @@ package info.bioinfweb.libralign.model.factory;
 
 
 import info.bioinfweb.libralign.model.AlignmentModel;
+import info.bioinfweb.libralign.model.implementations.SequenceIDManager;
 import info.bioinfweb.libralign.model.tokenset.TokenSet;
 
 
@@ -33,6 +34,52 @@ import info.bioinfweb.libralign.model.tokenset.TokenSet;
  * @param <T> the token type of the alignment models to be created by this instance
  */
 public abstract class AbstractAlignmentModelFactory<T> implements AlignmentModelFactory<T> {
+	private SequenceIDManager sharedIDManager = null;
+	
+	
+	/**
+	 * Creates a new instance of this class without an shared sequence ID manager. Each model instance,
+	 * that will be created by this factory, will have its own sequence ID manager.
+	 */
+	public AbstractAlignmentModelFactory() {
+		super();
+	}
+
+
+	/**
+	 * Creates a new instance of this class using a shared sequence ID manager.
+	 * 
+	 * @param sharedIDManager the sequence ID manager that will be shared by all model instances 
+	 *        created by this factory 
+	 */
+	public AbstractAlignmentModelFactory(SequenceIDManager sharedIDManager) {
+		super();
+		this.sharedIDManager = sharedIDManager;
+	}
+
+
+	/**
+	 * Returns the sequence ID manager that is shared among all model instances created by this factory.
+	 * 
+	 * @return the shared ID manager of {@code null} if no shared ID manager is used by this factory
+	 * @see #hasSharedIDManager()
+	 */
+	public SequenceIDManager getSharedIDManager() {
+		return sharedIDManager;
+	}
+	
+	
+	/**
+	 * Determines whether this instance uses a shared sequence ID manager.
+	 * 
+	 * @return {@code true} if a shared ID manager is present, {@code false} otherwise
+	 * @see #getSharedIDManager()
+	 */
+	public boolean hasSharedIDManager() {
+		return getSharedIDManager() != null;
+	}
+
+
 	/**
 	 * Creates a token using {@link TokenSet#tokenByRepresentation(String)}.
 	 * 

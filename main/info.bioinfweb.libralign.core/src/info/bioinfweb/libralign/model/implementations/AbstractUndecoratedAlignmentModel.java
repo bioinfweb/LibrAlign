@@ -66,7 +66,13 @@ public abstract class AbstractUndecoratedAlignmentModel<T> extends AbstractAlign
 	 */
 	public AbstractUndecoratedAlignmentModel(TokenSet<T> tokenSet, SequenceIDManager idManager) {
 		super();
-		this.idManager = idManager;
+		
+		if (idManager == null) {
+			this.idManager = new SequenceIDManager();
+		}
+		else {
+			this.idManager = idManager;
+		}
 		this.tokenSet = tokenSet;
 	}
 

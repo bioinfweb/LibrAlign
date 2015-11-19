@@ -57,6 +57,8 @@ public class SequenceIDManager {  //TODO What if the same name is added several 
 	
   /**
    * Adds a new empty sequence to the underlying data source and generates an ID for it.
+   * <p>
+   * If a shared ID manager is used, a previously defined ID is used, if one exists.
    * 
    * @param sequenceName - the name of the new sequence
    * @return the unique ID of the new sequence
@@ -64,9 +66,12 @@ public class SequenceIDManager {  //TODO What if the same name is added several 
 	 * @throws AlignmentSourceNotWritableException if the underlying data source is not writable for sequences
    */
   public int addSequenceName(String sequenceName) {
-		int sequenceID = createNewID();
-		idByNameMap.put(sequenceName, sequenceID);
-		nameByIDMap.put(sequenceID, sequenceName);
+  	int sequenceID = sequenceIDByName(sequenceName);
+  	if (sequenceID == -1) {
+  		sequenceID = createNewID();
+  		idByNameMap.put(sequenceName, sequenceID);
+  		nameByIDMap.put(sequenceID, sequenceName);
+  	}
 		return sequenceID;
   }
   

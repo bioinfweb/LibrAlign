@@ -22,6 +22,7 @@ package info.bioinfweb.libralign.model.factory;
 import info.bioinfweb.libralign.model.AlignmentModel;
 import info.bioinfweb.libralign.model.implementations.ArrayListAlignmentModel;
 import info.bioinfweb.libralign.model.implementations.PackedAlignmentModel;
+import info.bioinfweb.libralign.model.implementations.SequenceIDManager;
 import info.bioinfweb.libralign.model.tokenset.CharacterTokenSet;
 
 
@@ -51,6 +52,27 @@ import info.bioinfweb.libralign.model.tokenset.CharacterTokenSet;
  */
 public class BioPolymerCharAlignmentModelFactory extends AbstractAlignmentModelFactory<Character> 
 		implements AlignmentModelFactory<Character> {
+	
+	
+	/**
+	 * Creates a new instance of this class without an shared sequence ID manager. Each model instance,
+	 * that will be created by this factory, will have its own sequence ID manager.
+	 */
+	public BioPolymerCharAlignmentModelFactory() {
+		super();
+	}
+
+	
+	/**
+	 * Creates a new instance of this class using a shared sequence ID manager.
+	 * 
+	 * @param sharedIDManager the sequence ID manager that will be shared by all model instances 
+	 *        created by this factory 
+	 */
+	public BioPolymerCharAlignmentModelFactory(SequenceIDManager sharedIDManager) {
+		super(sharedIDManager);
+	}
+
 	
 	@Override
 	public AlignmentModel<Character> createNewModel(NewAlignmentModelParameterMap parameterMap) {
@@ -82,10 +104,10 @@ public class BioPolymerCharAlignmentModelFactory extends AbstractAlignmentModelF
 		// Create alignment model:
 		long charStateCount = Math.max(tokenSet.size(), parameterMap.getLong(NewAlignmentModelParameterMap.KEY_CHARACTER_STATE_COUNT, 0));
 		if (charStateCount > Integer.MAX_VALUE) {
-			return new ArrayListAlignmentModel<Character>(tokenSet);
+			return new ArrayListAlignmentModel<Character>(tokenSet, getSharedIDManager());  // null is allowed as ID manager
 		}
 		else {
-			return new PackedAlignmentModel<Character>(tokenSet, (int)charStateCount);
+			return new PackedAlignmentModel<Character>(tokenSet, getSharedIDManager(), (int)charStateCount);  // null is allowed as ID manager
 		}
 	}
 }
