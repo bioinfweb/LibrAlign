@@ -26,10 +26,10 @@ import info.bioinfweb.libralign.model.events.SequenceChangeEvent;
 import info.bioinfweb.libralign.model.tokenset.TokenSet;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.TreeMap;
 
 
 
@@ -37,7 +37,7 @@ import java.util.TreeMap;
  * Implements all methods dealing with the organization of the sequence set using some implementation
  * of {@link Map} to identify the sequence object belonging to a sequence ID. The ordering of the
  * sequences is implemented using an additional list storing the IDs. Inherited classes have the option 
- * to provide a custom map implementation instead of {@link TreeMap} which is the default.
+ * to provide a custom map implementation instead of {@link HashMap} which is the default.
  * <p>
  * Sequences are sorted by the order they are added to the model. This ordering in independent to the
  * {@link SequenceOrder} object used in an associated {@link AlignmentArea}.  
@@ -92,13 +92,13 @@ public abstract class AbstractMapBasedAlignmentModel<S, T> extends AbstractUndec
 
 
 	/**
-	 * Creates a new instance of this class relying on a {@link TreeMap}.
+	 * Creates a new instance of this class relying on a {@link HashMap}.
 	 * 
 	 * @param tokenSet - the token set which is supported by the implementation
 	 * @param idManager the ID manager to be used by the new instance (maybe shared among multiple instances) 
 	 */
 	public AbstractMapBasedAlignmentModel(TokenSet<T> tokenSet, SequenceIDManager idManager) {
-		this(tokenSet, idManager, new TreeMap<Integer, S>());
+		this(tokenSet, idManager, new HashMap<Integer, S>());
 	}
 
 

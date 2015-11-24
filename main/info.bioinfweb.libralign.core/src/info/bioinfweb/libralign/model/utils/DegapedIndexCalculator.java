@@ -19,10 +19,10 @@
 package info.bioinfweb.libralign.model.utils;
 
 
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
-import java.util.TreeMap;
 
 import info.bioinfweb.commons.Math2;
 import info.bioinfweb.commons.collections.ListChangeType;
@@ -78,7 +78,7 @@ public class DegapedIndexCalculator<T> {
 	
 	private AlignmentModel<T> model;
 	private Set<T> gapTokens;
-	private Map<Integer, IndexInfo> indexInfos = new TreeMap<Integer, IndexInfo>();
+	private Map<Integer, IndexInfo> indexInfos = new HashMap<Integer, IndexInfo>();
 	
 	
 	/**
