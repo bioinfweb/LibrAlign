@@ -105,7 +105,7 @@ public class SwingAlignmentArea extends JScrollPane implements ToolkitSpecificAl
 	 * scrolling.
 	 */
 	private void removeArrowKeyBindings() {
-	  getActionMap().put("unitScrollLeft", VOID_ACTION);  // remove() does not work here.
+		getActionMap().put("unitScrollLeft", VOID_ACTION);  // remove() does not work here.
 	  getActionMap().put("unitScrollUp", VOID_ACTION);
 		getActionMap().put("unitScrollRight", VOID_ACTION);
 	  getActionMap().put("unitScrollDown", VOID_ACTION);
