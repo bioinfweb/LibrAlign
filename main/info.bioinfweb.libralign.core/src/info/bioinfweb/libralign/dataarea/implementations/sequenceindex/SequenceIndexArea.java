@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package info.bioinfweb.libralign.dataarea.implementations;
+package info.bioinfweb.libralign.dataarea.implementations.sequenceindex;
 
 
 import info.bioinfweb.commons.Math2;
@@ -31,6 +31,7 @@ import info.bioinfweb.libralign.model.concatenated.ConcatenatedAlignmentModel;
 import info.bioinfweb.libralign.model.events.SequenceChangeEvent;
 import info.bioinfweb.libralign.model.events.SequenceRenamedEvent;
 import info.bioinfweb.libralign.model.events.TokenChangeEvent;
+import info.bioinfweb.libralign.pherogram.model.PherogramAreaModel;
 
 import java.awt.BasicStroke;
 import java.awt.FontMetrics;
@@ -79,7 +80,8 @@ public class SequenceIndexArea extends DataArea {
 	public static final double LABEL_LEFT_DISTANCE_FACTOR = 0.2f;
 
 
-    private int firstIndex = DEFAULT_FIRST_INDEX;
+	private int firstIndex = DEFAULT_FIRST_INDEX;
+	private SequenceIndexModel model;
 
 
 	/**
@@ -117,8 +119,8 @@ public class SequenceIndexArea extends DataArea {
 	private int calculateLabelInterval(FontMetrics fontMetrics) {
 		double compoundWidth = getLabeledAlignmentArea().getPaintSettings().minTokenWidth();
 		return (int)Math2.roundUp((fontMetrics.stringWidth("0") *
-				("" + getLabeledAlignmentArea().getGlobalMaxSequenceLength()).length() + 2 * LABEL_LEFT_DISTANCE_FACTOR * compoundWidth)
-				/ compoundWidth);
+				Integer.toString(getLabeledAlignmentArea().getGlobalMaxSequenceLength()).length() + 
+				2 * LABEL_LEFT_DISTANCE_FACTOR * compoundWidth)	/ compoundWidth);
 	}
 
 
@@ -155,6 +157,7 @@ public class SequenceIndexArea extends DataArea {
     		// Text output
     		double dashLength = DASH_LENGTH_FACTOR * getHeight();
     		long compoundIndex = Math2.roundUp((x - maxLengthBeforeStart) / compoundWidth);  // If Math.round() is used, intervals are not constant, if values like 2.4999999999 occur.
+    		//TODO Rename compoundIndex to column and get index from model.
     		if ((compoundIndex - 1) % labelInterval == 0) {  // BioJava indices start with 1
     			g.drawString("" + (compoundIndex + getFirstIndex() - 1), (int)(x + labelLeftDistance),
     					(int)Math2.roundUp(LABEL_TOP_DISTANCE_FACTOR * getHeight()));

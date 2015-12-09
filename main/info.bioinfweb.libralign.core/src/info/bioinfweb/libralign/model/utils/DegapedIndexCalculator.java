@@ -84,7 +84,7 @@ public class DegapedIndexCalculator<T> {
 	/**
 	 * Creates a new instance of this class. 
 	 * 
-	 * @param model the alignment model to calculate ungapped indices in
+	 * @param model the alignment model to calculate ungapped indices from
 	 * @param gapTokens a set of tokens to be considered as gaps
 	 */
 	public DegapedIndexCalculator(AlignmentModel<T> model, Set<T> gapTokens) {

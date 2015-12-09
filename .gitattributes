@@ -103,7 +103,6 @@ main/info.bioinfweb.libralign.core/src/info/bioinfweb/libralign/dataarea/DataAre
 main/info.bioinfweb.libralign.core/src/info/bioinfweb/libralign/dataarea/DataAreaSequenceChangeListener.java -text svneol=unset#text/plain
 main/info.bioinfweb.libralign.core/src/info/bioinfweb/libralign/dataarea/DataAreaVisibleIterator.java -text svneol=unset#text/plain
 main/info.bioinfweb.libralign.core/src/info/bioinfweb/libralign/dataarea/implementations/ConsensusSequenceArea.java -text svneol=unset#text/plain
-main/info.bioinfweb.libralign.core/src/info/bioinfweb/libralign/dataarea/implementations/SequenceIndexArea.java -text svneol=unset#text/plain
 main/info.bioinfweb.libralign.core/src/info/bioinfweb/libralign/dataarea/implementations/charset/CharSet.java -text svneol=unset#text/plain
 main/info.bioinfweb.libralign.core/src/info/bioinfweb/libralign/dataarea/implementations/charset/CharSetArea.java -text svneol=unset#text/plain
 main/info.bioinfweb.libralign.core/src/info/bioinfweb/libralign/dataarea/implementations/charset/CharSetDataModel.java -text svneol=unset#text/plain
@@ -112,6 +111,8 @@ main/info.bioinfweb.libralign.core/src/info/bioinfweb/libralign/dataarea/impleme
 main/info.bioinfweb.libralign.core/src/info/bioinfweb/libralign/dataarea/implementations/package-info.java -text svneol=unset#text/plain
 main/info.bioinfweb.libralign.core/src/info/bioinfweb/libralign/dataarea/implementations/pherogram/PherogramArea.java -text svneol=unset#text/plain
 main/info.bioinfweb.libralign.core/src/info/bioinfweb/libralign/dataarea/implementations/pherogram/package-info.java -text svneol=unset#text/plain
+main/info.bioinfweb.libralign.core/src/info/bioinfweb/libralign/dataarea/implementations/sequenceindex/SequenceIndexArea.java -text svneol=unset#text/plain
+main/info.bioinfweb.libralign.core/src/info/bioinfweb/libralign/dataarea/implementations/sequenceindex/SequenceIndexModel.java -text svneol=unset#text/plain
 main/info.bioinfweb.libralign.core/src/info/bioinfweb/libralign/dataarea/package-info.java -text svneol=unset#text/plain
 main/info.bioinfweb.libralign.core/src/info/bioinfweb/libralign/editsettings/EditSettings.java -text svneol=unset#text/plain
 main/info.bioinfweb.libralign.core/src/info/bioinfweb/libralign/editsettings/EditSettingsChangeEvent.java -text svneol=unset#text/plain
