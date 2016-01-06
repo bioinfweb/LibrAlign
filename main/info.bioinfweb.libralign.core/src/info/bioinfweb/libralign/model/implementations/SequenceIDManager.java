@@ -19,6 +19,7 @@
 package info.bioinfweb.libralign.model.implementations;
 
 
+import info.bioinfweb.commons.IntegerIDManager;
 import info.bioinfweb.libralign.model.AlignmentModel;
 import info.bioinfweb.libralign.model.exception.AlignmentSourceNotWritableException;
 import info.bioinfweb.libralign.model.exception.DuplicateSequenceNameException;
@@ -39,23 +40,12 @@ import java.util.TreeMap;
  * @since 0.4.0
  */
 public class SequenceIDManager {  //TODO What if the same name is added several times (especially if it has been removed from a model and then added again)?
+	private IntegerIDManager integerIDManager = new IntegerIDManager();
 	private Map<String, Integer> idByNameMap = new TreeMap<String, Integer>();
 	private Map<Integer, String> nameByIDMap = new TreeMap<Integer, String>();
-	private int nextID = 0;
-	
+
 	
 	/**
-	 * Returns a new sequence identifier that has not been returned before.
-	 * 
-	 * @return a value greater or equal to zero
-	 */
-	private int createNewID() {
-		nextID++;
-		return nextID - 1;
-	}
-	
-	
-  /**
    * Adds a new empty sequence to the underlying data source and generates an ID for it.
    * <p>
    * If a shared ID manager is used, a previously defined ID is used, if one exists.
@@ -68,7 +58,7 @@ public class SequenceIDManager {  //TODO What if the same name is added several 
   public int addSequenceName(String sequenceName) {
   	int sequenceID = sequenceIDByName(sequenceName);
   	if (sequenceID == -1) {
-  		sequenceID = createNewID();
+  		sequenceID = integerIDManager.createNewID();
   		idByNameMap.put(sequenceName, sequenceID);
   		nameByIDMap.put(sequenceID, sequenceName);
   	}
