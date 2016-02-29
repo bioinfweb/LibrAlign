@@ -30,11 +30,11 @@ import info.bioinfweb.libralign.alignmentarea.AlignmentArea;
 import info.bioinfweb.libralign.alignmentarea.content.AlignmentContentArea;
 import info.bioinfweb.libralign.alignmentarea.tokenpainter.NucleotideTokenPainter;
 import info.bioinfweb.libralign.dataarea.implementations.ConsensusSequenceArea;
-import info.bioinfweb.libralign.dataarea.implementations.SequenceIndexArea;
 import info.bioinfweb.libralign.dataarea.implementations.charset.CharSet;
 import info.bioinfweb.libralign.dataarea.implementations.charset.CharSetArea;
 import info.bioinfweb.libralign.dataarea.implementations.charset.CharSetDataModel;
 import info.bioinfweb.libralign.dataarea.implementations.pherogram.PherogramArea;
+import info.bioinfweb.libralign.dataarea.implementations.sequenceindex.SequenceIndexArea;
 import info.bioinfweb.libralign.model.AlignmentModel;
 import info.bioinfweb.libralign.model.implementations.BioJava3AlignmentModel;
 import info.bioinfweb.libralign.model.implementations.PackedAlignmentModel;
@@ -44,6 +44,8 @@ import info.bioinfweb.libralign.model.utils.AlignmentModelUtils;
 import info.bioinfweb.libralign.multiplealignments.MultipleAlignmentsContainer;
 import info.bioinfweb.libralign.pherogram.model.PherogramAreaModel;
 import info.bioinfweb.libralign.pherogram.provider.BioJavaPherogramProvider;
+import info.bioinfweb.tic.input.TICKeyEvent;
+import info.bioinfweb.tic.input.TICKeyListener;
 
 import org.biojava.bio.chromatogram.ChromatogramFactory;
 import org.biojava3.core.sequence.DNASequence;
@@ -157,6 +159,20 @@ public class AbstractApplication {
 			area.getDataAreas().getBottomAreas().add(new ConsensusSequenceArea(area.getContentArea(), mainArea));
       result.getAlignmentAreas().add(area);
 			
+      result.addKeyListener(new TICKeyListener() {
+				@Override
+				public boolean keyReleased(TICKeyEvent e) {
+					System.out.println("released " + e.getKeyCode());
+					return false;
+				}
+				
+				@Override
+				public boolean keyPressed(TICKeyEvent e) {
+					System.out.println("pressed " + e.getKeyCode());
+					return false;
+				}
+			});
+      
 			return result;
 		}
 		catch (Exception e) {
