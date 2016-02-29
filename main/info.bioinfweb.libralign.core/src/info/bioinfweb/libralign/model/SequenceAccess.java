@@ -34,7 +34,7 @@ import info.bioinfweb.libralign.model.adapters.SequenceDataAdapter;
  * @author Ben St&ouml;ver
  * @since 0.1.0
  *
- * @param <S> - the class of the sequence objects representing a row in the alignment
+ * @param <S> the class of the sequence objects representing a row in the alignment
  */
 public interface SequenceAccess<S> {
 	/**
