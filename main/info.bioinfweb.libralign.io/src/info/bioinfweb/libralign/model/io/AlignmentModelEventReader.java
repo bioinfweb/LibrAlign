@@ -19,7 +19,7 @@
 package info.bioinfweb.libralign.model.io;
 
 
-import info.bioinfweb.commons.bio.CharacterStateType;
+import info.bioinfweb.commons.bio.CharacterStateSetType;
 import info.bioinfweb.jphyloio.JPhyloIOEventListener;
 import info.bioinfweb.jphyloio.JPhyloIOEventReader;
 import info.bioinfweb.jphyloio.events.CharacterSetEvent;
@@ -54,7 +54,7 @@ import java.util.TreeMap;
  */
 public class AlignmentModelEventReader implements JPhyloIOEventListener {
 	private final AlignmentModelFactory defaultFactory;
-	private final Map<CharacterStateType, AlignmentModelFactory> factoryMap;
+	private final Map<CharacterStateSetType, AlignmentModelFactory> factoryMap;
 	private AlignmentModel<?> currentModel = null;
 	private final List<AlignmentModel<?>> completedModels = new ArrayList<AlignmentModel<?>>();
 	private final Map<String, CharacterSetEvent> charSetEvents = new TreeMap<String, CharacterSetEvent>();
@@ -67,7 +67,7 @@ public class AlignmentModelEventReader implements JPhyloIOEventListener {
 	 */
 	public AlignmentModelEventReader() {
 		this(new StringAlignmentModelFactory());
-		getFactoryMap().put(CharacterStateType.CONTINUOUS, new DoubleAlignmentModelFactory());
+		getFactoryMap().put(CharacterStateSetType.CONTINUOUS, new DoubleAlignmentModelFactory());
 	}
 
 
@@ -79,7 +79,7 @@ public class AlignmentModelEventReader implements JPhyloIOEventListener {
 	 *        set types which are not defined in the factory map
 	 */
 	public AlignmentModelEventReader(AlignmentModelFactory<?> defaultFactory) {
-		this(defaultFactory, new EnumMap<CharacterStateType, AlignmentModelFactory>(CharacterStateType.class));
+		this(defaultFactory, new EnumMap<CharacterStateSetType, AlignmentModelFactory>(CharacterStateSetType.class));
 	}
 
 
@@ -90,7 +90,7 @@ public class AlignmentModelEventReader implements JPhyloIOEventListener {
 	 *        which are not defined in the factory map
 	 * @param factoryMap a map of alignment model factories for different character state (token) set types
 	 */
-	public AlignmentModelEventReader(AlignmentModelFactory defaultFactory, Map<CharacterStateType, AlignmentModelFactory> factoryMap) {
+	public AlignmentModelEventReader(AlignmentModelFactory defaultFactory, Map<CharacterStateSetType, AlignmentModelFactory> factoryMap) {
 		super();
 		this.defaultFactory = defaultFactory;
 		this.factoryMap = factoryMap;
@@ -115,23 +115,23 @@ public class AlignmentModelEventReader implements JPhyloIOEventListener {
 	 * @return the map of factories
 	 * @see #getDefaultFactory()
 	 */
-	public Map<CharacterStateType, AlignmentModelFactory> getFactoryMap() {
+	public Map<CharacterStateSetType, AlignmentModelFactory> getFactoryMap() {
 		return factoryMap;
 	}
 
 
 	/**
 	 * Sets the specified map for all nucleotide factories (identified with the keys
-	 * {@link CharacterStateType#NUCLEOTIDE}, {@link CharacterStateType#DNA}, {@link CharacterStateType#RNA}).
+	 * {@link CharacterStateSetType#NUCLEOTIDE}, {@link CharacterStateSetType#DNA}, {@link CharacterStateSetType#RNA}).
 	 * <p>
 	 * Previously defined factories for the according types are replaced by this operation.
 	 *
 	 * @param factory the alignment model factory to be used for all nucleotide token set types
 	 */
 	public void setNucleotideFactories(AlignmentModelFactory factory) {
-		getFactoryMap().put(CharacterStateType.NUCLEOTIDE, factory);
-		getFactoryMap().put(CharacterStateType.DNA, factory);
-		getFactoryMap().put(CharacterStateType.RNA, factory);
+		getFactoryMap().put(CharacterStateSetType.NUCLEOTIDE, factory);
+		getFactoryMap().put(CharacterStateSetType.DNA, factory);
+		getFactoryMap().put(CharacterStateSetType.RNA, factory);
 	}
 
 
@@ -210,7 +210,7 @@ public class AlignmentModelEventReader implements JPhyloIOEventListener {
 		// Ensure model instance:
 		if (currentModel == null) {
 			if (currentParameterMap.getCharacterStateSetType() == null) {
-				currentParameterMap.setCharacterStateSetType(CharacterStateType.UNKNOWN);
+				currentParameterMap.setCharacterStateSetType(CharacterStateSetType.UNKNOWN);
 			}
 			currentModel = factory.createNewModel(currentParameterMap);
 		}

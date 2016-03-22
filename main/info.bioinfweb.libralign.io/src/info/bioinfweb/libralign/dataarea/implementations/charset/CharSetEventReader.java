@@ -21,7 +21,7 @@ package info.bioinfweb.libralign.dataarea.implementations.charset;
 
 import info.bioinfweb.commons.graphics.UniqueColorLister;
 import info.bioinfweb.jphyloio.JPhyloIOEventReader;
-import info.bioinfweb.jphyloio.events.CharacterSetEvent;
+import info.bioinfweb.jphyloio.events.CharacterStateSetType;
 import info.bioinfweb.jphyloio.events.JPhyloIOEvent;
 import info.bioinfweb.libralign.model.data.NoArgDataModelFactory;
 import info.bioinfweb.libralign.model.io.AbstractDataModelEventReader;
@@ -61,7 +61,7 @@ public class CharSetEventReader extends AbstractDataModelEventReader<CharSetData
 
 	@Override
 	public void processEvent(JPhyloIOEventReader source, JPhyloIOEvent event) {
-		switch (event.getEventType()) {
+		switch (event.getType().getContentType()) {
 			case ALIGNMENT_END:
 				publishCurrentInfo();  // Adds alignment specific model to the result list, if one is present.
 				break;
@@ -82,7 +82,7 @@ public class CharSetEventReader extends AbstractDataModelEventReader<CharSetData
 				}
 				
 				// Read data:
-				CharacterSetEvent characterSetEvent = event.asCharacterSetEvent();
+				CharacterStateSetType characterSetEvent = event.asCharacterSetEvent();
 				CharSet charSet = model.getByName(characterSetEvent.getName());
 				if (charSet == null) {
 					charSet = new CharSet(characterSetEvent.getName(), colorLister.generateNext());
