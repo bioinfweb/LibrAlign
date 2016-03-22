@@ -19,7 +19,7 @@
 package info.bioinfweb.libralign.model.tokenset;
 
 
-import info.bioinfweb.commons.bio.CharacterStateType;
+import info.bioinfweb.commons.bio.CharacterStateSetType;
 
 import java.awt.event.KeyEvent;
 import java.util.HashMap;
@@ -48,7 +48,7 @@ public abstract class AbstractTokenSet<T> extends HashSet<T> implements TokenSet
 	public static final char DEFAULT_GAP_REPRESENTATION = '-';
 	
 	
-	private CharacterStateType type;
+	private CharacterStateSetType type;
 	private Map<KeyStroke, T> keyMap = new HashMap<KeyStroke, T>();
 	private boolean spaceForGap = true;
 	
@@ -56,7 +56,7 @@ public abstract class AbstractTokenSet<T> extends HashSet<T> implements TokenSet
 	/**
 	 * Creates a new empty instance of this class.
 	 */
-	public AbstractTokenSet(CharacterStateType type) {
+	public AbstractTokenSet(CharacterStateSetType type) {
 		super();
 		this.type = type;
 	}
@@ -68,7 +68,7 @@ public abstract class AbstractTokenSet<T> extends HashSet<T> implements TokenSet
 	 * @param type the token type of the new instance (Only a discrete type would make sense for this class.)
 	 * @param source the source instance to be cloned
 	 */
-	public AbstractTokenSet(CharacterStateType type, AbstractTokenSet<T> source) {
+	public AbstractTokenSet(CharacterStateSetType type, AbstractTokenSet<T> source) {
 		this(type);
 		addAll(source);
 		getKeyMap().putAll(source.getKeyMap());
@@ -76,7 +76,7 @@ public abstract class AbstractTokenSet<T> extends HashSet<T> implements TokenSet
 
 
 	@Override
-	public CharacterStateType getType() {
+	public CharacterStateSetType getType() {
 		return type;
 	}
 

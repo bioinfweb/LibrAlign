@@ -19,7 +19,7 @@
 package info.bioinfweb.libralign.model.implementations.decorate;
 
 
-import info.bioinfweb.commons.bio.CharacterStateType;
+import info.bioinfweb.commons.bio.CharacterStateSetType;
 import info.bioinfweb.commons.collections.PackedObjectArrayList;
 import info.bioinfweb.libralign.model.AlignmentModelChangeListener;
 import info.bioinfweb.libralign.model.AlignmentModel;
@@ -134,8 +134,8 @@ public abstract class AbstractTokenReplacementAlignmentModelDecorator<T, U> exte
 			Collection<? extends U> underlyingTokens) {
 		
 		Collection<T> result;
-		if (getTokenSet().getType().equals(CharacterStateType.CONTINUOUS) || 
-				getTokenSet().getType().equals(CharacterStateType.UNKNOWN)) {
+		if (getTokenSet().getType().equals(CharacterStateSetType.CONTINUOUS) || 
+				getTokenSet().getType().equals(CharacterStateSetType.UNKNOWN)) {
 			
 			result = new ArrayList<T>(underlyingTokens.size());
 		}
@@ -154,8 +154,8 @@ public abstract class AbstractTokenReplacementAlignmentModelDecorator<T, U> exte
 			Collection<? extends T> viewedTokens) {
 		
 		Collection<U> result;
-		if (getUnderlyingModel().getTokenSet().getType().equals(CharacterStateType.CONTINUOUS) || 
-				getUnderlyingModel().getTokenSet().getType().equals(CharacterStateType.UNKNOWN)) {
+		if (getUnderlyingModel().getTokenSet().getType().equals(CharacterStateSetType.CONTINUOUS) || 
+				getUnderlyingModel().getTokenSet().getType().equals(CharacterStateSetType.UNKNOWN)) {
 			
 			result = new ArrayList<U>(viewedTokens.size());
 		}

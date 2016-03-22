@@ -19,7 +19,7 @@
 package info.bioinfweb.libralign.dataarea.implementations;
 
 
-import info.bioinfweb.commons.bio.CharacterStateType;
+import info.bioinfweb.commons.bio.CharacterStateSetType;
 import info.bioinfweb.commons.bio.SequenceUtils;
 import info.bioinfweb.commons.graphics.FontCalculator;
 import info.bioinfweb.commons.graphics.GraphicsUtils;
@@ -133,7 +133,7 @@ public class ConsensusSequenceArea extends DataArea {
 			AlignmentModel model = getLabeledAlignmentModel();
 			TokenSet tokenSet = model.getTokenSet();
 			Iterator<Integer> iterator = model.sequenceIDIterator();
-			if (tokenSet.getType().isNucleotide() || tokenSet.getType().equals(CharacterStateType.AMINO_ACID)) {
+			if (tokenSet.getType().isNucleotide() || tokenSet.getType().equals(CharacterStateSetType.AMINO_ACID)) {
 				Map<Character, Double> frequencies;
 				
 				if (tokenSet.getType().isNucleotide()) {

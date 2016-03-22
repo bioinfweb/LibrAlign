@@ -19,7 +19,7 @@
 package info.bioinfweb.libralign.model.factory;
 
 
-import info.bioinfweb.commons.bio.CharacterStateMeaning;
+import info.bioinfweb.commons.bio.CharacterStateSetType;
 
 
 
@@ -31,10 +31,10 @@ import info.bioinfweb.commons.bio.CharacterStateMeaning;
  */
 public class TokenDefinition {
 	private String representation;
-	private CharacterStateMeaning meaning;
+	private CharacterStateSetType meaning;
 	
 	
-	public TokenDefinition(String representation, CharacterStateMeaning meaning) {
+	public TokenDefinition(String representation, CharacterStateSetType meaning) {
 		super();
 		this.representation = representation;
 		this.meaning = meaning;
@@ -46,7 +46,7 @@ public class TokenDefinition {
 	}
 	
 	
-	public CharacterStateMeaning getMeaning() {
+	public CharacterStateSetType getMeaning() {
 		return meaning;
 	}
 	

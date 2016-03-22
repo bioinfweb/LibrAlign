@@ -22,7 +22,7 @@ package info.bioinfweb.libralign.model.factory;
 import java.util.ArrayList;
 import java.util.List;
 
-import info.bioinfweb.commons.bio.CharacterStateType;
+import info.bioinfweb.commons.bio.CharacterStateSetType;
 import info.bioinfweb.commons.collections.ParameterMap;
 
 
@@ -81,10 +81,10 @@ public class NewAlignmentModelParameterMap extends ParameterMap {
 	 * @return the character set type ({@link TokenSetType#UNKNOWN} is also returned if no value is stored for the key 
 	 *         {@link #KEY_CHARACTER_SET_TYPE} in this instance.)
 	 */
-	public CharacterStateType getCharacterStateSetType() {
-		CharacterStateType result = (CharacterStateType)get(KEY_CHARACTER_STATE_SET_TYPE);  // Null is also cast correctly by this code.
+	public CharacterStateSetType getCharacterStateSetType() {
+		CharacterStateSetType result = (CharacterStateSetType)get(KEY_CHARACTER_STATE_SET_TYPE);  // Null is also cast correctly by this code.
 		if (result == null) {
-			result = CharacterStateType.UNKNOWN;
+			result = CharacterStateSetType.UNKNOWN;
 		}
 		return result;
 	}
@@ -95,7 +95,7 @@ public class NewAlignmentModelParameterMap extends ParameterMap {
 	 * 
 	 * @param type the character set type the alignment model to be created shall have
 	 */
-	public void setCharacterStateSetType(CharacterStateType type) {
+	public void setCharacterStateSetType(CharacterStateSetType type) {
 		put(KEY_CHARACTER_STATE_SET_TYPE, type);
 	}
 	
