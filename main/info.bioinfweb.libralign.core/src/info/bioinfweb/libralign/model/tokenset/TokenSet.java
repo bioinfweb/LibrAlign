@@ -89,8 +89,7 @@ public interface TokenSet<T> extends Set<T>, Cloneable {
 	 * Calculates the maximal length of a representation returned by {@link #representationByToken(Object)}
 	 * of all tokens contained in this set.
 	 * 
-	 * @return Since all representations must be at least one character long the returned string should have
-	 *         a length >= 1.
+	 * @return a value >= 1 (since all representations must be at least one character long)
 	 */
 	public int maxRepresentationLength();
 	
