@@ -20,6 +20,7 @@ package info.bioinfweb.libralign.model.tokenset;
 
 
 import info.bioinfweb.commons.bio.CharacterStateSetType;
+import info.bioinfweb.commons.bio.SequenceUtils;
 
 import java.awt.event.KeyEvent;
 import java.util.HashMap;
@@ -47,10 +48,7 @@ import javax.swing.KeyStroke;
 public abstract class AbstractTokenSet<T> extends HashSet<T> implements TokenSet<T> {
 	private static final long serialVersionUID = 1L;
 	
-	public static final char DEFAULT_GAP_REPRESENTATION = '-';
-	public static final char DEFAULT_MISSING_INFORMATION_REPRESENTATION = '?';
-	
-	
+
 	private CharacterStateSetType type;
 	private Map<KeyStroke, T> keyMap = new HashMap<KeyStroke, T>();
 	private boolean spaceForGap = true;
@@ -119,7 +117,7 @@ public abstract class AbstractTokenSet<T> extends HashSet<T> implements TokenSet
 
 	@Override
 	public T getGapToken() {
-		return tokenByRepresentation(Character.toString(DEFAULT_GAP_REPRESENTATION));
+		return tokenByRepresentation(Character.toString(SequenceUtils.GAP_CHAR));
 	}
 
 
@@ -144,7 +142,7 @@ public abstract class AbstractTokenSet<T> extends HashSet<T> implements TokenSet
 
 	@Override
 	public T getMissingInformationToken() {
-		return tokenByRepresentation(Character.toString(DEFAULT_MISSING_INFORMATION_REPRESENTATION));
+		return tokenByRepresentation(Character.toString(SequenceUtils.MISSING_DATA_CHAR));
 	}
 
 

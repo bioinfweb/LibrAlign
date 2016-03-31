@@ -21,7 +21,7 @@ package info.bioinfweb.libralign.model.tokenset.continuous;
 
 import info.bioinfweb.commons.bio.CharacterStateSetType;
 import info.bioinfweb.commons.bio.CharacterSymbolMeaning;
-import info.bioinfweb.libralign.model.tokenset.AbstractTokenSet;
+import info.bioinfweb.commons.bio.SequenceUtils;
 import info.bioinfweb.libralign.model.tokenset.TokenSet;
 
 import java.awt.event.KeyEvent;
@@ -46,7 +46,7 @@ import javax.swing.KeyStroke;
  *
  * @param <T> the type of tokens represented by this set
  */
-public abstract class AbstractContinuousSet<T extends Number> implements TokenSet<ContinuousToken<T>> {
+public abstract class AbstractContinuousSet<T extends Number & Comparable<T>> implements TokenSet<ContinuousToken<T>> {
 	private boolean spaceForGap = true;
 	
 	
@@ -55,10 +55,10 @@ public abstract class AbstractContinuousSet<T extends Number> implements TokenSe
 	
 	@Override
 	public ContinuousToken<T> tokenByRepresentation(String representation) {
-		if (Character.toString(AbstractTokenSet.DEFAULT_GAP_REPRESENTATION).equals(representation)) {
+		if (Character.toString(SequenceUtils.GAP_CHAR).equals(representation)) {
 			return getGapToken();
 		}
-		else if (Character.toString(AbstractTokenSet.DEFAULT_MISSING_INFORMATION_REPRESENTATION).equals(representation)) {
+		else if (Character.toString(SequenceUtils.MISSING_DATA_CHAR).equals(representation)) {
 			return getMissingInformationToken();
 		}
 		else {
@@ -253,7 +253,10 @@ public abstract class AbstractContinuousSet<T extends Number> implements TokenSe
 	@Override
 	public String representationByToken(ContinuousToken<T> token) {
 		if (isGapToken(token)) {
-			return Character.toString(AbstractTokenSet.DEFAULT_GAP_REPRESENTATION);
+			return Character.toString(SequenceUtils.GAP_CHAR);
+		}
+		else if (isMissingInformationToken(token)) {
+			return Character.toString(SequenceUtils.MISSING_DATA_CHAR);
 		}
 		else {
 			return token.toString();

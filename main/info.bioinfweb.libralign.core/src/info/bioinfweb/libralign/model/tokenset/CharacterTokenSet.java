@@ -77,7 +77,7 @@ public class CharacterTokenSet extends AbstractTokenSet<Character> {
 		else if (CharacterStateSetType.RNA.equals(type)) {
 			result.remove('T');
 		}
-		result.add(DEFAULT_GAP_REPRESENTATION);
+		result.add(SequenceUtils.GAP_CHAR);
 		return result;
 	}
 	
@@ -133,7 +133,7 @@ public class CharacterTokenSet extends AbstractTokenSet<Character> {
 	public static CharacterTokenSet newAminoAcidInstance() {
 		CharacterTokenSet result = new CharacterTokenSet(CharacterStateSetType.AMINO_ACID);
 		result.addAll(SequenceUtils.getAminoAcidOneLetterCodes(true));
-		result.add(DEFAULT_GAP_REPRESENTATION);
+		result.add(SequenceUtils.GAP_CHAR);
 		return result;
 	}
 	

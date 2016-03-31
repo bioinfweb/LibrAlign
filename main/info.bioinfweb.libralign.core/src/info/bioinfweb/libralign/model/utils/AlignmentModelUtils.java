@@ -168,7 +168,7 @@ public class AlignmentModelUtils {
   					selectedCharacters.append(alignmentModel.getTokenAt(id, column));
   				}
   				else {  // Add gaps if selection is behind the end of the sequence.
-  					selectedCharacters.append(AbstractTokenSet.DEFAULT_GAP_REPRESENTATION);
+  					selectedCharacters.append(SequenceUtils.GAP_CHAR);  //TODO Should missing data tokens be added here instead?
   				}
   				
   				if (separateBySpace && (row < selection.getLastRow())) {

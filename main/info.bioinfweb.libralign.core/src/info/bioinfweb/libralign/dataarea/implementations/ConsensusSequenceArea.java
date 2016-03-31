@@ -34,7 +34,6 @@ import info.bioinfweb.libralign.model.AlignmentModel;
 import info.bioinfweb.libralign.model.events.SequenceChangeEvent;
 import info.bioinfweb.libralign.model.events.SequenceRenamedEvent;
 import info.bioinfweb.libralign.model.events.TokenChangeEvent;
-import info.bioinfweb.libralign.model.tokenset.AbstractTokenSet;
 import info.bioinfweb.libralign.model.tokenset.TokenSet;
 import info.bioinfweb.libralign.multiplealignments.MultipleAlignmentsContainer;
 
@@ -120,7 +119,7 @@ public class ConsensusSequenceArea extends DataArea {
 				return model.getTokenSet().representationByToken(token);
 			}
 		}
-		return Character.toString(AbstractTokenSet.DEFAULT_GAP_REPRESENTATION);
+		return Character.toString(SequenceUtils.GAP_CHAR);  //TODO Is the missing data token also relevant here?
 	}
 	
 	

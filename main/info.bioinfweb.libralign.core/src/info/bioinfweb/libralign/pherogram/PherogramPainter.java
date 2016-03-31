@@ -25,8 +25,8 @@ import java.awt.geom.Path2D;
 import java.awt.geom.Rectangle2D;
 
 import info.bioinfweb.commons.Math2;
+import info.bioinfweb.commons.bio.SequenceUtils;
 import info.bioinfweb.libralign.dataarea.implementations.pherogram.PherogramArea;
-import info.bioinfweb.libralign.model.tokenset.AbstractTokenSet;
 import info.bioinfweb.libralign.pherogram.PherogramFormats.QualityOutputType;
 import info.bioinfweb.libralign.pherogram.distortion.GapPattern;
 import info.bioinfweb.libralign.pherogram.distortion.PherogramDistortion;
@@ -411,7 +411,7 @@ public class PherogramPainter {
 	public void paintGaps(Graphics2D g, int firstBaseCallIndex, int lastBaseCallIndex, double startX, double startY, 
 			double height, PherogramDistortion distortion, double compoundWidth) {
 		
-		g.setColor(owner.getFormats().getNucleotideColor(AbstractTokenSet.DEFAULT_GAP_REPRESENTATION));
+		g.setColor(owner.getFormats().getNucleotideColor(SequenceUtils.GAP_CHAR));
 		
 		for (int baseCallIndex = firstBaseCallIndex; baseCallIndex <= lastBaseCallIndex; baseCallIndex++) {
 			if (distortion.getGapPattern(baseCallIndex) != null) {

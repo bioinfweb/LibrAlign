@@ -33,7 +33,7 @@ import info.bioinfweb.commons.bio.CharacterSymbolMeaning;
  *
  * @param <V> the numeric type to be wrapped
  */
-public class ContinuousToken<V extends Number> {
+public class ContinuousToken<V extends Number & Comparable<V>> implements Comparable<ContinuousToken<V>> {
 	private V value;
 	private CharacterSymbolMeaning meaning;
 	
@@ -50,12 +50,12 @@ public class ContinuousToken<V extends Number> {
 	}
 	
 	
-	public static <V extends Number> ContinuousToken<V> newGapInstance() {
+	public static <V extends Number & Comparable<V>> ContinuousToken<V> newGapInstance() {
 		return new ContinuousToken<V>(null, CharacterSymbolMeaning.GAP);
 	}
 
 
-	public static <V extends Number> ContinuousToken<V> newMissingInformationInstance() {
+	public static <V extends Number & Comparable<V>> ContinuousToken<V> newMissingInformationInstance() {
 		return new ContinuousToken<V>(null, CharacterSymbolMeaning.MISSING);
 	}
 
@@ -72,5 +72,74 @@ public class ContinuousToken<V extends Number> {
 
 	public CharacterSymbolMeaning getMeaning() {
 		return meaning;
+	}
+
+
+	@Override
+	public String toString() {
+		if (hasValue()) {
+			return getValue().toString();
+		}
+		else {
+			Character result = getMeaning().getDefaultSymbol();
+			if (result == null) {
+				return getMeaning().toString();
+			}
+			else {
+				return result.toString();
+			}
+		}
+	}
+
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((meaning == null) ? 0 : meaning.hashCode());
+		result = prime * result + ((value == null) ? 0 : value.hashCode());
+		return result;
+	}
+
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		@SuppressWarnings("rawtypes")
+		ContinuousToken other = (ContinuousToken) obj;
+		if (meaning != other.meaning)
+			return false;
+		if (value == null) {
+			if (other.value != null)
+				return false;
+		} else if (!value.equals(other.value))
+			return false;
+		return true;
+	}
+
+
+	@Override
+	public int compareTo(ContinuousToken<V> other) {
+		if (hasValue()) {
+			if (other.hasValue()) {
+				return getValue().compareTo(other.getValue());
+			}
+			else {
+				return 1;
+			}
+		}
+		else {
+			if (other.hasValue()) {
+				return -1;
+			}
+			else {
+				return getMeaning().compareTo(other.getMeaning());
+			}
+		}
 	}
 }

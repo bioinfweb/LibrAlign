@@ -19,6 +19,8 @@
 package info.bioinfweb.libralign.model.tokenset;
 
 
+import info.bioinfweb.commons.bio.SequenceUtils;
+
 import java.util.Iterator;
 
 
@@ -79,7 +81,7 @@ public class TokenSetTools {
 	 * @return {@code true} if the specified token is recognized as a gap, {@code false} otherwise.
 	 */
 	public static <T> boolean isGapToken(TokenSet<T> tokenSet, T token) {
-		return Character.toString(AbstractTokenSet.DEFAULT_GAP_REPRESENTATION).equals(tokenSet.representationByToken(token));
+		return Character.toString(SequenceUtils.GAP_CHAR).equals(tokenSet.representationByToken(token));
 	}
 	
 	
@@ -91,6 +93,6 @@ public class TokenSetTools {
 	 * @return {@code true} if the specified token is recognized as an unknown position symbol, {@code false} otherwise.
 	 */
 	public static <T> boolean isUnknownPositionToken(TokenSet<T> tokenSet, T token) {
-		return Character.toString(AbstractTokenSet.DEFAULT_MISSING_INFORMATION_REPRESENTATION).equals(tokenSet.representationByToken(token));
+		return Character.toString(SequenceUtils.MISSING_DATA_CHAR).equals(tokenSet.representationByToken(token));
 	}
 }
