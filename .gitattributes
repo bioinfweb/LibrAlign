@@ -172,7 +172,6 @@ main/info.bioinfweb.libralign.core/src/info/bioinfweb/libralign/model/factory/Bi
 main/info.bioinfweb.libralign.core/src/info/bioinfweb/libralign/model/factory/NewAlignmentModelParameterMap.java -text svneol=unset#text/plain
 main/info.bioinfweb.libralign.core/src/info/bioinfweb/libralign/model/factory/StringAlignmentModelFactory.java -text svneol=unset#text/plain
 main/info.bioinfweb.libralign.core/src/info/bioinfweb/libralign/model/factory/TokenDefinition.java -text svneol=unset#text/plain
-main/info.bioinfweb.libralign.core/src/info/bioinfweb/libralign/model/factory/continuous/AbstractContinuousAlignmentModelFactory.java -text svneol=unset#text/plain
 main/info.bioinfweb.libralign.core/src/info/bioinfweb/libralign/model/factory/continuous/DoubleAlignmentModelFactory.java -text svneol=unset#text/plain
 main/info.bioinfweb.libralign.core/src/info/bioinfweb/libralign/model/factory/continuous/FloatAlignmentModelFactory.java -text svneol=unset#text/plain
 main/info.bioinfweb.libralign.core/src/info/bioinfweb/libralign/model/factory/continuous/package-info.java -text svneol=unset#text/plain
@@ -217,6 +216,7 @@ main/info.bioinfweb.libralign.core/src/info/bioinfweb/libralign/model/tokenset/D
 main/info.bioinfweb.libralign.core/src/info/bioinfweb/libralign/model/tokenset/TokenSet.java -text svneol=unset#text/plain
 main/info.bioinfweb.libralign.core/src/info/bioinfweb/libralign/model/tokenset/TokenSetTools.java -text svneol=unset#text/plain
 main/info.bioinfweb.libralign.core/src/info/bioinfweb/libralign/model/tokenset/continuous/AbstractContinuousSet.java -text svneol=unset#text/plain
+main/info.bioinfweb.libralign.core/src/info/bioinfweb/libralign/model/tokenset/continuous/ContinuousToken.java -text svneol=unset#text/plain
 main/info.bioinfweb.libralign.core/src/info/bioinfweb/libralign/model/tokenset/continuous/DoubleTokenSet.java -text svneol=unset#text/plain
 main/info.bioinfweb.libralign.core/src/info/bioinfweb/libralign/model/tokenset/continuous/FloatTokenSet.java -text svneol=unset#text/plain
 main/info.bioinfweb.libralign.core/src/info/bioinfweb/libralign/model/tokenset/continuous/package-info.java -text svneol=unset#text/plain

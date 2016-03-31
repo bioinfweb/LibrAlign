@@ -20,12 +20,16 @@ package info.bioinfweb.libralign.model.tokenset.continuous;
 
 
 import info.bioinfweb.commons.bio.CharacterStateSetType;
+import info.bioinfweb.commons.bio.CharacterSymbolMeaning;
 import info.bioinfweb.libralign.model.tokenset.AbstractTokenSet;
 import info.bioinfweb.libralign.model.tokenset.TokenSet;
 
+import java.awt.event.KeyEvent;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Iterator;
+
+import javax.swing.KeyStroke;
 
 
 
@@ -42,17 +46,73 @@ import java.util.Iterator;
  *
  * @param <T> the type of tokens represented by this set
  */
-public abstract class AbstractContinuousSet<T> implements TokenSet<T> {
+public abstract class AbstractContinuousSet<T extends Number> implements TokenSet<ContinuousToken<T>> {
 	private boolean spaceForGap = true;
 	
 	
+	protected abstract ContinuousToken<T> parseValue(String value) throws NumberFormatException;
+	
+	
+	@Override
+	public ContinuousToken<T> tokenByRepresentation(String representation) {
+		if (Character.toString(AbstractTokenSet.DEFAULT_GAP_REPRESENTATION).equals(representation)) {
+			return getGapToken();
+		}
+		else if (Character.toString(AbstractTokenSet.DEFAULT_MISSING_INFORMATION_REPRESENTATION).equals(representation)) {
+			return getMissingInformationToken();
+		}
+		else {
+			try {
+				return parseValue(representation);
+			}
+			catch (NumberFormatException e) {
+				return null;
+			}
+		}
+	}
+
+	
+	@Override
+	public ContinuousToken<T> tokenByKeyStroke(KeyStroke key) {
+		ContinuousToken<T> result = tokenByRepresentation(Character.toString(key.getKeyChar()));
+		if (isSpaceForGap() && (result == null) && (key.getKeyCode() == KeyEvent.VK_SPACE)) {
+			result = getGapToken();
+		}
+		return result;
+	}
+
+	
+	@Override
+	public boolean isGapToken(ContinuousToken<T> token) {
+		return (token != null) && (token.getMeaning().equals(CharacterSymbolMeaning.GAP));
+	}
+
+
+	@Override
+	public ContinuousToken<T> getGapToken() {
+		return ContinuousToken.newGapInstance();
+	}
+
+
+	@Override
+	public boolean isMissingInformationToken(ContinuousToken<T> token) {
+		return (token != null) && (token.getMeaning().equals(CharacterSymbolMeaning.MISSING));
+	}
+
+
+	@Override
+	public ContinuousToken<T> getMissingInformationToken() {
+		return ContinuousToken.newMissingInformationInstance();
+	}
+
+
 	/**
 	 * This method is not supported by this implementation and will always throw an {@link UnsupportedOperationException}.
 	 * 
 	 * @throws UnsupportedOperationException always
 	 */
 	@Override
-	public boolean add(T e) {
+	public boolean add(ContinuousToken<T> e) {
 		throw new UnsupportedOperationException("This continuous set does not support adding or removing single elements.");
 	}
 
@@ -63,7 +123,7 @@ public abstract class AbstractContinuousSet<T> implements TokenSet<T> {
 	 * @throws UnsupportedOperationException always
 	 */
 	@Override
-	public boolean addAll(Collection<? extends T> c) {
+	public boolean addAll(Collection<? extends ContinuousToken<T>> c) {
 		throw new UnsupportedOperationException("This continuous set does not support adding or removing single elements.");
 	}
 
@@ -118,7 +178,7 @@ public abstract class AbstractContinuousSet<T> implements TokenSet<T> {
 	 * @return always an empty iterator
 	 */
 	@Override
-	public Iterator<T> iterator() {
+	public Iterator<ContinuousToken<T>> iterator() {
 		return Collections.emptyIterator();
 	}
 	
@@ -191,7 +251,7 @@ public abstract class AbstractContinuousSet<T> implements TokenSet<T> {
 
 	
 	@Override
-	public String representationByToken(T token) {
+	public String representationByToken(ContinuousToken<T> token) {
 		if (isGapToken(token)) {
 			return Character.toString(AbstractTokenSet.DEFAULT_GAP_REPRESENTATION);
 		}
@@ -208,7 +268,7 @@ public abstract class AbstractContinuousSet<T> implements TokenSet<T> {
 
 	
 	@Override
-	public String descriptionByToken(T token) {
+	public String descriptionByToken(ContinuousToken<T> token) {
 		return representationByToken(token);
 	}
 

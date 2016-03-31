@@ -117,9 +117,12 @@ public interface TokenSet<T> extends Set<T>, Cloneable {
 	public CharacterStateSetType getType();
 	
 	/**
-	 * Tests if the specified token represents a gap. 
+	 * Tests if the specified token represents a gap. This method is e.g. used by data areas to determine the positions 
+	 * of gaps.
 	 * <p>
-	 * This method is e.g. used by data areas to determine the positions of gaps. 
+	 * Note that it's legal to have multiple tokens to be considered as gaps, but one of them must be defined as the default
+	 * gap tokens. When alignments are written to files (e.g. using <i>JPhyloIO</i>), some formats may accept only one of these 
+	 * tokens as a gap and the others may be represented as additional character states.
 	 * 
 	 * @param token the token to be tested
 	 * @return {@code true} if the specified token is recognized as a gap, {@code false} otherwise.
@@ -127,7 +130,7 @@ public interface TokenSet<T> extends Set<T>, Cloneable {
 	public boolean isGapToken(T token);
 	
 	/**
-	 * Returns an object that represents a gap in this token set.
+	 * Returns the default object that represents a gap in this token set.
 	 * 
 	 * @return the according gap object (Implementations may create a new instance with every call of this method
 	 *         or always return the same instance. In general gap objects should not have any mutable object 
@@ -152,6 +155,28 @@ public interface TokenSet<T> extends Set<T>, Cloneable {
 	 *        otherwise.
 	 */
 	public void setSpaceForGap(boolean spaceForGap);
+	
+	/**
+	 * Tests if the specified token represents an unknown position (usually '?'). This method is e.g. used by data areas to 
+	 * determine the positions of gaps.
+	 * <p>
+	 * Note that it's legal to have multiple tokens to be considered as unknown symbols, but one of them must be defined as 
+	 * the default. When alignments are written to files, some formats may accept only one   
+	 * 
+	 * @param token the token to be tested
+	 * @return {@code true} if the specified token is recognized as an unknown position, {@code false} otherwise.
+	 */
+	public boolean isMissingInformationToken(T token);
+	
+	/**
+	 * Returns the default object that represents an unknown position in this token set.
+	 * 
+	 * @return the according object (Implementations may create a new instance with every call of this method
+	 *         or always return the same instance. In general objects should not have any mutable object 
+	 *         specific properties to avoid problems if the same instance if located at multiple positions in an
+	 *         alignment.)
+	 */
+	public T getMissingInformationToken();
 	
 	/**
 	 * Returns a deep copy of this instance. Implementing this method is important when creating custom

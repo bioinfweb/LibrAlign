@@ -81,4 +81,16 @@ public class TokenSetTools {
 	public static <T> boolean isGapToken(TokenSet<T> tokenSet, T token) {
 		return Character.toString(AbstractTokenSet.DEFAULT_GAP_REPRESENTATION).equals(tokenSet.representationByToken(token));
 	}
+	
+	
+	/**
+	 * Tests if the specified token represents an unknown position in the specified token set. 
+	 * 
+	 * @param tokenSet the token set containing the specified token
+	 * @param token the token to be tested
+	 * @return {@code true} if the specified token is recognized as an unknown position symbol, {@code false} otherwise.
+	 */
+	public static <T> boolean isUnknownPositionToken(TokenSet<T> tokenSet, T token) {
+		return Character.toString(AbstractTokenSet.DEFAULT_MISSING_INFORMATION_REPRESENTATION).equals(tokenSet.representationByToken(token));
+	}
 }

@@ -45,7 +45,10 @@ import javax.swing.KeyStroke;
  * @param <T> - the type of token to be stored in this set
  */
 public abstract class AbstractTokenSet<T> extends HashSet<T> implements TokenSet<T> {
+	private static final long serialVersionUID = 1L;
+	
 	public static final char DEFAULT_GAP_REPRESENTATION = '-';
+	public static final char DEFAULT_MISSING_INFORMATION_REPRESENTATION = '?';
 	
 	
 	private CharacterStateSetType type;
@@ -129,6 +132,19 @@ public abstract class AbstractTokenSet<T> extends HashSet<T> implements TokenSet
 	@Override
 	public void setSpaceForGap(boolean spaceForGap) {
 		this.spaceForGap = spaceForGap;
+	}
+
+
+	@Override
+	public boolean isMissingInformationToken(T token) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+
+	@Override
+	public T getMissingInformationToken() {
+		return tokenByRepresentation(Character.toString(DEFAULT_MISSING_INFORMATION_REPRESENTATION));
 	}
 
 

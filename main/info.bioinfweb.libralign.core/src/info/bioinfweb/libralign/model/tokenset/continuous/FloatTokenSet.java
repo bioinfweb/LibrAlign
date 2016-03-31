@@ -19,19 +19,10 @@
 package info.bioinfweb.libralign.model.tokenset.continuous;
 
 
-import java.awt.event.KeyEvent;
-
-import javax.swing.KeyStroke;
-
-import info.bioinfweb.libralign.model.tokenset.AbstractTokenSet;
-
 
 
 /**
- * Implementation of a token set containing all possible {@code float} values. Gaps are represented by {@link Float#NaN}
- * in this set.
- * <p>
- * For sets containing only a continuous subset of these, overwrite the according methods.
+ * Implementation of a token set containing all possible {@code float} values.
  * 
  * @author Ben St&ouml;ver
  * @since 0.4.0
@@ -41,31 +32,11 @@ public class FloatTokenSet extends AbstractContinuousSet<Float> {
 	
 	
 	@Override
-	public Float tokenByKeyStroke(KeyStroke key) {
-		Float result = tokenByRepresentation(Character.toString(key.getKeyChar()));
-		if (isSpaceForGap() && (result == null) && (key.getKeyCode() == KeyEvent.VK_SPACE)) {
-			result = getGapToken();
-		}
-		return result;
+	protected ContinuousToken<Float> parseValue(String value)	throws NumberFormatException {
+		return new ContinuousToken<Float>(Float.parseFloat(value));
 	}
 
-	
-	@Override
-	public Float tokenByRepresentation(String representation) {
-		if (Character.toString(AbstractTokenSet.DEFAULT_GAP_REPRESENTATION).equals(representation)) {
-			return Float.NaN;
-		}
-		else {
-			try {
-				return Float.parseFloat(representation);
-			}
-			catch (NumberFormatException e) {
-				return null;
-			}
-		}
-	}
 
-	
 	/**
 	 * This method returns the length of 8 significant digits in exponential notation which is the notation this token
 	 * set uses to generate string representations.  
@@ -75,18 +46,6 @@ public class FloatTokenSet extends AbstractContinuousSet<Float> {
 	@Override
 	public int maxRepresentationLength() {
 		return FLOAT_MAX_REPRESENTATION_LENGTH;
-	}
-
-
-	@Override
-	public boolean isGapToken(Float token) {
-		return token.isNaN();
-	}
-
-
-	@Override
-	public Float getGapToken() {
-		return Float.NaN;
 	}
 
 

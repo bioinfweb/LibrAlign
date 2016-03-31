@@ -20,8 +20,10 @@ package info.bioinfweb.libralign.model.factory.continuous;
 
 
 import info.bioinfweb.libralign.model.AlignmentModel;
+import info.bioinfweb.libralign.model.factory.AbstractAlignmentModelFactory;
 import info.bioinfweb.libralign.model.factory.NewAlignmentModelParameterMap;
 import info.bioinfweb.libralign.model.implementations.ArrayListAlignmentModel;
+import info.bioinfweb.libralign.model.tokenset.continuous.ContinuousToken;
 import info.bioinfweb.libralign.model.tokenset.continuous.DoubleTokenSet;
 
 
@@ -32,15 +34,9 @@ import info.bioinfweb.libralign.model.tokenset.continuous.DoubleTokenSet;
  * @author Ben St&ouml;ver
  * @since 0.4.0
  */
-public class DoubleAlignmentModelFactory extends AbstractContinuousAlignmentModelFactory<Double> {
+public class DoubleAlignmentModelFactory extends AbstractAlignmentModelFactory<ContinuousToken<Double>> {
 	@Override
-	public AlignmentModel<Double> createNewModel(NewAlignmentModelParameterMap parameterMap) {
-		return new ArrayListAlignmentModel<Double>(new DoubleTokenSet());
-	}
-	
-
-	@Override
-	protected Double parseValue(String tokenRepresentation) {
-		return Double.parseDouble(tokenRepresentation);
+	public AlignmentModel<ContinuousToken<Double>> createNewModel(NewAlignmentModelParameterMap parameterMap) {
+		return new ArrayListAlignmentModel<ContinuousToken<Double>>(new DoubleTokenSet());
 	}
 }

@@ -19,19 +19,9 @@
 package info.bioinfweb.libralign.model.tokenset.continuous;
 
 
-import java.awt.event.KeyEvent;
-
-import javax.swing.KeyStroke;
-
-import info.bioinfweb.libralign.model.tokenset.AbstractTokenSet;
-
-
 
 /**
- * Implementation of a token set containing all possible {@code double} values. Gaps are represented by {@link Double#NaN}
- * in this set.
- * <p>
- * For sets containing only a continuous subset of these, overwrite the according methods.
+ * Implementation of a token set containing all possible {@code double} values.
  * 
  * @author Ben St&ouml;ver
  * @since 0.4.0
@@ -41,28 +31,8 @@ public class DoubleTokenSet extends AbstractContinuousSet<Double> {
 	
 	
 	@Override
-	public Double tokenByKeyStroke(KeyStroke key) {
-		Double result = tokenByRepresentation(Character.toString(key.getKeyChar()));
-		if (isSpaceForGap() && (result == null) && (key.getKeyCode() == KeyEvent.VK_SPACE)) {
-			result = getGapToken();
-		}
-		return result;
-	}
-
-	
-	@Override
-	public Double tokenByRepresentation(String representation) {
-		if (Character.toString(AbstractTokenSet.DEFAULT_GAP_REPRESENTATION).equals(representation)) {
-			return Double.NaN;
-		}
-		else {
-			try {
-				return Double.parseDouble(representation);
-			}
-			catch (NumberFormatException e) {
-				return null;
-			}
-		}
+	protected ContinuousToken<Double> parseValue(String value)	throws NumberFormatException {
+		return new ContinuousToken<Double>(Double.parseDouble(value));
 	}
 
 	
@@ -75,18 +45,6 @@ public class DoubleTokenSet extends AbstractContinuousSet<Double> {
 	@Override
 	public int maxRepresentationLength() {
 		return DOUBLE_MAX_REPRESENTATION_LENGTH;
-	}
-
-
-	@Override
-	public boolean isGapToken(Double token) {
-		return token.isNaN();
-	}
-
-
-	@Override
-	public Double getGapToken() {
-		return Double.NaN;
 	}
 
 

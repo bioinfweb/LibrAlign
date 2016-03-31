@@ -20,8 +20,10 @@ package info.bioinfweb.libralign.model.factory.continuous;
 
 
 import info.bioinfweb.libralign.model.AlignmentModel;
+import info.bioinfweb.libralign.model.factory.AbstractAlignmentModelFactory;
 import info.bioinfweb.libralign.model.factory.NewAlignmentModelParameterMap;
 import info.bioinfweb.libralign.model.implementations.ArrayListAlignmentModel;
+import info.bioinfweb.libralign.model.tokenset.continuous.ContinuousToken;
 import info.bioinfweb.libralign.model.tokenset.continuous.FloatTokenSet;
 
 
@@ -32,15 +34,9 @@ import info.bioinfweb.libralign.model.tokenset.continuous.FloatTokenSet;
  * @author Ben St&ouml;ver
  * @since 0.4.0
  */
-public class FloatAlignmentModelFactory extends AbstractContinuousAlignmentModelFactory<Float> {
+public class FloatAlignmentModelFactory extends AbstractAlignmentModelFactory<ContinuousToken<Float>> {
 	@Override
-	public AlignmentModel<Float> createNewModel(NewAlignmentModelParameterMap parameterMap) {
-		return new ArrayListAlignmentModel<Float>(new FloatTokenSet());
-	}
-	
-
-	@Override
-	protected Float parseValue(String tokenRepresentation) {
-		return Float.parseFloat(tokenRepresentation);
+	public AlignmentModel<ContinuousToken<Float>> createNewModel(NewAlignmentModelParameterMap parameterMap) {
+		return new ArrayListAlignmentModel<ContinuousToken<Float>>(new FloatTokenSet());
 	}
 }
