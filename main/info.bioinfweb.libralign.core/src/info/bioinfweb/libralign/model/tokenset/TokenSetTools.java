@@ -19,6 +19,8 @@
 package info.bioinfweb.libralign.model.tokenset;
 
 
+import info.bioinfweb.commons.bio.CharacterStateSetType;
+import info.bioinfweb.commons.bio.CharacterSymbolType;
 import info.bioinfweb.commons.bio.SequenceUtils;
 
 import java.util.Iterator;
@@ -86,13 +88,39 @@ public class TokenSetTools {
 	
 	
 	/**
-	 * Tests if the specified token represents an unknown position in the specified token set. 
+	 * Tests if the specified token represents missing data in the specified token set. 
 	 * 
 	 * @param tokenSet the token set containing the specified token
 	 * @param token the token to be tested
-	 * @return {@code true} if the specified token is recognized as an unknown position symbol, {@code false} otherwise.
+	 * @return {@code true} if the specified token is recognized as a missing data symbol, {@code false} otherwise.
 	 */
-	public static <T> boolean isUnknownPositionToken(TokenSet<T> tokenSet, T token) {
+	public static <T> boolean isMissingInformationToken(TokenSet<T> tokenSet, T token) {
 		return Character.toString(SequenceUtils.MISSING_DATA_CHAR).equals(tokenSet.representationByToken(token));
+	}
+	
+	
+	/**
+	 * Returns {@link CharacterSymbolType#UNCERTAIN} for all missing information tokens. If {@link TokenSet#getType()} of 
+	 * {@code tokenSet} specifies a  nucleotide or amino acid token set, {@link CharacterSymbolType#UNCERTAIN} is returned for 
+	 * all tokens which have a IUPAC ambiguity code string representation (as returned by 
+	 * {@link TokenSet#representationByToken(Object)}). In all other cases {@link CharacterSymbolType#ATOMIC_STATE} is returned.
+	 */
+	public static <T> CharacterSymbolType getSymbolType(TokenSet<T> tokenSet, T token) {
+		if (tokenSet.isMissingInformationToken(token)) {
+			return CharacterSymbolType.UNCERTAIN;
+		}  //TODO Should gaps also be treated as uncertain (like they are in NeXML)?
+		else {
+			String representation = tokenSet.representationByToken(token);
+			if (representation.length() == 1) {
+				char c = representation.charAt(0);
+				if (tokenSet.getType().isNucleotide() && SequenceUtils.isNucleotideAmbuguityCode(c)) {
+					return CharacterSymbolType.UNCERTAIN;
+				}
+			}
+			else if (tokenSet.getType().equals(CharacterStateSetType.AMINO_ACID) && SequenceUtils.isAminoAcidAmbiguityCode(representation)) {
+				return CharacterSymbolType.UNCERTAIN;
+			}
+			return CharacterSymbolType.ATOMIC_STATE;
+		}
 	}
 }

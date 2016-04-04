@@ -20,6 +20,7 @@ package info.bioinfweb.libralign.model.tokenset;
 
 
 import info.bioinfweb.commons.bio.CharacterStateSetType;
+import info.bioinfweb.commons.bio.CharacterSymbolType;
 import info.bioinfweb.commons.bio.SequenceUtils;
 
 import java.awt.event.KeyEvent;
@@ -143,6 +144,20 @@ public abstract class AbstractTokenSet<T> extends HashSet<T> implements TokenSet
 	@Override
 	public T getMissingInformationToken() {
 		return tokenByRepresentation(Character.toString(SequenceUtils.MISSING_DATA_CHAR));
+	}
+
+
+	/**
+	 * This default implementation returns {@link CharacterSymbolType#UNCERTAIN} for all missing information tokens.
+	 * If {@link #getType()} specifies a nucleotide or amino acid token set, {@link CharacterSymbolType#UNCERTAIN} is returned
+	 * for all tokens which have a IUPAC ambiguity code string representation (as returned by 
+	 * {@link #representationByToken(Object)}). In all other cases {@link CharacterSymbolType#ATOMIC_STATE} is returned.
+	 * <p>
+	 * Inherited classes should overwrite this method, if other uncertain or any polymorphic tokens are present.
+	 */
+	@Override
+	public CharacterSymbolType getSymbolType(T token) {
+		return TokenSetTools.getSymbolType(this, token);
 	}
 
 

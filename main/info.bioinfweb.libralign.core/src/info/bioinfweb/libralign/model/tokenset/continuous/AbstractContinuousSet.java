@@ -21,8 +21,10 @@ package info.bioinfweb.libralign.model.tokenset.continuous;
 
 import info.bioinfweb.commons.bio.CharacterStateSetType;
 import info.bioinfweb.commons.bio.CharacterSymbolMeaning;
+import info.bioinfweb.commons.bio.CharacterSymbolType;
 import info.bioinfweb.commons.bio.SequenceUtils;
 import info.bioinfweb.libralign.model.tokenset.TokenSet;
+import info.bioinfweb.libralign.model.tokenset.TokenSetTools;
 
 import java.awt.event.KeyEvent;
 import java.util.Collection;
@@ -103,6 +105,12 @@ public abstract class AbstractContinuousSet<T extends Number & Comparable<T>> im
 	@Override
 	public ContinuousToken<T> getMissingInformationToken() {
 		return ContinuousToken.newMissingInformationInstance();
+	}
+
+
+	@Override
+	public CharacterSymbolType getSymbolType(ContinuousToken<T> token) {
+		return TokenSetTools.getSymbolType(this, token);
 	}
 
 

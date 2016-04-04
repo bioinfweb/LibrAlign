@@ -20,6 +20,7 @@ package info.bioinfweb.libralign.model.tokenset;
 
 
 import info.bioinfweb.commons.bio.CharacterStateSetType;
+import info.bioinfweb.commons.bio.CharacterSymbolType;
 import info.bioinfweb.libralign.alignmentarea.AlignmentArea;
 import info.bioinfweb.libralign.model.AlignmentModel;
 import info.bioinfweb.libralign.model.adapters.CharSequenceAdapter;
@@ -177,6 +178,15 @@ public interface TokenSet<T> extends Set<T>, Cloneable {
 	 *         alignment.)
 	 */
 	public T getMissingInformationToken();
+	
+	/**
+	 * Returns the type of the specified token (symbol). Symbols can either represent an atomic token or a polymorphic state
+	 * or a set of tokens, if the the position is uncertain. 
+	 * 
+	 * @param token the symbol to be tested
+	 * @return the type of the specified symbol
+	 */
+	public CharacterSymbolType getSymbolType(T token);
 	
 	/**
 	 * Returns a deep copy of this instance. Implementing this method is important when creating custom
