@@ -20,6 +20,7 @@ package info.bioinfweb.libralign.model.tokenset;
 
 
 import info.bioinfweb.commons.bio.CharacterStateSetType;
+import info.bioinfweb.commons.bio.CharacterSymbolMeaning;
 import info.bioinfweb.commons.bio.CharacterSymbolType;
 import info.bioinfweb.commons.bio.SequenceUtils;
 import info.bioinfweb.commons.collections.CollectionUtils;
@@ -210,6 +211,12 @@ public class BioJava3TokenSet<C extends Compound> extends AbstractSet<C> impleme
 		else {
 			return TokenSetTools.getSymbolType(this, token);
 		}
+	}
+
+
+	@Override
+	public CharacterSymbolMeaning getMeaning(C token) {
+		return TokenSetTools.getMeaning(this, token);
 	}
 
 
