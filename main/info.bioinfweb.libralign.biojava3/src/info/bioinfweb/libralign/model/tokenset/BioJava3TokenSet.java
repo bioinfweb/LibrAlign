@@ -19,7 +19,9 @@
 package info.bioinfweb.libralign.model.tokenset;
 
 
-import info.bioinfweb.commons.bio.CharacterStateType;
+import info.bioinfweb.commons.bio.CharacterStateSetType;
+import info.bioinfweb.commons.bio.CharacterSymbolType;
+import info.bioinfweb.commons.bio.SequenceUtils;
 import info.bioinfweb.commons.collections.CollectionUtils;
 
 import java.awt.event.KeyEvent;
@@ -29,6 +31,8 @@ import java.util.Iterator;
 
 import javax.swing.KeyStroke;
 
+import org.biojava3.core.sequence.compound.AminoAcidCompound;
+import org.biojava3.core.sequence.compound.NucleotideCompound;
 import org.biojava3.core.sequence.template.Compound;
 import org.biojava3.core.sequence.template.CompoundSet;
 
@@ -47,7 +51,7 @@ import org.biojava3.core.sequence.template.CompoundSet;
 public class BioJava3TokenSet<C extends Compound> extends AbstractSet<C> implements TokenSet<C> {
 	private CompoundSet<C> compoundSet;
 	private boolean spaceForGap;
-	private CharacterStateType type;
+	private CharacterStateSetType type;
 	
 	
 	/**
@@ -75,7 +79,7 @@ public class BioJava3TokenSet<C extends Compound> extends AbstractSet<C> impleme
 	 * @param compoundSet - the BioJava compound set containing the compounds to be copied into the new instance
 	 * @param spaceForGap determines whether the space key shall be associated with gap symbol 
 	 */
-	public BioJava3TokenSet(CharacterStateType type, CompoundSet<C> compoundSet, boolean spaceForGap) {
+	public BioJava3TokenSet(CharacterStateSetType type, CompoundSet<C> compoundSet, boolean spaceForGap) {
 		super();
 		this.type = type;
 		this.compoundSet = compoundSet;
@@ -161,7 +165,7 @@ public class BioJava3TokenSet<C extends Compound> extends AbstractSet<C> impleme
 
 
 	@Override
-	public CharacterStateType getType() {
+	public CharacterStateSetType getType() {
 		return type;
 	}
 
@@ -182,7 +186,30 @@ public class BioJava3TokenSet<C extends Compound> extends AbstractSet<C> impleme
 	 */
 	@Override
 	public C getGapToken() {
-		return compoundSet.getCompoundForString(Character.toString(AbstractTokenSet.DEFAULT_GAP_REPRESENTATION));
+		return compoundSet.getCompoundForString(Character.toString(SequenceUtils.GAP_CHAR));
+	}
+
+
+	@Override
+	public boolean isMissingInformationToken(C token) {
+		return TokenSetTools.isMissingInformationToken(this, token);
+	}
+
+
+	@Override
+	public C getMissingInformationToken() {
+		return compoundSet.getCompoundForString(Character.toString(SequenceUtils.MISSING_DATA_CHAR));
+	}
+
+
+	@Override
+	public CharacterSymbolType getSymbolType(C token) {
+		if ((token instanceof NucleotideCompound) && ((NucleotideCompound)token).isAmbiguous()) {  // AminoAcidCompound does not specify an according method.
+			return CharacterSymbolType.UNCERTAIN;
+		}
+		else {
+			return TokenSetTools.getSymbolType(this, token);
+		}
 	}
 
 

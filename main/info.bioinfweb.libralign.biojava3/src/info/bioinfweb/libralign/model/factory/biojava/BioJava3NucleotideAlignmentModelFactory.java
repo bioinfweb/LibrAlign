@@ -22,7 +22,7 @@ package info.bioinfweb.libralign.model.factory.biojava;
 import org.biojava3.core.sequence.compound.NucleotideCompound;
 import org.biojava3.core.sequence.template.CompoundSet;
 
-import info.bioinfweb.commons.bio.CharacterStateType;
+import info.bioinfweb.commons.bio.CharacterStateSetType;
 import info.bioinfweb.commons.bio.biojava3.core.sequence.compound.AlignmentAmbiguityNucleotideCompoundSet;
 import info.bioinfweb.libralign.model.AlignmentModel;
 import info.bioinfweb.libralign.model.factory.AlignmentModelFactory;
@@ -53,10 +53,10 @@ public class BioJava3NucleotideAlignmentModelFactory implements AlignmentModelFa
 	
 	@Override
 	public AlignmentModel<NucleotideCompound> createNewModel(NewAlignmentModelParameterMap parameterMap) {
-		CharacterStateType type = parameterMap.getCharacterStateSetType();
+		CharacterStateSetType type = parameterMap.getCharacterStateSetType();
 		if (!type.isNucleotide()) {
-			if (type.equals(CharacterStateType.UNKNOWN)) {
-				type = CharacterStateType.NUCLEOTIDE;
+			if (type.equals(CharacterStateSetType.UNKNOWN)) {
+				type = CharacterStateSetType.NUCLEOTIDE;
 			}
 			else {
 				throw new IllegalArgumentException("An instance of " + getClass().getCanonicalName() + 
