@@ -20,6 +20,7 @@ package info.bioinfweb.libralign.model.tokenset;
 
 
 import info.bioinfweb.commons.bio.CharacterStateSetType;
+import info.bioinfweb.commons.bio.CharacterSymbolMeaning;
 import info.bioinfweb.commons.bio.CharacterSymbolType;
 import info.bioinfweb.libralign.alignmentarea.AlignmentArea;
 import info.bioinfweb.libralign.model.AlignmentModel;
@@ -178,6 +179,15 @@ public interface TokenSet<T> extends Set<T>, Cloneable {
 	 *         alignment.)
 	 */
 	public T getMissingInformationToken();
+	
+	/**
+	 * Returns the meaning of the specified symbol. (Note that <i>LibrAlign</i> models will usually not contain match tokens 
+	 * directly).
+	 * 
+	 * @param token the token to determine the meaning from
+	 * @return the meaning of the specified token
+	 */
+	public CharacterSymbolMeaning getMeaning(T token);
 	
 	/**
 	 * Returns the type of the specified token (symbol). Symbols can either represent an atomic token or a polymorphic state

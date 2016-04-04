@@ -114,6 +114,12 @@ public abstract class AbstractContinuousSet<T extends Number & Comparable<T>> im
 	}
 
 
+	@Override
+	public CharacterSymbolMeaning getMeaning(ContinuousToken<T> token) {
+		return TokenSetTools.getMeaning(this, token);
+	}
+
+
 	/**
 	 * This method is not supported by this implementation and will always throw an {@link UnsupportedOperationException}.
 	 * 

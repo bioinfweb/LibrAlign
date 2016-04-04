@@ -20,6 +20,7 @@ package info.bioinfweb.libralign.model.tokenset;
 
 
 import info.bioinfweb.commons.bio.CharacterStateSetType;
+import info.bioinfweb.commons.bio.CharacterSymbolMeaning;
 import info.bioinfweb.commons.bio.CharacterSymbolType;
 import info.bioinfweb.commons.bio.SequenceUtils;
 
@@ -158,6 +159,12 @@ public abstract class AbstractTokenSet<T> extends HashSet<T> implements TokenSet
 	@Override
 	public CharacterSymbolType getSymbolType(T token) {
 		return TokenSetTools.getSymbolType(this, token);
+	}
+
+
+	@Override
+	public CharacterSymbolMeaning getMeaning(T token) {
+		return TokenSetTools.getMeaning(this, token);
 	}
 
 

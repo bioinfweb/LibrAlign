@@ -20,6 +20,7 @@ package info.bioinfweb.libralign.model.tokenset;
 
 
 import info.bioinfweb.commons.bio.CharacterStateSetType;
+import info.bioinfweb.commons.bio.CharacterSymbolMeaning;
 import info.bioinfweb.commons.bio.CharacterSymbolType;
 import info.bioinfweb.commons.bio.SequenceUtils;
 
@@ -104,6 +105,10 @@ public class TokenSetTools {
 	 * {@code tokenSet} specifies a  nucleotide or amino acid token set, {@link CharacterSymbolType#UNCERTAIN} is returned for 
 	 * all tokens which have a IUPAC ambiguity code string representation (as returned by 
 	 * {@link TokenSet#representationByToken(Object)}). In all other cases {@link CharacterSymbolType#ATOMIC_STATE} is returned.
+	 * 
+	 * @param tokenSet the token set containing the specified token
+	 * @param token the token to be tested
+	 * @return the symbol type
 	 */
 	public static <T> CharacterSymbolType getSymbolType(TokenSet<T> tokenSet, T token) {
 		if (tokenSet.isMissingInformationToken(token)) {
@@ -121,6 +126,31 @@ public class TokenSetTools {
 				return CharacterSymbolType.UNCERTAIN;
 			}
 			return CharacterSymbolType.ATOMIC_STATE;
+		}
+	}
+	
+	
+	/**
+	 * Determines the meaning of the specified token as defined by {@link TokenSet#getMeaning(Object)}.
+	 * <p>
+	 * This default implementation will return {@link CharacterSymbolMeaning#GAP} for all tokens which are positively tested
+	 * by {@link TokenSet#isGapToken(Object)} and {@link CharacterSymbolMeaning#MISSING} for all tokens which are positively 
+	 * tested by {@link TokenSet#isMissingInformationToken(Object)}. In all other cases 
+	 * {@link CharacterSymbolMeaning#CHARACTER_STATE} is returned.
+	 * 
+	 * @param tokenSet the token set containing the specified token
+	 * @param token the token to be tested
+	 * @return the symbol meaning
+	 */
+	public static <T> CharacterSymbolMeaning getMeaning(TokenSet<T> tokenSet, T token) {
+		if (tokenSet.isGapToken(token)) {
+			return CharacterSymbolMeaning.GAP;
+		}
+		else if (tokenSet.isMissingInformationToken(token)) {
+			return CharacterSymbolMeaning.MISSING;
+		}
+		else {
+			return CharacterSymbolMeaning.CHARACTER_STATE;
 		}
 	}
 }
