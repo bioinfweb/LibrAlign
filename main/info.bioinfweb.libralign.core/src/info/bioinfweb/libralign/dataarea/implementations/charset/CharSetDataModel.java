@@ -32,8 +32,11 @@ import info.bioinfweb.libralign.model.data.DataModel;
  * @since 0.4.0
  */
 public class CharSetDataModel extends ArrayList<CharSet> implements DataModel {
+	//TODO Possibly use a Map for this method in the future to support large numbers of character sets.
+	//     If this is done, renaming of CharSets must somehow trigger according updates in the map.
+	
 	public CharSet getByName(String name) {
-		for (CharSet charSet : this) {  //TODO Possibly use a TreeMap for this method in the future to support large numbers of character sets.
+		for (CharSet charSet : this) {
 			if (charSet.getName().equals(name)) {
 				return charSet;
 			}
