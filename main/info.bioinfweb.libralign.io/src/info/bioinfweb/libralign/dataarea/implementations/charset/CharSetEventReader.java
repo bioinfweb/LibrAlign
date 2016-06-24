@@ -21,8 +21,10 @@ package info.bioinfweb.libralign.dataarea.implementations.charset;
 
 import info.bioinfweb.commons.graphics.UniqueColorLister;
 import info.bioinfweb.jphyloio.JPhyloIOEventReader;
+import info.bioinfweb.jphyloio.events.CharacterSetIntervalEvent;
 import info.bioinfweb.jphyloio.events.JPhyloIOEvent;
 import info.bioinfweb.jphyloio.events.LinkedLabeledIDEvent;
+import info.bioinfweb.jphyloio.events.type.EventTopologyType;
 import info.bioinfweb.libralign.model.data.NoArgDataModelFactory;
 import info.bioinfweb.libralign.model.io.AbstractDataModelEventReader;
 import info.bioinfweb.libralign.model.io.AlignmentDataReader;
@@ -33,7 +35,7 @@ import info.bioinfweb.libralign.model.io.DataModelReadInfo;
 /**
  * Reads {@link CharacterSetEvent}s from JPhyloIO into instances of {@link CharSetDataModel}.
  * <p>
- * {@link CharacterSetEvent}s between alignment start and end events are stored a model associated
+ * {@link CharacterSetEvent}s between alignment start and end events are stored as associated
  * with the according alignment model. Events fired outside alignments are stored in an additional
  * global model not associated with any alignment model. This global model is returned when the end
  * of the event stream was reached (if any according events occurred).
@@ -50,7 +52,12 @@ import info.bioinfweb.libralign.model.io.DataModelReadInfo;
  * @since 0.4.0
  */
 public class CharSetEventReader extends AbstractDataModelEventReader<CharSetDataModel> {
+	//TODO If models are stored associated or globally should not be determined by the position of their events in the stream, 
+	//     but by their linked matrix.
+	//TODO Multiple global models should be possible, if start events with different IDs that do not link a matrix are encountered. 
+	
 	private CharSetDataModel globalModel = null;
+	private LinkedLabeledIDEvent currentStartEvent = null;
 	private UniqueColorLister colorLister = new UniqueColorLister();
 	
 	
@@ -62,10 +69,20 @@ public class CharSetEventReader extends AbstractDataModelEventReader<CharSetData
 	@Override
 	public void processEvent(JPhyloIOEventReader source, JPhyloIOEvent event) {
 		switch (event.getType().getContentType()) {
-			case ALIGNMENT_END:
-				publishCurrentInfo();  // Adds alignment specific model to the result list, if one is present.
+			case ALIGNMENT:
+				if (event.getType().getTopologyType().equals(EventTopologyType.END)) {  //TODO Does this work if character sets are specified after the alignment (e.g. in Nexus)? When is the global model published?
+					publishCurrentInfo();  // Adds alignment specific model to the result list, if one is present.
+				}
 				break;
 			case CHARACTER_SET:
+				if (event.getType().getTopologyType().equals(EventTopologyType.START)) {
+					currentStartEvent = event.asLinkedLabeledIDEvent();
+				}
+				else {
+					currentStartEvent = null;
+				}
+				break;
+			case CHARACTER_SET_INTERVAL:
 				// Determine model to write to:
 				CharSetDataModel model;
 				if (getMainReader().getAlignmentModelReader().hasCurrentModel()) {
@@ -82,16 +99,19 @@ public class CharSetEventReader extends AbstractDataModelEventReader<CharSetData
 				}
 				
 				// Read data:
-				LinkedLabeledIDEvent characterSetEvent = event.asLinkedLabeledIDEvent();  //TODO This method does not yet distinguish between character set and interval and set element events => refactor
-				CharSet charSet = model.getByName(characterSetEvent.getName());
+				CharacterSetIntervalEvent intervalEvent = event.asCharacterSetIntervalEvent();
+				CharSet charSet = model.get(currentStartEvent.getID());
 				if (charSet == null) {
-					charSet = new CharSet(characterSetEvent.getName(), colorLister.generateNext());
-					model.add(charSet);
+					charSet = new CharSet(currentStartEvent.getLabel(), colorLister.generateNext());  //TODO Create default name if label is null?
+					model.put(currentStartEvent.getID(), charSet);
 				}
-				charSet.add((int)characterSetEvent.getStart(), (int)characterSetEvent.getEnd() - 1);  //TODO Refactor NonOverlappingIntervalList so that end index is also behind the interval.
+				charSet.add((int)intervalEvent.getStart(), (int)intervalEvent.getEnd() - 1);  //TODO Refactor NonOverlappingIntervalList so that end index is also behind the interval.
 				break;
-			case DOCUMENT_END:
-				getModels().add(new DataModelReadInfo<CharSetDataModel>(globalModel));
+			case DOCUMENT:
+				if (event.getType().getTopologyType().equals(EventTopologyType.END)) {
+					getModels().add(new DataModelReadInfo<CharSetDataModel>(globalModel));
+				}
+				break;
 			default:  // Nothing to do
 				break;
 		}
