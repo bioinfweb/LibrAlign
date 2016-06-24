@@ -22,7 +22,6 @@ package info.bioinfweb.libralign.model.io;
 import info.bioinfweb.commons.bio.CharacterStateSetType;
 import info.bioinfweb.jphyloio.JPhyloIOEventListener;
 import info.bioinfweb.jphyloio.JPhyloIOEventReader;
-import info.bioinfweb.jphyloio.events.CharacterSetEvent;
 import info.bioinfweb.jphyloio.events.JPhyloIOEvent;
 import info.bioinfweb.jphyloio.events.SequenceTokensEvent;
 import info.bioinfweb.jphyloio.events.SingleTokenDefinitionEvent;
@@ -57,7 +56,6 @@ public class AlignmentModelEventReader implements JPhyloIOEventListener {
 	private final Map<CharacterStateSetType, AlignmentModelFactory> factoryMap;
 	private AlignmentModel<?> currentModel = null;
 	private final List<AlignmentModel<?>> completedModels = new ArrayList<AlignmentModel<?>>();
-	private final Map<String, CharacterSetEvent> charSetEvents = new TreeMap<String, CharacterSetEvent>();
 	private NewAlignmentModelParameterMap currentParameterMap = null;
 
 
@@ -202,95 +200,91 @@ public class AlignmentModelEventReader implements JPhyloIOEventListener {
 
 	@SuppressWarnings("unchecked")
 	private void readTokens(SequenceTokensEvent event) {
-		AlignmentModelFactory factory = getFactoryMap().get(currentParameterMap.getCharacterStateSetType());
-		if (factory == null) {
-			factory = defaultFactory;
-		}
-
-		// Ensure model instance:
-		if (currentModel == null) {
-			if (currentParameterMap.getCharacterStateSetType() == null) {
-				currentParameterMap.setCharacterStateSetType(CharacterStateSetType.UNKNOWN);
-			}
-			currentModel = factory.createNewModel(currentParameterMap);
-		}
-
-		// Read tokens:
-		int id = currentModel.sequenceIDByName(event.getSequenceName());
-		if (id == -1) {
-			id = currentModel.addSequence(event.getSequenceName());
-		}
-
-		ArrayList<Object> tokens = new ArrayList<Object>(event.getCharacterValues().size());
-		for (String stringRepresentation : event.getCharacterValues()) {
-			tokens.add(factory.createToken(currentModel, stringRepresentation));
-		}
-		((AlignmentModel<Object>)currentModel).appendTokens(id, tokens);  //TODO Should currentModel have Object as its generic type?
+//		AlignmentModelFactory factory = getFactoryMap().get(currentParameterMap.getCharacterStateSetType());
+//		if (factory == null) {
+//			factory = defaultFactory;
+//		}
+//
+//		// Ensure model instance:
+//		if (currentModel == null) {
+//			if (currentParameterMap.getCharacterStateSetType() == null) {
+//				currentParameterMap.setCharacterStateSetType(CharacterStateSetType.UNKNOWN);
+//			}
+//			currentModel = factory.createNewModel(currentParameterMap);
+//		}
+//
+//		// Read tokens:
+//		int id = currentModel.sequenceIDByName(event.getSequenceName());
+//		if (id == -1) {
+//			id = currentModel.addSequence(event.getSequenceName());
+//		}
+//
+//		ArrayList<Object> tokens = new ArrayList<Object>(event.getCharacterValues().size());
+//		for (String stringRepresentation : event.getCharacterValues()) {
+//			tokens.add(factory.createToken(currentModel, stringRepresentation));
+//		}
+//		((AlignmentModel<Object>)currentModel).appendTokens(id, tokens);  //TODO Should currentModel have Object as its generic type?
 	}
 
 
 	@Override
 	public void processEvent(JPhyloIOEventReader source, JPhyloIOEvent event) {
-		switch (event.getEventType()) {
-			case CHARACTER_SET:
-				CharacterSetEvent charSetEvent = event.asCharacterSetEvent();
-				charSetEvents.put(charSetEvent.getName(), charSetEvent);  // Save character sets for possible references in token set definition
-				break;
-			case TOKEN_SET_DEFINITION:
-				TokenSetDefinitionEvent tokenSetEvent = event.asTokenSetDefinitionEvent();
-				if (tokenSetEvent.hasLinkedCharacterSet()) {  // concatenated case
-					if (currentModel == null) {
-						//TODO Create new concatenated instance (Can be created here already, because upcoming token definitions belong to the first part model.)
-					}
-					if (!(currentModel instanceof ConcatenatedAlignmentModel)) {
-						throw new IllegalStateException("Character state set for part of concatenated alignment found after global character state definition in the same alignment.");
-					}
-					else {
-						CharacterSetEvent characterSetEvent = charSetEvents.get(tokenSetEvent.getCharacterSetName());
-						if (characterSetEvent == null) {
-							//TODO Throw exception => This should probably be a checked exception. Therefore the signature of processEvent() would have to be changed in the interface.
-						}
-						else {
-							currentParameterMap.put(NewAlignmentModelParameterMap.KEY_START_INDEX, characterSetEvent.getStart());
-							currentParameterMap.put(NewAlignmentModelParameterMap.KEY_END_INDEX, characterSetEvent.getEnd());
-						}
-					}
-				}
-
-				if (currentParameterMap.getCharacterStateSetType() == null) {
-					currentParameterMap.setCharacterStateSetType(tokenSetEvent.getSetType());
-				}
-				else {
-					throw new IllegalStateException("Two global character state sets were defined in the same alignment.");
-				}
-				break;
-			case SINGLE_TOKEN_DEFINITION:
-				if ((currentModel == null) || (currentModel instanceof ConcatenatedAlignmentModel)) {
-					SingleTokenDefinitionEvent definitionEvent = event.asSingleTokenDefinitionEvent(); 
-					currentParameterMap.getDefinedTokens().add(
-							new TokenDefinition(definitionEvent.getTokenName(), definitionEvent.getMeaning()));
-					//TODO Will the character set name be needed for ConcantenatedAlignmentModels?
-				}
-				else {
-					//TODO Possibly throw exception here or just ignore event.
-				}
-				break;
-			case SEQUENCE_CHARACTERS:
-				readTokens(event.asSequenceTokensEvent());
-				break;
-			case ALIGNMENT_START:
-				currentParameterMap = new NewAlignmentModelParameterMap();
-				break;
-			case DOCUMENT_END:
-			case ALIGNMENT_END:  // Fall through of above cases for convenience if alignment end event should be missing. (Should not be essential.)
-				currentParameterMap = null;
-				if (currentModel != null) {
-					completedModels.add(currentModel);
-					currentModel = null;
-				}
-				break;
-			default:
-			    break;  // Nothing to do
-		}
+//		switch (event.getType().getContentType()) {
+//			case TOKEN_SET_DEFINITION:
+//				TokenSetDefinitionEvent tokenSetEvent = event.asTokenSetDefinitionEvent();
+//				if (tokenSetEvent.has) {  // concatenated case
+//					if (currentModel == null) {
+//						//TODO Create new concatenated instance (Can be created here already, because upcoming token definitions belong to the first part model.)
+//					}
+//					if (!(currentModel instanceof ConcatenatedAlignmentModel)) {
+//						throw new IllegalStateException("Character state set for part of concatenated alignment found after global character state definition in the same alignment.");
+//					}
+//					else {
+//						CharacterSetEvent characterSetEvent = charSetEvents.get(tokenSetEvent.getCharacterSetName());
+//						if (characterSetEvent == null) {
+//							//TODO Throw exception => This should probably be a checked exception. Therefore the signature of processEvent() would have to be changed in the interface.
+//						}
+//						else {
+//							currentParameterMap.put(NewAlignmentModelParameterMap.KEY_START_INDEX, characterSetEvent.getStart());
+//							currentParameterMap.put(NewAlignmentModelParameterMap.KEY_END_INDEX, characterSetEvent.getEnd());
+//						}
+//					}
+//				}
+//
+//				if (currentParameterMap.getCharacterStateSetType() == null) {
+//					currentParameterMap.setCharacterStateSetType(tokenSetEvent.getSetType());
+//				}
+//				else {
+//					throw new IllegalStateException("Two global character state sets were defined in the same alignment.");
+//				}
+//				break;
+//			case SINGLE_TOKEN_DEFINITION:
+//				if ((currentModel == null) || (currentModel instanceof ConcatenatedAlignmentModel)) {
+//					SingleTokenDefinitionEvent definitionEvent = event.asSingleTokenDefinitionEvent(); 
+//					currentParameterMap.getDefinedTokens().add(
+//							new TokenDefinition(definitionEvent.getTokenName(), definitionEvent.getMeaning()));
+//					//TODO Will the character set name be needed for ConcantenatedAlignmentModels?
+//				}
+//				else {
+//					//TODO Possibly throw exception here or just ignore event.
+//				}
+//				break;
+//			case SEQUENCE_CHARACTERS:
+//				readTokens(event.asSequenceTokensEvent());
+//				break;
+//			case ALIGNMENT_START:
+//				currentParameterMap = new NewAlignmentModelParameterMap();
+//				break;
+//			case DOCUMENT_END:
+//			case ALIGNMENT_END:  // Fall through of above cases for convenience if alignment end event should be missing. (Should not be essential.)
+//				currentParameterMap = null;
+//				if (currentModel != null) {
+//					completedModels.add(currentModel);
+//					currentModel = null;
+//				}
+//				break;
+//			default:
+//			    break;  // Nothing to do
+//		}
 	}
 }

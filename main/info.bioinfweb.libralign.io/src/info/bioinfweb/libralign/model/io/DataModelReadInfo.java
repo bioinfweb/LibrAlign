@@ -25,7 +25,7 @@ import info.bioinfweb.libralign.model.data.DataModel;
 
 
 /**
- * Stores information about a data that has been read from a data source (e.g. a file). 
+ * Stores information about a data model that has been read from a data source (e.g. a file). 
  * <p>
  * This information includes the new model as well as information about alignments and 
  * sequences its data is possibly associated with.

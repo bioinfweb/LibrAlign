@@ -85,9 +85,9 @@ public class CharSetEventReader extends AbstractDataModelEventReader<CharSetData
 			case CHARACTER_SET_INTERVAL:
 				// Determine model to write to:
 				CharSetDataModel model;
-				if (getMainReader().getAlignmentModelReader().hasCurrentModel()) {
+				if (getMainReader().getAlignmentModelReader().hasCurrentModel()) {  //TODO The linked ID is relevant, not the position.
 					if (!super.isReadingInstance()) {
-						createNewInfo(getMainReader().getAlignmentModelReader().getCurrentModel());
+						createNewInfo(getMainReader().getAlignmentModelReader().getCurrentModel());  //TODO Publishing here is not possible, since character set definitions may be continued (e.g. in interleaved MEGA).
 					}
 					model = getCurrentInfo().getDataModel();
 				}

@@ -116,17 +116,15 @@ public class AlignmentDataReader {
 	
 	
 	private boolean processNextEvent() throws Exception {
-		if (eventReader.hasNextEvent()) {
+		boolean result = eventReader.hasNextEvent();
+		if (result) {
 			JPhyloIOEvent event = eventReader.next();
 			alignmentModelReader.processEvent(eventReader, event);
 			for (DataModelEventReader<?> dataModelReader : dataModelReaders) {
 				dataModelReader.processEvent(eventReader, event);
 			}
-			return true;
 		}
-		else {
-			return false;
-		}
+		return result;
 	}
 	
 	
