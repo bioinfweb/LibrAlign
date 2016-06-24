@@ -19,24 +19,22 @@
 package info.bioinfweb.libralign.dataarea.implementations.charset;
 
 
-import java.util.ArrayList;
+import org.apache.commons.collections4.map.ListOrderedMap;
 
 import info.bioinfweb.libralign.model.data.DataModel;
 
 
 
 /**
- * The data model for a {@link CharSetArea}.
+ * The data model for a {@link CharSetArea}. It consists of an ordered map in which each character set is referenced by an
+ * unique ID. Note that this ID differs from the mutable character set name that is returned by {@link CharSet#getName()}.
  * 
  * @author Ben St&ouml;ver
  * @since 0.4.0
  */
-public class CharSetDataModel extends ArrayList<CharSet> implements DataModel {
-	//TODO Possibly use a Map for this method in the future to support large numbers of character sets.
-	//     If this is done, renaming of CharSets must somehow trigger according updates in the map.
-	
+public class CharSetDataModel extends ListOrderedMap<String, CharSet> implements DataModel {
 	public CharSet getByName(String name) {
-		for (CharSet charSet : this) {
+		for (CharSet charSet : valueList()) {
 			if (charSet.getName().equals(name)) {
 				return charSet;
 			}

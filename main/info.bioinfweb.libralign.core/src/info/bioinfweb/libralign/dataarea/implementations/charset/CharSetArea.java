@@ -120,7 +120,7 @@ public class CharSetArea extends DataArea {
 		}
 		
 		// Paint output:
-		Iterator<CharSet> iterator = getModel().iterator();
+		Iterator<CharSet> iterator = getModel().valueList().iterator();
 		double y = 0;
 		PaintSettings paintSettings = getLabeledAlignmentArea().getPaintSettings();
 		final double borderHeight = paintSettings.getTokenHeight() * BORDER_FRACTION;
