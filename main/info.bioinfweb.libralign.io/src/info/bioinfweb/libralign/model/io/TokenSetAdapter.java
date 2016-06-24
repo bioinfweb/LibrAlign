@@ -9,9 +9,9 @@ import org.semanticweb.owlapi.io.XMLUtils;
 
 import info.bioinfweb.commons.IntegerIDManager;
 import info.bioinfweb.jphyloio.ReadWriteConstants;
+import info.bioinfweb.jphyloio.ReadWriteParameterMap;
 import info.bioinfweb.jphyloio.dataadapters.JPhyloIOEventReceiver;
 import info.bioinfweb.jphyloio.dataadapters.ObjectListDataAdapter;
-import info.bioinfweb.jphyloio.dataadapters.implementations.EmptyAnnotatedDataAdapter;
 import info.bioinfweb.jphyloio.events.ConcreteJPhyloIOEvent;
 import info.bioinfweb.jphyloio.events.SingleTokenDefinitionEvent;
 import info.bioinfweb.jphyloio.events.TokenSetDefinitionEvent;
@@ -20,7 +20,7 @@ import info.bioinfweb.libralign.model.tokenset.TokenSet;
 
 
 
-public class TokenSetAdapter<T> extends EmptyAnnotatedDataAdapter implements ObjectListDataAdapter<TokenSetDefinitionEvent> {
+public class TokenSetAdapter<T> implements ObjectListDataAdapter<TokenSetDefinitionEvent> {
 	private String idPrefix; 
 	private TokenSet<T> tokenSet;
 	private String tokenSetID;
@@ -63,20 +63,20 @@ public class TokenSetAdapter<T> extends EmptyAnnotatedDataAdapter implements Obj
 	
 
 	@Override
-	public TokenSetDefinitionEvent getObjectStartEvent(String id)	throws IllegalArgumentException {
+	public TokenSetDefinitionEvent getObjectStartEvent(ReadWriteParameterMap parameters, String id) throws IllegalArgumentException {
 		checkTokenSetID(id);  // May throw an exception.
 		return new TokenSetDefinitionEvent(tokenSet.getType(), id, null);
 	}
 	
 
 	@Override
-	public long getCount() {
+	public long getCount(ReadWriteParameterMap parameters) {
 		return 1;
 	}
 
 	
 	@Override
-	public Iterator<String> getIDIterator() {
+	public Iterator<String> getIDIterator(ReadWriteParameterMap parameters) {
 		return Arrays.asList(new String[]{tokenSetID}).iterator();
 	}
 
@@ -90,7 +90,7 @@ public class TokenSetAdapter<T> extends EmptyAnnotatedDataAdapter implements Obj
 	
 	
 	@Override
-	public void writeContentData(JPhyloIOEventReceiver receiver, String id) throws IOException, IllegalArgumentException {
+	public void writeContentData(ReadWriteParameterMap parameters, JPhyloIOEventReceiver receiver, String id) throws IOException, IllegalArgumentException {
 		checkTokenSetID(id);  // May throw an exception.
 		IntegerIDManager idManager = new IntegerIDManager();
 		

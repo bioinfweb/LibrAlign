@@ -10,12 +10,11 @@ import org.semanticweb.owlapi.io.XMLUtils;
 import info.bioinfweb.commons.Math2;
 import info.bioinfweb.jphyloio.JPhyloIOEventWriter;
 import info.bioinfweb.jphyloio.ReadWriteConstants;
+import info.bioinfweb.jphyloio.ReadWriteParameterMap;
 import info.bioinfweb.jphyloio.dataadapters.JPhyloIOEventReceiver;
 import info.bioinfweb.jphyloio.dataadapters.MatrixDataAdapter;
 import info.bioinfweb.jphyloio.dataadapters.ObjectListDataAdapter;
-import info.bioinfweb.jphyloio.dataadapters.implementations.EmptyAnnotatedDataAdapter;
-import info.bioinfweb.jphyloio.dataadapters.implementations.EmptyObjectListDataAdapter;
-import info.bioinfweb.jphyloio.events.LabeledIDEvent;
+import info.bioinfweb.jphyloio.dataadapters.implementations.NoCharDefsNoSetsMatrixDataAdapter;
 import info.bioinfweb.jphyloio.events.LinkedLabeledIDEvent;
 import info.bioinfweb.jphyloio.events.SequenceTokensEvent;
 import info.bioinfweb.jphyloio.events.TokenSetDefinitionEvent;
@@ -37,13 +36,14 @@ import info.bioinfweb.libralign.model.concatenated.ConcatenatedAlignmentModel;
  * <p>
  * This implementation does not write any metadata associated with sequences or the alignment as a whole. If such data
  * shall be written the methods {@link #writeMetadata(JPhyloIOEventReceiver)} or 
- * {@link #writeSequenceMetadata(JPhyloIOEventReceiver, String)} should be overwritten accordingly.
+ * {@link #writeSequenceMetadata(JPhyloIOEventReceiver, String)} should be overwritten accordingly. If character 
+ * definitions or sets shall be written, the according methods need to be overwritten as well.
  * 
  * @author Ben St&ouml;ver
  *
  * @param <T> the type of sequence elements (tokens) used by the underlying alignment model object
  */
-public class AlignmentModelDataAdapter<T> extends EmptyAnnotatedDataAdapter implements MatrixDataAdapter {
+public class AlignmentModelDataAdapter<T> extends NoCharDefsNoSetsMatrixDataAdapter implements MatrixDataAdapter {
 	private static final int MAX_TOKENS_PER_EVENT = 64;
 	
 	
@@ -96,42 +96,32 @@ public class AlignmentModelDataAdapter<T> extends EmptyAnnotatedDataAdapter impl
 
 
 	@Override
-	public LinkedLabeledIDEvent getStartEvent() {
+	public LinkedLabeledIDEvent getStartEvent(ReadWriteParameterMap parameters) {
 		return startEvent;
 	}
 
 
 	@Override
-	public long getSequenceCount() {
+	public long getSequenceCount(ReadWriteParameterMap parameters) {
 		return model.getSequenceCount();
 	}
 
 
 	@Override
-	public long getColumnCount() {
+	public long getColumnCount(ReadWriteParameterMap parameters) {
 		// TODO Determine whether sequences have unequal lengths
 		return 0;
 	}
 
 
 	@Override
-	public boolean containsLongTokens() {
+	public boolean containsLongTokens(ReadWriteParameterMap parameters) {
 		return model.getTokenSet().maxRepresentationLength() > 1;
 	}
 
 
-	/**
-	 * This default implementation returns an empty list.
-	 */
-	@SuppressWarnings("unchecked")
 	@Override
-	public ObjectListDataAdapter<LabeledIDEvent> getCharacterSets() {
-		return EmptyObjectListDataAdapter.SHARED_EMPTY_OBJECT_LIST_ADAPTER;
-	}
-
-
-	@Override
-	public ObjectListDataAdapter<TokenSetDefinitionEvent> getTokenSets() {
+	public ObjectListDataAdapter<TokenSetDefinitionEvent> getTokenSets(ReadWriteParameterMap parameters) {
 		if (model instanceof ConcatenatedAlignmentModel) {
 			throw new InternalError("Support for concatenated alignment models not implemented.");  //TODO Implement when ConcatenatedAlignmentModel is available
 		}
@@ -206,7 +196,7 @@ public class AlignmentModelDataAdapter<T> extends EmptyAnnotatedDataAdapter impl
 
 
 	@Override
-	public Iterator<String> getSequenceIDIterator() {
+	public Iterator<String> getSequenceIDIterator(ReadWriteParameterMap parameters) {
 		final Iterator<Integer> iterator = model.sequenceIDIterator();
 		return new Iterator<String>() {
 			@Override
@@ -230,7 +220,7 @@ public class AlignmentModelDataAdapter<T> extends EmptyAnnotatedDataAdapter impl
 	
 	
 	@Override
-	public LinkedLabeledIDEvent getSequenceStartEvent(String sequenceID) {
+	public LinkedLabeledIDEvent getSequenceStartEvent(ReadWriteParameterMap parameters, String sequenceID) {
 		int modelID = modelByJPhyloIOSequenceID(sequenceID);
 		if (model.containsSequence(modelID)) {
 			return new LinkedLabeledIDEvent(EventContentType.SEQUENCE, sequenceID, model.sequenceNameByID(modelID), 
@@ -244,7 +234,7 @@ public class AlignmentModelDataAdapter<T> extends EmptyAnnotatedDataAdapter impl
 
 
 	@Override
-	public long getSequenceLength(String sequenceID) throws IllegalArgumentException {
+	public long getSequenceLength(ReadWriteParameterMap parameters, String sequenceID) throws IllegalArgumentException {
 		return model.getSequenceLength(modelByJPhyloIOSequenceID(sequenceID));
 	}
 	
@@ -264,8 +254,8 @@ public class AlignmentModelDataAdapter<T> extends EmptyAnnotatedDataAdapter impl
 
 
 	@Override
-	public void writeSequencePartContentData(JPhyloIOEventReceiver receiver, String sequenceID, long startColumn, long endColumn) 
-			throws IOException,	IllegalArgumentException {
+	public void writeSequencePartContentData(ReadWriteParameterMap parameters, JPhyloIOEventReceiver receiver, String sequenceID, 
+			long startColumn, long endColumn) throws IOException, IllegalArgumentException {
 		
 		int modelID = modelByJPhyloIOSequenceID(sequenceID);
 		int sequenceLength = model.getSequenceLength(modelID); 
