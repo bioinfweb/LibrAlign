@@ -21,8 +21,8 @@ package info.bioinfweb.libralign.dataarea.implementations.charset;
 
 import info.bioinfweb.commons.graphics.UniqueColorLister;
 import info.bioinfweb.jphyloio.JPhyloIOEventReader;
-import info.bioinfweb.jphyloio.events.CharacterStateSetType;
 import info.bioinfweb.jphyloio.events.JPhyloIOEvent;
+import info.bioinfweb.jphyloio.events.LinkedLabeledIDEvent;
 import info.bioinfweb.libralign.model.data.NoArgDataModelFactory;
 import info.bioinfweb.libralign.model.io.AbstractDataModelEventReader;
 import info.bioinfweb.libralign.model.io.AlignmentDataReader;
@@ -82,7 +82,7 @@ public class CharSetEventReader extends AbstractDataModelEventReader<CharSetData
 				}
 				
 				// Read data:
-				CharacterStateSetType characterSetEvent = event.asCharacterSetEvent();
+				LinkedLabeledIDEvent characterSetEvent = event.asLinkedLabeledIDEvent();  //TODO This method does not yet distinguish between character set and interval and set element events => refactor
 				CharSet charSet = model.getByName(characterSetEvent.getName());
 				if (charSet == null) {
 					charSet = new CharSet(characterSetEvent.getName(), colorLister.generateNext());
