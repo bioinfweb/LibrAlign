@@ -80,7 +80,7 @@ public class AlignmentModelDataAdapter<T> extends NoCharDefsNoSetsMatrixDataAdap
 			this.startEvent = startEvent;
 			this.model = model;
 			this.linkOTUs = linkOTUs;
-			tokenSetAdapter = new TokenSetAdapter<T>(idPrefix, model.getTokenSet());
+			tokenSetAdapter = new TokenSetAdapter<T>(idPrefix + "ts_", model.getTokenSet());
 		}
 	}
 

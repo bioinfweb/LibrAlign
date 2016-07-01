@@ -23,9 +23,11 @@ import info.bioinfweb.commons.bio.CharacterStateSetType;
 import info.bioinfweb.jphyloio.JPhyloIOEventListener;
 import info.bioinfweb.jphyloio.JPhyloIOEventReader;
 import info.bioinfweb.jphyloio.events.JPhyloIOEvent;
+import info.bioinfweb.jphyloio.events.LinkedLabeledIDEvent;
 import info.bioinfweb.jphyloio.events.SequenceTokensEvent;
 import info.bioinfweb.jphyloio.events.SingleTokenDefinitionEvent;
 import info.bioinfweb.jphyloio.events.TokenSetDefinitionEvent;
+import info.bioinfweb.jphyloio.events.type.EventTopologyType;
 import info.bioinfweb.libralign.model.AlignmentModel;
 import info.bioinfweb.libralign.model.concatenated.ConcatenatedAlignmentModel;
 import info.bioinfweb.libralign.model.factory.AlignmentModelFactory;
@@ -34,6 +36,7 @@ import info.bioinfweb.libralign.model.factory.StringAlignmentModelFactory;
 import info.bioinfweb.libralign.model.factory.TokenDefinition;
 import info.bioinfweb.libralign.model.factory.continuous.DoubleAlignmentModelFactory;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.EnumMap;
 import java.util.List;
@@ -56,6 +59,7 @@ public class AlignmentModelEventReader implements JPhyloIOEventListener {
 	private final Map<CharacterStateSetType, AlignmentModelFactory> factoryMap;
 	private AlignmentModel<?> currentModel = null;
 	private final List<AlignmentModel<?>> completedModels = new ArrayList<AlignmentModel<?>>();
+	private int currentSequenceID = -1; 
 	private NewAlignmentModelParameterMap currentParameterMap = null;
 
 
@@ -198,38 +202,47 @@ public class AlignmentModelEventReader implements JPhyloIOEventListener {
 	}
 
 
-	@SuppressWarnings("unchecked")
+	private AlignmentModelFactory<?> getAlignmentModelFactory() {
+		AlignmentModelFactory<?> factory = getFactoryMap().get(currentParameterMap.getCharacterStateSetType());
+		if (factory == null) {
+			factory = defaultFactory;
+		}
+		return factory;
+	}
+
+	
+	private void ensureCurrentModelInstance() {
+		// Ensure model instance:
+		if (currentModel == null) {
+			if (currentParameterMap.getCharacterStateSetType() == null) {
+				currentParameterMap.setCharacterStateSetType(CharacterStateSetType.UNKNOWN);
+			}
+			currentModel = getAlignmentModelFactory().createNewModel(currentParameterMap);
+		}
+	}
+	
+	
+	private void checkCurrentSequenceID() {
+		if (currentSequenceID < 0) {
+			throw new IllegalStateException("A sequence tokens event was encountered ouside a sequence defintion.");  //TODO Replace by other exception? 
+		}
+	}
+	
+	
+	@SuppressWarnings({"unchecked", "rawtypes"})
 	private void readTokens(SequenceTokensEvent event) {
-//		AlignmentModelFactory factory = getFactoryMap().get(currentParameterMap.getCharacterStateSetType());
-//		if (factory == null) {
-//			factory = defaultFactory;
-//		}
-//
-//		// Ensure model instance:
-//		if (currentModel == null) {
-//			if (currentParameterMap.getCharacterStateSetType() == null) {
-//				currentParameterMap.setCharacterStateSetType(CharacterStateSetType.UNKNOWN);
-//			}
-//			currentModel = factory.createNewModel(currentParameterMap);
-//		}
-//
-//		// Read tokens:
-//		int id = currentModel.sequenceIDByName(event.getSequenceName());
-//		if (id == -1) {
-//			id = currentModel.addSequence(event.getSequenceName());
-//		}
-//
-//		ArrayList<Object> tokens = new ArrayList<Object>(event.getCharacterValues().size());
-//		for (String stringRepresentation : event.getCharacterValues()) {
-//			tokens.add(factory.createToken(currentModel, stringRepresentation));
-//		}
-//		((AlignmentModel<Object>)currentModel).appendTokens(id, tokens);  //TODO Should currentModel have Object as its generic type?
+		AlignmentModelFactory factory = getAlignmentModelFactory();
+		ArrayList<Object> tokens = new ArrayList<Object>(event.getCharacterValues().size());
+		for (String stringRepresentation : event.getCharacterValues()) {
+			tokens.add(factory.createToken(currentModel, stringRepresentation));
+		}
+		((AlignmentModel<Object>)currentModel).appendTokens(currentSequenceID, tokens);  //TODO Should currentModel have Object as its generic type?
 	}
 
 
 	@Override
-	public void processEvent(JPhyloIOEventReader source, JPhyloIOEvent event) {
-//		switch (event.getType().getContentType()) {
+	public void processEvent(JPhyloIOEventReader source, JPhyloIOEvent event) throws IOException {
+		switch (event.getType().getContentType()) {
 //			case TOKEN_SET_DEFINITION:
 //				TokenSetDefinitionEvent tokenSetEvent = event.asTokenSetDefinitionEvent();
 //				if (tokenSetEvent.has) {  // concatenated case
@@ -269,22 +282,47 @@ public class AlignmentModelEventReader implements JPhyloIOEventListener {
 //					//TODO Possibly throw exception here or just ignore event.
 //				}
 //				break;
-//			case SEQUENCE_CHARACTERS:
-//				readTokens(event.asSequenceTokensEvent());
-//				break;
-//			case ALIGNMENT_START:
-//				currentParameterMap = new NewAlignmentModelParameterMap();
-//				break;
-//			case DOCUMENT_END:
-//			case ALIGNMENT_END:  // Fall through of above cases for convenience if alignment end event should be missing. (Should not be essential.)
-//				currentParameterMap = null;
-//				if (currentModel != null) {
-//					completedModels.add(currentModel);
-//					currentModel = null;
-//				}
-//				break;
-//			default:
-//			    break;  // Nothing to do
-//		}
+			case TOKEN_SET_DEFINITION:
+				if (event.getType().getTopologyType().equals(EventTopologyType.START)) {
+					//TODO Handle concatenated case (Currently additional token sets are ignored.)
+					if (currentParameterMap.getCharacterStateSetType() == null) {
+						currentParameterMap.setCharacterStateSetType(event.asTokenSetDefinitionEvent().getSetType());
+					}
+				}
+				break;
+			case SEQUENCE:
+				if (event.getType().getTopologyType().equals(EventTopologyType.START)) {
+					LinkedLabeledIDEvent sequenceEvent = event.asLinkedLabeledIDEvent();
+					ensureCurrentModelInstance();
+					currentSequenceID = currentModel.addSequence(sequenceEvent.getLabel());  //TODO Handle case that no label is present or labels are not unique.
+				}
+				else {  // END
+					currentSequenceID = -1;
+				}
+				break;
+			case SEQUENCE_TOKENS:
+				checkCurrentSequenceID();
+				readTokens(event.asSequenceTokensEvent());
+				break;
+			case SINGLE_SEQUENCE_TOKEN:
+				if (event.getType().getTopologyType().equals(EventTopologyType.START)) {
+					checkCurrentSequenceID();
+					((AlignmentModel<Object>)currentModel).appendToken(currentSequenceID, event.asSingleSequenceTokenEvent().getToken());  //TODO Should currentModel have Object as its generic type?
+				}
+				break;
+			case ALIGNMENT:
+				if (event.getType().getTopologyType().equals(EventTopologyType.START)) {
+					currentParameterMap = new NewAlignmentModelParameterMap();
+				}
+				else {
+					if (currentModel != null) {
+						completedModels.add(currentModel);
+						currentModel = null;
+					}
+				}
+				break;
+			default:
+			    break;  // Nothing to do
+		}
 	}
 }
