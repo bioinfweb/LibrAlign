@@ -107,10 +107,26 @@ public class AlignmentModelDataAdapter<T> extends NoCharDefsNoSetsMatrixDataAdap
 	}
 
 
+	/**
+	 * Returns the number of columns in the underlying {@link AlignmentModel} instance if all sequences have an equal length.
+	 * If at least two of these sequences differ in their length, -1 is returned. 
+	 * 
+	 * @return the column count or -1
+	 * @see info.bioinfweb.jphyloio.dataadapters.MatrixDataAdapter#getColumnCount(info.bioinfweb.jphyloio.ReadWriteParameterMap)
+	 */
 	@Override
 	public long getColumnCount(ReadWriteParameterMap parameters) {
-		// TODO Determine whether sequences have unequal lengths
-		return 0;
+		Iterator<Integer> iterator = model.sequenceIDIterator();
+		if (iterator.hasNext()) {
+			long lastLength = model.getSequenceLength(iterator.next());
+			while (iterator.hasNext()) {
+				if (lastLength != model.getSequenceLength(iterator.next())) {
+					return -1;
+				}
+			}
+			return lastLength;
+		}
+		return -1;
 	}
 
 
