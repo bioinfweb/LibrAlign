@@ -101,9 +101,7 @@ public class CharacterTokenSet extends AbstractTokenSet<Character> {
 	 * @return the new instance
 	 */
 	public static CharacterTokenSet newDNAInstance() {
-		CharacterTokenSet result = createNucleotideInstance(CharacterStateSetType.DNA);
-		result.remove('U');
-		return result;
+		return createNucleotideInstance(CharacterStateSetType.DNA);
 	}
 	
 	
@@ -114,9 +112,7 @@ public class CharacterTokenSet extends AbstractTokenSet<Character> {
 	 * @return the new instance
 	 */
 	public static CharacterTokenSet newRNAInstance() {
-		CharacterTokenSet result = createNucleotideInstance(CharacterStateSetType.DNA);
-		result.remove('T');
-		return result;
+		return createNucleotideInstance(CharacterStateSetType.RNA);
 	}
 	
 	
