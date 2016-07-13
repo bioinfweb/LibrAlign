@@ -79,6 +79,7 @@ public class CharacterTokenSet extends AbstractTokenSet<Character> {
 			result.remove('T');
 		}
 		result.add(SequenceUtils.GAP_CHAR);
+		result.add(SequenceUtils.MISSING_DATA_CHAR);
 		return result;
 	}
 	
@@ -131,12 +132,13 @@ public class CharacterTokenSet extends AbstractTokenSet<Character> {
 		CharacterTokenSet result = new CharacterTokenSet(CharacterStateSetType.AMINO_ACID);
 		result.addAll(SequenceUtils.getAminoAcidOneLetterCodes(true));
 		result.add(SequenceUtils.GAP_CHAR);
+		result.add(SequenceUtils.MISSING_DATA_CHAR);
 		return result;
 	}
 	
 	
 	/**
-	 * Return the character itself.
+	 * Returns the character itself.
 	 * 
 	 * @return a string consisting only of the character {@code token}
 	 */
