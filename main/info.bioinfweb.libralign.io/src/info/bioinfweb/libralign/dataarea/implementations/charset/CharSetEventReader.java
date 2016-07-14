@@ -19,6 +19,8 @@
 package info.bioinfweb.libralign.dataarea.implementations.charset;
 
 
+import java.util.List;
+
 import info.bioinfweb.commons.graphics.UniqueColorLister;
 import info.bioinfweb.jphyloio.JPhyloIOEventReader;
 import info.bioinfweb.jphyloio.events.CharacterSetIntervalEvent;
@@ -67,7 +69,7 @@ public class CharSetEventReader extends AbstractDataModelEventReader<CharSetData
 
 
 	@Override
-	public void processEvent(JPhyloIOEventReader source, JPhyloIOEvent event) {
+	public void processEvent(JPhyloIOEventReader source, List<JPhyloIOEvent> parentEvents, JPhyloIOEvent event) {
 		switch (event.getType().getContentType()) {
 			case ALIGNMENT:
 				if (event.getType().getTopologyType().equals(EventTopologyType.END)) {  //TODO Does this work if character sets are specified after the alignment (e.g. in Nexus)? When is the global model published?

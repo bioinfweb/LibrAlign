@@ -237,7 +237,7 @@ public class AlignmentModelEventReader implements JPhyloIOEventListener {
 
 
 	@Override
-	public void processEvent(JPhyloIOEventReader source, JPhyloIOEvent event) throws IOException {
+	public void processEvent(JPhyloIOEventReader source, List<JPhyloIOEvent> parentEvents, JPhyloIOEvent event) throws IOException {
 		switch (event.getType().getContentType()) {
 //			case TOKEN_SET_DEFINITION:
 //				TokenSetDefinitionEvent tokenSetEvent = event.asTokenSetDefinitionEvent();

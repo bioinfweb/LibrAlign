@@ -20,10 +20,13 @@ package info.bioinfweb.libralign.model.io;
 
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.Stack;
 
 import info.bioinfweb.jphyloio.JPhyloIOEventReader;
 import info.bioinfweb.jphyloio.events.JPhyloIOEvent;
+import info.bioinfweb.jphyloio.events.type.EventTopologyType;
 import info.bioinfweb.libralign.model.AlignmentModel;
 import info.bioinfweb.libralign.model.data.DataModel;
 import info.bioinfweb.libralign.model.factory.AlignmentModelFactory;
@@ -38,9 +41,13 @@ import info.bioinfweb.libralign.model.factory.AlignmentModelFactory;
  * @bioinfweb.module info.bioinfweb.libralign.io
  */
 public class AlignmentDataReader {
+	//TODO Could this class be inherited from EventForwarder?
+	
 	private JPhyloIOEventReader eventReader;
 	private AlignmentModelEventReader alignmentModelReader;
 	private List<DataModelEventReader<?>> dataModelReaders = new ArrayList<DataModelEventReader<?>>();
+	private Stack<JPhyloIOEvent> parentEvents;
+	private List<JPhyloIOEvent> unmodifiableParentEvents;
 	
 	
 	/**
@@ -60,6 +67,8 @@ public class AlignmentDataReader {
 		else {
 			this.eventReader = eventReader;
 			this.alignmentModelReader = new AlignmentModelEventReader(alignmentModelFactory);
+			parentEvents = new Stack<JPhyloIOEvent>();
+			unmodifiableParentEvents = Collections.unmodifiableList(parentEvents);
 		}
 	}
 
@@ -119,9 +128,18 @@ public class AlignmentDataReader {
 		boolean result = eventReader.hasNextEvent();
 		if (result) {
 			JPhyloIOEvent event = eventReader.next();
-			alignmentModelReader.processEvent(eventReader, event);
+			
+			if (event.getType().getTopologyType().equals(EventTopologyType.END)) {
+				parentEvents.pop();  // Throws an exception, if more end than start events are encountered.
+			}
+			
+			alignmentModelReader.processEvent(eventReader, unmodifiableParentEvents, event);
 			for (DataModelEventReader<?> dataModelReader : dataModelReaders) {
-				dataModelReader.processEvent(eventReader, event);
+				dataModelReader.processEvent(eventReader, unmodifiableParentEvents, event);
+			}
+			
+			if (event.getType().getTopologyType().equals(EventTopologyType.START)) {
+				parentEvents.add(event);
 			}
 		}
 		return result;
