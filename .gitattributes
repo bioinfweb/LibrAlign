@@ -17,6 +17,7 @@ demo/info.bioinfweb.libralign.demo.docexamples/src/info/bionfweb/libralign/demo/
 main/info.bioinfweb.libralign.biojava1/.classpath -text svneol=unset#text/plain
 main/info.bioinfweb.libralign.biojava1/.project -text svneol=unset#text/plain
 main/info.bioinfweb.libralign.biojava1/.settings/org.eclipse.jdt.core.prefs -text svneol=unset#text/plain
+main/info.bioinfweb.libralign.biojava1/.settings/org.eclipse.jdt.ui.prefs -text svneol=unset#text/plain
 main/info.bioinfweb.libralign.biojava1/lib/core-1.9.2.jar -text
 main/info.bioinfweb.libralign.biojava1/lib/sequencing-1.9.2.jar -text
 main/info.bioinfweb.libralign.biojava1/src/info/bioinfweb/libralign/pherogram/provider/BioJavaPherogramProvider.java -text svneol=unset#text/plain
