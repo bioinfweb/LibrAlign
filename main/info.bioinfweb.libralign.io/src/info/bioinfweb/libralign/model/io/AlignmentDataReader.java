@@ -20,13 +20,12 @@ package info.bioinfweb.libralign.model.io;
 
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
-import java.util.Stack;
 
 import info.bioinfweb.jphyloio.JPhyloIOEventReader;
 import info.bioinfweb.jphyloio.events.JPhyloIOEvent;
 import info.bioinfweb.jphyloio.events.type.EventTopologyType;
+import info.bioinfweb.jphyloio.push.ParentEventInformation;
 import info.bioinfweb.libralign.model.AlignmentModel;
 import info.bioinfweb.libralign.model.data.DataModel;
 import info.bioinfweb.libralign.model.factory.AlignmentModelFactory;
@@ -41,13 +40,28 @@ import info.bioinfweb.libralign.model.factory.AlignmentModelFactory;
  * @bioinfweb.module info.bioinfweb.libralign.io
  */
 public class AlignmentDataReader {
+	/**
+	 * Used to make {@link #add(JPhyloIOEvent)} and {@link #pop()} visible.
+	 */
+	private static class LocalParentEventInformation extends ParentEventInformation {
+		@Override
+		protected void add(JPhyloIOEvent event) {
+			super.add(event);
+		}
+
+		@Override
+		protected void pop() {
+			super.pop();
+		}
+	}
+	
+	
 	//TODO Could this class be inherited from EventForwarder?
 	
 	private JPhyloIOEventReader eventReader;
 	private AlignmentModelEventReader alignmentModelReader;
 	private List<DataModelEventReader<?>> dataModelReaders = new ArrayList<DataModelEventReader<?>>();
-	private Stack<JPhyloIOEvent> parentEvents;
-	private List<JPhyloIOEvent> unmodifiableParentEvents;
+	private LocalParentEventInformation parentEvents;
 	
 	
 	/**
@@ -67,8 +81,7 @@ public class AlignmentDataReader {
 		else {
 			this.eventReader = eventReader;
 			this.alignmentModelReader = new AlignmentModelEventReader(alignmentModelFactory);
-			parentEvents = new Stack<JPhyloIOEvent>();
-			unmodifiableParentEvents = Collections.unmodifiableList(parentEvents);
+			parentEvents = new LocalParentEventInformation();
 		}
 	}
 
@@ -133,9 +146,9 @@ public class AlignmentDataReader {
 				parentEvents.pop();  // Throws an exception, if more end than start events are encountered.
 			}
 			
-			alignmentModelReader.processEvent(eventReader, unmodifiableParentEvents, event);
+			alignmentModelReader.processEvent(eventReader, parentEvents, event);
 			for (DataModelEventReader<?> dataModelReader : dataModelReaders) {
-				dataModelReader.processEvent(eventReader, unmodifiableParentEvents, event);
+				dataModelReader.processEvent(eventReader, parentEvents, event);
 			}
 			
 			if (event.getType().getTopologyType().equals(EventTopologyType.START)) {

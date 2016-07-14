@@ -21,7 +21,7 @@ package info.bioinfweb.libralign.model.io;
 
 import java.util.List;
 
-import info.bioinfweb.jphyloio.JPhyloIOEventListener;
+import info.bioinfweb.jphyloio.push.JPhyloIOEventListener;
 import info.bioinfweb.libralign.model.data.DataModel;
 import info.bioinfweb.libralign.model.data.DataModelFactory;
 
