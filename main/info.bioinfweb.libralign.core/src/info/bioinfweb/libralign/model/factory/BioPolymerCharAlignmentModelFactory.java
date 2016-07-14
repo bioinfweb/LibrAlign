@@ -88,6 +88,7 @@ public class BioPolymerCharAlignmentModelFactory extends AbstractAlignmentModelF
 			case NUCLEOTIDE:
 				tokenSet = CharacterTokenSet.newNucleotideInstance();
 				break;
+			//TODO What about CONTINUES?
 			default:  // AMINO_ACID and UNKNOWN
 				tokenSet = CharacterTokenSet.newAminoAcidInstance();  // Also contains all nucleotide (ambiguity) codes.
 				break;
@@ -103,7 +104,7 @@ public class BioPolymerCharAlignmentModelFactory extends AbstractAlignmentModelF
 		
 		// Create alignment model:
 		long charStateCount = Math.max(tokenSet.size(), parameterMap.getLong(NewAlignmentModelParameterMap.KEY_CHARACTER_STATE_COUNT, 0));
-		if (charStateCount > Integer.MAX_VALUE) {
+		if (charStateCount > Integer.MAX_VALUE) {  //TODO This is not possible if the token type is Character!
 			return new ArrayListAlignmentModel<Character>(tokenSet, getSharedIDManager());  // null is allowed as ID manager
 		}
 		else {
