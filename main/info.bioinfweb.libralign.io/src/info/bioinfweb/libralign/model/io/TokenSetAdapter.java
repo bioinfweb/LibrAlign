@@ -12,6 +12,7 @@ import info.bioinfweb.jphyloio.ReadWriteConstants;
 import info.bioinfweb.jphyloio.ReadWriteParameterMap;
 import info.bioinfweb.jphyloio.dataadapters.JPhyloIOEventReceiver;
 import info.bioinfweb.jphyloio.dataadapters.ObjectListDataAdapter;
+import info.bioinfweb.jphyloio.events.CharacterSetIntervalEvent;
 import info.bioinfweb.jphyloio.events.ConcreteJPhyloIOEvent;
 import info.bioinfweb.jphyloio.events.SingleTokenDefinitionEvent;
 import info.bioinfweb.jphyloio.events.TokenSetDefinitionEvent;
@@ -24,9 +25,11 @@ public class TokenSetAdapter<T> implements ObjectListDataAdapter<TokenSetDefinit
 	private String idPrefix; 
 	private TokenSet<T> tokenSet;
 	private String tokenSetID;
+	private long start;
+	private long end;
 	
 	
-	public TokenSetAdapter(String idPrefix, TokenSet<T> tokenSet) {
+	public TokenSetAdapter(String idPrefix, TokenSet<T> tokenSet, long startIndex, long endIndex) {
 		super();
 		if (!XMLUtils.isNCName(idPrefix)) {
 			throw new IllegalArgumentException("The ID prefix  (\"" + idPrefix + "\") is not a valid NCName.");
@@ -38,6 +41,8 @@ public class TokenSetAdapter<T> implements ObjectListDataAdapter<TokenSetDefinit
 			this.idPrefix = idPrefix;
 			this.tokenSet = tokenSet;
 			tokenSetID = idPrefix + ReadWriteConstants.DEFAULT_TOKEN_SET_ID_PREFIX;
+			this.start = startIndex;
+			this.end = endIndex;
 		}
 	}
 
@@ -109,6 +114,8 @@ public class TokenSetAdapter<T> implements ObjectListDataAdapter<TokenSetDefinit
 				writeSingleTokenDefinitionEvent(receiver, idManager, token);
 			}
 		}
+		
+		receiver.add(new CharacterSetIntervalEvent(start, end));
 		
 		//TODO JPhyloIO sollte auch mehrere Gap- und Missing-Tokens im Modell akzeptieren (falls später Formate auftauchen, die
 		//     das auch unterstützen). Bei Formaten, die nur eins zulassen, soll immer das erste (aus writeData()) verwendet werden

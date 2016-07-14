@@ -80,7 +80,7 @@ public class AlignmentModelDataAdapter<T> extends NoCharDefsNoSetsMatrixDataAdap
 			this.startEvent = startEvent;
 			this.model = model;
 			this.linkOTUs = linkOTUs;
-			tokenSetAdapter = new TokenSetAdapter<T>(idPrefix + "ts_", model.getTokenSet());
+			tokenSetAdapter = new TokenSetAdapter<T>(idPrefix + "ts_", model.getTokenSet(), 0, model.getMaxSequenceLength());  // For unaligned data, the token set must still reach the end of the longest sequence.
 		}
 	}
 

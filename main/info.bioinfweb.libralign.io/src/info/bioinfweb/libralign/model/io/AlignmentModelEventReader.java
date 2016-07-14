@@ -307,7 +307,9 @@ public class AlignmentModelEventReader implements JPhyloIOEventListener {
 			case SINGLE_SEQUENCE_TOKEN:
 				if (event.getType().getTopologyType().equals(EventTopologyType.START)) {
 					checkCurrentSequenceID();
-					((AlignmentModel<Object>)currentModel).appendToken(currentSequenceID, event.asSingleSequenceTokenEvent().getToken());  //TODO Should currentModel have Object as its generic type?
+					((AlignmentModel<Object>)currentModel).appendToken(currentSequenceID, 
+							((AlignmentModelFactory<Object>)getAlignmentModelFactory()).createToken((AlignmentModel<Object>)currentModel, 
+									event.asSingleSequenceTokenEvent().getToken()));  //TODO Should currentModel have Object as its generic type?
 				}
 				break;
 			case ALIGNMENT:
