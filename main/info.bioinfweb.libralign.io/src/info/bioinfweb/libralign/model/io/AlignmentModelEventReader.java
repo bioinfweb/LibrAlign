@@ -25,15 +25,12 @@ import info.bioinfweb.jphyloio.JPhyloIOEventReader;
 import info.bioinfweb.jphyloio.events.JPhyloIOEvent;
 import info.bioinfweb.jphyloio.events.LinkedLabeledIDEvent;
 import info.bioinfweb.jphyloio.events.SequenceTokensEvent;
-import info.bioinfweb.jphyloio.events.SingleTokenDefinitionEvent;
-import info.bioinfweb.jphyloio.events.TokenSetDefinitionEvent;
 import info.bioinfweb.jphyloio.events.type.EventTopologyType;
 import info.bioinfweb.libralign.model.AlignmentModel;
 import info.bioinfweb.libralign.model.concatenated.ConcatenatedAlignmentModel;
 import info.bioinfweb.libralign.model.factory.AlignmentModelFactory;
 import info.bioinfweb.libralign.model.factory.NewAlignmentModelParameterMap;
 import info.bioinfweb.libralign.model.factory.StringAlignmentModelFactory;
-import info.bioinfweb.libralign.model.factory.TokenDefinition;
 import info.bioinfweb.libralign.model.factory.continuous.DoubleAlignmentModelFactory;
 
 import java.io.IOException;
@@ -41,7 +38,6 @@ import java.util.ArrayList;
 import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
-import java.util.TreeMap;
 
 
 
