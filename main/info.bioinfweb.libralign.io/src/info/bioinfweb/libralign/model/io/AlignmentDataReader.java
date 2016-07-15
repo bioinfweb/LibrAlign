@@ -24,8 +24,6 @@ import java.util.List;
 
 import info.bioinfweb.jphyloio.JPhyloIOEventReader;
 import info.bioinfweb.jphyloio.events.JPhyloIOEvent;
-import info.bioinfweb.jphyloio.events.type.EventTopologyType;
-import info.bioinfweb.jphyloio.push.ParentEventInformation;
 import info.bioinfweb.libralign.model.AlignmentModel;
 import info.bioinfweb.libralign.model.data.DataModel;
 import info.bioinfweb.libralign.model.factory.AlignmentModelFactory;
@@ -40,28 +38,11 @@ import info.bioinfweb.libralign.model.factory.AlignmentModelFactory;
  * @bioinfweb.module info.bioinfweb.libralign.io
  */
 public class AlignmentDataReader {
-	/**
-	 * Used to make {@link #add(JPhyloIOEvent)} and {@link #pop()} visible.
-	 */
-	private static class LocalParentEventInformation extends ParentEventInformation {
-		@Override
-		protected void add(JPhyloIOEvent event) {
-			super.add(event);
-		}
-
-		@Override
-		protected void pop() {
-			super.pop();
-		}
-	}
-	
-	
 	//TODO Could this class be inherited from EventForwarder?
 	
 	private JPhyloIOEventReader eventReader;
 	private AlignmentModelEventReader alignmentModelReader;
 	private List<DataModelEventReader<?>> dataModelReaders = new ArrayList<DataModelEventReader<?>>();
-	private LocalParentEventInformation parentEvents;
 	
 	
 	/**
@@ -81,7 +62,6 @@ public class AlignmentDataReader {
 		else {
 			this.eventReader = eventReader;
 			this.alignmentModelReader = new AlignmentModelEventReader(alignmentModelFactory);
-			parentEvents = new LocalParentEventInformation();
 		}
 	}
 
@@ -137,25 +117,19 @@ public class AlignmentDataReader {
 	}
 	
 	
-	private boolean processNextEvent() throws Exception {
-		boolean result = eventReader.hasNextEvent();
-		if (result) {
+	private JPhyloIOEvent processNextEvent() throws Exception {
+		if (eventReader.hasNextEvent()) {
 			JPhyloIOEvent event = eventReader.next();
 			
-			if (event.getType().getTopologyType().equals(EventTopologyType.END)) {
-				parentEvents.pop();  // Throws an exception, if more end than start events are encountered.
-			}
-			
-			alignmentModelReader.processEvent(eventReader, parentEvents, event);
+			alignmentModelReader.processEvent(eventReader, event);
 			for (DataModelEventReader<?> dataModelReader : dataModelReaders) {
-				dataModelReader.processEvent(eventReader, parentEvents, event);
+				dataModelReader.processEvent(eventReader, event);
 			}
-			
-			if (event.getType().getTopologyType().equals(EventTopologyType.START)) {
-				parentEvents.add(event);
-			}
+			return event;
 		}
-		return result;
+		else {
+			return null;
+		}
 	}
 	
 	
@@ -167,12 +141,14 @@ public class AlignmentDataReader {
 	 * @throws Exception if an exception was thrown by {@link JPhyloIOEventReader#next()}.
 	 */
 	public void readAll() throws Exception {
-		while (processNextEvent());
+		while (processNextEvent() != null);
 	}
 	
 	
-	public void readUnitlNextAlignmentModel() throws Exception {
-		throw new InternalError("not implemented");
-		//TODO implement (Callback class should be passed to alignment and data model readers that informs about newly completed model instances)
-	}
+//	public void readUntilAlignmentEnd() throws Exception {
+//		JPhyloIOEvent event;
+//		do {
+//			event = processNextEvent();
+//		}	while ((event != null) && ());
+//	}
 }
