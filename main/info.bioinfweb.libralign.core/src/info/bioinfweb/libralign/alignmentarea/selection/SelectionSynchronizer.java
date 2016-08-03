@@ -26,7 +26,8 @@ import java.util.List;
 
 
 /**
- * Instances of this class allow to synchronize different instances of {@link SelectionModel} if possible.
+ * Instances of this class allow to synchronize different instances of {@link SelectionModel} if possible. The
+ * synchronization can be switched on and off using {@link #setEnabled(boolean)}.
  * <p>
  * Note that synchronizing multiple selection models will usually require that the associated sequence data
  * providers of all selection models contain the same number of columns and rows.
@@ -42,7 +43,7 @@ public class SelectionSynchronizer {
 	private final SelectionListener LISTENER = new SelectionListener() {
 				@Override
 				public void selectionChanged(SelectionChangeEvent event) {
-					if (!isAdopting) {  // Avoid processing events that have been fired from this method. (Not thread save.)
+					if (enabled && !isAdopting) {  // Avoid processing events that have been fired from this method. (Not thread save.)
 						isAdopting = true;
 						try {
 							for (SelectionModel selectionModel : selectionModels) {
@@ -60,6 +61,7 @@ public class SelectionSynchronizer {
 			
 		
 	private List<SelectionModel> selectionModels = new ArrayList<SelectionModel>();
+	private boolean enabled = true;
 	private boolean isAdopting = false;
 
 	
@@ -90,5 +92,15 @@ public class SelectionSynchronizer {
 			model.removeSelectionListener(LISTENER);
 		}
 		return result;
+	}
+
+
+	public boolean isEnabled() {
+		return enabled;
+	}
+
+
+	public void setEnabled(boolean enabled) {
+		this.enabled = enabled;
 	}
 }
