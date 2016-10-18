@@ -228,8 +228,8 @@ public class AlignmentModelEventReader implements JPhyloIOEventListener {
 	@SuppressWarnings({"unchecked", "rawtypes"})
 	private void readTokens(SequenceTokensEvent event) {
 		AlignmentModelFactory factory = getAlignmentModelFactory();
-		ArrayList<Object> tokens = new ArrayList<Object>(event.getCharacterValues().size());
-		for (String stringRepresentation : event.getCharacterValues()) {
+		ArrayList<Object> tokens = new ArrayList<Object>(event.getTokens().size());
+		for (String stringRepresentation : event.getTokens()) {
 			tokens.add(factory.createToken(currentModel, stringRepresentation));
 		}
 		((AlignmentModel<Object>)currentModel).appendTokens(currentSequenceID, tokens);  //TODO Should currentModel have Object as its generic type?
@@ -237,7 +237,7 @@ public class AlignmentModelEventReader implements JPhyloIOEventListener {
 
 
 	@Override
-	public void processEvent(JPhyloIOEventReader source, JPhyloIOEvent event) throws IOException {
+	public void processEvent(JPhyloIOEventReader source, JPhyloIOEvent event) {
 		switch (event.getType().getContentType()) {
 //			case TOKEN_SET_DEFINITION:
 //				TokenSetDefinitionEvent tokenSetEvent = event.asTokenSetDefinitionEvent();
