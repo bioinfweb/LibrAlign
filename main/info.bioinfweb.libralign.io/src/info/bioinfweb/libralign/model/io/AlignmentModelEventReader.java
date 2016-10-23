@@ -311,6 +311,7 @@ public class AlignmentModelEventReader implements JPhyloIOEventListener {
 			case ALIGNMENT:
 				if (event.getType().getTopologyType().equals(EventTopologyType.START)) {
 					currentParameterMap = new NewAlignmentModelParameterMap();
+					currentParameterMap.put(NewAlignmentModelParameterMap.KEY_ALIGNMENT_LABEL, event.asLabeledIDEvent().getLabel());
 				}
 				else {
 					if (currentModel != null) {
