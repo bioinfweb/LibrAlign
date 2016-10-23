@@ -179,8 +179,8 @@ public class DegapedIndexCalculator<T> {
 			return info.degapedIndex;
 		}
 		else {
-			throw new IndexOutOfBoundsException("The index " + originalIndex + " is not between 0 and " + 
-					model.getSequenceLength(sequenceID) + " (which is the length of the sequence with the ID " + sequenceID + ").");
+			throw new IndexOutOfBoundsException("The index " + originalIndex + " in the sequence with the ID " + sequenceID + 
+					"is not between 0 and " +	(model.getSequenceLength(sequenceID) - 1) + ".");
 		}
 	}
 
