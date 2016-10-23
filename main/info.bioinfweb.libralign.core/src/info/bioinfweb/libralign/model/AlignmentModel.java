@@ -70,6 +70,22 @@ public interface AlignmentModel<T> {
 	
 	
 	/**
+	 * Returns a string labeling this alignment.
+	 * 
+	 * @return the name or title of this alignment
+	 */
+	public String getLabel();
+	
+	/**
+	 * Allows to specify a new label for this alignment.
+	 * 
+	 * @param label the new label
+	 * @throws UnsupportedOperationException if this implementation does not allow to change labels
+	 */
+	public void setLabel(String label) throws UnsupportedOperationException;
+	
+	
+	/**
 	 * Returns the token set which is supported by the implementation.
 	 * 
 	 * @return a token set containing all valid tokens

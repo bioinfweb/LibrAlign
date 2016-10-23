@@ -41,9 +41,28 @@ import info.bioinfweb.libralign.model.events.TokenChangeEvent;
  * @param <T> - the type of sequence elements (tokens) the implementing provider object works with
  */
 public abstract class AbstractAlignmentModel<T> implements AlignmentModel<T> {
+	private String label;
 	private Set<AlignmentModelChangeListener> changeListeners = new HashSet<AlignmentModelChangeListener>();
 
 	
+	@Override
+	public String getLabel() {
+		return label;
+	}
+
+
+	/**
+	 * Allows to specify a new label for this alignment. This implementation allows to edit the label and
+	 * will never throw an {@link UnsupportedOperationException} in this method.
+	 * 
+	 * @param label the new label
+	 */
+	@Override
+	public void setLabel(String label) {
+		this.label = label;
+	}
+
+
 	@Override
 	public Set<AlignmentModelChangeListener> getChangeListeners() {
 		return changeListeners;

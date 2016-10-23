@@ -77,7 +77,7 @@ import info.bioinfweb.libralign.model.tokenset.TokenSet;
 public class SwingUndoAlignmentModel<T> implements AlignmentModel<T>, 
     AlignmentModelView<T, T> {
 	
-	protected AlignmentModel<T> provider;
+	protected AlignmentModel<T> underlyingModel;
 	private UndoManager undoManager;
 	private SwingEditFactory<T> editFactory;
 	
@@ -86,7 +86,7 @@ public class SwingUndoAlignmentModel<T> implements AlignmentModel<T>,
 	 * Creates a new instance of this class which creates new edit objects using the provided 
 	 * {@link SwingEditFactory}.
 	 * 
-	 * @param provider - the sequence data provider used to perform the actual manipulation of the data
+	 * @param underlyingModel - the alignment model used to perform the actual manipulation of the data
 	 *        (It must be able to write at least one of sequences or tokens.)
 	 * @param undoManager - the undo manager that will store the generated edit objects
 	 * @param editFactory - the custom edit factory that shall be used to create new edit objects  
@@ -95,11 +95,11 @@ public class SwingUndoAlignmentModel<T> implements AlignmentModel<T>,
 	 *         (If only one of both is forbidden no exception will be thrown.)
 	 * @throws NullPointerException if {@code null} is specified for {@code undoManager}
 	 */
-	public SwingUndoAlignmentModel(AlignmentModel<T> provider, UndoManager undoManager, 
+	public SwingUndoAlignmentModel(AlignmentModel<T> underlyingModel, UndoManager undoManager, 
 			SwingEditFactory<T> editFactory) {
 		
 		super();
-		if (provider.isSequencesReadOnly() && provider.isTokensReadOnly()) {
+		if (underlyingModel.isSequencesReadOnly() && underlyingModel.isTokensReadOnly()) {
 			throw new IllegalArgumentException(
 					"The underlying provider must either be able to write sequences or tokens.");
 		}
@@ -107,7 +107,7 @@ public class SwingUndoAlignmentModel<T> implements AlignmentModel<T>,
 			throw new NullPointerException("The undo manager must not be null.");
 		}
 		else {
-			this.provider = provider;
+			this.underlyingModel = underlyingModel;
 			this.undoManager = undoManager;
 			this.editFactory = editFactory;
 		}
@@ -117,7 +117,7 @@ public class SwingUndoAlignmentModel<T> implements AlignmentModel<T>,
 	/**
 	 * Creates a new instance of this class which creates default LibrAlign edit objects.
 	 * 
-	 * @param provider - the sequence data provider used to perform the actual manipulation of the data
+	 * @param underlyingModel - the alignment model used to perform the actual manipulation of the data
 	 *        (It must be able to write at least one of sequences or tokens.)
 	 * @param undoManager - the undo manager that will store the generated edit objects
 	 * 
@@ -125,8 +125,8 @@ public class SwingUndoAlignmentModel<T> implements AlignmentModel<T>,
 	 *         (If only one of both is forbidden no exception will be thrown.)
 	 * @throws NullPointerException if {@code null} is specified for {@code undoManager}
 	 */
-	public SwingUndoAlignmentModel(AlignmentModel<T> provider, UndoManager undoManager) {
-		this(provider, undoManager, null);
+	public SwingUndoAlignmentModel(AlignmentModel<T> underlyingModel, UndoManager undoManager) {
+		this(underlyingModel, undoManager, null);
 	}
 
 
@@ -136,7 +136,7 @@ public class SwingUndoAlignmentModel<T> implements AlignmentModel<T>,
 	 * @return an instance of a class implementing {@link AlignmentModel}
 	 */
 	public AlignmentModel<T> getUnderlyingModel() {
-		return provider;
+		return underlyingModel;
 	}
 
 
@@ -193,20 +193,32 @@ public class SwingUndoAlignmentModel<T> implements AlignmentModel<T>,
 	
 	
 	@Override
+	public String getLabel() {
+		return underlyingModel.getLabel();
+	}
+
+
+	@Override
+	public void setLabel(String label) throws UnsupportedOperationException {
+		underlyingModel.setLabel(label);
+	}
+
+
+	@Override
 	public TokenSet<T> getTokenSet() {
-		return provider.getTokenSet();
+		return underlyingModel.getTokenSet();
 	}
 
 
 	@Override
 	public void setTokenSet(TokenSet<T> set) {
-		provider.setTokenSet(set);
+		underlyingModel.setTokenSet(set);
 	}
 
 
 	@Override
 	public T getTokenAt(int sequenceID, int index) {
-		return provider.getTokenAt(sequenceID, index);
+		return underlyingModel.getTokenAt(sequenceID, index);
 	}
 
 
@@ -220,7 +232,7 @@ public class SwingUndoAlignmentModel<T> implements AlignmentModel<T>,
 	public void setTokensAt(int sequenceID, int beginIndex,	Collection<? extends T> tokens)
 			throws AlignmentSourceNotWritableException {
 		
-		if (provider.isTokensReadOnly()) {
+		if (underlyingModel.isTokensReadOnly()) {
 			throw new AlignmentSourceNotWritableException(this);
 		}
 		else {
@@ -253,7 +265,7 @@ public class SwingUndoAlignmentModel<T> implements AlignmentModel<T>,
 	public void insertTokensAt(int sequenceID, int beginIndex, Collection<? extends T> tokens)
 			throws AlignmentSourceNotWritableException {
 		
-		if (provider.isTokensReadOnly()) {
+		if (underlyingModel.isTokensReadOnly()) {
 			throw new AlignmentSourceNotWritableException(this);
 		}
 		else {
@@ -274,7 +286,7 @@ public class SwingUndoAlignmentModel<T> implements AlignmentModel<T>,
 	public void removeTokensAt(int sequenceID, int beginIndex, int endIndex)
 			throws AlignmentSourceNotWritableException {
 		
-		if (provider.isTokensReadOnly()) {
+		if (underlyingModel.isTokensReadOnly()) {
 			throw new AlignmentSourceNotWritableException(this);
 		}
 		else {
@@ -285,49 +297,49 @@ public class SwingUndoAlignmentModel<T> implements AlignmentModel<T>,
 
 	@Override
 	public int getSequenceLength(int sequenceID) {
-		return provider.getSequenceLength(sequenceID);
+		return underlyingModel.getSequenceLength(sequenceID);
 	}
 
 
 	@Override
 	public int getMaxSequenceLength() {
-		return provider.getMaxSequenceLength();
+		return underlyingModel.getMaxSequenceLength();
 	}
 
 
 	@Override
 	public AlignmentModelWriteType getWriteType() {
-		return provider.getWriteType();
+		return underlyingModel.getWriteType();
 	}
 
 
 	@Override
 	public boolean isTokensReadOnly() {
-		return provider.isTokensReadOnly();
+		return underlyingModel.isTokensReadOnly();
 	}
 
 
 	@Override
 	public boolean isSequencesReadOnly() {
-		return provider.isSequencesReadOnly();
+		return underlyingModel.isSequencesReadOnly();
 	}
 
 
 	@Override
 	public boolean containsSequence(int sequenceID) {
-		return provider.containsSequence(sequenceID);
+		return underlyingModel.containsSequence(sequenceID);
 	}
 
 
 	@Override
 	public int sequenceIDByName(String sequenceName) {
-		return provider.sequenceIDByName(sequenceName);
+		return underlyingModel.sequenceIDByName(sequenceName);
 	}
 
 
 	@Override
 	public String sequenceNameByID(int sequenceID) {
-		return provider.sequenceNameByID(sequenceID);
+		return underlyingModel.sequenceNameByID(sequenceID);
 	}
 
 
@@ -375,18 +387,18 @@ public class SwingUndoAlignmentModel<T> implements AlignmentModel<T>,
 
 	@Override
 	public Iterator<Integer> sequenceIDIterator() {
-		return provider.sequenceIDIterator();
+		return underlyingModel.sequenceIDIterator();
 	}
 
 
 	@Override
 	public int getSequenceCount() {
-		return provider.getSequenceCount();
+		return underlyingModel.getSequenceCount();
 	}
 
 
 	@Override
 	public Set<AlignmentModelChangeListener> getChangeListeners() {
-		return provider.getChangeListeners();
+		return underlyingModel.getChangeListeners();
 	}
 }
