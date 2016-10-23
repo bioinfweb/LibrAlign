@@ -36,7 +36,7 @@ import info.bioinfweb.libralign.model.tokenset.continuous.DoubleTokenSet;
  */
 public class DoubleAlignmentModelFactory extends AbstractAlignmentModelFactory<ContinuousToken<Double>> {
 	@Override
-	public AlignmentModel<ContinuousToken<Double>> createNewModel(NewAlignmentModelParameterMap parameterMap) {
+	public AlignmentModel<ContinuousToken<Double>> doCreateNewModel(NewAlignmentModelParameterMap parameterMap) {
 		return new ArrayListAlignmentModel<ContinuousToken<Double>>(new DoubleTokenSet());
 	}
 }

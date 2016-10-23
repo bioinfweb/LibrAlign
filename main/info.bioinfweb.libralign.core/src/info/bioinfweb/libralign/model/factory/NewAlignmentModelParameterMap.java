@@ -38,6 +38,9 @@ public class NewAlignmentModelParameterMap extends ParameterMap {
 	/** The prefix of predefined keys used in this map. */
 	public static final String KEY_PREFIX = "info.bioinfweb.libralign.alignmentModelFactory.";
 	
+	/** Key used to store the label of the alignment model to be created. */
+	public static final String KEY_ALIGNMENT_LABEL = KEY_PREFIX + "alignmentLabel";
+	
 	/** Key used to store the return value of {@link #getCharacterStateSetType()}. */
 	public static final String KEY_CHARACTER_STATE_SET_TYPE = KEY_PREFIX + "charStateSetType";
 	

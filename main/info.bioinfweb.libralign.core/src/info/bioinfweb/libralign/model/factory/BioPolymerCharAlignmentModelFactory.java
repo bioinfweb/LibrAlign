@@ -75,7 +75,7 @@ public class BioPolymerCharAlignmentModelFactory extends AbstractAlignmentModelF
 
 	
 	@Override
-	public AlignmentModel<Character> createNewModel(NewAlignmentModelParameterMap parameterMap) {
+	public AlignmentModel<Character> doCreateNewModel(NewAlignmentModelParameterMap parameterMap) {
 		// Create initial set:
 		CharacterTokenSet tokenSet;
 		switch (parameterMap.getCharacterStateSetType()) {

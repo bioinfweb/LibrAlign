@@ -36,7 +36,7 @@ import info.bioinfweb.libralign.model.tokenset.continuous.FloatTokenSet;
  */
 public class FloatAlignmentModelFactory extends AbstractAlignmentModelFactory<ContinuousToken<Float>> {
 	@Override
-	public AlignmentModel<ContinuousToken<Float>> createNewModel(NewAlignmentModelParameterMap parameterMap) {
+	public AlignmentModel<ContinuousToken<Float>> doCreateNewModel(NewAlignmentModelParameterMap parameterMap) {
 		return new ArrayListAlignmentModel<ContinuousToken<Float>>(new FloatTokenSet());
 	}
 }

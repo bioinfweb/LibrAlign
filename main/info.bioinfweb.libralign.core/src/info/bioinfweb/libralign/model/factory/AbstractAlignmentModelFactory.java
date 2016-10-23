@@ -90,4 +90,17 @@ public abstract class AbstractAlignmentModelFactory<T> implements AlignmentModel
 	public T createToken(AlignmentModel<T> alignmentModel, String tokenRepresentation) {
 		return alignmentModel.getTokenSet().tokenByRepresentation(tokenRepresentation);
 	}
+
+
+	protected abstract AlignmentModel<T> doCreateNewModel(NewAlignmentModelParameterMap parameterMap);
+	
+	
+	@Override
+	public AlignmentModel<T> createNewModel(NewAlignmentModelParameterMap parameterMap) {
+		AlignmentModel<T> result = doCreateNewModel(parameterMap);
+		if (result != null) {
+			result.setLabel(parameterMap.getString(NewAlignmentModelParameterMap.KEY_ALIGNMENT_LABEL));
+		}
+		return result;
+	}
 }
