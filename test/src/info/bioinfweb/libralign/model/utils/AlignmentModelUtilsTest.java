@@ -40,7 +40,7 @@ public class AlignmentModelUtilsTest {
 	public void test_reverseComplement() {
 		AlignmentModel<Character> model = new PackedAlignmentModel<Character>(CharacterTokenSet.newNucleotideInstance());
 		model.addSequence("A");
-		int sequenceID = model.sequenceIDByName("A");
+		String sequenceID = model.sequenceIDByName("A");
 		model.appendTokens(sequenceID, AlignmentModelUtils.charSequenceToTokenList("ACGGT-ACT", model.getTokenSet()));
 		
 		AlignmentModelUtils.reverseComplement(model, sequenceID, 2, 8);

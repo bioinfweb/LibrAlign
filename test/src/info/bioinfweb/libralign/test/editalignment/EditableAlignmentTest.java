@@ -19,7 +19,7 @@
 package info.bioinfweb.libralign.test.editalignment;
 
 
-import info.bioinfweb.commons.bio.CharacterStateType;
+import info.bioinfweb.commons.bio.CharacterStateSetType;
 import info.bioinfweb.libralign.alignmentarea.AlignmentArea;
 import info.bioinfweb.libralign.alignmentarea.content.AlignmentContentArea;
 import info.bioinfweb.libralign.alignmentarea.tokenpainter.NucleotideTokenPainter;
@@ -52,7 +52,7 @@ public class EditableAlignmentTest {
 			AlignmentContentArea contentArea = alignmentArea.getContentArea();
 			
 			TokenSet<NucleotideCompound> tokenSet = new BioJava3TokenSet<NucleotideCompound>(
-					CharacterStateType.NUCLEOTIDE, new DNACompoundSet(), true);
+					CharacterStateSetType.NUCLEOTIDE, new DNACompoundSet(), true);
 			AlignmentModel<NucleotideCompound> provider = new ArrayListAlignmentModel<NucleotideCompound>(tokenSet);
 			//AlignmentModel<NucleotideCompound> provider = new PackedAlignmentModel<NucleotideCompound>(tokenSet);
 			
@@ -61,7 +61,7 @@ public class EditableAlignmentTest {
 			
 			// Test sequence:
 			provider.addSequence("A");
-			int id = provider.sequenceIDByName("A");
+			String id = provider.sequenceIDByName("A");
 			provider.insertTokenAt(id, 0, tokenSet.tokenByRepresentation("A"));
 			provider.insertTokenAt(id, 1, tokenSet.tokenByRepresentation("C"));
 			provider.insertTokenAt(id, 2, tokenSet.tokenByRepresentation("G"));
@@ -110,7 +110,7 @@ public class EditableAlignmentTest {
 	private String newSequenceName() {
 		int index = 1;
 		while (getAlignmentArea().getAlignmentModel().sequenceIDByName(
-				"Sequence" + index) != AlignmentModel.NO_SEQUENCE_FOUND) {
+				"Sequence" + index) != null) {
 			index++;
 		}
 		return "Sequence" + index;
@@ -119,16 +119,16 @@ public class EditableAlignmentTest {
 	
 	protected void addPherogramSequence() {
 		try {
-			AlignmentModel provider = getAlignmentArea().getAlignmentModel();
+			AlignmentModel model = getAlignmentArea().getAlignmentModel();
 			String name = newSequenceName();
-			provider.addSequence(name);
-			int id = provider.sequenceIDByName(name);
+			model.addSequence(name);
+			String id = model.sequenceIDByName(name);
 			BioJavaPherogramProvider pherogramProvider = new BioJavaPherogramProvider(ChromatogramFactory.create(
 	      	new File("data/pherograms/Test_qualityScore.scf")));
 
 			// Copy base call sequence into alignment:
 			for (int i = 0; i < pherogramProvider.getSequenceLength(); i++) {
-				provider.insertTokenAt(id, i, provider.getTokenSet().tokenByRepresentation(Character.toString(pherogramProvider.getBaseCall(i))));
+				model.insertTokenAt(id, i, model.getTokenSet().tokenByRepresentation(Character.toString(pherogramProvider.getBaseCall(i))));
 			}
 			
 			// Add data area:

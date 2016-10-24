@@ -22,12 +22,16 @@
 	<classpathentry kind="lib" path="/info.bioinfweb.libralign.biojava3/lib/biojava3-alignment-3.1.0.jar"/>
 	<classpathentry kind="lib" path="/info.bioinfweb.libralign.biojava3/lib/biojava3-core-3.1.0.jar"/>
 	<classpathentry kind="lib" path="/info.bioinfweb.libralign.io/bin"/>
-	<classpathentry kind="lib" path="/info.bioinfweb.libralign.io/lib/NeXML.jar"/>
 	<classpathentry kind="lib" path="/info.bioinfweb.commons.bio/bin"/>
 	<classpathentry kind="lib" path="/info.bioinfweb.commons.core/bin" sourcepath="/info.bioinfweb.commons.core/src"/>
 	<classpathentry kind="lib" path="/info.bioinfweb.commons.experimental/bin"/>
 	<classpathentry kind="lib" path="/info.bioinfweb.commons.testing/bin"/>
 	<classpathentry kind="lib" path="/info.bioinfweb.commons.swt/bin"/>
 	<classpathentry kind="lib" path="/info.bioinfweb.commons.swing/bin"/>
+	<classpathentry kind="lib" path="/info.bioinfweb.commons.core/lib/commons-collections-3.2.1.jar"/>
+	<classpathentry kind="lib" path="/info.bioinfweb.commons.core/lib/commons-lang3-3.1.jar"/>
+	<classpathentry kind="lib" path="/info.bioinfweb.commons.core/lib/guava-13.0.1.jar"/>
+	<classpathentry kind="lib" path="/info.bioinfweb.libralign.core/lib/commons-collections4-4.1.jar"/>
+	<classpathentry kind="lib" path="/JPhyloIO/lib/owlapi-XMLUtils-4.1.4.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

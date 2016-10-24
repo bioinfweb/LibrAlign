@@ -18,7 +18,7 @@ public class DegapedIndexCalculatorTest {
 	public void test_degapedIndex() {
 		TokenSet<Character> tokenSet = CharacterTokenSet.newDNAInstance();
 		AlignmentModel<Character> model = new PackedAlignmentModel(tokenSet);
-		int id = model.addSequence("A");
+		String id = model.addSequence("A");
 		model.appendTokens(id, AlignmentModelUtils.charSequenceToTokenList("A-AA--AAA", tokenSet));
 		
 		DegapedIndexCalculator<Character> calculator = new DegapedIndexCalculator(model);

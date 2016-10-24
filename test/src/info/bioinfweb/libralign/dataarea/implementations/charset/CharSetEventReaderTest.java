@@ -22,9 +22,8 @@ package info.bioinfweb.libralign.dataarea.implementations.charset;
 import java.io.File;
 import java.io.IOException;
 
-import info.bioinfweb.jphyloio.formats.nexus.NexusCommandReaderFactory;
+import info.bioinfweb.jphyloio.ReadWriteParameterMap;
 import info.bioinfweb.jphyloio.formats.nexus.NexusEventReader;
-import info.bioinfweb.libralign.model.AlignmentModel;
 import info.bioinfweb.libralign.model.factory.StringAlignmentModelFactory;
 import info.bioinfweb.libralign.model.io.AlignmentDataReader;
 import info.bioinfweb.libralign.model.io.DataModelReadInfo;
@@ -45,10 +44,8 @@ public class CharSetEventReaderTest {
 	
 	@Test
 	public void testReadingCharSets() {
-		NexusCommandReaderFactory factory = new NexusCommandReaderFactory();
-		factory.addJPhyloIOReaders();
 		try {
-			NexusEventReader eventReader = new NexusEventReader(new File("data/charSet/CharSet.nex"), false, factory);
+			NexusEventReader eventReader = new NexusEventReader(new File("data/charSet/CharSet.nex"), new ReadWriteParameterMap());
 
 			AlignmentDataReader mainReader = new AlignmentDataReader(eventReader, new StringAlignmentModelFactory());
 			CharSetEventReader charSetReader = new CharSetEventReader(mainReader);
@@ -64,7 +61,7 @@ public class CharSetEventReaderTest {
 			assertEquals(1, charSetReader.getModels().size());
 			DataModelReadInfo<CharSetDataModel> info = charSetReader.getModels().get(0);
 			assertNull(info.getAlignmentModel());
-			assertEquals(AlignmentModel.NO_SEQUENCE_FOUND, info.getSequenceID());
+			assertNull(info.getSequenceID());
 			CharSetDataModel model = info.getDataModel();			
 			
 			CharSet set = model.getByName("set01");

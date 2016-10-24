@@ -102,7 +102,7 @@ public class SwingTest extends EditableAlignmentTest {
 		JMenuItem cutPherogramLeftMenuItem = new JMenuItem("Cut pherogram left");
 		cutPherogramLeftMenuItem.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				int sequenceID = getAlignmentArea().getSequenceOrder().idByIndex(getAlignmentArea().getSelection().getFirstRow());
+				String sequenceID = getAlignmentArea().getSequenceOrder().idByIndex(getAlignmentArea().getSelection().getFirstRow());
 				((PherogramArea)getAlignmentArea().getDataAreas().getSequenceAreas(sequenceID).get(0)).setLeftCutPositionBySelection();
 			}
 		});
@@ -111,7 +111,7 @@ public class SwingTest extends EditableAlignmentTest {
 		JMenuItem cutPherogramRightMenuItem = new JMenuItem("Cut pherogram right");
 		cutPherogramRightMenuItem.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				int sequenceID = getAlignmentArea().getSequenceOrder().idByIndex(getAlignmentArea().getSelection().getFirstRow());
+				String sequenceID = getAlignmentArea().getSequenceOrder().idByIndex(getAlignmentArea().getSelection().getFirstRow());
 				((PherogramArea)getAlignmentArea().getDataAreas().getSequenceAreas(sequenceID).get(0)).setRightCutPositionBySelection();
 			}
 		});
@@ -120,7 +120,7 @@ public class SwingTest extends EditableAlignmentTest {
 		JMenuItem mntmReverseComplement = new JMenuItem("Reverse complement");
 		mntmReverseComplement.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				int sequenceID = getAlignmentArea().getSequenceOrder().idByIndex(getAlignmentArea().getSelection().getFirstRow());
+				String sequenceID = getAlignmentArea().getSequenceOrder().idByIndex(getAlignmentArea().getSelection().getFirstRow());
 				((PherogramArea)getAlignmentArea().getDataAreas().getSequenceAreas(sequenceID).get(0)).getModel().reverseComplement();
 			}
 		});
@@ -130,7 +130,7 @@ public class SwingTest extends EditableAlignmentTest {
 		JMenuItem mntmToggleShowProbability = new JMenuItem("Toggle show probability values");
 		mntmToggleShowProbability.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				int sequenceID = getAlignmentArea().getSequenceOrder().idByIndex(getAlignmentArea().getSelection().getFirstRow());
+				String sequenceID = getAlignmentArea().getSequenceOrder().idByIndex(getAlignmentArea().getSelection().getFirstRow());
 				((PherogramArea)getAlignmentArea().getDataAreas().getSequenceAreas(sequenceID).get(0)).getFormats().toggleShowProbabilityValues();
 			}
 		});
@@ -139,7 +139,7 @@ public class SwingTest extends EditableAlignmentTest {
 		JMenuItem mntmChangeQualityOutput = new JMenuItem("Change quality output");
 		mntmChangeQualityOutput.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				int sequenceID = getAlignmentArea().getSequenceOrder().idByIndex(getAlignmentArea().getSelection().getFirstRow());
+				String sequenceID = getAlignmentArea().getSequenceOrder().idByIndex(getAlignmentArea().getSelection().getFirstRow());
 				((PherogramArea)getAlignmentArea().getDataAreas().getSequenceAreas(sequenceID).get(0)).getFormats().changeQualityOutputType();
 			}
 		});

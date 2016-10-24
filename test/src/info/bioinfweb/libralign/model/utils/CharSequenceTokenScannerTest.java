@@ -20,9 +20,7 @@ package info.bioinfweb.libralign.model.utils;
 
 
 import static org.junit.Assert.*;
-
-
-import info.bioinfweb.commons.bio.CharacterStateType;
+import info.bioinfweb.commons.bio.CharacterStateSetType;
 import info.bioinfweb.libralign.model.tokenset.CharacterTokenSet;
 import info.bioinfweb.libralign.model.tokenset.TokenSet;
 import info.bioinfweb.libralign.model.tokenset.continuous.DoubleTokenSet;
@@ -34,7 +32,7 @@ import org.junit.*;
 public class CharSequenceTokenScannerTest {
 	@Test
 	public void test_singleCharacter() {
-		TokenSet<Character> tokenSet = new CharacterTokenSet(CharacterStateType.DNA, "ATCG-");
+		TokenSet<Character> tokenSet = new CharacterTokenSet(CharacterStateSetType.DNA, "ATCG-");
 		CharSequenceTokenScanner<Character> scanner = new CharSequenceTokenScanner("ATfC G-TAT", tokenSet, true, '?');
 		
 		assertFalse(scanner.isDefaultTokenUsedNow());

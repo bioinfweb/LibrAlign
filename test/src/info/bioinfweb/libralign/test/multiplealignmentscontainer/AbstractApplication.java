@@ -22,7 +22,6 @@ package info.bioinfweb.libralign.test.multiplealignmentscontainer;
 import java.awt.Color;
 import java.io.File;
 
-import info.bioinfweb.commons.bio.CharacterStateType;
 import info.bioinfweb.commons.bio.biojava3.alignment.SimpleAlignment;
 import info.bioinfweb.commons.bio.biojava3.alignment.template.Alignment;
 import info.bioinfweb.commons.bio.biojava3.core.sequence.compound.AlignmentAmbiguityNucleotideCompoundSet;
@@ -36,7 +35,6 @@ import info.bioinfweb.libralign.dataarea.implementations.charset.CharSetDataMode
 import info.bioinfweb.libralign.dataarea.implementations.pherogram.PherogramArea;
 import info.bioinfweb.libralign.dataarea.implementations.sequenceindex.SequenceIndexArea;
 import info.bioinfweb.libralign.model.AlignmentModel;
-import info.bioinfweb.libralign.model.implementations.BioJava3AlignmentModel;
 import info.bioinfweb.libralign.model.implementations.PackedAlignmentModel;
 import info.bioinfweb.libralign.model.tokenset.BioJava3TokenSet;
 import info.bioinfweb.libralign.model.tokenset.CharacterTokenSet;
@@ -89,7 +87,7 @@ public class AbstractApplication {
 	      	new File("data\\pherograms\\Test_qualityScore.scf")));
 			
 			AlignmentModel<Character> model = new PackedAlignmentModel<Character>(CharacterTokenSet.newDNAInstance());
-			int id = model.addSequence("Sequence 1");
+			String id = model.addSequence("Sequence 1");
 			model.appendTokens(id, AlignmentModelUtils.charSequenceToTokenList("ATCGTAGATCGTAGATCGTAGATCGTAGATCGTAGATCGTAGATCGTAG", 
 					model.getTokenSet()));
 			id = model.addSequence("Sequence 2");
