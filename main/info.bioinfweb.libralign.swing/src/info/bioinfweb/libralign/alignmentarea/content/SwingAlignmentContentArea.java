@@ -58,7 +58,7 @@ public class SwingAlignmentContentArea extends SwingAlignmentRowsArea<AlignmentS
 	
 
 	@Override
-	public SequenceArea getSequenceAreaByID(int sequenceID) {
+	public SequenceArea getSequenceAreaByID(String sequenceID) {
 		return sequenceAreaMap.get(sequenceID);
 	}
 
@@ -71,9 +71,9 @@ public class SwingAlignmentContentArea extends SwingAlignmentRowsArea<AlignmentS
 		addDataAreaList(getIndependentComponent().getOwner().getDataAreas().getTopAreas());
 		
 		SwingComponentFactory factory = SwingComponentFactory.getInstance();
-		Iterator<Integer> idIterator = getIndependentComponent().getOwner().getSequenceOrder().idIterator();
+		Iterator<String> idIterator = getIndependentComponent().getOwner().getSequenceOrder().idIterator();
 		while (idIterator.hasNext()) {
-			Integer id = idIterator.next();
+			String id = idIterator.next();
 			add(factory.getSwingComponent(sequenceAreaMap.get(id)));
 			addDataAreaList(getIndependentComponent().getOwner().getDataAreas().getSequenceAreas(id));
 		}
@@ -109,7 +109,7 @@ public class SwingAlignmentContentArea extends SwingAlignmentRowsArea<AlignmentS
 
 	
 	@Override
-	public void assignSequenceAreaSize(int sequenceID) throws IllegalArgumentException {
+	public void assignSequenceAreaSize(String sequenceID) throws IllegalArgumentException {
 		AlignmentContentAreaTools.assignSequenceAreaSize(sequenceAreaMap, sequenceID);
 	}
 
