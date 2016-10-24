@@ -62,6 +62,8 @@ import info.bioinfweb.libralign.model.concatenated.ConcatenatedAlignmentModel;
  * @param <T> the type of sequence elements (tokens) used by the underlying alignment model object
  */
 public class AlignmentModelDataAdapter<T> extends NoCharDefsNoSetsMatrixDataAdapter implements MatrixDataAdapter {
+	//TODO Can this class be simplified, now that String IDs are also used in LibrAlign?
+	
 	private static final int MAX_TOKENS_PER_EVENT = 64;
 	
 	
@@ -134,7 +136,7 @@ public class AlignmentModelDataAdapter<T> extends NoCharDefsNoSetsMatrixDataAdap
 	 */
 	@Override
 	public long getColumnCount(ReadWriteParameterMap parameters) {
-		Iterator<Integer> iterator = model.sequenceIDIterator();
+		Iterator<String> iterator = model.sequenceIDIterator();
 		if (iterator.hasNext()) {
 			long lastLength = model.getSequenceLength(iterator.next());
 			while (iterator.hasNext()) {
@@ -174,7 +176,7 @@ public class AlignmentModelDataAdapter<T> extends NoCharDefsNoSetsMatrixDataAdap
 	 * @param modelSequenceID the ID of the sequence used in the underlying {@link AlignmentModel} instance
 	 * @return the <i>JPhyloIO</i> sequence ID
 	 */
-	protected String jPhyloIOByModelSequenceID(int modelSequenceID) {
+	protected String jPhyloIOByModelSequenceID(String modelSequenceID) {
 		return idPrefix + modelSequenceID;
 	}
 
@@ -193,9 +195,9 @@ public class AlignmentModelDataAdapter<T> extends NoCharDefsNoSetsMatrixDataAdap
 	 * @return the sequence ID used by the underlying alignment model
 	 * @throws IllegalArgumentException if no integer ID can be extracted from the specified ID
 	 */
-	protected int modelByJPhyloIOSequenceID(String jPhyloIOsequenceID) throws IllegalArgumentException {
+	protected String modelByJPhyloIOSequenceID(String jPhyloIOsequenceID) throws IllegalArgumentException {
 		try {
-			return Integer.parseInt(jPhyloIOsequenceID.substring(idPrefix.length()));
+			return jPhyloIOsequenceID.substring(idPrefix.length());
 		}
 		catch (NumberFormatException e) {
 			throw new IllegalArgumentException("The specified JPhyloIO sequence ID \"" + jPhyloIOsequenceID + 
@@ -219,7 +221,7 @@ public class AlignmentModelDataAdapter<T> extends NoCharDefsNoSetsMatrixDataAdap
 	 * @param sequenceID the ID of the sequence used in the underlying {@link AlignmentModel} instance
 	 * @return the linked OTU or {@code null} if no OTU shall be linked.
 	 */
-	protected String getLinkedOTUID(int sequenceID) {
+	protected String getLinkedOTUID(String sequenceID) {
 		if (isLinkOTUs()) {
 			return ReadWriteConstants.DEFAULT_OTU_ID_PREFIX + sequenceID;
 		}
@@ -231,7 +233,7 @@ public class AlignmentModelDataAdapter<T> extends NoCharDefsNoSetsMatrixDataAdap
 
 	@Override
 	public Iterator<String> getSequenceIDIterator(ReadWriteParameterMap parameters) {
-		final Iterator<Integer> iterator = model.sequenceIDIterator();
+		final Iterator<String> iterator = model.sequenceIDIterator();
 		return new Iterator<String>() {
 			@Override
 			public boolean hasNext() {
@@ -255,7 +257,7 @@ public class AlignmentModelDataAdapter<T> extends NoCharDefsNoSetsMatrixDataAdap
 	
 	@Override
 	public LinkedLabeledIDEvent getSequenceStartEvent(ReadWriteParameterMap parameters, String sequenceID) {
-		int modelID = modelByJPhyloIOSequenceID(sequenceID);
+		String modelID = modelByJPhyloIOSequenceID(sequenceID);
 		if (model.containsSequence(modelID)) {
 			return new LinkedLabeledIDEvent(EventContentType.SEQUENCE, sequenceID, model.sequenceNameByID(modelID), 
 					getLinkedOTUID(modelID));
@@ -291,7 +293,7 @@ public class AlignmentModelDataAdapter<T> extends NoCharDefsNoSetsMatrixDataAdap
 	public void writeSequencePartContentData(ReadWriteParameterMap parameters, JPhyloIOEventReceiver receiver, String sequenceID, 
 			long startColumn, long endColumn) throws IOException, IllegalArgumentException {
 		
-		int modelID = modelByJPhyloIOSequenceID(sequenceID);
+		String modelID = modelByJPhyloIOSequenceID(sequenceID);
 		int sequenceLength = model.getSequenceLength(modelID); 
 		if (Math2.isBetween(startColumn, 0, sequenceLength - 1) && Math2.isBetween(endColumn, startColumn, sequenceLength)) {
 			if (startColumn == 0) {

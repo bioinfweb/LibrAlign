@@ -62,11 +62,11 @@ public abstract class AbstractDataModelEventReader<M extends DataModel> implemen
 
 
 	protected void createNewInfo(AlignmentModel<?> alignmentModel) {
-		createNewInfo(alignmentModel, AlignmentModel.NO_SEQUENCE_FOUND);
+		createNewInfo(alignmentModel, null);
 	}
 	
 	
-	protected void createNewInfo(AlignmentModel<?> alignmentModel, int sequenceID) {
+	protected void createNewInfo(AlignmentModel<?> alignmentModel, String sequenceID) {
 		publishCurrentInfo();
 		currentInfo = new DataModelReadInfo<M>(factory.createNewModel(), alignmentModel, sequenceID);
 	}

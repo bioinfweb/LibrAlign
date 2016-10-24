@@ -55,7 +55,7 @@ public class AlignmentModelEventReader implements JPhyloIOEventListener {
 	private final Map<CharacterStateSetType, AlignmentModelFactory> factoryMap;
 	private AlignmentModel<?> currentModel = null;
 	private final List<AlignmentModel<?>> completedModels = new ArrayList<AlignmentModel<?>>();
-	private int currentSequenceID = -1; 
+	private String currentSequenceID = null; 
 	private NewAlignmentModelParameterMap currentParameterMap = null;
 
 
@@ -219,7 +219,7 @@ public class AlignmentModelEventReader implements JPhyloIOEventListener {
 	
 	
 	private void checkCurrentSequenceID() {
-		if (currentSequenceID < 0) {
+		if (currentSequenceID == null) {
 			throw new IllegalStateException("A sequence tokens event was encountered ouside a sequence defintion.");  //TODO Replace by other exception? 
 		}
 	}
@@ -293,7 +293,7 @@ public class AlignmentModelEventReader implements JPhyloIOEventListener {
 					currentSequenceID = currentModel.addSequence(sequenceEvent.getLabel());  //TODO Handle case that no label is present or labels are not unique.
 				}
 				else {  // END
-					currentSequenceID = -1;
+					currentSequenceID = null;
 				}
 				break;
 			case SEQUENCE_TOKENS:

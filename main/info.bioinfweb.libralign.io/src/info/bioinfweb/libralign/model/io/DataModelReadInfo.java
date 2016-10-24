@@ -39,7 +39,7 @@ import info.bioinfweb.libralign.model.data.DataModel;
 public class DataModelReadInfo<M extends DataModel> {
 	private M dataModel;
 	private AlignmentModel<?> alignmentModel;
-	private int sequenceID;
+	private String sequenceID;
 	
 	
 	/**
@@ -50,11 +50,11 @@ public class DataModelReadInfo<M extends DataModel> {
 	 * @param sequenceID the ID of the sequence in the alignment model the read data is associated with 
 	 *        (Can be {@link AlignmentModel#NO_SEQUENCE_FOUND}.)
 	 * @throws IllegalArgumentException if {@code null} was specified as the alignment model, but still 
-	 *         a sequence ID (which is not {@link AlignmentModel#NO_SEQUENCE_FOUND}) was specified.
+	 *         a sequence ID (which is not {@code null}) was specified.
 	 */
-	public DataModelReadInfo(M dataModel, AlignmentModel<?> alignmentModel,	int sequenceID) {
+	public DataModelReadInfo(M dataModel, AlignmentModel<?> alignmentModel,	String sequenceID) {
 		super();
-		if ((alignmentModel == null) && (sequenceID != AlignmentModel.NO_SEQUENCE_FOUND)) {
+		if ((alignmentModel == null) && (sequenceID != null)) {
 			throw new IllegalArgumentException("A sequence ID can only be specified, if an alignment model was specified as well.");
 		}
 		else {
@@ -71,10 +71,10 @@ public class DataModelReadInfo<M extends DataModel> {
 	 * @param dataModel the data model that was read
 	 * @param alignmentModel the alignment model the read data is associated with (Can be {@code null}.)
 	 * @throws IllegalArgumentException if {@code null} was specified as the alignment model, but still 
-	 *         a sequence ID (which is not {@link AlignmentModel#NO_SEQUENCE_FOUND}) was specified.
+	 *         a sequence ID (which is not {@code null}) was specified.
 	 */
 	public DataModelReadInfo(M dataModel, AlignmentModel<?> alignmentModel) {
-		this(dataModel, alignmentModel, AlignmentModel.NO_SEQUENCE_FOUND);
+		this(dataModel, alignmentModel, null);
 	}
 	
 	
@@ -83,10 +83,10 @@ public class DataModelReadInfo<M extends DataModel> {
 	 * 
 	 * @param dataModel the data model that was read
 	 * @throws IllegalArgumentException if {@code null} was specified as the alignment model, but still 
-	 *         a sequence ID (which is not {@link AlignmentModel#NO_SEQUENCE_FOUND}) was specified.
+	 *         a sequence ID (which is not {@code null}) was specified.
 	 */
 	public DataModelReadInfo(M dataModel) {
-		this(dataModel, null, AlignmentModel.NO_SEQUENCE_FOUND);
+		this(dataModel, null, null);
 	}
 	
 	
@@ -100,7 +100,7 @@ public class DataModelReadInfo<M extends DataModel> {
 	}
 
 
-	public int getSequenceID() {
+	public String getSequenceID() {
 		return sequenceID;
 	}
 }
