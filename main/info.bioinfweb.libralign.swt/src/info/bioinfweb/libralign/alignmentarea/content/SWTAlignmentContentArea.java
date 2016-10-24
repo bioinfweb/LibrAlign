@@ -117,9 +117,9 @@ public class SWTAlignmentContentArea extends SWTAlignmentRowsArea<AlignmentSubAr
 		addDataAreaList(dataAreaModel.getTopAreas());
 
 		SWTComponentFactory factory = SWTComponentFactory.getInstance();
-		Iterator<Integer> idIterator = getIndependentComponent().getOwner().getSequenceOrder().idIterator();
+		Iterator<String> idIterator = getIndependentComponent().getOwner().getSequenceOrder().idIterator();
 		while (idIterator.hasNext()) {
-			Integer id = idIterator.next();
+			String id = idIterator.next();
 			factory.getSWTComponent(sequenceAreaMap.get(id), this, SWT.NONE);
 			sequenceAreaMap.get(id).assignSize();
 			addDataAreaList(dataAreaModel.getSequenceAreas(id));
@@ -133,7 +133,7 @@ public class SWTAlignmentContentArea extends SWTAlignmentRowsArea<AlignmentSubAr
 
 	
 	@Override
-	public SequenceArea getSequenceAreaByID(int sequenceID) {
+	public SequenceArea getSequenceAreaByID(String sequenceID) {
 		return sequenceAreaMap.get(sequenceID);
 	}
 
@@ -145,7 +145,7 @@ public class SWTAlignmentContentArea extends SWTAlignmentRowsArea<AlignmentSubAr
 
 
 	@Override
-	public void assignSequenceAreaSize(int sequenceID) throws IllegalArgumentException {
+	public void assignSequenceAreaSize(String sequenceID) throws IllegalArgumentException {
 		AlignmentContentAreaTools.assignSequenceAreaSize(sequenceAreaMap, sequenceID);
 	}
 
