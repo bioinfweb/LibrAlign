@@ -132,7 +132,11 @@ public class BioJava3SequenceAdapter<T, C extends Compound> extends AbstractAlig
 		}
 		return result;
 	}
-
+	
+	
+	// There is currently no toProfile() method, since Profile expects a collection of aligned sequences, which
+	// need information on the alignment steps that lead to this alignment.
+	
 	
 	/**
 	 * Returns {@code false} since this class always returns views of the underlying data source.

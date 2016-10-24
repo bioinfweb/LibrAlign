@@ -32,7 +32,6 @@ import java.util.Iterator;
 
 import javax.swing.KeyStroke;
 
-import org.biojava3.core.sequence.compound.AminoAcidCompound;
 import org.biojava3.core.sequence.compound.NucleotideCompound;
 import org.biojava3.core.sequence.template.Compound;
 import org.biojava3.core.sequence.template.CompoundSet;
@@ -40,8 +39,7 @@ import org.biojava3.core.sequence.template.CompoundSet;
 
 
 /**
- * Implementation of {@link TokenSet} containing shared functionality between classes adopting the 
- * contents of a BioJava {@link CompoundSet} object.
+ * Implementation of {@link TokenSet} backed by a <i>BioJava</i> {@link CompoundSet} object.
  * 
  * @author Ben St&ouml;ver
  * @since 0.4.0
@@ -70,21 +68,25 @@ public class BioJava3TokenSet<C extends Compound> extends AbstractSet<C> impleme
 	
 	/**
 	 * Creates a new instance of this class.
-	 * <p>
-	 * The contents of {@code compoundSet} are copied to the new instance and the key character map of 
-	 * {@link AbstractTokenSet} is filled with the first character of the return values of
-	 * {@link Compound#getShortName()} from every compound. Clear the contents {@link #getKeyMap()} 
-	 * afterwards, if you do not want this mapping.
 	 * 
 	 * @param type the token type of the new instance (Only a discrete type would make sense for this class.)
-	 * @param compoundSet - the BioJava compound set containing the compounds to be copied into the new instance
-	 * @param spaceForGap determines whether the space key shall be associated with gap symbol 
+	 * @param compoundSet the <i>BioJava</i> compound set containing the compounds to be copied into the new instance
+	 * @param spaceForGap determines whether the space key shall be associated with gap symbol
+	 * @throws NullPointerException if {@code type} or {@code compoundSet} are {@code null} 
 	 */
 	public BioJava3TokenSet(CharacterStateSetType type, CompoundSet<C> compoundSet, boolean spaceForGap) {
 		super();
-		this.type = type;
-		this.compoundSet = compoundSet;
-		this.spaceForGap = spaceForGap;
+		if (type == null) {
+			throw new NullPointerException("The character state set type must not be null.");
+		}
+		else if (compoundSet == null) {
+			throw new NullPointerException("The compound set must not be null.");
+		}
+		else {
+			this.type = type;
+			this.compoundSet = compoundSet;
+			this.spaceForGap = spaceForGap;
+		}
 	}
 
 
@@ -115,7 +117,7 @@ public class BioJava3TokenSet<C extends Compound> extends AbstractSet<C> impleme
 
 
 	/**
-	 * Returns an unmodifiable iterator of the underlying BioJava compound set.
+	 * Returns an unmodifiable iterator of the underlying <i>BioJava</i> compound set.
 	 * <p>
 	 * Note that this iterator will return the elements of this set as they were when this method
 	 * if called. If the set is modified later on, the iterator will not reflect such changes and 
@@ -181,7 +183,7 @@ public class BioJava3TokenSet<C extends Compound> extends AbstractSet<C> impleme
 	 * Returns the compound associated with {@link AbstractTokenSet#DEFAULT_GAP_REPRESENTATION} from the underlying
 	 * BioJava token set using {@link CompoundSet#getCompoundForString(String)}.
 	 * 
-	 * @return the gap token or {@code null} if the underlying BioJava token set does contain a representation for
+	 * @return the gap token or {@code null} if the underlying <i>BioJava</i> token set does contain a representation for
 	 *         {@link AbstractTokenSet#DEFAULT_GAP_REPRESENTATION}
 	 * @see info.bioinfweb.libralign.model.tokenset.TokenSet#getGapToken()
 	 */

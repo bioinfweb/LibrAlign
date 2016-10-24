@@ -25,7 +25,6 @@ import java.util.List;
 import info.bioinfweb.libralign.model.AlignmentModel;
 
 import org.biojava3.core.sequence.AccessionID;
-import org.biojava3.core.sequence.compound.NucleotideCompound;
 import org.biojava3.core.sequence.template.Compound;
 import org.biojava3.core.sequence.template.CompoundSet;
 import org.biojava3.core.sequence.template.Sequence;
