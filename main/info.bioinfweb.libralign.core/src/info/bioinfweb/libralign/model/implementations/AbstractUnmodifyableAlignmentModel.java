@@ -33,7 +33,7 @@ import info.bioinfweb.libralign.model.tokenset.TokenSet;
 
 
 /**
- * Implements basic functionality for a map based sequence data provider that uses unmodifiable sequence
+ * Implements basic functionality for a map based alignment model that uses unmodifiable sequence
  * objects as its underlying data source.
  * 
  * @author Ben St&ouml;ver
