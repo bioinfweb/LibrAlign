@@ -22,7 +22,6 @@ package info.bioinfweb.libralign.model.adapters;
 import java.util.Iterator;
 import java.util.List;
 
-import info.bioinfweb.commons.bio.biojava3.core.sequence.compound.AlignmentAmbiguityNucleotideCompoundSet;
 import info.bioinfweb.libralign.model.AlignmentModel;
 
 import org.biojava3.core.sequence.AccessionID;
@@ -52,9 +51,9 @@ import org.biojava3.core.sequence.template.SequenceView;
 public class SingleBioJava3SequenceAdapter<T, C extends Compound> 
     extends AbstractSingleSequenceDataAdapter<T> implements Sequence<C> {
 	
-	public static final NucleotideCompound UNKNOWN_NUCLEOTIDE_COMPOUND = 
-			AlignmentAmbiguityNucleotideCompoundSet.getAlignmentAmbiguityNucleotideCompoundSet().getCompoundForString(
-					"" + AlignmentAmbiguityNucleotideCompoundSet.UNKNOWN_CHARACTER);
+//	public static final NucleotideCompound UNKNOWN_NUCLEOTIDE_COMPOUND = 
+//			AlignmentAmbiguityNucleotideCompoundSet.getAlignmentAmbiguityNucleotideCompoundSet().getCompoundForString(
+//					"" + AlignmentAmbiguityNucleotideCompoundSet.UNKNOWN_CHARACTER);
   //TODO Add constants for codons and amino acids
 	
 	

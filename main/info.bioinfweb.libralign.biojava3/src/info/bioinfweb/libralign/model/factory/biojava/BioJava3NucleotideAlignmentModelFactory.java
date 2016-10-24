@@ -19,11 +19,11 @@
 package info.bioinfweb.libralign.model.factory.biojava;
 
 
+import org.biojava3.core.sequence.compound.AmbiguityDNACompoundSet;
 import org.biojava3.core.sequence.compound.NucleotideCompound;
 import org.biojava3.core.sequence.template.CompoundSet;
 
 import info.bioinfweb.commons.bio.CharacterStateSetType;
-import info.bioinfweb.commons.bio.biojava3.core.sequence.compound.AlignmentAmbiguityNucleotideCompoundSet;
 import info.bioinfweb.libralign.model.AlignmentModel;
 import info.bioinfweb.libralign.model.factory.AlignmentModelFactory;
 import info.bioinfweb.libralign.model.factory.NewAlignmentModelParameterMap;
@@ -43,7 +43,7 @@ public class BioJava3NucleotideAlignmentModelFactory implements AlignmentModelFa
 	public static final int DEFAULT_NUCLEOTIDE_CHARACTER_STATE_COUNT = 32;  // Nucleotide, ambiguity codes and special characters make up more than 16.
 	
 	
-	private static class ModifiableNucleotideCompoundSet extends AlignmentAmbiguityNucleotideCompoundSet {
+	private static class ModifiableNucleotideCompoundSet extends AmbiguityDNACompoundSet {
 		@Override
 		public void addNucleotideCompound(String base, String complement, String... equivalents) {
 			super.addNucleotideCompound(base, complement, equivalents);
@@ -64,6 +64,7 @@ public class BioJava3NucleotideAlignmentModelFactory implements AlignmentModelFa
 			}
 		}
 		ModifiableNucleotideCompoundSet nucleotideCompoundSet = new ModifiableNucleotideCompoundSet();
+		//TODO Add unknown character or U?
 		for (TokenDefinition tokenDefinition : parameterMap.getDefinedTokens()) {
 			if (nucleotideCompoundSet.getCompoundForString(tokenDefinition.getRepresentation()) == null) {
 				nucleotideCompoundSet.addNucleotideCompound(tokenDefinition.getRepresentation(), tokenDefinition.getRepresentation());

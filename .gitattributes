@@ -33,8 +33,6 @@ main/info.bioinfweb.libralign.biojava3/src/info/bioinfweb/libralign/model/factor
 main/info.bioinfweb.libralign.biojava3/src/info/bioinfweb/libralign/model/factory/biojava/BioJava3NucleotideAlignmentModelFactory.java -text svneol=unset#text/plain
 main/info.bioinfweb.libralign.biojava3/src/info/bioinfweb/libralign/model/factory/biojava/package-info.java -text svneol=unset#text/plain
 main/info.bioinfweb.libralign.biojava3/src/info/bioinfweb/libralign/model/implementations/BioJava3AlignmentModel.java -text svneol=unset#text/plain
-main/info.bioinfweb.libralign.biojava3/src/info/bioinfweb/libralign/model/implementations/translation/BioJava3DNASequenceDataView.java -text svneol=unset#text/plain
-main/info.bioinfweb.libralign.biojava3/src/info/bioinfweb/libralign/model/implementations/translation/BioJava3RNASequenceDataView.java -text svneol=unset#text/plain
 main/info.bioinfweb.libralign.biojava3/src/info/bioinfweb/libralign/model/tokenset/BioJava3TokenSet.java -text svneol=unset#text/plain
 main/info.bioinfweb.libralign.biojava4/.classpath -text svneol=unset#text/plain
 main/info.bioinfweb.libralign.biojava4/.project -text svneol=unset#text/plain
