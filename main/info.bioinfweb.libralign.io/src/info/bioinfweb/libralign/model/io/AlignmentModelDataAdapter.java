@@ -62,7 +62,7 @@ import info.bioinfweb.libralign.model.concatenated.ConcatenatedAlignmentModel;
  * @param <T> the type of sequence elements (tokens) used by the underlying alignment model object
  */
 public class AlignmentModelDataAdapter<T> extends NoCharDefsNoSetsMatrixDataAdapter implements MatrixDataAdapter {
-	//TODO Can this class be simplified, now that String IDs are also used in LibrAlign?
+	//TODO Can this class be simplified, now that String IDs are also used in LibrAlign? (It can probably remain unchanged, since an ID prefix is still necessary, if multiple alignments are combined in a single file.)
 	
 	private static final int MAX_TOKENS_PER_EVENT = 64;
 	
