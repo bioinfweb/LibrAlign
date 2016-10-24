@@ -80,7 +80,7 @@ public class BioJava3SequenceAdapter<T, C extends Compound> extends AbstractAlig
 	 * @return a sequence as an {@link Sequence} object
 	 */
 	@Override
-	public SingleBioJava3SequenceAdapter<T, C> getSequence(int sequenceID) {
+	public SingleBioJava3SequenceAdapter<T, C> getSequence(String sequenceID) {
 		return new SingleBioJava3SequenceAdapter<T, C>(getUnderlyingModel(), sequenceID, getCompoundSet());
 	}
 
@@ -93,7 +93,7 @@ public class BioJava3SequenceAdapter<T, C extends Compound> extends AbstractAlig
 	 * @return a subsequence as an {@link Sequence} object
 	 */
 	@Override
-	public SingleBioJava3SequenceAdapter<T, C> getSubSequence(int sequenceID, int offset, int length) {
+	public SingleBioJava3SequenceAdapter<T, C> getSubSequence(String sequenceID, int offset, int length) {
 		return new SingleBioJava3SequenceAdapter<T, C>(getUnderlyingModel(), sequenceID, offset, length, 
 				getCompoundSet());
 	}
@@ -108,7 +108,7 @@ public class BioJava3SequenceAdapter<T, C extends Compound> extends AbstractAlig
 	 */
 	public LightweightProfile<Sequence<C>, C> toLightweightProfile() {
 		MultipleSequenceAlignment<Sequence<C>, C> result = new MultipleSequenceAlignment<Sequence<C>, C>();
-		Iterator<Integer> iterator = getUnderlyingModel().sequenceIDIterator();
+		Iterator<String> iterator = getUnderlyingModel().sequenceIDIterator();
 		while (iterator.hasNext()) {
 			result.addAlignedSequence(getSequence(iterator.next()));
 		}

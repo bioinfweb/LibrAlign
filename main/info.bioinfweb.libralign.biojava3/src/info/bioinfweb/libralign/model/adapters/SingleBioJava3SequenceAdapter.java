@@ -72,7 +72,7 @@ public class SingleBioJava3SequenceAdapter<T, C extends Compound>
 	 * @param length - the length of the subsequence to be viewed
 	 * @param compoundSet - the compound set to be used for the translation
 	 */
-	public SingleBioJava3SequenceAdapter(AlignmentModel<T> underlyingProvider, int sequenceID, int offset,
+	public SingleBioJava3SequenceAdapter(AlignmentModel<T> underlyingProvider, String sequenceID, int offset,
 			int length, CompoundSet<C> compoundSet) {
 		
 		super(underlyingProvider, sequenceID, offset, length);
@@ -92,7 +92,7 @@ public class SingleBioJava3SequenceAdapter<T, C extends Compound>
 	 * @param unknownCompound - the compound that will be inserted into the BioJava sequence if no according 
 	 *        compound to the token in the underlying data source can be found in {@code compoundSet}
 	 */
-	public SingleBioJava3SequenceAdapter(AlignmentModel<T> underlyingProvider, int sequenceID, int offset,
+	public SingleBioJava3SequenceAdapter(AlignmentModel<T> underlyingProvider, String sequenceID, int offset,
 			int length, CompoundSet<C> compoundSet, C unknownCompound) {
 		
 		super(underlyingProvider, sequenceID, offset, length);
@@ -109,7 +109,7 @@ public class SingleBioJava3SequenceAdapter<T, C extends Compound>
 	 * @param sequenceID - the ID used in {@code provider} of the sequence to be viewed
 	 * @param compoundSet - the compound set to be used for the translation
 	 */
-	public SingleBioJava3SequenceAdapter(AlignmentModel<T> underlyingProvider, int sequenceID, 
+	public SingleBioJava3SequenceAdapter(AlignmentModel<T> underlyingProvider, String sequenceID, 
 			CompoundSet<C> compoundSet) {
 		
 		super(underlyingProvider, sequenceID);
@@ -127,7 +127,7 @@ public class SingleBioJava3SequenceAdapter<T, C extends Compound>
 	 * @param unknownCompound - the compound that will be inserted into the BioJava sequence if no according 
 	 *        compound to the token in the underlying data source can be found in {@code compoundSet}
 	 */
-	public SingleBioJava3SequenceAdapter(AlignmentModel<T> underlyingProvider, int sequenceID, 
+	public SingleBioJava3SequenceAdapter(AlignmentModel<T> underlyingProvider, String sequenceID, 
 			CompoundSet<C> compoundSet, C unknownCompound) {
 		
 		super(underlyingProvider, sequenceID);

@@ -133,20 +133,20 @@ public class BioJava3AlignmentModel<S extends Sequence<C>, C extends Compound>
 
 
 	@Override
-	public boolean containsSequence(int sequenceID) {
+	public boolean containsSequence(String sequenceID) {
 		String name = getIDManager().sequenceNameByID(sequenceID);
 		return (name != null) && alignment.containsName(name);
 	}
 
 
 	@Override
-	public C getTokenAt(int sequenceID, int elementIndex) {
+	public C getTokenAt(String sequenceID, int elementIndex) {
 		return alignment.getSequence(sequenceNameByID(sequenceID)).getCompoundAt(elementIndex + 1);  // BioJava indices start with 1.
 	}
 
 
 	@Override
-	public void setTokenAt(int sequenceID, int elementIndex, C token)
+	public void setTokenAt(String sequenceID, int elementIndex, C token)
 			throws AlignmentSourceNotWritableException {
 		
 		throw new AlignmentSourceNotWritableException(this);
@@ -154,7 +154,7 @@ public class BioJava3AlignmentModel<S extends Sequence<C>, C extends Compound>
 
 
 	@Override
-	public void insertTokenAt(int sequenceID, int elementIndex, C token)
+	public void insertTokenAt(String sequenceID, int elementIndex, C token)
 			throws AlignmentSourceNotWritableException {
 
 		throw new AlignmentSourceNotWritableException(this);
@@ -162,7 +162,7 @@ public class BioJava3AlignmentModel<S extends Sequence<C>, C extends Compound>
 
 
 	@Override
-	public void removeTokenAt(int sequenceID, int elementIndex)
+	public void removeTokenAt(String sequenceID, int elementIndex)
 			throws AlignmentSourceNotWritableException {
 		
 		throw new AlignmentSourceNotWritableException(this);
@@ -170,7 +170,7 @@ public class BioJava3AlignmentModel<S extends Sequence<C>, C extends Compound>
 
 
 	@Override
-	public void setTokensAt(int sequenceID, int beginIndex,	
+	public void setTokensAt(String sequenceID, int beginIndex,	
 			Collection<? extends C> tokens) throws AlignmentSourceNotWritableException {
 		
 		throw new AlignmentSourceNotWritableException(this);
@@ -178,7 +178,7 @@ public class BioJava3AlignmentModel<S extends Sequence<C>, C extends Compound>
 
 
 	@Override
-	public void insertTokensAt(int sequenceID, int beginIndex,
+	public void insertTokensAt(String sequenceID, int beginIndex,
 			Collection<? extends C> tokens) throws AlignmentSourceNotWritableException {
 
 		throw new AlignmentSourceNotWritableException(this);
@@ -186,7 +186,7 @@ public class BioJava3AlignmentModel<S extends Sequence<C>, C extends Compound>
 
 
 	@Override
-	public void removeTokensAt(int sequenceID, int beginIndex, int endIndex)
+	public void removeTokensAt(String sequenceID, int beginIndex, int endIndex)
 			throws AlignmentSourceNotWritableException {
 
 		throw new AlignmentSourceNotWritableException(this);
@@ -200,16 +200,16 @@ public class BioJava3AlignmentModel<S extends Sequence<C>, C extends Compound>
 
 
 	@Override
-	public Iterator<Integer> sequenceIDIterator() {
+	public Iterator<String> sequenceIDIterator() {
 		final Iterator<String> nameIterator = alignment.nameIterator();
-		return new Iterator<Integer>() {
+		return new Iterator<String>() {
 			@Override
 			public boolean hasNext() {
 				return nameIterator.hasNext();
 			}
 
 			@Override
-			public Integer next() {
+			public String next() {
 				return sequenceIDByName(nameIterator.next());
 			}
 
@@ -223,7 +223,7 @@ public class BioJava3AlignmentModel<S extends Sequence<C>, C extends Compound>
 
 
 	@Override
-	public int getSequenceLength(int sequenceID) {
+	public int getSequenceLength(String sequenceID) {
 		return alignment.getSequence(sequenceNameByID(sequenceID)).getLength();
 	}
 
@@ -241,21 +241,21 @@ public class BioJava3AlignmentModel<S extends Sequence<C>, C extends Compound>
 
 
 	@Override
-	public S getSequence(int sequenceID) {
+	public S getSequence(String sequenceID) {
 		return alignment.getSequence(sequenceNameByID(sequenceID));
 	}
 
 
 	@Override
-	public int addSequence(String sequenceName, S content) {
-		int id = addSequence(sequenceName);
+	public String addSequence(String sequenceName, S content) {
+		String id = addSequence(sequenceName);
 		alignment.replace(sequenceName, content);
 		return id;
 	}
 
 
 	@Override
-	public S replaceSequence(int sequenceID, S content) {
+	public S replaceSequence(String sequenceID, S content) {
 		S result = getSequence(sequenceID);
 		alignment.replace(sequenceNameByID(sequenceID), content);
 		return result;
@@ -263,20 +263,20 @@ public class BioJava3AlignmentModel<S extends Sequence<C>, C extends Compound>
 
 
 	@Override
-	protected void doAddSequence(int sequenceID, String sequenceName) {
+	protected void doAddSequence(String sequenceID, String sequenceName) {
 		alignment.add(sequenceName, (S)new DNASequence());  // null cannot be added here, because SimpleAlignment.replace() does not work than. 
 		//TODO In later versions an empty instance should be created with a BioJava factory here. The current code is only a temporary solution.
 	}
 
 
 	@Override
-	protected void doRemoveSequence(int sequenceID) {
+	protected void doRemoveSequence(String sequenceID) {
 		alignment.remove(sequenceNameByID(sequenceID));
 	}
 
 
 	@Override
-	protected void doRenameSequence(int sequenceID, String newSequenceName) {
+	protected void doRenameSequence(String sequenceID, String newSequenceName) {
 		alignment.renameSequence(sequenceNameByID(sequenceID), newSequenceName);
 	}
 }
