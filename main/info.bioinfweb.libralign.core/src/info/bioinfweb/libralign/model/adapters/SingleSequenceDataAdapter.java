@@ -39,7 +39,7 @@ public interface SingleSequenceDataAdapter<T> extends BasicAlignmentModelView<T>
 	 * 
 	 * @return the sequence ID
 	 */
-	public int getSequenceID();
+	public String getSequenceID();
 
 	/**
 	 * Returns the index the first character in this sequence corresponds to in the original sequence in

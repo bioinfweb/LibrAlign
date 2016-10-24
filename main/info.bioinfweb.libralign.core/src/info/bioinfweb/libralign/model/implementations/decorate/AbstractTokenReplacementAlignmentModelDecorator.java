@@ -84,7 +84,7 @@ public abstract class AbstractTokenReplacementAlignmentModelDecorator<T, U> exte
 	 * @param underlyingToken the token stored in (or shown by) the underlying provider
 	 * @return the token that shall be shown instead
 	 */
-	protected abstract T convertUnderlyingToken(int underlyingSequenceID, int underlyingIndex, U underlyingToken);
+	protected abstract T convertUnderlyingToken(String underlyingSequenceID, int underlyingIndex, U underlyingToken);
 
 	
 	/**
@@ -97,13 +97,13 @@ public abstract class AbstractTokenReplacementAlignmentModelDecorator<T, U> exte
 	 * @param decoratedToken the token shown in the view instance 
 	 * @return the token to be stored in (or shown by) the underlying provider
 	 */
-	protected abstract U convertDecoratedToken(int viewedSequenceID, int viewedIndex, T decoratedToken);
+	protected abstract U convertDecoratedToken(String viewedSequenceID, int viewedIndex, T decoratedToken);
 	
 	
 	protected Iterable<TokenChangeEvent<T>> convertTokenChangeEvent(TokenChangeEvent<U> event) {
 		List<TokenChangeEvent<T>> result = new ArrayList<TokenChangeEvent<T>>(1);
-		int decoratedID = convertUnderlyingSequenceID(event.getSequenceID());
-		if (decoratedID > -1) {
+		String decoratedID = convertUnderlyingSequenceID(event.getSequenceID());
+		if (decoratedID != null) {
 			TokenChangeEvent<T> newEvent;
 			switch (event.getType()) {
 				case INSERTION:
@@ -130,7 +130,7 @@ public abstract class AbstractTokenReplacementAlignmentModelDecorator<T, U> exte
 	}
 
 
-	protected Collection<? extends T> convertUnderlyingTokens(int underlyingSequenceID, int underlyingIndex, 
+	protected Collection<? extends T> convertUnderlyingTokens(String underlyingSequenceID, int underlyingIndex, 
 			Collection<? extends U> underlyingTokens) {
 		
 		Collection<T> result;
@@ -150,7 +150,7 @@ public abstract class AbstractTokenReplacementAlignmentModelDecorator<T, U> exte
 	}
 	
 	
-	protected Collection<? extends U> convertDecoratedTokens(int viewedSequenceID, int viewedIndex, 
+	protected Collection<? extends U> convertDecoratedTokens(String viewedSequenceID, int viewedIndex, 
 			Collection<? extends T> viewedTokens) {
 		
 		Collection<U> result;
@@ -171,9 +171,9 @@ public abstract class AbstractTokenReplacementAlignmentModelDecorator<T, U> exte
 	
 	
 	@Override
-	public T getTokenAt(int sequenceID, int index) {
-		int underlyingID = convertDecoratedSequenceID(sequenceID);
-		if (underlyingID > -1) {
+	public T getTokenAt(String sequenceID, int index) {
+		String underlyingID = convertDecoratedSequenceID(sequenceID);
+		if (underlyingID != null) {
 			int underlyingIndex = convertUnderlyingTokenIndex(sequenceID, index);  // Should in this case always be equal to the decorated index.
 			if (underlyingIndex > -1) {
 				return convertUnderlyingToken(underlyingID, underlyingIndex, 
@@ -191,9 +191,9 @@ public abstract class AbstractTokenReplacementAlignmentModelDecorator<T, U> exte
 
 
 	@Override
-	public void setTokenAt(int sequenceID, int index, T token) throws AlignmentSourceNotWritableException {
-		int underlyingID = convertDecoratedSequenceID(sequenceID);
-		if (underlyingID > -1) {
+	public void setTokenAt(String sequenceID, int index, T token) throws AlignmentSourceNotWritableException {
+		String underlyingID = convertDecoratedSequenceID(sequenceID);
+		if (underlyingID != null) {
 			int underlyingIndex = convertUnderlyingTokenIndex(sequenceID, index);  // Should in this case always be equal to the decorated index.
 			if (underlyingIndex > -1) {
 				getUnderlyingModel().setTokenAt(underlyingID, underlyingIndex, 
@@ -211,11 +211,11 @@ public abstract class AbstractTokenReplacementAlignmentModelDecorator<T, U> exte
 
 
 	@Override
-	public void setTokensAt(int sequenceID, int beginIndex, Collection<? extends T> tokens)
+	public void setTokensAt(String sequenceID, int beginIndex, Collection<? extends T> tokens)
 			throws AlignmentSourceNotWritableException {
 		
-		int underlyingID = convertDecoratedSequenceID(sequenceID);
-		if (underlyingID > -1) {
+		String underlyingID = convertDecoratedSequenceID(sequenceID);
+		if (underlyingID != null) {
 			int underlyingIndex = convertUnderlyingTokenIndex(sequenceID, beginIndex);  // Should in this case always be equal to the decorated index.
 			if (underlyingIndex > -1) {
 				getUnderlyingModel().setTokensAt(underlyingID, underlyingIndex, 
@@ -233,9 +233,9 @@ public abstract class AbstractTokenReplacementAlignmentModelDecorator<T, U> exte
 
 
 	@Override
-	public void appendToken(int sequenceID, T token) throws AlignmentSourceNotWritableException {
-		int underlyingID = convertDecoratedSequenceID(sequenceID);
-		if (underlyingID > -1) {
+	public void appendToken(String sequenceID, T token) throws AlignmentSourceNotWritableException {
+		String underlyingID = convertDecoratedSequenceID(sequenceID);
+		if (underlyingID != null) {
 			getUnderlyingModel().appendToken(underlyingID, convertDecoratedToken(sequenceID, 
 					getUnderlyingModel().getSequenceLength(underlyingID), token));
 		}
@@ -246,9 +246,9 @@ public abstract class AbstractTokenReplacementAlignmentModelDecorator<T, U> exte
 
 
 	@Override
-	public void appendTokens(int sequenceID, Collection<? extends T> tokens) throws AlignmentSourceNotWritableException {
-		int underlyingID = convertDecoratedSequenceID(sequenceID);
-		if (underlyingID > -1) {
+	public void appendTokens(String sequenceID, Collection<? extends T> tokens) throws AlignmentSourceNotWritableException {
+		String underlyingID = convertDecoratedSequenceID(sequenceID);
+		if (underlyingID != null) {
 			getUnderlyingModel().appendTokens(underlyingID, convertDecoratedTokens(sequenceID, 
 					getUnderlyingModel().getSequenceLength(underlyingID), tokens));
 		}
@@ -259,9 +259,9 @@ public abstract class AbstractTokenReplacementAlignmentModelDecorator<T, U> exte
 
 
 	@Override
-	public void insertTokenAt(int sequenceID, int index, T token)	throws AlignmentSourceNotWritableException {
-		int underlyingID = convertDecoratedSequenceID(sequenceID);
-		if (underlyingID > -1) {
+	public void insertTokenAt(String sequenceID, int index, T token)	throws AlignmentSourceNotWritableException {
+		String underlyingID = convertDecoratedSequenceID(sequenceID);
+		if (underlyingID != null) {
 			int underlyingIndex = convertUnderlyingTokenIndex(sequenceID, index);  // Should in this case always be equal to the decorated index.
 			if (underlyingIndex > -1) {
 				getUnderlyingModel().insertTokenAt(underlyingID, underlyingIndex, 
@@ -279,11 +279,11 @@ public abstract class AbstractTokenReplacementAlignmentModelDecorator<T, U> exte
 
 
 	@Override
-	public void insertTokensAt(int sequenceID, int beginIndex, Collection<? extends T> tokens)
+	public void insertTokensAt(String sequenceID, int beginIndex, Collection<? extends T> tokens)
 			throws AlignmentSourceNotWritableException {
 		
-		int underlyingID = convertDecoratedSequenceID(sequenceID);
-		if (underlyingID > -1) {
+		String underlyingID = convertDecoratedSequenceID(sequenceID);
+		if (underlyingID != null) {
 			int underlyingIndex = convertUnderlyingTokenIndex(sequenceID, beginIndex);  // Should in this case always be equal to the decorated index.
 			if (underlyingIndex > -1) {
 				getUnderlyingModel().insertTokensAt(underlyingID, underlyingIndex, 
@@ -301,9 +301,9 @@ public abstract class AbstractTokenReplacementAlignmentModelDecorator<T, U> exte
 
 
 	@Override
-	public void removeTokenAt(int sequenceID, int index) throws AlignmentSourceNotWritableException {
-		int underlyingID = convertDecoratedSequenceID(sequenceID);
-		if (underlyingID > -1) {
+	public void removeTokenAt(String sequenceID, int index) throws AlignmentSourceNotWritableException {
+		String underlyingID = convertDecoratedSequenceID(sequenceID);
+		if (underlyingID != null) {
 			int underlyingIndex = convertUnderlyingTokenIndex(sequenceID, index);  // Should in this case always be equal to the decorated index.
 			if (underlyingIndex > -1) {
 				getUnderlyingModel().removeTokenAt(underlyingID, underlyingIndex);
@@ -320,9 +320,9 @@ public abstract class AbstractTokenReplacementAlignmentModelDecorator<T, U> exte
 
 
 	@Override
-	public void removeTokensAt(int sequenceID, int beginIndex, int endIndex) throws AlignmentSourceNotWritableException {
-		int underlyingID = convertDecoratedSequenceID(sequenceID);
-		if (underlyingID > -1) {
+	public void removeTokensAt(String sequenceID, int beginIndex, int endIndex) throws AlignmentSourceNotWritableException {
+		String underlyingID = convertDecoratedSequenceID(sequenceID);
+		if (underlyingID != null) {
 			getUnderlyingModel().removeTokensAt(underlyingID, beginIndex, endIndex);  // Indices are not converted here, because this model does not perform index conversions.
 		}
 		else {
@@ -332,9 +332,9 @@ public abstract class AbstractTokenReplacementAlignmentModelDecorator<T, U> exte
 
 
 	@Override
-	public int getSequenceLength(int sequenceID) {
-		int underlyingID = convertDecoratedSequenceID(sequenceID);
-		if (underlyingID > -1) {
+	public int getSequenceLength(String sequenceID) {
+		String underlyingID = convertDecoratedSequenceID(sequenceID);
+		if (underlyingID != null) {
 			return getUnderlyingModel().getSequenceLength(underlyingID);
 		}
 		else {
@@ -368,11 +368,11 @@ public abstract class AbstractTokenReplacementAlignmentModelDecorator<T, U> exte
 
 
 	@Override
-	public String renameSequence(int sequenceID, String newSequenceName) throws AlignmentSourceNotWritableException,
+	public String renameSequence(String sequenceID, String newSequenceName) throws AlignmentSourceNotWritableException,
 			DuplicateSequenceNameException, SequenceNotFoundException {
 		
-		int underlyingID = convertDecoratedSequenceID(sequenceID);
-		if (underlyingID > -1) {
+		String underlyingID = convertDecoratedSequenceID(sequenceID);
+		if (underlyingID != null) {
 			return getUnderlyingModel().renameSequence(underlyingID, newSequenceName);
 		}
 		else {

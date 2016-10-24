@@ -45,7 +45,7 @@ public interface SequenceDataAdapter<S, T> extends BasicAlignmentModelView<T>, S
 	 * @param length - the length of the subsequence to be viewed
 	 * @return a copy or view depending on the return value of {@link #returnsCopies()}
 	 */
-	public S getSubSequence(int sequenceID, int offset, int length);
+	public S getSubSequence(String sequenceID, int offset, int length);
 	
 	/**
 	 * Specifies if the instances returned by {@link #getSequence(int)} are views of the underlying data source

@@ -119,20 +119,20 @@ public class PackedAlignmentModel<T> extends AbstractListAlignmentModel<T> {
 	 * @return the maximum number of different tokens
 	 */
 	public int getMaxTokenCount() {
-		Iterator<Integer> iterator = sequenceIDIterator();
+		Iterator<String> iterator = sequenceIDIterator();
 		List<T> sequence;  // PackedObjectArrayList may take up more tokens than specified
 		if (iterator.hasNext()) {
 			sequence = getSequence(iterator.next());
 		}
 		else {  // Create dummy instance of no sequence is present yet.
-			sequence = createNewSequence(0, "");
+			sequence = createNewSequence("id0", "");
 		}
 		return ((PackedObjectArrayList<T>)sequence).getMaxObjectTypeCount();
 	}
 
 
 	@Override
-	protected List<T> createNewSequence(int sequenceID, String sequenceName, int initialCapacity) {
+	protected List<T> createNewSequence(String sequenceID, String sequenceName, int initialCapacity) {
 		return new PackedObjectArrayList<T>(minTokenCount, initialCapacity);
 	}
 

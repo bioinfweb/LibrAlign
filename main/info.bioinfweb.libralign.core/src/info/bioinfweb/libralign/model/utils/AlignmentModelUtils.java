@@ -116,7 +116,7 @@ public class AlignmentModelUtils {
 	 * @param end the first position behind the subsequence to be reverse complemented
 	 * @see PherogramArea#reverseComplement()
 	 */
-	public static <T> void reverseComplement(AlignmentModel<T> model, int sequenceID, int start, int end) {
+	public static <T> void reverseComplement(AlignmentModel<T> model, String sequenceID, int start, int end) {
 		TokenSet<T> tokenSet = model.getTokenSet();
 		if (tokenSet.getType().isNucleotide()) {
 			Collection<T> tokens = new PackedObjectArrayList<T>(tokenSet.size(), end - start); 
@@ -141,7 +141,7 @@ public class AlignmentModelUtils {
 	 * @param model the alignment model containing the sequence
 	 * @param sequenceID the ID of the sequence to be reverse complemented
 	 */
-	public static void reverseComplement(AlignmentModel<?> model, int sequenceID) {
+	public static void reverseComplement(AlignmentModel<?> model, String sequenceID) {
 		reverseComplement(model, sequenceID, 0, model.getSequenceLength(sequenceID));
 	}
 	
@@ -161,7 +161,7 @@ public class AlignmentModelUtils {
   		StringBuilder selectedCharacters = new StringBuilder();
   		AlignmentModel<?> alignmentModel = area.getAlignmentModel();
   		for (int row = selection.getFirstRow(); row <= selection.getLastRow(); row++) {
-  			int id = area.getSequenceOrder().idByIndex(row);
+  			String id = area.getSequenceOrder().idByIndex(row);
   			for (int column = selection.getFirstColumn(); column <= selection.getLastColumn(); column++) {
   				if (alignmentModel.getSequenceLength(id) > column) {
   					selectedCharacters.append(alignmentModel.getTokenAt(id, column));

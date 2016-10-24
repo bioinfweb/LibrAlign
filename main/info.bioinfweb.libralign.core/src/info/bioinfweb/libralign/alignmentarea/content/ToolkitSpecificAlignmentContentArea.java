@@ -47,7 +47,7 @@ public interface ToolkitSpecificAlignmentContentArea extends ToolkitSpecificAlig
    * @param sequenceID - the ID of the sequence displayed in the returned area
    * @return the GUI component or {@code null} if no sequence with the specified ID is displayed in this area
    */
-  public SequenceArea getSequenceAreaByID(int sequenceID);
+  public SequenceArea getSequenceAreaByID(String sequenceID);
   
   /**
    * Returns the height of this component.
@@ -62,7 +62,7 @@ public interface ToolkitSpecificAlignmentContentArea extends ToolkitSpecificAlig
    * @param sequenceID - the ID of the sequence displayed in the sequence area to be resized
    * @throws IllegalArgumentException if no sequence area for the specified sequence ID was found
    */
-  public void assignSequenceAreaSize(int sequenceID) throws IllegalArgumentException;
+  public void assignSequenceAreaSize(String sequenceID) throws IllegalArgumentException;
 
   /**
    * Adds a list of data areas as children of this component.

@@ -49,7 +49,7 @@ public class RNAAlignmentModelDecorator<T, U> extends AbstractTokenReplacementAl
 	
 	
 	@Override
-	protected T convertUnderlyingToken(int underlyingSequenceID, int underlyingIndex, U underlyingToken) {
+	protected T convertUnderlyingToken(String underlyingSequenceID, int underlyingIndex, U underlyingToken) {
 		if (underlyingToken != null) {
 			String representation = getUnderlyingModel().getTokenSet().representationByToken(underlyingToken);
 			if (representation.equals(AlignmentModelUtils.THYMINE)) {
@@ -66,7 +66,7 @@ public class RNAAlignmentModelDecorator<T, U> extends AbstractTokenReplacementAl
 
 	
 	@Override
-	protected U convertDecoratedToken(int viewedSequenceID, int viewedIndex, T decoratedToken) {
+	protected U convertDecoratedToken(String viewedSequenceID, int viewedIndex, T decoratedToken) {
 		if (decoratedToken != null) {
 			String representation = getTokenSet().representationByToken(decoratedToken);
 			if (representation.equals(AlignmentModelUtils.URACILE)) {

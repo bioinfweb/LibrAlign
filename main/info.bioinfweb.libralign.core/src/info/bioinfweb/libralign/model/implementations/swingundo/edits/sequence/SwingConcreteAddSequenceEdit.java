@@ -39,7 +39,7 @@ public class SwingConcreteAddSequenceEdit<T> extends SwingSequenceEdit<T> implem
 
 	
 	public SwingConcreteAddSequenceEdit(SwingUndoAlignmentModel<T> provider, String name) {
-		super(provider, -1);
+		super(provider, null);
 		this.name = name;
 	}
 
@@ -65,7 +65,7 @@ public class SwingConcreteAddSequenceEdit<T> extends SwingSequenceEdit<T> implem
 
 
 	@Override
-	public int getNewSequenceID() {
+	public String getNewSequenceID() {
 		return sequenceID;
 	}
 }

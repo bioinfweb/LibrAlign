@@ -44,7 +44,7 @@ public class SwingRemoveSequenceEdit<T> extends SwingSequenceEdit<T> {
 	private Collection tokens;  // Raw type is necessary here, because the generic element type of the provider can't be determined during runtime and the class of the first token might be a subtype of the actual type.
 	
 
-	public SwingRemoveSequenceEdit(SwingUndoAlignmentModel<T> provider, int sequenceID) {
+	public SwingRemoveSequenceEdit(SwingUndoAlignmentModel<T> provider, String sequenceID) {
 		super(provider, sequenceID);
 		
 		name = getProvider().sequenceNameByID(sequenceID);

@@ -80,7 +80,7 @@ public class ArrayListAlignmentModel<T> extends AbstractListAlignmentModel<T> {
 
 
 	@Override
-	protected List<T> createNewSequence(int sequenceID, String sequenceName,
+	protected List<T> createNewSequence(String sequenceID, String sequenceName,
 			int initialCapacity) {
 
 		return new ArrayList<T>(initialCapacity);

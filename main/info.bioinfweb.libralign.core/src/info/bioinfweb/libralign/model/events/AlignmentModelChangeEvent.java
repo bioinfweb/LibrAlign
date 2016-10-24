@@ -35,7 +35,7 @@ import java.util.EventObject;
  * @param <T> - the type of sequence elements (tokens) the implementing provider object works with
  */
 public class AlignmentModelChangeEvent<T> extends EventObject {
-	private int sequenceID;
+	private String sequenceID;
 
 	
 	/**
@@ -44,7 +44,7 @@ public class AlignmentModelChangeEvent<T> extends EventObject {
 	 * @param source - the data provider where the change took place
 	 * @param sequenceID - the unique ID of the affected sequence
 	 */
-	public AlignmentModelChangeEvent(AlignmentModel<T> source, int sequenceID) {
+	public AlignmentModelChangeEvent(AlignmentModel<T> source, String sequenceID) {
 		super(source);
 		this.sequenceID = sequenceID;
 	}
@@ -66,7 +66,7 @@ public class AlignmentModelChangeEvent<T> extends EventObject {
 	 * 
 	 * @return a value greater or equal to zero
 	 */
-	public int getSequenceID() {
+	public String getSequenceID() {
 		return sequenceID;
 	}
 }

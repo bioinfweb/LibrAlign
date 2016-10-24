@@ -55,7 +55,7 @@ public class StringAdapter<T> extends CharSequenceAdapter<T> {
 	 * @return a string object
 	 */
 	@Override
-	public String getSequence(int sequenceID) {
+	public String getSequence(String sequenceID) {
 		return super.getSequence(sequenceID).toString();
 	}
 
@@ -70,7 +70,7 @@ public class StringAdapter<T> extends CharSequenceAdapter<T> {
 	 * @return a string object
 	 */
 	@Override
-	public String getSubSequence(int sequenceID, int offset, int length) {
+	public String getSubSequence(String sequenceID, int offset, int length) {
 		return super.getSubSequence(sequenceID, offset, length).toString(); 
 	}
 

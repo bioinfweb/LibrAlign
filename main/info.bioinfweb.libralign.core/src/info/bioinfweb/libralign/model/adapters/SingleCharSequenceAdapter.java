@@ -53,7 +53,7 @@ public class SingleCharSequenceAdapter<T> extends AbstractSingleSequenceDataAdap
 	 *        that is not exactly one character long shall be exported with the first character of their
 	 *        representation or {@code false} if an exception shall be thrown if such a token is found.
 	 */
-	public SingleCharSequenceAdapter(AlignmentModel<T> provider, int sequenceID, int offset, int length,
+	public SingleCharSequenceAdapter(AlignmentModel<T> provider, String sequenceID, int offset, int length,
 			boolean cutLongRepresentations) {
 		
 		super(provider, sequenceID, offset, length);
@@ -70,7 +70,7 @@ public class SingleCharSequenceAdapter<T> extends AbstractSingleSequenceDataAdap
 	 *        that is not exactly one character long shall be exported with the first character of their
 	 *        representation or {@code false} if an exception shall be thrown if such a token is found.
 	 */
-	public SingleCharSequenceAdapter(AlignmentModel<T> provider, int sequenceID, 
+	public SingleCharSequenceAdapter(AlignmentModel<T> provider, String sequenceID, 
 			boolean cutLongRepresentations) {
 		
 		this(provider, sequenceID, 0, Integer.MAX_VALUE, cutLongRepresentations);  // The real length will always be returned by length() since it will be smaller.

@@ -50,7 +50,7 @@ public abstract class AbstractTokenPainter implements TokenPainter {
 	 * @param paintArea the rectangle to be filled with the representation of the token
 	 * @param selectionColor this color must be mixed by half with the painted output if it is not {@code null}
 	 */
-	protected abstract void doPaintToken(AlignmentArea alignmentModel, int sequenceID,	int columnIndex, Object token, 
+	protected abstract void doPaintToken(AlignmentArea alignmentModel, String sequenceID,	int columnIndex, Object token, 
 			String tokenRepresentation,	Graphics2D g, Rectangle2D paintArea, Color selectionColor);
 	
 	
@@ -69,7 +69,7 @@ public abstract class AbstractTokenPainter implements TokenPainter {
 	 */
 	@SuppressWarnings({"rawtypes", "unchecked"})
 	@Override
-	public void paintToken(AlignmentArea alignmentArea, int sequenceID,	int columnIndex, Graphics2D g, 
+	public void paintToken(AlignmentArea alignmentArea, String sequenceID,	int columnIndex, Graphics2D g, 
 			Rectangle2D paintArea, Color selectionColor) {
 		
 		AlignmentModel alignmentModel = (AlignmentModel)alignmentArea.getAlignmentModel();

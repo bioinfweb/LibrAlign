@@ -52,8 +52,8 @@ import java.util.Map;
  * @param <T> - the type of sequence elements (tokens) the implementing provider object works with
  */
 public abstract class AbstractMapBasedAlignmentModel<S, T> extends AbstractUndecoratedAlignmentModel<T> {
-  private Map<Integer, S> sequenceMap;
-  private List<Integer> sequenceOrder;  // Only necessary to save the order the sequences were added, because they might be sorted like this later on. The actual ordering will be done by a SequenceOrder object of the GUI.
+  private Map<String, S> sequenceMap;
+  private List<String> sequenceOrder;  // Only necessary to save the order the sequences were added, because they might be sorted like this later on. The actual ordering will be done by a SequenceOrder object of the GUI.
 
   
 	/**
@@ -65,7 +65,7 @@ public abstract class AbstractMapBasedAlignmentModel<S, T> extends AbstractUndec
 	 * @param sequenceOrder - the list object defining the order of the sequences
 	 */
 	public AbstractMapBasedAlignmentModel(TokenSet<T> tokenSet, SequenceIDManager idManager, 
-			Map<Integer, S> sequenceMap, List<Integer> sequenceOrder) {
+			Map<String, S> sequenceMap, List<String> sequenceOrder) {
 		
 		super(tokenSet, idManager);
 		if (sequenceMap.isEmpty()) {
@@ -86,8 +86,8 @@ public abstract class AbstractMapBasedAlignmentModel<S, T> extends AbstractUndec
 	 * @param idManager the ID manager to be used by the new instance (maybe shared among multiple instances) 
 	 * @param sequenceMap - the map instance used to assign sequences to their IDs
 	 */
-	public AbstractMapBasedAlignmentModel(TokenSet<T> tokenSet,	SequenceIDManager idManager, Map<Integer, S> sequenceMap) {
-		this(tokenSet, idManager, sequenceMap, new ArrayList<Integer>());
+	public AbstractMapBasedAlignmentModel(TokenSet<T> tokenSet,	SequenceIDManager idManager, Map<String, S> sequenceMap) {
+		this(tokenSet, idManager, sequenceMap, new ArrayList<String>());
 	}
 
 
@@ -98,7 +98,7 @@ public abstract class AbstractMapBasedAlignmentModel<S, T> extends AbstractUndec
 	 * @param idManager the ID manager to be used by the new instance (maybe shared among multiple instances) 
 	 */
 	public AbstractMapBasedAlignmentModel(TokenSet<T> tokenSet, SequenceIDManager idManager) {
-		this(tokenSet, idManager, new HashMap<Integer, S>());
+		this(tokenSet, idManager, new HashMap<String, S>());
 	}
 
 
@@ -108,7 +108,7 @@ public abstract class AbstractMapBasedAlignmentModel<S, T> extends AbstractUndec
 	 * 
 	 * @return the instance of a map implementation provided in the constructor
 	 */
-	protected Map<Integer, S> getSequenceMap() {
+	protected Map<String, S> getSequenceMap() {
 		return sequenceMap;
 	}
 
@@ -120,13 +120,13 @@ public abstract class AbstractMapBasedAlignmentModel<S, T> extends AbstractUndec
 	 * @return an instance of {@link ArrayList} in the current implementation (Note that the implementing class
 	 *         might change in future releases of LibrAlign.)
 	 */
-	protected List<Integer> getSequenceOrder() {
+	protected List<String> getSequenceOrder() {
 		return sequenceOrder;
 	}
 
 
 	@Override
-	public boolean containsSequence(int sequenceID) {
+	public boolean containsSequence(String sequenceID) {
 		return getSequenceMap().containsKey(sequenceID);
 	}
 
@@ -138,14 +138,14 @@ public abstract class AbstractMapBasedAlignmentModel<S, T> extends AbstractUndec
 	 * @see info.bioinfweb.libralign.model.AlignmentModel#sequenceIDIterator()
 	 */
 	@Override
-	public Iterator<Integer> sequenceIDIterator() {
+	public Iterator<String> sequenceIDIterator() {
 		return new AbstractSequenceIDIterator<AbstractMapBasedAlignmentModel<S, T>>(
 				this,	getSequenceOrder().iterator()) {
 			
 					@Override
 					protected void doRemove() {
 						getSequenceMap().remove(getCurrentID());
-						fireAfterSequenceChange(SequenceChangeEvent.newRemoveInstance(getProvider(), getCurrentID()));
+						fireAfterSequenceChange(SequenceChangeEvent.newRemoveInstance(getModel(), getCurrentID()));
 					}
 				};
 	}
@@ -166,11 +166,11 @@ public abstract class AbstractMapBasedAlignmentModel<S, T> extends AbstractUndec
 	 * @param sequenceName - the name the new sequence will have
 	 * @return the new sequence object
 	 */
-	protected abstract S createNewSequence(int sequenceID, String sequenceName);
+	protected abstract S createNewSequence(String sequenceID, String sequenceName);
 	
 
 	@Override
-	protected void doAddSequence(int sequenceID, String sequenceName) {
+	protected void doAddSequence(String sequenceID, String sequenceName) {
 		S sequence = createNewSequence(sequenceID, sequenceName);
 		getSequenceMap().put(sequenceID, sequence);
 		getSequenceOrder().add(sequenceID);
@@ -178,7 +178,7 @@ public abstract class AbstractMapBasedAlignmentModel<S, T> extends AbstractUndec
 
 
 	@Override
-	protected void doRemoveSequence(int sequenceID) {
+	protected void doRemoveSequence(String sequenceID) {
 		getSequenceMap().remove(sequenceID);
 		getSequenceOrder().remove(getSequenceOrder().indexOf(sequenceID));
 	}

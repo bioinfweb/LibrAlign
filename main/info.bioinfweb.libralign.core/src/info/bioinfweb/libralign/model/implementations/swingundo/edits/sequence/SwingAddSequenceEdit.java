@@ -38,7 +38,7 @@ public interface SwingAddSequenceEdit extends UndoableEdit {
   /**
    * The ID the newly inserted sequence was assigned to.
    * 
-   * @return the new ID or {@code -1} of this edit has never been executed
+   * @return the new ID or {@code null} of this edit has never been executed
    */
-  public int getNewSequenceID();	
+  public String getNewSequenceID();	
 }

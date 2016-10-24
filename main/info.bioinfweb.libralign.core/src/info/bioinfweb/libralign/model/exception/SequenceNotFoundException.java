@@ -34,7 +34,7 @@ import info.bioinfweb.libralign.model.AlignmentModel;
  * @since 0.1.0
  */
 public class SequenceNotFoundException extends AlignmentModelException {
-	private int sequenceID;
+	private String sequenceID;
 	
 	
 	/**
@@ -42,7 +42,7 @@ public class SequenceNotFoundException extends AlignmentModelException {
 	 * 
 	 * @param source - the sequence provider where this exception happened
 	 */
-	public SequenceNotFoundException(AlignmentModel<?> source, int sequenceID) {
+	public SequenceNotFoundException(AlignmentModel<?> source, String sequenceID) {
 		super(source, "The requested sequence with the ID " + sequenceID + " was not found in the underlying data source.");
 		this.sequenceID = sequenceID;
 	}
@@ -53,7 +53,7 @@ public class SequenceNotFoundException extends AlignmentModelException {
 	 * 
 	 * @return the ID to which no sequence was contained in the according model
 	 */
-	public int getSequenceID() {
+	public String getSequenceID() {
 		return sequenceID;
 	}
 }

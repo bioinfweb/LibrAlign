@@ -36,7 +36,7 @@ import info.bioinfweb.libralign.model.AlignmentModel;
 public class AbstractSingleSequenceDataAdapter<T> extends AbstractAlignmentModelAdapter<T> 
     implements SingleSequenceDataAdapter<T> {
 	
-	private int sequenceID;
+	private String sequenceID;
 	private int offset;
 	private int length;
 	
@@ -49,7 +49,7 @@ public class AbstractSingleSequenceDataAdapter<T> extends AbstractAlignmentModel
 	 * @param offset - the start index of the subsequence to be viewed (The first token has the index 0.)
 	 * @param length - the length of the subsequence to be viewed
 	 */
-	protected AbstractSingleSequenceDataAdapter(AlignmentModel<T> underlyingProvider, int sequenceID, 
+	protected AbstractSingleSequenceDataAdapter(AlignmentModel<T> underlyingProvider, String sequenceID, 
 			int offset,	int length) {
 		
 		super(underlyingProvider);
@@ -66,7 +66,7 @@ public class AbstractSingleSequenceDataAdapter<T> extends AbstractAlignmentModel
 	 * @param provider - the sequence data provider that contains the sequence to be viewed
 	 * @param sequenceID - the ID used in {@code provider} of the sequence to be viewed
 	 */
-	protected AbstractSingleSequenceDataAdapter(AlignmentModel<T> underlyingProvider, int sequenceID) {
+	protected AbstractSingleSequenceDataAdapter(AlignmentModel<T> underlyingProvider, String sequenceID) {
 		
 		super(underlyingProvider);
 		this.sequenceID = sequenceID;
@@ -76,12 +76,12 @@ public class AbstractSingleSequenceDataAdapter<T> extends AbstractAlignmentModel
 
 
 	@Override
-	public int getSequenceID() {
+	public String getSequenceID() {
 		return sequenceID;
 	}
 
 
-	protected void setSequenceID(int sequenceID) {
+	protected void setSequenceID(String sequenceID) {
 		this.sequenceID = sequenceID;
 	}
 

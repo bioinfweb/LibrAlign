@@ -35,7 +35,7 @@ import javax.swing.undo.CannotUndoException;
  * @see SwingUndoAlignmentModel
  */
 public class SwingRemoveTokensEdit<T> extends SwingInsertRemoveTokensEdit<T> {
-	public SwingRemoveTokensEdit(SwingUndoAlignmentModel<T> provider, int sequenceID, int beginIndex, 
+	public SwingRemoveTokensEdit(SwingUndoAlignmentModel<T> provider, String sequenceID, int beginIndex, 
 			int endIndex) {
 	
 		super(provider, sequenceID, beginIndex, endIndex);

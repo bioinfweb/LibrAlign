@@ -37,7 +37,7 @@ import java.util.TreeMap;
  * @author Ben St&ouml;ver
  * @since 0.0.0
  */
-public class SequenceAreaMap extends TreeMap<Integer, SequenceArea> implements SelectionListener {
+public class SequenceAreaMap extends TreeMap<String, SequenceArea> implements SelectionListener {
 	private AlignmentContentArea owner;
 	private CursorSelectionInputListener selectionInputListener;
 
@@ -66,13 +66,13 @@ public class SequenceAreaMap extends TreeMap<Integer, SequenceArea> implements S
 	public void updateElements() {
 		if (getOwner().getOwner().hasAlignmentModel()) {
 			// Backup this map and clear it: (Necessary to remove sequences that are not present in the source anymore.)
-			Map<Integer, SequenceArea> saveMap = new TreeMap<Integer, SequenceArea>(this);
+			Map<String, SequenceArea> saveMap = new TreeMap<String, SequenceArea>(this);
 			clear();
 			
 			// (Re)insert sequence areas: 
-			Iterator<Integer> iterator = getOwner().getOwner().getAlignmentModel().sequenceIDIterator();
+			Iterator<String> iterator = getOwner().getOwner().getAlignmentModel().sequenceIDIterator();
 			while (iterator.hasNext()) {
-				Integer id = iterator.next();
+				String id = iterator.next();
 				SequenceArea sequenceArea = saveMap.get(id);
 				if (sequenceArea == null) {
 					sequenceArea = new SequenceArea(getOwner(), id);
@@ -86,7 +86,7 @@ public class SequenceAreaMap extends TreeMap<Integer, SequenceArea> implements S
 			}
 			
 			// Unregister listeners from removed sequence areas: (Would probably also work without this.)
-			for (Integer id: saveMap.keySet()) {
+			for (String id: saveMap.keySet()) {
 				SequenceArea sequenceArea = saveMap.get(id);
 				sequenceArea.removeMouseListener(selectionInputListener);
 				sequenceArea.removeKeyListener(selectionInputListener);

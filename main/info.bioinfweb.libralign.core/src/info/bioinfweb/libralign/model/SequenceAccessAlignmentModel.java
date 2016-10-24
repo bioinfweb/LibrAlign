@@ -44,7 +44,7 @@ public interface SequenceAccessAlignmentModel<S, T> extends AlignmentModel<T>, S
 	 * 
 	 * @throws AlignmentSourceNotWritableException if the underlying data source is not writable for sequences
    */
-	public int addSequence(String sequenceName, S content);
+	public String addSequence(String sequenceName, S content);
 	
 	/**
 	 * Replaces the sequence object with the specified ID.
@@ -54,5 +54,5 @@ public interface SequenceAccessAlignmentModel<S, T> extends AlignmentModel<T>, S
 	 * @return the previous sequence identified by the specified ID, or {@code null} if there was no sequence 
 	 *         with the ID
  	 */
-	public S replaceSequence(int sequenceID, S content);
+	public S replaceSequence(String sequenceID, S content);
 }

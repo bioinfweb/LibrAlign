@@ -50,7 +50,7 @@ public class TokenChangeEvent<T> extends SequenceChangeEvent<T> {
 	 * @param startIndex - the index of the first affected token in the sequence
 	 * @param affectedTokens - a list of the affected tokens
 	 */
-	protected TokenChangeEvent(AlignmentModel<T> source, int sequenceID, ListChangeType type,
+	protected TokenChangeEvent(AlignmentModel<T> source, String sequenceID, ListChangeType type,
 			int startIndex, Collection<? extends T> affectedTokens) {
 		
 		super(source, sequenceID, type);
@@ -68,7 +68,7 @@ public class TokenChangeEvent<T> extends SequenceChangeEvent<T> {
 	 * @param newTokens - the list of the tokens to be inserted 
 	 * @return a new instance with the same token type as {@code source}
 	 */
-	public static <T> TokenChangeEvent<T> newInsertInstance(AlignmentModel<T> source, int sequenceID,
+	public static <T> TokenChangeEvent<T> newInsertInstance(AlignmentModel<T> source, String sequenceID,
 			int startIndex, Collection<? extends T> newTokens) {
 		
 		return new TokenChangeEvent<T>(source, sequenceID, ListChangeType.INSERTION, startIndex, newTokens);
@@ -84,7 +84,7 @@ public class TokenChangeEvent<T> extends SequenceChangeEvent<T> {
 	 * @param newToken - the token to be inserted 
 	 * @return a new instance with the same token type as {@code source}
 	 */
-	public static <T> TokenChangeEvent<T> newInsertInstance(AlignmentModel<T> source, int sequenceID,
+	public static <T> TokenChangeEvent<T> newInsertInstance(AlignmentModel<T> source, String sequenceID,
 			int index, T newToken) {
 		
 		return newInsertInstance(source, sequenceID, index, Collections.nCopies(1, newToken));
@@ -100,7 +100,7 @@ public class TokenChangeEvent<T> extends SequenceChangeEvent<T> {
 	 * @param removedTokens - the tokens that have been deleted
 	 * @return a new instance with the same token type as {@code source}
 	 */
-	public static <T> TokenChangeEvent<T> newRemoveInstance(AlignmentModel<T> source, int sequenceID,
+	public static <T> TokenChangeEvent<T> newRemoveInstance(AlignmentModel<T> source, String sequenceID,
 			int startIndex, Collection<? extends T> removedTokens) {
 		
 		return new TokenChangeEvent<T>(source, sequenceID, ListChangeType.DELETION, startIndex, removedTokens);
@@ -116,7 +116,7 @@ public class TokenChangeEvent<T> extends SequenceChangeEvent<T> {
 	 * @param removedToken - the token that has been deleted
 	 * @return a new instance with the same token type as {@code source}
 	 */
-	public static <T> TokenChangeEvent<T> newRemoveInstance(AlignmentModel<T> source, int sequenceID,
+	public static <T> TokenChangeEvent<T> newRemoveInstance(AlignmentModel<T> source, String sequenceID,
 			int index, T removedToken) {
 		
 		return newRemoveInstance(source, sequenceID, index, Collections.nCopies(1, removedToken));
@@ -132,7 +132,7 @@ public class TokenChangeEvent<T> extends SequenceChangeEvent<T> {
 	 * @param replacedTokens - the list of tokens that have been replaced 
 	 * @return a new instance with the same token type as {@code source}
 	 */
-	public static <T> TokenChangeEvent<T> newReplaceInstance(AlignmentModel<T> source, int sequenceID,
+	public static <T> TokenChangeEvent<T> newReplaceInstance(AlignmentModel<T> source, String sequenceID,
 			int startIndex, Collection<? extends T> replacedTokens) {
 		
 		return new TokenChangeEvent<T>(source, sequenceID, ListChangeType.REPLACEMENT, startIndex, replacedTokens);
@@ -148,7 +148,7 @@ public class TokenChangeEvent<T> extends SequenceChangeEvent<T> {
 	 * @param replacedToken - the list of tokens that have been replaced 
 	 * @return a new instance with the same token type as {@code source}
 	 */
-	public static <T> TokenChangeEvent<T> newReplaceInstance(AlignmentModel<T> source, int sequenceID,
+	public static <T> TokenChangeEvent<T> newReplaceInstance(AlignmentModel<T> source, String sequenceID,
 			int index, T replacedToken) {
 		
 		return newReplaceInstance(source, sequenceID, index, Collections.nCopies(1, replacedToken));

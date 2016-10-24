@@ -42,7 +42,7 @@ public class SequenceLabelArea extends TextLabelArea {
 
 	@Override
 	protected String getText() {
-		return getOwner().getOwner().getAlignmentModel().sequenceNameByID(getLabeledArea().getSeqenceID());
+		return getOwner().getOwner().getAlignmentModel().sequenceNameByID(getLabeledArea().getSequenceID());
 	}
 
 
@@ -57,7 +57,7 @@ public class SequenceLabelArea extends TextLabelArea {
 		super.paint(e);
 
 		// Paint separator:
-		if (getOwner().getOwner().getSequenceOrder().indexByID(getLabeledArea().getSeqenceID()) > 0) {
+		if (getOwner().getOwner().getSequenceOrder().indexByID(getLabeledArea().getSequenceID()) > 0) {
 			Graphics2D g  = e.getGraphics();
 			g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 			g.draw(new Line2D.Float(0, 0, getSize().width, 0));  // Draw line only if there is another label above.

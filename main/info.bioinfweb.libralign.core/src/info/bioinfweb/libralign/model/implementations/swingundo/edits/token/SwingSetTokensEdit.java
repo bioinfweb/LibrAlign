@@ -52,7 +52,7 @@ public class SwingSetTokensEdit<T> extends SwingTokenEdit<T> {
 	 *        (The first element in the sequence has the index 0.)
 	 * @param tokens - the new tokens for the specified position
 	 */
-	public SwingSetTokensEdit(SwingUndoAlignmentModel<T> provider, int sequenceID,
+	public SwingSetTokensEdit(SwingUndoAlignmentModel<T> provider, String sequenceID,
 			int beginIndex, Collection<? extends T> tokens) {
 		
 		super(provider, sequenceID, beginIndex, tokens);
@@ -78,7 +78,7 @@ public class SwingSetTokensEdit<T> extends SwingTokenEdit<T> {
 	 *        (The first element in the sequence has the index 0.)
 	 * @param token - the new token for the specified position
 	 */
-	public SwingSetTokensEdit(SwingUndoAlignmentModel<T> provider, int sequenceID,
+	public SwingSetTokensEdit(SwingUndoAlignmentModel<T> provider, String sequenceID,
 			int index, T token) {
 		
 		this(provider, sequenceID, index, Collections.nCopies(1, token));

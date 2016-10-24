@@ -334,8 +334,8 @@ public class PherogramArea extends DataArea implements PherogramComponent {
   @SuppressWarnings({"rawtypes", "unchecked"})
 	public boolean copyBaseCallSequence(int startBaseCallIndex, int endBaseCallIndex) {
   	if (getList() != null) {
-	  	int sequenceID = getList().getLocation().getSequenceID();
-	  	if (sequenceID >= 0) {
+	  	String sequenceID = getList().getLocation().getSequenceID();
+	  	if (sequenceID != null) {
 		  	AlignmentModel model = getLabeledAlignmentModel();
 		  	TokenSet tokenSet = model.getTokenSet();
 		  	for (int baseCallIndex = startBaseCallIndex; baseCallIndex < endBaseCallIndex; baseCallIndex++) {
@@ -359,8 +359,8 @@ public class PherogramArea extends DataArea implements PherogramComponent {
 	  	for (int i = 0; i < length; i++) {
 				tokens.add(getLabeledAlignmentModel().getTokenSet().getGapToken());
 			}
-	  	int sequenceID = getList().getLocation().getSequenceID();
-	  	if (sequenceID >= 0) {
+	  	String sequenceID = getList().getLocation().getSequenceID();
+	  	if (sequenceID != null) {
 	  		((AlignmentModel<Object>)getLabeledAlignmentModel()).setTokensAt(sequenceID, startEditableIndex, tokens);
 	  	}
   	}

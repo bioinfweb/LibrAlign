@@ -112,7 +112,7 @@ public abstract class AbstractUndecoratedAlignmentModel<T> extends AbstractAlign
 	 * @see info.bioinfweb.libralign.alignmentprovider.SequenceDataProvider#sequenceNameByID(int)
 	 */
 	@Override
-  public String sequenceNameByID(int sequenceID) {
+  public String sequenceNameByID(String sequenceID) {
 		if (containsSequence(sequenceID)) {
 			return getIDManager().sequenceNameByID(sequenceID);
 		}
@@ -126,10 +126,10 @@ public abstract class AbstractUndecoratedAlignmentModel<T> extends AbstractAlign
 	 * @see info.bioinfweb.libralign.alignmentprovider.SequenceDataProvider#sequenceIDByName(java.lang.String)
 	 */
 	@Override
-	public int sequenceIDByName(String sequenceName) {
-		Integer result = getIDManager().sequenceIDByName(sequenceName);
+	public String sequenceIDByName(String sequenceName) {
+		String result = getIDManager().sequenceIDByName(sequenceName);
 		if ((result == null) || !containsSequence(result)) {
-			return NO_SEQUENCE_FOUND;
+			return null;
 		}
 		else {
 			return result;
@@ -147,19 +147,16 @@ public abstract class AbstractUndecoratedAlignmentModel<T> extends AbstractAlign
 	 *        call of this method
 	 * @param sequenceName - the initial name the new sequence shall have 
 	 */
-	protected abstract void doAddSequence(int sequenceID, String sequenceName);
+	protected abstract void doAddSequence(String sequenceID, String sequenceName);
 	
 	
-	/* (non-Javadoc)
-	 * @see info.bioinfweb.libralign.alignmentprovider.SequenceDataProvider#addSequence(java.lang.String)
-	 */
 	@Override
-	public int addSequence(String sequenceName) {
+	public String addSequence(String sequenceName) {
 		if (isSequencesReadOnly()) {
 			throw new AlignmentSourceNotWritableException(this);
 		}
 		else {
-			int sequenceID = getIDManager().addSequenceName(sequenceName);
+			String sequenceID = getIDManager().addSequenceName(sequenceName);
 			doAddSequence(sequenceID, sequenceName);
 			fireAfterSequenceChange(SequenceChangeEvent.newInsertInstance(this, sequenceID));
 			return sequenceID;
@@ -175,14 +172,14 @@ public abstract class AbstractUndecoratedAlignmentModel<T> extends AbstractAlign
 	 * 
 	 * @param sequenceID - the unique identifier of the sequence to be removed
 	 */
-	protected abstract void doRemoveSequence(int sequenceID);
+	protected abstract void doRemoveSequence(String sequenceID);
 	
 	
 	/* (non-Javadoc)
 	 * @see info.bioinfweb.libralign.alignmentprovider.SequenceDataProvider#removeSequence(int)
 	 */
 	@Override
-	public boolean removeSequence(int sequenceID) {
+	public boolean removeSequence(String sequenceID) {
 		if (isSequencesReadOnly()) {
 			throw new AlignmentSourceNotWritableException(this);
 		}
@@ -212,7 +209,7 @@ public abstract class AbstractUndecoratedAlignmentModel<T> extends AbstractAlign
 	 * @param sequenceID - the unique identifier of the sequence to be removed
    * @param newSequenceName - the new name the sequence shall have
 	 */
-	protected void doRenameSequence(int sequenceID, String newSequenceName) {}
+	protected void doRenameSequence(String sequenceID, String newSequenceName) {}
 	
 	
 	/**
@@ -226,7 +223,7 @@ public abstract class AbstractUndecoratedAlignmentModel<T> extends AbstractAlign
 	public int getMaxSequenceLength() {
 		if (recalculateMaxSequenceLength) {
 			maxSequenceLength = 0;
-			Iterator<Integer> iterator = sequenceIDIterator();
+			Iterator<String> iterator = sequenceIDIterator();
 			while (iterator.hasNext()) {
 				maxSequenceLength = Math.max(maxSequenceLength, getSequenceLength(iterator.next()));
 			}
@@ -257,7 +254,7 @@ public abstract class AbstractUndecoratedAlignmentModel<T> extends AbstractAlign
 	 * @see info.bioinfweb.libralign.alignmentprovider.SequenceDataProvider#renameSequence(int, java.lang.String)
 	 */
 	@Override
-	public String renameSequence(int sequenceID, String newSequenceName) {
+	public String renameSequence(String sequenceID, String newSequenceName) {
 		if (isSequencesReadOnly()) {
 			throw new AlignmentSourceNotWritableException(this);
 		}
@@ -271,13 +268,13 @@ public abstract class AbstractUndecoratedAlignmentModel<T> extends AbstractAlign
 
 	
 	@Override
-	public void appendToken(int sequenceID, T token) throws AlignmentSourceNotWritableException {
+	public void appendToken(String sequenceID, T token) throws AlignmentSourceNotWritableException {
 		insertTokenAt(sequenceID, getSequenceLength(sequenceID), token);
 	}
 
 
 	@Override
-	public void appendTokens(int sequenceID, Collection<? extends T> tokens) throws AlignmentSourceNotWritableException {
+	public void appendTokens(String sequenceID, Collection<? extends T> tokens) throws AlignmentSourceNotWritableException {
 		insertTokensAt(sequenceID, getSequenceLength(sequenceID), tokens);
 	}
 

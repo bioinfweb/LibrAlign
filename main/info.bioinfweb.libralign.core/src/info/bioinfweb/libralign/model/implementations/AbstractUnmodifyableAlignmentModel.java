@@ -55,7 +55,7 @@ public abstract class AbstractUnmodifyableAlignmentModel<S, T>
 	 * @param sequenceOrder - the list object defining the order of the sequences
 	 */
 	public AbstractUnmodifyableAlignmentModel(TokenSet<T> tokenSet, SequenceIDManager idManager,	
-			Map<Integer, S> sequenceMap, List<Integer> sequenceOrder) {
+			Map<String, S> sequenceMap, List<String> sequenceOrder) {
 		
 		super(tokenSet, idManager, sequenceMap, sequenceOrder);
 	}
@@ -68,7 +68,7 @@ public abstract class AbstractUnmodifyableAlignmentModel<S, T>
 	 * @param idManager the ID manager to be used by the new instance (maybe shared among multiple instances) 
 	 * @param sequenceMap - the map instance used to assign sequences to their IDs
 	 */
-	public AbstractUnmodifyableAlignmentModel(TokenSet<T> tokenSet, SequenceIDManager idManager, Map<Integer, S> sequenceMap) {
+	public AbstractUnmodifyableAlignmentModel(TokenSet<T> tokenSet, SequenceIDManager idManager, Map<String, S> sequenceMap) {
 		super(tokenSet, idManager, sequenceMap);
 	}
 
@@ -101,8 +101,8 @@ public abstract class AbstractUnmodifyableAlignmentModel<S, T>
 	 * @throws AlignmentSourceNotWritableException This exception is not thrown by this implementation.
    */
 	@Override
-	public int addSequence(String sequenceName, S content) {
-		int result = addSequence(sequenceName);
+	public String addSequence(String sequenceName, S content) {
+		String result = addSequence(sequenceName);
 		replaceSequence(result, content);
 		return result;
 	}
@@ -128,7 +128,7 @@ public abstract class AbstractUnmodifyableAlignmentModel<S, T>
 	 *         with the ID
 	 */
 	@Override
-	public S replaceSequence(int sequenceID, S content) {
+	public S replaceSequence(String sequenceID, S content) {
 		// Remove old sequence:
 		S previous = null;
 		if (removeSequence(sequenceID)) {
@@ -150,13 +150,13 @@ public abstract class AbstractUnmodifyableAlignmentModel<S, T>
 
 
 	@Override
-	public void setTokenAt(int sequenceID, int index, T token) throws AlignmentSourceNotWritableException {
+	public void setTokenAt(String sequenceID, int index, T token) throws AlignmentSourceNotWritableException {
 		throw new AlignmentSourceNotWritableException(this);
 	}
 
 
 	@Override
-	public void setTokensAt(int sequenceID, int beginIndex,	Collection<? extends T> tokens)
+	public void setTokensAt(String sequenceID, int beginIndex,	Collection<? extends T> tokens)
 			throws AlignmentSourceNotWritableException {
 
 		throw new AlignmentSourceNotWritableException(this);
@@ -164,27 +164,13 @@ public abstract class AbstractUnmodifyableAlignmentModel<S, T>
 
 
 	@Override
-	public void insertTokenAt(int sequenceID, int index, T token) throws AlignmentSourceNotWritableException {
+	public void insertTokenAt(String sequenceID, int index, T token) throws AlignmentSourceNotWritableException {
 		throw new AlignmentSourceNotWritableException(this);
 	}
 
 
 	@Override
-	public void insertTokensAt(int sequenceID, int beginIndex, Collection<? extends T> tokens)
-			throws AlignmentSourceNotWritableException {
-		
-		throw new AlignmentSourceNotWritableException(this);
-	}
-
-
-	@Override
-	public void removeTokenAt(int sequenceID, int index) throws AlignmentSourceNotWritableException {
-		throw new AlignmentSourceNotWritableException(this);
-	}
-
-
-	@Override
-	public void removeTokensAt(int sequenceID, int beginIndex, int endIndex)
+	public void insertTokensAt(String sequenceID, int beginIndex, Collection<? extends T> tokens)
 			throws AlignmentSourceNotWritableException {
 		
 		throw new AlignmentSourceNotWritableException(this);
@@ -192,7 +178,21 @@ public abstract class AbstractUnmodifyableAlignmentModel<S, T>
 
 
 	@Override
-	public S getSequence(int sequenceID) {
+	public void removeTokenAt(String sequenceID, int index) throws AlignmentSourceNotWritableException {
+		throw new AlignmentSourceNotWritableException(this);
+	}
+
+
+	@Override
+	public void removeTokensAt(String sequenceID, int beginIndex, int endIndex)
+			throws AlignmentSourceNotWritableException {
+		
+		throw new AlignmentSourceNotWritableException(this);
+	}
+
+
+	@Override
+	public S getSequence(String sequenceID) {
 		return getSequenceMap().get(sequenceID);
 	}
 }

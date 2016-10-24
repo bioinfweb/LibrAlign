@@ -78,7 +78,7 @@ public class DataAreaList extends DataAreaChangeEventList {
 	 * @param owner - the parent element that will contain this list 
 	 * @param sequenceID - the unique identifier of the sequence the contained data areas will be attached to
 	 */
-	public DataAreaList(DataAreaModel owner, int sequenceID) {
+	public DataAreaList(DataAreaModel owner, String sequenceID) {
 		super(new ArrayList<DataArea>(INITIAL_LIST_SIZE));
 		this.owner = owner;
 		location = new DataAreaLocation(sequenceID);

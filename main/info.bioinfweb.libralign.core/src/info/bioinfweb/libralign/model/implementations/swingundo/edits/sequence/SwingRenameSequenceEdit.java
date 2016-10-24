@@ -39,7 +39,7 @@ public class SwingRenameSequenceEdit<T> extends SwingSequenceEdit<T> {
 	private String oldName;
   
   
-  public SwingRenameSequenceEdit(SwingUndoAlignmentModel<T> provider, int sequenceID, String newName) {
+  public SwingRenameSequenceEdit(SwingUndoAlignmentModel<T> provider, String sequenceID, String newName) {
 		super(provider, sequenceID);
 		this.newName = newName;
 	}

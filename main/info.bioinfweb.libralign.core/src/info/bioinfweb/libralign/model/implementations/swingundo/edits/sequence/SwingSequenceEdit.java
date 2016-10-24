@@ -32,10 +32,10 @@ import info.bioinfweb.libralign.model.implementations.swingundo.edits.LibrAlignS
  * @see SwingUndoAlignmentModel
  */
 public abstract class SwingSequenceEdit<T> extends LibrAlignSwingAlignmentEdit<T> {
-	protected int sequenceID;
+	protected String sequenceID;
 
 	
-	public SwingSequenceEdit(SwingUndoAlignmentModel<T> provider, int sequenceID) {
+	public SwingSequenceEdit(SwingUndoAlignmentModel<T> provider, String sequenceID) {
 		super(provider);
 		this.sequenceID = sequenceID;
 	}
@@ -44,9 +44,9 @@ public abstract class SwingSequenceEdit<T> extends LibrAlignSwingAlignmentEdit<T
 	/**
 	 * Returns the sequence ID this edit deals with.
 	 * 
-	 * @return the sequence ID or {@code -1} if the ID is not yet known.
+	 * @return the sequence ID or {@code null} if the ID is not yet known.
 	 */
-	public int getSequenceID() {
+	public String getSequenceID() {
 		return sequenceID;
 	}
 }

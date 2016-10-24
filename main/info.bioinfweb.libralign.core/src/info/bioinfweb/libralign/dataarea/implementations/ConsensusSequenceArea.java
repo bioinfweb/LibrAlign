@@ -112,7 +112,7 @@ public class ConsensusSequenceArea extends DataArea {
 	}
 
 	
-	private <T> String getRepresentation(AlignmentModel<T> model, int sequenceID, int column) {
+	private <T> String getRepresentation(AlignmentModel<T> model, String sequenceID, int column) {
 		if (model.getSequenceLength(sequenceID) > column) {  // Sequences may have different lengths.
 			T token = model.getTokenAt(sequenceID, column);
 			if (!model.getTokenSet().isGapToken(token)) {
@@ -131,7 +131,7 @@ public class ConsensusSequenceArea extends DataArea {
 			
 			AlignmentModel model = getLabeledAlignmentModel();
 			TokenSet tokenSet = model.getTokenSet();
-			Iterator<Integer> iterator = model.sequenceIDIterator();
+			Iterator<String> iterator = model.sequenceIDIterator();
 			if (tokenSet.getType().isNucleotide() || tokenSet.getType().equals(CharacterStateSetType.AMINO_ACID)) {
 				Map<Character, Double> frequencies;
 				
@@ -162,7 +162,7 @@ public class ConsensusSequenceArea extends DataArea {
 		  	Map<String, Double> frequencies = new TreeMap<String, Double>();
 		  	double sum = 0.0;
 		  	while (iterator.hasNext()) {
-					int sequenceID = iterator.next();
+					String sequenceID = iterator.next();
 					if (model.getSequenceLength(sequenceID) > column) {  // Sequences may have different lengths.
 						Object token = model.getTokenAt(sequenceID, column);
 						if (!tokenSet.isGapToken(token)) {

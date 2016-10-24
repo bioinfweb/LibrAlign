@@ -28,11 +28,11 @@ public class SequenceIndexModel implements DataModel {
 	public static final int MIN_BITS_PER_VALUE = 16;  // Below 16 not more than 16 KB could be saved by reducing the bit rate.
 	
 	
-	private int sequenceID;
+	private String sequenceID;
 	private PackedIntegerArrayList unalignedIndices;
 	
 	
-	public SequenceIndexModel(int sequenceID, int initialCapacity) {
+	public SequenceIndexModel(String sequenceID, int initialCapacity) {
 		super();
 		this.sequenceID = sequenceID;
 		ensureCapacity(initialCapacity);

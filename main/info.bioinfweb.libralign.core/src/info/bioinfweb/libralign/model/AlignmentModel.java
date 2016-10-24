@@ -40,18 +40,16 @@ import info.bioinfweb.libralign.model.utils.AlignmentModelUtils;
  * Classes implementing this interface act as a model for the sequence names and tokens (e.g. nucleotide
  * or amino acid compounds).
  * <p>
- * All sequences stored are identified by an integer ID and not by their names that are possibly displayed
+ * All sequences stored are identified by an string ID and not by their names that are possibly displayed
  * to an application user, because these names might change during runtime. Subclasses must ensure that
- * these IDs are unique and greater or equal to zero and do not change during runtime. Additionally IDs of 
- * deleted sequences should not be reused, because other objects might have stored references to the deleted 
- * sequence using its ID and therefore would not be able to determine that the sequence became deleted, if a 
- * new sequence with the same ID is present.
+ * these IDs are unique and do not change during runtime. Additionally IDs of deleted sequences should not 
+ * be reused, because other objects might have stored references to these using its ID and therefore would 
+ * not be able to determine that the sequence became deleted, if a new sequence with the same ID is present.
  * <p>
- * The ID values do not have to match the order of the sequences, which is defined the 
- * {@link #sequenceNameIterator()}. The ordering of sequences in an {@link AlignmentContentArea} is anyway not
- * defined by the data provider but by the instance returned by {@link AlignmentContentArea#getSequenceOrder()}.
+ * The ordering of sequences in an {@link AlignmentContentArea} is not defined by the model implementation 
+ * but by the instance returned by {@link AlignmentContentArea#getSequenceOrder()}.
  * <p>
- * Note that this interface leafs it up to the implementation if the alignment data is organized in objects
+ * Note that this interface leaves it up to the implementation if the alignment data is organized in objects
  * storing whole sequences (rows) or another storage pattern. If your implementation uses sequence objects
  * consider implementing {@link SequenceAccessAlignmentModel}.
  * 
@@ -66,9 +64,6 @@ import info.bioinfweb.libralign.model.utils.AlignmentModelUtils;
  * @param <T> the type of sequence elements (tokens) the implementing model object works with
  */
 public interface AlignmentModel<T> {
-	public static final int NO_SEQUENCE_FOUND = -1;
-	
-	
 	/**
 	 * Returns a string labeling this alignment.
 	 * 
@@ -108,7 +103,7 @@ public interface AlignmentModel<T> {
 	 * @param sequenceID - the identifier the sequence in the alignment
 	 * @return the length of the sequence or {@code -1} if no sequence with the specified name exists
 	 */
-	public int getSequenceLength(int sequenceID);
+	public int getSequenceLength(String sequenceID);
 	
 	/**
 	 * Returns the length of the longest sequence in the alignment which is equivalent to the length of
@@ -126,7 +121,7 @@ public interface AlignmentModel<T> {
 	/**
 	 * Returns a value that specifies if whole sequences or single tokens can be edited in the underlying 
 	 * data source.
-	 * 
+	 * s
 	 * @return the write type of this data source 
 	 */
 	public AlignmentModelWriteType getWriteType();
@@ -151,15 +146,15 @@ public interface AlignmentModel<T> {
    * @param sequenceID - the ID of the sequence to checked on
    * @return {@code true} if an according sequence was found, {@code false} otherwise 
    */
-  public boolean containsSequence(int sequenceID);
+  public boolean containsSequence(String sequenceID);
   
   /**
    * Returns the unique sequence ID associated with the specified name.
    * 
    * @param sequenceName - the name of the sequence that would be visible to the application user
-   * @return the sequence ID or {@code -1} if no sequence with the specified name is contained in this model
+   * @return the sequence ID or {@code null} if no sequence with the specified name is contained in this model
    */
-  public int sequenceIDByName(String sequenceName);
+  public String sequenceIDByName(String sequenceName);
 
   /**
    * Returns the sequence name (that would be visible to the application user) associated with the 
@@ -168,7 +163,7 @@ public interface AlignmentModel<T> {
    * @param sequenceID - the unique unmodifiable ID the sequence is identified by
    * @return the sequence name or {@code null} if no sequence with this ID is contained in this model
    */
-  public String sequenceNameByID(int sequenceID);
+  public String sequenceNameByID(String sequenceID);
 
   /**
    * Adds a new empty sequence to the underlying data source and generates an ID for it.
@@ -178,7 +173,7 @@ public interface AlignmentModel<T> {
 	 * 
 	 * @throws AlignmentSourceNotWritableException if the underlying data source is not writable for sequences
    */
-  public int addSequence(String sequenceName) throws AlignmentSourceNotWritableException;
+  public String addSequence(String sequenceName) throws AlignmentSourceNotWritableException;
   
   /**
    * Removes the specified sequence from the underlying data source.
@@ -189,7 +184,7 @@ public interface AlignmentModel<T> {
 	 * 
 	 * @throws AlignmentSourceNotWritableException if the underlying data source is not writable for sequences
    */
-  public boolean removeSequence(int sequenceID) throws AlignmentSourceNotWritableException;
+  public boolean removeSequence(String sequenceID) throws AlignmentSourceNotWritableException;
   
   /**
    * Renames a sequence in the underlying data source.
@@ -204,7 +199,7 @@ public interface AlignmentModel<T> {
 	 * @throws SequenceNotFoundException if a sequence with the specified ID is not present the underlying
 	 *         data source
    */
-  public String renameSequence(int sequenceID, String newSequenceName) 
+  public String renameSequence(String sequenceID, String newSequenceName) 
   		throws AlignmentSourceNotWritableException, DuplicateSequenceNameException, SequenceNotFoundException;
   
 	/**
@@ -213,7 +208,7 @@ public interface AlignmentModel<T> {
 	 * 
 	 * @return an iterator over the IDs
 	 */
-	public Iterator<Integer> sequenceIDIterator();
+	public Iterator<String> sequenceIDIterator();
   
 	/**
 	 * Returns the number of sequences in the underlying data source.
@@ -241,7 +236,7 @@ public interface AlignmentModel<T> {
 	 * @throws IndexOutOfBoundsException if the specified index is below zero or greater or equal to the length of the
 	 *         specified sequence 
 	 */
-	public T getTokenAt(int sequenceID, int index);
+	public T getTokenAt(String sequenceID, int index);
 	
 	/**
 	 * Replaces the token at the specified position by the passed token.
@@ -256,7 +251,7 @@ public interface AlignmentModel<T> {
 	 *         specified sequence (Note that not all implementations will throw this exception for indices above zero.
 	 *         Some may also elongate the sequence accordingly and will up the new positions with e.g. gaps.) 
 	 */
-	public void setTokenAt(int sequenceID, int index, T token) throws AlignmentSourceNotWritableException;
+	public void setTokenAt(String sequenceID, int index, T token) throws AlignmentSourceNotWritableException;
 
 	/**
 	 * Replaces a sequence of tokens starting at the specified position. If the specified collection
@@ -272,7 +267,7 @@ public interface AlignmentModel<T> {
 	 * @throws SequenceNotFoundException if no according sequence to the specified ID was found in this model
 	 * @see AlignmentModelUtils#charSequenceToTokenList(CharSequence, TokenSet)
 	 */
-	public void setTokensAt(int sequenceID, int beginIndex, Collection<? extends T> tokens) 
+	public void setTokensAt(String sequenceID, int beginIndex, Collection<? extends T> tokens) 
 			throws AlignmentSourceNotWritableException;
 
 	/**
@@ -284,7 +279,7 @@ public interface AlignmentModel<T> {
 	 * @throws SequenceNotFoundException if no according sequence to the specified ID was found in this model
 	 * @throws AlignmentSourceNotWritableException if the underlying data source is not writable for tokens
 	 */
-	public void appendToken(int sequenceID, T token) throws AlignmentSourceNotWritableException;
+	public void appendToken(String sequenceID, T token) throws AlignmentSourceNotWritableException;
 	
 	/**
 	 * Appends a sequence of tokens starting at the end of the current sequence.
@@ -296,7 +291,7 @@ public interface AlignmentModel<T> {
 	 * @throws AlignmentSourceNotWritableException if the underlying data source is not writable for tokens
 	 * @see AlignmentModelUtils#charSequenceToTokenList(CharSequence, TokenSet)
 	 */
-	public void appendTokens(int sequenceID, Collection<? extends T> tokens) throws AlignmentSourceNotWritableException;
+	public void appendTokens(String sequenceID, Collection<? extends T> tokens) throws AlignmentSourceNotWritableException;
 
 	/**
 	 * Inserts a token at the specified position. All tokens located behind the specified index are moved 
@@ -310,7 +305,7 @@ public interface AlignmentModel<T> {
 	 * @throws SequenceNotFoundException if no according sequence to the specified ID was found in this model
 	 * @throws AlignmentSourceNotWritableException if the underlying data source is not writable for tokens
 	 */
-	public void insertTokenAt(int sequenceID, int index, T token) throws AlignmentSourceNotWritableException;
+	public void insertTokenAt(String sequenceID, int index, T token) throws AlignmentSourceNotWritableException;
 
 	/**
 	 * Inserts a sequence of tokens starting at the specified position. All tokens located behind the 
@@ -325,7 +320,7 @@ public interface AlignmentModel<T> {
 	 * @throws AlignmentSourceNotWritableException if the underlying data source is not writable for tokens
 	 * @see AlignmentModelUtils#charSequenceToTokenList(CharSequence, TokenSet)
 	 */
-	public void insertTokensAt(int sequenceID, int beginIndex, Collection<? extends T> tokens) throws AlignmentSourceNotWritableException;
+	public void insertTokensAt(String sequenceID, int beginIndex, Collection<? extends T> tokens) throws AlignmentSourceNotWritableException;
 	
 	/**
 	 * Removes the token at the specified position from the underlying data source.
@@ -336,7 +331,7 @@ public interface AlignmentModel<T> {
 	 * @throws SequenceNotFoundException if no according sequence to the specified ID was found in this model
 	 * @throws AlignmentSourceNotWritableException if the underlying data source is not writable for tokens
 	 */
-	public void removeTokenAt(int sequenceID, int index) throws AlignmentSourceNotWritableException;
+	public void removeTokenAt(String sequenceID, int index) throws AlignmentSourceNotWritableException;
 	
 	/**
 	 * Removes the token inside the specified interval from the underlying data source.
@@ -350,5 +345,5 @@ public interface AlignmentModel<T> {
 	 * @throws SequenceNotFoundException if no according sequence to the specified ID was found in this model
 	 * @throws AlignmentSourceNotWritableException if the underlying data source is not writable for tokens
 	 */
-	public void removeTokensAt(int sequenceID, int beginIndex, int endIndex) throws AlignmentSourceNotWritableException;
+	public void removeTokensAt(String sequenceID, int beginIndex, int endIndex) throws AlignmentSourceNotWritableException;
 }

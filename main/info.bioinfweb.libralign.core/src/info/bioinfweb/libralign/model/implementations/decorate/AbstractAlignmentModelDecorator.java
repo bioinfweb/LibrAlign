@@ -96,13 +96,14 @@ public abstract class AbstractAlignmentModelDecorator<T, U> extends AbstractAlig
 	 * <p>
 	 * Inherited classes that use different IDs than their underlying model must overwrite this method. Otherwise
 	 * change events from the underlying model will not be converted correctly. The same applies if inherited classes
-	 * hide any of the underlying sequences. In this case, they must return -1 for calls with the ID of a hidden sequence. 
+	 * hide any of the underlying sequences. In this case, they must return {@code null} for calls with the ID of a hidden 
+	 * sequence. 
 	 * 
 	 * @param underlyingSequenceID the sequence ID used in the underlying model
-	 * @return the according sequence ID used by this view of -1 if the specified underlying sequence is hidden by
+	 * @return the according sequence ID used by this view or {@code null} if the specified underlying sequence is hidden by
 	 *         this decorator 
 	 */
-	protected int convertUnderlyingSequenceID(int underlyingSequenceID) {
+	protected String convertUnderlyingSequenceID(String underlyingSequenceID) {
 		return underlyingSequenceID;
 	}
 	
@@ -116,20 +117,20 @@ public abstract class AbstractAlignmentModelDecorator<T, U> extends AbstractAlig
 	 * in the underlying model. In this case, they must return -1 for calls with the ID of an additional sequence. 
 	 * 
 	 * @param decoratedSequenceID the sequence ID used in the underlying model
-	 * @return the according sequence ID used by this view of -1 if the specified decorated sequence is not present in
-	 *         the underlying model
+	 * @return the according sequence ID used by this view or {@code null} if the specified decorated sequence is not 
+	 *         present in the underlying model
 	 */
-	protected int convertDecoratedSequenceID(int decoratedSequenceID) {
+	protected String convertDecoratedSequenceID(String decoratedSequenceID) {
 		return decoratedSequenceID;
 	}
 	
 	
-	protected int convertUnderlyingTokenIndex(int sequenceID, int underlyingIndex) {
+	protected int convertUnderlyingTokenIndex(String sequenceID, int underlyingIndex) {
 		return underlyingIndex;
 	}
 	
 	
-	protected int convertDecoratedTokenIndex(int sequenceID, int decoratedIndex) {
+	protected int convertDecoratedTokenIndex(String sequenceID, int decoratedIndex) {
 		return decoratedIndex;
 	}
 	
@@ -165,8 +166,8 @@ public abstract class AbstractAlignmentModelDecorator<T, U> extends AbstractAlig
 	 *         of LibrAlign never have any other type.)
 	 */
 	protected SequenceChangeEvent<T> convertSequenceChangeEvent(SequenceChangeEvent<U> event) {
-		int decoratedID = convertUnderlyingSequenceID(event.getSequenceID());
-		if (decoratedID != -1) {
+		String decoratedID = convertUnderlyingSequenceID(event.getSequenceID());
+		if (decoratedID != null) {
 			switch (event.getType()) {
 				case INSERTION:
 					return SequenceChangeEvent.newInsertInstance(this, decoratedID);
@@ -197,8 +198,8 @@ public abstract class AbstractAlignmentModelDecorator<T, U> extends AbstractAlig
 	 * @return a new converted event object or {@code null} if the specified underlying sequence is hidden by this decorator
 	 */
 	protected SequenceRenamedEvent<T> convertSequenceRenamedEvent(SequenceRenamedEvent<U> event) {
-		int decoratedID = convertUnderlyingSequenceID(event.getSequenceID());
-		if (decoratedID != -1) {
+		String decoratedID = convertUnderlyingSequenceID(event.getSequenceID());
+		if (decoratedID != null) {
 			return new SequenceRenamedEvent<T>(this, decoratedID, event.getPreviousName(), event.getNewName());
 		}
 		else {
@@ -242,37 +243,37 @@ public abstract class AbstractAlignmentModelDecorator<T, U> extends AbstractAlig
 
 
 	@Override
-	public boolean containsSequence(int sequenceID) {
+	public boolean containsSequence(String sequenceID) {
 		return underlyingModel.containsSequence(sequenceID);
 	}
 
 
 	@Override
-	public int sequenceIDByName(String sequenceName) {
+	public String sequenceIDByName(String sequenceName) {
 		return underlyingModel.sequenceIDByName(sequenceName);
 	}
 
 
 	@Override
-	public String sequenceNameByID(int sequenceID) {
+	public String sequenceNameByID(String sequenceID) {
 		return underlyingModel.sequenceNameByID(sequenceID);
 	}
 
 
 	@Override
-	public int addSequence(String sequenceName) throws AlignmentSourceNotWritableException {
+	public String addSequence(String sequenceName) throws AlignmentSourceNotWritableException {
 		return underlyingModel.addSequence(sequenceName);
 	}
 
 
 	@Override
-	public boolean removeSequence(int sequenceID)	throws AlignmentSourceNotWritableException {
+	public boolean removeSequence(String sequenceID)	throws AlignmentSourceNotWritableException {
 		return underlyingModel.removeSequence(sequenceID);
 	}
 
 
 	@Override
-	public Iterator<Integer> sequenceIDIterator() {
+	public Iterator<String> sequenceIDIterator() {
 		return underlyingModel.sequenceIDIterator();
 	}
 

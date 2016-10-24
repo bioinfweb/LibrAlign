@@ -35,12 +35,12 @@ import java.util.Collections;
  * @see SwingUndoAlignmentModel
  */
 public abstract class SwingTokenEdit<T> extends LibrAlignSwingAlignmentEdit<T> {
-	protected int sequenceID;
+	protected String sequenceID;
 	protected int beginIndex;
 	protected Collection<? extends T> tokens;
 	
 	
-	public SwingTokenEdit(SwingUndoAlignmentModel<T> provider, int sequenceID, int beginIndex, 
+	public SwingTokenEdit(SwingUndoAlignmentModel<T> provider, String sequenceID, int beginIndex, 
 			Collection<? extends T> tokens) {
 		
 		super(provider);
@@ -55,7 +55,7 @@ public abstract class SwingTokenEdit<T> extends LibrAlignSwingAlignmentEdit<T> {
 	 * 
 	 * @return the sequence ID
 	 */
-	public int getSequenceID() {
+	public String getSequenceID() {
 		return sequenceID;
 	}
 

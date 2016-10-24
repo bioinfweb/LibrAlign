@@ -67,13 +67,13 @@ public class CharSequenceAlignmentModel extends AbstractUnmodifyableAlignmentMod
 	 * @return ""
 	 */
 	@Override
-	protected CharSequence createNewSequence(int sequenceID, String sequenceName) {
+	protected CharSequence createNewSequence(String sequenceID, String sequenceName) {
 		return "";
 	}
 
 
 	@Override
-	public int getSequenceLength(int sequenceID) {
+	public int getSequenceLength(String sequenceID) {
 		CharSequence sequence = getSequence(sequenceID);
 		if (sequence != null) {
 			return sequence.length();
@@ -85,7 +85,7 @@ public class CharSequenceAlignmentModel extends AbstractUnmodifyableAlignmentMod
 
 
 	@Override
-	public Character getTokenAt(int sequenceID, int index) {
+	public Character getTokenAt(String sequenceID, int index) {
 		CharSequence sequence = getSequence(sequenceID);
 		if (sequence != null) {
 			return sequence.charAt(index);

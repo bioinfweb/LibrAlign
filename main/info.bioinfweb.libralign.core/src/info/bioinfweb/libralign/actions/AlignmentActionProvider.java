@@ -86,7 +86,7 @@ public class AlignmentActionProvider<T> {
 		SelectionModel selection = getAlignmentArea().getSelection();
 		if (!selection.isEmpty()) {
 			for (int row = selection.getCursorRow(); row < selection.getCursorRow() + selection.getCursorHeight(); row++) {
-				int sequenceID = getAlignmentArea().getSequenceOrder().idByIndex(row);
+				String sequenceID = getAlignmentArea().getSequenceOrder().idByIndex(row);
 				int sequenceLength = getModel().getSequenceLength(sequenceID);
 				if (selection.getFirstColumn() < sequenceLength) {
 					getModel().removeTokensAt(sequenceID,
@@ -116,7 +116,7 @@ public class AlignmentActionProvider<T> {
 		try {
 			if (selection.isEmpty()) {
 				for (int row = selection.getCursorRow(); row < selection.getCursorRow() + selection.getCursorHeight(); row++) {
-					int sequenceID = getAlignmentArea().getSequenceOrder().idByIndex(row);
+					String sequenceID = getAlignmentArea().getSequenceOrder().idByIndex(row);
 					if (selection.getCursorColumn() < getModel().getSequenceLength(sequenceID)) {
 						getModel().removeTokenAt(sequenceID, selection.getCursorColumn());
 						result = true;
@@ -152,7 +152,7 @@ public class AlignmentActionProvider<T> {
 			if (selection.isEmpty()) {
 				if (selection.getCursorColumn() > 0) {
 					for (int row = selection.getCursorRow(); row < selection.getCursorRow() + selection.getCursorHeight(); row++) {
-						int sequenceID = getAlignmentArea().getSequenceOrder().idByIndex(row);
+						String sequenceID = getAlignmentArea().getSequenceOrder().idByIndex(row);
 						if (selection.getCursorColumn() < getModel().getSequenceLength(sequenceID)) {
 							getModel().removeTokenAt(sequenceID, selection.getCursorColumn() - 1);
 							result = true;
@@ -178,7 +178,7 @@ public class AlignmentActionProvider<T> {
 	 * @param newLength the new length the sequence shall have
 	 * @return the number of trailing gaps that have been inserted
 	 */
-	public int elongateSequence(int sequenceID, int newLength) {
+	public int elongateSequence(String sequenceID, int newLength) {
 		int additionalLength = newLength - getModel().getSequenceLength(sequenceID);
 		if (additionalLength > 0) {
 			T gapToken = getModel().getTokenSet().getGapToken();
@@ -223,7 +223,7 @@ public class AlignmentActionProvider<T> {
 			}
 
 			for (int row = selection.getCursorRow(); row < selection.getCursorRow() + selection.getCursorHeight(); row++) {
-				int sequenceID = getAlignmentArea().getSequenceOrder().idByIndex(row);
+				String sequenceID = getAlignmentArea().getSequenceOrder().idByIndex(row);
 				elongateSequence(sequenceID, selection.getFirstColumn());
 				getModel().insertTokensAt(sequenceID,	selection.getFirstColumn(), tokens);
 			}
@@ -255,7 +255,7 @@ public class AlignmentActionProvider<T> {
 		SelectionModel selection = getAlignmentArea().getSelection();
 		try {
 			for (int row = selection.getCursorRow(); row < selection.getCursorRow() + selection.getCursorHeight(); row++) {
-				int sequenceID = getAlignmentArea().getSequenceOrder().idByIndex(row);
+				String sequenceID = getAlignmentArea().getSequenceOrder().idByIndex(row);
 				
 				// Remove possible additional tokens:
 				int sequenceLength = getModel().getSequenceLength(sequenceID);

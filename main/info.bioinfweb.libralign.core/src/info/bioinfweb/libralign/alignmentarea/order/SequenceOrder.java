@@ -40,18 +40,18 @@ import java.util.TreeMap;
  * @since 0.0.0
  */
 public class SequenceOrder {
-	private final Comparator<Integer> ASCENDING_ALPHABETICAL_COMPARATOR = new Comparator<Integer>() {
+	private final Comparator<String> ASCENDING_ALPHABETICAL_COMPARATOR = new Comparator<String>() {
 		@Override
-		public int compare(Integer o1, Integer o2) {
+		public int compare(String o1, String o2) {
 			return getOwner().getAlignmentModel().sequenceNameByID(o1).compareTo(
 					getOwner().getAlignmentModel().sequenceNameByID(o2));
 		}
 	};
 
 
-	private final Comparator<Integer> DESCENDING_ALPHABETICAL_COMPARATOR = new Comparator<Integer>() {
+	private final Comparator<String> DESCENDING_ALPHABETICAL_COMPARATOR = new Comparator<String>() {
 		@Override
-		public int compare(Integer o1, Integer o2) {
+		public int compare(String o1, String o2) {
 			return getOwner().getAlignmentModel().sequenceNameByID(o2).compareTo(
 					getOwner().getAlignmentModel().sequenceNameByID(o1));
 		}
@@ -59,8 +59,8 @@ public class SequenceOrder {
 
 
 	private AlignmentArea owner;
-	private List<Integer> idList = new ArrayList<Integer>();
-	private Map<Integer, Integer> indexByIDMap = new TreeMap<Integer, Integer>();
+	private List<String> idList = new ArrayList<String>();
+	private Map<String, Integer> indexByIDMap = new TreeMap<String, Integer>();
 	private SequenceOrderType orderType = SequenceOrderType.SOURCE;
 
 	
@@ -95,7 +95,7 @@ public class SequenceOrder {
 	 * @param id - the unique identifier of the sequence
 	 * @return the index of the sequence (The first sequence has the index 0.)
 	 */
-	public int indexByID(int id) {
+	public int indexByID(String id) {
 		Integer result = indexByIDMap.get(id);
 		if (result == null) {
 			result = idList.indexOf(id);
@@ -112,7 +112,7 @@ public class SequenceOrder {
 	 * @return the ID of the sequence in the data source
 	 * @throws IndexOutOfBoundsException if the specified index is below 0 or greater or equal to number of sequences.
 	 */
-	public int idByIndex(int index) {
+	public String idByIndex(int index) {
 		return idList.get(index);
 	}
 	
@@ -144,7 +144,7 @@ public class SequenceOrder {
 		orderType = SequenceOrderType.SOURCE;
 		idList.clear();
 		if (getOwner().hasAlignmentModel()) {
-			Iterator<Integer> iterator = getOwner().getAlignmentModel().sequenceIDIterator();
+			Iterator<String> iterator = getOwner().getAlignmentModel().sequenceIDIterator();
 			while (iterator.hasNext()) {
 				idList.add(iterator.next());
 			}
@@ -185,7 +185,7 @@ public class SequenceOrder {
 	public int moveSequence(int index, int offset) {
 		indexByIDMap.clear();
 		int newIndex = Math.max(0, Math.min(idList.size() - 1, index + offset));
-		int id = idList.get(index);
+		String id = idList.get(index);
 		if (newIndex < index) {
 			for (int i = index; i > newIndex; i--) {
 				idList.set(i, idList.get(i - 1));
@@ -206,7 +206,7 @@ public class SequenceOrder {
 	 * 
 	 * @return an unmodifiable iterator object
 	 */
-	public Iterator<Integer> idIterator() {
+	public Iterator<String> idIterator() {
 		return CollectionUtils.unmodifiableIterator(idList.iterator());
 	}
 	

@@ -22,7 +22,7 @@ package info.bioinfweb.libralign.alignmentarea.content;
 
 
 public class AlignmentContentAreaTools {
-	public static void assignSequenceAreaSize(SequenceAreaMap sequenceAreaMap, int sequenceID) throws IllegalArgumentException {
+	public static void assignSequenceAreaSize(SequenceAreaMap sequenceAreaMap, String sequenceID) throws IllegalArgumentException {
 		SequenceArea area = sequenceAreaMap.get(sequenceID);
 		if (area != null) {
 			area.assignSize();

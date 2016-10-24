@@ -217,19 +217,19 @@ public class SwingUndoAlignmentModel<T> implements AlignmentModel<T>,
 
 
 	@Override
-	public T getTokenAt(int sequenceID, int index) {
+	public T getTokenAt(String sequenceID, int index) {
 		return underlyingModel.getTokenAt(sequenceID, index);
 	}
 
 
 	@Override
-	public void setTokenAt(int sequenceID, int index, T token)	throws AlignmentSourceNotWritableException {
+	public void setTokenAt(String sequenceID, int index, T token)	throws AlignmentSourceNotWritableException {
     setTokensAt(sequenceID, index, Collections.nCopies(1, token));
 	}
 
 
 	@Override
-	public void setTokensAt(int sequenceID, int beginIndex,	Collection<? extends T> tokens)
+	public void setTokensAt(String sequenceID, int beginIndex,	Collection<? extends T> tokens)
 			throws AlignmentSourceNotWritableException {
 		
 		if (underlyingModel.isTokensReadOnly()) {
@@ -242,19 +242,19 @@ public class SwingUndoAlignmentModel<T> implements AlignmentModel<T>,
 
 
 	@Override
-	public void appendToken(int sequenceID, T token) throws AlignmentSourceNotWritableException {
+	public void appendToken(String sequenceID, T token) throws AlignmentSourceNotWritableException {
 		insertTokenAt(sequenceID, getSequenceLength(sequenceID), token);
 	}
 
 
 	@Override
-	public void appendTokens(int sequenceID, Collection<? extends T> tokens) throws AlignmentSourceNotWritableException {
+	public void appendTokens(String sequenceID, Collection<? extends T> tokens) throws AlignmentSourceNotWritableException {
 		insertTokensAt(sequenceID, getSequenceLength(sequenceID), tokens);
 	}
 
 
 	@Override
-	public void insertTokenAt(int sequenceID, int index, T token)
+	public void insertTokenAt(String sequenceID, int index, T token)
 			throws AlignmentSourceNotWritableException {
 		
     insertTokensAt(sequenceID, index, Collections.nCopies(1, token));
@@ -262,7 +262,7 @@ public class SwingUndoAlignmentModel<T> implements AlignmentModel<T>,
 
 
 	@Override
-	public void insertTokensAt(int sequenceID, int beginIndex, Collection<? extends T> tokens)
+	public void insertTokensAt(String sequenceID, int beginIndex, Collection<? extends T> tokens)
 			throws AlignmentSourceNotWritableException {
 		
 		if (underlyingModel.isTokensReadOnly()) {
@@ -275,7 +275,7 @@ public class SwingUndoAlignmentModel<T> implements AlignmentModel<T>,
 
 
 	@Override
-	public void removeTokenAt(int sequenceID, int index)
+	public void removeTokenAt(String sequenceID, int index)
 			throws AlignmentSourceNotWritableException {
 
     removeTokensAt(sequenceID, index, index + 1);
@@ -283,7 +283,7 @@ public class SwingUndoAlignmentModel<T> implements AlignmentModel<T>,
 
 
 	@Override
-	public void removeTokensAt(int sequenceID, int beginIndex, int endIndex)
+	public void removeTokensAt(String sequenceID, int beginIndex, int endIndex)
 			throws AlignmentSourceNotWritableException {
 		
 		if (underlyingModel.isTokensReadOnly()) {
@@ -296,7 +296,7 @@ public class SwingUndoAlignmentModel<T> implements AlignmentModel<T>,
 
 
 	@Override
-	public int getSequenceLength(int sequenceID) {
+	public int getSequenceLength(String sequenceID) {
 		return underlyingModel.getSequenceLength(sequenceID);
 	}
 
@@ -326,25 +326,25 @@ public class SwingUndoAlignmentModel<T> implements AlignmentModel<T>,
 
 
 	@Override
-	public boolean containsSequence(int sequenceID) {
+	public boolean containsSequence(String sequenceID) {
 		return underlyingModel.containsSequence(sequenceID);
 	}
 
 
 	@Override
-	public int sequenceIDByName(String sequenceName) {
+	public String sequenceIDByName(String sequenceName) {
 		return underlyingModel.sequenceIDByName(sequenceName);
 	}
 
 
 	@Override
-	public String sequenceNameByID(int sequenceID) {
+	public String sequenceNameByID(String sequenceID) {
 		return underlyingModel.sequenceNameByID(sequenceID);
 	}
 
 
 	@Override
-	public int addSequence(String sequenceName) {
+	public String addSequence(String sequenceName) {
 		if (isSequencesReadOnly()) {
 			throw new AlignmentSourceNotWritableException(this);
 		}
@@ -361,7 +361,7 @@ public class SwingUndoAlignmentModel<T> implements AlignmentModel<T>,
 
 
 	@Override
-	public boolean removeSequence(int sequenceID) {
+	public boolean removeSequence(String sequenceID) {
 		if (containsSequence(sequenceID)) {
 			addEdit(new SwingRemoveSequenceEdit<T>(this, sequenceID));
 			return true;
@@ -373,7 +373,7 @@ public class SwingUndoAlignmentModel<T> implements AlignmentModel<T>,
 
 
 	@Override
-	public String renameSequence(int sequenceID, String newSequenceName) {
+	public String renameSequence(String sequenceID, String newSequenceName) {
 		if (isSequencesReadOnly()) {
 			throw new AlignmentSourceNotWritableException(this);
 		}
@@ -386,7 +386,7 @@ public class SwingUndoAlignmentModel<T> implements AlignmentModel<T>,
 
 
 	@Override
-	public Iterator<Integer> sequenceIDIterator() {
+	public Iterator<String> sequenceIDIterator() {
 		return underlyingModel.sequenceIDIterator();
 	}
 

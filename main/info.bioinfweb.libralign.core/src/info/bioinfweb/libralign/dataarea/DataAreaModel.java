@@ -28,6 +28,7 @@ import info.bioinfweb.libralign.multiplealignments.MultipleAlignmentsContainer;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -44,7 +45,7 @@ public class DataAreaModel {
 	private final AlignmentArea owner;
   private final DataAreaList topAreas = new DataAreaList(this, DataAreaListType.TOP);
   private final DataAreaList bottomAreas = new DataAreaList(this, DataAreaListType.BOTTOM);
-  private final Map<Integer, DataAreaList> sequenceAreaLists = new TreeMap<Integer, DataAreaList>();
+  private final Map<String, DataAreaList> sequenceAreaLists = new HashMap<String, DataAreaList>();
   private final List<DataAreaModelListener> listeners = new ArrayList<DataAreaModelListener>(8);
   private boolean visibilityUpdateInProgress = false;
   private final DataAreaSequenceChangeListener sequenceChangeListener = new DataAreaSequenceChangeListener(this);
@@ -98,7 +99,7 @@ public class DataAreaModel {
 	 *        in the returned list
 	 * @return a modifiable list
 	 */
-	public DataAreaList getSequenceAreas(int sequenceID) {
+	public DataAreaList getSequenceAreas(String sequenceID) {
 		DataAreaList result = sequenceAreaLists.get(sequenceID);
 		if (result == null) {
 			result = new DataAreaList(this, sequenceID);
@@ -131,7 +132,7 @@ public class DataAreaModel {
 		}
 
 		List<DataArea> affectedAreas = new ArrayList<DataArea>();
-		Iterator<Integer> idIterator = sequenceAreaLists.keySet().iterator();
+		Iterator<String> idIterator = sequenceAreaLists.keySet().iterator();
 		while (idIterator.hasNext()) {
 			affectedAreas.addAll(getSequenceAreas(idIterator.next()).setAllVisible(visible));
 		}
@@ -150,7 +151,7 @@ public class DataAreaModel {
 	 */
 	public int getVisibleSequenceAreaHeight() {
 		int result = 0;
-		Iterator<Integer> iterator = sequenceAreaLists.keySet().iterator();
+		Iterator<String> iterator = sequenceAreaLists.keySet().iterator();
 		while (iterator.hasNext()) {
 			result += getSequenceAreas(iterator.next()).getVisibleHeight();
 		}
@@ -180,7 +181,7 @@ public class DataAreaModel {
 		if (localMaxLengthBeforeStart == AlignmentLabelArea.RECALCULATE_VALUE) {
 			localMaxLengthBeforeStart = Math.max((int)Math2.roundUp(getOwner().getPaintSettings().getCursorLineWidth() / 2),
 					Math.max(getTopAreas().getMaxLengthBeforeStart(), getBottomAreas().getMaxLengthBeforeStart()));
-			Iterator<Integer> iterator = sequenceAreaLists.keySet().iterator();
+			Iterator<String> iterator = sequenceAreaLists.keySet().iterator();
 			while (iterator.hasNext()) {
 				localMaxLengthBeforeStart = Math.max(localMaxLengthBeforeStart, getSequenceAreas(iterator.next()).getMaxLengthBeforeStart());
 			}
@@ -234,7 +235,7 @@ public class DataAreaModel {
     if (localMaxLengthAfterEnd == AlignmentLabelArea.RECALCULATE_VALUE) {
       localMaxLengthAfterEnd = Math.max((int)Math2.roundUp(getOwner().getPaintSettings().getCursorLineWidth() / 2), 
       		Math.max(getTopAreas().getMaxLengthAfterEnd(), getBottomAreas().getMaxLengthAfterEnd()));
-      Iterator<Integer> iterator = sequenceAreaLists.keySet().iterator();
+      Iterator<String> iterator = sequenceAreaLists.keySet().iterator();
       while (iterator.hasNext()) {
         localMaxLengthAfterEnd = Math.max(localMaxLengthAfterEnd, getSequenceAreas(iterator.next()).getMaxLengthAfterEnd());
       }

@@ -40,11 +40,31 @@ import java.util.TreeMap;
  * @since 0.4.0
  */
 public class SequenceIDManager {  //TODO What if the same name is added several times (especially if it has been removed from a model and then added again)?
+	public static final String DEFAULT_ID_PREFIX = "id";
+	
+	
+	private String idPrefix;
 	private IntegerIDManager integerIDManager = new IntegerIDManager();
-	private Map<String, Integer> idByNameMap = new TreeMap<String, Integer>();
-	private Map<Integer, String> nameByIDMap = new TreeMap<Integer, String>();
+	private Map<String, String> idByNameMap = new TreeMap<String, String>();
+	private Map<String, String> nameByIDMap = new TreeMap<String, String>();
 
 	
+	public SequenceIDManager() {
+		this(DEFAULT_ID_PREFIX);
+	}
+	
+	
+	public SequenceIDManager(String idPrefix) {
+		super();
+		if (idPrefix == null) {
+			throw new NullPointerException("The ID prefix must not be null.");
+		}
+		else {
+			this.idPrefix = idPrefix;
+		}
+	}
+
+
 	/**
    * Adds a new empty sequence to the underlying data source and generates an ID for it.
    * <p>
@@ -55,10 +75,10 @@ public class SequenceIDManager {  //TODO What if the same name is added several 
 	 * 
 	 * @throws AlignmentSourceNotWritableException if the underlying data source is not writable for sequences
    */
-  public int addSequenceName(String sequenceName) {
-  	int sequenceID = sequenceIDByName(sequenceName);
-  	if (sequenceID == -1) {
-  		sequenceID = integerIDManager.createNewID();
+  public String addSequenceName(String sequenceName) {
+  	String sequenceID = sequenceIDByName(sequenceName);
+  	if (sequenceID == null) {
+  		sequenceID = idPrefix + integerIDManager.createNewID();
   		idByNameMap.put(sequenceName, sequenceID);
   		nameByIDMap.put(sequenceID, sequenceName);
   	}
@@ -80,7 +100,7 @@ public class SequenceIDManager {  //TODO What if the same name is added several 
 	 * @throws SequenceNotFoundException if a sequence with the specified ID is not present the underlying
 	 *         data source
    */
-  public String renameSequence(int sequenceID, String newSequenceName, AlignmentModel<?> model) 
+  public String renameSequence(String sequenceID, String newSequenceName, AlignmentModel<?> model) 
   		throws DuplicateSequenceNameException, SequenceNotFoundException {
 
   	String oldSequenceName = nameByIDMap.get(sequenceID);
@@ -105,16 +125,10 @@ public class SequenceIDManager {  //TODO What if the same name is added several 
    * Returns the unique sequence ID associated with the specified name.
    * 
    * @param sequenceName - the name of the sequence that would be visible to the application user
-   * @return the sequence ID or {@code -1} if no sequence with the specified name is contained in this model
+   * @return the sequence ID or {@code null} if no sequence with the specified name is contained in this model
    */
-  public int sequenceIDByName(String sequenceName) {
-  	Integer result =  idByNameMap.get(sequenceName);
-  	if (result == null) {
-  		return -1;
-  	}
-  	else {
-  		return result;
-  	}
+  public String sequenceIDByName(String sequenceName) {
+  	return idByNameMap.get(sequenceName);
   }
 
   
@@ -125,7 +139,7 @@ public class SequenceIDManager {  //TODO What if the same name is added several 
    * @param sequenceID - the unique unmodifiable ID the sequence is identified by
    * @return the sequence name or {@code null} if no sequence with this ID is contained in this model
    */
-  public String sequenceNameByID(int sequenceID) {
+  public String sequenceNameByID(String sequenceID) {
   	return nameByIDMap.get(sequenceID);
   }
 }

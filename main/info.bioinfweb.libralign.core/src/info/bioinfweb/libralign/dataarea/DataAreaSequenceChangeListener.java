@@ -73,7 +73,7 @@ public class DataAreaSequenceChangeListener implements AlignmentModelChangeListe
 	public <T> void afterSequenceChange(SequenceChangeEvent<T> e) {
 		fireAfterSequenceChange(getOwner().getTopAreas(), e);
 		
-		Iterator<Integer> iterator = e.getSource().sequenceIDIterator();
+		Iterator<String> iterator = e.getSource().sequenceIDIterator();
 		while (iterator.hasNext()) {
 			fireAfterSequenceChange(getOwner().getSequenceAreas(iterator.next()), e);
 		}
@@ -94,7 +94,7 @@ public class DataAreaSequenceChangeListener implements AlignmentModelChangeListe
 	public <T> void afterSequenceRenamed(SequenceRenamedEvent<T> e) {
 		fireAfterSequenceRenamed(getOwner().getTopAreas(), e);
 		
-		Iterator<Integer> iterator = e.getSource().sequenceIDIterator();
+		Iterator<String> iterator = e.getSource().sequenceIDIterator();
 		while (iterator.hasNext()) {
 			fireAfterSequenceRenamed(getOwner().getSequenceAreas(iterator.next()), e);
 		}
@@ -115,7 +115,7 @@ public class DataAreaSequenceChangeListener implements AlignmentModelChangeListe
 	public <T> void afterTokenChange(TokenChangeEvent<T> e) {
 		fireAfterTokenChange(getOwner().getTopAreas(), e);
 		
-		Iterator<Integer> iterator = e.getSource().sequenceIDIterator();
+		Iterator<String> iterator = e.getSource().sequenceIDIterator();
 		while (iterator.hasNext()) {
 			fireAfterTokenChange(getOwner().getSequenceAreas(iterator.next()), e);
 		}

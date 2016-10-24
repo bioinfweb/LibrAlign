@@ -51,7 +51,7 @@ public interface TokenPainter {
 	 * @param paintArea the rectangle to be filled with the representation of the token
 	 * @param selectionColor this color must be mixed by half with the painted output if it is not {@code null}
 	 */
-	public void paintToken(AlignmentArea alignmentArea, int sequenceID, int columnIndex, Graphics2D g, Rectangle2D paintArea, 
+	public void paintToken(AlignmentArea alignmentArea, String sequenceID, int columnIndex, Graphics2D g, Rectangle2D paintArea, 
 			Color selectionColor);
 	
 	/**

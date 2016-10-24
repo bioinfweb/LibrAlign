@@ -78,7 +78,7 @@ public class DegapedIndexCalculator<T> {
 	
 	private AlignmentModel<T> model;
 	private Set<T> gapTokens;
-	private Map<Integer, IndexInfo> indexInfos = new HashMap<Integer, IndexInfo>();
+	private Map<String, IndexInfo> indexInfos = new HashMap<String, IndexInfo>();
 	
 	
 	/**
@@ -128,7 +128,7 @@ public class DegapedIndexCalculator<T> {
 	}
 	
 	
-	private IndexInfo getIndexInfo(int sequenceID) {
+	private IndexInfo getIndexInfo(String sequenceID) {
 		IndexInfo result = indexInfos.get(sequenceID);
 		if (result == null) {
 			result = new IndexInfo();
@@ -156,7 +156,7 @@ public class DegapedIndexCalculator<T> {
 	 * @return the index the token at the specified position would have, if there were no gaps
 	 *         in the sequence
 	 */
-	public int degapedIndex(int sequenceID, int originalIndex) {
+	public int degapedIndex(String sequenceID, int originalIndex) {
 		if (Math2.isBetween(originalIndex, 0, model.getSequenceLength(sequenceID) - 1)) {
 			IndexInfo info = getIndexInfo(sequenceID);
 			

@@ -48,5 +48,5 @@ public interface SequenceAccess<S> {
 	 * @param sequenceID - the ID of the sequence to be returned
 	 * @return the sequence object as described above
 	 */
-	public S getSequence(int sequenceID);
+	public S getSequence(String sequenceID);
 }

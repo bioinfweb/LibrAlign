@@ -437,7 +437,7 @@ public class AlignmentContentArea extends TICComponent {
 			}
 		}
 		if (subArea instanceof SequenceArea) {
-			return getOwner().getSequenceOrder().indexByID(((SequenceArea)subArea).getSeqenceID());
+			return getOwner().getSequenceOrder().indexByID(((SequenceArea)subArea).getSequenceID());
 		}
 		else if (y < 0) {
 			return 0;

@@ -51,18 +51,18 @@ public class SequenceArea extends AlignmentSubArea {
 	private static final Color DEFAULT_BACKGROUND_COLOR = Color.LIGHT_GRAY.brighter();
 	
 	
-	private int seqenceID;
+	private String sequenceID;
 	
 	
 	/**
 	 * Creates a new instance of this class.
 	 * 
 	 * @param owner - the alignment area that will contain this instance
-	 * @param seqenceID - the unique identifier of the sequence that will be displayed in this area
+	 * @param sequenceID - the unique identifier of the sequence that will be displayed in this area
 	 */
-	public SequenceArea(AlignmentContentArea owner, int seqenceID) {
+	public SequenceArea(AlignmentContentArea owner, String sequenceID) {
 		super(owner);
-		this.seqenceID = seqenceID;
+		this.sequenceID = sequenceID;
 		assignSize();
 	}
 
@@ -72,14 +72,14 @@ public class SequenceArea extends AlignmentSubArea {
 	 * 
 	 * @return an ID of a sequence stored in the according {@link AlignmentModel}
 	 */
-	public int getSeqenceID() {
-		return seqenceID;
+	public String getSequenceID() {
+		return sequenceID;
 	}
 
 
   private void paintCursor(Graphics2D g) {
   	SelectionModel selection = getOwner().getOwner().getSelection();
-  	if (Math2.isBetween(getOwner().getOwner().getSequenceOrder().indexByID(getSeqenceID()), 
+  	if (Math2.isBetween(getOwner().getOwner().getSequenceOrder().indexByID(getSequenceID()), 
   			selection.getCursorRow(), selection.getCursorRow() + selection.getCursorHeight() - 1)) {
   		
   		Stroke previousStroke = g.getStroke();
@@ -104,7 +104,7 @@ public class SequenceArea extends AlignmentSubArea {
 
 		int firstIndex = Math.max(0, getOwner().columnByPaintX((int)event.getRectangle().getMinX()));
 		int lastIndex = getOwner().columnByPaintX((int)event.getRectangle().getMaxX());
-		int lastColumn = getOwner().getOwner().getAlignmentModel().getSequenceLength(getSeqenceID()) - 1;
+		int lastColumn = getOwner().getOwner().getAlignmentModel().getSequenceLength(getSequenceID()) - 1;
 		if ((lastIndex == -1) || (lastIndex > lastColumn)) {  //TODO Elongate to the length of the longest sequence and paint empty/special tokens on the right end?
 			lastIndex = lastColumn;
 		}
@@ -114,7 +114,7 @@ public class SequenceArea extends AlignmentSubArea {
 		double x = getOwner().paintXByColumn(firstIndex);
 		PaintSettings paintSettings = getOwner().getOwner().getPaintSettings();
 		for (int i = firstIndex; i <= lastIndex; i++) {
-			paintSettings.getTokenPainterList().painterByColumn(i).paintToken(getOwner().getOwner(), getSeqenceID(), i, 
+			paintSettings.getTokenPainterList().painterByColumn(i).paintToken(getOwner().getOwner(), getSequenceID(), i, 
 					event.getGraphics(), new Rectangle2D.Double(x, 0, paintSettings.getTokenWidth(i), paintSettings.getTokenHeight()), 
 					paintSettings.getSelectionColor());
 	    x += paintSettings.getTokenWidth(i);

@@ -29,7 +29,7 @@ package info.bioinfweb.libralign.dataarea;
  */
 public class DataAreaLocation {
   private DataAreaListType listType;
-  private int sequenceID;
+  private String sequenceID;
 
 
 	/**
@@ -48,7 +48,7 @@ public class DataAreaLocation {
 		}
 		else {
 			this.listType = listType;
-			sequenceID = -1;
+			sequenceID = null;
 		}
 	}
 
@@ -62,28 +62,27 @@ public class DataAreaLocation {
 	 * 
 	 * @param sequenceID - the unique identifier of the sequence the contained data areas will be attached to
 	 */
-	public DataAreaLocation(int sequenceID) {
+	public DataAreaLocation(String sequenceID) {
 		super();
 		this.listType = DataAreaListType.SEQUENCE;
 		this.sequenceID = sequenceID;
 	}
 	
 	
-	public int getSequenceID() {
+	public String getSequenceID() {
 		return sequenceID;
 	}
 
 
 	/**
 	 * Can be used to update the sequence name, if a sequence was renamed or data area is moved. 
-	 * The list type is automatically set to {@link DataAreaListType#SEQUENCE} if an ID greater 
-	 * zero is specified.
+	 * The list type is automatically set to {@link DataAreaListType#SEQUENCE} if an non-{@code null}
+	 * ID is specified.
 	 * 
-	 * @param sequenceID - the unique identifier of the associated sequence (Must greater or equal 
-	 *        to zero and should be a valid identifier.)
+	 * @param sequenceID - the unique identifier of the associated sequence
 	 */
-	public void setSequenceID(int sequenceID) {
-		if (sequenceID >= 0) {
+	public void setSequenceID(String sequenceID) {
+		if (sequenceID != null) {
 			listType = DataAreaListType.SEQUENCE;
 		}
 		this.sequenceID = sequenceID;
@@ -104,7 +103,7 @@ public class DataAreaLocation {
 	public void setListType(DataAreaListType listType) {
 		this.listType = listType;
 		if (listType != DataAreaListType.SEQUENCE) {
-			sequenceID = -1;
+			sequenceID = null;
 		}
 	}
 }

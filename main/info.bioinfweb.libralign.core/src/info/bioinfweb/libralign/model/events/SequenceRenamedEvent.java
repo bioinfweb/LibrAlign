@@ -35,7 +35,7 @@ public class SequenceRenamedEvent<T> extends AlignmentModelChangeEvent<T> {
 	private String newName;
 	
 	
-	public SequenceRenamedEvent(AlignmentModel<T> source, int sequenceID,
+	public SequenceRenamedEvent(AlignmentModel<T> source, String sequenceID,
 			String previousName, String newName) {
 		
 		super(source, sequenceID);

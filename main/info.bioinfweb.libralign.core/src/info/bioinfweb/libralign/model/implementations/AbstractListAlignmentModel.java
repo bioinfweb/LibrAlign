@@ -80,13 +80,13 @@ public abstract class AbstractListAlignmentModel<T> extends AbstractMapBasedAlig
 	}
 
 	
-	public List<T> getSequence(int sequenceID) {
+	public List<T> getSequence(String sequenceID) {
 		return getSequenceMap().get(sequenceID);
 	}
 	
 	
 	@Override
-	public T getTokenAt(int sequenceID, int index) {
+	public T getTokenAt(String sequenceID, int index) {
 		List<T> sequence = getSequence(sequenceID);
 		if (sequence != null) {
 			return sequence.get(index);
@@ -98,7 +98,7 @@ public abstract class AbstractListAlignmentModel<T> extends AbstractMapBasedAlig
 	
 
 	@Override
-	public void setTokenAt(int sequenceID, int index, T token) throws AlignmentSourceNotWritableException {
+	public void setTokenAt(String sequenceID, int index, T token) throws AlignmentSourceNotWritableException {
 		List<T> sequence = getSequence(sequenceID);
 		if (sequence != null) {
 			T replacedToken = sequence.get(index);
@@ -112,7 +112,7 @@ public abstract class AbstractListAlignmentModel<T> extends AbstractMapBasedAlig
 
 	
 	@Override
-	public void setTokensAt(int sequenceID, int beginIndex,	Collection<? extends T> tokens)
+	public void setTokensAt(String sequenceID, int beginIndex,	Collection<? extends T> tokens)
 			throws AlignmentSourceNotWritableException {
 
 		List<T> sequence = getSequence(sequenceID);
@@ -135,7 +135,7 @@ public abstract class AbstractListAlignmentModel<T> extends AbstractMapBasedAlig
 
 	
 	@Override
-	public void insertTokenAt(int sequenceID, int index, T token)	throws AlignmentSourceNotWritableException {
+	public void insertTokenAt(String sequenceID, int index, T token)	throws AlignmentSourceNotWritableException {
 		List<T> sequence = getSequence(sequenceID);
 		if (sequence != null) {
 			sequence.add(index, token);
@@ -148,7 +148,7 @@ public abstract class AbstractListAlignmentModel<T> extends AbstractMapBasedAlig
 
 	
 	@Override
-	public void insertTokensAt(int sequenceID, int beginIndex, Collection<? extends T> tokens)
+	public void insertTokensAt(String sequenceID, int beginIndex, Collection<? extends T> tokens)
 			throws AlignmentSourceNotWritableException {
 
 		List<T> sequence = getSequence(sequenceID);
@@ -163,7 +163,7 @@ public abstract class AbstractListAlignmentModel<T> extends AbstractMapBasedAlig
 
 	
 	@Override
-	public void removeTokenAt(int sequenceID, int index) throws AlignmentSourceNotWritableException {
+	public void removeTokenAt(String sequenceID, int index) throws AlignmentSourceNotWritableException {
 		List<T> sequence = getSequence(sequenceID);
 		if (sequence != null) {
 			T removedToken = sequence.get(index);
@@ -177,7 +177,7 @@ public abstract class AbstractListAlignmentModel<T> extends AbstractMapBasedAlig
 
 	
 	@Override
-	public void removeTokensAt(int sequenceID, int beginIndex, int endIndex)
+	public void removeTokensAt(String sequenceID, int beginIndex, int endIndex)
 			throws AlignmentSourceNotWritableException {
 
 		List<T> sequence = getSequence(sequenceID);
@@ -196,7 +196,7 @@ public abstract class AbstractListAlignmentModel<T> extends AbstractMapBasedAlig
 
 	
 	@Override
-	public int getSequenceLength(int sequenceID) {
+	public int getSequenceLength(String sequenceID) {
 		List<T> sequence = getSequence(sequenceID);
 		if (sequence != null) {
 			return sequence.size();
@@ -251,11 +251,11 @@ public abstract class AbstractListAlignmentModel<T> extends AbstractMapBasedAlig
 	 * @param initialCapacity - the initial capacity the returned list object shall have
 	 * @return the new sequence object
 	 */
-	protected abstract List<T> createNewSequence(int sequenceID, String sequenceName, int initialCapacity);
+	protected abstract List<T> createNewSequence(String sequenceID, String sequenceName, int initialCapacity);
 	
 
 	@Override
-	protected List<T> createNewSequence(int sequenceID, String sequenceName) {
+	protected List<T> createNewSequence(String sequenceID, String sequenceName) {
 		int capacity = initialCapacity;
 		if (isUseMaxLength() && (getSequenceCount() > 0)) {
 			int initialLength;

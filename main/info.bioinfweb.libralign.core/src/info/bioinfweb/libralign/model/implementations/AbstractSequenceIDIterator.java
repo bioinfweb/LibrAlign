@@ -43,21 +43,21 @@ import java.util.Iterator;
  * @param <P> - the implementing class of {@link AlignmentModel} which will return the iterator
  *        inherited from this class 
  */
-public abstract class AbstractSequenceIDIterator<P extends AlignmentModel> implements Iterator<Integer> {
-	private P provider;
-	private Iterator<Integer> iterator;
-  private int currentID = -1;
+public abstract class AbstractSequenceIDIterator<P extends AlignmentModel> implements Iterator<String> {
+	private P model;
+	private Iterator<String> iterator;
+  private String currentID = null;
 	
 	
 	/**
 	 * Creates a new instance of this class.
 	 * 
-	 * @param provider - the provider that is going to return this iterator with one of its methods
+	 * @param model - the provider that is going to return this iterator with one of its methods
 	 * @param iterator - the underlying iterator that returns the sequence IDs in the correct order
 	 */
-	public AbstractSequenceIDIterator(P provider, Iterator<Integer> iterator) {
+	public AbstractSequenceIDIterator(P model, Iterator<String> iterator) {
 		super();
-		this.provider = provider;
+		this.model = model;
 		this.iterator = iterator;
 	}
 
@@ -67,8 +67,8 @@ public abstract class AbstractSequenceIDIterator<P extends AlignmentModel> imple
 	 * 
 	 * @return the provider instance specified in the constructor of this class.
 	 */
-	protected P getProvider() {
-		return provider;
+	protected P getModel() {
+		return model;
 	}
 
 
@@ -77,7 +77,7 @@ public abstract class AbstractSequenceIDIterator<P extends AlignmentModel> imple
 	 * 
 	 * @return the iterator instance specifying the ID order
 	 */
-	protected Iterator<Integer> getIterator() {
+	protected Iterator<String> getIterator() {
 		return iterator;
 	}
 
@@ -85,9 +85,9 @@ public abstract class AbstractSequenceIDIterator<P extends AlignmentModel> imple
 	/**
 	 * The ID that has been returned by this iterator by the last call of {@link #next()}.
 	 * 
-	 * @return the current ID or {@code -1} if {@link #next()} has never been called until now
+	 * @return the current ID or {@code null} if {@link #next()} has never been called until now
 	 */
-	protected int getCurrentID() {
+	protected String getCurrentID() {
 		return currentID;
 	}
 
@@ -99,7 +99,7 @@ public abstract class AbstractSequenceIDIterator<P extends AlignmentModel> imple
 
 	
 	@Override
-	public Integer next() {
+	public String next() {
 		currentID = iterator.next();
 		return currentID;
 	}
@@ -126,7 +126,7 @@ public abstract class AbstractSequenceIDIterator<P extends AlignmentModel> imple
 	 */
 	@Override
 	public void remove() {
-		if (getProvider().isSequencesReadOnly()) {
+		if (getModel().isSequencesReadOnly()) {
 			throw new UnsupportedOperationException(
 					"The underlying data source does not allow the removal of sequences.");
 		}

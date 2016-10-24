@@ -37,18 +37,18 @@ public class SequenceChangeEvent<T> extends AlignmentModelChangeEvent<T> {
 	private ListChangeType type;
 
 	
-	protected SequenceChangeEvent(AlignmentModel<T> source, int sequenceID, ListChangeType type) {
+	protected SequenceChangeEvent(AlignmentModel<T> source, String sequenceID, ListChangeType type) {
 		super(source, sequenceID);
 		this.type = type;
 	}
 	
 	
-	public static <T> SequenceChangeEvent<T> newInsertInstance(AlignmentModel<T> source, int sequenceID) {
+	public static <T> SequenceChangeEvent<T> newInsertInstance(AlignmentModel<T> source, String sequenceID) {
 		return new SequenceChangeEvent<T>(source, sequenceID, ListChangeType.INSERTION);
 	}
 	
 	
-	public static <T> SequenceChangeEvent<T> newRemoveInstance(AlignmentModel<T> source, int sequenceID) {
+	public static <T> SequenceChangeEvent<T> newRemoveInstance(AlignmentModel<T> source, String sequenceID) {
 		return new SequenceChangeEvent<T>(source, sequenceID, ListChangeType.DELETION);
 	}
 
