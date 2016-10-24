@@ -21,7 +21,6 @@ package info.bioinfweb.libralign.alignmentarea.order;
 
 import info.bioinfweb.commons.collections.CollectionUtils;
 import info.bioinfweb.libralign.alignmentarea.AlignmentArea;
-import info.bioinfweb.libralign.alignmentarea.content.AlignmentContentArea;
 
 import java.util.ArrayList;
 import java.util.Collections;

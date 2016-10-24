@@ -31,28 +31,30 @@ import info.bioinfweb.libralign.model.exception.AlignmentSourceNotWritableExcept
  * @author Ben St&ouml;ver
  * @since 0.1.0
  *
- * @param <S> - the type of the sequence objects (e.g. a BioJava sequence type or {@link String})
- * @param <T> - the type of sequence elements (tokens) the implementing provider object works with
+ * @param <S> the type of the sequence objects (e.g. a BioJava sequence type or {@link String})
+ * @param <T> the type of sequence elements (tokens) the implementing provider object works with
  */
 public interface SequenceAccessAlignmentModel<S, T> extends AlignmentModel<T>, SequenceAccess<S> {
   /**
    * Adds a the specified sequence to the underlying data source and generates an ID for it.
    * 
-   * @param sequenceName - the name of the new sequence
-	 * @param content - the sequence object to be added.
+   * @param sequenceName the name of the new sequence
+	 * @param content the sequence object to be added.
    * @return the unique ID of the new sequence
 	 * 
 	 * @throws AlignmentSourceNotWritableException if the underlying data source is not writable for sequences
    */
-	public String addSequence(String sequenceName, S content);
+	public String addSequence(String sequenceName, S content) throws AlignmentSourceNotWritableException;
 	
 	/**
 	 * Replaces the sequence object with the specified ID.
 	 * 
-	 * @param sequenceID - the ID of the sequence to be replaced
-	 * @param content - the new sequence object
+	 * @param sequenceID the ID of the sequence to be replaced
+	 * @param content the new sequence object
 	 * @return the previous sequence identified by the specified ID, or {@code null} if there was no sequence 
 	 *         with the ID
+	 * 
+	 * @throws AlignmentSourceNotWritableException if the underlying data source is not writable for tokens
  	 */
-	public S replaceSequence(String sequenceID, S content);
+	public S replaceSequence(String sequenceID, S content) throws AlignmentSourceNotWritableException;
 }

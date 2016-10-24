@@ -42,8 +42,7 @@ import info.bioinfweb.libralign.model.tokenset.TokenSet;
  * @param <S> - the type of the sequence objects (e.g. a BioJava sequence type or {@link String})
  * @param <T> - the type of sequence elements (tokens) the implementing provider object works with
  */
-public abstract class AbstractUnmodifyableAlignmentModel<S, T>
-    extends AbstractMapBasedAlignmentModel<S, T>
+public abstract class AbstractUnmodifyableAlignmentModel<S, T> extends AbstractMapBasedAlignmentModel<S, T>
     implements SequenceAccessAlignmentModel<S, T> {
 	
 	/**
