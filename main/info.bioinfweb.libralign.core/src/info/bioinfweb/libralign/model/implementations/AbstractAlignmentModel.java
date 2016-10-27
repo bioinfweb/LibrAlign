@@ -2,26 +2,22 @@
  * LibrAlign - A GUI library for displaying and editing multiple sequence alignments and attached data
  * Copyright (C) 2014 - 2016  Ben Stöver
  * <http://bioinfweb.info/LibrAlign>
- * 
+ *
  * This file is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- * 
+ *
  * This file is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 package info.bioinfweb.libralign.model.implementations;
 
-
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.Set;
 
 import info.bioinfweb.libralign.model.AlignmentModel;
 import info.bioinfweb.libralign.model.AlignmentModelChangeListener;
@@ -29,12 +25,15 @@ import info.bioinfweb.libralign.model.events.SequenceChangeEvent;
 import info.bioinfweb.libralign.model.events.SequenceRenamedEvent;
 import info.bioinfweb.libralign.model.events.TokenChangeEvent;
 
+import java.util.HashSet;
+import java.util.Set;
+
 
 
 /**
  * This is the base class for all alignment models and alignment model decorators. It implements the common
  * change listener functionality.
- * 
+ *
  * @author Ben St&ouml;ver
  * @since 0.4.0
  *
@@ -44,7 +43,7 @@ public abstract class AbstractAlignmentModel<T> implements AlignmentModel<T> {
 	private String label;
 	private Set<AlignmentModelChangeListener> changeListeners = new HashSet<AlignmentModelChangeListener>();
 
-	
+
 	@Override
 	public String getLabel() {
 		return label;
@@ -54,7 +53,7 @@ public abstract class AbstractAlignmentModel<T> implements AlignmentModel<T> {
 	/**
 	 * Allows to specify a new label for this alignment. This implementation allows to edit the label and
 	 * will never throw an {@link UnsupportedOperationException} in this method.
-	 * 
+	 *
 	 * @param label the new label
 	 */
 	@Override
@@ -73,9 +72,8 @@ public abstract class AbstractAlignmentModel<T> implements AlignmentModel<T> {
 	 * Informs all listeners that a sequence has been inserted, removed or replaced.
 	 */
 	protected void fireAfterSequenceChange(SequenceChangeEvent<T> e) {
-		Iterator<AlignmentModelChangeListener> iterator = getChangeListeners().iterator();
-		while (iterator.hasNext()) {
-			iterator.next().afterSequenceChange(e);
+        for (AlignmentModelChangeListener listener : getChangeListeners().toArray(new AlignmentModelChangeListener[getChangeListeners().size()])) {  // Copying the list is necessary to allow listeners to remove themselves from the list without a ConcurrentModificationException being thrown.
+            listener.afterSequenceChange(e);
 		}
 	}
 
@@ -84,20 +82,18 @@ public abstract class AbstractAlignmentModel<T> implements AlignmentModel<T> {
 	 * Informs all listeners that a sequence has been renamed.
 	 */
 	protected void fireAfterSequenceRenamed(SequenceRenamedEvent<T> e) {
-		Iterator<AlignmentModelChangeListener> iterator = getChangeListeners().iterator();
-		while (iterator.hasNext()) {
-			iterator.next().afterSequenceRenamed(e);
+        for (AlignmentModelChangeListener listener : getChangeListeners().toArray(new AlignmentModelChangeListener[getChangeListeners().size()])) {  // Copying the list is necessary to allow listeners to remove themselves from the list without a ConcurrentModificationException being thrown.
+            listener.afterSequenceRenamed(e);
 		}
 	}
-	
+
 
 	/**
 	 * Informs all listeners that a sequence has been inserted, removed or replaced.
 	 */
 	protected void fireAfterTokenChange(TokenChangeEvent<T> e) {
-		Iterator<AlignmentModelChangeListener> iterator = getChangeListeners().iterator();
-		while (iterator.hasNext()) {
-			iterator.next().afterTokenChange(e);
+        for (AlignmentModelChangeListener listener : getChangeListeners().toArray(new AlignmentModelChangeListener[getChangeListeners().size()])) {  // Copying the list is necessary to allow listeners to remove themselves from the list without a ConcurrentModificationException being thrown.
+            listener.afterTokenChange(e);
 		}
 	}
 }

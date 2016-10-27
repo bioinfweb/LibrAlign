@@ -32,7 +32,6 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.TreeMap;
 
 
 
@@ -192,9 +191,9 @@ public class DataAreaModel {
 
 	/**
 	 * Flags the properties {@link #getLocalMaxLengthBeforeStart()} and {@link #getLocalMaxLengthAfterEnd()} to
-	 * be recalculated when they are accessed the next time. 
+	 * be recalculated when they are accessed the next time.
 	 * <p>
-	 * LibrAlign does not recalculate these values on every call for performance reasons. Usually application code 
+	 * LibrAlign does not recalculate these values on every call for performance reasons. Usually application code
 	 * will not have to call this method directly.
 	 */
 	public void setLocalMaxLengthBeforeAfterRecalculate() {
@@ -233,7 +232,7 @@ public class DataAreaModel {
    */
   public int getLocalMaxLengthAfterEnd() {
     if (localMaxLengthAfterEnd == AlignmentLabelArea.RECALCULATE_VALUE) {
-      localMaxLengthAfterEnd = Math.max((int)Math2.roundUp(getOwner().getPaintSettings().getCursorLineWidth() / 2), 
+      localMaxLengthAfterEnd = Math.max((int)Math2.roundUp(getOwner().getPaintSettings().getCursorLineWidth() / 2),
       		Math.max(getTopAreas().getMaxLengthAfterEnd(), getBottomAreas().getMaxLengthAfterEnd()));
       Iterator<String> iterator = sequenceAreaLists.keySet().iterator();
       while (iterator.hasNext()) {
@@ -281,9 +280,8 @@ public class DataAreaModel {
 	 */
 	protected void fireInsertedRemoved(ListChangeType type, Collection<? extends DataArea> affectedElement) {
 		DataAreaChangeEvent e = new DataAreaChangeEvent(this, true, type, affectedElement);
-		Iterator<DataAreaModelListener> iterator = listeners.iterator();
-		while (iterator.hasNext()) {
-			iterator.next().dataAreaInsertedRemoved(e);
+        for (DataAreaModelListener listener : listeners.toArray(new DataAreaModelListener[listeners.size()])) {  // Copying the list is necessary to allow listeners to remove themselves from the list without a ConcurrentModificationException being thrown.
+			listener.dataAreaInsertedRemoved(e);
 		}
 	}
 
@@ -293,9 +291,8 @@ public class DataAreaModel {
 	 */
 	protected void fireInsertedRemoved(ListChangeType type, DataArea affectedElements) {
 		DataAreaChangeEvent e = new DataAreaChangeEvent(this, true, type, affectedElements);
-		Iterator<DataAreaModelListener> iterator = listeners.iterator();
-		while (iterator.hasNext()) {
-			iterator.next().dataAreaInsertedRemoved(e);
+        for (DataAreaModelListener listener : listeners.toArray(new DataAreaModelListener[listeners.size()])) {  // Copying the list is necessary to allow listeners to remove themselves from the list without a ConcurrentModificationException being thrown.
+			listener.dataAreaInsertedRemoved(e);
 		}
 	}
 
@@ -349,9 +346,8 @@ public class DataAreaModel {
 	 */
 	protected void fireVisibilityChanged(boolean eventsFromSingleList, Collection<? extends DataArea> affectedElements) {
 		DataAreaChangeEvent e = new DataAreaChangeEvent(this, eventsFromSingleList, null, affectedElements);
-		Iterator<DataAreaModelListener> iterator = listeners.iterator();
-		while (iterator.hasNext()) {
-			iterator.next().dataAreaVisibilityChanged(e);
+        for (DataAreaModelListener listener : listeners.toArray(new DataAreaModelListener[listeners.size()])) {  // Copying the list is necessary to allow listeners to remove themselves from the list without a ConcurrentModificationException being thrown.
+			listener.dataAreaVisibilityChanged(e);
 		}
 	}
 
