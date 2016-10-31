@@ -180,7 +180,7 @@ public class DegapedIndexCalculator<T> {
 		}
 		else {
 			throw new IndexOutOfBoundsException("The index " + originalIndex + " in the sequence with the ID " + sequenceID + 
-					"is not between 0 and " +	(model.getSequenceLength(sequenceID) - 1) + ".");
+					" is not between 0 and " +	(model.getSequenceLength(sequenceID) - 1) + ".");
 		}
 	}
 
