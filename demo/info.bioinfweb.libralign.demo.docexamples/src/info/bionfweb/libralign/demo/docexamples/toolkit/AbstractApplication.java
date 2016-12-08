@@ -43,7 +43,7 @@ public class AbstractApplication {
 		
 		// Create model:
 		AlignmentModel<Character> model = new PackedAlignmentModel<Character>(CharacterTokenSet.newNucleotideInstance());
-		int id = model.addSequence("A");
+		String id = model.addSequence("A");
 		model.appendTokens(id, AlignmentModelUtils.charSequenceToTokenList("AT-CG", model.getTokenSet()));
 
 		// Prepare main area:

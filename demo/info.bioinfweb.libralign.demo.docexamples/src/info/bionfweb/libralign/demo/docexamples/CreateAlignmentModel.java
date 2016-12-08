@@ -42,7 +42,7 @@ public class CreateAlignmentModel {
 		AlignmentModel<Character> model = new PackedAlignmentModel<Character>(CharacterTokenSet.newDNAInstance());
 		
 		// Add one sequence and add single tokens:
-		int id = model.addSequence("Seq1");
+		String id = model.addSequence("Seq1");
 		model.appendToken(id, 'A');
 		model.appendToken(id, 'T');
 		model.appendToken(id, 'C');
@@ -54,7 +54,7 @@ public class CreateAlignmentModel {
 		
 		
 		// Test output of the alignment:
-		Iterator<Integer> idIterator = model.sequenceIDIterator();
+		Iterator<String> idIterator = model.sequenceIDIterator();
 		while (idIterator.hasNext()) {
 			id = idIterator.next();
 			
