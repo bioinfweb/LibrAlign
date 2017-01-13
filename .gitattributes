@@ -48,6 +48,7 @@ main/info.bioinfweb.libralign.core/.settings/org.eclipse.jdt.ui.prefs -text svne
 main/info.bioinfweb.libralign.core/lib/commons-beanutils-1.9.2.jar -text
 main/info.bioinfweb.libralign.core/lib/commons-collections4-4.1.jar -text
 main/info.bioinfweb.libralign.core/lib/commons-lang3-3.1.jar -text
+main/info.bioinfweb.libralign.core/pom.xml -text svneol=unset#text/plain
 main/info.bioinfweb.libralign.core/src/info/bioinfweb/libralign/actions/AlignmentActionProvider.java -text svneol=unset#text/plain
 main/info.bioinfweb.libralign.core/src/info/bioinfweb/libralign/alignmentarea/AlignmentArea.java -text svneol=unset#text/plain
 main/info.bioinfweb.libralign.core/src/info/bioinfweb/libralign/alignmentarea/ToolkitSpecificAlignmentArea.java -text svneol=unset#text/plain
