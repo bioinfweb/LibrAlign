@@ -292,6 +292,7 @@ main/info.bioinfweb.libralign.swt/.project -text svneol=unset#text/plain
 main/info.bioinfweb.libralign.swt/.settings/org.eclipse.jdt.core.prefs -text svneol=unset#text/plain
 main/info.bioinfweb.libralign.swt/.settings/org.eclipse.jdt.ui.prefs -text svneol=unset#text/plain
 main/info.bioinfweb.libralign.swt/lib/swt.jar -text
+main/info.bioinfweb.libralign.swt/pom.xml -text svneol=unset#text/plain
 main/info.bioinfweb.libralign.swt/src/info/bioinfweb/libralign/alignmentarea/SWTAlignmentArea.java -text svneol=unset#text/plain
 main/info.bioinfweb.libralign.swt/src/info/bioinfweb/libralign/alignmentarea/SWTScrolledCompositeResizeListener.java -text svneol=unset#text/plain
 main/info.bioinfweb.libralign.swt/src/info/bioinfweb/libralign/alignmentarea/content/SWTAlignmentContentArea.java -text svneol=unset#text/plain

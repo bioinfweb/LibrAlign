@@ -1,0 +1,65 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" 
+xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>info.bioinfweb.libralign</groupId>
+  <artifactId>libralign-swt</artifactId>
+  <version>0.4.0</version>
+  <packaging>jar</packaging>
+  <name>LibrAlign SWT</name>
+  <description>The SWT module of LibrAlign.</description>
+  <url>http://bioinfweb.info/LibrAlign/</url>
+  <licenses>
+    <license>
+      <name>GNU Lesser General Public License, Version 3</name>
+      <!-- TODO: Insert URL here, as soon as the website is updated. -->
+    </license>
+  </licenses>
+  <developers>
+    <developer>
+      <name>Ben Stöver</name>
+      <email>stoever@bioinfweb.info</email>
+      <organization>bioinfweb.info</organization>
+      <organizationUrl>http://www.bioinfweb.info/</organizationUrl>
+    </developer>
+  </developers>
+  <scm>
+    <connection>scm:svn:https://secure.bioinfweb.info/Code/svn/LibrAlign/trunk/main/info.bioinfweb.libralign.swt/</connection>
+    <developerConnection>scm:svn:https://secure.bioinfweb.info/Code/svn/LibrAlign/trunk/main/info.bioinfweb.libralign.swt/</developerConnection>
+    <url>http://bioinfweb.info/Code/sventon/repos/LibrAlign/list/trunk/main/info.bioinfweb.libralign.swt/</url>
+  </scm>
+
+  <dependencies>
+    <!-- bioinfweb.commons -->
+	<dependency>
+		<groupId>info.bioinfweb.commons.java</groupId>
+		<artifactId>bioinfweb-commons-java-core</artifactId>
+		<version>2.2.0</version>
+	</dependency>
+	<dependency>
+		<groupId>info.bioinfweb.commons.java</groupId>
+		<artifactId>bioinfweb-commons-java-swt</artifactId>
+		<version>2.0.0</version>
+	</dependency>
+	
+	<!-- TIC -->
+	<dependency>
+		<groupId>info.bioinfweb.tic</groupId>
+		<artifactId>tic-core</artifactId>
+		<version>2.0.0-preview-2</version>
+	</dependency>
+	<dependency>
+		<groupId>info.bioinfweb.tic</groupId>
+		<artifactId>tic-swt</artifactId>
+		<version>2.0.0-preview-2</version>
+	</dependency>
+	
+	<!-- LibrAlign -->
+	<dependency>
+		<groupId>info.bioinfweb.libralign</groupId>
+		<artifactId>libralign-core</artifactId>
+		<version>0.4.0-preview-2</version>
+	</dependency>
+  </dependencies>
+</project>
