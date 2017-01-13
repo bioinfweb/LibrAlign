@@ -1,0 +1,50 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" 
+xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>info.bioinfweb.libralign</groupId>
+  <artifactId>libralign-biojava1</artifactId>
+  <version>0.4.0</version>
+  <packaging>jar</packaging>
+  <name>LibrAlign BioJava1 compatibility components</name>
+  <description>The BioJava 1 module of LibrAlign.</description>
+  <url>http://bioinfweb.info/LibrAlign/</url>
+  <licenses>
+    <license>
+      <name>GNU Lesser General Public License, Version 3</name>
+      <!-- TODO: Insert URL here, as soon as the website is updated. -->
+    </license>
+  </licenses>
+  <developers>
+    <developer>
+      <name>Ben Stöver</name>
+      <email>stoever@bioinfweb.info</email>
+      <organization>bioinfweb.info</organization>
+      <organizationUrl>http://www.bioinfweb.info/</organizationUrl>
+    </developer>
+  </developers>
+  <scm>
+    <connection>scm:svn:https://secure.bioinfweb.info/Code/svn/LibrAlign/trunk/main/info.bioinfweb.libralign.biojava1/</connection>
+    <developerConnection>scm:svn:https://secure.bioinfweb.info/Code/svn/LibrAlign/trunk/main/info.bioinfweb.libralign.biojava1/</developerConnection>
+    <url>http://bioinfweb.info/Code/sventon/repos/LibrAlign/list/trunk/main/info.bioinfweb.libralign.biojava1/</url>
+  </scm>
+
+  <dependencies>
+	<dependency>
+		<groupId>info.bioinfweb.libralign</groupId>
+		<artifactId>libralign-core</artifactId>
+		<version>0.4.0-preview-1</version>
+	</dependency>
+	<dependency>
+      <groupId>org.biojava</groupId>
+      <artifactId>core</artifactId>
+      <version>1.9.2</version>
+    </dependency>
+	<dependency>
+      <groupId>org.biojava</groupId>
+      <artifactId>sequencing</artifactId>
+      <version>1.9.2</version>
+    </dependency>
+  </dependencies>
+</project>
