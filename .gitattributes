@@ -330,6 +330,8 @@ main/info.bioinfweb.libralign.swt/.classpath -text svneol=unset#text/plain
 main/info.bioinfweb.libralign.swt/.project -text svneol=unset#text/plain
 main/info.bioinfweb.libralign.swt/.settings/org.eclipse.jdt.core.prefs -text svneol=unset#text/plain
 main/info.bioinfweb.libralign.swt/.settings/org.eclipse.jdt.ui.prefs -text svneol=unset#text/plain
+main/info.bioinfweb.libralign.swt/include/lib/bioinfweb-commons-java-swt-2.0.0.jar -text
+main/info.bioinfweb.libralign.swt/include/lib/tic-swt-2.0.0.jar -text
 main/info.bioinfweb.libralign.swt/lib/swt.jar -text
 main/info.bioinfweb.libralign.swt/pom.xml -text svneol=unset#text/plain
 main/info.bioinfweb.libralign.swt/src/APACHE-LICENSE.txt -text svneol=unset#text/plain
