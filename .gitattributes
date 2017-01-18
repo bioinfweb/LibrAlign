@@ -18,8 +18,8 @@ main/info.bioinfweb.libralign.biojava1/.classpath -text svneol=unset#text/plain
 main/info.bioinfweb.libralign.biojava1/.project -text svneol=unset#text/plain
 main/info.bioinfweb.libralign.biojava1/.settings/org.eclipse.jdt.core.prefs -text svneol=unset#text/plain
 main/info.bioinfweb.libralign.biojava1/.settings/org.eclipse.jdt.ui.prefs -text svneol=unset#text/plain
-main/info.bioinfweb.libralign.biojava1/lib/core-1.9.2.jar -text
-main/info.bioinfweb.libralign.biojava1/lib/sequencing-1.9.2.jar -text
+main/info.bioinfweb.libralign.biojava1/include/lib/core-1.9.2.jar -text
+main/info.bioinfweb.libralign.biojava1/include/lib/sequencing-1.9.2.jar -text
 main/info.bioinfweb.libralign.biojava1/pom.xml -text svneol=unset#text/plain
 main/info.bioinfweb.libralign.biojava1/src/APACHE-LICENSE.txt -text svneol=unset#text/plain
 main/info.bioinfweb.libralign.biojava1/src/GPL.txt -text svneol=unset#text/plain
