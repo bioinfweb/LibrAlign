@@ -45,6 +45,10 @@ main/info.bioinfweb.libralign.biojava4/.settings/org.eclipse.jdt.core.prefs -tex
 main/info.bioinfweb.libralign.biojava4/.settings/org.eclipse.jdt.ui.prefs -text svneol=unset#text/plain
 main/info.bioinfweb.libralign.biojava4/lib/biojava-alignment-4.1.0.jar -text
 main/info.bioinfweb.libralign.biojava4/lib/biojava-core-4.1.0.jar -text
+main/info.bioinfweb.libralign.biojava4/src/APACHE-LICENSE.txt -text svneol=unset#text/plain
+main/info.bioinfweb.libralign.biojava4/src/GPL.txt -text svneol=unset#text/plain
+main/info.bioinfweb.libralign.biojava4/src/LGPL.txt -text svneol=unset#text/plain
+main/info.bioinfweb.libralign.biojava4/src/NOTICE.txt -text svneol=unset#text/plain
 main/info.bioinfweb.libralign.core/.classpath -text svneol=unset#text/plain
 main/info.bioinfweb.libralign.core/.project -text svneol=unset#text/plain
 main/info.bioinfweb.libralign.core/.settings/org.eclipse.jdt.core.prefs -text svneol=unset#text/plain
