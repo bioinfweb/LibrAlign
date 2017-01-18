@@ -330,6 +330,7 @@ main/info.bioinfweb.libralign.swt/src/info/bioinfweb/libralign/pherogram/view/SW
 test/.classpath -text svneol=unset#text/plain
 test/.project -text svneol=unset#text/plain
 test/.settings/org.eclipse.jdt.core.prefs -text svneol=unset#text/plain
+test/.settings/org.eclipse.jdt.ui.prefs -text svneol=unset#text/plain
 test/data/charSet/CharSet.nex -text
 test/data/pherograms/Test_pel1PCR_Pel2Wdhg_PCR-7-A_1.ab1 -text
 test/data/pherograms/Test_pel1PCR_Pel2Wdhg_PCR-7-A_1.scf -text
