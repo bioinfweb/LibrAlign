@@ -4,6 +4,7 @@
 <!ENTITY additionalClasspathEntries SYSTEM "additional_classpath_entries.xml">
 <!ENTITY javadocLinks SYSTEM "javaDoc_links.xml">
 <!ENTITY binaries SYSTEM "binaries.xml">
+<!ENTITY renameBinaries SYSTEM "rename_binaries.xml">
 <!ENTITY sourcefiles SYSTEM "sourcefiles.xml">
 <!ENTITY libraryJars SYSTEM "library_jars.xml">
 <!ENTITY javadocSourceLocations SYSTEM "javaDoc_sourceLocations.xml">
