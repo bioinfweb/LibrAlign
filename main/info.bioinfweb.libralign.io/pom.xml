@@ -13,7 +13,7 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/ma
   <licenses>
     <license>
       <name>GNU Lesser General Public License, Version 3</name>
-      <!-- TODO: Insert URL here, as soon as the website is updated. -->
+      <url>http://bioinfweb.info/LibrAlign/License/LGPL</url>
     </license>
   </licenses>
   <developers>
@@ -41,23 +41,11 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/ma
 	</dependency>
 	<!-- commons.bio is currently indirectly referenced. -->
 	
-	<!-- TIC -->
-	<dependency>
-	  <groupId>info.bioinfweb.tic</groupId>
-	  <artifactId>tic-core</artifactId>
-	  <version>2.0.0-preview-2</version>
-	</dependency>
-	<dependency>
-	  <groupId>info.bioinfweb.tic</groupId>
-	  <artifactId>tic-swt</artifactId>
-	  <version>2.0.0-preview-2</version>
-	</dependency>
-	
 	<!-- LibrAlign -->
 	<dependency>
 	  <groupId>info.bioinfweb.libralign</groupId>
 	  <artifactId>libralign-core</artifactId>
-	  <version>0.4.0-preview-2</version>
+	  <version>0.4.0</version>
 	</dependency>
 	
 	<!-- JPhyloIO -->
