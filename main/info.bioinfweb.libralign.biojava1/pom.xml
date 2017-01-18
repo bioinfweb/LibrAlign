@@ -13,7 +13,7 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/ma
   <licenses>
     <license>
       <name>GNU Lesser General Public License, Version 3</name>
-      <!-- TODO: Insert URL here, as soon as the website is updated. -->
+      <url>http://bioinfweb.info/LibrAlign/License/LGPL</url>
     </license>
   </licenses>
   <developers>
@@ -34,7 +34,7 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/ma
 	<dependency>
 		<groupId>info.bioinfweb.libralign</groupId>
 		<artifactId>libralign-core</artifactId>
-		<version>0.4.0-preview-1</version>
+		<version>0.4.0</version>
 	</dependency>
 	<dependency>
       <groupId>org.biojava</groupId>
