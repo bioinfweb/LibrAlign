@@ -30,8 +30,8 @@ main/info.bioinfweb.libralign.biojava3/.classpath -text svneol=unset#text/plain
 main/info.bioinfweb.libralign.biojava3/.project -text svneol=unset#text/plain
 main/info.bioinfweb.libralign.biojava3/.settings/org.eclipse.jdt.core.prefs -text svneol=unset#text/plain
 main/info.bioinfweb.libralign.biojava3/.settings/org.eclipse.jdt.ui.prefs -text svneol=unset#text/plain
-main/info.bioinfweb.libralign.biojava3/lib/biojava3-alignment-3.1.0.jar -text
-main/info.bioinfweb.libralign.biojava3/lib/biojava3-core-3.1.0.jar -text
+main/info.bioinfweb.libralign.biojava3/include/lib/biojava3-alignment-3.1.0.jar -text
+main/info.bioinfweb.libralign.biojava3/include/lib/biojava3-core-3.1.0.jar -text
 main/info.bioinfweb.libralign.biojava3/src/info/bioinfweb/libralign/model/adapters/BioJava3SequenceAdapter.java -text svneol=unset#text/plain
 main/info.bioinfweb.libralign.biojava3/src/info/bioinfweb/libralign/model/adapters/SingleBioJava3SequenceAdapter.java -text svneol=unset#text/plain
 main/info.bioinfweb.libralign.biojava3/src/info/bioinfweb/libralign/model/factory/biojava/BioJava3AminoAcidAligmentModelFactory.java -text svneol=unset#text/plain
