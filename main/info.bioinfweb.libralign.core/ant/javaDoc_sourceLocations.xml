@@ -1,0 +1,7 @@
+		    <sourceLocation sourceFolder="${sourceDataFolder}/${projectFolderPrefix}.core/src" urlPrefix="http://bioinfweb.info/Code/sventon/repos/LibrAlign/show/trunk/main/info.bioinfweb.libralign.core/src/" />
+		    <sourceLocation sourceFolder="${sourceDataFolder}/${projectFolderPrefix}.swing/src" urlPrefix="http://bioinfweb.info/Code/sventon/repos/LibrAlign/show/trunk/main/info.bioinfweb.libralign.swing/src/" />
+		    <sourceLocation sourceFolder="${sourceDataFolder}/${projectFolderPrefix}.swt/src" urlPrefix="http://bioinfweb.info/Code/sventon/repos/LibrAlign/show/trunk/main/info.bioinfweb.libralign.swt/src/" />
+		    <sourceLocation sourceFolder="${sourceDataFolder}/${projectFolderPrefix}.io/src" urlPrefix="http://bioinfweb.info/Code/sventon/repos/LibrAlign/show/trunk/main/info.bioinfweb.libralign.io/src/" />
+		    <sourceLocation sourceFolder="${sourceDataFolder}/${projectFolderPrefix}.biojava1/src" urlPrefix="http://bioinfweb.info/Code/sventon/repos/LibrAlign/show/trunk/main/info.bioinfweb.libralign.biojava1/src/" />
+		    <sourceLocation sourceFolder="${sourceDataFolder}/${projectFolderPrefix}.biojava3/src" urlPrefix="http://bioinfweb.info/Code/sventon/repos/LibrAlign/show/trunk/main/info.bioinfweb.libralign.biojava3/src/" />
+		    <sourceLocation sourceFolder="${sourceDataFolder}/${projectFolderPrefix}.biojava4/src" urlPrefix="http://bioinfweb.info/Code/sventon/repos/LibrAlign/show/trunk/main/info.bioinfweb.libralign.biojava4/src/" />

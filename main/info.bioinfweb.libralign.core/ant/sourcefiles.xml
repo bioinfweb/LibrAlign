@@ -1,0 +1,7 @@
+<include name="${projectFolderPrefix}.core/**/*.*" />
+<include name="${projectFolderPrefix}.swing/**/*.*" />
+<include name="${projectFolderPrefix}.swt/**/*.*" />
+<include name="${projectFolderPrefix}.io/**/*.*" />
+<include name="${projectFolderPrefix}.biojava1/**/*.*" />
+<include name="${projectFolderPrefix}.biojava3/**/*.*" />
+<include name="${projectFolderPrefix}.biojava4/**/*.*" />

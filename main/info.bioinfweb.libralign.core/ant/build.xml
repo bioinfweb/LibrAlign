@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE project [
+<!ENTITY libraryReleaseTargets SYSTEM "/srv/bioinfweb/data/ReleaseManager/shared/ant/Library_Release_Targets.xml">
+<!ENTITY additionalClasspathEntries SYSTEM "additional_classpath_entries.xml">
+<!ENTITY javadocLinks SYSTEM "javaDoc_links.xml">
+<!ENTITY binaries SYSTEM "binaries.xml">
+<!ENTITY sourcefiles SYSTEM "sourcefiles.xml">
+<!ENTITY libraryJars SYSTEM "library_jars.xml">
+<!ENTITY javadocSourceLocations SYSTEM "javaDoc_sourceLocations.xml">
+<!ENTITY dbPassword SYSTEM "secure/dbPassword.xml">
+]>
+<!-- The value of 'projectLabel' may not contain the following characters: '%', '_', '[', ']' -->
+<project>
+	<property name="projectLabel" value="LibrAlign" />
+	<property name="simpleProjectLabel" value="libralign" />
+	<property name="projectFolderPrefix" value="info.bioinfweb.libralign" />
+	<property name="projectFolder" value="/srv/bioinfweb/data/ReleaseManager/LibrAlign" />
+	<property name="sharedFolder" value="/srv/bioinfweb/data/ReleaseManager/shared" />
+	<property name="tempFolder" value="${projectFolder}/temp" />
+	<property name="sourceDataFolder" value="${tempFolder}/checkout" />
+	<property name="webspaceRootFolder" value="/srv/bioinfweb/content/LibrAlign" />
+	<property name="webspaceJavaDocFolder" value="${webspaceRootFolder}/PROTECTED/tree/Documentation/API" />
+	<property name="webspaceDownloadFolder" value="${webspaceRootFolder}/Download" />	
+	<property name="svnRepositoryPath" value="https://secure.bioinfweb.info/Code/svn/LibrAlign/trunk/main/" />
+	<property name="styleName" value="LibrAlign" />
+	<property name="dbName" value="biw_LibrAlign" />
+	<property name="dbUser" value="biw_rm_LibrAlign" />
+	&dbPassword;
+	<property name="softwareID" value="14" />
+	<property name="containedItems" value="1 2 3 4 5 6" />
+	<property name="singleModuleDownloadTypes" value="1,6" />
+	<property name="completeDownloadTypes" value="4,5" /> 
+	<property name="defaultNewsTextEn" value="A [LINK http://bioinfweb.info/LibrAlign/Download new version] of our GUI library providing powerful components for displaying and editing multiple sequence alignments and attached raw- and metadata was released." />
+	<property name="defaultNewsTextDe" value="Eine [LINK http://bioinfweb.info/LibrAlign/Download neue Version] unserer GUI-Bibliothek mit mächtigen Komponenten zum Anzeigen und Bearbeiten von Multisequenzalignments und verknüpften Roh- und Metadaten wurde veröffentlicht." />
+	<property name="defaultImageURL" value="http://bioinfweb.info/Software/LibrAlignList.png" />
+	<property name="defaultImageLinkURL" value="http://bioinfweb.info/LibrAlign/" />
+	<property name="displayGroups" value="BIW,AG" />
+	
+	&libraryReleaseTargets;
+</project>

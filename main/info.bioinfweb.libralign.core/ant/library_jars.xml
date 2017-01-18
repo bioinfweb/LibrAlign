@@ -1,0 +1,21 @@
+<fileset dir="${sourceDataFolder}/${projectFolderPrefix}.core/include">
+	<include name="**/*" />
+</fileset>
+<fileset dir="${sourceDataFolder}/${projectFolderPrefix}.swing/include">
+	<include name="**/*" />
+</fileset>
+<fileset dir="${sourceDataFolder}/${projectFolderPrefix}.swt/include">
+	<include name="**/*" />
+</fileset>
+<fileset dir="${sourceDataFolder}/${projectFolderPrefix}.io/include">
+	<include name="**/*" />
+</fileset>
+<fileset dir="${sourceDataFolder}/${projectFolderPrefix}.biojava1/include">
+	<include name="**/*" />
+</fileset>
+<fileset dir="${sourceDataFolder}/${projectFolderPrefix}.biojava3/include">
+	<include name="**/*" />
+</fileset>
+<fileset dir="${sourceDataFolder}/${projectFolderPrefix}.biojava4/include">
+	<include name="**/*" />
+</fileset>

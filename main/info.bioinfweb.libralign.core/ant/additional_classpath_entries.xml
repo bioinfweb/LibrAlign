@@ -1,0 +1,6 @@
+<fileset dir="${sourceDataFolder}/${projectFolderPrefix}.core">
+  <include name="**/lib/*.jar" />
+</fileset>
+<fileset dir="${tempFolder}">
+  <include name="${simpleProjectLabel}.core.jar" />
+</fileset>
