@@ -52,7 +52,7 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/ma
 	<dependency>
 		<groupId>info.bioinfweb.tic</groupId>
 		<artifactId>tic-core</artifactId>
-		<version>2.0.0-preview-2</version>
+		<version>2.0.0</version>
 	</dependency>
 	
 	<!-- Apache commons -->
