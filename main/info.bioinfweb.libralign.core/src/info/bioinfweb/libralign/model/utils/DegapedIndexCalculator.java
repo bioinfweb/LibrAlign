@@ -37,8 +37,8 @@ import info.bioinfweb.libralign.model.events.TokenChangeEvent;
 /**
  * Utility class that can calculate ungapped indices of sequences in an alignment model.
  * <p>
- * It allows to specify a set of tokens to be considered as gaps. This set may contain any token,
- * not necessarily actual gap tokens like '-'.
+ * It allows to specify a set of tokens to be considered as gaps. This set may contain any token that shall be considered as 
+ * a gap.
  * <p>
  * {@link #degapedIndex(int, int)} is the key method which calculates the index a token in a 
  * sequence would have, if that sequence contained no gaps (no tokens contained in {@link #getGapTokens()}).
@@ -139,16 +139,16 @@ public class DegapedIndexCalculator<T> {
 	
 	
 	/**
-	 * Calculates the ungapped index according to a position in the sequence containing gaps.
+	 * Calculates the ungapped index associated with a position in a sequence with gaps.
 	 * <p>
-	 * If {@code originalIndex} refers to position of the original sequence containing a gap,
+	 * If {@code originalIndex} refers to a position in the original sequence of a gap,
 	 * the ungapped index of the next non-gap token on the left is returned. If no non-gap
 	 * token exists left of the specified position, 0 is returned.
 	 * <p>
-	 * The runtime of this method scales linearly to the distance between {@code originalIndex}
-	 * in this call of this method and {@code originalIndex} in the previous call with the same 
+	 * The runtime of this method scales linearly with the distance between {@code originalIndex}
+	 * in this call of the method and {@code originalIndex} in the previous call with the same 
 	 * sequence ID. If this is the first call with the specified sequence ID ever or since the 
-	 * last modification of the according sequence, the runtime is proportional to 
+	 * last modification of the respective sequence, the runtime is proportional to 
 	 * {@code originalIndex}.
 	 * 
 	 * @param sequenceID the ID of the sequence where the ungapped index shall be determined
