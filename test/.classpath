@@ -11,15 +11,9 @@
 	<classpathentry kind="lib" path="/info.bioinfweb.tic.core/bin"/>
 	<classpathentry kind="lib" path="/info.bioinfweb.tic.swing/bin"/>
 	<classpathentry kind="lib" path="/info.bioinfweb.tic.swt/bin"/>
-	<classpathentry kind="lib" path="/info.bioinfweb.libralign.core/lib/commons-beanutils-1.9.2.jar"/>
-	<classpathentry kind="lib" path="/info.bioinfweb.libralign.core/lib/commons-lang3-3.1.jar"/>
 	<classpathentry kind="lib" path="/info.bioinfweb.libralign.swt/lib/swt.jar"/>
-	<classpathentry kind="lib" path="/info.bioinfweb.libralign.biojava1/lib/core-1.9.2.jar"/>
-	<classpathentry kind="lib" path="/info.bioinfweb.libralign.biojava1/lib/sequencing-1.9.2.jar"/>
 	<classpathentry kind="lib" path="/info.bioinfweb.libralign.biojava1/bin"/>
 	<classpathentry kind="lib" path="/info.bioinfweb.libralign.biojava3/bin"/>
-	<classpathentry kind="lib" path="/info.bioinfweb.libralign.biojava3/lib/biojava3-alignment-3.1.0.jar"/>
-	<classpathentry kind="lib" path="/info.bioinfweb.libralign.biojava3/lib/biojava3-core-3.1.0.jar"/>
 	<classpathentry kind="lib" path="/info.bioinfweb.libralign.io/bin"/>
 	<classpathentry kind="lib" path="/info.bioinfweb.commons.bio/bin"/>
 	<classpathentry kind="lib" path="/info.bioinfweb.commons.core/bin" sourcepath="/info.bioinfweb.commons.core/src"/>
@@ -27,9 +21,15 @@
 	<classpathentry kind="lib" path="/info.bioinfweb.commons.testing/bin"/>
 	<classpathentry kind="lib" path="/info.bioinfweb.commons.swt/bin"/>
 	<classpathentry kind="lib" path="/info.bioinfweb.commons.swing/bin"/>
-	<classpathentry kind="lib" path="/info.bioinfweb.libralign.core/lib/commons-collections4-4.1.jar"/>
 	<classpathentry kind="lib" path="/info.bioinfweb.jphyloio.core/bin" sourcepath="/info.bioinfweb.jphyloio.core/src"/>
 	<classpathentry kind="lib" path="/info.bioinfweb.commons.core/include/lib/guava-20.0.jar"/>
 	<classpathentry kind="lib" path="/info.bioinfweb.jphyloio.core/include/lib/owlapi-XMLUtils-4.1.4.jar"/>
+	<classpathentry kind="lib" path="/info.bioinfweb.libralign.biojava3/include/lib/biojava3-alignment-3.1.0.jar"/>
+	<classpathentry kind="lib" path="/info.bioinfweb.libralign.biojava3/include/lib/biojava3-core-3.1.0.jar"/>
+	<classpathentry kind="lib" path="/info.bioinfweb.libralign.core/include/lib/commons-beanutils-1.9.2.jar"/>
+	<classpathentry kind="lib" path="/info.bioinfweb.libralign.core/include/lib/commons-collections4-4.1.jar"/>
+	<classpathentry kind="lib" path="/info.bioinfweb.libralign.core/include/lib/commons-lang3-3.1.jar"/>
+	<classpathentry kind="lib" path="/info.bioinfweb.libralign.biojava1/include/lib/core-1.9.2.jar"/>
+	<classpathentry kind="lib" path="/info.bioinfweb.libralign.biojava1/include/lib/sequencing-1.9.2.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
