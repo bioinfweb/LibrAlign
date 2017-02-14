@@ -19,6 +19,7 @@
 package info.bioinfweb.libralign.model.utils.indextranslation;
 
 
+import java.util.HashSet;
 import java.util.Set;
 
 import info.bioinfweb.commons.collections.PackedIntegerArrayList;
@@ -50,22 +51,39 @@ public class RandomAccessIndexTranslator<T> extends AbstractIndexTranslator<T, R
 	}
 
 
+	/**
+	 * Creates a new instance of this class using a {@link HashSet} containing the gap token specified by the 
+	 * token set of {@code model}. Additional gap tokens can be added using {@link #getGapTokens()} later on. 
+	 * 
+	 * @param model the alignment model to calculate ungapped indices in
+	 */
+	public RandomAccessIndexTranslator(AlignmentModel<T> model) {
+		this(model, new HashSet<T>());
+		getGapTokens().add(model.getTokenSet().getGapToken());
+	}
+
+
 	@Override
 	protected IndexTranslations createSequenceData(String sequenceID) {
 		IndexTranslations result = new IndexTranslations();
 		int length = getModel().getSequenceLength(sequenceID);
+		int bitsPerValue = PackedIntegerArrayList.calculateBitsPerValue(length + 2);  // -2..(length - 1)
+		result.alignedIndices = new PackedIntegerArrayList(bitsPerValue, -2, length);
+		result.unalignedIndices = new PackedIntegerArrayList(bitsPerValue, -2, length);
 		int alignedIndex = 0;
-		int unalignedIndex = 0;
-		int bitsPerValue = PackedIntegerArrayList.calculateBitsPerValue(length);
-		result.alignedIndices = new PackedIntegerArrayList(bitsPerValue, 0, length);
-		result.unalignedIndices = new PackedIntegerArrayList(bitsPerValue, 0, length);
+		int unalignedIndex = IndexRelation.OUT_OF_RANGE;
 		
 		while (alignedIndex < length) {
-			result.alignedIndices.add(alignedIndex);
-			result.unalignedIndices.add(unalignedIndex);
 			if (!getGapTokens().contains(getModel().getTokenAt(sequenceID, alignedIndex))) {
-				unalignedIndex++;
+				if (unalignedIndex == IndexRelation.OUT_OF_RANGE) {
+					unalignedIndex = 0;
+				}
+				else {
+					unalignedIndex++;
+				}
+				result.alignedIndices.add(alignedIndex);
 			}
+			result.unalignedIndices.add(unalignedIndex);
 			alignedIndex++;
 		}
 		return result;
@@ -79,12 +97,15 @@ public class RandomAccessIndexTranslator<T> extends AbstractIndexTranslator<T, R
 		IndexTranslations translations = getSequenceData(sequenceID);
 		int unalignedIndex = (int)translations.unalignedIndices.get(alignedIndex);
 		if (getGapTokens().contains(getModel().getTokenAt(sequenceID, alignedIndex))) {
-			int unalignedIndexAfter = IndexRelation.OUT_OF_RANGE;
-			if (alignedIndex + 1 < translations.unalignedIndices.size()) {
-				unalignedIndexAfter = (int)translations.unalignedIndices.get(alignedIndex + 1);
+			int unalignedIndexAfter = unalignedIndex + 1;
+			if (unalignedIndex == IndexRelation.OUT_OF_RANGE) {  // Possible if requested position is part of a leading gap.
+				unalignedIndexAfter = 0;
+			}
+			
+			if (unalignedIndexAfter >= translations.alignedIndices.size()) {
+				unalignedIndexAfter = IndexRelation.OUT_OF_RANGE;
 			}
 			return new IndexRelation(unalignedIndex, IndexRelation.GAP, unalignedIndexAfter);
-			//TODO Before value must possibly be set to OUT_OF_RANGE if sequence starts with a gap.
 		}
 		else {
 			return new IndexRelation(unalignedIndex, unalignedIndex, unalignedIndex);
