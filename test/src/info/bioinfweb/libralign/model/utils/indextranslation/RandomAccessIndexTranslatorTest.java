@@ -66,4 +66,18 @@ public class RandomAccessIndexTranslatorTest {
 		assertEquals(11, calculator.getAlignedIndex(id, 5));
 		assertEquals(12, calculator.getAlignedIndex(id, 6));
 	}	
+	
+	
+	@Test
+	public void test_degapedIndex_onlyGaps() {
+		TokenSet<Character> tokenSet = CharacterTokenSet.newDNAInstance();
+		AlignmentModel<Character> model = new PackedAlignmentModel<Character>(tokenSet);
+		String id = model.addSequence("A");
+		model.appendTokens(id, AlignmentModelUtils.charSequenceToTokenList("---", tokenSet));
+		
+		RandomAccessIndexTranslator<Character> calculator = new RandomAccessIndexTranslator<Character>(model);
+		assertIndexRelation(IndexRelation.OUT_OF_RANGE, IndexRelation.GAP, IndexRelation.OUT_OF_RANGE, calculator.getUnalignedIndex(id, 0));
+		assertIndexRelation(IndexRelation.OUT_OF_RANGE, IndexRelation.GAP, IndexRelation.OUT_OF_RANGE, calculator.getUnalignedIndex(id, 1));
+		assertIndexRelation(IndexRelation.OUT_OF_RANGE, IndexRelation.GAP, IndexRelation.OUT_OF_RANGE, calculator.getUnalignedIndex(id, 2));
+	}	
 }
