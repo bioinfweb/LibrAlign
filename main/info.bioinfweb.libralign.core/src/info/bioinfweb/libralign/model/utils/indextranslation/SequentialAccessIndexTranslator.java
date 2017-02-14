@@ -43,7 +43,16 @@ import java.util.Set;
 public class SequentialAccessIndexTranslator<T> extends AbstractIndexTranslator<T, SequentialAccessIndexTranslator.IndexInfo> {
 	protected static final class IndexInfo {
 		public int alignedIndex = 0;
-		public int unalignedIndex = 0;
+		public int unalignedIndex = IndexRelation.OUT_OF_RANGE;
+		public boolean lastMoveRight = false;
+		public int unalignedLength;
+		public int lastAlignedPosition;
+		
+		public IndexInfo(int unalignedLength, int lastAlignedPosition) {
+			super();
+			this.unalignedLength = unalignedLength;
+			this.lastAlignedPosition = lastAlignedPosition;
+		}
 	}
 	
 	
@@ -72,7 +81,47 @@ public class SequentialAccessIndexTranslator<T> extends AbstractIndexTranslator<
 
 	@Override
 	protected IndexInfo createSequenceData(String sequenceID) {
-		return new IndexInfo();
+		int unalignedLength = 0;
+		int lastAlignedPosition = 0;
+		for (int alignedIndex = 0; alignedIndex < getModel().getSequenceLength(sequenceID); alignedIndex++) {
+			if (!getGapTokens().contains(getModel().getTokenAt(sequenceID, alignedIndex))) {
+				unalignedLength++;
+				lastAlignedPosition = alignedIndex;
+			}
+		}
+		return new IndexInfo(unalignedLength, lastAlignedPosition);
+	}
+	
+	
+	private IndexRelation determineGapBorders(String sequenceID, IndexInfo info) {
+		if (info.unalignedIndex == IndexRelation.OUT_OF_RANGE) {  // Cursor has never left the leading gap.
+			int after = 0;
+			if (info.unalignedLength == 0) {
+				after = IndexRelation.OUT_OF_RANGE;
+			}
+			return new IndexRelation(IndexRelation.OUT_OF_RANGE, IndexRelation.GAP, after);
+		}
+		else {
+			int before;
+			int after;
+			if (info.lastMoveRight) {
+				before = info.unalignedIndex;
+				after = info.unalignedIndex + 1;
+				if (after >= info.unalignedLength) {
+					after = IndexRelation.OUT_OF_RANGE;
+				}
+			}
+			else {
+				if (info.unalignedIndex == 0) {
+					before = IndexRelation.OUT_OF_RANGE;
+				}
+				else {
+					before = info.unalignedIndex - 1;
+				}
+				after = info.unalignedIndex;
+			}
+			return new IndexRelation(before, IndexRelation.GAP, after);
+		}
 	}
 
 
@@ -96,59 +145,89 @@ public class SequentialAccessIndexTranslator<T> extends AbstractIndexTranslator<
 	 */
 	@Override
 	public IndexRelation getUnalignedIndex(String sequenceID, int alignedIndex) {
-		//TODO Finish implementation
-		
 		if (Math2.isBetween(alignedIndex, 0, getModel().getSequenceLength(sequenceID) - 1)) {
 			IndexInfo info = getSequenceData(sequenceID);
 			
 			// Move left: (Only one of both loops will be used.)
-			while (alignedIndex < info.alignedIndex) {  //TODO Make sure to move to the left of a gap?
-				if (!getGapTokens().contains(getModel().getTokenAt(sequenceID, info.alignedIndex))) {
-					info.unalignedIndex--;
-				}
+			while (alignedIndex < info.alignedIndex) {
 				info.alignedIndex--;
-			}
-	
-			// Move right: (Only one of both loops will be used.)
-			while (alignedIndex > info.alignedIndex) {
 				if (!getGapTokens().contains(getModel().getTokenAt(sequenceID, info.alignedIndex))) {
-					info.unalignedIndex++;
+					if (info.unalignedIndex == IndexRelation.OUT_OF_RANGE) {
+						info.unalignedIndex = 0;
+					}
+					else {
+						info.unalignedIndex--;
+					}
 				}
-				info.alignedIndex++;
+				info.lastMoveRight = false;
 			}
-			
-			//return info.unalignedIndex;
-			return null;
+
+			// Move right: (Only one of both loops will be used.)
+			while ((alignedIndex > info.alignedIndex) && (info.alignedIndex < info.lastAlignedPosition)) {  // If going into the trailing gap would be allowed, alignedIndex would be set to a value not matching the unaligned index.
+				info.alignedIndex++;
+				if (!getGapTokens().contains(getModel().getTokenAt(sequenceID, info.alignedIndex))) {
+					if (info.unalignedIndex == IndexRelation.OUT_OF_RANGE) {
+						info.unalignedIndex = 0;
+					}
+					else {
+						info.unalignedIndex++;
+					}
+				}
+				info.lastMoveRight = true;
+			}
+
+			if (getGapTokens().contains(getModel().getTokenAt(sequenceID, alignedIndex))) {
+				return determineGapBorders(sequenceID, info);
+			}
+			else {
+				return new IndexRelation(info.unalignedIndex, info.unalignedIndex, info.unalignedIndex);
+			}
 		}
-		else {
-			throw new IndexOutOfBoundsException("The index " + alignedIndex + " in the sequence with the ID " + sequenceID + 
-					" is not between 0 and " +	(getModel().getSequenceLength(sequenceID) - 1) + ".");
+		else {  // Throw exception:
+			String message;
+			int length = getModel().getSequenceLength(sequenceID);
+			if (length == 0) {
+				message = "The sequence with the ID " + sequenceID + " is empty.";
+			}
+			else {
+				message = "The index " + alignedIndex + " in the sequence with the ID " + sequenceID + 
+						" is not between 0 and " +	(length - 1) + ".";
+			}
+			throw new IndexOutOfBoundsException(message);
 		}
 	}
 
 
 	@Override
 	public int getAlignedIndex(String sequenceID, int unalignedIndex) {
-		//TODO Test implementation
-		
 		IndexInfo info = getSequenceData(sequenceID);
-		
+
 		// Move left: (Only one of both loops will be used.)
-		while (unalignedIndex < info.unalignedIndex) {
-			if (!getGapTokens().contains(getModel().getTokenAt(sequenceID, info.alignedIndex))) {
-				info.unalignedIndex--;
-			}
+		while ((unalignedIndex < info.unalignedIndex) && (info.alignedIndex >= 0)) {
 			info.alignedIndex--;
+			if (!getGapTokens().contains(getModel().getTokenAt(sequenceID, info.alignedIndex))) {
+				if (info.unalignedIndex == IndexRelation.OUT_OF_RANGE) {
+					info.unalignedIndex = 0;
+				}
+				else {
+					info.unalignedIndex--;
+				}
+			}
 		}
 
 		// Move right: (Only one of both loops will be used.)
-		while (unalignedIndex > info.unalignedIndex) {
-			if (!getGapTokens().contains(getModel().getTokenAt(sequenceID, info.alignedIndex))) {
-				info.unalignedIndex++;
-			}
+		while ((unalignedIndex > info.unalignedIndex) && (info.alignedIndex < getModel().getSequenceLength(sequenceID))) {
 			info.alignedIndex++;
+			if (!getGapTokens().contains(getModel().getTokenAt(sequenceID, info.alignedIndex))) {
+				if (info.unalignedIndex == IndexRelation.OUT_OF_RANGE) {
+					info.unalignedIndex = 0;
+				}
+				else {
+					info.unalignedIndex++;
+				}
+			}
 		}
 		
-		return info.unalignedIndex;
+		return info.alignedIndex;
 	}
 }
