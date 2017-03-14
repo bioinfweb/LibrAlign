@@ -25,7 +25,7 @@ public class DeleteSequenceAction extends AbstractAlignmentAreaAction implements
 	
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		String deleteSequence = area.getAlignmentModel().removeSequence();
+		String deleteSequence = area.getAlignmentModel().removeSequence(sequenceID);
 		
 	}	
 }

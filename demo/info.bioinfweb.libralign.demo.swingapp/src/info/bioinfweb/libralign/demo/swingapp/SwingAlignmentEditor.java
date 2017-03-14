@@ -71,7 +71,7 @@ public class SwingAlignmentEditor {
 
 		
 		frame.getContentPane().add(alignmentArea, BorderLayout.CENTER);
-		frame.getContentPane().setLayout(new BorderLayout(0, 0));
+		frame.getContentPane().setLayout(new BorderLayout(1, 1));
 		
 //		AddSequenceAction addSequence = new AddSequenceAction(alignmentArea);
 //		DeleteSequenceAction deleteSequence = new DeleteSequenceAction(alignmentArea);

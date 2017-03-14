@@ -25,6 +25,6 @@ public class AddSequenceAction extends AbstractAlignmentAreaAction implements Ac
 	
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		String addSelection = area.getAlignmentModel().addSelection();		
+		String addSelection = area.getAlignmentModel().addSequence("New Sequence");
 	}	
 }
