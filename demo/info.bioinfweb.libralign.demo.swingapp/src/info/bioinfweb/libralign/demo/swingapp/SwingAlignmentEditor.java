@@ -8,12 +8,18 @@ import javax.swing.JComponent;
 import javax.swing.JFrame;
 
 import info.bioinfweb.libralign.alignmentarea.AlignmentArea;
+import info.bioinfweb.libralign.alignmentarea.content.AlignmentContentArea;
+import info.bioinfweb.libralign.alignmentarea.tokenpainter.NucleotideTokenPainter;
+import info.bioinfweb.libralign.demo.swingapp.actions.AddSequenceAction;
+import info.bioinfweb.libralign.demo.swingapp.actions.DeleteSequenceAction;
 import info.bioinfweb.libralign.model.implementations.PackedAlignmentModel;
 import info.bioinfweb.libralign.model.tokenset.CharacterTokenSet;
 import info.bioinfweb.tic.SwingComponentFactory;
 import javax.swing.JMenuBar;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
+
+import org.omg.CORBA.portable.Delegate;
 
 
 
@@ -62,20 +68,27 @@ public class SwingAlignmentEditor {
 		
 		// Create instance specific to Swing:
 		JComponent alignmentArea = SwingComponentFactory.getInstance().getSwingComponent(area);
+
 		
 		frame.getContentPane().add(alignmentArea, BorderLayout.CENTER);
 		frame.getContentPane().setLayout(new BorderLayout(0, 0));
+		
+//		AddSequenceAction addSequence = new AddSequenceAction(alignmentArea);
+//		DeleteSequenceAction deleteSequence = new DeleteSequenceAction(alignmentArea);
+		
 		
 		JMenuBar menuBar = new JMenuBar();
 		frame.setJMenuBar(menuBar);
 		
 		JMenu mnEdit = new JMenu("Edit");
-		menuBar.add(mnEdit);
+		menuBar.add(mnEdit);	
 		
 		JMenuItem mntmAddSequence = new JMenuItem("Add sequence");
 		mnEdit.add(mntmAddSequence);
 		
 		JMenuItem mntmDeleteSequence = new JMenuItem("Delete sequence");
 		mnEdit.add(mntmDeleteSequence);
+
+
 	}
 }
