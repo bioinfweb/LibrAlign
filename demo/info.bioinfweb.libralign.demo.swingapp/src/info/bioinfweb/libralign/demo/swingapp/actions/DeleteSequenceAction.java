@@ -6,6 +6,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 
 import javax.swing.Action;
+import javax.swing.JOptionPane;
 import javax.swing.KeyStroke;
 
 import info.bioinfweb.libralign.alignmentarea.AlignmentArea;
@@ -24,7 +25,11 @@ public class DeleteSequenceAction extends AbstractAlignmentAreaAction implements
 	
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		String sequenceID = area.getAlignmentModel().sequenceIDByName("Sequence 1");
-		boolean deleteSequence = area.getAlignmentModel().removeSequence(sequenceID);		
+		String sequenceID = area.getAlignmentModel().sequenceIDByName(JOptionPane.showInputDialog("Name of sequence to be deleted"));
+		if (area.getAlignmentModel().containsSequence(sequenceID)) {
+			area.getAlignmentModel().removeSequence(sequenceID);
+		} else {
+			JOptionPane.showMessageDialog(frame, "Sequence not found");
+		}		
 	}	
 }
