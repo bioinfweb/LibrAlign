@@ -6,11 +6,10 @@ import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 
 import javax.swing.Action;
-import javax.swing.JComponent;
 import javax.swing.KeyStroke;
 
 import info.bioinfweb.libralign.alignmentarea.AlignmentArea;
-import info.bioinfweb.libralign.model.AlignmentModel;
+
 
 
 
@@ -25,7 +24,7 @@ public class DeleteSequenceAction extends AbstractAlignmentAreaAction implements
 	
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		String deleteSequence = area.getAlignmentModel().removeSequence(sequenceID);
-		
+		String sequenceID = area.getAlignmentModel().sequenceIDByName("Sequence 1");
+		boolean deleteSequence = area.getAlignmentModel().removeSequence(sequenceID);		
 	}	
 }

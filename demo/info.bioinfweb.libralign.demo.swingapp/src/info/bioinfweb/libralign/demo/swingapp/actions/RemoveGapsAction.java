@@ -21,13 +21,12 @@ public class RemoveGapsAction extends AbstractAlignmentAreaAction implements Act
 		putValue(Action.ACCELERATOR_KEY, KeyStroke.getKeyStroke('R', Toolkit.getDefaultToolkit().getMenuShortcutKeyMask()));
 	}
 
-//	@Override
-//	public void actionPerformed(ActionEvent e) {
-//		if (sequence.contains("-")) {
-//			String removeGaps = area.getAlignmentModel().removeTokenAt(sequenceID, index);
-//		}
-		
-		
+	@Override
+	public void actionPerformed(ActionEvent arg0) {
+		String sequence = area.getAlignmentModel().toString();
+		int index = sequence.lastIndexOf("-");
+		while (index >= 0) {
+			sequence.replace("-", "");	
+		}		
 	}
-
 }

@@ -6,25 +6,23 @@ import java.awt.EventQueue;
 
 import javax.swing.JComponent;
 import javax.swing.JFrame;
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
 
 import info.bioinfweb.libralign.alignmentarea.AlignmentArea;
-import info.bioinfweb.libralign.alignmentarea.content.AlignmentContentArea;
 import info.bioinfweb.libralign.alignmentarea.tokenpainter.NucleotideTokenPainter;
 import info.bioinfweb.libralign.demo.swingapp.actions.AddSequenceAction;
 import info.bioinfweb.libralign.demo.swingapp.actions.DeleteSequenceAction;
+import info.bioinfweb.libralign.demo.swingapp.actions.RemoveGapsAction;
 import info.bioinfweb.libralign.model.implementations.PackedAlignmentModel;
 import info.bioinfweb.libralign.model.tokenset.CharacterTokenSet;
 import info.bioinfweb.tic.SwingComponentFactory;
-import javax.swing.JMenuBar;
-import javax.swing.JMenu;
-import javax.swing.JMenuItem;
-
-import org.omg.CORBA.portable.Delegate;
 
 
 
 public class SwingAlignmentEditor {
 	private JFrame frame;
+	private AlignmentArea alignmentArea;
 
 	
 	/**
@@ -36,6 +34,7 @@ public class SwingAlignmentEditor {
 				try {
 					SwingAlignmentEditor window = new SwingAlignmentEditor();
 					window.frame.setVisible(true);
+					window.alignmentArea.assignSizeToAll();
 				}
 				catch (Exception e) {
 					e.printStackTrace();
@@ -63,32 +62,29 @@ public class SwingAlignmentEditor {
 		frame.setTitle("Swing Alignment Editor Demo");
 		
 		// Create LibrAlign component instance:
-		AlignmentArea area = new AlignmentArea();
-		area.setAlignmentModel(new PackedAlignmentModel<Character>(CharacterTokenSet.newNucleotideInstance()), false);
+		alignmentArea = new AlignmentArea();
+		alignmentArea.setAlignmentModel(new PackedAlignmentModel<Character>(CharacterTokenSet.newNucleotideInstance()), false);
 		
 		// Create instance specific to Swing:
-		JComponent alignmentArea = SwingComponentFactory.getInstance().getSwingComponent(area);
-
+		JComponent swingAlignmentArea = SwingComponentFactory.getInstance().getSwingComponent(alignmentArea);
 		
-		frame.getContentPane().add(alignmentArea, BorderLayout.CENTER);
-		frame.getContentPane().setLayout(new BorderLayout(1, 1));
+		frame.getContentPane().setLayout(new BorderLayout(0, 0));
+		frame.getContentPane().add(swingAlignmentArea, BorderLayout.CENTER);
 		
-//		AddSequenceAction addSequence = new AddSequenceAction(alignmentArea);
-//		DeleteSequenceAction deleteSequence = new DeleteSequenceAction(alignmentArea);
+		alignmentArea.getPaintSettings().getTokenPainterList().set(0, new NucleotideTokenPainter());
 		
+		AddSequenceAction addSequence = new AddSequenceAction(alignmentArea);
+		DeleteSequenceAction deleteSequence = new DeleteSequenceAction(alignmentArea);
+		RemoveGapsAction removeGaps = new RemoveGapsAction(alignmentArea);		
 		
 		JMenuBar menuBar = new JMenuBar();
 		frame.setJMenuBar(menuBar);
 		
 		JMenu mnEdit = new JMenu("Edit");
-		menuBar.add(mnEdit);	
-		
-		JMenuItem mntmAddSequence = new JMenuItem("Add sequence");
-		mnEdit.add(mntmAddSequence);
-		
-		JMenuItem mntmDeleteSequence = new JMenuItem("Delete sequence");
-		mnEdit.add(mntmDeleteSequence);
+		menuBar.add(mnEdit);			
 
-
+		mnEdit.add(addSequence);
+		mnEdit.add(removeGaps);
+		mnEdit.add(deleteSequence);		
 	}
 }
