@@ -61,7 +61,7 @@ public class BioJavaAlignmentRendererTest extends JFrame {
   RulerRenderer ruler = new RulerRenderer();
   
  
-  public BioJavaAlignmentRendererTest(){
+  public BioJavaAlignmentRendererTest() {
     super("Alignment Panel");
  
     //Create the sequences for the alignment
@@ -131,6 +131,7 @@ public class BioJavaAlignmentRendererTest extends JFrame {
     setVisible(true);  
   }
  
+  
   /**
    * Main method
    */
