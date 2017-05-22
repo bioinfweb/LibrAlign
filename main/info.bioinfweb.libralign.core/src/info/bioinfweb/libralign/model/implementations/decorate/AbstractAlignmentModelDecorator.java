@@ -35,8 +35,8 @@ import info.bioinfweb.libralign.model.tokenset.TokenSet;
 
 
 /**
- * Basic implementation of {@link AlignmentModelView} which stores the underlying model
- * in a property and delegates sequence specific methods (which are independent of the token
+ * Basic implementation of {@link AlignmentModelView} which references the underlying model
+ * by a property and delegates sequence specific methods (which are independent of the token
  * type) to the underlying model.
  * 
  * @author Ben St&ouml;ver

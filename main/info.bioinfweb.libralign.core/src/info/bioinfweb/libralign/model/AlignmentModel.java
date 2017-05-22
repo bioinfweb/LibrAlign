@@ -36,7 +36,7 @@ import info.bioinfweb.libralign.model.utils.AlignmentModelUtils;
 
 
 /**
- * Interface that allows LibrAlign GUI elements to access different types of alignment data sources.
+ * Interface that allows <i>LibrAlign</i> GUI elements to access different types of alignment data sources.
  * Classes implementing this interface act as a model for the sequence names and tokens (e.g. nucleotide
  * or amino acid compounds).
  * <p>
