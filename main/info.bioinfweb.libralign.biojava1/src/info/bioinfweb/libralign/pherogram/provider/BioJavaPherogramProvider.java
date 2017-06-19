@@ -2,17 +2,17 @@
  * LibrAlign - A GUI library for displaying and editing multiple sequence alignments and attached data
  * Copyright (C) 2014-2017  Ben Stöver
  * <http://bioinfweb.info/LibrAlign>
- * 
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU Lesser General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU Lesser General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
@@ -41,22 +41,22 @@ import org.biojava.bio.symbol.IntegerAlphabet;
  * {@link Chromatogram} instance start with 1. (This class converts the indices accordingly.)
  * <p>
  * Trace indices (x-values) start with 0 in LibrAlign and in BioJava.
- * 
+ *
  * @author Ben St&ouml;ver
  * @bioinfweb.module info.bioinfweb.libralign.biojava1
  */
 public class BioJavaPherogramProvider implements PherogramProvider {
 	public static final String QUALITY_LABEL_PREFIX = "quality-";
-	
-	
+
+
 	private Chromatogram chromatogram;
 	private Map<Character, AtomicSymbol> traceCurveMap = createTraceCurveMap();
 	private double maxTraceValue = 0;  // Must be double in order to avoid an integer division in normalizeTraceValue().
 
-	
+
 	/**
 	 * Creates a new instance of this class.
-	 * 
+	 *
 	 * @param chromatogram - the BioJava pherogram instance
 	 */
 	public BioJavaPherogramProvider(Chromatogram chromatogram) {
@@ -65,7 +65,7 @@ public class BioJavaPherogramProvider implements PherogramProvider {
 		maxTraceValue = chromatogram.getMax();
 	}
 
-	
+
 	private static Map<Character, AtomicSymbol> createTraceCurveMap() {
 		Map<Character, AtomicSymbol> result = new TreeMap<Character, AtomicSymbol>();
 		result.put('A', DNATools.a());
@@ -74,17 +74,17 @@ public class BioJavaPherogramProvider implements PherogramProvider {
 		result.put('G', DNATools.g());
 		return result;
 	}
-	
-	
+
+
 	private AtomicSymbol symbolByNucleotide(char nucleotide) {
 		return traceCurveMap.get(Character.toUpperCase(nucleotide));
 	}
 
-	
+
 	private double normalizeTraceValue(int value) {
 		return value / maxTraceValue;
 	}
-	
+
 
 	@Override
 	public double getTraceValue(char nucleotide, int x) {
@@ -92,7 +92,7 @@ public class BioJavaPherogramProvider implements PherogramProvider {
 			return normalizeTraceValue(chromatogram.getTrace(symbolByNucleotide(nucleotide))[x]);
 		}
 		catch (IllegalSymbolException e) {
-			throw new InternalError("An unexpected internal error occurred. No trace data for the symbol " + 
+			throw new InternalError("An unexpected internal error occurred. No trace data for the symbol " +
 		      e.getSymbol() + " was found.");
 		}
 	}
@@ -110,7 +110,7 @@ public class BioJavaPherogramProvider implements PherogramProvider {
 			return normalizeTraceValue(chromatogram.getMax(symbolByNucleotide(nucleotide)));
 		}
 		catch (IllegalSymbolException e) {
-			throw new InternalError("An unexpected internal error occurred. No trace data for the symbol " + 
+			throw new InternalError("An unexpected internal error occurred. No trace data for the symbol " +
 		      e.getSymbol() + " was found.");
 		}
 	}
@@ -122,7 +122,7 @@ public class BioJavaPherogramProvider implements PherogramProvider {
 			return Character.toUpperCase(DNATools.dnaToken(chromatogram.getBaseCalls().symbolAt(Chromatogram.DNA, baseIndex + 1)));
 		}
 		catch (IllegalSymbolException e) {
-			throw new InternalError("An unexpected internal error occurred. No trace data for the symbol " + 
+			throw new InternalError("An unexpected internal error occurred. No trace data for the symbol " +
 		      e.getSymbol() + " was found.");
 		}
 	}
@@ -157,12 +157,12 @@ public class BioJavaPherogramProvider implements PherogramProvider {
 	public int getSequenceLength() {
 		return chromatogram.getSequenceLength();
 	}
-	
-	
+
+
 	/**
-   * Returns a new instance of this class which uses the reverse complemented version of the underlying BioJava 1 
+   * Returns a new instance of this class which uses the reverse complemented version of the underlying <i>BioJava</i> 1
    * chromatogram.
-   * 
+   *
    * @return a new instance of this class
    */
   @Override
