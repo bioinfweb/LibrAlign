@@ -96,7 +96,7 @@ public class BioJavaAlignmentRendererTest extends JFrame {
     render3.setLabel(ali.getLabels().get(2));
     render3.setRenderer(symbol);
  
-    //Add the alignment renderers to the multi-line renderer
+    // Add the alignment renderers to the multi-line renderer
     multi.addRenderer(render1);
     multi.addRenderer(render2);
     multi.addRenderer(render3);

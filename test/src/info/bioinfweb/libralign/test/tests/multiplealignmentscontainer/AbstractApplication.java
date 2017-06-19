@@ -63,16 +63,16 @@ public class AbstractApplication {
 		CharSet charSet = new CharSet("A", Color.RED);
 		charSet.add(2, 5);
 		charSet.add(8, 20);
-		model.add(charSet);
+		model.put("id1", charSet);
 		
 		charSet = new CharSet("B", Color.GREEN.darker());
 		charSet.add(1, 20);
-		model.add(charSet);
+		model.put("id2", charSet);
 		
 		charSet = new CharSet("C", Color.BLUE);
 		charSet.add(7, 12);
 		charSet.add(17, 25);
-		model.add(charSet);
+		model.put("id3", charSet);
 		
 		return new CharSetArea(owner, labeledArea, model);
 	}
