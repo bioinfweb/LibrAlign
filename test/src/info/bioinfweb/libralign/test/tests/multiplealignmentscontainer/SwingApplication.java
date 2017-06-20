@@ -35,6 +35,7 @@ import javax.swing.JMenuBar;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 import javax.swing.KeyStroke;
+import javax.swing.UIManager;
 
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
@@ -58,6 +59,8 @@ public class SwingApplication extends AbstractApplication {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
+					UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+					
 					SwingApplication window = new SwingApplication();
 					window.frame.setVisible(true);
 					//window.alignmentArea.getToolkitComponent().redistributeHeight();
