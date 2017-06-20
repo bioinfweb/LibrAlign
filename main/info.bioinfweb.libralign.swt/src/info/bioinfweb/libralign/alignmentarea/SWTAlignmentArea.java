@@ -68,10 +68,10 @@ public class SWTAlignmentArea extends AbstractSWTComposite implements ToolkitSpe
 	/**
 	 * Creates a new instance of this class.
 	 *
-	 * @param owner - the alignment area using this component
-	 * @param parent - the parent SWT component
-	 * @param position - the position of this component in {@code owner}
-	 * @param hideHorizontalScrollBar - Specify {@code true} here if you want no horizontal scroll bar to be displayed
+	 * @param owner the alignment area using this component
+	 * @param parent the parent SWT component
+	 * @param position the position of this component in {@code owner}
+	 * @param hideHorizontalScrollBar Specify {@code true} here if you want no horizontal scroll bar to be displayed
 	 *        in this part of the alignment are or {@code false} otherwise.
 	 */
 	public SWTAlignmentArea(AlignmentArea owner, Composite parent, int style) {
@@ -133,7 +133,7 @@ public class SWTAlignmentArea extends AbstractSWTComposite implements ToolkitSpe
 		contentScroller.setContent(contentArea);
 		contentScroller.addMouseListener(new MouseAdapter() {
 			@Override
-			public void mouseDown(MouseEvent event) {  // Sets the focus to an according sequence area, if the user clicks outside of the content area and moves the cursor.
+			public void mouseDown(MouseEvent event) {  // Sets the focus to a respective sequence area, if the user clicks outside of the content area and moves the cursor.
 				if (getIndependentComponent().hasAlignmentModel() && (getIndependentComponent().getAlignmentModel().getSequenceCount() > 0)) {
     			AlignmentContentArea contentArea = getIndependentComponent().getContentArea();
     			int row = contentArea.rowByPaintY(event.y);
