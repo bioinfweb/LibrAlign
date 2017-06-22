@@ -59,6 +59,7 @@ public abstract class DataArea extends AlignmentSubArea implements AlignmentMode
 			this.labeledAlignmentArea = labeledArea;
 		}
 	}
+	
 
 	/**
 	 * Returns the alignment area that is labeled by this data area.
@@ -188,6 +189,6 @@ public abstract class DataArea extends AlignmentSubArea implements AlignmentMode
 	 */
 	@Override
 	public Dimension getSize() {
-		return new Dimension(getOwner().getOwner().getGlobalMaxNeededWidth(),	getHeight());  
+		return new Dimension(getOwner().getOwner().getGlobalMaxNeededWidth(), getHeight());  
 	}
 }
