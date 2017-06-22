@@ -381,7 +381,7 @@ public class AlignmentContentArea extends TICComponent {
 	 * Returns the column containing the specified x coordinate. If the coordinate lies behind the last column,
 	 * the number of columns + 1 is returned.
 	 *
-	 * @param x - the paint coordinate
+	 * @param x the paint coordinate
 	 * @return the alignment column
 	 */
 	public int columnByPaintX(int x) {

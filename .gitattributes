@@ -90,6 +90,7 @@ main/info.bioinfweb.libralign.core/src/info/bioinfweb/libralign/alignmentarea/Al
 main/info.bioinfweb.libralign.core/src/info/bioinfweb/libralign/alignmentarea/ToolkitSpecificAlignmentArea.java -text svneol=unset#text/plain
 main/info.bioinfweb.libralign.core/src/info/bioinfweb/libralign/alignmentarea/content/AlignmentContentArea.java -text svneol=unset#text/plain
 main/info.bioinfweb.libralign.core/src/info/bioinfweb/libralign/alignmentarea/content/AlignmentContentAreaTools.java -text svneol=unset#text/plain
+main/info.bioinfweb.libralign.core/src/info/bioinfweb/libralign/alignmentarea/content/AlignmentPaintEvent.java -text svneol=unset#text/plain
 main/info.bioinfweb.libralign.core/src/info/bioinfweb/libralign/alignmentarea/content/AlignmentSubArea.java -text svneol=unset#text/plain
 main/info.bioinfweb.libralign.core/src/info/bioinfweb/libralign/alignmentarea/content/AlignmentSubAreaIterator.java -text svneol=unset#text/plain
 main/info.bioinfweb.libralign.core/src/info/bioinfweb/libralign/alignmentarea/content/CursorSelectionInputListener.java -text svneol=unset#text/plain
