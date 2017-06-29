@@ -4,3 +4,6 @@
 <fileset dir="${tempFolder}">
   <include name="${simpleProjectLabel}.core.jar" />
 </fileset>
+<fileset dir="${sharedFolder}">
+  <include name="build-lib/swt.jar" />
+</fileset>
