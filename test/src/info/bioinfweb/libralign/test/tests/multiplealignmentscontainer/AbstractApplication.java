@@ -22,6 +22,7 @@ package info.bioinfweb.libralign.test.tests.multiplealignmentscontainer;
 import java.awt.Color;
 import java.io.File;
 
+import info.bioinfweb.commons.SystemUtils;
 import info.bioinfweb.commons.bio.biojava3.alignment.SimpleAlignment;
 import info.bioinfweb.commons.bio.biojava3.alignment.template.Alignment;
 import info.bioinfweb.commons.bio.biojava3.core.sequence.compound.AlignmentAmbiguityNucleotideCompoundSet;
@@ -84,7 +85,7 @@ public class AbstractApplication {
 			
 			// Create models:
 			BioJavaPherogramProvider pherogramProvider = new BioJavaPherogramProvider(ChromatogramFactory.create(
-	      	new File("data\\pherograms\\Test_qualityScore.scf")));
+	      	new File("data" + SystemUtils.FILE_SEPARATOR + "pherograms" + SystemUtils.FILE_SEPARATOR + "Test_qualityScore.scf")));
 			
 			AlignmentModel<Character> model = new PackedAlignmentModel<Character>(CharacterTokenSet.newDNAInstance());
 			String id = model.addSequence("Sequence 1");
