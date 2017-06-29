@@ -402,6 +402,7 @@ test/src/info/bioinfweb/libralign/test/tests/empty/SwingEmptyAlignmentTest.java 
 test/src/info/bioinfweb/libralign/test/tests/multiplealignmentscontainer/AbstractApplication.java -text svneol=unset#text/plain
 test/src/info/bioinfweb/libralign/test/tests/multiplealignmentscontainer/SWTApplication.java -text svneol=unset#text/plain
 test/src/info/bioinfweb/libralign/test/tests/multiplealignmentscontainer/SwingApplication.java -text svneol=unset#text/plain
+test/src/info/bioinfweb/libralign/test/tests/multiplealignmentscontainer/SwingBasedSWTApplication.java -text svneol=unset#text/plain
 test/src/info/bioinfweb/libralign/test/tests/performance/DataTypeTest.java -text svneol=unset#text/plain
 test/src/info/bioinfweb/libralign/test/tests/performance/application/AbstractApplication.java -text svneol=unset#text/plain
 test/src/info/bioinfweb/libralign/test/tests/performance/application/SwingTest.java -text svneol=unset#text/plain

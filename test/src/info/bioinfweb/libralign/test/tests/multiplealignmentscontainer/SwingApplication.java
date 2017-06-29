@@ -87,6 +87,7 @@ public class SwingApplication extends AbstractApplication {
 	private void initialize() {
 		frame = new JFrame();
 		frame.setBounds(100, 100, 450, 250);
+		frame.setTitle("Swing Application");
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		GridBagLayout gridBagLayout = new GridBagLayout();
 		gridBagLayout.columnWidths = new int[]{0, 0};
