@@ -24,6 +24,8 @@ import java.awt.BorderLayout;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 
+import info.bioinfweb.commons.swing.SwingUtils;
+import info.bioinfweb.commons.swt.SWTUtils;
 import info.bioinfweb.libralign.multiplealignments.MultipleAlignmentsContainer;
 import info.bioinfweb.tic.SWTComponentFactory;
 import info.bioinfweb.tic.SwingComponentFactory;
@@ -78,16 +80,6 @@ public class SwingBasedSWTApplication extends AbstractApplication {
 	}
 	
 	
-	private void setSwingLF() {
-		try {
-			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-		}
-		catch (ClassNotFoundException | InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException e) {
-			e.printStackTrace();
-		}
-	}
-	
-	
 	/**
 	 * Create contents of the window.
 	 */
@@ -97,14 +89,9 @@ public class SwingBasedSWTApplication extends AbstractApplication {
 		shell.setText("Swing based SWT Application");
 		shell.setLayout(new FillLayout(SWT.HORIZONTAL));
 		
-		Composite alignmentsContainerComposite = new Composite(shell, SWT.EMBEDDED);
-		
 		alignmentsContainer = createAlignmentsContainer();
-		setSwingLF();
-		java.awt.Frame alignmentsContainerFrame = SWT_AWT.new_Frame(alignmentsContainerComposite);
-		java.awt.Panel alignmentsContainerPanel = new java.awt.Panel(new java.awt.BorderLayout());
-		alignmentsContainerFrame.add(alignmentsContainerPanel);
-		alignmentsContainerPanel.add(SwingComponentFactory.getInstance().getSwingComponent(alignmentsContainer), BorderLayout.CENTER);
+		SwingUtils.setNativeLF();
+		SWTUtils.embedAWTComponent(SwingComponentFactory.getInstance().getSwingComponent(alignmentsContainer), shell);
 		
 		Menu menu = new Menu(shell, SWT.BAR);
 		shell.setMenuBar(menu);
