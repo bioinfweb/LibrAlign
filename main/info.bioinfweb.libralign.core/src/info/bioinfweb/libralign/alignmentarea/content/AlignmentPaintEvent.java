@@ -34,8 +34,14 @@ import info.bioinfweb.tic.TICPaintEvent;
  * <p>
  * The coordinates used in {@link #getRectangle()} and {@link #getGraphics()} are relative to the left
  * most pixel of {@link #getFirstColumn()}. Therefore the x-coordinate 0 does not reference the left most
- * pixel of the whole component but the left most pixel of the area currently to be repainted. Relative
- * coordinates are used to avoid overflows when painting very long sequences.   
+ * pixel of the whole component but the left most pixel first alignment column to be repainted. Relative
+ * coordinates are used to avoid overflows when painting very long sequences.
+ * <p>
+ * If the rectangle to be painted contains parts of the area left of the first alignment column, the 
+ * return value of {@link #getFirstColumn()} will always be be 0 (even of the first column itself is not 
+ * visible). Coordinates of {@link #getRectangle()} will still be relative to the left pixel of the column 
+ * 0 and its x-coordinate will therefore be negative. The coordinate system used in {@link #getGraphics()}
+ * will be identical so that painting can be performed using respective negative x-coordinates.
  * 
  * @author Ben St&ouml;ver
  * @since 0.5.0
@@ -46,13 +52,40 @@ public class AlignmentPaintEvent extends TICPaintEvent {
 	private int lastColumn;
 	
 	
+	/**
+	 * Creates a new instance of this class.
+	 * 
+	 * @param source the object that triggered the event
+	 * @param parentAlignmentArea the alignment area containing the component to be repainted
+	 * @param firstColumn the first column of the alignment that shall be (partly) repainted (If only space left of the 
+	 *        alignment shall be repainted, this value should still be 0.)
+	 * @param lastColumn the index after the last column that shall be (partly) repainted (If only space right of the 
+	 *        alignment shall be repainted, this value should still be equal to the number of columns in the alignment.)
+	 * @param graphics the swing graphics context used to repaint the component
+	 * @param rectangle the rectangle that has to be repainted with coordinates relative to the left most pixel of 
+	 *        {@code firstColumn}
+	 *        
+	 * @throws IllegalArgumentException if {@code source}, {@code parentAlignmentArea}, {@code graphics} or {@code rectangle} are 
+	 *         {@code null} or if {@code firstColumn} or {@code lastColumn} are below 0 
+	 */
 	public AlignmentPaintEvent(Object source, AlignmentArea parentAlignmentArea, int firstColumn, int lastColumn, 
 			Graphics2D graphics, Rectangle rectangle) {
 		
 		super(source, graphics, rectangle);
-		this.parentAlignmentArea = parentAlignmentArea;
-		this.firstColumn = firstColumn;
-		this.lastColumn = lastColumn;
+		if (parentAlignmentArea == null) {
+			throw new IllegalArgumentException("The parent alignment area must not be null.");
+		}
+		else if (firstColumn < 0) {
+			throw new IllegalArgumentException("The first column must not be below 0. (" + firstColumn + ")");
+		}
+		else if (lastColumn < 0) {
+			throw new IllegalArgumentException("The last column must not be below 0. (" + lastColumn + ")");
+		}
+		else {
+			this.parentAlignmentArea = parentAlignmentArea;
+			this.firstColumn = firstColumn;
+			this.lastColumn = lastColumn;
+		}
 	}
 
 
@@ -67,10 +100,13 @@ public class AlignmentPaintEvent extends TICPaintEvent {
 
 
 	/**
-	 * Returns the index after the right most alignment alignment column in the area to be (at least 
-	 * partly) painted.
+	 * Returns the index of the left most alignment column in the area to be (at least partly) painted.
+	 * <p>
+	 * If only space left of the alignment shall be repainted, this method will still return 0, even if the first 
+	 * column is not part if the area to be repainted. (The x-coordinate of {@link #getRectangle()} will be 
+	 * negative in such cases.)
 	 * 
-	 * @return the index of the first visible alignment column (Column indices start with 0.)
+	 * @return the index of the first visible alignment column (The first column of an alignment has the index 0.)
 	 */
 	public int getFirstColumn() {
 		return firstColumn;
@@ -78,9 +114,14 @@ public class AlignmentPaintEvent extends TICPaintEvent {
 	
 
 	/**
-	 * Returns the index of the left most alignment column in the area to be (at least partly) painted.
+	 * Returns the index after the right most alignment alignment column in the area to be (at least partly) 
+	 * painted.
+	 * <p>
+	 * If only space right of the alignment shall be repainted, this method will always return the index after
+	 * the last column of the alignment and coordinates returned by {@link #getRectangle()} will be relative to 
+	 * it, even if the last column is not part if the area to be repainted.
 	 * 
-	 * @return the index of the first visible alignment column (Column indices start with 0.)
+	 * @return the index of the first visible alignment column (The first column of an alignment has the index 0.)
 	 */
 	public int getLastColumn() {
 		return lastColumn;
