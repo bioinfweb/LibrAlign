@@ -21,6 +21,7 @@ package info.bioinfweb.libralign.alignmentarea.content;
 
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
+import java.awt.geom.Rectangle2D;
 
 import info.bioinfweb.libralign.alignmentarea.AlignmentArea;
 import info.bioinfweb.libralign.model.concatenated.ConcatenatedAlignmentModel;
@@ -69,9 +70,9 @@ public class AlignmentPaintEvent extends TICPaintEvent {
 	 *         {@code null} or if {@code firstColumn} or {@code lastColumn} are below 0 
 	 */
 	public AlignmentPaintEvent(Object source, AlignmentArea parentAlignmentArea, int firstColumn, int lastColumn, 
-			Graphics2D graphics, Rectangle rectangle) {
+			Graphics2D graphics, Rectangle rectangle) {  //TODO Better use Rectangle2D.Double. (See also comment below.)
 		
-		super(source, graphics, rectangle);
+		super(source, graphics, rectangle);  //TODO Values should be stored with double precision, to allow values greater than Integer.MAX_VALUE. The best solution would be to use the base class Rectangle2D rectangle in the TICPaintEvent, which would result in an API change in TIC.
 		if (parentAlignmentArea == null) {
 			throw new IllegalArgumentException("The parent alignment area must not be null.");
 		}
