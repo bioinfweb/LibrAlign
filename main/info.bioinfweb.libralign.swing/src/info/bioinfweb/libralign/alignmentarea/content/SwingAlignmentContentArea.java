@@ -40,7 +40,7 @@ import javax.swing.Scrollable;
  * @since 0.3.0
  * @bioinfweb.module info.bioinfweb.libralign.swing
  */
-public class SwingAlignmentContentArea extends SwingAlignmentRowsArea<AlignmentSubArea> implements Scrollable, ToolkitSpecificAlignmentContentArea {
+public class SwingAlignmentContentArea extends SwingAlignmentRowsArea<TICComponent> implements Scrollable, ToolkitSpecificAlignmentContentArea {
 	private SequenceAreaMap sequenceAreaMap;
 	
 	
@@ -74,7 +74,7 @@ public class SwingAlignmentContentArea extends SwingAlignmentRowsArea<AlignmentS
 		Iterator<String> idIterator = getIndependentComponent().getOwner().getSequenceOrder().idIterator();
 		while (idIterator.hasNext()) {
 			String id = idIterator.next();
-			add(factory.getSwingComponent(sequenceAreaMap.get(id)));
+			add(factory.getSwingComponent(sequenceAreaMap.get(id).getComponent()));
 			addDataAreaList(getIndependentComponent().getOwner().getDataAreas().getSequenceAreas(id));
 		}
 		
@@ -89,19 +89,19 @@ public class SwingAlignmentContentArea extends SwingAlignmentRowsArea<AlignmentS
 		while (iterator.hasNext()) {
 			DataArea dataArea = iterator.next();
 			if (dataArea.isVisible()) {
-				add(factory.getSwingComponent(dataArea));
+				add(factory.getSwingComponent(dataArea.getComponent()));
 			}
 		}
 	}
 	
 
 	@Override
-	public AlignmentSubArea getAreaByY(int y) {
-		Component child = getComponentAt(0, y);
+	public AlignmentSubArea getAreaByY(double y) {
+		Component child = getComponentAt(0, (int)Math.round(y));
 		if ((child != null) && (child instanceof ToolkitComponent)) {
 			TICComponent ticComponent = ((ToolkitComponent)child).getIndependentComponent();
-			if (ticComponent instanceof AlignmentSubArea) {
-				return (AlignmentSubArea)ticComponent;
+			if (ticComponent instanceof AbstractAlignmentSubAreaComponent) {
+				return ((AbstractAlignmentSubAreaComponent)ticComponent).getOwner();
 			}
 		}
 		return null;

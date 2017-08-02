@@ -29,6 +29,7 @@ import java.awt.event.MouseEvent;
 import info.bioinfweb.libralign.alignmentarea.content.AlignmentContentArea;
 import info.bioinfweb.libralign.alignmentarea.content.SequenceArea;
 import info.bioinfweb.libralign.alignmentarea.content.SwingAlignmentContentArea;
+import info.bioinfweb.libralign.alignmentarea.content.ToolkitSpecificAlignmentContentArea;
 import info.bioinfweb.tic.SwingComponentFactory;
 import info.bioinfweb.tic.TargetToolkit;
 import info.bioinfweb.tic.toolkit.SwingComponentTools;
@@ -71,11 +72,17 @@ public class SwingAlignmentArea extends JScrollPane implements ToolkitSpecificAl
 				if (getIndependentComponent().hasAlignmentModel() && (getIndependentComponent().getAlignmentModel().getSequenceCount() > 0)) {
 					AlignmentContentArea contentArea = getIndependentComponent().getContentArea();
 					int row = contentArea.rowByPaintY(e.getY());
-					SequenceArea sequenceArea = contentArea.getToolkitComponent().getSequenceAreaByID(
-							getIndependentComponent().getSequenceOrder().idByIndex(row));
-					if (sequenceArea != null) {
-						getIndependentComponent().getSelection().setNewCursorPosition(contentArea.columnByPaintX(e.getX()), row);
-						((JComponent)sequenceArea.getToolkitComponent()).requestFocusInWindow();
+					if (getIndependentComponent().getContentArea().isUseSubcomponents()) {
+						SequenceArea sequenceArea = ((ToolkitSpecificAlignmentContentArea)contentArea.getToolkitComponent()).getSequenceAreaByID(
+								getIndependentComponent().getSequenceOrder().idByIndex(row));
+						if (sequenceArea != null) {
+							getIndependentComponent().getSelection().setNewCursorPosition(contentArea.columnByPaintX(e.getX()), row);
+							((JComponent)sequenceArea.getComponent().getToolkitComponent()).requestFocusInWindow();
+						}
+					}
+					else {
+						throw new InternalError("Not implemented.");
+						//TODO Implement.
 					}
 				}
 			}
