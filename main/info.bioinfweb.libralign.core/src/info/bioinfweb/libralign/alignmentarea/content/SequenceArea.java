@@ -19,17 +19,7 @@
 package info.bioinfweb.libralign.alignmentarea.content;
 
 
-import java.awt.BasicStroke;
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.Graphics2D;
-import java.awt.RenderingHints;
-import java.awt.Stroke;
-import java.awt.geom.Line2D;
-import java.awt.geom.Rectangle2D;
-
 import info.bioinfweb.commons.Math2;
-import info.bioinfweb.tic.TICPaintEvent;
 import info.bioinfweb.libralign.alignmentarea.AlignmentArea;
 import info.bioinfweb.libralign.alignmentarea.label.AlignmentLabelArea;
 import info.bioinfweb.libralign.alignmentarea.label.AlignmentLabelSubArea;
@@ -38,6 +28,14 @@ import info.bioinfweb.libralign.alignmentarea.paintsettings.PaintSettings;
 import info.bioinfweb.libralign.alignmentarea.selection.SelectionModel;
 import info.bioinfweb.libralign.alignmentarea.selection.SelectionType;
 import info.bioinfweb.libralign.model.AlignmentModel;
+
+import java.awt.BasicStroke;
+import java.awt.Color;
+import java.awt.Graphics2D;
+import java.awt.RenderingHints;
+import java.awt.Stroke;
+import java.awt.geom.Line2D;
+import java.awt.geom.Rectangle2D;
 
 
 
@@ -63,7 +61,6 @@ public class SequenceArea extends AlignmentSubArea {
 	public SequenceArea(AlignmentContentArea owner, String sequenceID) {
 		super(owner);
 		this.sequenceID = sequenceID;
-		assignSize();
 	}
 
 
@@ -98,9 +95,9 @@ public class SequenceArea extends AlignmentSubArea {
   
   
   @Override
-	public void paint(TICPaintEvent event) {
-		event.getGraphics().setColor(DEFAULT_BACKGROUND_COLOR);  //TODO Define different background color for whole component and unknown tokens
-		event.getGraphics().fillRect(event.getRectangle().x, event.getRectangle().y, event.getRectangle().width, event.getRectangle().height);
+	public void paintPart(AlignmentPaintEvent event) {
+  	event.getGraphics().setColor(DEFAULT_BACKGROUND_COLOR);  //TODO Define different background color for whole component and unknown tokens
+  	event.getGraphics().fill(event.getRectangle());
 
 		int firstIndex = Math.max(0, getOwner().columnByPaintX((int)event.getRectangle().getMinX()));
 		int lastIndex = getOwner().columnByPaintX((int)event.getRectangle().getMaxX());
@@ -127,9 +124,8 @@ public class SequenceArea extends AlignmentSubArea {
 
 	
 	@Override
-	public Dimension getSize() {
-		return new Dimension(getOwner().getOwner().getGlobalMaxNeededWidth(),
-				(int)Math.round(getOwner().getOwner().getPaintSettings().getTokenHeight()));  //TODO Always round up here?
+	public double getHeight() {
+		return getOwner().getOwner().getPaintSettings().getTokenHeight();
 	}
 
 

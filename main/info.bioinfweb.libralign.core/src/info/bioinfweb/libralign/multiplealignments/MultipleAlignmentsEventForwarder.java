@@ -21,7 +21,7 @@ package info.bioinfweb.libralign.multiplealignments;
 
 import info.bioinfweb.libralign.alignmentarea.AlignmentArea;
 import info.bioinfweb.libralign.dataarea.DataAreaChangeEvent;
-import info.bioinfweb.libralign.dataarea.DataAreaModelListener;
+import info.bioinfweb.libralign.dataarea.DataAreasModelListener;
 import info.bioinfweb.libralign.model.AlignmentModelChangeListener;
 import info.bioinfweb.libralign.model.AlignmentModel;
 import info.bioinfweb.libralign.model.events.SequenceChangeEvent;
@@ -37,7 +37,7 @@ import info.bioinfweb.libralign.model.events.TokenChangeEvent;
  * @author Ben St&ouml;ver
  * @since 0.3.0
  */
-public class MultipleAlignmentsEventForwarder implements AlignmentModelChangeListener, DataAreaModelListener {
+public class MultipleAlignmentsEventForwarder implements AlignmentModelChangeListener, DataAreasModelListener {
 	private MultipleAlignmentsContainer owner;
 
 	

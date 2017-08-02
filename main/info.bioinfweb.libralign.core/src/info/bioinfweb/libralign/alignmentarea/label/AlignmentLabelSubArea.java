@@ -81,6 +81,9 @@ public abstract class AlignmentLabelSubArea extends TICComponent {
 	
 	@Override
 	public Dimension getSize() {
-		return new Dimension(getOwner().getGlobalMaximumNeededWidth(), getLabeledArea().getSize().height);
+		return new Dimension((int)Math.round(getOwner().getGlobalMaximumNeededWidth()), (int)Math.round(getLabeledArea().getHeight()));
+		//TODO If a directly drawn AlignmentContentArea is used, a vertical shift between the content and its labels may occur, due to the rounding done here.
+		//     A possible solution may be to keep track of the rounding differences and round the following label area heights in a way that there will never be a difference lager than one pixel.
+		//     (A directly drawn AlignmentLabelArea would also solve that problem.)
 	}
 }

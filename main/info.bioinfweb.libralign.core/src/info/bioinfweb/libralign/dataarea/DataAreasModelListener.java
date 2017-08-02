@@ -32,7 +32,7 @@ import java.util.EventListener;
  * @author Ben St&ouml;ver
  * @since 0.0.0
  */
-public interface DataAreaModelListener extends EventListener {
+public interface DataAreasModelListener extends EventListener {
 	public void dataAreaInsertedRemoved(DataAreaChangeEvent e);
 	
 	public void dataAreaVisibilityChanged(DataAreaChangeEvent e);

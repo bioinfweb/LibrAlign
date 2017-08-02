@@ -30,14 +30,14 @@ import java.util.Iterator;
 
 
 /**
- * Helper class used by {@link DataAreaModel} to inform the data areas it contains about changes in the
+ * Helper class used by {@link DataAreasModel} to inform the data areas it contains about changes in the
  * associated {@link AlignmentModel}.
  *
  * @author Ben St&ouml;ver
  * @since 0.3.0
  */
 public class DataAreaSequenceChangeListener implements AlignmentModelChangeListener {
-	private DataAreaModel owner;
+	private DataAreasModel owner;
 
 
 	/**
@@ -45,7 +45,7 @@ public class DataAreaSequenceChangeListener implements AlignmentModelChangeListe
 	 *
 	 * @param owner - the data area model which will be using this instance
 	 */
-	public DataAreaSequenceChangeListener(DataAreaModel owner) {
+	public DataAreaSequenceChangeListener(DataAreasModel owner) {
 		super();
 		this.owner = owner;
 	}
@@ -56,7 +56,7 @@ public class DataAreaSequenceChangeListener implements AlignmentModelChangeListe
 	 *
 	 * @return the data area model that was specified in the constructor
 	 */
-	public DataAreaModel getOwner() {
+	public DataAreasModel getOwner() {
 		return owner;
 	}
 
@@ -102,7 +102,7 @@ public class DataAreaSequenceChangeListener implements AlignmentModelChangeListe
 
 
 	private <T> void fireAfterTokenChange(DataAreaList list, TokenChangeEvent<T> e) {
-        for (DataArea listener : list.toArray(new DataArea[list.size()])) {  // Copying the list is necessary to allow listeners to remove themselves from the list without a ConcurrentModificationException being thrown.
+		for (DataArea listener : list.toArray(new DataArea[list.size()])) {  // Copying the list is necessary to allow listeners to remove themselves from the list without a ConcurrentModificationException being thrown.
 			listener.afterTokenChange(e);
 		}
 	}

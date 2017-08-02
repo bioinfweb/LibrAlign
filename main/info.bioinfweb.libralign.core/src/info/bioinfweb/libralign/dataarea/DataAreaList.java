@@ -41,7 +41,7 @@ public class DataAreaList extends DataAreaChangeEventList {
 	public static final int INITIAL_LIST_SIZE = 8;
 
 
-	private DataAreaModel owner;
+	private DataAreasModel owner;
 	private DataAreaLocation location;
 
 
@@ -55,7 +55,7 @@ public class DataAreaList extends DataAreaChangeEventList {
 	 *
 	 * @throws IllegalArgumentException if {@link DataAreaListType#SEQUENCE} is specified as {@code listType}
 	 */
-	public DataAreaList(DataAreaModel owner, DataAreaListType listType) {
+	public DataAreaList(DataAreasModel owner, DataAreaListType listType) {
 		super(new ArrayList<DataArea>(INITIAL_LIST_SIZE));
 		if (listType.equals(DataAreaListType.SEQUENCE)) {
 			throw new IllegalArgumentException("The type " + DataAreaListType.SEQUENCE +
@@ -78,7 +78,7 @@ public class DataAreaList extends DataAreaChangeEventList {
 	 * @param owner - the parent element that will contain this list
 	 * @param sequenceID - the unique identifier of the sequence the contained data areas will be attached to
 	 */
-	public DataAreaList(DataAreaModel owner, String sequenceID) {
+	public DataAreaList(DataAreasModel owner, String sequenceID) {
 		super(new ArrayList<DataArea>(INITIAL_LIST_SIZE));
 		this.owner = owner;
 		location = new DataAreaLocation(sequenceID);
@@ -92,14 +92,14 @@ public class DataAreaList extends DataAreaChangeEventList {
 	 * @param owner - the parent element that will contain this list
 	 * @param location - the location this list will have in the alignment area
 	 */
-	public DataAreaList(DataAreaModel owner, DataAreaLocation location) {
+	public DataAreaList(DataAreasModel owner, DataAreaLocation location) {
 		super(new ArrayList<DataArea>(INITIAL_LIST_SIZE));
 		this.owner = owner;
 		this.location = location;
 	}
 
 
-	public DataAreaModel getOwner() {
+	public DataAreasModel getOwner() {
 		return owner;
 	}
 
@@ -119,7 +119,7 @@ public class DataAreaList extends DataAreaChangeEventList {
 	 *
 	 * @param visible - Specify {@code true} here, if you want the elements to be displayed, {@code false} otherwise.
 	 * @return a collection containing all affected elements
-	 * @see DataAreaModel#setSequenceDataAreasVisible(boolean)
+	 * @see DataAreasModel#setSequenceDataAreasVisible(boolean)
 	 */
 	public Collection<DataArea> setAllVisible(boolean visible) {
 		boolean informListeners = !getOwner().isVisibilityUpdateInProgress();
@@ -175,8 +175,8 @@ public class DataAreaList extends DataAreaChangeEventList {
    *
    * @return an integer >= 0
    */
-  public int getMaxLengthBeforeStart() {
-    int result = 0;
+  public double getMaxLengthBeforeStart() {
+    double result = 0;
     Iterator<DataArea> iterator = visibleIterator();
     while (iterator.hasNext()) {
       result = Math.max(result, iterator.next().getLengthBeforeStart());
@@ -191,8 +191,8 @@ public class DataAreaList extends DataAreaChangeEventList {
    *
    * @return an integer >= 0
    */
-  public int getMaxLengthAfterEnd() {
-    int result = 0;
+  public double getMaxLengthAfterEnd() {
+    double result = 0;
     Iterator<DataArea> iterator = visibleIterator();
     while (iterator.hasNext()) {
       result = Math.max(result, iterator.next().getLengthAfterEnd());

@@ -103,17 +103,17 @@ public class PherogramPainter {
 	}
 	
 	
-	public void paintUncaledBackground(Graphics2D g, Rectangle visibleRect, double horizontalScale) {
+	public void paintUnscaledBackground(Graphics2D g, Rectangle2D visibleRect, double horizontalScale) {
 		// Draw cut off background:
 		g.setColor(owner.getFormats().getCutBackgroundColor());
 		PherogramProvider provider = owner.getModel().getPherogramProvider();
-		double endX = visibleRect.x + visibleRect.width;
-		double leftX = visibleRect.x;
+		double endX = visibleRect.getMinX() + visibleRect.getWidth();
+		double leftX = visibleRect.getMinX();
 		if (owner.getModel().getLeftCutPosition() > 0) {
 			leftX = Math.max((provider.getBaseCallPosition(owner.getModel().getLeftCutPosition() - 1) + 
 					provider.getBaseCallPosition(owner.getModel().getLeftCutPosition())) / 2.0 * horizontalScale, leftX);
-			if (leftX >= visibleRect.x) {
-				g.fill(new Rectangle2D.Double(visibleRect.x, visibleRect.y, leftX, visibleRect.height));
+			if (leftX >= visibleRect.getMinX()) {
+				g.fill(new Rectangle2D.Double(visibleRect.getMinX(), visibleRect.getMinY(), leftX, visibleRect.getHeight()));
 			}
 		}
 		double rightX = endX;
@@ -121,14 +121,14 @@ public class PherogramPainter {
 			rightX = Math.min((provider.getBaseCallPosition(owner.getModel().getRightCutPosition() - 1) + 
 					provider.getBaseCallPosition(owner.getModel().getRightCutPosition())) / 2.0 * horizontalScale, rightX);
 			if (rightX < endX) {
-				g.fill(new Rectangle2D.Double(rightX, visibleRect.y, 
-						endX - rightX, visibleRect.height));
+				g.fill(new Rectangle2D.Double(rightX, visibleRect.getMinY(), 
+						endX - rightX, visibleRect.getHeight()));
 			}
 		}
 
 		// Draw center background:
 		g.setColor(owner.getFormats().getBackgroundColor());
-		g.fill(new Rectangle2D.Double(leftX, visibleRect.y, rightX - leftX, visibleRect.height));
+		g.fill(new Rectangle2D.Double(leftX, visibleRect.getMinY(), rightX - leftX, visibleRect.getHeight()));
 	}
 	
 	

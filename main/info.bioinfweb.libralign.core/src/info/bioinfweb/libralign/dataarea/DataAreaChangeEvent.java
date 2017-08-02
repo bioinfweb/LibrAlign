@@ -94,8 +94,8 @@ public class DataAreaChangeEvent extends EventObject {
 	 * Returns the model object that contains the list where the change occurred.
 	 */
 	@Override
-	public DataAreaModel getSource() {
-		return (DataAreaModel)super.getSource();
+	public DataAreasModel getSource() {
+		return (DataAreasModel)super.getSource();
 	}
 
 

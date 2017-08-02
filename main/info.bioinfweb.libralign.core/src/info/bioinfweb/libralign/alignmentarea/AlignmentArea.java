@@ -30,7 +30,9 @@ import info.bioinfweb.tic.TICPaintEvent;
 import info.bioinfweb.libralign.actions.AlignmentActionProvider;
 import info.bioinfweb.libralign.alignmentarea.content.AlignmentContentArea;
 import info.bioinfweb.libralign.alignmentarea.content.AlignmentSubArea;
+import info.bioinfweb.libralign.alignmentarea.content.ToolkitSpecificAlignmentContentArea;
 import info.bioinfweb.libralign.alignmentarea.label.AlignmentLabelArea;
+import info.bioinfweb.libralign.alignmentarea.label.AlignmentLabelSubArea;
 import info.bioinfweb.libralign.alignmentarea.order.SequenceOrder;
 import info.bioinfweb.libralign.alignmentarea.paintsettings.PaintSettings;
 import info.bioinfweb.libralign.alignmentarea.paintsettings.PaintSettingsListener;
@@ -41,8 +43,8 @@ import info.bioinfweb.libralign.alignmentarea.selection.SelectionChangeEvent;
 import info.bioinfweb.libralign.alignmentarea.selection.SelectionListener;
 import info.bioinfweb.libralign.alignmentarea.selection.SelectionModel;
 import info.bioinfweb.libralign.dataarea.DataAreaChangeEvent;
-import info.bioinfweb.libralign.dataarea.DataAreaModel;
-import info.bioinfweb.libralign.dataarea.DataAreaModelListener;
+import info.bioinfweb.libralign.dataarea.DataAreasModel;
+import info.bioinfweb.libralign.dataarea.DataAreasModelListener;
 import info.bioinfweb.libralign.editsettings.EditSettings;
 import info.bioinfweb.libralign.model.AlignmentModelChangeListener;
 import info.bioinfweb.libralign.model.AlignmentModel;
@@ -57,14 +59,16 @@ import info.bioinfweb.libralign.multiplealignments.MultipleAlignmentsContainer;
 /**
  * Instances of this class act as GUI components that display a multiple sequence alignment including attached data areas.
  * <p>
- * {@code AlignmentArea} is one of the major GUI components in LibrAlign. It acts as a view in the model view controller 
- * paradigm and works closely together with an instance of {@link AlignmentModel} which provides the data to be displayed.
+ * {@code AlignmentArea} is one of the major GUI components in <i>LibrAlign</i>. It acts as a view in the model view 
+ * controller paradigm and works closely together with an instance of {@link AlignmentModel} which provides the data to 
+ * be displayed.
  * <p>
  * It can be used as stand-alone components are can be contained in a {@link MultipleAlignmentsContainer}, which would be 
  * returned by {@link #getContainer()} in this case. Instances of this class are {@link TICComponent}s. To use this class 
  * in a GUI application, a toolkit specific version of it can be created using {@code SwingComponentFactory} or 
- * {@code SWTComponentFactory} from <a href="http://bioinfweb.info/TIC">TIC</a>. See the
- * <a href="http://bioinfweb.info/LibrAlign/Documentation/wiki/Working_with_toolkits">LibrAlign documentation</a> for details.
+ * {@code SWTComponentFactory} from <a href="http://bioinfweb.info/TIC"><i>TIC</i></a>. See the
+ * <a href="http://bioinfweb.info/LibrAlign/Documentation/wiki/Working_with_toolkits"><i>LibrAlign</i> documentation</a> 
+ * for details.
  * <p>
  * {@code AlignmentArea} has the following key properties:
  * <ul>
@@ -89,7 +93,7 @@ import info.bioinfweb.libralign.multiplealignments.MultipleAlignmentsContainer;
  * @see AlignmentLabelArea
  * @see AlignmentModel
  */
-public class AlignmentArea extends TICComponent implements AlignmentModelChangeListener, DataAreaModelListener {
+public class AlignmentArea extends TICComponent implements AlignmentModelChangeListener, DataAreasModelListener {
 	public static final int MIN_PART_AREA_HEIGHT = 5;
 	
 	/** Defines the width of the divider of the GUI components for the head, content, and bottom area. */ 
@@ -98,7 +102,7 @@ public class AlignmentArea extends TICComponent implements AlignmentModelChangeL
 
 	private AlignmentModel<?> alignmentModel = null;
 	private SequenceOrder sequenceOrder = new SequenceOrder(this);
-	private DataAreaModel dataAreas = new DataAreaModel(this);
+	private DataAreasModel dataAreas = new DataAreasModel(this);
 	private PaintSettings paintSettings;
 	private EditSettings editSettings;
 	private SelectionModel selection;
@@ -175,7 +179,7 @@ public class AlignmentArea extends TICComponent implements AlignmentModelChangeL
 			editSettings = new EditSettings();
 		}
 		
-		alignmentContentArea = new AlignmentContentArea(this);
+		alignmentContentArea = new AlignmentContentArea(this, true);  //TODO Allow to customize whether to create subcomponents later.
 		alignmentLabelArea = new AlignmentLabelArea(this);  // Must be called after alignmentContentArea has been created.
 
 		dataAreas.addListener(this);
@@ -295,7 +299,7 @@ public class AlignmentArea extends TICComponent implements AlignmentModelChangeL
 	 * 
 	 * @return the model object managing all attached data areas 
 	 */
-	public DataAreaModel getDataAreas() {
+	public DataAreasModel getDataAreas() {
 		return dataAreas;
 	}
 
@@ -460,7 +464,7 @@ public class AlignmentArea extends TICComponent implements AlignmentModelChangeL
 	 * 
 	 * @return a value >= 0
 	 */
-	public int getGlobalMaxNeededWidth() {
+	public double getGlobalMaxNeededWidth() {
 		double result = 0;
 		if (hasContainer()) {
 			for (AlignmentArea alignmentArea : getContainer().getAlignmentAreas()) {
@@ -470,14 +474,15 @@ public class AlignmentArea extends TICComponent implements AlignmentModelChangeL
 		else {
 			result = getLocalMaxNeededWidth();
 		}
-		return (int)Math2.roundUp(result);  // Rounded because this method is mainly used to determine component widths.
+		return result;
 	}
 	
 	
 	public void scrollCursorToVisible() {
+		//TODO Refactor to also support direct painting without subcomponents.
 		if (hasToolkitComponent()) {
 			Rectangle visibleRectangle = getToolkitComponent().getVisibleAlignmentRect();
-			Rectangle currentRectangle = getContentArea().getCursorRectangle();
+			Rectangle currentRectangle = getContentArea().getCursorRectangle().getBounds();  // Rounding takes place here.
 			Rectangle scrollRectangle = new Rectangle(currentRectangle);
 			int dy = currentRectangle.height - visibleRectangle.height;
 			if ((dy > 0) && (lastCursorRectangle != null)) {
@@ -538,12 +543,18 @@ public class AlignmentArea extends TICComponent implements AlignmentModelChangeL
 	 */
 	public void assignSizeToAll() {
 		if (hasToolkitComponent() && getContentArea().hasToolkitComponent() && getLabelArea().hasToolkitComponent()) {
-			Iterator<AlignmentSubArea> iterator = getContentArea().getToolkitComponent().subAreaIterator();
+			Iterator<AlignmentLabelSubArea> iterator = getLabelArea().getToolkitComponent().subAreaIterator();
 			while (iterator.hasNext()) {
-				AlignmentSubArea area = iterator.next();
-				area.assignSize();
-				area.getLabelSubArea().assignSize();
+				iterator.next().assignSize();;
 			}
+			
+			if (getContentArea().isUseSubcomponents()) {
+				Iterator<TICComponent> contentIterator = ((ToolkitSpecificAlignmentContentArea)getContentArea().getToolkitComponent()).subAreaIterator();
+				while (contentIterator.hasNext()) {
+					contentIterator.next().assignSize();;
+				}
+			}
+			
 			getContentArea().assignSize();
 			getLabelArea().assignSize();
 			assignSize();
@@ -556,8 +567,8 @@ public class AlignmentArea extends TICComponent implements AlignmentModelChangeL
 	 * Reinserts subelements in the contained label and content areas if they already have created a toolkit specific component.
 	 */
 	public void reinsertSubelements() {
-		if (getContentArea().hasToolkitComponent()) {
-			getContentArea().getToolkitComponent().reinsertSubelements();
+		if (getContentArea().hasToolkitComponent() && getContentArea().isUseSubcomponents()) {
+			((ToolkitSpecificAlignmentContentArea)getContentArea().getToolkitComponent()).reinsertSubelements();
 		}
 		if (getLabelArea().hasToolkitComponent()) {
 			getLabelArea().getToolkitComponent().reinsertSubelements();
@@ -595,8 +606,14 @@ public class AlignmentArea extends TICComponent implements AlignmentModelChangeL
 		getDataAreas().getSequenceDataChangeListener().afterTokenChange(e);
 		assignSizeToAll();
 		if (getContentArea().hasToolkitComponent()) {
-			getContentArea().getToolkitComponent().repaintSequenceAreas();  // Necessary when neither the selection changes nor the size of the sequence areas changed (e.g. when deleting right in a sequence with an attached pherogram with space before and after the alignment).
-			//TODO Wouldn't it be sufficient, if only the affected sequence area gets repainted?
+			if (getContentArea().isUseSubcomponents()) {
+				((ToolkitSpecificAlignmentContentArea)getContentArea().getToolkitComponent()).repaintSequenceAreas();  // Necessary when neither the selection changes nor the size of the sequence areas changed (e.g. when deleting right in a sequence with an attached pherogram with space before and after the alignment).
+				//TODO Wouldn't it be sufficient, if only the affected sequence area gets repainted?
+			}
+			else {
+				throw new InternalError("Not implemented.");
+				//TODO Implement.
+			}
 		}
 	}
 

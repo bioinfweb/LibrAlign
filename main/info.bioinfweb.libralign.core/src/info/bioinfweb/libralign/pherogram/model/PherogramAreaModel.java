@@ -390,8 +390,8 @@ public class PherogramAreaModel extends PherogramComponentModel implements DataM
    * <p>
    * If a {@code shiftChange} of 0 is specified the entry in the underlying shift list will be deleted.
    * 
-   * @param baseCallIndex - the first position in the base call sequence where the shift change shall be valid
-   * @param shiftChange - a positive of negative for the the shift change (number of positions in the editable sequence)
+   * @param baseCallIndex the first position in the base call sequence where the shift change shall be valid
+   * @param shiftChange a positive of negative for the the shift change (number of positions in the editable sequence)
    */
   public void setShiftChange(int baseCallIndex, int shiftChange) {
   	int listIndex = shiftChangeListIndexByBaseCallIndex(baseCallIndex);

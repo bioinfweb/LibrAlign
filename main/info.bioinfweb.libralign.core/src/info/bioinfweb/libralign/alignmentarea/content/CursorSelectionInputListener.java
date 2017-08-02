@@ -27,7 +27,9 @@ import javax.swing.Action;
 import javax.swing.JComponent;
 import javax.swing.KeyStroke;
 
+import info.bioinfweb.tic.TICComponent;
 import info.bioinfweb.tic.TargetToolkit;
+import info.bioinfweb.tic.input.TICInputEvent;
 import info.bioinfweb.tic.input.TICKeyEvent;
 import info.bioinfweb.tic.input.TICKeyListener;
 import info.bioinfweb.tic.input.TICMouseAdapter;
@@ -72,14 +74,26 @@ public class CursorSelectionInputListener extends TICMouseAdapter implements TIC
 	}
 
 
+	private boolean isEventFromSequenceArea(TICInputEvent event) {
+		return (event.getSource() instanceof DefaultAlignmentSubAreaComponent) && 
+				(((DefaultAlignmentSubAreaComponent)event.getSource()).getOwner() instanceof SequenceArea);
+	}
+	
+	
+	private SequenceArea getSequenceArea(TICComponent component) {
+		return (SequenceArea)((DefaultAlignmentSubAreaComponent)component).getOwner();
+	}
+	
+	
 	@Override
 	public boolean mousePressed(TICMouseEvent event) {
+		//TODO Also handle respective events from single AlignmentContentAreaComponent
 		setSwingFocus(event);  // Necessary for Swing components to react to keyboard events.
 		if (event.getClickCount() > 1) {
 			// Handle double click events here
 		}
-		else if ((event.isMouseButton1Down()) && (event.getSource() instanceof SequenceArea)) {
-			Point columnRow = calculateColumnRow((SequenceArea)event.getSource(), event.getComponentX(), event.getComponentY());
+		else if ((event.isMouseButton1Down()) && isEventFromSequenceArea(event)) {
+			Point columnRow = calculateColumnRow(getSequenceArea(event.getSource()), event.getComponentX(), event.getComponentY());
 			getOwner().getSelection().setNewCursorPosition(columnRow.x, columnRow.y, 1);  // Height is always set to 1 on a mouse click.
 		}
 		return true;  // Forwarding to parent is not necessary.
@@ -88,8 +102,9 @@ public class CursorSelectionInputListener extends TICMouseAdapter implements TIC
 
 	@Override
 	public boolean mouseDragged(TICMouseEvent event) {
-		if ((event.isMouseButton1Down()) && (event.getSource() instanceof SequenceArea)) {
-			Point columnRow = calculateColumnRow((SequenceArea)event.getSource(), event.getComponentX(), event.getComponentY());
+		//TODO Also handle respective events from single AlignmentContentAreaComponent
+		if ((event.isMouseButton1Down()) && isEventFromSequenceArea(event)) {
+			Point columnRow = calculateColumnRow(getSequenceArea(event.getSource()), event.getComponentX(), event.getComponentY());
 			getOwner().getSelection().setSelectionEnd(columnRow.x, columnRow.y);
 		}
 		return true;  // Forwarding to parent is not necessary.

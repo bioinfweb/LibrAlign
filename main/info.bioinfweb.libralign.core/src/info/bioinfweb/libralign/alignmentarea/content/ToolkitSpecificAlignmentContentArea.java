@@ -22,6 +22,7 @@ package info.bioinfweb.libralign.alignmentarea.content;
 import info.bioinfweb.libralign.alignmentarea.ToolkitSpecificAlignmentArea;
 import info.bioinfweb.libralign.alignmentarea.rowsarea.ToolkitSpecificAlignmentRowsArea;
 import info.bioinfweb.libralign.dataarea.DataAreaList;
+import info.bioinfweb.tic.TICComponent;
 
 
 
@@ -32,19 +33,19 @@ import info.bioinfweb.libralign.dataarea.DataAreaList;
  * @author Ben St&ouml;ver
  * @since 0.3.0
  */
-public interface ToolkitSpecificAlignmentContentArea extends ToolkitSpecificAlignmentRowsArea<AlignmentSubArea> {
+public interface ToolkitSpecificAlignmentContentArea extends ToolkitSpecificAlignmentRowsArea<TICComponent> {
 	/**
 	 * Returns the child component containing the specified y-coordinate.
 	 * 
-	 * @param y - the y-coordinate relative to this alignment content area
+	 * @param y the y-coordinate relative to this alignment content area
 	 * @return the sequence or data area at the specified position
 	 */
-	public AlignmentSubArea getAreaByY(int y);
+	public AlignmentSubArea getAreaByY(double y);
 	
   /**
    * Returns the {@link SequenceArea} inside this area that displays the sequence with the specified ID.
    * 
-   * @param sequenceID - the ID of the sequence displayed in the returned area
+   * @param sequenceID the ID of the sequence displayed in the returned area
    * @return the GUI component or {@code null} if no sequence with the specified ID is displayed in this area
    */
   public SequenceArea getSequenceAreaByID(String sequenceID);
@@ -59,7 +60,7 @@ public interface ToolkitSpecificAlignmentContentArea extends ToolkitSpecificAlig
   /**
    * Delegates to the {@link SequenceArea} contained in this component to assign its current size.
    * 
-   * @param sequenceID - the ID of the sequence displayed in the sequence area to be resized
+   * @param sequenceID the ID of the sequence displayed in the sequence area to be resized
    * @throws IllegalArgumentException if no sequence area for the specified sequence ID was found
    */
   public void assignSequenceAreaSize(String sequenceID) throws IllegalArgumentException;

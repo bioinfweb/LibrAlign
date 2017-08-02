@@ -19,16 +19,9 @@
 package info.bioinfweb.libralign.dataarea.implementations.charset;
 
 
-import java.awt.Graphics2D;
-import java.awt.SystemColor;
-import java.awt.geom.Rectangle2D;
-import java.util.EnumSet;
-import java.util.Iterator;
-import java.util.Set;
-
-import info.bioinfweb.tic.TICPaintEvent;
 import info.bioinfweb.libralign.alignmentarea.AlignmentArea;
 import info.bioinfweb.libralign.alignmentarea.content.AlignmentContentArea;
+import info.bioinfweb.libralign.alignmentarea.content.AlignmentPaintEvent;
 import info.bioinfweb.libralign.alignmentarea.label.AlignmentLabelArea;
 import info.bioinfweb.libralign.alignmentarea.label.AlignmentLabelSubArea;
 import info.bioinfweb.libralign.alignmentarea.paintsettings.PaintSettings;
@@ -39,6 +32,13 @@ import info.bioinfweb.libralign.model.events.SequenceChangeEvent;
 import info.bioinfweb.libralign.model.events.SequenceRenamedEvent;
 import info.bioinfweb.libralign.model.events.TokenChangeEvent;
 import info.bioinfweb.libralign.multiplealignments.MultipleAlignmentsContainer;
+
+import java.awt.Graphics2D;
+import java.awt.SystemColor;
+import java.awt.geom.Rectangle2D;
+import java.util.EnumSet;
+import java.util.Iterator;
+import java.util.Set;
 
 
 
@@ -97,13 +97,13 @@ public class CharSetArea extends DataArea {
 
 
 	@Override
-	public int getHeight() {
-		return (int)Math.round(getModel().size() * getLabeledAlignmentArea().getPaintSettings().getTokenHeight());  //TODO Add possible border height, possibly round up?
+	public double getHeight() {
+		return getModel().size() * getLabeledAlignmentArea().getPaintSettings().getTokenHeight();  //TODO Add possible border height, possibly round up?
 	}
 
 	
 	@Override
-	public void paint(TICPaintEvent event) {
+	public void paintPart(AlignmentPaintEvent event) {
 		AlignmentContentArea contentArea = getLabeledAlignmentArea().getContentArea();
 		
 		// Paint background:

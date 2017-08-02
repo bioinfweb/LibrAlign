@@ -19,35 +19,28 @@
 package info.bioinfweb.libralign.alignmentarea.content;
 
 
-import java.awt.Graphics2D;
-import java.awt.Rectangle;
-import java.awt.geom.Rectangle2D;
-
 import info.bioinfweb.libralign.alignmentarea.AlignmentArea;
-import info.bioinfweb.libralign.model.concatenated.ConcatenatedAlignmentModel;
 import info.bioinfweb.tic.TICPaintEvent;
+
+import java.awt.Graphics2D;
+import java.awt.geom.Rectangle2D;
 
 
 
 /**
  * Event object used by {@link AlignmentSubArea} that provides information on the area of a component
- * displaying a part of an alignment to be painted, the graphics context and tool methods.
+ * displaying a part of an alignment to be painted and the graphics context.
  * <p>
  * The coordinates used in {@link #getRectangle()} and {@link #getGraphics()} are relative to the left
- * most pixel of {@link #getFirstColumn()}. Therefore the x-coordinate 0 does not reference the left most
- * pixel of the whole component but the left most pixel first alignment column to be repainted. Relative
- * coordinates are used to avoid overflows when painting very long sequences.
- * <p>
- * If the rectangle to be painted contains parts of the area left of the first alignment column, the 
- * return value of {@link #getFirstColumn()} will always be be 0 (even of the first column itself is not 
- * visible). Coordinates of {@link #getRectangle()} will still be relative to the left pixel of the column 
- * 0 and its x-coordinate will therefore be negative. The coordinate system used in {@link #getGraphics()}
- * will be identical so that painting can be performed using respective negative x-coordinates.
+ * most pixel of first column of the alignment. Therefore the x-coordinate 0 does necessarily not reference 
+ * the left most pixel of the whole component if data areas use space left of the alignment.
  * 
  * @author Ben St&ouml;ver
  * @since 0.5.0
  */
 public class AlignmentPaintEvent extends TICPaintEvent {
+	private static final long serialVersionUID = 1L;
+	
 	private AlignmentArea parentAlignmentArea;
 	private int firstColumn;
 	private int lastColumn;
@@ -63,16 +56,16 @@ public class AlignmentPaintEvent extends TICPaintEvent {
 	 * @param lastColumn the index after the last column that shall be (partly) repainted (If only space right of the 
 	 *        alignment shall be repainted, this value should still be equal to the number of columns in the alignment.)
 	 * @param graphics the swing graphics context used to repaint the component
-	 * @param rectangle the rectangle that has to be repainted with coordinates relative to the left most pixel of 
-	 *        {@code firstColumn}
+	 * @param rectangle the rectangle that has to be repainted with coordinates relative to the left most pixel of the
+	 *        first column of the alignment
 	 *        
 	 * @throws IllegalArgumentException if {@code source}, {@code parentAlignmentArea}, {@code graphics} or {@code rectangle} are 
 	 *         {@code null} or if {@code firstColumn} or {@code lastColumn} are below 0 
 	 */
 	public AlignmentPaintEvent(Object source, AlignmentArea parentAlignmentArea, int firstColumn, int lastColumn, 
-			Graphics2D graphics, Rectangle rectangle) {  //TODO Better use Rectangle2D.Double. (See also comment below.)
+			Graphics2D graphics, Rectangle2D rectangle) {
 		
-		super(source, graphics, rectangle);  //TODO Values should be stored with double precision, to allow values greater than Integer.MAX_VALUE. The best solution would be to use the base class Rectangle2D rectangle in the TICPaintEvent, which would result in an API change in TIC.
+		super(source, graphics, rectangle);
 		if (parentAlignmentArea == null) {
 			throw new IllegalArgumentException("The parent alignment area must not be null.");
 		}
@@ -88,6 +81,20 @@ public class AlignmentPaintEvent extends TICPaintEvent {
 			this.lastColumn = lastColumn;
 		}
 	}
+
+
+//	/**
+//	 * Returns the rectangle that needs to be repainted. Coordinates are relative to the left most alignment column (column 0).
+//	 * <p>
+//	 * In contrast to {@link TICPaintEvent} this class always uses instances of {@link Rectangle2D.Double} to make sure that 
+//	 * large alignments (possibly using coordinates higher than {@link Integer#MAX_VALUE}) can be painted.
+//	 * 
+//	 * @return the area to be painted 
+//	 */
+//	@Override
+//	public Rectangle2D getRectangle() {
+//		return (Rectangle2D)super.getRectangle();
+//	}
 
 
 	/**
@@ -126,50 +133,5 @@ public class AlignmentPaintEvent extends TICPaintEvent {
 	 */
 	public int getLastColumn() {
 		return lastColumn;
-	}
-	
-	
-	/**
-	 * Returns the column containing the specified relative x-coordinate. If the coordinate lies behind 
-	 * the last column of the whole alignment, the number of columns + 1 is returned. This method takes 
-	 * the current horizontal zoom factor into account.
-	 *
-	 * @param x the paint coordinate relative to the first column to be currently painted as returned
-	 *        by {@link #getFirstColumn()}
-	 * @return the absolute alignment column
-	 */
-	public int columnByRelativePaintX(int x) {
-		if (getParentAlignmentArea().getAlignmentModel() instanceof ConcatenatedAlignmentModel) {
-			throw new InternalError("not implemented");  //TODO Implement and consider that different alignment parts may have different token widths here.
-		}
-		else {
-			return Math.max(0, Math.min(getParentAlignmentArea().getGlobalMaxSequenceLength(),
-					(int)(x / getParentAlignmentArea().getPaintSettings().getTokenWidth(0) + getFirstColumn())));  //TODO Catch IllegalStateException?
-		}
-	}
-	
-	
-	/**
-	 * Returns the left most relative x-coordinate of the area the specified column fills up.
-	 * This method takes the current horizontal zoom factor into account.
-	 *
-	 * @param column the column painted at the returned x-position
-	 * @return an x-coordinate relative to to the first column to be currently painted as returned
-	 *         by {@link #getFirstColumn()}
-	 */
-	public int relativePaintXByColumn(int column) {
-	  if (getParentAlignmentArea().hasAlignmentModel()) {
-  		if (getParentAlignmentArea().getAlignmentModel() instanceof ConcatenatedAlignmentModel) {
-  			throw new InternalError("not implemented");  //TODO Implement and consider that different alignment parts may have different token widths here.
-  		}
-  		else {
-  			return (int)Math.round((column - getFirstColumn()) *
-  					getParentAlignmentArea().getPaintSettings().getTokenPainterList().painterByColumn(0).getPreferredWidth() *
-  					getParentAlignmentArea().getPaintSettings().getZoomX());  //TODO Catch IllegalStateException?
-  		}
-	  }
-	  else {
-	    throw new IllegalStateException("Column dependent paint positions can only be calculated if an alignment model is defined.");
-	  }
 	}
 }

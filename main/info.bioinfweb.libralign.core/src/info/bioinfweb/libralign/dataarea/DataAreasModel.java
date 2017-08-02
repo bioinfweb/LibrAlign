@@ -40,16 +40,16 @@ import java.util.Map;
  *
  * @author Ben St&ouml;ver
  */
-public class DataAreaModel {
+public class DataAreasModel {
 	private final AlignmentArea owner;
   private final DataAreaList topAreas = new DataAreaList(this, DataAreaListType.TOP);
   private final DataAreaList bottomAreas = new DataAreaList(this, DataAreaListType.BOTTOM);
   private final Map<String, DataAreaList> sequenceAreaLists = new HashMap<String, DataAreaList>();
-  private final List<DataAreaModelListener> listeners = new ArrayList<DataAreaModelListener>(8);
+  private final List<DataAreasModelListener> listeners = new ArrayList<DataAreasModelListener>(8);
   private boolean visibilityUpdateInProgress = false;
   private final DataAreaSequenceChangeListener sequenceChangeListener = new DataAreaSequenceChangeListener(this);
-  private int localMaxLengthBeforeStart = AlignmentLabelArea.RECALCULATE_VALUE;
-  private int localMaxLengthAfterEnd = AlignmentLabelArea.RECALCULATE_VALUE;
+  private double localMaxLengthBeforeStart = AlignmentLabelArea.RECALCULATE_VALUE;
+  private double localMaxLengthAfterEnd = AlignmentLabelArea.RECALCULATE_VALUE;
 
 
 	/**
@@ -57,7 +57,7 @@ public class DataAreaModel {
 	 *
 	 * @param owner - the alignment content area that will be using this instance
 	 */
-  public DataAreaModel(AlignmentArea owner) {
+  public DataAreasModel(AlignmentArea owner) {
 		super();
 		this.owner = owner;
 	}
@@ -176,7 +176,7 @@ public class DataAreaModel {
 	 *
 	 * @return an integer >= 0
 	 */
-	public int getLocalMaxLengthBeforeStart() {
+	public double getLocalMaxLengthBeforeStart() {
 		if (localMaxLengthBeforeStart == AlignmentLabelArea.RECALCULATE_VALUE) {
 			localMaxLengthBeforeStart = Math.max((int)Math2.roundUp(getOwner().getPaintSettings().getCursorLineWidth() / 2),
 					Math.max(getTopAreas().getMaxLengthBeforeStart(), getBottomAreas().getMaxLengthBeforeStart()));
@@ -209,9 +209,9 @@ public class DataAreaModel {
 	 *
 	 * @return an integer >= 0
 	 */
-	public int getGlobalMaxLengthBeforeStart() {
+	public double getGlobalMaxLengthBeforeStart() {
 		AlignmentArea alignmentArea = getOwner();
-		int result = 0;
+		double result = 0;
 		if (alignmentArea.hasContainer()) {
 			for (AlignmentArea containerAlignmentArea : alignmentArea.getContainer().getAlignmentAreas()) {
 				result = Math.max(result, containerAlignmentArea.getDataAreas().getLocalMaxLengthBeforeStart());
@@ -230,7 +230,7 @@ public class DataAreaModel {
    *
    * @return an integer >= 0
    */
-  public int getLocalMaxLengthAfterEnd() {
+  public double getLocalMaxLengthAfterEnd() {
     if (localMaxLengthAfterEnd == AlignmentLabelArea.RECALCULATE_VALUE) {
       localMaxLengthAfterEnd = Math.max((int)Math2.roundUp(getOwner().getPaintSettings().getCursorLineWidth() / 2),
       		Math.max(getTopAreas().getMaxLengthAfterEnd(), getBottomAreas().getMaxLengthAfterEnd()));
@@ -250,7 +250,7 @@ public class DataAreaModel {
 	 * @param listener - the listener object to be notified in the future
 	 * @return {@code true} (as specified by {@link Collection#add(Object)})
 	 */
-	public boolean addListener(DataAreaModelListener listener) {
+	public boolean addListener(DataAreasModelListener listener) {
 		return listeners.add(listener);
 	}
 
@@ -261,7 +261,7 @@ public class DataAreaModel {
 	 * @param listener - the listener to be removed
 	 * @return {@code true} if this list contained the specified element
 	 */
-	public boolean removeListener(DataAreaModelListener listener) {
+	public boolean removeListener(DataAreasModelListener listener) {
 		return listeners.remove(listener);
 	}
 
@@ -280,7 +280,7 @@ public class DataAreaModel {
 	 */
 	protected void fireInsertedRemoved(ListChangeType type, Collection<? extends DataArea> affectedElement) {
 		DataAreaChangeEvent e = new DataAreaChangeEvent(this, true, type, affectedElement);
-        for (DataAreaModelListener listener : listeners.toArray(new DataAreaModelListener[listeners.size()])) {  // Copying the list is necessary to allow listeners to remove themselves from the list without a ConcurrentModificationException being thrown.
+        for (DataAreasModelListener listener : listeners.toArray(new DataAreasModelListener[listeners.size()])) {  // Copying the list is necessary to allow listeners to remove themselves from the list without a ConcurrentModificationException being thrown.
 			listener.dataAreaInsertedRemoved(e);
 		}
 	}
@@ -291,7 +291,7 @@ public class DataAreaModel {
 	 */
 	protected void fireInsertedRemoved(ListChangeType type, DataArea affectedElements) {
 		DataAreaChangeEvent e = new DataAreaChangeEvent(this, true, type, affectedElements);
-        for (DataAreaModelListener listener : listeners.toArray(new DataAreaModelListener[listeners.size()])) {  // Copying the list is necessary to allow listeners to remove themselves from the list without a ConcurrentModificationException being thrown.
+        for (DataAreasModelListener listener : listeners.toArray(new DataAreasModelListener[listeners.size()])) {  // Copying the list is necessary to allow listeners to remove themselves from the list without a ConcurrentModificationException being thrown.
 			listener.dataAreaInsertedRemoved(e);
 		}
 	}
@@ -346,7 +346,7 @@ public class DataAreaModel {
 	 */
 	protected void fireVisibilityChanged(boolean eventsFromSingleList, Collection<? extends DataArea> affectedElements) {
 		DataAreaChangeEvent e = new DataAreaChangeEvent(this, eventsFromSingleList, null, affectedElements);
-        for (DataAreaModelListener listener : listeners.toArray(new DataAreaModelListener[listeners.size()])) {  // Copying the list is necessary to allow listeners to remove themselves from the list without a ConcurrentModificationException being thrown.
+        for (DataAreasModelListener listener : listeners.toArray(new DataAreasModelListener[listeners.size()])) {  // Copying the list is necessary to allow listeners to remove themselves from the list without a ConcurrentModificationException being thrown.
 			listener.dataAreaVisibilityChanged(e);
 		}
 	}

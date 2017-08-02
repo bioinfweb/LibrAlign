@@ -19,15 +19,14 @@
 package info.bioinfweb.libralign.dataarea;
 
 
-import java.awt.Dimension;
-import java.util.Set;
-
 import info.bioinfweb.libralign.alignmentarea.AlignmentArea;
 import info.bioinfweb.libralign.alignmentarea.content.AlignmentContentArea;
 import info.bioinfweb.libralign.alignmentarea.content.AlignmentSubArea;
 import info.bioinfweb.libralign.model.AlignmentModel;
 import info.bioinfweb.libralign.model.AlignmentModelChangeListener;
 import info.bioinfweb.libralign.multiplealignments.MultipleAlignmentsContainer;
+
+import java.util.Set;
 
 
 
@@ -154,7 +153,7 @@ public abstract class DataArea extends AlignmentSubArea implements AlignmentMode
 	 * 
 	 * @return This default implementation always returns 0. 
 	 */
-	public int getLengthBeforeStart() {
+	public double getLengthBeforeStart() {
 		return 0;
 	}
 	
@@ -167,28 +166,7 @@ public abstract class DataArea extends AlignmentSubArea implements AlignmentMode
 	 * 
 	 * @return This default implementation always returns 0. 
 	 */
-	public int getLengthAfterEnd() {
+	public double getLengthAfterEnd() {
 		return 0;
-	}
-	
-	
-	/**
-	 * Returns the height in pixels considering the current zoom factor this component needs.
-	 * 
-	 * @return an integer value > 0
-	 */
-	public abstract int getHeight();
-
-
-	/**
-	 * Returns the size of the component depending on the return values of {@link #getLength()}, {@link #getHeight()}
-	 * and the maximum length before the first alignment position in the associated alignment area. (That means this
-	 * method might return a different dimension depending on the {@link AlignmentArea} is it contained in.)
-	 * 
-	 * @return the (minimal) width and height of this component
-	 */
-	@Override
-	public Dimension getSize() {
-		return new Dimension(getOwner().getOwner().getGlobalMaxNeededWidth(), getHeight());  
 	}
 }

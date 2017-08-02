@@ -19,6 +19,7 @@
 package info.bioinfweb.libralign.alignmentarea.content;
 
 
+import info.bioinfweb.commons.Math2;
 import info.bioinfweb.commons.SystemUtils;
 import info.bioinfweb.libralign.alignmentarea.AlignmentArea;
 import info.bioinfweb.libralign.alignmentarea.ToolkitSpecificAlignmentArea;
@@ -37,10 +38,10 @@ import info.bioinfweb.tic.input.TICMouseWheelEvent;
 import info.bioinfweb.tic.input.TICMouseWheelListener;
 
 import java.awt.Dimension;
-import java.awt.Rectangle;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
+import java.awt.geom.Rectangle2D;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -55,7 +56,8 @@ import javax.swing.KeyStroke;
  * data areas.
  * <p>
  * This component is used a child component of {@link AlignmentArea} and in contrast to {@link AlignmentArea}
- * does not contain a scroll container, but acts as the scrolled component.
+ * does not contain a scroll container, but acts as the scrolled component. Application developers will not
+ * need to create instances of this class directly but should use {@link AlignmentArea}.
  *
  * @author Ben St&ouml;ver
  * @since 0.3.0
@@ -68,6 +70,7 @@ public class AlignmentContentArea extends TICComponent {
 
 
 	private final AlignmentArea owner;
+	private final boolean useSubcomponents;
 	private Map<KeyStroke, Action> actionMap = new HashMap<KeyStroke, Action>();
 
 
@@ -77,10 +80,13 @@ public class AlignmentContentArea extends TICComponent {
 	 * If {@code code} is part of a {@link MultipleAlignmentsContainer} the shared edit settings of this container
 	 * will automatically be used by the returned instance.
 	 *
-	 * @param owner - the alignment area component that will be containing the return instance
+	 * @param owner the alignment area component that will be containing the return instance
+	 * @param useSubcomponents Determines whether single subcomponents shall be used for each sequence or data area 
+	 *        or if all their contents shall be painted on a single shared component.
 	 */
-	public AlignmentContentArea(AlignmentArea owner) {
+	public AlignmentContentArea(AlignmentArea owner, boolean useSubcomponents) {
 		super();
+		this.useSubcomponents = useSubcomponents;
 		this.owner = owner;
 		fillActionMap();
 		addMouseWheelListener(new TICMouseWheelListener() {
@@ -314,6 +320,18 @@ public class AlignmentContentArea extends TICComponent {
 	}
 
 
+	/**
+	 * Determines whether single subcomponents shall be used for each sequence or data area 
+	 * or if all their contents shall be painted on a single shared component.
+	 * 
+	 * @return {@code true} if subcomponents are used, {@code false} otherwise
+	 * @since 0.5.0
+	 */
+	public boolean isUseSubcomponents() {
+		return useSubcomponents;
+	}
+
+
 	public Map<KeyStroke, Action> getActionMap() {
 		return actionMap;
 	}
@@ -327,14 +345,14 @@ public class AlignmentContentArea extends TICComponent {
 	 *
 	 * @return a rectangle with paint coordinates
 	 */
-	public Rectangle getCursorRectangle() {
+	public Rectangle2D getCursorRectangle() {
 		SelectionModel selection = getOwner().getSelection();
-		int y = paintYByRow(selection.getCursorRow());
-		int width = 0;
+		double y = paintYByRow(selection.getCursorRow());
+		double width = 0;
 		if (selection.getCursorColumn() < getOwner().getAlignmentModel().getMaxSequenceLength()) {  // There is no more token behind the cursor, if it is located at the right end of the alignment.
-			width = (int)Math.round(getOwner().getPaintSettings().getTokenWidth(selection.getCursorColumn()));
+			width = getOwner().getPaintSettings().getTokenWidth(selection.getCursorColumn());
 		}
-		Rectangle result = new Rectangle(paintXByColumn(selection.getCursorColumn()), y, width,
+		Rectangle2D.Double result = new Rectangle2D.Double(paintXByColumn(selection.getCursorColumn()), y, width,
 				paintYByRow(selection.getCursorRow() + selection.getCursorHeight()) - y);
 		if (selection.getCursorRow() + selection.getCursorHeight() - 1 ==
 				getOwner().getAlignmentModel().getSequenceCount() - 1) {
@@ -347,7 +365,7 @@ public class AlignmentContentArea extends TICComponent {
 
 	@Override
 	public Dimension getSize() {
-		Dimension result = new Dimension(getOwner().getGlobalMaxNeededWidth(), getOwner().getDataAreas().getVisibleAreaHeight());
+		Dimension result = new Dimension((int)Math2.roundUp(getOwner().getGlobalMaxNeededWidth()), getOwner().getDataAreas().getVisibleAreaHeight());
 		if (getOwner().hasAlignmentModel()) {
 			result.height += getOwner().getAlignmentModel().getSequenceCount() * getOwner().getPaintSettings().getTokenHeight();
 		}
@@ -361,20 +379,30 @@ public class AlignmentContentArea extends TICComponent {
 
 	@Override
 	protected String getSwingComponentClassName() {
-		return "info.bioinfweb.libralign.alignmentarea.content.SwingAlignmentContentArea";
+		if (isUseSubcomponents()) {
+			return "info.bioinfweb.libralign.alignmentarea.content.SwingAlignmentContentArea";
+		}
+		else {
+			return super.getSwingComponentClassName();
+		}
 	}
 
 
 	@Override
 	protected String getSWTComponentClassName() {
-		return "info.bioinfweb.libralign.alignmentarea.content.SWTAlignmentContentArea";
+		if (isUseSubcomponents()) {
+			return "info.bioinfweb.libralign.alignmentarea.content.SWTAlignmentContentArea";
+		}
+		else {
+			return super.getSwingComponentClassName();
+		}
 	}
 
 
-	@Override
-	public ToolkitSpecificAlignmentContentArea getToolkitComponent() {
-		return (ToolkitSpecificAlignmentContentArea)super.getToolkitComponent();
-	}
+//	@Override
+//	public ToolkitSpecificAlignmentContentArea getToolkitComponent() {
+//		return (ToolkitSpecificAlignmentContentArea)super.getToolkitComponent();
+//	}
 
 
 	/**
@@ -384,7 +412,7 @@ public class AlignmentContentArea extends TICComponent {
 	 * @param x the paint coordinate
 	 * @return the alignment column
 	 */
-	public int columnByPaintX(int x) {
+	public int columnByPaintX(double x) {
 		if (getOwner().getAlignmentModel() instanceof ConcatenatedAlignmentModel) {
 			throw new InternalError("not implemented");  //TODO Implement and consider that different alignment parts may have different token widths here.
 		}
@@ -400,18 +428,18 @@ public class AlignmentContentArea extends TICComponent {
 	 * component on which the sequences are painted. Use this method to convert between cell indices and
 	 * paint coordinates. This method takes the current horizontal zoom factor into account.
 	 *
-	 * @param column - the column painted at the returned x-position
+	 * @param column the column painted at the returned x-position
 	 * @return a value >= 0
 	 */
-	public int paintXByColumn(int column) {
+	public double paintXByColumn(int column) {
 	  if (getOwner().hasAlignmentModel()) {
   		if (getOwner().getAlignmentModel() instanceof ConcatenatedAlignmentModel) {
   			throw new InternalError("not implemented");  //TODO Implement and consider that different alignment parts may have different token widths here.
   		}
   		else {
-  			return (int)Math.round(column *
+  			return column *
   					getOwner().getPaintSettings().getTokenPainterList().painterByColumn(0).getPreferredWidth() *
-  					getOwner().getPaintSettings().getZoomX()) +  getOwner().getDataAreas().getGlobalMaxLengthBeforeStart();  //TODO Catch IllegalStateException?
+  					getOwner().getPaintSettings().getZoomX() + getOwner().getDataAreas().getGlobalMaxLengthBeforeStart();  //TODO Catch IllegalStateException?
   		}
 	  }
 	  else {
@@ -425,28 +453,35 @@ public class AlignmentContentArea extends TICComponent {
 	 * of sequences. If a data area is displayed at the specified position, the row of the associated sequence is returned
 	 * anyway.
 	 *
-	 * @param y - the y coordinate relative to the alignment part area containing the sequence areas
+	 * @param y the y coordinate relative to the alignment part area containing the sequence areas
 	 * @return a valid sequence position.
 	 */
-	public int rowByPaintY(int y) {
-		AlignmentSubArea subArea = getToolkitComponent().getAreaByY(y);
-		if (subArea instanceof DataArea) {
-			DataAreaLocation location = ((DataArea)subArea).getList().getLocation();
-			if (location.getListType().equals(DataAreaListType.SEQUENCE)) {
-				subArea = getToolkitComponent().getSequenceAreaByID(location.getSequenceID());
+	public int rowByPaintY(double y) {
+		if (isUseSubcomponents()) {
+			ToolkitSpecificAlignmentContentArea area = (ToolkitSpecificAlignmentContentArea)getToolkitComponent();
+			AlignmentSubArea subArea = area.getAreaByY(y);
+			if (subArea instanceof DataArea) {
+				DataAreaLocation location = ((DataArea)subArea).getList().getLocation();
+				if (location.getListType().equals(DataAreaListType.SEQUENCE)) {
+					subArea = area.getSequenceAreaByID(location.getSequenceID());
+				}
+			}
+			if (subArea instanceof SequenceArea) {
+				return getOwner().getSequenceOrder().indexByID(((SequenceArea)subArea).getSequenceID());
+			}
+			else if (y < 0) {
+				return 0;
+			}
+			else if (getOwner().hasAlignmentModel()) {
+				return Math.max(0, getOwner().getAlignmentModel().getSequenceCount() - 1);
+			}
+			else {
+				return 0;
 			}
 		}
-		if (subArea instanceof SequenceArea) {
-			return getOwner().getSequenceOrder().indexByID(((SequenceArea)subArea).getSequenceID());
-		}
-		else if (y < 0) {
-			return 0;
-		}
-		else if (getOwner().hasAlignmentModel()) {
-			return Math.max(0, getOwner().getAlignmentModel().getSequenceCount() - 1);
-		}
 		else {
-			return 0;
+			throw new InternalError("Not implemented.");
+			//TODO Implement respective behavior.
 		}
 	}
 
@@ -459,31 +494,54 @@ public class AlignmentContentArea extends TICComponent {
 	 * If an index lower than zero or greater than the highest index is specified the y-coordinate of the first
 	 * or the last sequence is returned accordingly.
 	 *
-	 * @param row - the row painted at the returned x-position
+	 * @param row the row painted at the returned x-position
 	 * @return a value >= 0
 	 */
-	public int paintYByRow(int row) {
+	public double paintYByRow(int row) {
 		row = Math.max(0, Math.min(getOwner().getAlignmentModel().getSequenceCount() - 1, row));
-    return getToolkitComponent().getSequenceAreaByID(getOwner().getSequenceOrder().idByIndex(row)).
-    		getToolkitComponent().getLocationInParent().y;
+		if (isUseSubcomponents()) {
+			SequenceArea area = ((ToolkitSpecificAlignmentContentArea)getToolkitComponent()).getSequenceAreaByID(getOwner().getSequenceOrder().idByIndex(row));
+			if (area.hasComponent()) {  //TODO This check is redundant to the one above.
+				if (area.getComponent().hasToolkitComponent()) {
+					return area.getComponent().getToolkitComponent().getLocationInParent().y;
+				}
+				else {
+					throw new IllegalStateException("No Swing or SWT component of the specified sequence area has yet been created.");
+				}
+			}
+			else {
+				throw new InternalError("Not implemented.");
+				//TODO Support direct painting without subcomponents.
+			}
+		}
+		else {
+			throw new InternalError("Not implemented.");
+			//TODO Implement respective behavior.
+		}
 	}
 
 
 	/**
 	 * Calculates the y coordinate relative to the alignment content area, which contains the specified sequence area.
 	 *
-	 * @param sequenceArea - the sequence area where {@code relativeY} belongs to
-	 * @param relativeY - the y coordinate relative to {@code sequenceArea}
+	 * @param sequenceArea the sequence area where {@code relativeY} belongs to
+	 * @param relativeY the y coordinate relative to {@code sequenceArea}
 	 * @return the y coordinate relative to the parent instance of {@link ToolkitSpecificAlignmentArea}
 	 * @throws IllegalStateException if neither or Swing or a SWT component has been created for the specified sequence
 	 *         area before the call of this method
 	 */
-	public int alignmentPartY(SequenceArea sequenceArea, int relativeY) {
-		if (sequenceArea.hasToolkitComponent()) {
-			return sequenceArea.getToolkitComponent().getLocationInParent().y + relativeY;  // SequenceAreas need to be direct children of the ToolkitSpecificAlignmentPartAreas for this method to work.
+	public double alignmentPartY(SequenceArea sequenceArea, int relativeY) {
+		if (sequenceArea.hasComponent()) {
+			if (sequenceArea.getComponent().hasToolkitComponent()) {
+				return sequenceArea.getComponent().getToolkitComponent().getLocationInParent().y + relativeY;  // SequenceAreas need to be direct children of the ToolkitSpecificAlignmentPartAreas for this method to work.
+			}
+			else {
+				throw new IllegalStateException("No Swing or SWT component of the specified sequence area has yet been created.");
+			}
 		}
 		else {
-			throw new IllegalStateException("No Swing or SWT component of the specified sequence area has yet been created.");
+			throw new InternalError("Not implemented.");
+			//TODO Support direct painting without subcomponents.
 		}
 	}
 }

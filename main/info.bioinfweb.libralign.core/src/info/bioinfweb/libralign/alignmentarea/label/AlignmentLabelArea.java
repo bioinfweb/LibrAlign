@@ -32,24 +32,27 @@ import info.bioinfweb.libralign.multiplealignments.MultipleAlignmentsContainer;
 
 /**
  * A toolkit independent GUI component displaying the sequence names in an {@link AlignmentArea}.
+ * <p>
+ * Application developers will not need to create instances of this class directly but should 
+ * use {@link AlignmentArea}.
  * 
  * @author Ben St&ouml;ver
  * @since 0.2.0
  */
 public class AlignmentLabelArea extends TICComponent {
 	public static final int BORDER_WIDTH = 2;
-	public static final int RECALCULATE_VALUE = -1;
+	public static final double RECALCULATE_VALUE = -1.0;
 	
 	
   private AlignmentArea owner;
-  private int localMaxNeededWidth = RECALCULATE_VALUE;
+  private double localMaxNeededWidth = RECALCULATE_VALUE;
 	
 	
 	/**
 	 * Creates a new instance of this class.
 	 * 
-	 * @param owner - the alignment area that uses this instance
-	 * @param position - Specify here whether this area will be used to label the head, the content, or the 
+	 * @param owner the alignment area that uses this instance
+	 * @param position Specify here whether this area will be used to label the head, the content, or the 
 	 *        bottom part of the alignment area.
 	 */
 	public AlignmentLabelArea(AlignmentArea owner) {
@@ -74,13 +77,13 @@ public class AlignmentLabelArea extends TICComponent {
 	 * 
 	 * @return a value >= 0
 	 */
-	public int getLocalMaximumNeededWidth() {
+	public double getLocalMaximumNeededWidth() {
 		if (localMaxNeededWidth == RECALCULATE_VALUE) {
 			localMaxNeededWidth = 0;
 			if (getOwner().getContentArea().hasToolkitComponent()) {
-				Iterator<AlignmentSubArea> iterator = getOwner().getContentArea().getToolkitComponent().subAreaIterator();
+				Iterator<AlignmentLabelSubArea> iterator = getToolkitComponent().subAreaIterator();
 				while (iterator.hasNext()) {
-					localMaxNeededWidth = Math.max(localMaxNeededWidth, iterator.next().getLabelSubArea().getNeededWidth());
+					localMaxNeededWidth = Math.max(localMaxNeededWidth, iterator.next().getNeededWidth());
 				}
 			}
 		}
@@ -121,9 +124,9 @@ public class AlignmentLabelArea extends TICComponent {
 	 * 
 	 * @return a value >= 0
 	 */
-	public int getGlobalMaximumNeededWidth() {
+	public double getGlobalMaximumNeededWidth() {
 		if (getOwner().hasContainer()) {
-			int result = 0;
+			double result = 0;
 			for (AlignmentArea alignmentArea : getOwner().getContainer().getAlignmentAreas()) {
 				result = Math.max(result, alignmentArea.getLabelArea().getLocalMaximumNeededWidth());
 			}
@@ -137,7 +140,7 @@ public class AlignmentLabelArea extends TICComponent {
 	
 	@Override
 	public Dimension getSize() {
-		return new Dimension(getGlobalMaximumNeededWidth(),	getOwner().getContentArea().getSize().height);  // If references starting from owner would be used here, there would be problems in initialization order.
+		return new Dimension((int)Math.round(getGlobalMaximumNeededWidth()),	getOwner().getContentArea().getSize().height);  // If references starting from owner would be used here, there would be problems in initialization order.
 	}
 	
 	

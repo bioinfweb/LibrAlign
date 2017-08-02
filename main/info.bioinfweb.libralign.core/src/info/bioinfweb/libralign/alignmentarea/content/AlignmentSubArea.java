@@ -21,6 +21,7 @@ package info.bioinfweb.libralign.alignmentarea.content;
 
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
+import java.awt.geom.Rectangle2D;
 
 import javax.naming.OperationNotSupportedException;
 
@@ -41,9 +42,10 @@ import info.bioinfweb.tic.TICComponent;
  * @author Ben St&ouml;ver
  * @since 0.0.0
  */
-public abstract class AlignmentSubArea extends TICComponent {  //TODO Remove inheritance
+public abstract class AlignmentSubArea {
 	private AlignmentLabelSubArea labelSubArea = null;
 	private AlignmentContentArea owner = null;
+	private TICComponent component;
 
 	
 	/**
@@ -94,23 +96,52 @@ public abstract class AlignmentSubArea extends TICComponent {  //TODO Remove inh
 	
 	
 	/**
+	 * Returns the height in pixels considering the current zoom factor this component needs.
+	 * 
+	 * @return a double value > 0
+	 */
+	public abstract double getHeight();
+
+
+	/**
 	 * Implementations of this method perform the painting of a part of the component. It is used when an
-	 * {@link AlignmentArea} is set to contain no subcomponents but to paint its contents directly. This 
-	 * default implementation always throws an {@link OperationNotSupportedException} and should be 
-	 * overwritten by inherited classes.
+	 * {@link AlignmentArea} is set to contain no subcomponents but to paint its contents directly.
+	 * <p>
+	 * This default implementation always throws an {@link OperationNotSupportedException}. Note that 
+	 * therefore inherited classes must either overwrite this method or {@link #createComponent()} in 
+	 * order to return an instance there that does not delegate to this method.
 	 * <p>
 	 * Note that the aim of this method is to allow painting very wide components, which may have a width
-	 * larger than {@link Integer#MAX_VALUE}. Therefore painting coordinates (as used in 
-	 * {@link AlignmentPaintEvent#getRectangle()} are always relative to the left most pixel of the alignment 
-	 * column with the index <i>firstColumn</i>. Implementations should not calculate absolute pixel 
-	 * coordinates at any time to avoid integer overflows, since column indices may range from 0 to 
-	 * {@link Integer#MAX_VALUE}.   
+	 * larger than {@link Integer#MAX_VALUE}. Therefore painting coordinates are stored as {@code double}
+	 * values (using {@link Graphics2D} and {@link Rectangle2D.Double}). Implementations should not 
+	 * calculate pixel coordinates as {@code int}s at any time to avoid integer overflows, but only use 
+	 * {@code double} (or possibly {@code long} if necessary).
 	 * 
 	 * @param event the paint event providing information on the area to be painted, the graphics context
 	 *        and tool methods.
 	 */
 	public void paintPart(AlignmentPaintEvent event) {
 		throw new UnsupportedOperationException("This class provides no implementation for direct component painting.");
+	}
+	
+	
+	public void repaint() {
+		if (getOwner().isUseSubcomponents()) {
+			if (hasComponent()) {  //TODO Is this condition necessary?
+				getComponent().repaint();
+			}
+		}
+		else {
+			throw new InternalError("Not implemented.");
+			//TODO Repaint respective region of AlignmentContentArea, when it allows direct painting.
+		}
+	}
+	
+	
+	public void assignSize() {
+		if (hasComponent()) {
+			getComponent().assignSize();
+		}
 	}
 	
 	
@@ -123,10 +154,37 @@ public abstract class AlignmentSubArea extends TICComponent {  //TODO Remove inh
 	 * <p>
 	 * Note that {@link AlignmentArea}s set to use subcomponents are not able to handle very long 
 	 * sequences. See the documentation of {@link AlignmentArea} for details.
+	 * <p>
+	 * If this default implementation is not overwritten by inherited classes, 
+	 * {@link #paintPart(AlignmentPaintEvent)} must be implemented respectively.
 	 * 
 	 * @return the <i>TIC</i> component displaying the contents of this area 
 	 */
-	public TICComponent createComponent() {
-		return null;  //TODO Implement by returning a component that delegates to paintPart().
+	protected TICComponent createComponent() {
+		return new DefaultAlignmentSubAreaComponent(this);
+	}
+	
+	
+	/**
+	 * Returns the component displaying the contents of this area. If none is present, 
+	 * {@link #createComponent()} will first be called.
+	 * 
+	 * @return the <i>TIC</i> component to display the contents of this area
+	 */
+	public TICComponent getComponent() {
+		if (component == null) {
+			component = createComponent();
+		}
+		return component;
+	}
+	
+	
+	/**
+	 * Checks if a component for this area was already created.
+	 * 
+	 * @return {@code true} if a component is present or {@code false} otherwise
+	 */
+	public boolean hasComponent() {
+		return component != null;
 	}
 }

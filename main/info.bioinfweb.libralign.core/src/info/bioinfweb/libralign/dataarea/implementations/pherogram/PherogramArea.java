@@ -22,6 +22,7 @@ package info.bioinfweb.libralign.dataarea.implementations.pherogram;
 import info.bioinfweb.commons.collections.SimpleSequenceInterval;
 import info.bioinfweb.tic.TICPaintEvent;
 import info.bioinfweb.libralign.alignmentarea.content.AlignmentContentArea;
+import info.bioinfweb.libralign.alignmentarea.content.AlignmentPaintEvent;
 import info.bioinfweb.libralign.alignmentarea.tokenpainter.TokenPainter;
 import info.bioinfweb.libralign.dataarea.DataArea;
 import info.bioinfweb.libralign.dataarea.DataAreaListType;
@@ -179,7 +180,7 @@ public class PherogramArea extends DataArea implements PherogramComponent {
 	
 	protected SimpleSequenceInterval calculatePaintRange(TICPaintEvent e) {
 		PherogramAlignmentRelation lowerBorderRelation = getModel().baseCallIndexByEditableIndex(
-				getLabeledAlignmentArea().getContentArea().columnByPaintX(e.getRectangle().x) - 2);  // - 2 because two (experimentally obtained) half visible column should be painted. (Why are this two?) 
+				getLabeledAlignmentArea().getContentArea().columnByPaintX(e.getRectangle().getMinX()) - 2);  // - 2 because two (experimentally obtained) half visible column should be painted. (Why are this two?)
 		int lowerBorder;
 		if (lowerBorderRelation.getCorresponding() == PherogramAlignmentRelation.GAP) {
 			lowerBorder = lowerBorderRelation.getBefore();
@@ -189,7 +190,7 @@ public class PherogramArea extends DataArea implements PherogramComponent {
 		}
 
 		PherogramAlignmentRelation upperBorderRelation = getModel().baseCallIndexByEditableIndex(
-				getLabeledAlignmentArea().getContentArea().columnByPaintX(e.getRectangle().x + e.getRectangle().width) + 2);  // + 1 + 1 because BioJava indices start with 1 and one half visible column should be painted.
+				getLabeledAlignmentArea().getContentArea().columnByPaintX(e.getRectangle().getMinX() + e.getRectangle().getWidth()) + 2);  // + 1 + 1 because BioJava indices start with 1 and one half visible column should be painted.
 		int upperBorder;
 		if (upperBorderRelation.getCorresponding() == PherogramAlignmentRelation.GAP) {
 			upperBorder = upperBorderRelation.getAfter();
@@ -203,7 +204,7 @@ public class PherogramArea extends DataArea implements PherogramComponent {
 	
 
 	@Override
-	public void paint(TICPaintEvent e) {
+	public void paintPart(AlignmentPaintEvent e) {
 		Graphics2D g = e.getGraphics();
 		g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 		
@@ -214,24 +215,24 @@ public class PherogramArea extends DataArea implements PherogramComponent {
 		
 		// Draw cut off background:
 		g.setColor(getFormats().getCutBackgroundColor());
-		if (leftX >= e.getRectangle().x) {
-			g.fill(new Rectangle2D.Double(e.getRectangle().x, e.getRectangle().y, 
-					leftX - e.getRectangle().x, e.getRectangle().height));
+		if (leftX >= e.getRectangle().getMinX()) {
+			g.fill(new Rectangle2D.Double(e.getRectangle().getMinX(), e.getRectangle().getMinY(), 
+					leftX - e.getRectangle().getMinX(), e.getRectangle().getHeight()));
 		}
 		else {
-			leftX = e.getRectangle().x;
+			leftX = e.getRectangle().getMinX();
 		}
-		if (rightX <= e.getRectangle().x + e.getRectangle().width) {
-			g.fill(new Rectangle2D.Double(rightX, e.getRectangle().y, 
-					e.getRectangle().x + e.getRectangle().width - rightX, e.getRectangle().height));
+		if (rightX <= e.getRectangle().getMinX() + e.getRectangle().getWidth()) {
+			g.fill(new Rectangle2D.Double(rightX, e.getRectangle().getMinY(), 
+					e.getRectangle().getMinX() + e.getRectangle().getWidth() - rightX, e.getRectangle().getHeight()));
 		}
 		else {
-			rightX = e.getRectangle().x + e.getRectangle().width;
+			rightX = e.getRectangle().getMinX() + e.getRectangle().getWidth();
 		}
 		
 		// Draw center background:
 		g.setColor(getFormats().getBackgroundColor());
-		g.fill(new Rectangle2D.Double(leftX, e.getRectangle().y, rightX - leftX, e.getRectangle().height));
+		g.fill(new Rectangle2D.Double(leftX, e.getRectangle().getMinY(), rightX - leftX, e.getRectangle().getHeight()));
 
 		SimpleSequenceInterval paintRange = calculatePaintRange(e);
 		double x = getLabeledAlignmentArea().getContentArea().paintXByColumn(getModel().getFirstSeqPos() - getModel().getLeftCutPosition());
@@ -452,24 +453,24 @@ public class PherogramArea extends DataArea implements PherogramComponent {
 
 
 	@Override
-	public int getLengthBeforeStart() {
+	public double getLengthBeforeStart() {
 		return Math.max(0, getLabeledAlignmentArea().getContentArea().paintXByColumn(getModel().baseCallIndexByEditableIndex(0).getAfter()));
 	}
 
 
 	@Override
-	public int getLengthAfterEnd() {
+	public double getLengthAfterEnd() {
 		int lastEditableIndex = getModel().editableIndexByBaseCallIndex(getModel().getRightCutPosition() - 1).getAfter();
 		double lengthOfOutputAfterAlignmentStart = getLabeledAlignmentArea().getContentArea().paintXByColumn(lastEditableIndex) + 
 				(1 + getModel().getPherogramProvider().getSequenceLength() - getModel().getRightCutPosition()) *  
 				getOwner().getOwner().getPaintSettings().getTokenWidth(Math.max(0, getModel().getFirstSeqPos())) - getLengthBeforeStart();  // Math.max(0, ...) is used because this method might be called during the execution of setter cut position method, when other properties are not yet adjusted.  
-		return Math.max(0, (int)Math.round(lengthOfOutputAfterAlignmentStart - getOwner().getOwner().getLocalMaximumNeededAlignmentWidth()));
+		return Math.max(0, lengthOfOutputAfterAlignmentStart - getOwner().getOwner().getLocalMaximumNeededAlignmentWidth());
 	}
 
 
 	@Override
-	public int getHeight() {
-		return (int)Math.round(DEFAULT_HEIGHT_FACTOR * getLabeledAlignmentArea().getPaintSettings().getTokenHeight());
+	public double getHeight() {
+		return DEFAULT_HEIGHT_FACTOR * getLabeledAlignmentArea().getPaintSettings().getTokenHeight();
 	}
 
 

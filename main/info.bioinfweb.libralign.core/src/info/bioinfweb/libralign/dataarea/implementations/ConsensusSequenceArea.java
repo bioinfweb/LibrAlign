@@ -26,6 +26,7 @@ import info.bioinfweb.commons.graphics.GraphicsUtils;
 import info.bioinfweb.tic.TICPaintEvent;
 import info.bioinfweb.libralign.alignmentarea.AlignmentArea;
 import info.bioinfweb.libralign.alignmentarea.content.AlignmentContentArea;
+import info.bioinfweb.libralign.alignmentarea.content.AlignmentPaintEvent;
 import info.bioinfweb.libralign.alignmentarea.tokenpainter.SingleColorTokenPainter;
 import info.bioinfweb.libralign.alignmentarea.tokenpainter.TokenPainter;
 import info.bioinfweb.libralign.dataarea.DataArea;
@@ -108,7 +109,6 @@ public class ConsensusSequenceArea extends DataArea {
 	public ConsensusSequenceArea(AlignmentContentArea owner, AlignmentArea labeledAlignmentArea) {
 		super(owner, labeledAlignmentArea);
 		fractionsMap = new TreeMap<Integer, List<FractionInfo>>();  // Saves scores between change events of the provider.
-		assignSize();
 	}
 
 	
@@ -189,13 +189,13 @@ public class ConsensusSequenceArea extends DataArea {
 	
 
 	@Override
-	public int getHeight() {
-		return (int)Math.round(DEFAULT_HEIGHT_FACTOR * getLabeledAlignmentArea().getPaintSettings().getTokenHeight());
+	public double getHeight() {
+		return DEFAULT_HEIGHT_FACTOR * getLabeledAlignmentArea().getPaintSettings().getTokenHeight();
 	}
 
 
 	@Override
-	public void paint(TICPaintEvent event) {
+	public void paintPart(AlignmentPaintEvent event) {
 		// Paint background:
 		Graphics2D g = event.getGraphics();
 		g.setColor(SystemColor.menu);

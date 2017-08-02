@@ -19,69 +19,56 @@
 package info.bioinfweb.libralign.alignmentarea.content;
 
 
-import java.awt.Dimension;
-import java.awt.Rectangle;
-
 import info.bioinfweb.libralign.alignmentarea.AlignmentArea;
 import info.bioinfweb.tic.TICComponent;
 import info.bioinfweb.tic.TICPaintEvent;
+
+import java.awt.Dimension;
 
 
 
 /**
  * Implementation of a <i>TIC</i> component that displays a single {@link AlignmentSubArea}. It delegates its paint method
- * to {@link AlignmentSubArea#paintPart(AlignmentPaintEvent)} using a respective coordinate transformation. Instances of 
- * this class are returned by {@link AlignmentSubArea#createComponent()}, if inherited classes do not overwrite this method.
+ * to {@link AlignmentSubArea#paintPart(AlignmentPaintEvent)}. {@link AlignmentSubArea#createComponent()} returns instances 
+ * of this class if inherited classes do not overwrite it.
  * <p>
  * Instances of this class will only be used by an {@link AlignmentArea} is set to use subcomponents and will not be able to
  * display sequences that use up more than {@link Integer#MAX_VALUE} pixels. If <i>SWT</i> under <i>Windows</i> is used as 
- * the target toolkit, the maximum component width will only be 32768 pixels. If larger sequences need to be handled, 
- * {@link AlignmentArea} should be set not to use subcomponents.
+ * the target toolkit, the maximum component width will currently only be 32768 pixels (due to a limitation in GUI component 
+ * libraries of these operating systems). If larger sequences need to be handled, {@link AlignmentArea} should be set not to 
+ * use subcomponents.
  * 
  * @author Ben St&ouml;ver
  * @since 0.5.0
  */
-public class DefaultAlignmentSubAreaComponent extends TICComponent {
-	private AlignmentSubArea owner;
-	
-	
-	/**
-	 * Creates a new instance of this class.
-	 * 
-	 * @param owner the parent alignment subarea that shall be displayed by this component
-	 */
+public class DefaultAlignmentSubAreaComponent extends AbstractAlignmentSubAreaComponent {
 	public DefaultAlignmentSubAreaComponent(AlignmentSubArea owner) {
-		super();
-		this.owner = owner;
-	}
-
-
-	/**
-	 * Returns the alignment subarea that is displayed using this component.
-	 * 
-	 * @return the parent alignment subarea
-	 */
-	public AlignmentSubArea getOwner() {
-		return owner;
+		super(owner);
 	}
 
 
 	@Override
 	public void paint(TICPaintEvent event) {
-		int firstColumn = Math.max(0, getOwner().getOwner().columnByPaintX(event.getRectangle().x));
-		int xOffset = getOwner().getOwner().paintXByColumn(firstColumn);
-		event.getGraphics().translate(-xOffset, 0);  //TODO +1?
+		//event.getGraphics().translate(-xOffset, 0);
+		//TODO Consider x-shift of graphics context due to data area width left of alignment. (Here or/and somewhere else?)
 		getOwner().paintPart(new AlignmentPaintEvent(event.getSource(), getOwner().getOwner().getOwner(),
-				firstColumn, getOwner().getOwner().columnByPaintX((int)event.getRectangle().getMaxX()), 
+				Math.max(0, getOwner().getOwner().columnByPaintX(event.getRectangle().getMinX())),  // first column 
+				getOwner().getOwner().columnByPaintX((int)event.getRectangle().getMaxX()),  // last column
 				event.getGraphics(), 
-				new Rectangle(event.getRectangle().x - xOffset, event.getRectangle().y,  //TODO +1?
-						event.getRectangle().width, event.getRectangle().height)));
+				event.getRectangle()));  // Rectangle is used instead of Rectangle2D.Double. This is possible, because the component width is anyway limited.
 	}
 	
 
+	/**
+	 * Returns the size of the component depending on the return values of {@link #getLength()}, {@link #getHeight()}
+	 * and the maximum length before the first alignment position in the associated alignment area. (That means this
+	 * method might return a different dimension depending on the {@link AlignmentArea} is it contained in.)
+	 * 
+	 * @return the (minimal) width and height of this component
+	 */
 	@Override
 	public Dimension getSize() {
-		// TODO Implement similar to DataArea.getSize()
-		return null;
+		return new Dimension((int)Math.round(getOwner().getOwner().getOwner().getGlobalMaxNeededWidth()), 
+				(int)Math.round(getOwner().getHeight()));  
 	}
 }

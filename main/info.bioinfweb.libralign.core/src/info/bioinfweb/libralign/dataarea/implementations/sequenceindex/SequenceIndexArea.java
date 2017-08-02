@@ -24,6 +24,7 @@ import info.bioinfweb.commons.collections.ListChangeType;
 import info.bioinfweb.tic.TICPaintEvent;
 import info.bioinfweb.libralign.alignmentarea.AlignmentArea;
 import info.bioinfweb.libralign.alignmentarea.content.AlignmentContentArea;
+import info.bioinfweb.libralign.alignmentarea.content.AlignmentPaintEvent;
 import info.bioinfweb.libralign.dataarea.DataArea;
 import info.bioinfweb.libralign.dataarea.DataAreaListType;
 import info.bioinfweb.libralign.model.AlignmentModel;
@@ -42,6 +43,7 @@ import java.awt.Stroke;
 import java.awt.SystemColor;
 import java.awt.geom.Line2D;
 import java.awt.geom.Path2D;
+import java.awt.geom.Rectangle2D;
 import java.util.EnumSet;
 import java.util.Set;
 
@@ -125,13 +127,13 @@ public class SequenceIndexArea extends DataArea {
 
 
 	@Override
-	public void paint(TICPaintEvent e) {
+	public void paintPart(AlignmentPaintEvent e) {
 		Graphics2D g = e.getGraphics();
     g.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
     		RenderingHints.VALUE_ANTIALIAS_ON);
 
     // Paint background:
-    Rectangle visibleRect = e.getRectangle();
+    Rectangle2D visibleRect = e.getRectangle();
 		g.setColor(SystemColor.menu);
 		g.fill(visibleRect);
 		paintSelection(g);
@@ -142,18 +144,18 @@ public class SequenceIndexArea extends DataArea {
 		}
 		double compoundWidth = getLabeledAlignmentArea().getPaintSettings().getTokenWidth(0);  //TODO Implement support for concatenated models.
 		g.setColor(SystemColor.menuText);
-    g.draw(new Line2D.Double(visibleRect.x, getHeight() - 1, visibleRect.x + visibleRect.width, getHeight() - 1));  // base line
+    g.draw(new Line2D.Double(visibleRect.getMinX(), getHeight() - 1, visibleRect.getMinX() + visibleRect.getWidth(), getHeight() - 1));  // base line
 
     // Paint text data and dashes:
-    final int maxLengthBeforeStart = getLabeledAlignmentArea().getDataAreas().getGlobalMaxLengthBeforeStart();
+    final double maxLengthBeforeStart = getLabeledAlignmentArea().getDataAreas().getGlobalMaxLengthBeforeStart();
     double labelLeftDistance = LABEL_LEFT_DISTANCE_FACTOR * compoundWidth;
     g.setFont(getLabeledAlignmentArea().getPaintSettings().getTokenHeightFont());
     int labelInterval = calculateLabelInterval(g.getFontMetrics());
     double x = Math.max(compoundWidth / 2f,
-    		visibleRect.x - visibleRect.x % compoundWidth - labelInterval * compoundWidth - compoundWidth / 2f);  // labelInterval is subtracted because partly visible text should also be painted
+    		visibleRect.getMinX() - visibleRect.getMinX() % compoundWidth - labelInterval * compoundWidth - compoundWidth / 2f);  // labelInterval is subtracted because partly visible text should also be painted
     Stroke stroke = g.getStroke();
     try {
-      while (x <= visibleRect.x + visibleRect.width) {
+      while (x <= visibleRect.getMinX() + visibleRect.getWidth()) {
     		// Text output
     		double dashLength = DASH_LENGTH_FACTOR * getHeight();
     		long compoundIndex = Math2.roundUp((x - maxLengthBeforeStart) / compoundWidth);  // If Math.round() is used, intervals are not constant, if values like 2.4999999999 occur.
@@ -217,15 +219,15 @@ public class SequenceIndexArea extends DataArea {
 
 
 	@Override
-	public int getHeight() {
-		return (int)Math.round(getLabeledAlignmentArea().getPaintSettings().getTokenHeight());
+	public double getHeight() {
+		return getLabeledAlignmentArea().getPaintSettings().getTokenHeight();
 	}
 
 
 	@Override
 	public <T> void afterSequenceChange(SequenceChangeEvent<T> e) {
 		assignSize();  // Longest sequence could have been deleted or a longer sequence could have been added.
-        repaint();  // In case the size did not change, but the space before the alignment did.
+		repaint();  // In case the size did not change, but the space before the alignment did.
 	}
 
 

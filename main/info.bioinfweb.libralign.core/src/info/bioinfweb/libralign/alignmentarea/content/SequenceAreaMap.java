@@ -76,8 +76,10 @@ public class SequenceAreaMap extends TreeMap<String, SequenceArea> implements Se
 				SequenceArea sequenceArea = saveMap.get(id);
 				if (sequenceArea == null) {
 					sequenceArea = new SequenceArea(getOwner(), id);
-					sequenceArea.addMouseListener(selectionInputListener);
-					sequenceArea.addKeyListener(selectionInputListener);
+					if (getOwner().isUseSubcomponents()) {
+						sequenceArea.getComponent().addMouseListener(selectionInputListener);
+						sequenceArea.getComponent().addKeyListener(selectionInputListener);
+					}
 				}
 				else {
 					saveMap.remove(id);
@@ -88,8 +90,10 @@ public class SequenceAreaMap extends TreeMap<String, SequenceArea> implements Se
 			// Unregister listeners from removed sequence areas: (Would probably also work without this.)
 			for (String id: saveMap.keySet()) {
 				SequenceArea sequenceArea = saveMap.get(id);
-				sequenceArea.removeMouseListener(selectionInputListener);
-				sequenceArea.removeKeyListener(selectionInputListener);
+				if (sequenceArea.hasComponent()) {
+					sequenceArea.getComponent().removeMouseListener(selectionInputListener);
+					sequenceArea.getComponent().removeKeyListener(selectionInputListener);
+				}
 			}
 		}
 		else {
