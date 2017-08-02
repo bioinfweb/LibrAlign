@@ -43,8 +43,8 @@ import org.junit.* ;
 
 public class DataAreaListTest {
   private DataAreaList createList(AlignmentArea alignmentArea, final List<DataAreaChangeEvent> eventList, DataAreaListType type) {
-  	DataAreaModel owner = new DataAreaModel(alignmentArea);
-  	owner.addListener(new DataAreaModelListener() {
+  	DataAreasModel owner = new DataAreasModel(alignmentArea);
+  	owner.addListener(new DataAreasModelListener() {
 					@Override
 					public void dataAreaVisibilityChanged(DataAreaChangeEvent e) {
 						eventList.add(e);
@@ -62,10 +62,7 @@ public class DataAreaListTest {
   private DataArea createDataArea(AlignmentContentArea alignmentArea) {
   	return new DataArea(alignmentArea, alignmentArea.getOwner()) {
 						@Override
-						public void paint(TICPaintEvent event) {}
-						
-						@Override
-						public int getHeight() {
+						public double getHeight() {
 							return 1;
 						}
 
