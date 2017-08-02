@@ -23,6 +23,7 @@ import info.bioinfweb.commons.swt.ScrolledCompositeSyncListener;
 import info.bioinfweb.libralign.alignmentarea.content.AlignmentContentArea;
 import info.bioinfweb.libralign.alignmentarea.content.SWTAlignmentContentArea;
 import info.bioinfweb.libralign.alignmentarea.content.SequenceArea;
+import info.bioinfweb.libralign.alignmentarea.content.ToolkitSpecificAlignmentContentArea;
 import info.bioinfweb.libralign.alignmentarea.label.SWTAlignmentLabelArea;
 import info.bioinfweb.libralign.multiplealignments.SWTMultipleAlignmentsContainer;
 import info.bioinfweb.tic.SWTComponentFactory;
@@ -137,12 +138,19 @@ public class SWTAlignmentArea extends AbstractSWTComposite implements ToolkitSpe
 				if (getIndependentComponent().hasAlignmentModel() && (getIndependentComponent().getAlignmentModel().getSequenceCount() > 0)) {
     			AlignmentContentArea contentArea = getIndependentComponent().getContentArea();
     			int row = contentArea.rowByPaintY(event.y);
-    			SequenceArea sequenceArea = contentArea.getToolkitComponent().getSequenceAreaByID(
-    					getIndependentComponent().getSequenceOrder().idByIndex(row));
-    			if (sequenceArea != null) {
-    				getIndependentComponent().getSelection().setNewCursorPosition(contentArea.columnByPaintX(event.x), row);
-    				((Composite)sequenceArea.getToolkitComponent()).setFocus();
-    			}
+    			
+					if (getIndependentComponent().getContentArea().isUseSubcomponents()) {
+						SequenceArea sequenceArea = ((ToolkitSpecificAlignmentContentArea)contentArea.getToolkitComponent()).getSequenceAreaByID(
+								getIndependentComponent().getSequenceOrder().idByIndex(row));
+						if (sequenceArea != null) {
+	    				getIndependentComponent().getSelection().setNewCursorPosition(contentArea.columnByPaintX(event.x), row);
+							((Composite)sequenceArea.getComponent().getToolkitComponent()).setFocus();
+						}
+					}
+					else {
+						throw new InternalError("Not implemented.");
+						//TODO Implement.
+					}
 				}
 			}
 		});

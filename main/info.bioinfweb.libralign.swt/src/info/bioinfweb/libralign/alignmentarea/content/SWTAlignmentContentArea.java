@@ -20,13 +20,13 @@ package info.bioinfweb.libralign.alignmentarea.content;
 
 
 import info.bioinfweb.commons.Math2;
-import info.bioinfweb.tic.SWTComponentFactory;
-import info.bioinfweb.tic.TICComponent;
-import info.bioinfweb.tic.toolkit.ToolkitComponent;
 import info.bioinfweb.libralign.alignmentarea.rowsarea.SWTAlignmentRowsArea;
 import info.bioinfweb.libralign.dataarea.DataArea;
 import info.bioinfweb.libralign.dataarea.DataAreaList;
-import info.bioinfweb.libralign.dataarea.DataAreaModel;
+import info.bioinfweb.libralign.dataarea.DataAreasModel;
+import info.bioinfweb.tic.SWTComponentFactory;
+import info.bioinfweb.tic.TICComponent;
+import info.bioinfweb.tic.toolkit.ToolkitComponent;
 
 import java.util.Iterator;
 
@@ -46,7 +46,7 @@ import org.eclipse.swt.widgets.Control;
  * @since 0.3.0
  * @bioinfweb.module info.bioinfweb.libralign.swt
  */
-public class SWTAlignmentContentArea extends SWTAlignmentRowsArea<AlignmentSubArea> 
+public class SWTAlignmentContentArea extends SWTAlignmentRowsArea<TICComponent> 
 		implements ToolkitSpecificAlignmentContentArea {
 	
 	private SequenceAreaMap sequenceAreaMap;
@@ -72,7 +72,7 @@ public class SWTAlignmentContentArea extends SWTAlignmentRowsArea<AlignmentSubAr
 		while (iterator.hasNext()) {
 			DataArea dataArea = iterator.next();
 			if (dataArea.isVisible()) {
-				factory.getSWTComponent(dataArea, this, SWT.NONE);
+				factory.getSWTComponent(dataArea.getComponent(), this, SWT.NONE);
 				dataArea.assignSize();
 			}
 		}
@@ -93,14 +93,14 @@ public class SWTAlignmentContentArea extends SWTAlignmentRowsArea<AlignmentSubAr
 
 
 	@Override
-	public AlignmentSubArea getAreaByY(int y) {
+	public AlignmentSubArea getAreaByY(double y) {
 		Control[] children = getChildren();
 		for (int i = 0; i < children.length; i++) {
 			Rectangle r = children[i].getBounds();
 			if (Math2.isBetween(y, r.y, r.y + r.height - 1) && (children[i] instanceof ToolkitComponent)) {
 				TICComponent ticComponent = ((ToolkitComponent)children[i]).getIndependentComponent();
-				if (ticComponent instanceof AlignmentSubArea) {
-					return (AlignmentSubArea)ticComponent;
+				if (ticComponent instanceof AbstractAlignmentSubAreaComponent) {
+					return ((AbstractAlignmentSubAreaComponent)ticComponent).getOwner();
 				}
 			}
 		}
@@ -110,7 +110,7 @@ public class SWTAlignmentContentArea extends SWTAlignmentRowsArea<AlignmentSubAr
 
 	@Override
 	public void reinsertSubelements() {
-		DataAreaModel dataAreaModel = getIndependentComponent().getOwner().getDataAreas();
+		DataAreasModel dataAreaModel = getIndependentComponent().getOwner().getDataAreas();
 		removeAll();
 		sequenceAreaMap.updateElements();
 
@@ -120,7 +120,7 @@ public class SWTAlignmentContentArea extends SWTAlignmentRowsArea<AlignmentSubAr
 		Iterator<String> idIterator = getIndependentComponent().getOwner().getSequenceOrder().idIterator();
 		while (idIterator.hasNext()) {
 			String id = idIterator.next();
-			factory.getSWTComponent(sequenceAreaMap.get(id), this, SWT.NONE);
+			factory.getSWTComponent(sequenceAreaMap.get(id).getComponent(), this, SWT.NONE);
 			sequenceAreaMap.get(id).assignSize();
 			addDataAreaList(dataAreaModel.getSequenceAreas(id));
 		}

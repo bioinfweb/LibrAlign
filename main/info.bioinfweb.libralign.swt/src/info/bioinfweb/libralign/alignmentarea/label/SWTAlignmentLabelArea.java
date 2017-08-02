@@ -76,10 +76,9 @@ public class SWTAlignmentLabelArea extends SWTAlignmentRowsArea<AlignmentLabelSu
 		if (getIndependentComponent().getOwner().getContentArea().hasToolkitComponent()) {
 			removeAll();
 			SWTComponentFactory factory = SWTComponentFactory.getInstance();
-			Iterator<AlignmentSubArea> iterator = 
-					getIndependentComponent().getOwner().getContentArea().getToolkitComponent().subAreaIterator();
+			Iterator<AlignmentLabelSubArea> iterator = subAreaIterator();
 			while (iterator.hasNext()) {
-				final AlignmentLabelSubArea subArea = iterator.next().getLabelSubArea();
+				final AlignmentLabelSubArea subArea = iterator.next();
 				factory.getSWTComponent(subArea, this, SWT.NONE);
 				subArea.assignSize();
 			}
