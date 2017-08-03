@@ -49,12 +49,9 @@ import org.eclipse.swt.widgets.Control;
 public class SWTAlignmentContentArea extends SWTAlignmentRowsArea<TICComponent> 
 		implements ToolkitSpecificAlignmentContentArea {
 	
-	private SequenceAreaMap sequenceAreaMap;
-
-	
 	public SWTAlignmentContentArea(AlignmentContentArea independentComponent, Composite parentComposite, int style) {  //TODO Is this constructor found in the factory, if a supertype of TICComponent is used?
 		super(independentComponent, parentComposite, style);
-		sequenceAreaMap = new SequenceAreaMap(getIndependentComponent());
+		getIndependentComponent().getSequenceAreaMap().updateElements();  // This needs to be called before reinsertSubelements(). (getIndependentComponent().updateSubelements() cannot be used before this constructor returned a value.)
 		reinsertSubelements();
   }
 
@@ -112,7 +109,6 @@ public class SWTAlignmentContentArea extends SWTAlignmentRowsArea<TICComponent>
 	public void reinsertSubelements() {
 		DataAreasModel dataAreaModel = getIndependentComponent().getOwner().getDataAreas();
 		removeAll();
-		sequenceAreaMap.updateElements();
 
 		addDataAreaList(dataAreaModel.getTopAreas());
 
@@ -120,8 +116,8 @@ public class SWTAlignmentContentArea extends SWTAlignmentRowsArea<TICComponent>
 		Iterator<String> idIterator = getIndependentComponent().getOwner().getSequenceOrder().idIterator();
 		while (idIterator.hasNext()) {
 			String id = idIterator.next();
-			factory.getSWTComponent(sequenceAreaMap.get(id).getComponent(), this, SWT.NONE);
-			sequenceAreaMap.get(id).assignSize();
+			factory.getSWTComponent(getIndependentComponent().getSequenceAreaMap().get(id).getComponent(), this, SWT.NONE);
+			getIndependentComponent().getSequenceAreaMap().get(id).assignSize();
 			addDataAreaList(dataAreaModel.getSequenceAreas(id));
 		}
 
@@ -133,12 +129,6 @@ public class SWTAlignmentContentArea extends SWTAlignmentRowsArea<TICComponent>
 
 	
 	@Override
-	public SequenceArea getSequenceAreaByID(String sequenceID) {
-		return sequenceAreaMap.get(sequenceID);
-	}
-
-
-	@Override
 	public int getHeight() {
 		return getSize().y;
 	}
@@ -146,12 +136,12 @@ public class SWTAlignmentContentArea extends SWTAlignmentRowsArea<TICComponent>
 
 	@Override
 	public void assignSequenceAreaSize(String sequenceID) throws IllegalArgumentException {
-		AlignmentContentAreaTools.assignSequenceAreaSize(sequenceAreaMap, sequenceID);
+		AlignmentContentAreaTools.assignSequenceAreaSize(getIndependentComponent().getSequenceAreaMap(), sequenceID);
 	}
 
 
 	@Override
 	public void repaintSequenceAreas() {
-		sequenceAreaMap.repaintSequenceAreas();
+		getIndependentComponent().getSequenceAreaMap().repaintSequenceAreas();
 	}
 }

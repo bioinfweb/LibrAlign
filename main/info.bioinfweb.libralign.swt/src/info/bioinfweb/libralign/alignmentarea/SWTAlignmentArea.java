@@ -21,9 +21,7 @@ package info.bioinfweb.libralign.alignmentarea;
 
 import info.bioinfweb.commons.swt.ScrolledCompositeSyncListener;
 import info.bioinfweb.libralign.alignmentarea.content.AlignmentContentArea;
-import info.bioinfweb.libralign.alignmentarea.content.SWTAlignmentContentArea;
 import info.bioinfweb.libralign.alignmentarea.content.SequenceArea;
-import info.bioinfweb.libralign.alignmentarea.content.ToolkitSpecificAlignmentContentArea;
 import info.bioinfweb.libralign.alignmentarea.label.SWTAlignmentLabelArea;
 import info.bioinfweb.libralign.multiplealignments.SWTMultipleAlignmentsContainer;
 import info.bioinfweb.tic.SWTComponentFactory;
@@ -129,8 +127,7 @@ public class SWTAlignmentArea extends AbstractSWTComposite implements ToolkitSpe
 		contentContainer.setLayoutData(createGridData(true));
 		contentScroller = new ScrolledComposite(contentContainer, SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL);
 		contentScroller.setAlwaysShowScrollBars(true);
-		SWTAlignmentContentArea contentArea =	(SWTAlignmentContentArea)factory.getSWTComponent(
-				getIndependentComponent().getContentArea(), contentScroller, SWT.NONE);
+		Composite contentArea =	factory.getSWTComponent(getIndependentComponent().getContentArea(), contentScroller, SWT.NONE);
 		contentScroller.setContent(contentArea);
 		contentScroller.addMouseListener(new MouseAdapter() {
 			@Override
@@ -139,17 +136,11 @@ public class SWTAlignmentArea extends AbstractSWTComposite implements ToolkitSpe
     			AlignmentContentArea contentArea = getIndependentComponent().getContentArea();
     			int row = contentArea.rowByPaintY(event.y);
     			
-					if (getIndependentComponent().getContentArea().isUseSubcomponents()) {
-						SequenceArea sequenceArea = ((ToolkitSpecificAlignmentContentArea)contentArea.getToolkitComponent()).getSequenceAreaByID(
-								getIndependentComponent().getSequenceOrder().idByIndex(row));
-						if (sequenceArea != null) {
-	    				getIndependentComponent().getSelection().setNewCursorPosition(contentArea.columnByPaintX(event.x), row);
-							((Composite)sequenceArea.getComponent().getToolkitComponent()).setFocus();
-						}
-					}
-					else {
-						throw new InternalError("Not implemented.");
-						//TODO Implement.
+					SequenceArea sequenceArea = contentArea.getSequenceAreaByID(
+							getIndependentComponent().getSequenceOrder().idByIndex(row));
+					if (sequenceArea != null) {
+    				getIndependentComponent().getSelection().setNewCursorPosition(contentArea.columnByPaintX(event.x), row);
+						((Composite)sequenceArea.getComponent().getToolkitComponent()).setFocus();
 					}
 				}
 			}
