@@ -20,7 +20,6 @@ package info.bioinfweb.libralign.alignmentarea.content;
 
 
 import info.bioinfweb.libralign.alignmentarea.AlignmentArea;
-import info.bioinfweb.tic.TICComponent;
 import info.bioinfweb.tic.TICPaintEvent;
 
 import java.awt.Dimension;
@@ -50,7 +49,7 @@ public class DefaultAlignmentSubAreaComponent extends AbstractAlignmentSubAreaCo
 	@Override
 	public void paint(TICPaintEvent event) {
 		//event.getGraphics().translate(-xOffset, 0);
-		//TODO Consider x-shift of graphics context due to data area width left of alignment. (Here or/and somewhere else?)
+		//TODO Consider x-shift of graphics context due to data area width left of alignment if coordinate shift on y is implemented. (Here or/and somewhere else?)
 		getOwner().paintPart(new AlignmentPaintEvent(event.getSource(), getOwner().getOwner().getOwner(),
 				Math.max(0, getOwner().getOwner().columnByPaintX(event.getRectangle().getMinX())),  // first column 
 				getOwner().getOwner().columnByPaintX((int)event.getRectangle().getMaxX()),  // last column

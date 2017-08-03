@@ -19,24 +19,15 @@
 package info.bioinfweb.libralign.alignmentarea;
 
 
-import java.awt.Dimension;
-import java.awt.Rectangle;
-import java.beans.PropertyChangeEvent;
-import java.util.Iterator;
-
-import info.bioinfweb.commons.Math2;
-import info.bioinfweb.tic.TICComponent;
-import info.bioinfweb.tic.TICPaintEvent;
 import info.bioinfweb.libralign.actions.AlignmentActionProvider;
 import info.bioinfweb.libralign.alignmentarea.content.AlignmentContentArea;
-import info.bioinfweb.libralign.alignmentarea.content.AlignmentSubArea;
 import info.bioinfweb.libralign.alignmentarea.content.ToolkitSpecificAlignmentContentArea;
 import info.bioinfweb.libralign.alignmentarea.label.AlignmentLabelArea;
 import info.bioinfweb.libralign.alignmentarea.label.AlignmentLabelSubArea;
 import info.bioinfweb.libralign.alignmentarea.order.SequenceOrder;
 import info.bioinfweb.libralign.alignmentarea.paintsettings.PaintSettings;
-import info.bioinfweb.libralign.alignmentarea.paintsettings.PaintSettingsListener;
 import info.bioinfweb.libralign.alignmentarea.paintsettings.PaintSettingsEvent;
+import info.bioinfweb.libralign.alignmentarea.paintsettings.PaintSettingsListener;
 import info.bioinfweb.libralign.alignmentarea.paintsettings.TokenPainterReplacedEvent;
 import info.bioinfweb.libralign.alignmentarea.paintsettings.ZoomChangeEvent;
 import info.bioinfweb.libralign.alignmentarea.selection.SelectionChangeEvent;
@@ -46,13 +37,20 @@ import info.bioinfweb.libralign.dataarea.DataAreaChangeEvent;
 import info.bioinfweb.libralign.dataarea.DataAreasModel;
 import info.bioinfweb.libralign.dataarea.DataAreasModelListener;
 import info.bioinfweb.libralign.editsettings.EditSettings;
-import info.bioinfweb.libralign.model.AlignmentModelChangeListener;
 import info.bioinfweb.libralign.model.AlignmentModel;
+import info.bioinfweb.libralign.model.AlignmentModelChangeListener;
 import info.bioinfweb.libralign.model.concatenated.ConcatenatedAlignmentModel;
 import info.bioinfweb.libralign.model.events.SequenceChangeEvent;
 import info.bioinfweb.libralign.model.events.SequenceRenamedEvent;
 import info.bioinfweb.libralign.model.events.TokenChangeEvent;
 import info.bioinfweb.libralign.multiplealignments.MultipleAlignmentsContainer;
+import info.bioinfweb.tic.TICComponent;
+import info.bioinfweb.tic.TICPaintEvent;
+
+import java.awt.Dimension;
+import java.awt.Rectangle;
+import java.beans.PropertyChangeEvent;
+import java.util.Iterator;
 
 
 
@@ -158,8 +156,8 @@ public class AlignmentArea extends TICComponent implements AlignmentModelChangeL
 	 * If you want to create an alignment area that shall be inserted into a {@link MultipleAlignmentsContainer}
 	 * use {@link #AlignmentArea(MultipleAlignmentsContainer)} instead.
 	 */
-	public AlignmentArea() {
-		this(null);
+	public AlignmentArea(boolean useSubcomponents) {
+		this(null, useSubcomponents);
 	}
 	
 	
@@ -168,7 +166,7 @@ public class AlignmentArea extends TICComponent implements AlignmentModelChangeL
 	 * 
 	 * @param container - the container where the returned instance will be contained in
 	 */
-	public AlignmentArea(MultipleAlignmentsContainer container) {
+	public AlignmentArea(MultipleAlignmentsContainer container, boolean useSubcomponents) {
 		super();
 		this.container = container;
 		
@@ -179,14 +177,6 @@ public class AlignmentArea extends TICComponent implements AlignmentModelChangeL
 			editSettings = new EditSettings();
 		}
 		
-		alignmentContentArea = new AlignmentContentArea(this, true);  //TODO Allow to customize whether to create subcomponents later.
-		alignmentLabelArea = new AlignmentLabelArea(this);  // Must be called after alignmentContentArea has been created.
-
-		dataAreas.addListener(this);
-		
-		paintSettings = new PaintSettings(this);
-		paintSettings.addListener(PAINT_SETTINGS_LISTERNER);
-		
 		selection = new SelectionModel(this);
 		selection.addSelectionListener(new SelectionListener() {
 					@Override
@@ -194,6 +184,15 @@ public class AlignmentArea extends TICComponent implements AlignmentModelChangeL
 						scrollCursorToVisible();
 					}
 				});
+		
+		alignmentContentArea = new AlignmentContentArea(this, useSubcomponents);  // The selection object must already have been created here.  
+		alignmentLabelArea = new AlignmentLabelArea(this);  // Must be called after alignmentContentArea has been created.
+
+		dataAreas.addListener(this);
+		
+		paintSettings = new PaintSettings(this);
+		paintSettings.addListener(PAINT_SETTINGS_LISTERNER);
+		
 	}
 
 
@@ -255,9 +254,7 @@ public class AlignmentArea extends TICComponent implements AlignmentModelChangeL
 			
 			this.alignmentModel = alignmentModel;
 			getSequenceOrder().setSourceSequenceOrder();  // Update sequence names
-			if (hasToolkitComponent()) {
-				reinsertSubelements();
-			}
+			updateSubelements();
 			
       // Fire events for listener move after the process finished
 			if (this.alignmentModel != null) {
@@ -566,10 +563,8 @@ public class AlignmentArea extends TICComponent implements AlignmentModelChangeL
 	/**
 	 * Reinserts subelements in the contained label and content areas if they already have created a toolkit specific component.
 	 */
-	public void reinsertSubelements() {
-		if (getContentArea().hasToolkitComponent() && getContentArea().isUseSubcomponents()) {
-			((ToolkitSpecificAlignmentContentArea)getContentArea().getToolkitComponent()).reinsertSubelements();
-		}
+	public void updateSubelements() {
+		getContentArea().updateSubelements();
 		if (getLabelArea().hasToolkitComponent()) {
 			getLabelArea().getToolkitComponent().reinsertSubelements();
 		}
@@ -581,9 +576,7 @@ public class AlignmentArea extends TICComponent implements AlignmentModelChangeL
 		if (e.getSource().equals(getAlignmentModel())) {
 			getLabelArea().setLocalMaxWidthRecalculateToAll();  // Needs to be called before assignSizeToAll().
 			getSequenceOrder().refreshFromSource();
-			if (hasToolkitComponent()) {
-				reinsertSubelements();
-			}
+			updateSubelements();
 		}
 		//TODO Send message to all and/or remove some data areas? (Some might be data specific (e.g. pherograms), some not (e.g. consensus sequence).)
 		getDataAreas().getSequenceDataChangeListener().afterSequenceChange(e);
@@ -632,7 +625,7 @@ public class AlignmentArea extends TICComponent implements AlignmentModelChangeL
 		if (hasToolkitComponent()) {
 			if (e.getSource().equals(getDataAreas())) {
 				getDataAreas().setLocalMaxLengthBeforeAfterRecalculate();
-				reinsertSubelements();
+				updateSubelements();
 			}
 			assignSizeToAll();
 		}

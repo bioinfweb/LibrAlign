@@ -19,17 +19,15 @@
 package info.bioinfweb.libralign.alignmentarea.content;
 
 
-import java.awt.Graphics2D;
-import java.awt.Rectangle;
-import java.awt.geom.Rectangle2D;
-
-import javax.naming.OperationNotSupportedException;
-
 import info.bioinfweb.libralign.alignmentarea.AlignmentArea;
 import info.bioinfweb.libralign.alignmentarea.label.AlignmentLabelArea;
 import info.bioinfweb.libralign.alignmentarea.label.AlignmentLabelSubArea;
 import info.bioinfweb.libralign.alignmentarea.label.DefaultLabelSubArea;
 import info.bioinfweb.tic.TICComponent;
+
+import java.awt.Graphics2D;
+import java.awt.Rectangle;
+import java.awt.geom.Rectangle2D;
 
 
 
@@ -51,7 +49,7 @@ public abstract class AlignmentSubArea {
 	/**
 	 * Creates a new instance of this class.
 	 * 
-	 * @param owner - the alignment content area that will contain this instance
+	 * @param owner the alignment content area that will contain this instance
 	 */
 	public AlignmentSubArea(AlignmentContentArea owner) {
 		super();
@@ -74,7 +72,7 @@ public abstract class AlignmentSubArea {
 	 * <p>
 	 * This default implementation always returns an instance of {@link DefaultLabelSubArea}.
 	 * 
-	 * @param owner - the alignment label area that can be set as the owner of the returned component.
+	 * @param owner the alignment label area that can be set as the owner of the returned component.
 	 * @return a new instance of {@link DefaultLabelSubArea} linked to this instance
 	 */
 	protected AlignmentLabelSubArea createLabelSubArea(AlignmentLabelArea owner) {
@@ -98,7 +96,7 @@ public abstract class AlignmentSubArea {
 	/**
 	 * Returns the height in pixels considering the current zoom factor this component needs.
 	 * 
-	 * @return a double value > 0
+	 * @return a {@code double} value > 0
 	 */
 	public abstract double getHeight();
 
@@ -107,14 +105,14 @@ public abstract class AlignmentSubArea {
 	 * Implementations of this method perform the painting of a part of the component. It is used when an
 	 * {@link AlignmentArea} is set to contain no subcomponents but to paint its contents directly.
 	 * <p>
-	 * This default implementation always throws an {@link OperationNotSupportedException}. Note that 
+	 * This default implementation always throws an {@link UnsupportedOperationException}. Note that 
 	 * therefore inherited classes must either overwrite this method or {@link #createComponent()} in 
 	 * order to return an instance there that does not delegate to this method.
 	 * <p>
 	 * Note that the aim of this method is to allow painting very wide components, which may have a width
 	 * larger than {@link Integer#MAX_VALUE}. Therefore painting coordinates are stored as {@code double}
 	 * values (using {@link Graphics2D} and {@link Rectangle2D.Double}). Implementations should not 
-	 * calculate pixel coordinates as {@code int}s at any time to avoid integer overflows, but only use 
+	 * calculate pixel coordinates as {@code int}s at any time to avoid overflows, but only use
 	 * {@code double} (or possibly {@code long} if necessary).
 	 * 
 	 * @param event the paint event providing information on the area to be painted, the graphics context
@@ -132,8 +130,9 @@ public abstract class AlignmentSubArea {
 			}
 		}
 		else {
-			throw new InternalError("Not implemented.");
-			//TODO Repaint respective region of AlignmentContentArea, when it allows direct painting.
+			if (getOwner().hasToolkitComponent()) {
+				getOwner().getToolkitComponent().repaint();  //TODO Repaint only respective region of AlignmentContentArea.
+			}
 		}
 	}
 	

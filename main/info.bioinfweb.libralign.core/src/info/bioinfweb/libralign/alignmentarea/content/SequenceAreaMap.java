@@ -46,7 +46,10 @@ public class SequenceAreaMap extends TreeMap<String, SequenceArea> implements Se
 		super();
 		this.owner = owner;
 		selectionInputListener = new CursorSelectionInputListener(owner.getOwner());
-		owner.getOwner().getSelection().addSelectionListener(this);
+		owner.
+		getOwner().
+		getSelection().
+		addSelectionListener(this);
 		updateElements();
 	}
 
@@ -112,5 +115,8 @@ public class SequenceAreaMap extends TreeMap<String, SequenceArea> implements Se
 	@Override
 	public void selectionChanged(SelectionChangeEvent e) {
 		repaintSequenceAreas();  // Just repainting the areas in the selection is not enough, because other might have just become deselected.
+		//TODO Painting of unnecessary areas and cells should be avoided here. This call is probably mainly responsible for flickering in SWT.
+		//     In the future only cells that were previously and are newly selected should be repainted.
+		//TODO Somewhere else, the same is probably done for data areas and should be refactored too.
 	}
 }
