@@ -69,7 +69,7 @@ public class SWTAlignmentContentArea extends SWTAlignmentRowsArea<TICComponent>
 		while (iterator.hasNext()) {
 			DataArea dataArea = iterator.next();
 			if (dataArea.isVisible()) {
-				factory.getSWTComponent(dataArea.getComponent(), this, SWT.NONE);
+				factory.getSWTComponent(dataArea.getComponent(), this, SWT.NO_BACKGROUND);
 				dataArea.assignSize();
 			}
 		}
@@ -116,7 +116,7 @@ public class SWTAlignmentContentArea extends SWTAlignmentRowsArea<TICComponent>
 		Iterator<String> idIterator = getIndependentComponent().getOwner().getSequenceOrder().idIterator();
 		while (idIterator.hasNext()) {
 			String id = idIterator.next();
-			factory.getSWTComponent(getIndependentComponent().getSequenceAreaMap().get(id).getComponent(), this, SWT.NONE);
+			factory.getSWTComponent(getIndependentComponent().getSequenceAreaMap().get(id).getComponent(), this, SWT.NO_BACKGROUND);
 			getIndependentComponent().getSequenceAreaMap().get(id).assignSize();
 			addDataAreaList(dataAreaModel.getSequenceAreas(id));
 		}
