@@ -41,12 +41,9 @@ import javax.swing.Scrollable;
  * @bioinfweb.module info.bioinfweb.libralign.swing
  */
 public class SwingAlignmentContentArea extends SwingAlignmentRowsArea<TICComponent> implements Scrollable, ToolkitSpecificAlignmentContentArea {
-	private SequenceAreaMap sequenceAreaMap;
-	
-	
 	public SwingAlignmentContentArea(AlignmentContentArea independentComponent) {
 		super(independentComponent);
-		sequenceAreaMap = new SequenceAreaMap(independentComponent);
+		getIndependentComponent().getSequenceAreaMap().updateElements();  // This needs to be called before reinsertSubelements(). (getIndependentComponent().updateSubelements() cannot be used before this constructor returned a value.)
 		reinsertSubelements();
 	}
 
@@ -58,23 +55,16 @@ public class SwingAlignmentContentArea extends SwingAlignmentRowsArea<TICCompone
 	
 
 	@Override
-	public SequenceArea getSequenceAreaByID(String sequenceID) {
-		return sequenceAreaMap.get(sequenceID);
-	}
-
-
-	@Override
 	public void reinsertSubelements() {
 		removeAll();
-		sequenceAreaMap.updateElements();
-		
+
 		addDataAreaList(getIndependentComponent().getOwner().getDataAreas().getTopAreas());
 		
 		SwingComponentFactory factory = SwingComponentFactory.getInstance();
 		Iterator<String> idIterator = getIndependentComponent().getOwner().getSequenceOrder().idIterator();
 		while (idIterator.hasNext()) {
 			String id = idIterator.next();
-			add(factory.getSwingComponent(sequenceAreaMap.get(id).getComponent()));
+			add(factory.getSwingComponent(getIndependentComponent().getSequenceAreaMap().get(id).getComponent()));
 			addDataAreaList(getIndependentComponent().getOwner().getDataAreas().getSequenceAreas(id));
 		}
 		
@@ -110,12 +100,12 @@ public class SwingAlignmentContentArea extends SwingAlignmentRowsArea<TICCompone
 	
 	@Override
 	public void assignSequenceAreaSize(String sequenceID) throws IllegalArgumentException {
-		AlignmentContentAreaTools.assignSequenceAreaSize(sequenceAreaMap, sequenceID);
+		AlignmentContentAreaTools.assignSequenceAreaSize(getIndependentComponent().getSequenceAreaMap(), sequenceID);
 	}
 
 
 	@Override
 	public void repaintSequenceAreas() {
-		sequenceAreaMap.repaintSequenceAreas();
+		getIndependentComponent().getSequenceAreaMap().repaintSequenceAreas();
 	}
 }

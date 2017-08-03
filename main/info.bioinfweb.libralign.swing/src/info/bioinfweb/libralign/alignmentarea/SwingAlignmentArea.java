@@ -72,17 +72,11 @@ public class SwingAlignmentArea extends JScrollPane implements ToolkitSpecificAl
 				if (getIndependentComponent().hasAlignmentModel() && (getIndependentComponent().getAlignmentModel().getSequenceCount() > 0)) {
 					AlignmentContentArea contentArea = getIndependentComponent().getContentArea();
 					int row = contentArea.rowByPaintY(e.getY());
-					if (getIndependentComponent().getContentArea().isUseSubcomponents()) {
-						SequenceArea sequenceArea = ((ToolkitSpecificAlignmentContentArea)contentArea.getToolkitComponent()).getSequenceAreaByID(
-								getIndependentComponent().getSequenceOrder().idByIndex(row));
-						if (sequenceArea != null) {
-							getIndependentComponent().getSelection().setNewCursorPosition(contentArea.columnByPaintX(e.getX()), row);
-							((JComponent)sequenceArea.getComponent().getToolkitComponent()).requestFocusInWindow();
-						}
-					}
-					else {
-						throw new InternalError("Not implemented.");
-						//TODO Implement.
+					SequenceArea sequenceArea = contentArea.getSequenceAreaByID(
+							getIndependentComponent().getSequenceOrder().idByIndex(row));
+					if (sequenceArea != null) {
+						getIndependentComponent().getSelection().setNewCursorPosition(contentArea.columnByPaintX(e.getX()), row);
+						((JComponent)sequenceArea.getComponent().getToolkitComponent()).requestFocusInWindow();
 					}
 				}
 			}
