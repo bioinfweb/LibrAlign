@@ -151,10 +151,28 @@ public class AlignmentArea extends TICComponent implements AlignmentModelChangeL
 	
 	
 	/**
+	 * Creates a new instance of this class that shall not part of a {@link MultipleAlignmentsContainer} that uses no
+	 * subcomponents for each sequence and data area.
+	 * <p>
+	 * If you want to create an alignment area that shall be inserted into a {@link MultipleAlignmentsContainer}
+	 * use {@link #AlignmentArea(MultipleAlignmentsContainer, boolean))} instead.
+	 */
+	public AlignmentArea() {
+		this(null, false);
+	}
+	
+	
+	/**
 	 * Creates a new instance of this class that shall not part of a {@link MultipleAlignmentsContainer}.
 	 * <p>
 	 * If you want to create an alignment area that shall be inserted into a {@link MultipleAlignmentsContainer}
 	 * use {@link #AlignmentArea(MultipleAlignmentsContainer)} instead.
+	 * 
+	 * @param useSubcomponents Specify {@code true} here, if a separate subcomponent should be used for each 
+	 *        sequence and data area or {@code false} to draw all on separate components. (Using separate
+	 *        components allows to use custom toolkit specific components provided by custom data areas but
+	 *        does not allow to display long sequences, especially with <i>SWT</i> under <i>Windows</i> and
+	 *        <i>Linux</i>.)
 	 */
 	public AlignmentArea(boolean useSubcomponents) {
 		this(null, useSubcomponents);
@@ -162,9 +180,25 @@ public class AlignmentArea extends TICComponent implements AlignmentModelChangeL
 	
 	
 	/**
+	 * Creates a new instance of this class to be inserted into a {@link MultipleAlignmentsContainer} that uses no
+	 * subcomponents for each sequence and data area.
+	 * 
+	 * @param container the container where the returned instance will be contained in
+	 */
+	public AlignmentArea(MultipleAlignmentsContainer container) {
+		this(container, false);
+	}
+	
+	
+	/**
 	 * Creates a new instance of this class to be inserted into a {@link MultipleAlignmentsContainer}.
 	 * 
-	 * @param container - the container where the returned instance will be contained in
+	 * @param container the container where the returned instance will be contained in
+	 * @param useSubcomponents Specify {@code true} here, if a separate subcomponent should be used for each 
+	 *        sequence and data area or {@code false} to draw all on separate components. (Using separate
+	 *        components allows to use custom toolkit specific components provided by custom data areas but
+	 *        does not allow to display long sequences, especially with <i>SWT</i> under <i>Windows</i> and
+	 *        <i>Linux</i>.)
 	 */
 	public AlignmentArea(MultipleAlignmentsContainer container, boolean useSubcomponents) {
 		super();
