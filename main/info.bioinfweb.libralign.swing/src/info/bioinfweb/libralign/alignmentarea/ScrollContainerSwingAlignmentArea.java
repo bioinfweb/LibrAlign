@@ -21,7 +21,7 @@ package info.bioinfweb.libralign.alignmentarea;
 
 import info.bioinfweb.libralign.alignmentarea.content.AlignmentContentArea;
 import info.bioinfweb.libralign.alignmentarea.content.SequenceArea;
-import info.bioinfweb.libralign.alignmentarea.content.SwingAlignmentContentArea;
+import info.bioinfweb.libralign.alignmentarea.content.ScrollContainerSwingAlignmentContentArea;
 import info.bioinfweb.tic.SwingComponentFactory;
 import info.bioinfweb.tic.TargetToolkit;
 import info.bioinfweb.tic.toolkit.SwingComponentTools;
@@ -50,7 +50,7 @@ import javax.swing.ScrollPaneConstants;
  * @since 0.2.0
  * @bioinfweb.module info.bioinfweb.libralign.swing
  */
-public class SwingAlignmentArea extends JScrollPane implements ToolkitSpecificAlignmentArea {
+public class ScrollContainerSwingAlignmentArea extends JScrollPane implements ToolkitSpecificAlignmentArea {
 	private static Action VOID_ACTION = new AbstractAction() {
 		@Override
 		public void actionPerformed(ActionEvent e) {}
@@ -60,7 +60,7 @@ public class SwingAlignmentArea extends JScrollPane implements ToolkitSpecificAl
 	private AlignmentArea independentComponent;
 	
 	
-	public SwingAlignmentArea(AlignmentArea independentComponent) {
+	public ScrollContainerSwingAlignmentArea(AlignmentArea independentComponent) {
 		super();
 		this.independentComponent = independentComponent;
 		init();
@@ -144,14 +144,14 @@ public class SwingAlignmentArea extends JScrollPane implements ToolkitSpecificAl
 	
 	@Override
 	public void scrollAlignmentRectToVisible(Rectangle rectangle) {
-		((SwingAlignmentContentArea)
+		((ScrollContainerSwingAlignmentContentArea)
 				getIndependentComponent().getContentArea().getToolkitComponent()).scrollRectToVisible(rectangle);
 	}
 
 
 	@Override
 	public Rectangle getVisibleAlignmentRect() {
-		return ((SwingAlignmentContentArea)
+		return ((ScrollContainerSwingAlignmentContentArea)
 				getIndependentComponent().getContentArea().getToolkitComponent()).getVisibleRect();
 	}
 

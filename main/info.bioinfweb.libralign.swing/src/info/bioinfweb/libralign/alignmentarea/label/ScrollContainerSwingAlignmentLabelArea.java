@@ -33,7 +33,7 @@ import java.util.Iterator;
  * @since 0.3.0
  * @bioinfweb.module info.bioinfweb.libralign.swing
  */
-public class SwingAlignmentLabelArea extends SwingAlignmentRowsArea<AlignmentLabelSubArea> 
+public class ScrollContainerSwingAlignmentLabelArea extends SwingAlignmentRowsArea<AlignmentLabelSubArea> 
 		implements ToolkitSpecificAlignmentLabelArea {
 	
 	/**
@@ -41,7 +41,7 @@ public class SwingAlignmentLabelArea extends SwingAlignmentRowsArea<AlignmentLab
 	 * 
 	 * @param independentComponent - the toolkit independent component associated with the new instance
 	 */
-	public SwingAlignmentLabelArea(AlignmentLabelArea independentComponent) {
+	public ScrollContainerSwingAlignmentLabelArea(AlignmentLabelArea independentComponent) {
 		super(independentComponent);
 		reinsertSubelements();
 	}

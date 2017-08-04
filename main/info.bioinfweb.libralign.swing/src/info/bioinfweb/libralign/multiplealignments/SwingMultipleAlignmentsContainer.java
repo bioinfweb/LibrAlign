@@ -30,7 +30,7 @@ import java.util.List;
 
 import info.bioinfweb.commons.swing.SwingUtils;
 import info.bioinfweb.libralign.alignmentarea.AlignmentArea;
-import info.bioinfweb.libralign.alignmentarea.SwingAlignmentArea;
+import info.bioinfweb.libralign.alignmentarea.ScrollContainerSwingAlignmentArea;
 import info.bioinfweb.tic.SwingComponentFactory;
 import info.bioinfweb.tic.toolkit.AbstractSwingComponent;
 
@@ -56,7 +56,7 @@ public class SwingMultipleAlignmentsContainer extends AbstractSwingComponent imp
 				public void adjustmentValueChanged(AdjustmentEvent e) {
 					SwingComponentFactory factory = SwingComponentFactory.getInstance();
 					for (int i = 0; i < getIndependentComponent().getAlignmentAreas().size(); i++) {
-						JScrollBar scrollBar = ((SwingAlignmentArea)factory.getSwingComponent(
+						JScrollBar scrollBar = ((ScrollContainerSwingAlignmentArea)factory.getSwingComponent(
 								getIndependentComponent().getAlignmentAreas().get(i))).getHorizontalScrollBar(); 
 						if (scrollBar != e.getSource()) {
 							scrollBar.getModel().setValue(e.getValue());
@@ -137,8 +137,8 @@ public class SwingMultipleAlignmentsContainer extends AbstractSwingComponent imp
 	}
 
 
-	private SwingAlignmentArea createAlignmentArea(int index, boolean hideHorizintalScrollBar) {
-  	SwingAlignmentArea result = (SwingAlignmentArea)SwingComponentFactory.getInstance().getSwingComponent(
+	private ScrollContainerSwingAlignmentArea createAlignmentArea(int index, boolean hideHorizintalScrollBar) {
+  	ScrollContainerSwingAlignmentArea result = (ScrollContainerSwingAlignmentArea)SwingComponentFactory.getInstance().getSwingComponent(
   			getIndependentComponent().getAlignmentAreas().get(index));
   	result.setHideHorizontalScrollBar(hideHorizintalScrollBar);
   	return result;
@@ -151,7 +151,7 @@ public class SwingMultipleAlignmentsContainer extends AbstractSwingComponent imp
 		removeAll();
 		SwingComponentFactory factory = SwingComponentFactory.getInstance();
 		for (int i = 0; i < getIndependentComponent().getAlignmentAreas().size(); i++) {
-			((SwingAlignmentArea)factory.getSwingComponent(getIndependentComponent().getAlignmentAreas().get(i))).
+			((ScrollContainerSwingAlignmentArea)factory.getSwingComponent(getIndependentComponent().getAlignmentAreas().get(i))).
 					getHorizontalScrollBar().removeAdjustmentListener(SCROLL_SYNC_LISTENER); 
 		}		
 		
@@ -178,7 +178,7 @@ public class SwingMultipleAlignmentsContainer extends AbstractSwingComponent imp
 
 		// Add scroll synchronize listeners:
 		for (int i = 0; i < getIndependentComponent().getAlignmentAreas().size(); i++) {
-			((SwingAlignmentArea)factory.getSwingComponent(getIndependentComponent().getAlignmentAreas().get(i))).
+			((ScrollContainerSwingAlignmentArea)factory.getSwingComponent(getIndependentComponent().getAlignmentAreas().get(i))).
 					getHorizontalScrollBar().addAdjustmentListener(SCROLL_SYNC_LISTENER); 
 		}		
 	}
@@ -188,7 +188,7 @@ public class SwingMultipleAlignmentsContainer extends AbstractSwingComponent imp
 	public int getAvailableHeight() {
   	int result = 0;
   	for (AlignmentArea alignmentArea : getIndependentComponent().getAlignmentAreas()) {
-			result += ((SwingAlignmentArea)alignmentArea.getToolkitComponent()).getViewport().getHeight();
+			result += ((ScrollContainerSwingAlignmentArea)alignmentArea.getToolkitComponent()).getViewport().getHeight();
 		}
   	return result;
 	}

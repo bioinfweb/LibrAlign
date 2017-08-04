@@ -25,8 +25,8 @@ import java.util.Arrays;
 import java.util.Iterator;
 
 import info.bioinfweb.libralign.alignmentarea.content.AlignmentSubAreaIterator;
-import info.bioinfweb.libralign.alignmentarea.content.SwingAlignmentContentArea;
-import info.bioinfweb.libralign.alignmentarea.label.SwingAlignmentLabelArea;
+import info.bioinfweb.libralign.alignmentarea.content.ScrollContainerSwingAlignmentContentArea;
+import info.bioinfweb.libralign.alignmentarea.label.ScrollContainerSwingAlignmentLabelArea;
 import info.bioinfweb.tic.TICComponent;
 import info.bioinfweb.tic.toolkit.AbstractSwingComponent;
 
@@ -36,7 +36,7 @@ import javax.swing.Scrollable;
 
 
 /**
- * Abstract base class for {@link SwingAlignmentContentArea} and {@link SwingAlignmentLabelArea}.
+ * Abstract base class for {@link ScrollContainerSwingAlignmentContentArea} and {@link ScrollContainerSwingAlignmentLabelArea}.
  * 
  * @author Ben St&ouml;ver
  * @since 0.3.0

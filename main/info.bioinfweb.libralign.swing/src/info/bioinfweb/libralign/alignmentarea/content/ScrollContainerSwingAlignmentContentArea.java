@@ -40,8 +40,8 @@ import javax.swing.Scrollable;
  * @since 0.3.0
  * @bioinfweb.module info.bioinfweb.libralign.swing
  */
-public class SwingAlignmentContentArea extends SwingAlignmentRowsArea<TICComponent> implements Scrollable, ToolkitSpecificAlignmentContentArea {
-	public SwingAlignmentContentArea(AlignmentContentArea independentComponent) {
+public class ScrollContainerSwingAlignmentContentArea extends SwingAlignmentRowsArea<TICComponent> implements Scrollable, ToolkitSpecificAlignmentContentArea {
+	public ScrollContainerSwingAlignmentContentArea(AlignmentContentArea independentComponent) {
 		super(independentComponent);
 		getIndependentComponent().getSequenceAreaMap().updateElements();  // This needs to be called before reinsertSubelements(). (getIndependentComponent().updateSubelements() cannot be used before this constructor returned a value.)
 		reinsertSubelements();
