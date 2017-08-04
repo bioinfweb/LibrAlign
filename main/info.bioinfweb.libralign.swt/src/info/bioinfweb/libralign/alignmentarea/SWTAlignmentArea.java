@@ -44,8 +44,9 @@ import org.eclipse.swt.widgets.Composite;
 
 
 /**
- * SWT component displaying the head, content, or bottom area of an alignment area. This class also implements
- * the necessary scrolling functionality and offers workarounds for missing Swing functionality in SWT.
+ * <i>SWT</i> component displaying the head, content, or bottom area of an alignment area. This class also implements
+ * the necessary scrolling functionality and offers workarounds for missing respective functionality in <i>SWT</i> 
+ * compared to <i>Swing</i>.
  * <p>
  * This class is meant for internal use by {@link AlignmentArea} and should not be instantiated directly.
  *
