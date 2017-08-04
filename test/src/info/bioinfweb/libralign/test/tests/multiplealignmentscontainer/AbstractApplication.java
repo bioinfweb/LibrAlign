@@ -19,13 +19,7 @@
 package info.bioinfweb.libralign.test.tests.multiplealignmentscontainer;
 
 
-import java.awt.Color;
-import java.io.File;
-
 import info.bioinfweb.commons.SystemUtils;
-import info.bioinfweb.commons.bio.biojava3.alignment.SimpleAlignment;
-import info.bioinfweb.commons.bio.biojava3.alignment.template.Alignment;
-import info.bioinfweb.commons.bio.biojava3.core.sequence.compound.AlignmentAmbiguityNucleotideCompoundSet;
 import info.bioinfweb.libralign.alignmentarea.AlignmentArea;
 import info.bioinfweb.libralign.alignmentarea.content.AlignmentContentArea;
 import info.bioinfweb.libralign.alignmentarea.tokenpainter.NucleotideTokenPainter;
@@ -37,18 +31,16 @@ import info.bioinfweb.libralign.dataarea.implementations.pherogram.PherogramArea
 import info.bioinfweb.libralign.dataarea.implementations.sequenceindex.SequenceIndexArea;
 import info.bioinfweb.libralign.model.AlignmentModel;
 import info.bioinfweb.libralign.model.implementations.PackedAlignmentModel;
-import info.bioinfweb.libralign.model.tokenset.BioJava3TokenSet;
 import info.bioinfweb.libralign.model.tokenset.CharacterTokenSet;
 import info.bioinfweb.libralign.model.utils.AlignmentModelUtils;
 import info.bioinfweb.libralign.multiplealignments.MultipleAlignmentsContainer;
 import info.bioinfweb.libralign.pherogram.model.PherogramAreaModel;
 import info.bioinfweb.libralign.pherogram.provider.BioJavaPherogramProvider;
-import info.bioinfweb.tic.input.TICKeyEvent;
-import info.bioinfweb.tic.input.TICKeyListener;
+
+import java.awt.Color;
+import java.io.File;
 
 import org.biojava.bio.chromatogram.ChromatogramFactory;
-import org.biojava3.core.sequence.DNASequence;
-import org.biojava3.core.sequence.compound.NucleotideCompound;
 
 
 
@@ -58,8 +50,7 @@ import org.biojava3.core.sequence.compound.NucleotideCompound;
  * @author Ben St&ouml;ver
  */
 public class AbstractApplication {
-	private static final boolean USE_SUBCOMPONENTS = false;
-
+	private static final boolean USE_SUBCOMPONENTS = true;
 	
 	
 	private CharSetArea createCharSetArea(AlignmentContentArea owner, AlignmentArea labeledArea) {

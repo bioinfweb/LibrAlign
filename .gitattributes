@@ -387,6 +387,7 @@ test/src/info/bioinfweb/libralign/test/tests/BitShiftTest.java -text svneol=unse
 test/src/info/bioinfweb/libralign/test/tests/CastNullTest.java -text svneol=unset#text/plain
 test/src/info/bioinfweb/libralign/test/tests/GenericCollectionTest.java -text svneol=unset#text/plain
 test/src/info/bioinfweb/libralign/test/tests/NeXMLTest.java -text svneol=unset#text/plain
+test/src/info/bioinfweb/libralign/test/tests/PaintingOutOfIntRange.java -text svneol=unset#text/plain
 test/src/info/bioinfweb/libralign/test/tests/PrimitiveIntegersPerformanceTest.java -text svneol=unset#text/plain
 test/src/info/bioinfweb/libralign/test/tests/SWTFixedSize.java -text svneol=unset#text/plain
 test/src/info/bioinfweb/libralign/test/tests/SashFormAdvanced.java -text svneol=unset#text/plain
@@ -415,3 +416,4 @@ test/src/info/bioinfweb/libralign/test/tests/pherogramview/AbstractPherogramView
 test/src/info/bioinfweb/libralign/test/tests/pherogramview/SWTPherogramViewTest.java -text svneol=unset#text/plain
 test/src/info/bioinfweb/libralign/test/tests/pherogramview/SwingPherogramHeadingViewTraceCurveTest.java -text svneol=unset#text/plain
 test/src/info/bioinfweb/libralign/test/tests/pherogramview/SwingPherogramViewTest.java -text svneol=unset#text/plain
+test/src/org/eclipse/swt/snippets/Snippet48.java -text svneol=unset#text/plain
