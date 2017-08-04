@@ -24,6 +24,7 @@ import java.awt.EventQueue;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.geom.Line2D;
+import java.text.DecimalFormat;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -81,6 +82,12 @@ public class PaintingOutOfIntRange {
 				g.draw(new Line2D.Double(5.0, offset + 5.0, 250.0, offset + 250.0));
 				
 				// => Values larger than Integer.MAX_VALUE are not possible in Graphics2D, even when stored as double values.
+				
+				// Precision testing:
+//				double a = 2.0 * Integer.MAX_VALUE;
+//				System.out.println(new DecimalFormat("#.##################").format(a));
+//				a = a - 100;
+//				System.out.println(new DecimalFormat("#.##################").format(a));
 			}
 		};
 		frame.getContentPane().add(panel, BorderLayout.CENTER);
