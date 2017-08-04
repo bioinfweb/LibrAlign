@@ -46,7 +46,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Rectangle2D;
-import java.awt.geom.Rectangle2D.Double;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -473,7 +472,7 @@ public class AlignmentContentArea extends TICComponent {
 	@Override
 	protected String getSwingComponentClassName() {
 		if (isUseSubcomponents()) {
-			return "info.bioinfweb.libralign.alignmentarea.content.SwingAlignmentContentArea";
+			return "info.bioinfweb.libralign.alignmentarea.content.ScrollContainerSwingAlignmentContentArea";
 		}
 		else {
 			return super.getSwingComponentClassName();
@@ -484,7 +483,7 @@ public class AlignmentContentArea extends TICComponent {
 	@Override
 	protected String getSWTComponentClassName() {
 		if (isUseSubcomponents()) {
-			return "info.bioinfweb.libralign.alignmentarea.content.SWTAlignmentContentArea";
+			return "info.bioinfweb.libralign.alignmentarea.content.ScrollContainerSWTAlignmentContentArea";
 		}
 		else {
 			return super.getSWTComponentClassName();

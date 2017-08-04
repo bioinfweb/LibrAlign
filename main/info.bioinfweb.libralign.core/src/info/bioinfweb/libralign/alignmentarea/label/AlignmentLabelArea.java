@@ -161,13 +161,13 @@ public class AlignmentLabelArea extends TICComponent {
 
 	@Override
 	protected String getSwingComponentClassName() {
-		return "info.bioinfweb.libralign.alignmentarea.label.SwingAlignmentLabelArea";
+		return "info.bioinfweb.libralign.alignmentarea.label.ScrollContainerSwingAlignmentLabelArea";
 	}
 
 
 	@Override
 	protected String getSWTComponentClassName() {
-		return "info.bioinfweb.libralign.alignmentarea.label.SWTAlignmentLabelArea";
+		return "info.bioinfweb.libralign.alignmentarea.label.ScrollContainerSWTAlignmentLabelArea";
 	}
 
 
