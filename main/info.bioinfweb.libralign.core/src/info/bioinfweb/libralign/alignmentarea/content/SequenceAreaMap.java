@@ -79,10 +79,10 @@ public class SequenceAreaMap extends TreeMap<String, SequenceArea> implements Se
 				SequenceArea sequenceArea = saveMap.get(id);
 				if (sequenceArea == null) {
 					sequenceArea = new SequenceArea(getOwner(), id);
-					if (getOwner().isUseSubcomponents()) {
-						sequenceArea.getComponent().addMouseListener(selectionInputListener);
-						sequenceArea.getComponent().addKeyListener(selectionInputListener);
-					}
+					//TODO Since currently subcomponents are always created for Swing, listeners need to be added just in case (because the target toolkit is not known yet). This means that a TIC component is always created, even if it is not needed. Maybe a better solution (e.g. storing listeners and registering them when the component is created) can be found in the future.
+					// if (getOwner().isUseSubcomponents()) {
+					sequenceArea.getComponent().addMouseListener(selectionInputListener);
+					sequenceArea.getComponent().addKeyListener(selectionInputListener);
 				}
 				else {
 					saveMap.remove(id);

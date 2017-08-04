@@ -536,7 +536,12 @@ public class AlignmentArea extends TICComponent implements AlignmentModelChangeL
 
 	@Override
 	protected String getSWTComponentClassName() {
-		return "info.bioinfweb.libralign.alignmentarea.ScrollContainerSWTAlignmentArea";
+		if (getContentArea().isUseSubcomponents()) {
+			return "info.bioinfweb.libralign.alignmentarea.ScrollContainerSWTAlignmentArea";
+		}
+		else {
+			return "info.bioinfweb.libralign.alignmentarea.DirectSWTAlignmentArea";
+		}
 	}
 
 

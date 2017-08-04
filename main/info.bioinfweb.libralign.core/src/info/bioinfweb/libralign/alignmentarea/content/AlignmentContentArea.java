@@ -35,6 +35,7 @@ import info.bioinfweb.libralign.model.concatenated.ConcatenatedAlignmentModel;
 import info.bioinfweb.libralign.multiplealignments.MultipleAlignmentsContainer;
 import info.bioinfweb.tic.TICComponent;
 import info.bioinfweb.tic.TICPaintEvent;
+import info.bioinfweb.tic.TargetToolkit;
 import info.bioinfweb.tic.input.TICMouseWheelEvent;
 import info.bioinfweb.tic.input.TICMouseWheelListener;
 
@@ -336,7 +337,8 @@ public class AlignmentContentArea extends TICComponent {
 	 * @since 0.5.0
 	 */
 	public boolean isUseSubcomponents() {
-		return useSubcomponents;
+		//TODO Does this work this way? If so, update documentation of constructors.
+		return (hasToolkitComponent() && getToolkitComponent().getTargetToolkit().equals(TargetToolkit.SWING)) || useSubcomponents;
 	}
 
 
@@ -471,12 +473,13 @@ public class AlignmentContentArea extends TICComponent {
 
 	@Override
 	protected String getSwingComponentClassName() {
-		if (isUseSubcomponents()) {
-			return "info.bioinfweb.libralign.alignmentarea.content.ScrollContainerSwingAlignmentContentArea";
-		}
-		else {
-			return super.getSwingComponentClassName();
-		}
+		return "info.bioinfweb.libralign.alignmentarea.content.ScrollContainerSwingAlignmentContentArea";
+//		if (isUseSubcomponents()) {
+//			return "info.bioinfweb.libralign.alignmentarea.content.ScrollContainerSwingAlignmentContentArea";
+//		}
+//		else {
+//			return super.getSwingComponentClassName();
+//		}
 	}
 
 
@@ -486,7 +489,7 @@ public class AlignmentContentArea extends TICComponent {
 			return "info.bioinfweb.libralign.alignmentarea.content.ScrollContainerSWTAlignmentContentArea";
 		}
 		else {
-			return super.getSWTComponentClassName();
+			return super.getSWTComponentClassName();  //TODO Return name of special SWT implementation.
 		}
 	}
 
