@@ -19,20 +19,19 @@
 package info.bioinfweb.libralign.alignmentarea;
 
 
+import info.bioinfweb.libralign.alignmentarea.content.AlignmentContentArea;
+import info.bioinfweb.libralign.alignmentarea.content.SequenceArea;
+import info.bioinfweb.libralign.alignmentarea.content.SwingAlignmentContentArea;
+import info.bioinfweb.tic.SwingComponentFactory;
+import info.bioinfweb.tic.TargetToolkit;
+import info.bioinfweb.tic.toolkit.SwingComponentTools;
+
 import java.awt.Dimension;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-
-import info.bioinfweb.libralign.alignmentarea.content.AlignmentContentArea;
-import info.bioinfweb.libralign.alignmentarea.content.SequenceArea;
-import info.bioinfweb.libralign.alignmentarea.content.SwingAlignmentContentArea;
-import info.bioinfweb.libralign.alignmentarea.content.ToolkitSpecificAlignmentContentArea;
-import info.bioinfweb.tic.SwingComponentFactory;
-import info.bioinfweb.tic.TargetToolkit;
-import info.bioinfweb.tic.toolkit.SwingComponentTools;
 
 import javax.swing.AbstractAction;
 import javax.swing.Action;
