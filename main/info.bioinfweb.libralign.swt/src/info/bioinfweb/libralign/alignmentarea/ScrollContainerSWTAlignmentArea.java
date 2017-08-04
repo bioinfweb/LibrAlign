@@ -55,8 +55,6 @@ import org.eclipse.swt.widgets.Composite;
  * @bioinfweb.module info.bioinfweb.libralign.swt
  */
 public class ScrollContainerSWTAlignmentArea extends AbstractSWTComposite implements ToolkitSpecificAlignmentArea {
-	private final AlignmentArea owner;
-
 	private Composite labelContainer;
 	private ScrolledComposite labelScroller;
 	private SWTScrolledCompositeResizeListener labelResizeListener;
@@ -76,7 +74,6 @@ public class ScrollContainerSWTAlignmentArea extends AbstractSWTComposite implem
 	 */
 	public ScrollContainerSWTAlignmentArea(AlignmentArea owner, Composite parent, int style) {
 		super(owner, parent, style);
-		this.owner = owner;
 		initGUI(false);
 	}
 
@@ -193,7 +190,7 @@ public class ScrollContainerSWTAlignmentArea extends AbstractSWTComposite implem
 
 	@Override
 	public AlignmentArea getIndependentComponent() {
-		return owner;
+		return (AlignmentArea)super.getIndependentComponent();
 	}
 
 
