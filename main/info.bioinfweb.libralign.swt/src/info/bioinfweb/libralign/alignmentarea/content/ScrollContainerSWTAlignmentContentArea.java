@@ -46,10 +46,10 @@ import org.eclipse.swt.widgets.Control;
  * @since 0.3.0
  * @bioinfweb.module info.bioinfweb.libralign.swt
  */
-public class SWTAlignmentContentArea extends SWTAlignmentRowsArea<TICComponent> 
+public class ScrollContainerSWTAlignmentContentArea extends SWTAlignmentRowsArea<TICComponent> 
 		implements ToolkitSpecificAlignmentContentArea {
 	
-	public SWTAlignmentContentArea(AlignmentContentArea independentComponent, Composite parentComposite, int style) {  //TODO Is this constructor found in the factory, if a supertype of TICComponent is used?
+	public ScrollContainerSWTAlignmentContentArea(AlignmentContentArea independentComponent, Composite parentComposite, int style) {  //TODO Is this constructor found in the factory, if a supertype of TICComponent is used?
 		super(independentComponent, parentComposite, style);
 		getIndependentComponent().getSequenceAreaMap().updateElements();  // This needs to be called before reinsertSubelements(). (getIndependentComponent().updateSubelements() cannot be used before this constructor returned a value.)
 		reinsertSubelements();

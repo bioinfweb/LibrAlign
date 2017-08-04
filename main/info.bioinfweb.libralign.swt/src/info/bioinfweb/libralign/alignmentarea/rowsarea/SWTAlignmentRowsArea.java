@@ -23,8 +23,8 @@ import java.util.Arrays;
 import java.util.Iterator;
 
 import info.bioinfweb.libralign.alignmentarea.content.AlignmentSubAreaIterator;
-import info.bioinfweb.libralign.alignmentarea.content.SWTAlignmentContentArea;
-import info.bioinfweb.libralign.alignmentarea.label.SWTAlignmentLabelArea;
+import info.bioinfweb.libralign.alignmentarea.content.ScrollContainerSWTAlignmentContentArea;
+import info.bioinfweb.libralign.alignmentarea.label.ScrollContainerSWTAlignmentLabelArea;
 import info.bioinfweb.tic.TICComponent;
 import info.bioinfweb.tic.toolkit.AbstractSWTComposite;
 
@@ -36,7 +36,7 @@ import org.eclipse.swt.widgets.Control;
 
 
 /**
- * Abstract base class for {@link SWTAlignmentContentArea} and {@link SWTAlignmentLabelArea}.
+ * Abstract base class for {@link ScrollContainerSWTAlignmentContentArea} and {@link ScrollContainerSWTAlignmentLabelArea}.
  * 
  * @author Ben St&ouml;ver
  * @since 0.3.0

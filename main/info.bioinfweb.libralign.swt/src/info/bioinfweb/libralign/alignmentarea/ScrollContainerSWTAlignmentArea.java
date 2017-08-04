@@ -22,7 +22,7 @@ package info.bioinfweb.libralign.alignmentarea;
 import info.bioinfweb.commons.swt.ScrolledCompositeSyncListener;
 import info.bioinfweb.libralign.alignmentarea.content.AlignmentContentArea;
 import info.bioinfweb.libralign.alignmentarea.content.SequenceArea;
-import info.bioinfweb.libralign.alignmentarea.label.SWTAlignmentLabelArea;
+import info.bioinfweb.libralign.alignmentarea.label.ScrollContainerSWTAlignmentLabelArea;
 import info.bioinfweb.libralign.multiplealignments.SWTMultipleAlignmentsContainer;
 import info.bioinfweb.tic.SWTComponentFactory;
 import info.bioinfweb.tic.toolkit.AbstractSWTComposite;
@@ -54,7 +54,7 @@ import org.eclipse.swt.widgets.Composite;
  * @since 0.2.0
  * @bioinfweb.module info.bioinfweb.libralign.swt
  */
-public class SWTAlignmentArea extends AbstractSWTComposite implements ToolkitSpecificAlignmentArea {
+public class ScrollContainerSWTAlignmentArea extends AbstractSWTComposite implements ToolkitSpecificAlignmentArea {
 	private final AlignmentArea owner;
 
 	private Composite labelContainer;
@@ -74,7 +74,7 @@ public class SWTAlignmentArea extends AbstractSWTComposite implements ToolkitSpe
 	 * @param hideHorizontalScrollBar Specify {@code true} here if you want no horizontal scroll bar to be displayed
 	 *        in this part of the alignment are or {@code false} otherwise.
 	 */
-	public SWTAlignmentArea(AlignmentArea owner, Composite parent, int style) {
+	public ScrollContainerSWTAlignmentArea(AlignmentArea owner, Composite parent, int style) {
 		super(owner, parent, style);
 		this.owner = owner;
 		initGUI(false);
@@ -116,8 +116,8 @@ public class SWTAlignmentArea extends AbstractSWTComposite implements ToolkitSpe
 		labelContainer.setLayoutData(createGridData(false));
 		labelScroller = new ScrolledComposite(labelContainer,	SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL);
 		labelScroller.setAlwaysShowScrollBars(true);
-		SWTAlignmentLabelArea labelArea =  // Will not create any subelements of labelArea because the content area has not yet been created.
-				(SWTAlignmentLabelArea)factory.getSWTComponent(getIndependentComponent().getLabelArea(), labelScroller, SWT.NONE);
+		ScrollContainerSWTAlignmentLabelArea labelArea =  // Will not create any subelements of labelArea because the content area has not yet been created.
+				(ScrollContainerSWTAlignmentLabelArea)factory.getSWTComponent(getIndependentComponent().getLabelArea(), labelScroller, SWT.NONE);
 		labelScroller.setContent(labelArea);
 		labelResizeListener = new SWTScrolledCompositeResizeListener(labelContainer, labelScroller, true,
 				hideHorizontalScrollBar);

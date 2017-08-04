@@ -22,7 +22,7 @@ package info.bioinfweb.libralign.multiplealignments;
 import info.bioinfweb.commons.swt.SWTUtils;
 import info.bioinfweb.commons.swt.ScrolledCompositeSyncListener;
 import info.bioinfweb.libralign.alignmentarea.AlignmentArea;
-import info.bioinfweb.libralign.alignmentarea.SWTAlignmentArea;
+import info.bioinfweb.libralign.alignmentarea.ScrollContainerSWTAlignmentArea;
 import info.bioinfweb.libralign.alignmentarea.ToolkitSpecificAlignmentArea;
 import info.bioinfweb.tic.SWTComponentFactory;
 import info.bioinfweb.tic.toolkit.AbstractSWTComposite;
@@ -91,7 +91,7 @@ public class SWTMultipleAlignmentsContainer extends AbstractSWTComposite
 		SWTComponentFactory factory = SWTComponentFactory.getInstance();
 		Iterator<AlignmentArea> iterator = getIndependentComponent().getAlignmentAreas().iterator();
 		while (iterator.hasNext()) {
-			SWTAlignmentArea area = (SWTAlignmentArea)factory.getSWTComponent(iterator.next(), sashForm, SWT.NONE);
+			ScrollContainerSWTAlignmentArea area = (ScrollContainerSWTAlignmentArea)factory.getSWTComponent(iterator.next(), sashForm, SWT.NONE);
 			area.setHideHorizontalScrollBar(iterator.hasNext());  // Show scroll bar only in the lowest area.
 		}
 		
@@ -117,8 +117,8 @@ public class SWTMultipleAlignmentsContainer extends AbstractSWTComposite
 							@Override
 							public ScrolledComposite next() {
 								ToolkitSpecificAlignmentArea area = iterator.next().getToolkitComponent();
-								if (area instanceof SWTAlignmentArea) {
-									return ((SWTAlignmentArea)area).getContentScroller();
+								if (area instanceof ScrollContainerSWTAlignmentArea) {
+									return ((ScrollContainerSWTAlignmentArea)area).getContentScroller();
 								}
 								else {
 									throw new IllegalStateException("The current alignment area does not have a SWT toolkit component.");
@@ -151,7 +151,7 @@ public class SWTMultipleAlignmentsContainer extends AbstractSWTComposite
 	public int getAvailableHeight() {
 		getSashForm().getParent().layout();  // Otherwise the old height of the sashForm would be returned.
 		return getSashForm().getSize().y - 
-				((SWTAlignmentArea)getIndependentComponent().getAlignmentAreas().get(  // Subtract height reserved for horizontal scroll bar.
+				((ScrollContainerSWTAlignmentArea)getIndependentComponent().getAlignmentAreas().get(  // Subtract height reserved for horizontal scroll bar.
 						getIndependentComponent().getAlignmentAreas().size() - 1).getToolkitComponent()).getHorizontalScrollbarHeight();
 	}
 
@@ -167,7 +167,7 @@ public class SWTMultipleAlignmentsContainer extends AbstractSWTComposite
 	public void setDividerLocations(int[] heights) {
 		// Add height of scroll bar to last height:
 		int index = heights.length - 1;
-		heights[index] += ((SWTAlignmentArea)getIndependentComponent().getAlignmentAreas().get(index).getToolkitComponent()).
+		heights[index] += ((ScrollContainerSWTAlignmentArea)getIndependentComponent().getAlignmentAreas().get(index).getToolkitComponent()).
 				getHorizontalScrollbarHeight();
 		
   	getSashForm().setWeights(heights);

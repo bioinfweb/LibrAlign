@@ -25,7 +25,7 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 
 import info.bioinfweb.libralign.alignmentarea.content.AlignmentSubArea;
-import info.bioinfweb.libralign.alignmentarea.content.SWTAlignmentContentArea;
+import info.bioinfweb.libralign.alignmentarea.content.ScrollContainerSWTAlignmentContentArea;
 import info.bioinfweb.libralign.alignmentarea.rowsarea.SWTAlignmentRowsArea;
 import info.bioinfweb.tic.SWTComponentFactory;
 
@@ -38,13 +38,13 @@ import info.bioinfweb.tic.SWTComponentFactory;
  * @since 0.3.0
  * @bioinfweb.module info.bioinfweb.libralign.swt
  */
-public class SWTAlignmentLabelArea extends SWTAlignmentRowsArea<AlignmentLabelSubArea> 
+public class ScrollContainerSWTAlignmentLabelArea extends SWTAlignmentRowsArea<AlignmentLabelSubArea> 
 		implements ToolkitSpecificAlignmentLabelArea {
 	
 	/**
 	 * Creates a new instance of this class.
    * <p>
-   * Note that this method will only add subelements if the subelements of the associated {@link SWTAlignmentContentArea}
+   * Note that this method will only add subelements if the subelements of the associated {@link ScrollContainerSWTAlignmentContentArea}
    * are already present. Otherwise the component will be empty after calling this method and you need to call 
    * {@link #reinsertSubelements()} again after the associated alignment content area has been created. 
 	 * 
@@ -52,7 +52,7 @@ public class SWTAlignmentLabelArea extends SWTAlignmentRowsArea<AlignmentLabelSu
 	 * @param style - the SWT style value
 	 * @param independentComponent - the toolkit independent component that uses this instance
 	 */
-	public SWTAlignmentLabelArea(AlignmentLabelArea independentComponent, Composite parent, int style) {
+	public ScrollContainerSWTAlignmentLabelArea(AlignmentLabelArea independentComponent, Composite parent, int style) {
 		super(independentComponent, parent, style);
 		reinsertSubelements();
 	}
@@ -68,7 +68,7 @@ public class SWTAlignmentLabelArea extends SWTAlignmentRowsArea<AlignmentLabelSu
    * Recreates the components displaying sequences and data areas in the alignment according to
    * the current model information.
    * <p>
-   * Note that this method will only add elements if the subelements of the associated {@link SWTAlignmentContentArea}
+   * Note that this method will only add elements if the subelements of the associated {@link ScrollContainerSWTAlignmentContentArea}
    * are already present. Otherwise the component will be empty after calling this method. 
 	 */
 	@Override
