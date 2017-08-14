@@ -34,14 +34,6 @@ import info.bioinfweb.tic.TICComponent;
  * @since 0.3.0
  */
 public interface ToolkitSpecificAlignmentContentArea extends ToolkitSpecificAlignmentRowsArea<TICComponent> {
-	/**
-	 * Returns the child component containing the specified y-coordinate.
-	 * 
-	 * @param y the y-coordinate relative to this alignment content area
-	 * @return the sequence or data area at the specified position
-	 */
-	public AlignmentSubArea getAreaByY(double y);  //TODO Move this method to AlignmentContentArea and calculate the result directly from the height values to have it work also for direct painting in AlignmentContentArea.
-	
   /**
    * Returns the height of this component.
    * 

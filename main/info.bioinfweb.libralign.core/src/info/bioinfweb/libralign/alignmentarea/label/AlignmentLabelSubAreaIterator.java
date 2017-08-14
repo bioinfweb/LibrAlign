@@ -16,27 +16,33 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package info.bioinfweb.libralign.alignmentarea.rowsarea;
+package info.bioinfweb.libralign.alignmentarea.label;
 
+
+import info.bioinfweb.libralign.alignmentarea.content.AlignmentSubAreaIterator;
 
 import java.util.Iterator;
 
-import info.bioinfweb.tic.TICComponent;
-import info.bioinfweb.tic.toolkit.ToolkitComponent;
 
 
+public class AlignmentLabelSubAreaIterator implements Iterator<AlignmentLabelSubArea> {
+	private AlignmentSubAreaIterator iterator;
+	
 
-/**
- * Interface to be implemented by all classes displaying alignment associated components in rows. (One row for
- * each sequence and data area.)
- * 
- * @author Ben St&ouml;ver
- * @since 0.3.0
- */
-public interface ToolkitSpecificAlignmentRowsArea<C extends TICComponent> extends ToolkitComponent {
-  /**
-   * Recreates the components displaying sequences and data areas in the alignment according to
-   * the current model information. 
-   */
-  public void reinsertSubelements();
+	public AlignmentLabelSubAreaIterator(AlignmentSubAreaIterator iterator) {
+		super();
+		this.iterator = iterator;
+	}
+
+
+	@Override
+	public boolean hasNext() {
+		return iterator.hasNext();
+	}
+
+	
+	@Override
+	public AlignmentLabelSubArea next() {
+		return iterator.next().getLabelSubArea();
+	}
 }

@@ -102,6 +102,7 @@ main/info.bioinfweb.libralign.core/src/info/bioinfweb/libralign/alignmentarea/co
 main/info.bioinfweb.libralign.core/src/info/bioinfweb/libralign/alignmentarea/content/package-info.java -text svneol=unset#text/plain
 main/info.bioinfweb.libralign.core/src/info/bioinfweb/libralign/alignmentarea/label/AlignmentLabelArea.java -text svneol=unset#text/plain
 main/info.bioinfweb.libralign.core/src/info/bioinfweb/libralign/alignmentarea/label/AlignmentLabelSubArea.java -text svneol=unset#text/plain
+main/info.bioinfweb.libralign.core/src/info/bioinfweb/libralign/alignmentarea/label/AlignmentLabelSubAreaIterator.java -text svneol=unset#text/plain
 main/info.bioinfweb.libralign.core/src/info/bioinfweb/libralign/alignmentarea/label/DefaultLabelSubArea.java -text svneol=unset#text/plain
 main/info.bioinfweb.libralign.core/src/info/bioinfweb/libralign/alignmentarea/label/SequenceLabelArea.java -text svneol=unset#text/plain
 main/info.bioinfweb.libralign.core/src/info/bioinfweb/libralign/alignmentarea/label/TextLabelArea.java -text svneol=unset#text/plain

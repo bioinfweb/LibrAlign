@@ -38,6 +38,7 @@ import info.bioinfweb.tic.TICPaintEvent;
 import info.bioinfweb.tic.TargetToolkit;
 import info.bioinfweb.tic.input.TICMouseWheelEvent;
 import info.bioinfweb.tic.input.TICMouseWheelListener;
+import info.bioinfweb.tic.toolkit.ToolkitComponent;
 
 import java.awt.Dimension;
 import java.awt.Graphics2D;
@@ -340,6 +341,11 @@ public class AlignmentContentArea extends TICComponent {
 		//TODO Does this work this way? If so, update documentation of constructors.
 		return (hasToolkitComponent() && getToolkitComponent().getTargetToolkit().equals(TargetToolkit.SWING)) || useSubcomponents;
 	}
+	
+	
+	public AlignmentSubAreaIterator subAreaIterator() {
+		return new AlignmentSubAreaIterator(getOwner());
+	}
 
 
   protected SequenceAreaMap getSequenceAreaMap() {
@@ -448,21 +454,18 @@ public class AlignmentContentArea extends TICComponent {
 		//TODO Move this code to a tool class and reuse it in DefaultAlignmentSubAreaComponent.paint().
 		int firstIndex = Math.max(0, columnByPaintX(r.getMinX()));
 		int lastIndex = columnByPaintX(r.getMaxX());
+		if ((lastIndex == -1)) {
+			lastIndex = getOwner().getAlignmentModel().getMaxSequenceLength();
+		}
 		
 		y = paintDataAreaList(getOwner().getDataAreas().getTopAreas(), y, g, r, firstIndex, lastIndex, saveAT);
 		Iterator<String> idIterator = getOwner().getSequenceOrder().idIterator();
 		while (idIterator.hasNext()) {
 			String id = idIterator.next();
-			int lastColumn = getOwner().getAlignmentModel().getSequenceLength(id) - 1;
-			
-			//TODO Is the following necessary? When does -1 occur? 
-			if ((lastIndex == -1) /*|| (lastIndex > lastColumn)*/) {  //TODO Elongate to the length of the longest sequence and paint empty/special tokens on the right end?
-				lastIndex = lastColumn;
-			}
 			SequenceArea sequenceArea = getSequenceAreaByID(id);
-			y = paintSubArea(sequenceArea, y, g, r, firstIndex, lastColumn);
+			y = paintSubArea(sequenceArea, y, g, r, firstIndex, lastIndex);
 			g.setTransform(saveAT);
-			y = paintDataAreaList(getOwner().getDataAreas().getSequenceAreas(id), y, g, r, firstIndex, lastColumn, saveAT);
+			y = paintDataAreaList(getOwner().getDataAreas().getSequenceAreas(id), y, g, r, firstIndex, lastIndex, saveAT);
 		}
 		y = paintDataAreaList(getOwner().getDataAreas().getBottomAreas(), y, g, r, firstIndex, lastIndex, saveAT);
 		
@@ -538,6 +541,28 @@ public class AlignmentContentArea extends TICComponent {
 
 
 	/**
+	 * Returns the child component containing the specified y-coordinate.
+	 * 
+	 * @param y the y-coordinate relative to this alignment content area
+	 * @return the sequence or data area at the specified position or {@code null} if {@code y} is 
+	 *         below 0 or higher than this instance
+	 */
+	public AlignmentSubArea getAreaByY(double y) {
+		double currentY = 0;
+		Iterator<AlignmentSubArea> iterator = subAreaIterator();
+		while (iterator.hasNext()) {
+			AlignmentSubArea area = iterator.next();
+			double height = area.getHeight();
+			if (Math2.isBetween(y, currentY, currentY + height)) {
+				return area;
+			}
+			currentY += height;
+		}
+		return null;
+	}
+	
+
+	/**
 	 * Returns the row index of the sequence displayed at the specified y coordinate considering the current order
 	 * of sequences. If a data area is displayed at the specified position, the row of the associated sequence is returned
 	 * anyway.
@@ -546,31 +571,24 @@ public class AlignmentContentArea extends TICComponent {
 	 * @return a valid sequence position.
 	 */
 	public int rowByPaintY(double y) {
-		if (isUseSubcomponents()) {
-			ToolkitSpecificAlignmentContentArea area = (ToolkitSpecificAlignmentContentArea)getToolkitComponent();
-			AlignmentSubArea subArea = area.getAreaByY(y);
-			if (subArea instanceof DataArea) {
-				DataAreaLocation location = ((DataArea)subArea).getList().getLocation();
-				if (location.getListType().equals(DataAreaListType.SEQUENCE)) {
-					subArea = getSequenceAreaByID(location.getSequenceID());
-				}
-			}
-			if (subArea instanceof SequenceArea) {
-				return getOwner().getSequenceOrder().indexByID(((SequenceArea)subArea).getSequenceID());
-			}
-			else if (y < 0) {
-				return 0;
-			}
-			else if (getOwner().hasAlignmentModel()) {
-				return Math.max(0, getOwner().getAlignmentModel().getSequenceCount() - 1);
-			}
-			else {
-				return 0;
+		AlignmentSubArea subArea = getAreaByY(y);
+		if (subArea instanceof DataArea) {
+			DataAreaLocation location = ((DataArea)subArea).getList().getLocation();
+			if (location.getListType().equals(DataAreaListType.SEQUENCE)) {
+				subArea = getSequenceAreaByID(location.getSequenceID());
 			}
 		}
+		if (subArea instanceof SequenceArea) {
+			return getOwner().getSequenceOrder().indexByID(((SequenceArea)subArea).getSequenceID());
+		}
+		else if (y < 0) {
+			return 0;
+		}
+		else if (getOwner().hasAlignmentModel()) {
+			return Math.max(0, getOwner().getAlignmentModel().getSequenceCount() - 1);
+		}
 		else {
-			throw new InternalError("Not implemented.");
-			//TODO Implement respective behavior.
+			return 0;
 		}
 	}
 
@@ -613,7 +631,7 @@ public class AlignmentContentArea extends TICComponent {
 	 * @throws IllegalStateException if neither or Swing or a SWT component has been created for the specified sequence
 	 *         area before the call of this method
 	 */
-	public double alignmentPartY(SequenceArea sequenceArea, int relativeY) {
+	public double alignmentPartY(SequenceArea sequenceArea, double relativeY) {
 		if (isUseSubcomponents()) {
 			if (sequenceArea.hasComponent() && sequenceArea.getComponent().hasToolkitComponent()) {
 				return sequenceArea.getComponent().getToolkitComponent().getLocationInParent().y + relativeY;  // SequenceAreas need to be direct children of the ToolkitSpecificAlignmentPartAreas for this method to work.

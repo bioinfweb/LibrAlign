@@ -46,10 +46,7 @@ public class SequenceAreaMap extends TreeMap<String, SequenceArea> implements Se
 		super();
 		this.owner = owner;
 		selectionInputListener = new CursorSelectionInputListener(owner.getOwner());
-		owner.
-		getOwner().
-		getSelection().
-		addSelectionListener(this);
+		owner.getOwner().getSelection().addSelectionListener(this);
 		updateElements();
 	}
 

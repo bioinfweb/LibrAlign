@@ -69,6 +69,11 @@ public class AlignmentLabelArea extends TICComponent {
 	public AlignmentArea getOwner() {
 		return owner;
 	}
+	
+	
+	public AlignmentLabelSubAreaIterator subAreaIterator() {
+		return new AlignmentLabelSubAreaIterator(getOwner().getContentArea().subAreaIterator());
+	}
 
 
 	/**
@@ -81,7 +86,7 @@ public class AlignmentLabelArea extends TICComponent {
 		if (localMaxNeededWidth == RECALCULATE_VALUE) {
 			localMaxNeededWidth = 0;
 			if (getOwner().getContentArea().hasToolkitComponent()) {
-				Iterator<AlignmentLabelSubArea> iterator = getToolkitComponent().subAreaIterator();
+				Iterator<AlignmentLabelSubArea> iterator = subAreaIterator();
 				while (iterator.hasNext()) {
 					localMaxNeededWidth = Math.max(localMaxNeededWidth, iterator.next().getNeededWidth());
 				}
@@ -146,7 +151,7 @@ public class AlignmentLabelArea extends TICComponent {
 	
 	public void assignSizeToAll() {
 		if (hasToolkitComponent()) {
-			Iterator<AlignmentLabelSubArea> iterator = getToolkitComponent().subAreaIterator();
+			Iterator<AlignmentLabelSubArea> iterator = subAreaIterator();
 			while (iterator.hasNext()) {
 				iterator.next().assignSize();
 			}

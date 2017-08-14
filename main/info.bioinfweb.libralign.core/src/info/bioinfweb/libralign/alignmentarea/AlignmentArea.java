@@ -21,6 +21,7 @@ package info.bioinfweb.libralign.alignmentarea;
 
 import info.bioinfweb.libralign.actions.AlignmentActionProvider;
 import info.bioinfweb.libralign.alignmentarea.content.AlignmentContentArea;
+import info.bioinfweb.libralign.alignmentarea.content.AlignmentSubArea;
 import info.bioinfweb.libralign.alignmentarea.content.ToolkitSpecificAlignmentContentArea;
 import info.bioinfweb.libralign.alignmentarea.label.AlignmentLabelArea;
 import info.bioinfweb.libralign.alignmentarea.label.AlignmentLabelSubArea;
@@ -579,13 +580,13 @@ public class AlignmentArea extends TICComponent implements AlignmentModelChangeL
 	 */
 	public void assignSizeToAll() {
 		if (hasToolkitComponent() && getContentArea().hasToolkitComponent() && getLabelArea().hasToolkitComponent()) {
-			Iterator<AlignmentLabelSubArea> iterator = getLabelArea().getToolkitComponent().subAreaIterator();
+			Iterator<AlignmentLabelSubArea> iterator = getLabelArea().subAreaIterator();
 			while (iterator.hasNext()) {
 				iterator.next().assignSize();;
 			}
 			
 			if (getContentArea().isUseSubcomponents()) {
-				Iterator<TICComponent> contentIterator = ((ToolkitSpecificAlignmentContentArea)getContentArea().getToolkitComponent()).subAreaIterator();
+				Iterator<AlignmentSubArea> contentIterator = getContentArea().subAreaIterator();
 				while (contentIterator.hasNext()) {
 					contentIterator.next().assignSize();;
 				}

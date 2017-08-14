@@ -19,10 +19,12 @@
 package info.bioinfweb.libralign.alignmentarea.content;
 
 
-import info.bioinfweb.tic.TICComponent;
+import info.bioinfweb.libralign.alignmentarea.AlignmentArea;
+import info.bioinfweb.libralign.dataarea.DataArea;
 import info.bioinfweb.tic.toolkit.ToolkitComponent;
 
 import java.util.Iterator;
+import java.util.NoSuchElementException;
 
 
 
@@ -32,29 +34,45 @@ import java.util.Iterator;
  * @author Ben St&ouml;ver
  * @since 0.3.0
  */
-public class AlignmentSubAreaIterator<C extends TICComponent> implements Iterator<C> {
-	private Iterator iterator;
+public class AlignmentSubAreaIterator implements Iterator<AlignmentSubArea> {
+	private AlignmentArea area;
+	private Iterator<String> idIterator;
+	private Iterator<DataArea> dataAreaIterator;
+	private boolean bottomAreaIteratorCreated = false;
 
 
-	public AlignmentSubAreaIterator(Iterator iterator) {
+	public AlignmentSubAreaIterator(AlignmentArea area) {
 		super();
-		this.iterator = iterator;
+		this.area = area;
+		idIterator = area.getSequenceOrder().idIterator();
+		dataAreaIterator = area.getDataAreas().getTopAreas().iterator();
 	}
 	
 	
 	@Override
 	public boolean hasNext() {
-		return iterator.hasNext();
+		return dataAreaIterator.hasNext() || idIterator.hasNext() || (!bottomAreaIteratorCreated && !area.getDataAreas().getBottomAreas().isEmpty());
 	}
 
 	
 	@Override
-	public C next() {
-		Object component = iterator.next();
-		if (component instanceof ToolkitComponent) {
-			return (C)((ToolkitComponent)component).getIndependentComponent();  // Checking C would only be possible with a Class parameter.
+	public AlignmentSubArea next() {
+		if (dataAreaIterator.hasNext()) {
+			return dataAreaIterator.next();
 		}
-		throw new ClassCastException("A child component of an invalid type was found.");
+		else if (idIterator.hasNext()) {
+			String sequenceID = idIterator.next();
+			dataAreaIterator = area.getDataAreas().getSequenceAreas(sequenceID).iterator();
+			return area.getContentArea().getSequenceAreaByID(sequenceID);
+		}
+		else if (!bottomAreaIteratorCreated) {
+			dataAreaIterator = area.getDataAreas().getBottomAreas().iterator();
+			bottomAreaIteratorCreated = true;
+			return dataAreaIterator.next();  // May throw a NoSuchElementException as well.
+		}
+		else {
+			throw new NoSuchElementException("This iterator does not contain more elements.");
+		}
 	}
 
 
