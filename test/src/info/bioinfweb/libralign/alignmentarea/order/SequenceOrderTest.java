@@ -19,21 +19,19 @@
 package info.bioinfweb.libralign.alignmentarea.order;
 
 
-import static org.junit.Assert.* ;
+import static org.junit.Assert.assertEquals;
+
+
 import info.bioinfweb.commons.bio.biojava3.alignment.SimpleAlignment;
 import info.bioinfweb.commons.bio.biojava3.alignment.template.Alignment;
 import info.bioinfweb.commons.bio.biojava3.core.sequence.compound.AlignmentAmbiguityNucleotideCompoundSet;
 import info.bioinfweb.libralign.alignmentarea.AlignmentArea;
-
-
-
-
 import info.bioinfweb.libralign.model.AlignmentModel;
 import info.bioinfweb.libralign.model.tokenset.BioJava3TokenSet;
 
 import org.biojava3.core.sequence.DNASequence;
 import org.biojava3.core.sequence.compound.NucleotideCompound;
-import org.junit.* ;
+import org.junit.Test;
 
 
 
