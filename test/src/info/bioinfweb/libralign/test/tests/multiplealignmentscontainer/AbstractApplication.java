@@ -50,7 +50,7 @@ import org.biojava.bio.chromatogram.ChromatogramFactory;
  * @author Ben St&ouml;ver
  */
 public class AbstractApplication {
-	private static final boolean USE_SUBCOMPONENTS = true;
+	private static final boolean USE_SUBCOMPONENTS = false;
 	
 	
 	private CharSetArea createCharSetArea(AlignmentContentArea owner, AlignmentArea labeledArea) {
