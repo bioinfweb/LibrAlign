@@ -19,15 +19,14 @@
 package info.bioinfweb.libralign.alignmentarea.label;
 
 
+import info.bioinfweb.libralign.alignmentarea.content.ScrollContainerSWTAlignmentContentArea;
+import info.bioinfweb.libralign.alignmentarea.rowsarea.SWTAlignmentRowsArea;
+import info.bioinfweb.tic.SWTComponentFactory;
+
 import java.util.Iterator;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
-
-import info.bioinfweb.libralign.alignmentarea.content.AlignmentSubArea;
-import info.bioinfweb.libralign.alignmentarea.content.ScrollContainerSWTAlignmentContentArea;
-import info.bioinfweb.libralign.alignmentarea.rowsarea.SWTAlignmentRowsArea;
-import info.bioinfweb.tic.SWTComponentFactory;
 
 
 
@@ -76,7 +75,7 @@ public class ScrollContainerSWTAlignmentLabelArea extends SWTAlignmentRowsArea<A
 		if (getIndependentComponent().getOwner().getContentArea().hasToolkitComponent()) {
 			removeAll();
 			SWTComponentFactory factory = SWTComponentFactory.getInstance();
-			Iterator<AlignmentLabelSubArea> iterator = subAreaIterator();
+			Iterator<AlignmentLabelSubArea> iterator = getIndependentComponent().subAreaIterator();
 			while (iterator.hasNext()) {
 				final AlignmentLabelSubArea subArea = iterator.next();
 				factory.getSWTComponent(subArea, this, SWT.NONE);

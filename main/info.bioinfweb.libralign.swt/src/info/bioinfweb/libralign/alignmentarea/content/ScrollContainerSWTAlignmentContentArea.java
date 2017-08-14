@@ -19,20 +19,17 @@
 package info.bioinfweb.libralign.alignmentarea.content;
 
 
-import info.bioinfweb.commons.Math2;
 import info.bioinfweb.libralign.alignmentarea.rowsarea.SWTAlignmentRowsArea;
 import info.bioinfweb.libralign.dataarea.DataArea;
 import info.bioinfweb.libralign.dataarea.DataAreaList;
 import info.bioinfweb.libralign.dataarea.DataAreasModel;
 import info.bioinfweb.tic.SWTComponentFactory;
 import info.bioinfweb.tic.TICComponent;
-import info.bioinfweb.tic.toolkit.ToolkitComponent;
 
 import java.util.Iterator;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Point;
-import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.layout.RowData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
@@ -87,22 +84,6 @@ public class ScrollContainerSWTAlignmentContentArea extends SWTAlignmentRowsArea
 		}
 		setSize(width, height);
 	}
-
-
-	@Override
-	public AlignmentSubArea getAreaByY(double y) {
-		Control[] children = getChildren();
-		for (int i = 0; i < children.length; i++) {
-			Rectangle r = children[i].getBounds();
-			if (Math2.isBetween(y, r.y, r.y + r.height - 1) && (children[i] instanceof ToolkitComponent)) {
-				TICComponent ticComponent = ((ToolkitComponent)children[i]).getIndependentComponent();
-				if (ticComponent instanceof AbstractAlignmentSubAreaComponent) {
-					return ((AbstractAlignmentSubAreaComponent)ticComponent).getOwner();
-				}
-			}
-		}
-		return null;
-	}	
 
 
 	@Override
