@@ -19,16 +19,13 @@
 package info.bioinfweb.libralign.alignmentarea.rowsarea;
 
 
-import java.awt.Dimension;
-import java.awt.Rectangle;
-import java.util.Arrays;
-import java.util.Iterator;
-
-import info.bioinfweb.libralign.alignmentarea.content.AlignmentSubAreaIterator;
 import info.bioinfweb.libralign.alignmentarea.content.ScrollContainerSwingAlignmentContentArea;
 import info.bioinfweb.libralign.alignmentarea.label.ScrollContainerSwingAlignmentLabelArea;
 import info.bioinfweb.tic.TICComponent;
 import info.bioinfweb.tic.toolkit.AbstractSwingComponent;
+
+import java.awt.Dimension;
+import java.awt.Rectangle;
 
 import javax.swing.BoxLayout;
 import javax.swing.Scrollable;
@@ -49,12 +46,6 @@ public abstract class SwingAlignmentRowsArea<C extends TICComponent> extends Abs
 		super(owner);
 		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 		// reinsertSubelements() cannot be called here, because necessary fields need to be initialized by the implementing class first.
-	}
-
-
-	@Override
-	public Iterator<C> subAreaIterator() {
-		return new AlignmentSubAreaIterator<C>(Arrays.asList(getComponents()).iterator()); 
 	}
 
 

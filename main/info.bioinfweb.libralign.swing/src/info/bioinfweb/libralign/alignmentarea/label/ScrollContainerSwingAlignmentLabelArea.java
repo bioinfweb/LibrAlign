@@ -57,7 +57,7 @@ public class ScrollContainerSwingAlignmentLabelArea extends SwingAlignmentRowsAr
 	public void reinsertSubelements() {
 		if (getIndependentComponent().getOwner().getContentArea().hasToolkitComponent()) {
 			removeAll();
-			Iterator<AlignmentLabelSubArea> iterator = subAreaIterator();
+			Iterator<AlignmentLabelSubArea> iterator = getIndependentComponent().subAreaIterator();
 			SwingComponentFactory factory = SwingComponentFactory.getInstance();
 			while (iterator.hasNext()) {
 				add(factory.getSwingComponent(iterator.next()));

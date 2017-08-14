@@ -19,15 +19,13 @@
 package info.bioinfweb.libralign.alignmentarea.content;
 
 
-import java.awt.Component;
-import java.util.Iterator;
-
-import info.bioinfweb.tic.SwingComponentFactory;
-import info.bioinfweb.tic.TICComponent;
-import info.bioinfweb.tic.toolkit.ToolkitComponent;
 import info.bioinfweb.libralign.alignmentarea.rowsarea.SwingAlignmentRowsArea;
 import info.bioinfweb.libralign.dataarea.DataArea;
 import info.bioinfweb.libralign.dataarea.DataAreaList;
+import info.bioinfweb.tic.SwingComponentFactory;
+import info.bioinfweb.tic.TICComponent;
+
+import java.util.Iterator;
 
 import javax.swing.Scrollable;
 
@@ -85,19 +83,6 @@ public class ScrollContainerSwingAlignmentContentArea extends SwingAlignmentRows
 	}
 	
 
-	@Override
-	public AlignmentSubArea getAreaByY(double y) {
-		Component child = getComponentAt(0, (int)Math.round(y));
-		if ((child != null) && (child instanceof ToolkitComponent)) {
-			TICComponent ticComponent = ((ToolkitComponent)child).getIndependentComponent();
-			if (ticComponent instanceof AbstractAlignmentSubAreaComponent) {
-				return ((AbstractAlignmentSubAreaComponent)ticComponent).getOwner();
-			}
-		}
-		return null;
-	}
-
-	
 	@Override
 	public void assignSequenceAreaSize(String sequenceID) throws IllegalArgumentException {
 		AlignmentContentAreaTools.assignSequenceAreaSize(getIndependentComponent().getSequenceAreaMap(), sequenceID);
