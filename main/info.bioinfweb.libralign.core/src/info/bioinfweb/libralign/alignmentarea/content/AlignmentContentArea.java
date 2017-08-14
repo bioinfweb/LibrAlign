@@ -413,30 +413,6 @@ public class AlignmentContentArea extends TICComponent {
 	}
 
 
-	private double paintSubArea(AlignmentSubArea area, double y, Graphics2D g, Rectangle2D r, int firstIndex, int lastIndex) {
-		if (Math2.overlaps(y, y + area.getHeight(), r.getMinY(), r.getMaxY())) {
-			double yDif = Math.max(0, r.getMinY() - y);
-			g.translate(0, y);
-			area.paintPart(new AlignmentPaintEvent(this, getOwner(), 
-					firstIndex, lastIndex, g, 
-					new Rectangle2D.Double(r.getMinX(), yDif, r.getWidth(), Math.min(r.getHeight(), area.getHeight()) - yDif)));
-		}
-		return y + area.getHeight();
-	}
-	
-	
-	private double paintDataAreaList(DataAreaList list, double y, Graphics2D g, Rectangle2D r, int firstIndex, int lastIndex, 
-			AffineTransform saveAT) {
-		
-		for (DataArea area : list) {
-			paintSubArea(area, y, g, r, firstIndex, lastIndex);
-			g.setTransform(saveAT);
-			y += area.getHeight();
-		}
-		return y;
-	}
-	
-	
 	/**
 	 * Paints the contents (sequences and data areas) of an alignment, if this instance is set to use direct painting.
 	 * This method is not used, if the instance is set to use subcomponents for each sequence and data area.
@@ -457,17 +433,20 @@ public class AlignmentContentArea extends TICComponent {
 		if ((lastIndex == -1)) {
 			lastIndex = getOwner().getAlignmentModel().getMaxSequenceLength();
 		}
-		
-		y = paintDataAreaList(getOwner().getDataAreas().getTopAreas(), y, g, r, firstIndex, lastIndex, saveAT);
-		Iterator<String> idIterator = getOwner().getSequenceOrder().idIterator();
-		while (idIterator.hasNext()) {
-			String id = idIterator.next();
-			SequenceArea sequenceArea = getSequenceAreaByID(id);
-			y = paintSubArea(sequenceArea, y, g, r, firstIndex, lastIndex);
-			g.setTransform(saveAT);
-			y = paintDataAreaList(getOwner().getDataAreas().getSequenceAreas(id), y, g, r, firstIndex, lastIndex, saveAT);
+
+		Iterator<AlignmentSubArea> iterator = subAreaIterator();
+		while (iterator.hasNext()) {
+			AlignmentSubArea area = iterator.next();
+			if (Math2.overlaps(y, y + area.getHeight(), r.getMinY(), r.getMaxY())) {
+				double yDif = Math.max(0, r.getMinY() - y);
+				g.translate(0, y);
+				area.paintPart(new AlignmentPaintEvent(this, getOwner(), 
+						firstIndex, lastIndex, g, 
+						new Rectangle2D.Double(r.getMinX(), yDif, r.getWidth(), Math.min(r.getHeight(), area.getHeight()) - yDif)));
+				g.setTransform(saveAT);
+			}
+			y += area.getHeight();
 		}
-		y = paintDataAreaList(getOwner().getDataAreas().getBottomAreas(), y, g, r, firstIndex, lastIndex, saveAT);
 		
 		g.setColor(SystemColor.control);  //TODO Which color should be used?
 		g.fill(new Rectangle2D.Double(r.getMinX(), y, r.getWidth(), r.getHeight() - Math.max(0, r.getMinY() - y)));  // The remaining space needs to be filled. Otherwise scrolling artifacts are drawn there.
