@@ -91,7 +91,7 @@ public class SWTMultipleAlignmentsContainer extends AbstractSWTComposite
 		SWTComponentFactory factory = SWTComponentFactory.getInstance();
 		Iterator<AlignmentArea> iterator = getIndependentComponent().getAlignmentAreas().iterator();
 		while (iterator.hasNext()) {
-			ScrollContainerSWTAlignmentArea area = (ScrollContainerSWTAlignmentArea)factory.getSWTComponent(iterator.next(), sashForm, SWT.NONE);
+			ToolkitSpecificAlignmentArea area = (ToolkitSpecificAlignmentArea)factory.getSWTComponent(iterator.next(), sashForm, SWT.NONE);
 			area.setHideHorizontalScrollBar(iterator.hasNext());  // Show scroll bar only in the lowest area.
 		}
 		
@@ -120,6 +120,7 @@ public class SWTMultipleAlignmentsContainer extends AbstractSWTComposite
 								if (area instanceof ScrollContainerSWTAlignmentArea) {
 									return ((ScrollContainerSWTAlignmentArea)area).getContentScroller();
 								}
+								//TODO Handle case for DirectSWTAlignmentArea.
 								else {
 									throw new IllegalStateException("The current alignment area does not have a SWT toolkit component.");
 								}
@@ -127,7 +128,7 @@ public class SWTMultipleAlignmentsContainer extends AbstractSWTComposite
 
 							@Override
 							public void remove() {
-								throw new UnsupportedOperationException("This iterator does not support the remove method.");
+								throw new UnsupportedOperationException("This iterator does not support removing elements.");
 							}
 						};
 					}

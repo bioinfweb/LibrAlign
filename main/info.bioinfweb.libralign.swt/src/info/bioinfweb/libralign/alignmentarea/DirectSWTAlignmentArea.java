@@ -19,6 +19,8 @@
 package info.bioinfweb.libralign.alignmentarea;
 
 
+import java.awt.Rectangle;
+
 import info.bioinfweb.tic.SWTComponentFactory;
 import info.bioinfweb.tic.toolkit.AbstractSWTComposite;
 
@@ -29,7 +31,7 @@ import org.eclipse.swt.widgets.Composite;
 
 
 
-public class DirectSWTAlignmentArea extends AbstractSWTComposite {
+public class DirectSWTAlignmentArea extends AbstractSWTComposite implements ToolkitSpecificAlignmentArea {
 	public DirectSWTAlignmentArea(AlignmentArea ticComponent, Composite parent, int style) {
 		super(ticComponent, parent, style);
 		init();
@@ -50,5 +52,26 @@ public class DirectSWTAlignmentArea extends AbstractSWTComposite {
 	@Override
 	public AlignmentArea getIndependentComponent() {
 		return (AlignmentArea)super.getIndependentComponent();
+	}
+
+
+	@Override
+	public void scrollAlignmentRectToVisible(Rectangle rectangle) {
+		// TODO Auto-generated method stub
+		
+	}
+
+
+	@Override
+	public Rectangle getVisibleAlignmentRect() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+
+	@Override
+	public void setHideHorizontalScrollBar(boolean hideHorizontalScrollBar) {
+		// TODO Auto-generated method stub
+		
 	}
 }
