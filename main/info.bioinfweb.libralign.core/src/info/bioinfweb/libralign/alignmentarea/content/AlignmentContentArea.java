@@ -489,7 +489,7 @@ public class AlignmentContentArea extends TICComponent {
 			return "info.bioinfweb.libralign.alignmentarea.content.ScrollContainerSWTAlignmentContentArea";
 		}
 		else {
-			return super.getSWTComponentClassName();  //TODO Return name of special SWT implementation.
+			return "info.bioinfweb.libralign.alignmentarea.content.DirectSWTAlignmentContentArea";
 		}
 	}
 
