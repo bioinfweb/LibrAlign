@@ -61,9 +61,12 @@ public class CursorSelectionInputListener extends TICMouseAdapter implements TIC
 	}
 	
 	
-	private Point calculateColumnRow(SequenceArea source, int x, int y) {
-		return new Point(getOwner().getContentArea().columnByPaintX(x), 
-				getOwner().getContentArea().rowByPaintY(getOwner().getContentArea().alignmentPartY(source, y)));
+	private Point calculateColumnRow(TICMouseEvent event) {
+		double y = event.getComponentY();
+		if (isEventFromSequenceArea(event)) {
+			y = getOwner().getContentArea().alignmentPartY(getSequenceArea(event.getSource()), y);
+		}
+		return new Point(getOwner().getContentArea().columnByPaintX(event.getComponentX()),	getOwner().getContentArea().rowByPaintY(y));
 	}
 	
 	
@@ -87,13 +90,12 @@ public class CursorSelectionInputListener extends TICMouseAdapter implements TIC
 	
 	@Override
 	public boolean mousePressed(TICMouseEvent event) {
-		//TODO Also handle respective events from single AlignmentContentAreaComponent
 		setSwingFocus(event);  // Necessary for Swing components to react to keyboard events.
 		if (event.getClickCount() > 1) {
 			// Handle double click events here
 		}
-		else if ((event.isMouseButton1Down()) && isEventFromSequenceArea(event)) {
-			Point columnRow = calculateColumnRow(getSequenceArea(event.getSource()), event.getComponentX(), event.getComponentY());
+		else if (event.isMouseButton1Down()) {
+			Point columnRow = calculateColumnRow(event);
 			getOwner().getSelection().setNewCursorPosition(columnRow.x, columnRow.y, 1);  // Height is always set to 1 on a mouse click.
 		}
 		return true;  // Forwarding to parent is not necessary.
@@ -102,9 +104,8 @@ public class CursorSelectionInputListener extends TICMouseAdapter implements TIC
 
 	@Override
 	public boolean mouseDragged(TICMouseEvent event) {
-		//TODO Also handle respective events from single AlignmentContentAreaComponent
-		if ((event.isMouseButton1Down()) && isEventFromSequenceArea(event)) {
-			Point columnRow = calculateColumnRow(getSequenceArea(event.getSource()), event.getComponentX(), event.getComponentY());
+		if (event.isMouseButton1Down()) {
+			Point columnRow = calculateColumnRow(event);
 			getOwner().getSelection().setSelectionEnd(columnRow.x, columnRow.y);
 		}
 		return true;  // Forwarding to parent is not necessary.

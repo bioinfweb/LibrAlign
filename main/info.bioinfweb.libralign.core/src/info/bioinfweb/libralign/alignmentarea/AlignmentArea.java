@@ -220,7 +220,7 @@ public class AlignmentArea extends TICComponent implements AlignmentModelChangeL
 					}
 				});
 		
-		alignmentContentArea = new AlignmentContentArea(this, useSubcomponents);  // The selection object must already have been created here.  
+		alignmentContentArea = new AlignmentContentArea(this, useSubcomponents);  // The selection object must already have been created here.
 		alignmentLabelArea = new AlignmentLabelArea(this);  // Must be called after alignmentContentArea has been created.
 
 		dataAreas.addListener(this);
@@ -644,8 +644,7 @@ public class AlignmentArea extends TICComponent implements AlignmentModelChangeL
 				//TODO Wouldn't it be sufficient, if only the affected sequence area gets repainted?
 			}
 			else {
-				throw new InternalError("Not implemented.");
-				//TODO Implement.
+				getContentArea().repaint();  //TODO Painting only the respective sequence and depending data areas would be sufficient.
 			}
 		}
 	}

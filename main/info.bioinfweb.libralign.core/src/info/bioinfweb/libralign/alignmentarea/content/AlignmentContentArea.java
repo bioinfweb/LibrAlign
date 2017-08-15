@@ -122,6 +122,13 @@ public class AlignmentContentArea extends TICComponent {
 				}
 			}
 		});
+		
+		if (!isUseSubcomponents()) {  //TODO Registering this may cause problems in Swing?
+			//TODO Registering listener in Swing case should be avoided. 
+			CursorSelectionInputListener listener = new CursorSelectionInputListener(owner);
+			addMouseListener(listener);
+			addKeyListener(listener);
+		}
   }
 
 
@@ -585,19 +592,22 @@ public class AlignmentContentArea extends TICComponent {
 	 */
 	public double paintYByRow(int row) {
 		row = Math.max(0, Math.min(getOwner().getAlignmentModel().getSequenceCount() - 1, row));
-		SequenceArea area = getSequenceAreaByID(getOwner().getSequenceOrder().idByIndex(row));
-		if (isUseSubcomponents()) {
-			if (area.hasComponent() && area.getComponent().hasToolkitComponent()) {
-				return area.getComponent().getToolkitComponent().getLocationInParent().y;
+		
+		double y = 0.0;
+		int currentRow = 0;
+		Iterator<AlignmentSubArea> iterator = subAreaIterator();
+		while (iterator.hasNext()) {
+			AlignmentSubArea area = iterator.next();
+			if (area instanceof SequenceArea) {
+				if (currentRow == row) {
+					return y;
+				}
+				currentRow++;
 			}
-			else {
-				throw new IllegalStateException("No Swing or SWT component of the specified sequence area has yet been created.");
-			}
+			y += area.getHeight();
 		}
-		else {
-			throw new InternalError("Not implemented.");
-			//TODO Support direct painting without subcomponents.
-		}
+		throw new InternalError("There were not enough sequence areas returned by the interator. "  // This should not happen due to the setting of row above.
+				+ "This is an unexpected internal LibrAlign error. Please inform the developers at http://bioinfweb.info/LibrAlign.");  //TODO Use global constant for URL in the future.
 	}
 
 
