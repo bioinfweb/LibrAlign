@@ -123,7 +123,7 @@ public class AlignmentContentArea extends TICComponent {
 			}
 		});
 		
-		if (!isUseSubcomponents()) {  //TODO Registering this may cause problems in Swing?
+		if (!isUseSubcomponents()) {  //TODO Registering this may cause problems in Swing, for events that are forwarded to the parent component.
 			//TODO Registering listener in Swing case should be avoided. 
 			CursorSelectionInputListener listener = new CursorSelectionInputListener(owner);
 			addMouseListener(listener);
