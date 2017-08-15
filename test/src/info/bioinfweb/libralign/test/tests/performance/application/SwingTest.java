@@ -20,7 +20,7 @@ package info.bioinfweb.libralign.test.tests.performance.application;
 
 
 import info.bioinfweb.commons.testing.TestLogger;
-import info.bioinfweb.libralign.alignmentarea.SwingAlignmentArea;
+import info.bioinfweb.libralign.alignmentarea.ScrollContainerSwingAlignmentArea;
 import info.bioinfweb.tic.SwingComponentFactory;
 
 import java.awt.BorderLayout;
@@ -80,8 +80,8 @@ public class SwingTest extends AbstractApplication {
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
 		TestLogger.getInstance().saveCurrentTime("createSwingComp");
-		SwingAlignmentArea swingAlignmentArea = 
-				(SwingAlignmentArea)SwingComponentFactory.getInstance().getSwingComponent(getAlignmentArea()); 
+		ScrollContainerSwingAlignmentArea swingAlignmentArea = 
+				(ScrollContainerSwingAlignmentArea)SwingComponentFactory.getInstance().getSwingComponent(getAlignmentArea()); 
 		TestLogger.getInstance().logTimeSince("performance", "createSwingComp");
 
 		TestLogger.getInstance().saveCurrentTime("addToGUI");
