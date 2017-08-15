@@ -39,6 +39,8 @@ public class DirectSWTAlignmentArea extends AbstractSWTComposite implements Tool
 	}
 	
 	
+	//TODO Assign size probably needs to be suppressed in the independent component?
+
 	private void init() {
 		setLayout(new FillLayout(SWT.HORIZONTAL));
 		
@@ -58,7 +60,8 @@ public class DirectSWTAlignmentArea extends AbstractSWTComposite implements Tool
 
 	@Override
 	public void scrollAlignmentRectToVisible(Rectangle rectangle) {
-		// TODO implement
+		((DirectSWTAlignmentContentArea)getIndependentComponent().getContentArea().getToolkitComponent()).scrollRectToVisible(
+				new org.eclipse.swt.graphics.Rectangle(rectangle.x, rectangle.y, rectangle.width, rectangle.height));
 	}
 
 
