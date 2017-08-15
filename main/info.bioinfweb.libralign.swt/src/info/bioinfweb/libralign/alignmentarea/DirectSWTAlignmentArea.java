@@ -21,6 +21,7 @@ package info.bioinfweb.libralign.alignmentarea;
 
 import java.awt.Rectangle;
 
+import info.bioinfweb.libralign.alignmentarea.content.DirectSWTAlignmentContentArea;
 import info.bioinfweb.tic.SWTComponentFactory;
 import info.bioinfweb.tic.toolkit.AbstractSWTComposite;
 
@@ -57,21 +58,18 @@ public class DirectSWTAlignmentArea extends AbstractSWTComposite implements Tool
 
 	@Override
 	public void scrollAlignmentRectToVisible(Rectangle rectangle) {
-		// TODO Auto-generated method stub
-		
+		// TODO implement
 	}
 
 
 	@Override
 	public Rectangle getVisibleAlignmentRect() {
-		// TODO Auto-generated method stub
-		return null;
+		return ((DirectSWTAlignmentContentArea)getIndependentComponent().getContentArea().getToolkitComponent()).getVisibleAlignmentRect();
 	}
 
 
 	@Override
 	public void setHideHorizontalScrollBar(boolean hideHorizontalScrollBar) {
-		// TODO Auto-generated method stub
-		
+		// TODO implement
 	}
 }

@@ -107,4 +107,10 @@ public class DirectSWTAlignmentContentArea extends DefaultSWTComposite {
 		setScrollOffsetY(origin.y);
 		super.paintControl(e);
 	}
+	
+	
+	public java.awt.Rectangle getVisibleAlignmentRect() {
+		Rectangle client = getClientArea();
+		return new java.awt.Rectangle(-origin.x, -origin.x, client.width, client.height);
+	}
 }
