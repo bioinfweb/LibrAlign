@@ -95,13 +95,13 @@ public class PherogramView extends TICComponent {
 
 
 	@Override
-	protected String getSwingComponentClassName() {
+	protected String getSwingComponentClassName(Object... parameters) {
 		return "info.bioinfweb.libralign.pherogram.view.SwingPhergramView";
 	}
 
 
 	@Override
-	protected String getSWTComponentClassName() {
+	protected String getSWTComponentClassName(Object... parameters) {
 		return "info.bioinfweb.libralign.pherogram.view.SWTPhergramView";
 	}
 }

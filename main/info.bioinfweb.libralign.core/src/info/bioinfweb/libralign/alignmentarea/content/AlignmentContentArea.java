@@ -461,7 +461,7 @@ public class AlignmentContentArea extends TICComponent {
 
 
 	@Override
-	protected String getSwingComponentClassName() {
+	protected String getSwingComponentClassName(Object... parameters) {
 		return "info.bioinfweb.libralign.alignmentarea.content.ScrollContainerSwingAlignmentContentArea";
 //		if (isUseSubcomponents()) {
 //			return "info.bioinfweb.libralign.alignmentarea.content.ScrollContainerSwingAlignmentContentArea";
@@ -473,7 +473,7 @@ public class AlignmentContentArea extends TICComponent {
 
 
 	@Override
-	protected String getSWTComponentClassName() {
+	protected String getSWTComponentClassName(Object... parameters) {
 		if (isUseSubcomponents()) {
 			return "info.bioinfweb.libralign.alignmentarea.content.ScrollContainerSWTAlignmentContentArea";
 		}
