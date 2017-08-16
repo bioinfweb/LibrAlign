@@ -463,22 +463,24 @@ public class AlignmentContentArea extends TICComponent {
 	@Override
 	protected String getSwingComponentClassName(Object... parameters) {
 		return "info.bioinfweb.libralign.alignmentarea.content.ScrollContainerSwingAlignmentContentArea";
-//		if (isUseSubcomponents()) {
-//			return "info.bioinfweb.libralign.alignmentarea.content.ScrollContainerSwingAlignmentContentArea";
-//		}
-//		else {
-//			return super.getSwingComponentClassName();
-//		}
 	}
 
 
 	@Override
 	protected String getSWTComponentClassName(Object... parameters) {
-		if (isUseSubcomponents()) {
-			return "info.bioinfweb.libralign.alignmentarea.content.ScrollContainerSWTAlignmentContentArea";
+		try {
+			if ((Boolean)parameters[0]) {
+				return "info.bioinfweb.libralign.alignmentarea.content.ScrollContainerSWTAlignmentContentArea";
+			}
+			else {
+				return "info.bioinfweb.libralign.alignmentarea.content.DirectSWTAlignmentContentArea";
+			}
 		}
-		else {
-			return "info.bioinfweb.libralign.alignmentarea.content.DirectSWTAlignmentContentArea";
+		catch (ArrayIndexOutOfBoundsException e) {
+			throw new IllegalArgumentException("To few parameters. One boolean parameter expected.", e);
+		}
+		catch (ClassCastException e) {
+			throw new IllegalArgumentException("Invalid parameter type. Boolean expected.", e);
 		}
 	}
 
