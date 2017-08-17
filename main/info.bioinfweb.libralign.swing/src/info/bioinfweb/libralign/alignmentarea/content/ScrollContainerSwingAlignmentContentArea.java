@@ -54,7 +54,7 @@ public class ScrollContainerSwingAlignmentContentArea extends SwingAlignmentRows
 
 	@Override
 	public boolean hasSubcomponents() {
-		return false;
+		return true;
 	}
 
 
@@ -76,7 +76,6 @@ public class ScrollContainerSwingAlignmentContentArea extends SwingAlignmentRows
 	}
 	
 	
-	@Override
 	public void addDataAreaList(DataAreaList list) {
 		SwingComponentFactory factory = SwingComponentFactory.getInstance();
 		Iterator<DataArea> iterator = list.iterator();
@@ -90,7 +89,7 @@ public class ScrollContainerSwingAlignmentContentArea extends SwingAlignmentRows
 	
 
 	@Override
-	public void repaintSequenceAreas() {
+	public void repaintSequences() {
 		getIndependentComponent().getSequenceAreaMap().repaintSequenceAreas();
 	}
 }
