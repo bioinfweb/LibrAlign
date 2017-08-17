@@ -53,6 +53,12 @@ public class ScrollContainerSwingAlignmentContentArea extends SwingAlignmentRows
 	
 
 	@Override
+	public boolean hasSubcomponents() {
+		return false;
+	}
+
+
+	@Override
 	public void reinsertSubelements() {
 		removeAll();
 
@@ -82,12 +88,6 @@ public class ScrollContainerSwingAlignmentContentArea extends SwingAlignmentRows
 		}
 	}
 	
-
-	@Override
-	public void assignSequenceAreaSize(String sequenceID) throws IllegalArgumentException {
-		AlignmentContentAreaTools.assignSequenceAreaSize(getIndependentComponent().getSequenceAreaMap(), sequenceID);
-	}
-
 
 	@Override
 	public void repaintSequenceAreas() {
