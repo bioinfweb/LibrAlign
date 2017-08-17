@@ -490,8 +490,7 @@ public class PherogramArea extends DataArea implements PherogramComponent {
 				(e.getSequenceID() == getList().getLocation().getSequenceID())) {
 			
 			int addend = getLabeledAlignmentArea().getEditSettings().isInsertLeftInDataArea() ? -1 : 0;
-			int lastSeqPos = getModel().editableIndexByBaseCallIndex(getModel().getRightCutPosition() - 1).getAfter() 
-					- addend;
+			int lastSeqPos = getModel().editableIndexByBaseCallIndex(getModel().getRightCutPosition() - 1).getAfter() - addend;
 			if (e.getStartIndex() <= lastSeqPos) {  // Do not process edits behind the pherogram.
 				int tokensBefore = Math.min(e.getAffectedTokens().size(), Math.max(0, getModel().getFirstSeqPos() - e.getStartIndex() - addend));
 				int tokensAfter = Math.max(0, e.getAffectedTokens().size() - Math.max(0, lastSeqPos - e.getStartIndex()) + addend);

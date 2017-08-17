@@ -42,17 +42,18 @@ public interface ToolkitSpecificAlignmentContentArea extends ToolkitSpecificAlig
   public int getHeight();
   
   /**
-   * Delegates to the {@link SequenceArea} contained in this component to assign its current size.
-   * 
-   * @param sequenceID the ID of the sequence displayed in the sequence area to be resized
-   * @throws IllegalArgumentException if no sequence area for the specified sequence ID was found
+	 * Determines whether this component contains nested components for each sequence or data area 
+	 * or if all its contents are painted directly.
+	 * 
+	 * @return {@code true} if subcomponents are used, {@code false} otherwise
+	 * @since 0.5.0
    */
-  public void assignSequenceAreaSize(String sequenceID) throws IllegalArgumentException;
+  public boolean hasSubcomponents();
 
   /**
    * Adds a list of data areas as children of this component.
    * 
-   * @param list - the data areas to be added
+   * @param list the data areas to be added
    */
   public void addDataAreaList(DataAreaList list);
   

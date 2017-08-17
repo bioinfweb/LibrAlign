@@ -72,8 +72,8 @@ public abstract class AbstractAlignmentModel<T> implements AlignmentModel<T> {
 	 * Informs all listeners that a sequence has been inserted, removed or replaced.
 	 */
 	protected void fireAfterSequenceChange(SequenceChangeEvent<T> e) {
-        for (AlignmentModelChangeListener listener : getChangeListeners().toArray(new AlignmentModelChangeListener[getChangeListeners().size()])) {  // Copying the list is necessary to allow listeners to remove themselves from the list without a ConcurrentModificationException being thrown.
-            listener.afterSequenceChange(e);
+		for (AlignmentModelChangeListener listener : getChangeListeners().toArray(new AlignmentModelChangeListener[getChangeListeners().size()])) {  // Copying the list is necessary to allow listeners to remove themselves from the list without a ConcurrentModificationException being thrown.
+			listener.afterSequenceChange(e);
 		}
 	}
 
@@ -82,8 +82,8 @@ public abstract class AbstractAlignmentModel<T> implements AlignmentModel<T> {
 	 * Informs all listeners that a sequence has been renamed.
 	 */
 	protected void fireAfterSequenceRenamed(SequenceRenamedEvent<T> e) {
-        for (AlignmentModelChangeListener listener : getChangeListeners().toArray(new AlignmentModelChangeListener[getChangeListeners().size()])) {  // Copying the list is necessary to allow listeners to remove themselves from the list without a ConcurrentModificationException being thrown.
-            listener.afterSequenceRenamed(e);
+		for (AlignmentModelChangeListener listener : getChangeListeners().toArray(new AlignmentModelChangeListener[getChangeListeners().size()])) {  // Copying the list is necessary to allow listeners to remove themselves from the list without a ConcurrentModificationException being thrown.
+			listener.afterSequenceRenamed(e);
 		}
 	}
 
@@ -92,8 +92,8 @@ public abstract class AbstractAlignmentModel<T> implements AlignmentModel<T> {
 	 * Informs all listeners that a sequence has been inserted, removed or replaced.
 	 */
 	protected void fireAfterTokenChange(TokenChangeEvent<T> e) {
-        for (AlignmentModelChangeListener listener : getChangeListeners().toArray(new AlignmentModelChangeListener[getChangeListeners().size()])) {  // Copying the list is necessary to allow listeners to remove themselves from the list without a ConcurrentModificationException being thrown.
-            listener.afterTokenChange(e);
+		for (AlignmentModelChangeListener listener : getChangeListeners().toArray(new AlignmentModelChangeListener[getChangeListeners().size()])) {  // Copying the list is necessary to allow listeners to remove themselves from the list without a ConcurrentModificationException being thrown.
+			listener.afterTokenChange(e);
 		}
 	}
 }
