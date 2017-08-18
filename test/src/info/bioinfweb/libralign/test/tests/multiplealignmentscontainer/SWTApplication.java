@@ -39,6 +39,9 @@ import org.eclipse.swt.events.SelectionEvent;
  * @author Ben St&ouml;ver
  */
 public class SWTApplication extends AbstractApplication {
+	private static final boolean USE_SUBCOMPONENTS = false;
+	
+	
 	protected Shell shell;
 	private MultipleAlignmentsContainer alignmentsContainer;
 	
@@ -85,7 +88,7 @@ public class SWTApplication extends AbstractApplication {
 		shell.setLayout(new FillLayout(SWT.HORIZONTAL));
 		
 		alignmentsContainer = createAlignmentsContainer();
-		SWTComponentFactory.getInstance().getSWTComponent(alignmentsContainer, shell, SWT.NONE);
+		SWTComponentFactory.getInstance().getSWTComponent(alignmentsContainer, shell, SWT.NONE, USE_SUBCOMPONENTS);
 		
 		Menu menu = new Menu(shell, SWT.BAR);
 		shell.setMenuBar(menu);

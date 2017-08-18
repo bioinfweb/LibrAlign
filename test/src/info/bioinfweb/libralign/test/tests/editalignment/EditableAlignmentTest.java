@@ -44,15 +44,12 @@ import org.biojava3.core.sequence.compound.NucleotideCompound;
 
 
 public class EditableAlignmentTest {
-	private static final boolean USE_SUBCOMPONENTS = false;
-	
-	
 	private AlignmentArea alignmentArea = null;
 	
 	
 	protected  AlignmentArea getAlignmentArea() {
 		if (alignmentArea == null) {
-			alignmentArea = new AlignmentArea(USE_SUBCOMPONENTS);
+			alignmentArea = new AlignmentArea();
 			AlignmentContentArea contentArea = alignmentArea.getContentArea();
 			
 			TokenSet<NucleotideCompound> tokenSet = new BioJava3TokenSet<NucleotideCompound>(

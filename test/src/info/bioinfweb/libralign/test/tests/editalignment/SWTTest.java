@@ -29,6 +29,9 @@ import org.eclipse.swt.SWT;
 
 
 public class SWTTest extends EditableAlignmentTest {
+	private static final boolean USE_SUBCOMPONENTS = false;
+	
+	
 	protected Shell shell;
 
 	
@@ -72,7 +75,7 @@ public class SWTTest extends EditableAlignmentTest {
 		shell.setText("SWT editable alignment test");
 		shell.setLayout(new FillLayout(SWT.VERTICAL));
 		
-		SWTComponentFactory.getInstance().getSWTComponent(getAlignmentArea(), shell, SWT.NONE);
+		SWTComponentFactory.getInstance().getSWTComponent(getAlignmentArea(), shell, SWT.NONE, USE_SUBCOMPONENTS);
 	}
 	
 	

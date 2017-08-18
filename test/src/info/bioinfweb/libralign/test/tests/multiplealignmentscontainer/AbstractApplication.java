@@ -50,9 +50,6 @@ import org.biojava.bio.chromatogram.ChromatogramFactory;
  * @author Ben St&ouml;ver
  */
 public class AbstractApplication {
-	private static final boolean USE_SUBCOMPONENTS = false;
-	
-	
 	private CharSetArea createCharSetArea(AlignmentContentArea owner, AlignmentArea labeledArea) {
 		CharSetDataModel model = new CharSetDataModel();
 		
@@ -109,16 +106,16 @@ public class AbstractApplication {
 			
 
 			// Create alignment areas:
-			AlignmentArea mainArea = new AlignmentArea(result, USE_SUBCOMPONENTS);  // Needs to be created first to act as a reference for data areas.
+			AlignmentArea mainArea = new AlignmentArea(result);  // Needs to be created first to act as a reference for data areas.
 			
 			// Index:
-			AlignmentArea area = new AlignmentArea(result, USE_SUBCOMPONENTS);
+			AlignmentArea area = new AlignmentArea(result);
 			area.setAllowVerticalScrolling(false);
 			area.getDataAreas().getTopAreas().add(new SequenceIndexArea(area.getContentArea(), mainArea));
 			result.getAlignmentAreas().add(area);
 			
 			// Char sets:
-			area = new AlignmentArea(result, USE_SUBCOMPONENTS);
+			area = new AlignmentArea(result);
 			area.setAllowVerticalScrolling(true);
 			area.getDataAreas().getTopAreas().add(createCharSetArea(area.getContentArea(), mainArea));
 			result.getAlignmentAreas().add(area);
@@ -145,14 +142,14 @@ public class AbstractApplication {
 			model.appendTokens(id, AlignmentModelUtils.charSequenceToTokenList("ATCGTAGATCGTAGATCGTAGATCGTAGATCGTAGATCGTAGATCGTAG", 
 					model.getTokenSet()));
 
-			area = new AlignmentArea(result, USE_SUBCOMPONENTS);
+			area = new AlignmentArea(result);
 			area.setAllowVerticalScrolling(false);      			
 			area.setAlignmentModel(model, false);
 			area.getPaintSettings().getTokenPainterList().set(0, new NucleotideTokenPainter());
 			result.getAlignmentAreas().add(area);
 			
 			// Consensus sequence:
-      area = new AlignmentArea(result, USE_SUBCOMPONENTS);
+      area = new AlignmentArea(result);
 			area.setAllowVerticalScrolling(false);
 			area.getDataAreas().getBottomAreas().add(new ConsensusSequenceArea(area.getContentArea(), mainArea));
       result.getAlignmentAreas().add(area);
