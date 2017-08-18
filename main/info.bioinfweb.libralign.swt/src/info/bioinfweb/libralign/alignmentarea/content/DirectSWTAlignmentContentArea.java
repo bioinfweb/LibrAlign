@@ -27,7 +27,7 @@ import org.eclipse.swt.widgets.Composite;
 
 
 
-public class DirectSWTAlignmentContentArea extends DefaultScrolledSWTComposite {
+public class DirectSWTAlignmentContentArea extends DefaultScrolledSWTComposite implements ToolkitSpecificAlignmentContentArea {
 	//TODO Assign size probably needs to be suppressed in the independent component?
 
 	public DirectSWTAlignmentContentArea(AlignmentContentArea ticComponent, Composite parent, int style) {
@@ -44,5 +44,21 @@ public class DirectSWTAlignmentContentArea extends DefaultScrolledSWTComposite {
 	public java.awt.Rectangle getVisibleAlignmentRect() {
 		Rectangle r = getVisibleRectangle();
 		return new java.awt.Rectangle(r.x, r.y, r.width, r.height);
+	}
+
+
+	@Override
+	public void reinsertSubelements() {}  // Nothing to do.
+
+
+	@Override
+	public boolean hasSubcomponents() {
+		return false;
+	}
+
+
+	@Override
+	public void repaintSequences() {
+		repaint();
 	}
 }

@@ -47,7 +47,7 @@ public class DirectSWTAlignmentArea extends AbstractSWTComposite implements Tool
 		SashForm sashForm = new SashForm(this, SWT.NONE);
 		SWTComponentFactory factory = SWTComponentFactory.getInstance();
 		factory.getSWTComponent(getIndependentComponent().getLabelArea(), sashForm, SWT.NONE);  //TODO Does constructing these components in the "wrong" order also make a difference here, when subcomponents are not used?
-		factory.getSWTComponent(getIndependentComponent().getContentArea(), sashForm, SWT.NO_BACKGROUND);
+		factory.getSWTComponent(getIndependentComponent().getContentArea(), sashForm, SWT.NO_BACKGROUND, false);
 		sashForm.setWeights(new int[] {1, 10});  //TODO Specify calculated values here?
 	}
 

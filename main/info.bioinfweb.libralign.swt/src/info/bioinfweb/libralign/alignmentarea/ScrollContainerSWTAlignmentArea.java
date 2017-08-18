@@ -125,7 +125,7 @@ public class ScrollContainerSWTAlignmentArea extends AbstractSWTComposite implem
 		contentContainer.setLayoutData(createGridData(true));
 		contentScroller = new ScrolledComposite(contentContainer, SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL);
 		contentScroller.setAlwaysShowScrollBars(true);
-		Composite contentArea =	factory.getSWTComponent(getIndependentComponent().getContentArea(), contentScroller, SWT.NONE);
+		Composite contentArea =	factory.getSWTComponent(getIndependentComponent().getContentArea(), contentScroller, SWT.NONE, true);
 		contentScroller.setContent(contentArea);
 		contentScroller.addMouseListener(new MouseAdapter() {
 			@Override

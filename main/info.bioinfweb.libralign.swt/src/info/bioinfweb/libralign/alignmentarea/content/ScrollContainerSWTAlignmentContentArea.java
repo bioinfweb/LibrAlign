@@ -61,11 +61,10 @@ public class ScrollContainerSWTAlignmentContentArea extends SWTAlignmentRowsArea
 
 	@Override
 	public boolean hasSubcomponents() {
-		return false;
+		return true;
 	}
 
 
-	@Override
 	public void addDataAreaList(DataAreaList list) {
 		Iterator<DataArea> iterator = list.iterator();
 		SWTComponentFactory factory = SWTComponentFactory.getInstance();
@@ -116,13 +115,7 @@ public class ScrollContainerSWTAlignmentContentArea extends SWTAlignmentRowsArea
 
 	
 	@Override
-	public int getHeight() {
-		return getSize().y;
-	}
-
-
-	@Override
-	public void repaintSequenceAreas() {
+	public void repaintSequences() {
 		getIndependentComponent().getSequenceAreaMap().repaintSequenceAreas();
 	}
 }
