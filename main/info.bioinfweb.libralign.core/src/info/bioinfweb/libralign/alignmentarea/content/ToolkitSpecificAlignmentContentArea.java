@@ -21,7 +21,6 @@ package info.bioinfweb.libralign.alignmentarea.content;
 
 import info.bioinfweb.libralign.alignmentarea.ToolkitSpecificAlignmentArea;
 import info.bioinfweb.libralign.alignmentarea.rowsarea.ToolkitSpecificAlignmentRowsArea;
-import info.bioinfweb.libralign.dataarea.DataAreaList;
 import info.bioinfweb.tic.TICComponent;
 
 
@@ -30,17 +29,16 @@ import info.bioinfweb.tic.TICComponent;
  * Interface for all toolkit specific components displaying the contents of an alignment area (not including
  * the parent scroll container which is part of implementations of {@link ToolkitSpecificAlignmentArea}).
  * 
+ * <h3><a id="developer"></a>Notes for developers</h3>
+ * This interface should only contain methods that need to be called from the <i>core</i> module and that can
+ * be implemented by all components, not matter if they contain subcomponents or not. Methods that are shared
+ * by some or all implementations but are not called from the <i>core</i> module should not be added to this
+ * interface.
+ *  
  * @author Ben St&ouml;ver
  * @since 0.3.0
  */
 public interface ToolkitSpecificAlignmentContentArea extends ToolkitSpecificAlignmentRowsArea<TICComponent> {
-  /**
-   * Returns the height of this component.
-   * 
-   * @return the height in pixels
-   */
-  public int getHeight();
-  
   /**
 	 * Determines whether this component contains nested components for each sequence or data area 
 	 * or if all its contents are painted directly.
@@ -50,15 +48,9 @@ public interface ToolkitSpecificAlignmentContentArea extends ToolkitSpecificAlig
    */
   public boolean hasSubcomponents();
 
-  /**
-   * Adds a list of data areas as children of this component.
-   * 
-   * @param list the data areas to be added
-   */
-  public void addDataAreaList(DataAreaList list);
-  
 	/**
-	 * Forces all contained {@link SequenceArea}s (not data areas) to be repainted.
+	 * Forces the repaint of all displayed sequences. In implementations that contain subcomponents 
+	 * all (visible) {@link SequenceArea}s (not data areas) are repainted.
 	 */
-	public void repaintSequenceAreas();
+	public void repaintSequences();
 }

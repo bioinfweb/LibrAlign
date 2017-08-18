@@ -52,7 +52,7 @@ public class DefaultAlignmentSubAreaComponent extends AbstractAlignmentSubAreaCo
 		//TODO Consider x-shift of graphics context due to data area width left of alignment if coordinate shift on y is implemented. (Here or/and somewhere else?)
 		getOwner().paintPart(new AlignmentPaintEvent(event.getSource(), getOwner().getOwner().getOwner(),
 				Math.max(0, getOwner().getOwner().columnByPaintX(event.getRectangle().getMinX())),  // first column 
-				getOwner().getOwner().columnByPaintX((int)event.getRectangle().getMaxX()),  // last column
+				getOwner().getOwner().columnByPaintX(event.getRectangle().getMaxX()),  // last column
 				event.getGraphics(), 
 				event.getRectangle()));  // Rectangle is used instead of Rectangle2D.Double. This is possible, because the component width is anyway limited.
 	}

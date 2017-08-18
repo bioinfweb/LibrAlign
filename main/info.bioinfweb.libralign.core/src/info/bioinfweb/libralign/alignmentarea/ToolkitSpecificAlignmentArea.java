@@ -29,6 +29,10 @@ import info.bioinfweb.libralign.multiplealignments.MultipleAlignmentsContainer;
 /**
  * Interface implemented by all toolkit specific components displaying the contents of an {@link AlignmentArea}.
  * 
+ * <h3><a id="developer"></a>Notes for developers</h3>
+ * This interface should only contain methods that need to be called from the <i>core</i>. Methods that are 
+ * shared by some or all implementations but are not called from the <i>core</i> module should not be added.
+ * 
  * @author Ben St&ouml;ver
  * @since 0.2.0
  */

@@ -22,12 +22,12 @@ package info.bioinfweb.libralign.alignmentarea.content;
 import info.bioinfweb.commons.Math2;
 import info.bioinfweb.commons.SystemUtils;
 import info.bioinfweb.libralign.alignmentarea.AlignmentArea;
+import info.bioinfweb.libralign.alignmentarea.GUITools;
 import info.bioinfweb.libralign.alignmentarea.ToolkitSpecificAlignmentArea;
 import info.bioinfweb.libralign.alignmentarea.label.AlignmentLabelArea;
 import info.bioinfweb.libralign.alignmentarea.paintsettings.PaintSettings;
 import info.bioinfweb.libralign.alignmentarea.selection.SelectionModel;
 import info.bioinfweb.libralign.dataarea.DataArea;
-import info.bioinfweb.libralign.dataarea.DataAreaList;
 import info.bioinfweb.libralign.dataarea.DataAreaListType;
 import info.bioinfweb.libralign.dataarea.DataAreaLocation;
 import info.bioinfweb.libralign.model.AlignmentModel;
@@ -35,10 +35,8 @@ import info.bioinfweb.libralign.model.concatenated.ConcatenatedAlignmentModel;
 import info.bioinfweb.libralign.multiplealignments.MultipleAlignmentsContainer;
 import info.bioinfweb.tic.TICComponent;
 import info.bioinfweb.tic.TICPaintEvent;
-import info.bioinfweb.tic.TargetToolkit;
 import info.bioinfweb.tic.input.TICMouseWheelEvent;
 import info.bioinfweb.tic.input.TICMouseWheelListener;
-import info.bioinfweb.tic.toolkit.ToolkitComponent;
 
 import java.awt.Dimension;
 import java.awt.Graphics2D;
@@ -77,9 +75,8 @@ public class AlignmentContentArea extends TICComponent {
 
 
 	private final AlignmentArea owner;
-	private final boolean useSubcomponents;
 	private SequenceAreaMap sequenceAreaMap;
-	private Map<KeyStroke, Action> actionMap = new HashMap<KeyStroke, Action>();
+	private Map<KeyStroke, Action> actionMap = new HashMap<KeyStroke, Action>();  //TODO Should this property be available in AlignmentArea directly? At least using a delegate getter?
 
 
 	/**
@@ -89,12 +86,9 @@ public class AlignmentContentArea extends TICComponent {
 	 * will automatically be used by the returned instance.
 	 *
 	 * @param owner the alignment area component that will be containing the return instance
-	 * @param useSubcomponents Determines whether single subcomponents shall be used for each sequence or data area 
-	 *        or if all their contents shall be painted on a single shared component.
 	 */
-	public AlignmentContentArea(AlignmentArea owner, boolean useSubcomponents) {
+	public AlignmentContentArea(AlignmentArea owner) {
 		super();
-		this.useSubcomponents = useSubcomponents;
 		this.owner = owner;
 		sequenceAreaMap = new SequenceAreaMap(this);
 		
@@ -115,24 +109,25 @@ public class AlignmentContentArea extends TICComponent {
 						zoomY -= change;
 					}
 					settings.setZoom(zoomX, zoomY);
+				  //TODO Additionally adjust the scroll position so that the cursor remains over the same alignment position, if possible.
 					return true;
 				}
 				else {
-					return false;  // Forward event to parent JScrollPane to scroll.
+					return false;  // Forward event to parent scroll container to scroll.
 				}
 			}
 		});
 		
-		if (!isUseSubcomponents()) {  //TODO Registering this may cause problems in Swing, for events that are forwarded to the parent component.
-			//TODO Registering listener in Swing case should be avoided. 
+		//if (!isUseSubcomponents()) {
+			//TODO Refactor this as when event forwarding to nested TICComponents is implemented. 
 			CursorSelectionInputListener listener = new CursorSelectionInputListener(owner);
 			addMouseListener(listener);
 			addKeyListener(listener);
-		}
+		//}
   }
 
 
-	private void fillActionMap() {
+	private void fillActionMap() {  // The actions added here can be modified by application code and will be used by CursorSelectionInputListener.
 		actionMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_LEFT, KeyEvent.SHIFT_MASK), new AbstractAction() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -337,19 +332,6 @@ public class AlignmentContentArea extends TICComponent {
 	}
 
 
-	/**
-	 * Determines whether single subcomponents shall be used for each sequence or data area 
-	 * or if all their contents shall be painted on a single shared component.
-	 * 
-	 * @return {@code true} if subcomponents are used, {@code false} otherwise
-	 * @since 0.5.0
-	 */
-	public boolean isUseSubcomponents() {
-		//TODO Does this work this way? If so, update documentation of constructors.
-		return (hasToolkitComponent() && getToolkitComponent().getTargetToolkit().equals(TargetToolkit.SWING)) || useSubcomponents;
-	}
-	
-	
 	public AlignmentSubAreaIterator subAreaIterator() {
 		return new AlignmentSubAreaIterator(getOwner());
 	}
@@ -378,8 +360,8 @@ public class AlignmentContentArea extends TICComponent {
 	
 	public void updateSubelements() {
 		getSequenceAreaMap().updateElements();
-		if (isUseSubcomponents() && hasToolkitComponent()) {
-			((ToolkitSpecificAlignmentContentArea)getToolkitComponent()).reinsertSubelements();
+		if (hasToolkitComponent()) {
+			getToolkitComponent().reinsertSubelements();  // Will have no effect, if no subcomponents are used.
 		}
 	}
 
@@ -461,6 +443,12 @@ public class AlignmentContentArea extends TICComponent {
 
 
 	@Override
+	public ToolkitSpecificAlignmentContentArea getToolkitComponent() {
+		return (ToolkitSpecificAlignmentContentArea)super.getToolkitComponent();
+	}
+
+
+	@Override
 	protected String getSwingComponentClassName(Object... parameters) {
 		return "info.bioinfweb.libralign.alignmentarea.content.ScrollContainerSwingAlignmentContentArea";
 	}
@@ -468,19 +456,11 @@ public class AlignmentContentArea extends TICComponent {
 
 	@Override
 	protected String getSWTComponentClassName(Object... parameters) {
-		try {
-			if ((Boolean)parameters[0]) {
-				return "info.bioinfweb.libralign.alignmentarea.content.ScrollContainerSWTAlignmentContentArea";
-			}
-			else {
-				return "info.bioinfweb.libralign.alignmentarea.content.DirectSWTAlignmentContentArea";
-			}
+		if (GUITools.determineUseSubcomponents(parameters)) {
+			return "info.bioinfweb.libralign.alignmentarea.content.ScrollContainerSWTAlignmentContentArea";
 		}
-		catch (ArrayIndexOutOfBoundsException e) {
-			throw new IllegalArgumentException("To few parameters. One boolean parameter expected.", e);
-		}
-		catch (ClassCastException e) {
-			throw new IllegalArgumentException("Invalid parameter type. Boolean expected.", e);
+		else {
+			return "info.bioinfweb.libralign.alignmentarea.content.DirectSWTAlignmentContentArea";
 		}
 	}
 
@@ -535,7 +515,7 @@ public class AlignmentContentArea extends TICComponent {
 	 * @return the sequence or data area at the specified position or {@code null} if {@code y} is 
 	 *         below 0 or higher than this instance
 	 */
-	public AlignmentSubArea getAreaByY(double y) {
+	public AlignmentSubArea getAreaByPaintY(double y) {
 		double currentY = 0;
 		Iterator<AlignmentSubArea> iterator = subAreaIterator();
 		while (iterator.hasNext()) {
@@ -559,7 +539,7 @@ public class AlignmentContentArea extends TICComponent {
 	 * @return a valid sequence position.
 	 */
 	public int rowByPaintY(double y) {
-		AlignmentSubArea subArea = getAreaByY(y);
+		AlignmentSubArea subArea = getAreaByPaintY(y);
 		if (subArea instanceof DataArea) {
 			DataAreaLocation location = ((DataArea)subArea).getList().getLocation();
 			if (location.getListType().equals(DataAreaListType.SEQUENCE)) {
@@ -610,30 +590,5 @@ public class AlignmentContentArea extends TICComponent {
 		}
 		throw new InternalError("There were not enough sequence areas returned by the interator. "  // This should not happen due to the setting of row above.
 				+ "This is an unexpected internal LibrAlign error. Please inform the developers at http://bioinfweb.info/LibrAlign.");  //TODO Use global constant for URL in the future.
-	}
-
-
-	/**
-	 * Calculates the y coordinate relative to the alignment content area, which contains the specified sequence area.
-	 *
-	 * @param sequenceArea the sequence area where {@code relativeY} belongs to
-	 * @param relativeY the y coordinate relative to {@code sequenceArea}
-	 * @return the y coordinate relative to the parent instance of {@link ToolkitSpecificAlignmentArea}
-	 * @throws IllegalStateException if neither or Swing or a SWT component has been created for the specified sequence
-	 *         area before the call of this method
-	 */
-	public double alignmentPartY(SequenceArea sequenceArea, double relativeY) {
-		if (isUseSubcomponents()) {
-			if (sequenceArea.hasComponent() && sequenceArea.getComponent().hasToolkitComponent()) {
-				return sequenceArea.getComponent().getToolkitComponent().getLocationInParent().y + relativeY;  // SequenceAreas need to be direct children of the ToolkitSpecificAlignmentPartAreas for this method to work.
-			}
-			else {
-				throw new IllegalStateException("No Swing or SWT component of the specified sequence area has yet been created.");
-			}
-		}
-		else {
-			throw new InternalError("Not implemented.");
-			//TODO Support direct painting without subcomponents.
-		}
 	}
 }

@@ -124,14 +124,14 @@ public abstract class AlignmentSubArea {
 	
 	
 	public void repaint() {
-		if (getOwner().isUseSubcomponents()) {
-			if (hasComponent()) {  //TODO Is this condition necessary?
-				getComponent().repaint();
+		if (getOwner().hasToolkitComponent()) {
+			if (getOwner().getToolkitComponent().hasSubcomponents()) {
+				if (hasComponent()) {
+					getComponent().repaint();
+				}
 			}
-		}
-		else {
-			if (getOwner().hasToolkitComponent()) {
-				getOwner().getToolkitComponent().repaint();  //TODO Repaint only respective region of AlignmentContentArea.
+			else {
+				getOwner().repaint();  // The repaint() method of the toolkit component must not be used here directly, because AlignmentContentArea.repaint() may combine several subsequent paint operations.
 			}
 		}
 	}

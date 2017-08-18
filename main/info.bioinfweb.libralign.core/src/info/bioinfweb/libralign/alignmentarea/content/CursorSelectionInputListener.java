@@ -36,6 +36,7 @@ import info.bioinfweb.tic.input.TICMouseAdapter;
 import info.bioinfweb.tic.input.TICMouseEvent;
 import info.bioinfweb.tic.input.TICMouseListener;
 import info.bioinfweb.libralign.alignmentarea.AlignmentArea;
+import info.bioinfweb.libralign.alignmentarea.ToolkitSpecificAlignmentArea;
 import info.bioinfweb.libralign.model.AlignmentModel;
 
 
@@ -64,7 +65,7 @@ public class CursorSelectionInputListener extends TICMouseAdapter implements TIC
 	private Point calculateColumnRow(TICMouseEvent event) {
 		double y = event.getComponentY();
 		if (isEventFromSequenceArea(event)) {
-			y = getOwner().getContentArea().alignmentPartY(getSequenceArea(event.getSource()), y);
+			y += getSequenceArea(event.getSource()).getComponent().getToolkitComponent().getLocationInParent().getY();
 		}
 		return new Point(getOwner().getContentArea().columnByPaintX(event.getComponentX()),	getOwner().getContentArea().rowByPaintY(y));
 	}

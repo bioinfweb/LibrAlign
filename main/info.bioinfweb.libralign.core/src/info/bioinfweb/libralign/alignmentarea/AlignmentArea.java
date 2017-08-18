@@ -34,6 +34,7 @@ import info.bioinfweb.libralign.alignmentarea.paintsettings.ZoomChangeEvent;
 import info.bioinfweb.libralign.alignmentarea.selection.SelectionChangeEvent;
 import info.bioinfweb.libralign.alignmentarea.selection.SelectionListener;
 import info.bioinfweb.libralign.alignmentarea.selection.SelectionModel;
+import info.bioinfweb.libralign.dataarea.DataArea;
 import info.bioinfweb.libralign.dataarea.DataAreaChangeEvent;
 import info.bioinfweb.libralign.dataarea.DataAreasModel;
 import info.bioinfweb.libralign.dataarea.DataAreasModelListener;
@@ -66,8 +67,7 @@ import java.util.Iterator;
  * returned by {@link #getContainer()} in this case. Instances of this class are {@link TICComponent}s. To use this class 
  * in a GUI application, a toolkit specific version of it can be created using {@code SwingComponentFactory} or 
  * {@code SWTComponentFactory} from <a href="http://bioinfweb.info/TIC"><i>TIC</i></a>. See the
- * <a href="http://bioinfweb.info/LibrAlign/Documentation/wiki/Working_with_toolkits"><i>LibrAlign</i> documentation</a> 
- * for details.
+ * <a href="http://r.bioinfweb.info/LibrAlignToolkitDoc"><i>LibrAlign</i> documentation</a> for details.
  * <p>
  * {@code AlignmentArea} has the following key properties:
  * <ul>
@@ -83,6 +83,42 @@ import java.util.Iterator;
  * The implementation of {@code AlignmentArea} is distributed across {@link #getContentArea()} which displays the
  * sequences and data areas and {@link #getLabelArea()} which displays there labels (on the left).
  * 
+ * <h3><a id="toolkit"></a>Creating toolkit components</h3>
+ * Since <i>LibrAlign</i> works with both <i>Swing</i> and <i>SWT</i> all its GUI components are {@link TICComponent}s
+ * and therefore allow to create <i>Swing</i> and <i>SWT</i> instances from them using the factory classes from 
+ * <i>TIC</i>. (See the <a href="http://r.bioinfweb.info/LibrAlignToolkitDoc">documentation</a> for further details.)
+ * <p>
+ * <i>SWT</i> components used to display an alignment are available in two versions. One creates a subcomponent for 
+ * each sequence and data area in the alignment. This allows e.g. to provide custom toolkit-specific components for
+ * custom data area implementations (instead of just implementing the 
+ * {@link DataArea#paintPart(info.bioinfweb.libralign.alignmentarea.content.AlignmentPaintEvent)} method), which may
+ * be necessary in rare cases, e.g. to nest other GUI components in a data area. Using subcomponents in <i>SWT</i> 
+ * has the disadvantage that they have a size limit of 2^15-1 px in <i>SWT</i> on many operating systems (currently
+ * <i>Windows</i> or <i>Linux</i>). This width limit can easily be reached when displaying nucleotide or protein 
+ * sequences and is due to limitations in the GUI libraries of these operating systems and cannot be fixed within 
+ * <i>LibrAlign</i> or <i>SWT</i>.
+ * <p>
+ * As a workaround for that problem alternative <i>SWT</i> component implementations that do not create subcomponents 
+ * for sequences and data areas are available, which paint the whole alignment directly on a shared component and 
+ * allow to scroll alignments with a maximum width and height of {@link Integer#MAX_VALUE} px. (Which is much larger 
+ * than the maximum in the first alternative.) These components are not able to make use of custom <i>SWT</i> 
+ * components associated with custom or third party data areas. Only data areas that paint directly by implementing 
+ * {@link DataArea#paintPart(info.bioinfweb.libralign.alignmentarea.content.AlignmentPaintEvent)} can be used in this 
+ * case.
+ * <p>
+ * The strategy to be used can be set with an additional {@code boolean} parameter passed to the <i>TIC</i> factory
+ * class when creating the <i>SWT</i> toolkit component of an instance of this class. (See 
+ * <a href="http://r.bioinfweb.info/LibrAlignToolkitDoc">here</a> on how to create toolkit components with such a
+ * factory.) If the parameter is omitted, no subcomponents will be created.
+ * <pre>
+ *   SWTComponentFactory.getInstance().getSWTComponent(someAlignmentArea, shell, SWT.NONE, true);  // Creates an SWT component <b>with</b> subcomponents.
+ *   SWTComponentFactory.getInstance().getSWTComponent(someAlignmentArea, shell, SWT.NONE, false);  // Creates an SWT component <b>without</b> subcomponents.
+ *   SWTComponentFactory.getInstance().getSWTComponent(someAlignmentArea, shell, SWT.NONE);  // Creates an SWT component <b>without</b> subcomponents.
+ * </pre>
+ * Since no such limitation exists in <i>Swing</i>, subcomponents will always be created there. This problem is 
+ * only relevant for <i>SWT</i> under <i>Windows</i> or <i>Linux</i>. (You can determine whether an existing 
+ * component has subcomponents or using {@link ToolkitSpecificAlignmentContentArea#hasSubcomponents()}.) 
+ * 
  * @author Ben St&ouml;ver
  * @since 0.0.0
  * @bioinfweb.module info.bioinfweb.libralign.core
@@ -91,6 +127,7 @@ import java.util.Iterator;
  * @see AlignmentContentArea
  * @see AlignmentLabelArea
  * @see AlignmentModel
+ * @see <a href="http://r.bioinfweb.info/LibrAlignToolkitDoc">LibrAlign documentation on working with toolkits</a> 
  */
 public class AlignmentArea extends TICComponent implements AlignmentModelChangeListener, DataAreasModelListener {
 	public static final int MIN_PART_AREA_HEIGHT = 5;
@@ -152,42 +189,13 @@ public class AlignmentArea extends TICComponent implements AlignmentModelChangeL
 	
 	
 	/**
-	 * Creates a new instance of this class that shall not part of a {@link MultipleAlignmentsContainer} that uses no
-	 * subcomponents for each sequence and data area.
-	 * <p>
-	 * If you want to create an alignment area that shall be inserted into a {@link MultipleAlignmentsContainer}
-	 * use {@link #AlignmentArea(MultipleAlignmentsContainer, boolean))} instead.
-	 */
-	public AlignmentArea() {
-		this(null, false);
-	}
-	
-	
-	/**
 	 * Creates a new instance of this class that shall not part of a {@link MultipleAlignmentsContainer}.
 	 * <p>
 	 * If you want to create an alignment area that shall be inserted into a {@link MultipleAlignmentsContainer}
-	 * use {@link #AlignmentArea(MultipleAlignmentsContainer)} instead.
-	 * 
-	 * @param useSubcomponents Specify {@code true} here, if a separate subcomponent should be used for each 
-	 *        sequence and data area or {@code false} to draw all on separate components. (Using separate
-	 *        components allows to use custom toolkit specific components provided by custom data areas but
-	 *        does not allow to display long sequences, especially with <i>SWT</i> under <i>Windows</i> and
-	 *        <i>Linux</i>.)
+	 * use {@link #AlignmentArea(MultipleAlignmentsContainer))} instead.
 	 */
-	public AlignmentArea(boolean useSubcomponents) {
-		this(null, useSubcomponents);
-	}
-	
-	
-	/**
-	 * Creates a new instance of this class to be inserted into a {@link MultipleAlignmentsContainer} that uses no
-	 * subcomponents for each sequence and data area.
-	 * 
-	 * @param container the container where the returned instance will be contained in
-	 */
-	public AlignmentArea(MultipleAlignmentsContainer container) {
-		this(container, false);
+	public AlignmentArea() {
+		this(null);
 	}
 	
 	
@@ -195,13 +203,8 @@ public class AlignmentArea extends TICComponent implements AlignmentModelChangeL
 	 * Creates a new instance of this class to be inserted into a {@link MultipleAlignmentsContainer}.
 	 * 
 	 * @param container the container where the returned instance will be contained in
-	 * @param useSubcomponents Specify {@code true} here, if a separate subcomponent should be used for each 
-	 *        sequence and data area or {@code false} to draw all on separate components. (Using separate
-	 *        components allows to use custom toolkit specific components provided by custom data areas but
-	 *        does not allow to display long sequences, especially with <i>SWT</i> under <i>Windows</i> and
-	 *        <i>Linux</i>.)
 	 */
-	public AlignmentArea(MultipleAlignmentsContainer container, boolean useSubcomponents) {
+	public AlignmentArea(MultipleAlignmentsContainer container) {
 		super();
 		this.container = container;
 		
@@ -220,7 +223,7 @@ public class AlignmentArea extends TICComponent implements AlignmentModelChangeL
 					}
 				});
 		
-		alignmentContentArea = new AlignmentContentArea(this, useSubcomponents);  // The selection object must already have been created here.
+		alignmentContentArea = new AlignmentContentArea(this);  // The selection object must already have been created here.
 		alignmentLabelArea = new AlignmentLabelArea(this);  // Must be called after alignmentContentArea has been created.
 
 		dataAreas.addListener(this);
@@ -529,15 +532,30 @@ public class AlignmentArea extends TICComponent implements AlignmentModelChangeL
 	}
 	
 	
+	/**
+	 * Returns the name of a toolkit specific <i>Swing</i> component displaying the contents of this instance.
+	 * 
+	 * @param parameters This implementation does not recognize any additional parameters.
+	 * @return the name of a toolkit specific <i>Swing</i> component
+	 */
 	@Override
 	protected String getSwingComponentClassName(Object... parameters) {
 		return "info.bioinfweb.libralign.alignmentarea.ScrollContainerSwingAlignmentArea";
 	}
 
 
+	/**
+	 * Returns the name of a toolkit specific <i>SWT</i> component displaying the contents of this instance.
+	 * 
+	 * @param parameters This implementation expects no or a single {@link Boolean} parameter which determines 
+	 *        whether the name of an <i>SWT</i> component using subcomponents for each sequence and data area 
+	 *        or a shared component for direct painting shall be returned. If no parameter is passed, 
+	 *        {@code false} is assumed.
+	 * @return the name of a toolkit specific <i>SWT</i> component
+	 */
 	@Override
 	protected String getSWTComponentClassName(Object... parameters) {
-		if (getContentArea().isUseSubcomponents()) {
+		if (GUITools.determineUseSubcomponents(parameters)) {
 			return "info.bioinfweb.libralign.alignmentarea.ScrollContainerSWTAlignmentArea";
 		}
 		else {
@@ -585,7 +603,7 @@ public class AlignmentArea extends TICComponent implements AlignmentModelChangeL
 				iterator.next().assignSize();;
 			}
 			
-			if (getContentArea().isUseSubcomponents()) {
+			if (getContentArea().getToolkitComponent().hasSubcomponents()) {
 				Iterator<AlignmentSubArea> contentIterator = getContentArea().subAreaIterator();
 				while (contentIterator.hasNext()) {
 					contentIterator.next().assignSize();;
@@ -636,16 +654,16 @@ public class AlignmentArea extends TICComponent implements AlignmentModelChangeL
 
 	@Override
 	public <T> void afterTokenChange(TokenChangeEvent<T> e) {
-		getDataAreas().getSequenceDataChangeListener().afterTokenChange(e);
-		assignSizeToAll();
-		if (getContentArea().hasToolkitComponent()) {
-			if (getContentArea().isUseSubcomponents()) {
-				((ToolkitSpecificAlignmentContentArea)getContentArea().getToolkitComponent()).repaintSequenceAreas();  // Necessary when neither the selection changes nor the size of the sequence areas changed (e.g. when deleting right in a sequence with an attached pherogram with space before and after the alignment).
-				//TODO Wouldn't it be sufficient, if only the affected sequence area gets repainted?
+		getContentArea().setUpdateOngoing(true);
+		try {
+			getDataAreas().getSequenceDataChangeListener().afterTokenChange(e);
+			assignSizeToAll();
+			if (getContentArea().hasToolkitComponent()) {
+				getContentArea().getToolkitComponent().repaintSequences();  // Necessary when neither the selection changes nor the size of the sequence areas changed (e.g. when deleting right in a sequence with an attached pherogram with space before and after the alignment).
 			}
-			else {
-				getContentArea().repaint();  //TODO Painting only the respective sequence and depending data areas would be sufficient.
-			}
+		}
+		finally {
+			getContentArea().setUpdateOngoing(false);  // Perform one single paint operation, if it was requested. (Otherwise in case of a shared directly painted component, separate repaint operations for all data areas and the sequences may happen.)
 		}
 	}
 

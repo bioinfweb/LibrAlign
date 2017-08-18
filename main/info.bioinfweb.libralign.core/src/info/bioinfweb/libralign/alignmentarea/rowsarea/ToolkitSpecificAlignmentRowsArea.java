@@ -26,15 +26,16 @@ import info.bioinfweb.tic.toolkit.ToolkitComponent;
 
 /**
  * Interface to be implemented by all classes displaying alignment associated components in rows. (One row for
- * each sequence and data area.)
+ * each sequence or data area.)
  * 
  * @author Ben St&ouml;ver
  * @since 0.3.0
  */
 public interface ToolkitSpecificAlignmentRowsArea<C extends TICComponent> extends ToolkitComponent {
   /**
-   * Recreates the components displaying sequences and data areas in the alignment according to
-   * the current model information. 
+   * Recreates the subcomponents displaying sequences and data areas in the alignment according to
+   * the current model information. For implementations that do not use subcomponents, calling this
+   * method may have no effect. 
    */
   public void reinsertSubelements();
 }
