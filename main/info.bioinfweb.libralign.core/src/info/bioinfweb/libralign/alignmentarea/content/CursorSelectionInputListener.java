@@ -19,6 +19,15 @@
 package info.bioinfweb.libralign.alignmentarea.content;
 
 
+import info.bioinfweb.libralign.alignmentarea.AlignmentArea;
+import info.bioinfweb.libralign.model.AlignmentModel;
+import info.bioinfweb.tic.TargetToolkit;
+import info.bioinfweb.tic.input.TICKeyEvent;
+import info.bioinfweb.tic.input.TICKeyListener;
+import info.bioinfweb.tic.input.TICMouseAdapter;
+import info.bioinfweb.tic.input.TICMouseEvent;
+import info.bioinfweb.tic.input.TICMouseListener;
+
 import java.awt.Point;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
@@ -26,18 +35,6 @@ import java.awt.event.ActionEvent;
 import javax.swing.Action;
 import javax.swing.JComponent;
 import javax.swing.KeyStroke;
-
-import info.bioinfweb.tic.TICComponent;
-import info.bioinfweb.tic.TargetToolkit;
-import info.bioinfweb.tic.input.TICInputEvent;
-import info.bioinfweb.tic.input.TICKeyEvent;
-import info.bioinfweb.tic.input.TICKeyListener;
-import info.bioinfweb.tic.input.TICMouseAdapter;
-import info.bioinfweb.tic.input.TICMouseEvent;
-import info.bioinfweb.tic.input.TICMouseListener;
-import info.bioinfweb.libralign.alignmentarea.AlignmentArea;
-import info.bioinfweb.libralign.alignmentarea.ToolkitSpecificAlignmentArea;
-import info.bioinfweb.libralign.model.AlignmentModel;
 
 
 
@@ -64,8 +61,8 @@ public class CursorSelectionInputListener extends TICMouseAdapter implements TIC
 	
 	private Point calculateColumnRow(TICMouseEvent event) {
 		double y = event.getComponentY();
-		if (isEventFromSequenceArea(event)) {
-			y += getSequenceArea(event.getSource()).getComponent().getToolkitComponent().getLocationInParent().getY();
+		if (event.getSource() instanceof SequenceArea) {
+			y += ((SequenceArea)event.getSource()).getToolkitComponent().getLocationInParent().getY();
 		}
 		return new Point(getOwner().getContentArea().columnByPaintX(event.getComponentX()),	getOwner().getContentArea().rowByPaintY(y));
 	}
@@ -78,17 +75,6 @@ public class CursorSelectionInputListener extends TICMouseAdapter implements TIC
 	}
 
 
-	private boolean isEventFromSequenceArea(TICInputEvent event) {
-		return (event.getSource() instanceof DefaultAlignmentSubAreaComponent) && 
-				(((DefaultAlignmentSubAreaComponent)event.getSource()).getOwner() instanceof SequenceArea);
-	}
-	
-	
-	private SequenceArea getSequenceArea(TICComponent component) {
-		return (SequenceArea)((DefaultAlignmentSubAreaComponent)component).getOwner();
-	}
-	
-	
 	@Override
 	public boolean mousePressed(TICMouseEvent event) {
 		setSwingFocus(event);  // Necessary for Swing components to react to keyboard events.

@@ -21,7 +21,6 @@ package info.bioinfweb.libralign.alignmentarea.content;
 
 import info.bioinfweb.libralign.alignmentarea.ToolkitSpecificAlignmentArea;
 import info.bioinfweb.libralign.alignmentarea.rowsarea.ToolkitSpecificAlignmentRowsArea;
-import info.bioinfweb.tic.TICComponent;
 
 
 
@@ -38,7 +37,7 @@ import info.bioinfweb.tic.TICComponent;
  * @author Ben St&ouml;ver
  * @since 0.3.0
  */
-public interface ToolkitSpecificAlignmentContentArea extends ToolkitSpecificAlignmentRowsArea<TICComponent> {
+public interface ToolkitSpecificAlignmentContentArea extends ToolkitSpecificAlignmentRowsArea<AlignmentSubArea> {
   /**
 	 * Determines whether this component contains nested components for each sequence or data area 
 	 * or if all its contents are painted directly.
