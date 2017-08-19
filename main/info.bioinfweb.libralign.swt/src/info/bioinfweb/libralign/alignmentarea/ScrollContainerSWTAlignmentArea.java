@@ -138,7 +138,7 @@ public class ScrollContainerSWTAlignmentArea extends AbstractSWTComposite implem
 							getIndependentComponent().getSequenceOrder().idByIndex(row));
 					if (sequenceArea != null) {
     				getIndependentComponent().getSelection().setNewCursorPosition(contentArea.columnByPaintX(event.x), row);
-						((Composite)sequenceArea.getComponent().getToolkitComponent()).setFocus();
+						((Composite)sequenceArea.getToolkitComponent()).setFocus();
 					}
 				}
 			}

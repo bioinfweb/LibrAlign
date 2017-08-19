@@ -24,7 +24,6 @@ import info.bioinfweb.libralign.dataarea.DataArea;
 import info.bioinfweb.libralign.dataarea.DataAreaList;
 import info.bioinfweb.libralign.dataarea.DataAreasModel;
 import info.bioinfweb.tic.SWTComponentFactory;
-import info.bioinfweb.tic.TICComponent;
 
 import java.util.Iterator;
 
@@ -43,7 +42,7 @@ import org.eclipse.swt.widgets.Control;
  * @since 0.3.0
  * @bioinfweb.module info.bioinfweb.libralign.swt
  */
-public class ScrollContainerSWTAlignmentContentArea extends SWTAlignmentRowsArea<TICComponent> 
+public class ScrollContainerSWTAlignmentContentArea extends SWTAlignmentRowsArea<AlignmentSubArea> 
 		implements ToolkitSpecificAlignmentContentArea {
 	
 	public ScrollContainerSWTAlignmentContentArea(AlignmentContentArea independentComponent, Composite parentComposite, int style) {  //TODO Is this constructor found in the factory, if a supertype of TICComponent is used?
@@ -71,7 +70,7 @@ public class ScrollContainerSWTAlignmentContentArea extends SWTAlignmentRowsArea
 		while (iterator.hasNext()) {
 			DataArea dataArea = iterator.next();
 			if (dataArea.isVisible()) {
-				factory.getSWTComponent(dataArea.getComponent(), this, SWT.NO_BACKGROUND);
+				factory.getSWTComponent(dataArea, this, SWT.NO_BACKGROUND);
 				dataArea.assignSize();
 			}
 		}
@@ -102,7 +101,7 @@ public class ScrollContainerSWTAlignmentContentArea extends SWTAlignmentRowsArea
 		Iterator<String> idIterator = getIndependentComponent().getOwner().getSequenceOrder().idIterator();
 		while (idIterator.hasNext()) {
 			String id = idIterator.next();
-			factory.getSWTComponent(getIndependentComponent().getSequenceAreaMap().get(id).getComponent(), this, SWT.NO_BACKGROUND);
+			factory.getSWTComponent(getIndependentComponent().getSequenceAreaMap().get(id), this, SWT.NO_BACKGROUND);
 			getIndependentComponent().getSequenceAreaMap().get(id).assignSize();
 			addDataAreaList(dataAreaModel.getSequenceAreas(id));
 		}
