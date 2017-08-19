@@ -75,7 +75,7 @@ public class ScrollContainerSwingAlignmentArea extends JScrollPane implements To
 							getIndependentComponent().getSequenceOrder().idByIndex(row));
 					if (sequenceArea != null) {
 						getIndependentComponent().getSelection().setNewCursorPosition(contentArea.columnByPaintX(e.getX()), row);
-						((JComponent)sequenceArea.getComponent().getToolkitComponent()).requestFocusInWindow();
+						((JComponent)sequenceArea.getToolkitComponent()).requestFocusInWindow();
 					}
 				}
 			}

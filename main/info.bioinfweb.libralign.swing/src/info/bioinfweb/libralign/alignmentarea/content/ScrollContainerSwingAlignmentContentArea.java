@@ -23,7 +23,6 @@ import info.bioinfweb.libralign.alignmentarea.rowsarea.SwingAlignmentRowsArea;
 import info.bioinfweb.libralign.dataarea.DataArea;
 import info.bioinfweb.libralign.dataarea.DataAreaList;
 import info.bioinfweb.tic.SwingComponentFactory;
-import info.bioinfweb.tic.TICComponent;
 
 import java.util.Iterator;
 
@@ -38,7 +37,7 @@ import javax.swing.Scrollable;
  * @since 0.3.0
  * @bioinfweb.module info.bioinfweb.libralign.swing
  */
-public class ScrollContainerSwingAlignmentContentArea extends SwingAlignmentRowsArea<TICComponent> implements Scrollable, ToolkitSpecificAlignmentContentArea {
+public class ScrollContainerSwingAlignmentContentArea extends SwingAlignmentRowsArea<AlignmentSubArea> implements Scrollable, ToolkitSpecificAlignmentContentArea {
 	public ScrollContainerSwingAlignmentContentArea(AlignmentContentArea independentComponent) {
 		super(independentComponent);
 		getIndependentComponent().getSequenceAreaMap().updateElements();  // This needs to be called before reinsertSubelements(). (getIndependentComponent().updateSubelements() cannot be used before this constructor returned a value.)
@@ -68,7 +67,7 @@ public class ScrollContainerSwingAlignmentContentArea extends SwingAlignmentRows
 		Iterator<String> idIterator = getIndependentComponent().getOwner().getSequenceOrder().idIterator();
 		while (idIterator.hasNext()) {
 			String id = idIterator.next();
-			add(factory.getSwingComponent(getIndependentComponent().getSequenceAreaMap().get(id).getComponent()));
+			add(factory.getSwingComponent(getIndependentComponent().getSequenceAreaMap().get(id)));
 			addDataAreaList(getIndependentComponent().getOwner().getDataAreas().getSequenceAreas(id));
 		}
 		
@@ -82,7 +81,7 @@ public class ScrollContainerSwingAlignmentContentArea extends SwingAlignmentRows
 		while (iterator.hasNext()) {
 			DataArea dataArea = iterator.next();
 			if (dataArea.isVisible()) {
-				add(factory.getSwingComponent(dataArea.getComponent()));
+				add(factory.getSwingComponent(dataArea));
 			}
 		}
 	}
