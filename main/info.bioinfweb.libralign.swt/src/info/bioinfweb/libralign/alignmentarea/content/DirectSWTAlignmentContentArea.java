@@ -32,6 +32,12 @@ public class DirectSWTAlignmentContentArea extends DefaultScrolledSWTComposite i
 
 	public DirectSWTAlignmentContentArea(AlignmentContentArea ticComponent, Composite parent, int style) {
 		super(ticComponent, parent, style | SWT.NO_BACKGROUND |	SWT.NO_REDRAW_RESIZE);
+		
+		// Ensure that all key and mouse events will be forwarded to respective AlignmentSubAreas:
+		InputEventForwarder forwarder = new InputEventForwarder(getIndependentComponent());
+		getIndependentComponent().addKeyListener(forwarder);
+		getIndependentComponent().addMouseListener(forwarder);
+		getIndependentComponent().addMouseWheelListener(forwarder);
 	}
  
 	
