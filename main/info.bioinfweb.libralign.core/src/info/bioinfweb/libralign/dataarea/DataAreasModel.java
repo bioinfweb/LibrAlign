@@ -106,8 +106,8 @@ public class DataAreasModel {
 		}
 		return result;
 	}
-
-
+	
+	
 	/**
 	 * Removes the list of data areas attached to the specified sequence from this model.
 	 *

@@ -116,13 +116,6 @@ public class AlignmentContentArea extends TICComponent {
 				}
 			}
 		});
-		
-		//if (!isUseSubcomponents()) {
-			//TODO Refactor this as when event forwarding to nested TICComponents is implemented. 
-			CursorSelectionInputListener listener = new CursorSelectionInputListener(owner);
-			addMouseListener(listener);
-			addKeyListener(listener);
-		//}
   }
 
 
@@ -350,6 +343,18 @@ public class AlignmentContentArea extends TICComponent {
 	public SequenceArea getSequenceAreaByID(String sequenceID) {
 		return sequenceAreaMap.get(sequenceID);
 	}
+	
+	
+	/**
+   * Returns the {@link SequenceArea} inside this area that displays the sequence in the specified row.
+   * 
+   * @param row the row of the sequence displayed in the returned area
+   * @return the sequence area
+   * @throws IndexOutOfBoundsException if the specified row is below 0 or greater or equal to number of sequences
+   */
+	public SequenceArea getSequenceAreaByRow(int row) {
+		return getSequenceAreaByID(getOwner().getSequenceOrder().idByIndex(row));
+	}
 
 
 	public Map<KeyStroke, Action> getActionMap() {
@@ -515,20 +520,38 @@ public class AlignmentContentArea extends TICComponent {
 	 *         below 0 or higher than this instance
 	 */
 	public AlignmentSubArea getAreaByPaintY(double y) {
+		AlignmentSubAreaInfo info = getAreaInfoByPaintY(y);
+		if (info != null) {
+			return info.getArea();
+		}
+		else {
+			return null;
+		}
+	}
+	
+
+	/**
+	 * Returns the child component containing the specified y-coordinate and its top most y-coordinate in 
+	 * an instance of {@link AlignmentSubAreaInfo}.
+	 * 
+	 * @param y the y-coordinate relative to this alignment content area
+	 * @return the info object or {@code null} if {@code y} is below 0 or higher than this instance
+	 */
+	public AlignmentSubAreaInfo getAreaInfoByPaintY(double y) {
 		double currentY = 0;
 		Iterator<AlignmentSubArea> iterator = subAreaIterator();
 		while (iterator.hasNext()) {
 			AlignmentSubArea area = iterator.next();
 			double height = area.getHeight();
 			if (Math2.isBetween(y, currentY, currentY + height)) {
-				return area;
+				return new AlignmentSubAreaInfo(area, currentY);
 			}
 			currentY += height;
 		}
 		return null;
 	}
 	
-
+	
 	/**
 	 * Returns the row index of the sequence displayed at the specified y coordinate considering the current order
 	 * of sequences. If a data area is displayed at the specified position, the row of the associated sequence is returned

@@ -40,6 +40,9 @@ import javax.swing.KeyStroke;
 
 /**
  * Mouse and key listener modifying the selection and cursor if a cursor is used.
+ * <p>
+ * Note that this listener is only meant to be registered on instances of {@link SequenceArea} (or possibly 
+ * instances of inherited classes). Registering it to other instances may cause {@link ClassCastException}s.
  * 
  * @author Ben St&ouml;ver
  * @since 0.2.0
@@ -60,11 +63,16 @@ public class CursorSelectionInputListener extends TICMouseAdapter implements TIC
 	
 	
 	private Point calculateColumnRow(TICMouseEvent event) {
-		double y = event.getComponentY();
-		if (event.getSource() instanceof SequenceArea) {
-			y += ((SequenceArea)event.getSource()).getToolkitComponent().getLocationInParent().getY();
+		int row;
+		SequenceArea area = (SequenceArea)event.getSource();  // This listener is only registered in sequence areas.
+		if (event.getSource().hasToolkitComponent()) {  // This method is used if subcomponents are present, because mouse dragging events do not necessarily come from subareas that contain the current mouse position.
+			row = getOwner().getContentArea().rowByPaintY(event.getComponentY() + 
+					area.getToolkitComponent().getLocationInParent().getY());
 		}
-		return new Point(getOwner().getContentArea().columnByPaintX(event.getComponentX()),	getOwner().getContentArea().rowByPaintY(y));
+		else {  // This method is used for possible direct painting in SWT. There the source area will always contain the mouse coordinates.
+			row = getOwner().getSequenceOrder().indexByID(area.getSequenceID());
+		}
+		return new Point(getOwner().getContentArea().columnByPaintX(event.getComponentX()), row);
 	}
 	
 	
