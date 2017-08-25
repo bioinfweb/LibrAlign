@@ -392,6 +392,7 @@ test/src/info/bioinfweb/libralign/test/tests/BioJavaPherogramTest.java -text svn
 test/src/info/bioinfweb/libralign/test/tests/BitShiftTest.java -text svneol=unset#text/plain
 test/src/info/bioinfweb/libralign/test/tests/CastNullTest.java -text svneol=unset#text/plain
 test/src/info/bioinfweb/libralign/test/tests/GenericCollectionTest.java -text svneol=unset#text/plain
+test/src/info/bioinfweb/libralign/test/tests/ManualScrolling.java -text svneol=unset#text/plain
 test/src/info/bioinfweb/libralign/test/tests/NeXMLTest.java -text svneol=unset#text/plain
 test/src/info/bioinfweb/libralign/test/tests/PaintingOutOfIntRange.java -text svneol=unset#text/plain
 test/src/info/bioinfweb/libralign/test/tests/PrimitiveIntegersPerformanceTest.java -text svneol=unset#text/plain
