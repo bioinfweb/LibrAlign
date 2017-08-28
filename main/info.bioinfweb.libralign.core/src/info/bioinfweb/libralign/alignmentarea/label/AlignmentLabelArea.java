@@ -25,6 +25,7 @@ import java.util.Iterator;
 import info.bioinfweb.tic.TICComponent;
 import info.bioinfweb.tic.TICPaintEvent;
 import info.bioinfweb.libralign.alignmentarea.AlignmentArea;
+import info.bioinfweb.libralign.alignmentarea.GUITools;
 import info.bioinfweb.libralign.alignmentarea.content.AlignmentSubArea;
 import info.bioinfweb.libralign.multiplealignments.MultipleAlignmentsContainer;
 
@@ -172,7 +173,12 @@ public class AlignmentLabelArea extends TICComponent {
 
 	@Override
 	protected String getSWTComponentClassName(Object... parameters) {
-		return "info.bioinfweb.libralign.alignmentarea.label.ScrollContainerSWTAlignmentLabelArea";
+		if (GUITools.determineUseSubcomponents(parameters)) {
+			return "info.bioinfweb.libralign.alignmentarea.label.ScrollContainerSWTAlignmentLabelArea";
+		}
+		else {
+			return "info.bioinfweb.libralign.alignmentarea.label.DirectSWTAlignmentLabelArea";
+		}
 	}
 
 
