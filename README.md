@@ -17,7 +17,7 @@ It is distributed under [LGPL](http://bioinfweb.info/LibrAlign/License/LGPL). Mo
 
 A [documentation](http://bioinfweb.info/LibrAlign/Documentation) and a full [JavaDoc](http://bioinfweb.info/LibrAlign/Documentation/API/Latest) are available. A basic demo application can be found [here](https://github.com/bioinfweb/LibrAlign/tree/master/demo/info.bioinfweb.libralign.demo.swingapp/src/info/bioinfweb/libralign/demo/swingapp).
 
-If you have further questions, feel free to ask a question on our [ResearchGate project page](http://r.bioinfweb.info/RGLibrAlign) or contact [@BenStoever](https://github.com/BenStoever) at stoever@bioinfweb.info.
+If you have further questions, feel free to ask one on our [ResearchGate project page](http://r.bioinfweb.info/RGLibrAlign) or contact support@bioinfweb.info.
 
 ## Source code
 
@@ -26,6 +26,10 @@ This *GitHub* repository in a synchronized mirror of the [master repository at b
 ## License
 
 The latest versions of *LibrAlign* are distrubuted under [GNU General Lesser Public License Version 3](http://bioinfweb.info/LibrAlign/License/LGPL).
+
+See [NOTICE.txt](https://github.com/bioinfweb/LibrAlign/blob/master/main/info.bioinfweb.libralign.core/src/NOTICE.txt) fur further details.
+
+This product includes dependencies developed by the [Apache Software Foundation](http://www.apache.org/) distributed under the terms of the [Apache License Version 2.0](https://github.com/bioinfweb/LibrAlign/blob/master/main/info.bioinfweb.libralign.core/src/APACHE-LICENSE.txt).
 
 ## Binary releases
 
