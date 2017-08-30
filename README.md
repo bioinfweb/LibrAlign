@@ -25,7 +25,7 @@ This *GitHub* repository in a synchronized mirror of the [master repository at b
 
 ## License
 
-The latest versions of *LibrAlign* are distrubuted under [GNU General Lesser Public License Version 3](http://bioinfweb.info/LibrAlign/License/LGPL). See [NOTICE.txt](https://github.com/bioinfweb/LibrAlign/blob/master/main/info.bioinfweb.libralign.core/src/NOTICE.txt) fur further details.
+The latest versions of *LibrAlign* are distrubuted under [GNU General Lesser Public License Version 3](http://bioinfweb.info/LibrAlign/License/LGPL). See [NOTICE.txt](https://github.com/bioinfweb/LibrAlign/blob/master/main/info.bioinfweb.libralign.core/src/NOTICE.txt) for further details.
 
 This product includes dependencies developed by the [Apache Software Foundation](http://www.apache.org/) distributed under the terms of the [Apache License Version 2.0](https://github.com/bioinfweb/LibrAlign/blob/master/main/info.bioinfweb.libralign.core/src/APACHE-LICENSE.txt).
 
