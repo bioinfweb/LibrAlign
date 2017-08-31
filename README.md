@@ -31,4 +31,4 @@ This product includes dependencies developed by the [Apache Software Foundation]
 
 ## Binary releases
 
-Binary releases can be found at http://bioinfweb.info/LibrAlign/Download.
+Binary releases and *Maven* code can be found at http://bioinfweb.info/LibrAlign/Download.
