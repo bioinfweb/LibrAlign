@@ -31,7 +31,7 @@ import org.eclipse.swt.widgets.Composite;
 
 
 /**
- * The SWT component displaying the label components for an alignment.
+ * The <i>SWT</i> component displaying the label components for an alignment.
  * 
  * @author Ben St&ouml;ver
  * @since 0.3.0
@@ -43,13 +43,14 @@ public class ScrollContainerSWTAlignmentLabelArea extends SWTAlignmentRowsArea<A
 	/**
 	 * Creates a new instance of this class.
    * <p>
-   * Note that this method will only add subelements if the subelements of the associated {@link ScrollContainerSWTAlignmentContentArea}
-   * are already present. Otherwise the component will be empty after calling this method and you need to call 
-   * {@link #reinsertSubelements()} again after the associated alignment content area has been created. 
+   * Note that this method will only add subelements if the subelements of the associated 
+   * {@link ScrollContainerSWTAlignmentContentArea} are already present. Otherwise the component will 
+   * be empty after calling this method and you need to call {@link #reinsertSubelements()} again after 
+   * the associated alignment content area has been created. 
 	 * 
-	 * @param parent - the parent component
-	 * @param style - the SWT style value
-	 * @param independentComponent - the toolkit independent component that uses this instance
+	 * @param parent the parent component
+	 * @param style the <i>SWT</i> style value
+	 * @param independentComponent the toolkit independent component that uses this instance
 	 */
 	public ScrollContainerSWTAlignmentLabelArea(AlignmentLabelArea independentComponent, Composite parent, int style) {
 		super(independentComponent, parent, style);
@@ -64,7 +65,7 @@ public class ScrollContainerSWTAlignmentLabelArea extends SWTAlignmentRowsArea<A
 
 
 	/**
-   * Recreates the components displaying sequences and data areas in the alignment according to
+   * Recreates the components displaying labels for sequences and data areas in the alignment according to
    * the current model information.
    * <p>
    * Note that this method will only add elements if the subelements of the associated {@link ScrollContainerSWTAlignmentContentArea}
