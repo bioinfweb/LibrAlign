@@ -359,6 +359,7 @@ main/info.bioinfweb.libralign.swt/src/info/bioinfweb/libralign/alignmentarea/Scr
 main/info.bioinfweb.libralign.swt/src/info/bioinfweb/libralign/alignmentarea/content/DirectSWTAlignmentContentArea.java -text svneol=unset#text/plain
 main/info.bioinfweb.libralign.swt/src/info/bioinfweb/libralign/alignmentarea/content/ScrollContainerSWTAlignmentContentArea.java -text svneol=unset#text/plain
 main/info.bioinfweb.libralign.swt/src/info/bioinfweb/libralign/alignmentarea/label/DirectSWTAlignmentLabelArea.java -text svneol=unset#text/plain
+main/info.bioinfweb.libralign.swt/src/info/bioinfweb/libralign/alignmentarea/label/SWTAlignmentLabelArea.java -text svneol=unset#text/plain
 main/info.bioinfweb.libralign.swt/src/info/bioinfweb/libralign/alignmentarea/label/ScrollContainerSWTAlignmentLabelArea.java -text svneol=unset#text/plain
 main/info.bioinfweb.libralign.swt/src/info/bioinfweb/libralign/alignmentarea/rowsarea/SWTAlignmentRowsArea.java -text svneol=unset#text/plain
 main/info.bioinfweb.libralign.swt/src/info/bioinfweb/libralign/multiplealignments/SWTMultipleAlignmentsContainer.java -text svneol=unset#text/plain
