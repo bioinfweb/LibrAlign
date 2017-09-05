@@ -398,11 +398,10 @@ public class AlignmentContentArea extends TICComponent {
 
 	@Override
 	public Dimension getSize() {
-		Dimension result = new Dimension((int)Math2.roundUp(getOwner().getGlobalMaxNeededWidth()), getOwner().getDataAreas().getVisibleAreaHeight());
-		if (getOwner().hasAlignmentModel()) {
-			result.height += getOwner().getAlignmentModel().getSequenceCount() * getOwner().getPaintSettings().getTokenHeight();
-		}
-		return result;
+		//TODO This calculation only works as long as this area is within a scroll container. It will not work for self-scrolling components.
+		//     => Implement size calculation in toolkit component and delegate there? Where would assignSize() get its data from then? (Avoid circular delegation!)
+		//TODO Height should later be buffered somewhere, just like the maximum width.
+		return new Dimension((int)Math2.roundUp(getOwner().getGlobalMaxNeededWidth()), (int)getOwner().getPaintHeight());
 	}
 
 

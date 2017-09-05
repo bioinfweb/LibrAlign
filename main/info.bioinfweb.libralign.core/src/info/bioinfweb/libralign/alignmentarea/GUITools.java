@@ -25,7 +25,7 @@ import info.bioinfweb.libralign.alignmentarea.content.AlignmentContentArea;
 
 /**
  * Provides tool methods for the GUI components of <i>LibrAlign</i>. This class is intended for internal purposes
- * and will usually not be useful in application code.
+ * and should usually not be used in application code.
  * 
  * @author Ben St&ouml;ver
  * @since 0.5.0

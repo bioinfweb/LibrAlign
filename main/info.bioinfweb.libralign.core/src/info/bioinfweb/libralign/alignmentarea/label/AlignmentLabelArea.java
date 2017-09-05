@@ -173,12 +173,7 @@ public class AlignmentLabelArea extends TICComponent {
 
 	@Override
 	protected String getSWTComponentClassName(Object... parameters) {
-		if (GUITools.determineUseSubcomponents(parameters)) {
-			return "info.bioinfweb.libralign.alignmentarea.label.ScrollContainerSWTAlignmentLabelArea";
-		}
-		else {
-			return "info.bioinfweb.libralign.alignmentarea.label.DirectSWTAlignmentLabelArea";
-		}
+		return "info.bioinfweb.libralign.alignmentarea.label.SWTAlignmentLabelArea";
 	}
 
 

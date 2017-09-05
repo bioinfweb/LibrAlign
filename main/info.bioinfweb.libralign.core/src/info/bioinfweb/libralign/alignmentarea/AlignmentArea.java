@@ -513,6 +513,20 @@ public class AlignmentArea extends TICComponent implements AlignmentModelChangeL
 	}
 	
 	
+	/**
+	 * Calculates the height of all sequences and all visible data areas together. 
+	 * 
+	 * @return the height of the alignment displayed by this component in pixels
+	 */
+	public double getPaintHeight() {
+		double result = getDataAreas().getVisibleAreaHeight();
+		if (hasAlignmentModel()) {
+			result += getAlignmentModel().getSequenceCount() * getPaintSettings().getTokenHeight();
+		}
+		return result;
+	}
+	
+	
 	public void scrollCursorToVisible() {
 		//TODO Refactor to also support direct painting without subcomponents.
 		if (hasToolkitComponent()) {
