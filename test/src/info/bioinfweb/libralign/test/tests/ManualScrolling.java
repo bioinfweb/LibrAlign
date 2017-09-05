@@ -37,7 +37,7 @@ import org.eclipse.swt.widgets.Shell;
 /**
  * Snippet that demonstrated scrolling subcomponents with an overall size above 2^15 - 1.
  * <p>
- * Source: https://www.eclipse.org/forums/index.php/t/121005/ 
+ * Source: https://www.eclipse.org/forums/index.php/t/121005/
  */
 public class ManualScrolling {
 	public static void main(String[] args) {
@@ -52,7 +52,7 @@ public class ManualScrolling {
 			b.setText(Integer.toString(i));
 		}
 		final ScrollBar hBar = c.getHorizontalBar();
-		hBar.addListener (SWT.Selection, new Listener() {
+		hBar.addListener(SWT.Selection, new Listener() {
 			public void handleEvent (Event e) {
 				int hSelection = hBar.getSelection();
 				GridLayout layout = (GridLayout)c.getLayout();
@@ -61,7 +61,7 @@ public class ManualScrolling {
 			}
 		});
 		final ScrollBar vBar = c.getVerticalBar ();
-		vBar.addListener (SWT.Selection, new Listener () {
+		vBar.addListener(SWT.Selection, new Listener () {
 			public void handleEvent (Event e) {
 				int vSelection = vBar.getSelection();
 				GridLayout layout = (GridLayout)c.getLayout();
@@ -69,12 +69,13 @@ public class ManualScrolling {
 				c.layout(false);
 			}
 		});
-		c.addListener (SWT.Resize, new Listener () {
+		c.addListener(SWT.Resize, new Listener () {
 			public void handleEvent (Event e) {
 				Rectangle size = c.getClientArea();
 				size.width += vBar.getSize().x;
 				size.height += hBar.getSize().y;
-				Point preferredSize = c.computeSize(SWT.DEFAULT, SWT.DEFAULT);
+				Point preferredSize = c.computeSize(SWT.DEFAULT, SWT.DEFAULT);  //TODO This returns illegal values, if components are already scrolled.
+				System.out.println(preferredSize.y);
 				hBar.setMaximum(preferredSize.x);
 				hBar.setThumb(Math.min(size.width, preferredSize.x));
 				hBar.setPageIncrement(size.width);
@@ -82,12 +83,21 @@ public class ManualScrolling {
 				vBar.setThumb(Math.min(size.height, preferredSize.y));
 				vBar.setPageIncrement(size.height);
 				// this could be improved - scrolls back to origin on resize
+//				int hSelection = hBar.getSelection(); 
+//				int vSelection = vBar.getSelection();
+				
 				hBar.setSelection(0);
 				vBar.setSelection(0);
 				GridLayout layout = (GridLayout)c.getLayout();
-				layout.marginWidth = INDENT;  // Why is that done? The value does not seem to change here and below.
+				layout.marginWidth = INDENT;
 				layout.marginHeight = INDENT;
-				c.layout(false);
+				c.layout(false);				
+				
+//				hBar.setSelection(hSelection);
+//				vBar.setSelection(vSelection);
+//				layout.marginWidth = -hSelection + INDENT;
+//				layout.marginHeight = -vSelection + INDENT;
+//				c.layout(false);
 			}
 		});
 		shell.setSize(100, 600);
