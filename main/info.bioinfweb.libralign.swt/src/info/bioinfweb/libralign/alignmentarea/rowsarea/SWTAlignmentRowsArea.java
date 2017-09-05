@@ -20,7 +20,6 @@ package info.bioinfweb.libralign.alignmentarea.rowsarea;
 
 
 import info.bioinfweb.libralign.alignmentarea.content.ScrollContainerSWTAlignmentContentArea;
-import info.bioinfweb.libralign.alignmentarea.label.ScrollContainerSWTAlignmentLabelArea;
 import info.bioinfweb.tic.TICComponent;
 import info.bioinfweb.tic.toolkit.AbstractSWTComposite;
 
