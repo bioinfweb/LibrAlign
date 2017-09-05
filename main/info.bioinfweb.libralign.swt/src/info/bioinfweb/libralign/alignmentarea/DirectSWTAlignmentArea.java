@@ -19,42 +19,46 @@
 package info.bioinfweb.libralign.alignmentarea;
 
 
+import info.bioinfweb.libralign.alignmentarea.content.DirectSWTAlignmentContentArea;
+import info.bioinfweb.libralign.alignmentarea.label.SWTAlignmentLabelArea;
+import info.bioinfweb.tic.SWTComponentFactory;
+import info.bioinfweb.tic.toolkit.scrolling.ScrollEvent;
+import info.bioinfweb.tic.toolkit.scrolling.ScrollListener;
+
 import java.awt.Rectangle;
 
-import info.bioinfweb.libralign.alignmentarea.content.DirectSWTAlignmentContentArea;
-import info.bioinfweb.tic.SWTComponentFactory;
-import info.bioinfweb.tic.toolkit.AbstractSWTComposite;
-
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.custom.SashForm;
-import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Scrollable;
 
 
 
-public class DirectSWTAlignmentArea extends AbstractSWTComposite implements ToolkitSpecificAlignmentArea {
+public class DirectSWTAlignmentArea extends AbstractSWTAlignmentArea implements ToolkitSpecificAlignmentArea {
 	public DirectSWTAlignmentArea(AlignmentArea ticComponent, Composite parent, int style) {
 		super(ticComponent, parent, style);
-		init();
 	}
 	
-	
-	//TODO Assign size probably needs to be suppressed in the independent component?
-
-	private void init() {
-		setLayout(new FillLayout(SWT.HORIZONTAL));
-		
-		SashForm sashForm = new SashForm(this, SWT.NONE);
-		SWTComponentFactory factory = SWTComponentFactory.getInstance();
-		factory.getSWTComponent(getIndependentComponent().getLabelArea(), sashForm, SWT.NONE);  //TODO Does constructing these components in the "wrong" order also make a difference here, when subcomponents are not used?
-		factory.getSWTComponent(getIndependentComponent().getContentArea(), sashForm, SWT.NO_BACKGROUND, false);
-		sashForm.setWeights(new int[] {1, 10});  //TODO Specify calculated values here?
-	}
-
 	
 	@Override
 	public AlignmentArea getIndependentComponent() {
 		return (AlignmentArea)super.getIndependentComponent();
+	}
+
+
+	@Override
+	protected Scrollable createContentScroller(Composite container, final SWTAlignmentLabelArea labelArea) {
+		DirectSWTAlignmentContentArea result = (DirectSWTAlignmentContentArea)SWTComponentFactory.getInstance().getSWTComponent(
+				getIndependentComponent().getContentArea(), container, SWT.NO_BACKGROUND, false);
+		
+		// Synchronize vertical scrolling:
+		result.getScrollListeners().add(new ScrollListener() {
+			@Override
+			public void controlScrolled(ScrollEvent event) {
+				labelArea.setVerticalScrollPosition(-event.getSource().getScrollOffsetY());
+			}
+		});
+
+		return result;
 	}
 
 

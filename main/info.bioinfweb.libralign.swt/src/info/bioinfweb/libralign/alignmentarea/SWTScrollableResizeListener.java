@@ -19,35 +19,35 @@
 package info.bioinfweb.libralign.alignmentarea;
 
 
-import org.eclipse.swt.custom.ScrolledComposite;
 import org.eclipse.swt.events.ControlEvent;
 import org.eclipse.swt.events.ControlListener;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Scrollable;
 
 
 
 /**
- * Helper class that cuts off the horizontal scroll bar from a SWT {@link ScrolledComposite} to simulate
- * Swing functionality.
+ * Helper class that cuts off the horizontal scroll bar from an <i>SWT</i> {@link Scrollable} to provide
+ * functionality comparable to <i>Swing</i> components.
  * 
  * @author Ben St&ouml;ver
  * @since 0.2.0
  * @bioinfweb.module info.bioinfweb.libralign.swt
  */
-public class SWTScrolledCompositeResizeListener implements ControlListener {
+public class SWTScrollableResizeListener implements ControlListener {
 	private Composite container;
-	private ScrolledComposite scrolledComposite;
+	private Scrollable scrollable;
 	private boolean hideVerticalBar;
 	private boolean hideHorizontalBar;
 	
 	
-	public SWTScrolledCompositeResizeListener(Composite container, ScrolledComposite scrolledComposite, 
+	public SWTScrollableResizeListener(Composite container, Scrollable scrollable, 
 			boolean hideVerticalBar, boolean hideHorizontalBar) {
 		
 		super();
 		this.container = container;
-		this.scrolledComposite = scrolledComposite;
+		this.scrollable = scrollable;
 		this.hideVerticalBar = hideVerticalBar;
 		this.hideHorizontalBar = hideHorizontalBar;
 	}
@@ -58,8 +58,8 @@ public class SWTScrolledCompositeResizeListener implements ControlListener {
 	}
 
 
-	public ScrolledComposite getScrolledComposite() {
-		return scrolledComposite;
+	public Scrollable getScrollable() {
+		return scrollable;
 	}
 
 
@@ -88,12 +88,12 @@ public class SWTScrolledCompositeResizeListener implements ControlListener {
 		Rectangle bounds = container.getBounds();		
 		int width = bounds.width;
 		if (isHideVerticalBar()) {
-			width += scrolledComposite.getVerticalBar().getSize().x + scrolledComposite.getBorderWidth();
+			width += scrollable.getVerticalBar().getSize().x + scrollable.getBorderWidth();
 		}
 		int height = bounds.height;
 		if (isHideHorizontalBar()) {
-			height += scrolledComposite.getHorizontalBar().getSize().y + scrolledComposite.getBorderWidth(); 
+			height += scrollable.getHorizontalBar().getSize().y + scrollable.getBorderWidth(); 
 		}
-		scrolledComposite.setBounds(0, 0, width, height);
+		scrollable.setBounds(0, 0, width, height);
 	}
 }

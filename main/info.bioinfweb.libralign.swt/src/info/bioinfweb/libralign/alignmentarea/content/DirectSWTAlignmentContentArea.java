@@ -19,7 +19,7 @@
 package info.bioinfweb.libralign.alignmentarea.content;
 
 
-import info.bioinfweb.tic.toolkit.DefaultScrolledSWTComposite;
+import info.bioinfweb.tic.toolkit.scrolling.DefaultScrolledSWTComposite;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Rectangle;

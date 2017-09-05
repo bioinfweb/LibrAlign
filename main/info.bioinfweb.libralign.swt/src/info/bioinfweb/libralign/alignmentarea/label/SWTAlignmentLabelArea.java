@@ -20,6 +20,7 @@ package info.bioinfweb.libralign.alignmentarea.label;
 
 
 import info.bioinfweb.commons.Math2;
+import info.bioinfweb.libralign.alignmentarea.content.AlignmentContentArea;
 import info.bioinfweb.libralign.alignmentarea.content.ScrollContainerSWTAlignmentContentArea;
 import info.bioinfweb.libralign.alignmentarea.rowsarea.SWTAlignmentRowsArea;
 import info.bioinfweb.tic.SWTComponentFactory;
@@ -59,56 +60,23 @@ public class SWTAlignmentLabelArea extends SWTAlignmentRowsArea<AlignmentLabelSu
 	 * @param independentComponent the toolkit independent component that uses this instance
 	 */
 	public SWTAlignmentLabelArea(AlignmentLabelArea independentComponent, Composite parent, int style) {
-		super(independentComponent, parent, style | SWT.V_SCROLL | SWT.H_SCROLL);
+		super(independentComponent, parent, style | SWT.H_SCROLL);
 		reinsertSubelements();
-		addScrollListeners();
 	}
 	
 	
-	private void addScrollListeners() {
-		final ScrollBar vBar = getVerticalBar();
-		vBar.addListener(SWT.Selection, new Listener() {
-			public void handleEvent(Event e) {
-				System.out.println("vertical bar listener");
-				int vSelection = vBar.getSelection();
-				RowLayout layout = (RowLayout)getLayout();
-				layout.marginHeight = -vSelection;
-				layout(false);
-			}
-		});
-		//TODO Since the vertical scroll bar is never visible for the label area and programmatical setting of the selection does not trigger any events, the vertical scroll bar can be left out. Then no container is needed and scrolling can be performed in a setOrigin() method (that would anyway be needed).
-		addListener(SWT.Resize, new Listener() {
-			public void handleEvent(Event e) {
-				Rectangle size = getClientArea();
-				//size.width += vBar.getSize().x;
-				//size.height += hBar.getSize().y;  /TODO Is this needed?
-				int fullHeight = (int)Math2.roundUp(getIndependentComponent().getOwner().getPaintHeight());
-//				Point preferredSize = computeSize(SWT.DEFAULT, SWT.DEFAULT);  //TODO This returns illegal values, if components are already scrolled. => Replace by height from
-//				hBar.setMaximum(preferredSize.x);
-//				hBar.setThumb(Math.min(size.width, preferredSize.x));
-//				hBar.setPageIncrement(size.width);
-				vBar.setMaximum(fullHeight);
-				vBar.setThumb(Math.min(size.height, fullHeight));
-				vBar.setPageIncrement(size.height);
-				// this could be improved - scrolls back to origin on resize
-//				int hSelection = hBar.getSelection(); 
-//				int vSelection = vBar.getSelection();
-				
-//				hBar.setSelection(0);
-//				vBar.setSelection(0);
-//				GridLayout layout = (GridLayout)c.getLayout();
-//				layout.marginWidth = INDENT;
-//				layout.marginHeight = INDENT;
-				layout(false);				
-				
-//				hBar.setSelection(hSelection);
-//				vBar.setSelection(vSelection);
-//				layout.marginWidth = -hSelection + INDENT;
-//				layout.marginHeight = -vSelection + INDENT;
-//				c.layout(false);
-			}
-		});
-		
+	/**
+	 * Sets the vertical scroll position of this component. Note that this method is meant for internal use in
+	 * <i>LibrAlign</i> only. Application code should not call it directly, since the {@link AlignmentContentArea}
+	 * will not adjust its position. Set the content area scroll position instead, which will also scroll
+	 * this label area.
+	 * 
+	 * @param position the y-coordinate that shall be the new origin
+	 */
+	public void setVerticalScrollPosition(int position) {
+		RowLayout layout = (RowLayout)getLayout();
+		layout.marginHeight = -position;
+		layout(false);
 	}
 
 
