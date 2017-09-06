@@ -62,7 +62,7 @@ public class SwingMultipleAlignmentsContainer extends AbstractSwingComponent imp
 							scrollBar.getModel().setValue(e.getValue());
 						}
 					}
-					// If the operation would only be performed outside valueIsAdjusting the other scroll panes 
+					// If the operation would only be performed outside of valueIsAdjusting the other scroll panes 
 					// would not be moved while the scroll bar is dragged. 
 				}
 			};
@@ -74,8 +74,8 @@ public class SwingMultipleAlignmentsContainer extends AbstractSwingComponent imp
 	/**
 	 * Creates a new instance of this class.
 	 * 
-	 * @param independentComponent - the alignment area class that uses this instance to display its contents 
-	 *        in a Swing GUI
+	 * @param independentComponent the alignment area class that uses this instance to display its contents 
+	 *        in a <i>Swing</i> GUI
 	 */
 	public SwingMultipleAlignmentsContainer(MultipleAlignmentsContainer independentComponent) {
 		super(independentComponent);
@@ -107,7 +107,7 @@ public class SwingMultipleAlignmentsContainer extends AbstractSwingComponent imp
 	 * Creates the specified number of nested split panes. (If the list contains more split panes than {@code count}
 	 * the additional ones are removed.)
 	 * 
-	 * @param count - the number of split panes to be created
+	 * @param count the number of split panes to be created
 	 */
 	private void createSplitPanes(int count) {
 		if (splitPanes.size() < count) {
