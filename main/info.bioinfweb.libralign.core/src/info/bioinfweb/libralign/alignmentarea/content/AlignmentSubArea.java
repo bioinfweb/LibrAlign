@@ -44,7 +44,6 @@ import java.awt.geom.Rectangle2D;
 public abstract class AlignmentSubArea extends TICComponent {
 	private AlignmentLabelSubArea labelSubArea = null;
 	private AlignmentContentArea owner = null;
-	private TICComponent component;
 
 	
 	/**

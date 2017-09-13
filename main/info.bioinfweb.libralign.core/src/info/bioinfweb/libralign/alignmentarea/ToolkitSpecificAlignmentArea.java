@@ -40,7 +40,7 @@ public interface ToolkitSpecificAlignmentArea extends ToolkitComponent {
   /**
    * Scrolls the contained components so that the specified rectangle is visible.
    *  
-   * @param rectangle - the rectangle in the specified alignment that shall become visible
+   * @param rectangle the rectangle in the specified alignment that shall become visible
    */
   public void scrollAlignmentRectToVisible(Rectangle rectangle);
 
