@@ -115,7 +115,9 @@ public abstract class AbstractSWTAlignmentArea extends AbstractSWTComposite impl
 							getIndependentComponent().getSequenceOrder().idByIndex(row));
 					if (sequenceArea != null) {
     				getIndependentComponent().getSelection().setNewCursorPosition(contentArea.columnByPaintX(event.x), row);
-						((Composite)sequenceArea.getToolkitComponent()).setFocus();
+    				if (sequenceArea.hasToolkitComponent()) {
+    					((Composite)sequenceArea.getToolkitComponent()).setFocus();
+    				}
 					}
 				}
 			}
