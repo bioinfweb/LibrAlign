@@ -19,11 +19,9 @@
 package info.bioinfweb.libralign.alignmentarea;
 
 
-import info.bioinfweb.libralign.alignmentarea.AlignmentArea;
 import info.bioinfweb.libralign.alignmentarea.content.AlignmentContentArea;
 import info.bioinfweb.libralign.alignmentarea.content.InputEventForwarder;
 import info.bioinfweb.libralign.alignmentarea.content.ToolkitSpecificAlignmentContentArea;
-import info.bioinfweb.tic.TICComponent;
 import info.bioinfweb.tic.toolkit.DirectPaintingSWTScrollContainer;
 
 import org.eclipse.swt.SWT;

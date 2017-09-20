@@ -20,8 +20,6 @@ package info.bioinfweb.libralign.alignmentarea;
 
 
 import info.bioinfweb.libralign.alignmentarea.content.AlignmentContentArea;
-import info.bioinfweb.libralign.alignmentarea.label.SWTAlignmentLabelArea;
-import info.bioinfweb.tic.SWTComponentFactory;
 import info.bioinfweb.tic.toolkit.DirectPaintingSWTScrollContainer;
 
 import java.awt.Rectangle;
@@ -71,7 +69,7 @@ public class DirectPaintingSWTAlignmentArea extends AbstractSWTAlignmentArea imp
 
 
 	@Override
-	protected Scrollable createContentScroller(Composite container, final SWTAlignmentLabelArea labelArea) {
+	protected Scrollable createContentScroller(Composite container) {
 		contentScroller = new DirectPaintingSWTAlignmentContentScroller(getIndependentComponent(), container, SWT.NO_BACKGROUND); 
 		return contentScroller;
 	}
@@ -86,11 +84,5 @@ public class DirectPaintingSWTAlignmentArea extends AbstractSWTAlignmentArea imp
 	@Override
 	public Rectangle getVisibleRectangle() {
 		return contentScroller.getVisibleRectangle();
-	}
-
-
-	@Override
-	public void setHideHorizontalScrollBar(boolean hideHorizontalScrollBar) {
-		// TODO implement
 	}
 }

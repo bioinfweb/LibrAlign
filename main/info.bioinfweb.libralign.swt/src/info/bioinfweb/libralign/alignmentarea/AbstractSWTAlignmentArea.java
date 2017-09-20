@@ -22,6 +22,7 @@ package info.bioinfweb.libralign.alignmentarea;
 import info.bioinfweb.libralign.alignmentarea.content.AlignmentContentArea;
 import info.bioinfweb.libralign.alignmentarea.content.SequenceArea;
 import info.bioinfweb.libralign.alignmentarea.label.SWTAlignmentLabelArea;
+import info.bioinfweb.libralign.multiplealignments.SWTMultipleAlignmentsContainer;
 import info.bioinfweb.tic.SWTComponentFactory;
 import info.bioinfweb.tic.scrolling.TICScrollEvent;
 import info.bioinfweb.tic.scrolling.TICScrollListener;
@@ -38,7 +39,6 @@ import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Scrollable;
 
 
@@ -58,6 +58,7 @@ public abstract class AbstractSWTAlignmentArea extends AbstractSWTComposite impl
 	private SWTScrollableResizeListener labelResizeListener;
 	private SWTAlignmentLabelArea labelArea;
 	private Composite contentContainer;
+	private Scrollable contentScroller;
 	private SWTScrollableResizeListener contentResizeListener;
 
 
@@ -105,11 +106,7 @@ public abstract class AbstractSWTAlignmentArea extends AbstractSWTComposite impl
 		// Alignment area part components:
 		contentContainer = new Composite(this, SWT.NONE);
 		contentContainer.setLayoutData(createGridData(true));
-		Scrollable contentScroller = createContentScroller(contentContainer, labelArea); 
-		// new ScrolledComposite(contentContainer, SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL);
-//		contentScroller.setAlwaysShowScrollBars(true);
-//		Composite contentArea =	factory.getSWTComponent(getIndependentComponent().getContentArea(), contentScroller, SWT.NONE, true);
-//		contentScroller.setContent(contentArea);
+		contentScroller = createContentScroller(contentContainer); 
 		contentScroller.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseDown(MouseEvent event) {  // Sets the focus to a respective sequence area, if the user clicks outside of the content area and moves the cursor.
@@ -145,8 +142,7 @@ public abstract class AbstractSWTAlignmentArea extends AbstractSWTComposite impl
 		});
 
 		// Link label area:
-		//((Control)getIndependentComponent().getContentArea().getToolkitComponent())
-		contentScroller.addControlListener(new ControlAdapter() {  //TODO Is this needed only in the scroll container case?
+		contentScroller.addControlListener(new ControlAdapter() {
 					@Override
 					public void controlResized(ControlEvent e) {
 						getIndependentComponent().getLabelArea().assignSize();
@@ -168,15 +164,18 @@ public abstract class AbstractSWTAlignmentArea extends AbstractSWTComposite impl
 		labelContainer.addControlListener(labelAreaResizeListener);
 		labelAreaResizeListener.controlResized(null);  // Apply initial size to container.
 
+		// Allow to hide horizontal scroll bar on self-scrolling label area:
+		//TODO This does not yet work.
+		labelResizeListener = new SWTScrollableResizeListener(labelContainer, labelArea, false,
+				hideHorizontalScrollBar);
+		labelContainer.addControlListener(labelResizeListener);  // Must not be called before both fields are initialized.
+		
 		// Set correct size to recently created SWT components:
 		getIndependentComponent().assignSizeToAll();
 	}
 	
 	
-	//protected abstract Scrollable createLabelScroller(Composite container);
-
-	
-	protected abstract Scrollable createContentScroller(Composite container, SWTAlignmentLabelArea labelArea);
+	protected abstract Scrollable createContentScroller(Composite container);
 
 	
 	@Override
@@ -195,4 +194,17 @@ public abstract class AbstractSWTAlignmentArea extends AbstractSWTComposite impl
 		labelResizeListener.setHideHorizontalBar(hideHorizontalScrollBar);
 		contentResizeListener.setHideHorizontalBar(hideHorizontalScrollBar);
  	}
+
+
+	/**
+	 * Returns the height of the horizontal content scroll bar.
+	 * <p>
+	 * This method is used internally by {@link SWTMultipleAlignmentsContainer#getNeededHeight(int)}.
+	 *
+	 * @return the height in pixels
+	 */
+	public int getHorizontalScrollbarHeight() {
+		//TODO Avoid NPE when contentScroller was not yet created?
+		return contentScroller.getHorizontalBar().getSize().y;
+	}
 }

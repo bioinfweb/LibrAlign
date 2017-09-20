@@ -19,9 +19,8 @@
 package info.bioinfweb.libralign.alignmentarea;
 
 
-import info.bioinfweb.libralign.alignmentarea.label.SWTAlignmentLabelArea;
-import info.bioinfweb.libralign.multiplealignments.SWTMultipleAlignmentsContainer;
 import info.bioinfweb.tic.SWTComponentFactory;
+import info.bioinfweb.tic.toolkit.SWTComponentTools;
 import info.bioinfweb.tic.toolkit.ScrolledCompositeToolkitComponent;
 
 import org.eclipse.swt.SWT;
@@ -59,6 +58,7 @@ public class ScrollContainerSWTAlignmentArea extends AbstractSWTAlignmentArea im
 	 */
 	public ScrollContainerSWTAlignmentArea(AlignmentArea owner, Composite parent, int style) {
 		super(owner, parent, style);
+		SWTComponentTools.registerScrollEventForwarders(this);
 	}
 
 
@@ -69,7 +69,7 @@ public class ScrollContainerSWTAlignmentArea extends AbstractSWTAlignmentArea im
 
 
 	@Override
-	protected Scrollable createContentScroller(Composite container, final SWTAlignmentLabelArea labelArea) {
+	protected Scrollable createContentScroller(Composite container) {
 		contentScroller = new ScrolledComposite(container, SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL);
 		contentScroller.setAlwaysShowScrollBars(true);
 		Composite contentArea = SWTComponentFactory.getInstance().getSWTComponent(
@@ -77,18 +77,5 @@ public class ScrollContainerSWTAlignmentArea extends AbstractSWTAlignmentArea im
 		
 		contentScroller.setContent(contentArea);
 		return contentScroller;
-	}
-
-
-	/**
-	 * Returns the height of the horizontal content scroll bar.
-	 * <p>
-	 * This method is used internally by {@link SWTMultipleAlignmentsContainer#getNeededHeight(int)}.
-	 *
-	 * @return the height in pixels
-	 */
-	public int getHorizontalScrollbarHeight() {
-		//TODO Avoid NPE when contentScroller was not yet created?
-		return contentScroller.getHorizontalBar().getSize().y;
 	}
 }
