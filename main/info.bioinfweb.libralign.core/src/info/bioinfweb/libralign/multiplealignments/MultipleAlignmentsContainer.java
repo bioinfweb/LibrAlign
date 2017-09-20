@@ -28,6 +28,7 @@ import info.bioinfweb.commons.Math2;
 import info.bioinfweb.tic.TICComponent;
 import info.bioinfweb.tic.TICPaintEvent;
 import info.bioinfweb.libralign.alignmentarea.AlignmentArea;
+import info.bioinfweb.libralign.alignmentarea.GUITools;
 import info.bioinfweb.libralign.alignmentarea.paintsettings.PaintSettings;
 import info.bioinfweb.libralign.dataarea.implementations.sequenceindex.SequenceIndexArea;
 import info.bioinfweb.libralign.editsettings.EditSettings;
@@ -108,6 +109,12 @@ public class MultipleAlignmentsContainer extends TICComponent {
 	@Override
 	protected String getSWTComponentClassName(Object... parameters) {
 		return "info.bioinfweb.libralign.multiplealignments.SWTMultipleAlignmentsContainer";
+	}
+
+
+	@Override
+	protected Object[] getSWTComponentConstructorParameters(Object... parameters) {
+		return new Object[]{new Boolean(GUITools.determineUseSubcomponents(parameters))};
 	}
 
 

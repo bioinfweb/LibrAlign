@@ -37,11 +37,11 @@ import info.bioinfweb.libralign.model.events.TokenChangeEvent;
  * @author Ben St&ouml;ver
  * @since 0.3.0
  */
-public class MultipleAlignmentsEventForwarder implements AlignmentModelChangeListener, DataAreasModelListener {
+public class MultipleAlignmentsModelEventForwarder implements AlignmentModelChangeListener, DataAreasModelListener {
 	private MultipleAlignmentsContainer owner;
 
 	
-	public MultipleAlignmentsEventForwarder(MultipleAlignmentsContainer owner) {
+	public MultipleAlignmentsModelEventForwarder(MultipleAlignmentsContainer owner) {
 		super();
 		this.owner = owner;
 	}

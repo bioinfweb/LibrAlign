@@ -19,15 +19,13 @@
 package info.bioinfweb.libralign.alignmentarea.label;
 
 
-import java.awt.Dimension;
-import java.util.Iterator;
-
+import info.bioinfweb.libralign.alignmentarea.AlignmentArea;
+import info.bioinfweb.libralign.multiplealignments.MultipleAlignmentsContainer;
 import info.bioinfweb.tic.TICComponent;
 import info.bioinfweb.tic.TICPaintEvent;
-import info.bioinfweb.libralign.alignmentarea.AlignmentArea;
-import info.bioinfweb.libralign.alignmentarea.GUITools;
-import info.bioinfweb.libralign.alignmentarea.content.AlignmentSubArea;
-import info.bioinfweb.libralign.multiplealignments.MultipleAlignmentsContainer;
+
+import java.awt.Dimension;
+import java.util.Iterator;
 
 
 

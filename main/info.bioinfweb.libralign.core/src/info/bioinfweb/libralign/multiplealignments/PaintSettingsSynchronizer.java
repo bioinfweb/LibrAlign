@@ -43,9 +43,10 @@ import org.apache.commons.beanutils.BeanUtils;
  * <p>
  * This class does not synchronize any token painters. 
  * <p>
- * <b>Warning:</b> This class is for internal use in LibrAlign only and should not be referenced in application code
- * directly. API stability is not guaranteed for this class for any release of LibrAlign (no matter if the major version
- * number is increased or not). 
+ * <b>Warning:</b> This class is used by {@link AlignmentAreaList} within {@link MultipleAlignmentsContainer}. It is 
+ * designed for internal use in <i>LibrAlign</i> only and should not be referenced in application code directly. API 
+ * stability is not guaranteed for this class for any release of LibrAlign (no matter if the major version number is 
+ * increased or not). 
  * 
  * @author Ben St&ouml;ver
  * @since 0.4.0

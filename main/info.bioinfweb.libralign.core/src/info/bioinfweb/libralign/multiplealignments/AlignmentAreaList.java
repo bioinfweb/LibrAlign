@@ -38,14 +38,15 @@ import java.util.Collection;
  */
 public class AlignmentAreaList extends ObservableList<AlignmentArea> {
 	private MultipleAlignmentsContainer owner;
-	private MultipleAlignmentsEventForwarder multipleAlignmentListener;
+	private MultipleAlignmentsModelEventForwarder modelEventForwarder;
 	private PaintSettingsSynchronizer paintSettingsSynchronizer = new PaintSettingsSynchronizer(this);
+	private HorizontalScrollingSynchronizer scrollingSynchronizer = new HorizontalScrollingSynchronizer(this);
 
 	
 	public AlignmentAreaList(MultipleAlignmentsContainer owner) {
 		super(new ArrayList<AlignmentArea>());
 		this.owner = owner;
-		multipleAlignmentListener = new MultipleAlignmentsEventForwarder(owner);
+		modelEventForwarder = new MultipleAlignmentsModelEventForwarder(owner);
 	}
 
 
@@ -86,19 +87,23 @@ public class AlignmentAreaList extends ObservableList<AlignmentArea> {
 	}
 	
 	
-	private void addListenerToAlignmentArea(AlignmentArea alignmentArea) {
+	private void addListenersToAlignmentArea(AlignmentArea alignmentArea) {
 		if (alignmentArea.hasAlignmentModel()) {
-			alignmentArea.getAlignmentModel().getChangeListeners().add(multipleAlignmentListener);
+			alignmentArea.getAlignmentModel().getChangeListeners().add(modelEventForwarder);
 		}
-		alignmentArea.getDataAreas().addListener(multipleAlignmentListener);
+		alignmentArea.getDataAreas().addListener(modelEventForwarder);
+		alignmentArea.getPaintSettings().addListener(paintSettingsSynchronizer);
+		alignmentArea.getScrollListeners().add(scrollingSynchronizer);
 	}
 
 	
-	private void removeListenerToAlignmentArea(AlignmentArea alignmentArea) {
+	private void removeListenersFromAlignmentArea(AlignmentArea alignmentArea) {
 		if (alignmentArea.hasAlignmentModel()) {
-			alignmentArea.getAlignmentModel().getChangeListeners().remove(multipleAlignmentListener);
+			alignmentArea.getAlignmentModel().getChangeListeners().remove(modelEventForwarder);
 		}
-		alignmentArea.getDataAreas().removeListener(multipleAlignmentListener);
+		alignmentArea.getDataAreas().removeListener(modelEventForwarder);
+		alignmentArea.getPaintSettings().removeListener(paintSettingsSynchronizer);
+		alignmentArea.getScrollListeners().remove(scrollingSynchronizer);
 	}
 
 	
@@ -106,8 +111,7 @@ public class AlignmentAreaList extends ObservableList<AlignmentArea> {
 	protected void afterAdd(int index, Collection<? extends AlignmentArea> addedElements) {
 		adoptToListChanges();
 		for (AlignmentArea alignmentArea : addedElements) {
-			addListenerToAlignmentArea(alignmentArea);
-			alignmentArea.getPaintSettings().addListener(paintSettingsSynchronizer);
+			addListenersToAlignmentArea(alignmentArea);
 		}
 	}
 
@@ -116,18 +120,15 @@ public class AlignmentAreaList extends ObservableList<AlignmentArea> {
 	protected void afterRemove(int index, Collection<? extends AlignmentArea> removedElements) {
 		adoptToListChanges();
 		for (AlignmentArea alignmentArea : removedElements) {
-			removeListenerToAlignmentArea(alignmentArea);
-			alignmentArea.getPaintSettings().removeListener(paintSettingsSynchronizer);
+			removeListenersFromAlignmentArea(alignmentArea);
 		}
 	}
 
 
 	@Override
 	protected void afterReplace(int index, AlignmentArea previousElement, AlignmentArea currentElement) {
-		removeListenerToAlignmentArea(previousElement);
-		previousElement.getPaintSettings().removeListener(paintSettingsSynchronizer);
+		removeListenersFromAlignmentArea(previousElement);
 		adoptToListChanges();
-		addListenerToAlignmentArea(currentElement);
-		currentElement.getPaintSettings().addListener(paintSettingsSynchronizer);
+		addListenersToAlignmentArea(currentElement);
 	}
 }
