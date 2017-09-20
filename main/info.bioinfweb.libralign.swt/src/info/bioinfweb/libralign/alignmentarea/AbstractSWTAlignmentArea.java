@@ -23,6 +23,8 @@ import info.bioinfweb.libralign.alignmentarea.content.AlignmentContentArea;
 import info.bioinfweb.libralign.alignmentarea.content.SequenceArea;
 import info.bioinfweb.libralign.alignmentarea.label.SWTAlignmentLabelArea;
 import info.bioinfweb.tic.SWTComponentFactory;
+import info.bioinfweb.tic.scrolling.TICScrollEvent;
+import info.bioinfweb.tic.scrolling.TICScrollListener;
 import info.bioinfweb.tic.toolkit.AbstractSWTComposite;
 
 import java.awt.Dimension;
@@ -42,10 +44,14 @@ import org.eclipse.swt.widgets.Scrollable;
 
 
 /**
- * Implements shared functionality of {@link ScrollContainerSWTAlignmentArea} and {@link DirectSWTAlignmentArea}.
+ * Implements shared functionality of {@link ScrollContainerSWTAlignmentArea} and {@link DirectPaintingSWTAlignmentArea}.
  * 
  * @author Ben St&ouml;ver
  * @since 0.5.0
+ * @bioinfweb.module info.bioinfweb.libralign.swt
+ * @see AlignmentArea
+ * @see ScrollContainerSWTAlignmentArea
+ * @see DirectPaintingSWTAlignmentArea
  */
 public abstract class AbstractSWTAlignmentArea extends AbstractSWTComposite implements ToolkitSpecificAlignmentArea {
 	private Composite labelContainer;
@@ -129,15 +135,18 @@ public abstract class AbstractSWTAlignmentArea extends AbstractSWTComposite impl
 		// Update label area:
 		labelArea.reinsertSubelements();
 
-//		// Synchronize vertical scrolling:
-//		ScrollableSyncListener verticalSyncListener = new ScrollableSyncListener(
-//				new Scrollable[]{labelScroller, contentScroller}, false);  //TODO Check instance and optionally use ScrolledCompositeSyncListener?
-////		ScrolledCompositeSyncListener verticalSyncListener = new ScrolledCompositeSyncListener(
-////				new ScrolledComposite[]{labelScroller, contentScroller}, false);
-//		verticalSyncListener.registerToAll();
+		// Synchronize vertical scrolling:
+		// (This is done here, since it is not necessary in Swing, where JScrollPane handles this automatically.)
+		getIndependentComponent().getScrollListeners().add(new TICScrollListener() {
+			@Override
+			public void contentScrolled(TICScrollEvent event) {
+				labelArea.setVerticalScrollPosition(getIndependentComponent().getScrollOffsetY());
+			}
+		});
 
 		// Link label area:
-		((Control)getIndependentComponent().getContentArea().getToolkitComponent()).addControlListener(new ControlAdapter() {  //TODO Is this needed only in the scroll container case?
+		//((Control)getIndependentComponent().getContentArea().getToolkitComponent())
+		contentScroller.addControlListener(new ControlAdapter() {  //TODO Is this needed only in the scroll container case?
 					@Override
 					public void controlResized(ControlEvent e) {
 						getIndependentComponent().getLabelArea().assignSize();

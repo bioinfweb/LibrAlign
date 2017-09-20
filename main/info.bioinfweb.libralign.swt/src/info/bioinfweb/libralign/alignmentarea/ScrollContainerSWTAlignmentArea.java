@@ -22,13 +22,10 @@ package info.bioinfweb.libralign.alignmentarea;
 import info.bioinfweb.libralign.alignmentarea.label.SWTAlignmentLabelArea;
 import info.bioinfweb.libralign.multiplealignments.SWTMultipleAlignmentsContainer;
 import info.bioinfweb.tic.SWTComponentFactory;
-
-import java.awt.Rectangle;
+import info.bioinfweb.tic.toolkit.ScrolledCompositeToolkitComponent;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.ScrolledComposite;
-import org.eclipse.swt.events.ControlAdapter;
-import org.eclipse.swt.events.ControlEvent;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Scrollable;
 
@@ -45,7 +42,9 @@ import org.eclipse.swt.widgets.Scrollable;
  * @since 0.2.0
  * @bioinfweb.module info.bioinfweb.libralign.swt
  */
-public class ScrollContainerSWTAlignmentArea extends AbstractSWTAlignmentArea implements ToolkitSpecificAlignmentArea {
+public class ScrollContainerSWTAlignmentArea extends AbstractSWTAlignmentArea implements ToolkitSpecificAlignmentArea, 
+		ScrolledCompositeToolkitComponent {
+	
 	private ScrolledComposite contentScroller;
 	
 	
@@ -64,56 +63,20 @@ public class ScrollContainerSWTAlignmentArea extends AbstractSWTAlignmentArea im
 
 
 	@Override
-	protected Scrollable createContentScroller(Composite container, final SWTAlignmentLabelArea labelArea) {
-		contentScroller = new ScrolledComposite(container, SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL);
-		contentScroller.setAlwaysShowScrollBars(true);
-		Composite contentArea = SWTComponentFactory.getInstance().getSWTComponent(
-				getIndependentComponent().getContentArea(), contentScroller, SWT.NONE, true);
-		contentArea.addControlListener(new ControlAdapter() {
-			@Override
-			public void controlMoved(ControlEvent e) {
-				labelArea.setVerticalScrollPosition(contentScroller.getOrigin().y);
-			}
-		});
-		
-		contentScroller.setContent(contentArea);
+	public ScrolledComposite getScrolledComposite() {
 		return contentScroller;
 	}
 
 
 	@Override
-	public void scrollAlignmentRectToVisible(Rectangle rectangle) {
-		if (contentScroller != null) {
-			org.eclipse.swt.graphics.Point origin = contentScroller.getOrigin();
-			Rectangle visibleRect = getVisibleAlignmentRect();
-	
-			int x = origin.x;  // Do not scroll
-			if (rectangle.x < visibleRect.x) {
-				x = rectangle.x;  // Scroll left
-			}
-			else if (rectangle.x + rectangle.width > visibleRect.x + visibleRect.width) {
-				x = rectangle.x + rectangle.width - visibleRect.width;  // Scroll right
-			}
-	
-			int y = origin.y;  // Do not scroll
-			if (rectangle.y < visibleRect.y) {
-				y = rectangle.y;  // Scroll up
-			}
-			if (rectangle.y + rectangle.height > visibleRect.y + visibleRect.height) {
-				y = rectangle.y + rectangle.height - visibleRect.height;  // Scroll down
-			}
-	
-			contentScroller.setOrigin(x, y);
-		}
-	}
-
-
-	@Override
-	public Rectangle getVisibleAlignmentRect() {
-		//TODO Avoid NPE when contentScroller was not yet created?
-		org.eclipse.swt.graphics.Rectangle clientArea = contentScroller.getClientArea();
-		org.eclipse.swt.graphics.Point origin = contentScroller.getOrigin();
-		return new Rectangle(origin.x, origin.y, clientArea.width, clientArea.height);
+	protected Scrollable createContentScroller(Composite container, final SWTAlignmentLabelArea labelArea) {
+		contentScroller = new ScrolledComposite(container, SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL);
+		contentScroller.setAlwaysShowScrollBars(true);
+		Composite contentArea = SWTComponentFactory.getInstance().getSWTComponent(
+				getIndependentComponent().getContentArea(), contentScroller, SWT.NONE, true);
+		
+		contentScroller.setContent(contentArea);
+		return contentScroller;
 	}
 
 

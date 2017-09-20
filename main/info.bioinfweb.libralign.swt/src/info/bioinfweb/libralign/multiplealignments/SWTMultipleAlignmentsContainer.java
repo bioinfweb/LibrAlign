@@ -103,37 +103,37 @@ public class SWTMultipleAlignmentsContainer extends AbstractSWTComposite
 	}
 
 
-	private Iterable<ScrolledComposite> getScrolledCompositeIterable() {
-		return new Iterable<ScrolledComposite>() {
-					@Override
-					public Iterator<ScrolledComposite> iterator() {
-						final Iterator<AlignmentArea> iterator = getIndependentComponent().getAlignmentAreas().iterator();
-						return new Iterator<ScrolledComposite>() {
-							@Override
-							public boolean hasNext() {
-								return iterator.hasNext();
-							}
-
-							@Override
-							public ScrolledComposite next() {
-								ToolkitSpecificAlignmentArea area = iterator.next().getToolkitComponent();
-								if (area instanceof ScrollContainerSWTAlignmentArea) {
-									return ((ScrollContainerSWTAlignmentArea)area).getContentScroller();
-								}
-								//TODO Handle case for DirectSWTAlignmentArea.
-								else {
-									throw new IllegalStateException("The current alignment area does not have a SWT toolkit component.");
-								}
-							}
-
-							@Override
-							public void remove() {
-								throw new UnsupportedOperationException("This iterator does not support removing elements.");
-							}
-						};
-					}
-				};
-	}
+//	private Iterable<ScrolledComposite> getScrolledCompositeIterable() {
+//		return new Iterable<ScrolledComposite>() {
+//					@Override
+//					public Iterator<ScrolledComposite> iterator() {
+//						final Iterator<AlignmentArea> iterator = getIndependentComponent().getAlignmentAreas().iterator();
+//						return new Iterator<ScrolledComposite>() {
+//							@Override
+//							public boolean hasNext() {
+//								return iterator.hasNext();
+//							}
+//
+//							@Override
+//							public ScrolledComposite next() {
+//								ToolkitSpecificAlignmentArea area = iterator.next().getToolkitComponent();
+//								if (area instanceof ScrollContainerSWTAlignmentArea) {
+//									return ((ScrollContainerSWTAlignmentArea)area).getContentScroller();
+//								}
+//								//TODO Handle case for DirectSWTAlignmentArea.
+//								else {
+//									throw new IllegalStateException("The current alignment area does not have a SWT toolkit component.");
+//								}
+//							}
+//
+//							@Override
+//							public void remove() {
+//								throw new UnsupportedOperationException("This iterator does not support removing elements.");
+//							}
+//						};
+//					}
+//				};
+//	}
 
 
 	@Override
