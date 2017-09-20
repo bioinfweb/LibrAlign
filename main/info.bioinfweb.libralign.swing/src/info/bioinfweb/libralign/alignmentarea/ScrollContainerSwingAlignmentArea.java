@@ -21,14 +21,11 @@ package info.bioinfweb.libralign.alignmentarea;
 
 import info.bioinfweb.libralign.alignmentarea.content.AlignmentContentArea;
 import info.bioinfweb.libralign.alignmentarea.content.SequenceArea;
-import info.bioinfweb.libralign.alignmentarea.content.ScrollContainerSwingAlignmentContentArea;
 import info.bioinfweb.tic.SwingComponentFactory;
-import info.bioinfweb.tic.TargetToolkit;
+import info.bioinfweb.tic.toolkit.JScrollPaneToolkitComponent;
 import info.bioinfweb.tic.toolkit.SwingComponentTools;
 
 import java.awt.Dimension;
-import java.awt.Point;
-import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -50,7 +47,7 @@ import javax.swing.ScrollPaneConstants;
  * @since 0.2.0
  * @bioinfweb.module info.bioinfweb.libralign.swing
  */
-public class ScrollContainerSwingAlignmentArea extends JScrollPane implements ToolkitSpecificAlignmentArea {
+public class ScrollContainerSwingAlignmentArea extends JScrollPane implements ToolkitSpecificAlignmentArea, JScrollPaneToolkitComponent {
 	private static Action VOID_ACTION = new AbstractAction() {
 		@Override
 		public void actionPerformed(ActionEvent e) {}
@@ -84,6 +81,18 @@ public class ScrollContainerSwingAlignmentArea extends JScrollPane implements To
 	
 
 	@Override
+	public JComponent getSwingComponent() {
+		return this;
+	}
+
+
+	@Override
+	public JScrollPane getScrollPane() {
+		return this;
+	}
+
+
+	@Override
 	public AlignmentArea getIndependentComponent() {
 		return independentComponent;
 	}
@@ -113,46 +122,8 @@ public class ScrollContainerSwingAlignmentArea extends JScrollPane implements To
 	
 	
 	@Override
-	public Dimension getToolkitSize() {
-		return getSize();
-	}
-
-
-	@Override
 	public Dimension getMaximumSize() {
 		return SwingComponentTools.getMaximumSize(this, super.getMaximumSize());
-	}
-
-
-	@Override
-	public void assignSize() {
-		SwingComponentTools.assignSize(this);
-	}
-
-
-	@Override
-	public TargetToolkit getTargetToolkit() {
-		return TargetToolkit.SWING;
-	}
-
-
-	@Override
-	public Point getLocationInParent() {
-		return getLocation();
-	}
-	
-	
-	@Override
-	public void scrollAlignmentRectToVisible(Rectangle rectangle) {
-		((ScrollContainerSwingAlignmentContentArea)
-				getIndependentComponent().getContentArea().getToolkitComponent()).scrollRectToVisible(rectangle);
-	}
-
-
-	@Override
-	public Rectangle getVisibleAlignmentRect() {
-		return ((ScrollContainerSwingAlignmentContentArea)
-				getIndependentComponent().getContentArea().getToolkitComponent()).getVisibleRect();
 	}
 
 
