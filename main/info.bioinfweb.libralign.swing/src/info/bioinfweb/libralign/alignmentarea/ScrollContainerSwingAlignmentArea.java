@@ -61,6 +61,7 @@ public class ScrollContainerSwingAlignmentArea extends JScrollPane implements To
 		super();
 		this.independentComponent = independentComponent;
 		init();
+		SwingComponentTools.registerScrollEventForwarders(this);
 		
 		addMouseListener(new MouseAdapter() {
 			@Override

@@ -19,23 +19,20 @@
 package info.bioinfweb.libralign.multiplealignments;
 
 
-import java.awt.Component;
-import java.awt.event.AdjustmentEvent;
-import java.awt.event.AdjustmentListener;
-import java.awt.event.ComponentAdapter;
-import java.awt.event.ComponentEvent;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-
 import info.bioinfweb.commons.swing.SwingUtils;
 import info.bioinfweb.libralign.alignmentarea.AlignmentArea;
 import info.bioinfweb.libralign.alignmentarea.ScrollContainerSwingAlignmentArea;
 import info.bioinfweb.tic.SwingComponentFactory;
 import info.bioinfweb.tic.toolkit.AbstractSwingComponent;
 
+import java.awt.Component;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+
 import javax.swing.BoxLayout;
-import javax.swing.JScrollBar;
 import javax.swing.JSplitPane;
 
 
@@ -51,23 +48,6 @@ public class SwingMultipleAlignmentsContainer extends AbstractSwingComponent imp
 	public static final int NEEDED_BORDER_WIDTH = 1;
 	
 	
-	private final AdjustmentListener SCROLL_SYNC_LISTENER = new AdjustmentListener() {
-				@Override
-				public void adjustmentValueChanged(AdjustmentEvent e) {
-					SwingComponentFactory factory = SwingComponentFactory.getInstance();
-					for (int i = 0; i < getIndependentComponent().getAlignmentAreas().size(); i++) {
-						JScrollBar scrollBar = ((ScrollContainerSwingAlignmentArea)factory.getSwingComponent(
-								getIndependentComponent().getAlignmentAreas().get(i))).getHorizontalScrollBar(); 
-						if (scrollBar != e.getSource()) {
-							scrollBar.getModel().setValue(e.getValue());
-						}
-					}
-					// If the operation would only be performed outside of valueIsAdjusting the other scroll panes 
-					// would not be moved while the scroll bar is dragged. 
-				}
-			};
-
-			
 	private List<JSplitPane> splitPanes = new ArrayList<JSplitPane>();
 	
 	
@@ -147,15 +127,8 @@ public class SwingMultipleAlignmentsContainer extends AbstractSwingComponent imp
 	
 	@Override
 	public void adoptChildAreas() {
-		// Remove components and listeners:
 		removeAll();
-		SwingComponentFactory factory = SwingComponentFactory.getInstance();
-		for (int i = 0; i < getIndependentComponent().getAlignmentAreas().size(); i++) {
-			((ScrollContainerSwingAlignmentArea)factory.getSwingComponent(getIndependentComponent().getAlignmentAreas().get(i))).
-					getHorizontalScrollBar().removeAdjustmentListener(SCROLL_SYNC_LISTENER); 
-		}		
 		
-		// Create split panes and add components:
 		if (getIndependentComponent().getAlignmentAreas().size() > 1) {
 		  createSplitPanes(getIndependentComponent().getAlignmentAreas().size() - 1);
 
@@ -173,12 +146,6 @@ public class SwingMultipleAlignmentsContainer extends AbstractSwingComponent imp
 				add(SwingComponentFactory.getInstance().getSwingComponent(getIndependentComponent().getAlignmentAreas().get(0)));
 		  }
 		}
-
-		// Add scroll synchronize listeners:
-		for (int i = 0; i < getIndependentComponent().getAlignmentAreas().size(); i++) {
-			((ScrollContainerSwingAlignmentArea)factory.getSwingComponent(getIndependentComponent().getAlignmentAreas().get(i))).
-					getHorizontalScrollBar().addAdjustmentListener(SCROLL_SYNC_LISTENER); 
-		}		
 	}
 
 
