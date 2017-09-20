@@ -159,13 +159,11 @@ public class SwingMultipleAlignmentsContainer extends AbstractSwingComponent imp
 		if (getIndependentComponent().getAlignmentAreas().size() > 1) {
 		  createSplitPanes(getIndependentComponent().getAlignmentAreas().size() - 1);
 
-		  for (int i = 0; i < splitPanes.size() - 1; i++) {
+		  for (int i = 0; i < splitPanes.size(); i++) {
 				splitPanes.get(i).setTopComponent(createAlignmentArea(i, true));
 			}
-		  
-		  JSplitPane lastSplitPane = splitPanes.get(splitPanes.size() - 1);
-		  lastSplitPane.setTopComponent(createAlignmentArea(getIndependentComponent().getAlignmentAreas().size() - 2, true));
-		  lastSplitPane.setBottomComponent(createAlignmentArea(getIndependentComponent().getAlignmentAreas().size() - 1, false));
+		  splitPanes.get(splitPanes.size() - 1).setBottomComponent(
+		  		createAlignmentArea(getIndependentComponent().getAlignmentAreas().size() - 1, false));
 		  
 		  add(splitPanes.get(0));
 		}
