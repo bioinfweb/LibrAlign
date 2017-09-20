@@ -34,7 +34,7 @@ import org.eclipse.swt.events.SelectionEvent;
 
 
 /**
- * Demo application showing the usage of LibrAlign with SWT.
+ * Demo application showing the usage of <i>LibrAlign</i> with <i>SWT</i>.
  * 
  * @author Ben St&ouml;ver
  */

@@ -43,7 +43,7 @@ import java.awt.event.ActionEvent;
 
 
 /**
- * Demo application showing the usage of LibrAlign with Swing.
+ * Demo application showing the usage of <i>LibrAlign</i> with <i>Swing</i>.
  * 
  * @author Ben St&ouml;ver
  */
