@@ -459,12 +459,7 @@ public class AlignmentContentArea extends TICComponent {
 
 	@Override
 	protected String getSWTComponentClassName(Object... parameters) {
-		if (GUITools.determineUseSubcomponents(parameters)) {
-			return "info.bioinfweb.libralign.alignmentarea.content.ScrollContainerSWTAlignmentContentArea";
-		}
-		else {
-			return "info.bioinfweb.libralign.alignmentarea.content.DirectSWTAlignmentContentArea";
-		}
+		return "info.bioinfweb.libralign.alignmentarea.content.ScrollContainerSWTAlignmentContentArea";
 	}
 
 

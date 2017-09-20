@@ -48,6 +48,7 @@ import info.bioinfweb.libralign.model.events.TokenChangeEvent;
 import info.bioinfweb.libralign.multiplealignments.MultipleAlignmentsContainer;
 import info.bioinfweb.tic.TICComponent;
 import info.bioinfweb.tic.TICPaintEvent;
+import info.bioinfweb.tic.scrolling.ScrollingTICComponent;
 
 import java.awt.Dimension;
 import java.awt.Rectangle;
@@ -129,7 +130,7 @@ import java.util.Iterator;
  * @see AlignmentModel
  * @see <a href="http://r.bioinfweb.info/LibrAlignToolkitDoc">LibrAlign documentation on working with toolkits</a> 
  */
-public class AlignmentArea extends TICComponent implements AlignmentModelChangeListener, DataAreasModelListener {
+public class AlignmentArea extends ScrollingTICComponent implements AlignmentModelChangeListener, DataAreasModelListener {
 	public static final int MIN_PART_AREA_HEIGHT = 5;
 	
 	/** Defines the width of the divider of the GUI components for the head, content, and bottom area. */ 
@@ -230,7 +231,6 @@ public class AlignmentArea extends TICComponent implements AlignmentModelChangeL
 		
 		paintSettings = new PaintSettings(this);
 		paintSettings.addListener(PAINT_SETTINGS_LISTERNER);
-		
 	}
 
 
@@ -528,21 +528,18 @@ public class AlignmentArea extends TICComponent implements AlignmentModelChangeL
 	
 	
 	public void scrollCursorToVisible() {
-		//TODO Refactor to also support direct painting without subcomponents.
-		if (hasToolkitComponent()) {
-			Rectangle visibleRectangle = getToolkitComponent().getVisibleAlignmentRect();
-			Rectangle currentRectangle = getContentArea().getCursorRectangle().getBounds();  // Rounding takes place here.
-			Rectangle scrollRectangle = new Rectangle(currentRectangle);
-			int dy = currentRectangle.height - visibleRectangle.height;
-			if ((dy > 0) && (lastCursorRectangle != null)) {
-				scrollRectangle.height -= dy;
-				if (lastCursorRectangle.y == currentRectangle.y) {  // Not moved upwards (= downwards).
-					scrollRectangle.y += dy;
-				}
+		Rectangle visibleRectangle = getVisibleRectangle();
+		Rectangle currentRectangle = getContentArea().getCursorRectangle().getBounds();  // Rounding takes place here.
+		Rectangle scrollRectangle = new Rectangle(currentRectangle);
+		int dy = currentRectangle.height - visibleRectangle.height;
+		if ((dy > 0) && (lastCursorRectangle != null)) {
+			scrollRectangle.height -= dy;
+			if (lastCursorRectangle.y == currentRectangle.y) {  // Not moved upwards (= downwards).
+				scrollRectangle.y += dy;
 			}
-			getToolkitComponent().scrollAlignmentRectToVisible(scrollRectangle);
-			lastCursorRectangle = currentRectangle;
 		}
+		scrollRectangleToVisible(scrollRectangle);
+		lastCursorRectangle = currentRectangle;
 	}
 	
 	
@@ -573,7 +570,7 @@ public class AlignmentArea extends TICComponent implements AlignmentModelChangeL
 			return "info.bioinfweb.libralign.alignmentarea.ScrollContainerSWTAlignmentArea";
 		}
 		else {
-			return "info.bioinfweb.libralign.alignmentarea.DirectSWTAlignmentArea";
+			return "info.bioinfweb.libralign.alignmentarea.DirectPaintingSWTAlignmentArea";
 		}
 	}
 

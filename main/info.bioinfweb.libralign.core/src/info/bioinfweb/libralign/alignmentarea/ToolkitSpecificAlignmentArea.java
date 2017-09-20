@@ -19,10 +19,8 @@
 package info.bioinfweb.libralign.alignmentarea;
 
 
-import java.awt.Rectangle;
-
-import info.bioinfweb.tic.toolkit.ToolkitComponent;
 import info.bioinfweb.libralign.multiplealignments.MultipleAlignmentsContainer;
+import info.bioinfweb.tic.toolkit.ScrollingToolkitComponent;
 
 
 
@@ -30,28 +28,13 @@ import info.bioinfweb.libralign.multiplealignments.MultipleAlignmentsContainer;
  * Interface implemented by all toolkit specific components displaying the contents of an {@link AlignmentArea}.
  * 
  * <h3><a id="developer"></a>Notes for developers</h3>
- * This interface should only contain methods that need to be called from the <i>core</i>. Methods that are 
- * shared by some or all implementations but are not called from the <i>core</i> module should not be added.
+ * This interface should only contain methods that need to be called from the <i>core</i> module. Methods that 
+ * are shared by some or all implementations but are not called from there should not be added.
  * 
  * @author Ben St&ouml;ver
  * @since 0.2.0
  */
-public interface ToolkitSpecificAlignmentArea extends ToolkitComponent {
-  /**
-   * Scrolls the contained components so that the specified rectangle is visible.
-   *  
-   * @param rectangle the rectangle in the specified alignment that shall become visible
-   */
-  public void scrollAlignmentRectToVisible(Rectangle rectangle);
-
-  /**
-   * Returns the rectangle in pixels of the alignment (with associated data areas) that is visible in the current
-   * scroll container. 
-   * 
-   * @return a rectangle object
-   */
-  public Rectangle getVisibleAlignmentRect();
-  
+public interface ToolkitSpecificAlignmentArea extends ScrollingToolkitComponent {
 	/**
 	 * Determines whether a horizontal scroll bar should be displayed underneath this element. (In a 
 	 * {@link MultipleAlignmentsContainer} only the scroll bar of the bottom most alignment is displayed. If
