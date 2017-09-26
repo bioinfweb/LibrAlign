@@ -55,7 +55,7 @@ public class SWTAlignmentLabelArea extends SWTAlignmentRowsArea<AlignmentLabelSu
 	 * @param independentComponent the toolkit independent component that uses this instance
 	 */
 	public SWTAlignmentLabelArea(AlignmentLabelArea independentComponent, Composite parent, int style) {
-		super(independentComponent, parent, style | SWT.H_SCROLL);
+		super(independentComponent, parent, style);
 		reinsertSubelements();
 	}
 	

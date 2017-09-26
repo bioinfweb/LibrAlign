@@ -54,8 +54,6 @@ import org.eclipse.swt.widgets.Scrollable;
  * @see DirectPaintingSWTAlignmentArea
  */
 public abstract class AbstractSWTAlignmentArea extends AbstractSWTComposite implements ToolkitSpecificAlignmentArea {
-	private Composite labelContainer;
-	private SWTScrollableResizeListener labelResizeListener;
 	private SWTAlignmentLabelArea labelArea;
 	private Composite contentContainer;
 	private Scrollable contentScroller;
@@ -97,11 +95,10 @@ public abstract class AbstractSWTAlignmentArea extends AbstractSWTComposite impl
 			}
 		});
 		
-		// Label components:
-		labelContainer = new Composite(this, SWT.NONE);
-		labelContainer.setLayoutData(createGridData(false));
+		// Label component:
 		labelArea = (SWTAlignmentLabelArea)SWTComponentFactory.getInstance().getSWTComponent(
-				getIndependentComponent().getLabelArea(), labelContainer, SWT.NONE);
+				getIndependentComponent().getLabelArea(), this, SWT.NONE);
+		labelArea.setLayoutData(createGridData(false));
 
 		// Alignment area part components:
 		contentContainer = new Composite(this, SWT.NONE);
@@ -154,22 +151,16 @@ public abstract class AbstractSWTAlignmentArea extends AbstractSWTComposite impl
 					@Override
 					public void controlResized(ControlEvent e) {  //TODO Is this still needed or are the present calls of assignSize() sufficient for the directly scrolled component that is now used?
 						Dimension size = getIndependentComponent().getLabelArea().getSize();
-						GridData data = (GridData)labelContainer.getLayoutData();
-						data.widthHint = size.width + 2 * (labelContainer.getBorderWidth() + labelArea.getBorderWidth());
+						GridData data = (GridData)labelArea.getLayoutData();
+						data.widthHint = size.width + 2 * labelArea.getBorderWidth();
 						data.heightHint = getClientArea().height;  // AlignmentLabelArea will be scrolled vertically.
-						labelContainer.setLayoutData(data);
+						labelArea.setLayoutData(data);
 						layout();
 					}
 				};
-		labelContainer.addControlListener(labelAreaResizeListener);
+		labelArea.addControlListener(labelAreaResizeListener);
 		labelAreaResizeListener.controlResized(null);  // Apply initial size to container.
 
-		// Allow to hide horizontal scroll bar on self-scrolling label area:
-		//TODO This does not yet work.
-		labelResizeListener = new SWTScrollableResizeListener(labelContainer, labelArea, false,
-				hideHorizontalScrollBar);
-		labelContainer.addControlListener(labelResizeListener);  // Must not be called before both fields are initialized.
-		
 		// Set correct size to recently created SWT components:
 		getIndependentComponent().assignSizeToAll();
 	}
@@ -191,7 +182,6 @@ public abstract class AbstractSWTAlignmentArea extends AbstractSWTComposite impl
 
 	@Override
 	public void setHideHorizontalScrollBar(boolean hideHorizontalScrollBar) {
-		labelResizeListener.setHideHorizontalBar(hideHorizontalScrollBar);
 		contentResizeListener.setHideHorizontalBar(hideHorizontalScrollBar);
  	}
 
