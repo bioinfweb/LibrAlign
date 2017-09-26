@@ -94,6 +94,7 @@ public class SwingMultipleAlignmentsContainer extends AbstractSwingComponent imp
 			count -= splitPanes.size();
 			for (int i = 0; i < count; i++) {
 				JSplitPane splitPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT);
+				splitPane.setBorder(null);  // Avoid having nested borders resulting in having different widths for the different alignments.
 				splitPane.setDividerSize(AlignmentArea.DIVIDER_WIDTH);
 				splitPanes.add(splitPane);
 			}
