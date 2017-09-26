@@ -22,7 +22,6 @@ package info.bioinfweb.libralign.alignmentarea.content;
 import info.bioinfweb.commons.Math2;
 import info.bioinfweb.commons.SystemUtils;
 import info.bioinfweb.libralign.alignmentarea.AlignmentArea;
-import info.bioinfweb.libralign.alignmentarea.GUITools;
 import info.bioinfweb.libralign.alignmentarea.label.AlignmentLabelArea;
 import info.bioinfweb.libralign.alignmentarea.paintsettings.PaintSettings;
 import info.bioinfweb.libralign.alignmentarea.selection.SelectionModel;
@@ -434,7 +433,7 @@ public class AlignmentContentArea extends TICComponent {
 				g.translate(0, y);
 				area.paintPart(new AlignmentPaintEvent(this, getOwner(), 
 						firstIndex, lastIndex, g, 
-						new Rectangle2D.Double(r.getMinX(), yDif, r.getWidth(), Math.min(r.getHeight(), area.getHeight()) - yDif)));
+						new Rectangle2D.Double(r.getMinX(), yDif, r.getWidth(), Math.min(r.getHeight(), area.getHeight() - yDif))));
 				g.setTransform(saveAT);
 			}
 			y += area.getHeight();
