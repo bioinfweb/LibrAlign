@@ -29,7 +29,7 @@ import info.bioinfweb.libralign.alignmentarea.content.SequenceArea;
 
 
 /**
- * GUI component used to label instances of {@link SequenceArea}. The name of the according sequence will be displayed.
+ * GUI component used to label instances of {@link SequenceArea}. The name of the respective sequence will be displayed.
  * 
  * @author Ben St&ouml;ver
  * @since 0.3.0

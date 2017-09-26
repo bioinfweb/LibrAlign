@@ -77,18 +77,16 @@ public class AlignmentLabelArea extends TICComponent {
 
 	/**
 	 * Calculates the needed with to label the associated alignment. Note that the actual width of this
-	 * component is calculated using {@link #getGlobalMaximumNeededWidth()}.
+	 * component is calculated using {@link #getGlobalMaxNeededWidth()}.
 	 * 
 	 * @return a value >= 0
 	 */
 	public double getLocalMaximumNeededWidth() {
 		if (localMaxNeededWidth == RECALCULATE_VALUE) {
 			localMaxNeededWidth = 0;
-			if (getOwner().getContentArea().hasToolkitComponent()) {
-				Iterator<AlignmentLabelSubArea> iterator = subAreaIterator();
-				while (iterator.hasNext()) {
-					localMaxNeededWidth = Math.max(localMaxNeededWidth, iterator.next().getNeededWidth());
-				}
+			Iterator<AlignmentLabelSubArea> iterator = subAreaIterator();
+			while (iterator.hasNext()) {
+				localMaxNeededWidth = Math.max(localMaxNeededWidth, iterator.next().getNeededWidth());
 			}
 		}
 		return localMaxNeededWidth;
@@ -128,7 +126,7 @@ public class AlignmentLabelArea extends TICComponent {
 	 * 
 	 * @return a value >= 0
 	 */
-	public double getGlobalMaximumNeededWidth() {
+	public double getGlobalMaxNeededWidth() {
 		if (getOwner().hasContainer()) {
 			double result = 0;
 			for (AlignmentArea alignmentArea : getOwner().getContainer().getAlignmentAreas()) {
@@ -144,7 +142,7 @@ public class AlignmentLabelArea extends TICComponent {
 	
 	@Override
 	public Dimension getSize() {
-		return new Dimension((int)Math.round(getGlobalMaximumNeededWidth()),	getOwner().getContentArea().getSize().height);  // If references starting from owner would be used here, there would be problems in initialization order.
+		return new Dimension((int)Math.round(getGlobalMaxNeededWidth()), getOwner().getContentArea().getSize().height);  // If references starting from owner would be used here, there would be problems in initialization order.
 	}
 	
 	

@@ -466,7 +466,7 @@ public class AlignmentArea extends ScrollingTICComponent implements AlignmentMod
 	
 	/**
 	 * Calculates the needed with to label the associated alignment. Note that the actual width of this
-	 * component is calculated using {@link #getGlobalMaximumNeededWidth()}.
+	 * component is calculated using {@link #getGlobalMaxNeededWidth()}.
 	 * 
 	 * @return a value >= 0
 	 */
@@ -608,21 +608,25 @@ public class AlignmentArea extends ScrollingTICComponent implements AlignmentMod
 	 * their subcomponents and on this instance.
 	 */
 	public void assignSizeToAll() {
-		if (hasToolkitComponent() && getContentArea().hasToolkitComponent() && getLabelArea().hasToolkitComponent()) {
-			Iterator<AlignmentLabelSubArea> iterator = getLabelArea().subAreaIterator();
-			while (iterator.hasNext()) {
-				iterator.next().assignSize();;
-			}
-			
-			if (getContentArea().getToolkitComponent().hasSubcomponents()) {
-				Iterator<AlignmentSubArea> contentIterator = getContentArea().subAreaIterator();
-				while (contentIterator.hasNext()) {
-					contentIterator.next().assignSize();;
+		if (hasToolkitComponent()) {
+			if (getLabelArea().hasToolkitComponent()) {
+				Iterator<AlignmentLabelSubArea> iterator = getLabelArea().subAreaIterator();
+				while (iterator.hasNext()) {
+					iterator.next().assignSize();;
 				}
+				getLabelArea().assignSize();
 			}
 			
-			getContentArea().assignSize();
-			getLabelArea().assignSize();
+			if (getContentArea().hasToolkitComponent()) {
+				if (getContentArea().getToolkitComponent().hasSubcomponents()) {
+					Iterator<AlignmentSubArea> contentIterator = getContentArea().subAreaIterator();
+					while (contentIterator.hasNext()) {
+						contentIterator.next().assignSize();;
+					}
+				}
+				getContentArea().assignSize();
+			}
+			
 			assignSize();
 		}
 	}
