@@ -49,6 +49,11 @@ public class DirectPaintingSWTAlignmentContentScroller extends DirectPaintingSWT
 		ticComponent.getContentArea().addKeyListener(forwarder);
 		ticComponent.getContentArea().addMouseListener(forwarder);
 		ticComponent.getContentArea().addMouseWheelListener(forwarder);
+		
+		getVerticalBar().setIncrement(10);  //TODO Specify values depending on the token width and height later and update it during zooming.
+		getVerticalBar().setPageIncrement(50);
+		getHorizontalBar().setIncrement(10);
+		getHorizontalBar().setPageIncrement(50);
 	}
 	
 	
