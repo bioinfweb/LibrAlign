@@ -63,21 +63,22 @@ public class ScrollContainerSwingAlignmentArea extends JScrollPane implements To
 		init();
 		SwingComponentTools.registerScrollEventForwarders(this);
 		
-		addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent e) {  // Sets the focus to an according sequence area, if the user clicks outside of the content area and moves the cursor.
-				if (getIndependentComponent().hasAlignmentModel() && (getIndependentComponent().getAlignmentModel().getSequenceCount() > 0)) {
-					AlignmentContentArea contentArea = getIndependentComponent().getContentArea();
-					int row = contentArea.rowByPaintY(e.getY());
-					SequenceArea sequenceArea = contentArea.getSequenceAreaByID(
-							getIndependentComponent().getSequenceOrder().idByIndex(row));
-					if (sequenceArea != null) {
-						getIndependentComponent().getSelection().setNewCursorPosition(contentArea.columnByPaintX(e.getX()), row);
-						((JComponent)sequenceArea.getToolkitComponent()).requestFocusInWindow();
-					}
-				}
-			}
-		});
+		//TODO Is this really needed? If so, also add it to SWT again. (It was removed from AbstractSWTAlignmentArea.java in r869.)
+//		addMouseListener(new MouseAdapter() {
+//			@Override
+//			public void mouseClicked(MouseEvent e) {  // Sets the focus to an according sequence area, if the user clicks outside of the content area and moves the cursor.
+//				if (getIndependentComponent().hasAlignmentModel() && (getIndependentComponent().getAlignmentModel().getSequenceCount() > 0)) {
+//					AlignmentContentArea contentArea = getIndependentComponent().getContentArea();
+//					int row = contentArea.rowByPaintY(e.getY());
+//					SequenceArea sequenceArea = contentArea.getSequenceAreaByID(
+//							getIndependentComponent().getSequenceOrder().idByIndex(row));
+//					if (sequenceArea != null) {
+//						getIndependentComponent().getSelection().setNewCursorPosition(contentArea.columnByPaintX(e.getX()), row);
+//						((JComponent)sequenceArea.getToolkitComponent()).requestFocusInWindow();
+//					}
+//				}
+//			}
+//		});
 	}
 	
 
