@@ -397,8 +397,6 @@ public class AlignmentContentArea extends TICComponent {
 
 	@Override
 	public Dimension getSize() {
-		//TODO This calculation only works as long as this area is within a scroll container. It will not work for self-scrolling components.
-		//     => Implement size calculation in toolkit component and delegate there? Where would assignSize() get its data from then? (Avoid circular delegation!)
 		//TODO Height should later be buffered somewhere, just like the maximum width.
 		return new Dimension((int)Math2.roundUp(getOwner().getGlobalMaxNeededWidth()), (int)getOwner().getPaintHeight());
 	}
@@ -408,7 +406,6 @@ public class AlignmentContentArea extends TICComponent {
 	 * Paints the contents (sequences and data areas) of an alignment, if this instance is set to use direct painting.
 	 * This method is not used, if the instance is set to use subcomponents for each sequence and data area.
 	 * 
-	 * @see #isUseSubcomponents()
 	 * @see info.bioinfweb.tic.TICComponent#paint(info.bioinfweb.tic.TICPaintEvent)
 	 */
 	@Override
