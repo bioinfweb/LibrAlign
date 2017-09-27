@@ -45,13 +45,10 @@ public class DirectPaintingSWTAlignmentContentScroller extends DirectPaintingSWT
 		super(ticComponent, parent, style | SWT.NO_BACKGROUND |	SWT.NO_REDRAW_RESIZE, ticComponent.getContentArea());
 		
 		// Ensure that all key and mouse events will be forwarded to respective AlignmentSubAreas:
-	  //TODO Does this work this way? Does AlignmentContentArea receive any events when direct painting is used? 
-		//     If not, should this be enabled in TIC or should the event forwarder be attached somewhere else, e.g. 
-		//     to the scroll container?
 		InputEventForwarder forwarder = new InputEventForwarder(ticComponent.getContentArea()); 
-		getIndependentComponent().addKeyListener(forwarder);
-		getIndependentComponent().addMouseListener(forwarder);
-		getIndependentComponent().addMouseWheelListener(forwarder);
+		ticComponent.getContentArea().addKeyListener(forwarder);
+		ticComponent.getContentArea().addMouseListener(forwarder);
+		ticComponent.getContentArea().addMouseWheelListener(forwarder);
 	}
 	
 	

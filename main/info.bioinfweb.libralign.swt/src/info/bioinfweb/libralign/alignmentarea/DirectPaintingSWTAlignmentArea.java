@@ -70,7 +70,7 @@ public class DirectPaintingSWTAlignmentArea extends AbstractSWTAlignmentArea imp
 
 	@Override
 	protected Scrollable createContentScroller(Composite container) {
-		contentScroller = new DirectPaintingSWTAlignmentContentScroller(getIndependentComponent(), container, SWT.NO_BACKGROUND); 
+		contentScroller = new DirectPaintingSWTAlignmentContentScroller(getIndependentComponent(), container, SWT.NO_BACKGROUND);
 		return contentScroller;
 	}
 

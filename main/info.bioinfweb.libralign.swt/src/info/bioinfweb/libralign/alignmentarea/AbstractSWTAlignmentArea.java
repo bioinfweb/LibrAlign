@@ -19,8 +19,6 @@
 package info.bioinfweb.libralign.alignmentarea;
 
 
-import info.bioinfweb.libralign.alignmentarea.content.AlignmentContentArea;
-import info.bioinfweb.libralign.alignmentarea.content.SequenceArea;
 import info.bioinfweb.libralign.alignmentarea.label.SWTAlignmentLabelArea;
 import info.bioinfweb.libralign.multiplealignments.SWTMultipleAlignmentsContainer;
 import info.bioinfweb.tic.SWTComponentFactory;
@@ -34,8 +32,6 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ControlAdapter;
 import org.eclipse.swt.events.ControlEvent;
 import org.eclipse.swt.events.ControlListener;
-import org.eclipse.swt.events.MouseAdapter;
-import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
@@ -103,25 +99,7 @@ public abstract class AbstractSWTAlignmentArea extends AbstractSWTComposite impl
 		// Alignment area part components:
 		contentContainer = new Composite(this, SWT.NONE);
 		contentContainer.setLayoutData(createGridData(true));
-		contentScroller = createContentScroller(contentContainer); 
-		contentScroller.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseDown(MouseEvent event) {  // Sets the focus to a respective sequence area, if the user clicks outside of the content area and moves the cursor.
-				if (getIndependentComponent().hasAlignmentModel() && (getIndependentComponent().getAlignmentModel().getSequenceCount() > 0)) {
-    			AlignmentContentArea contentArea = getIndependentComponent().getContentArea();
-    			int row = contentArea.rowByPaintY(event.y);
-    			
-					SequenceArea sequenceArea = contentArea.getSequenceAreaByID(
-							getIndependentComponent().getSequenceOrder().idByIndex(row));
-					if (sequenceArea != null) {
-    				getIndependentComponent().getSelection().setNewCursorPosition(contentArea.columnByPaintX(event.x), row);
-    				if (sequenceArea.hasToolkitComponent()) {
-    					((Composite)sequenceArea.getToolkitComponent()).setFocus();
-    				}
-					}
-				}
-			}
-		});
+		contentScroller = createContentScroller(contentContainer);
 		contentResizeListener = new SWTScrollableResizeListener(contentContainer, contentScroller, false,
 				hideHorizontalScrollBar);
 		contentContainer.addControlListener(contentResizeListener);  // Must not be called before both fields are initialized.
