@@ -393,8 +393,8 @@ public class AlignmentArea extends ScrollingTICComponent implements AlignmentMod
 
 
 	/**
-	 * Returns the alignment content area used internally by this instance. Content areas display the sequences and 
-	 * data area, while data areas display their labels.
+	 * Returns the alignment content area used internally by this instance. Content areas display the sequence and 
+	 * data areas. This instance acts as the scroll container for the content area instance returned here.
 	 * 
 	 * @return the alignment content area contained in this instance
 	 */

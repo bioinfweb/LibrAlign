@@ -76,16 +76,8 @@ public class CursorSelectionInputListener extends TICMouseAdapter implements TIC
 	}
 	
 	
-	private void setSwingFocus(TICMouseEvent event) {
-		if (event.getSource().getCurrentToolkit().equals(TargetToolkit.SWING)) {
-			((JComponent)event.getSource().getToolkitComponent()).requestFocus();
-		}
-	}
-
-
 	@Override
 	public boolean mousePressed(TICMouseEvent event) {
-		setSwingFocus(event);  // Necessary for Swing components to react to keyboard events.
 		if (event.getClickCount() > 1) {
 			// Handle double click events here
 		}
@@ -93,6 +85,11 @@ public class CursorSelectionInputListener extends TICMouseAdapter implements TIC
 			Point columnRow = calculateColumnRow(event);
 			getOwner().getSelection().setNewCursorPosition(columnRow.x, columnRow.y, 1);  // Height is always set to 1 on a mouse click.
 		}
+		
+		if (event.getSource().hasToolkitComponent()) {
+			event.getSource().getToolkitComponent().requestFocus();  // Make sure that this component receives the keyboard events from now on.
+		}
+		
 		return true;  // Forwarding to parent is not necessary.
 	}
 
