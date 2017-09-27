@@ -51,15 +51,13 @@ public abstract class SwingAlignmentRowsArea<C extends TICComponent> extends Abs
 
 	@Override
 	public Dimension getPreferredScrollableViewportSize() {
-		// TODO Auto-generated method stub
 		return getPreferredSize();
 	}
 
 
 	@Override
 	public int getScrollableBlockIncrement(Rectangle arg0, int arg1, int arg2) {
-		// TODO Auto-generated method stub
-		return 10;
+		return 50;  //TODO Implement method to exactly expose five new rows or columns 
 	}
 
 
@@ -79,7 +77,6 @@ public abstract class SwingAlignmentRowsArea<C extends TICComponent> extends Abs
 
 	@Override
 	public int getScrollableUnitIncrement(Rectangle arg0, int arg1, int arg2) {
-		// TODO Auto-generated method stub
-		return 10;
+		return 10;  //TODO Implement method to exactly expose one new row or column
 	}
 }
