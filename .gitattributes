@@ -329,7 +329,7 @@ main/info.bioinfweb.libralign.swing/.classpath -text svneol=unset#text/plain
 main/info.bioinfweb.libralign.swing/.project -text svneol=unset#text/plain
 main/info.bioinfweb.libralign.swing/.settings/org.eclipse.jdt.core.prefs -text svneol=unset#text/plain
 main/info.bioinfweb.libralign.swing/.settings/org.eclipse.jdt.ui.prefs -text svneol=unset#text/plain
-main/info.bioinfweb.libralign.swing/include/lib/tic-swing-2.0.0.jar -text
+main/info.bioinfweb.libralign.swing/include/lib/tic-swing-3.0.0.jar -text
 main/info.bioinfweb.libralign.swing/pom.xml -text svneol=unset#text/plain
 main/info.bioinfweb.libralign.swing/src/APACHE-LICENSE.txt -text svneol=unset#text/plain
 main/info.bioinfweb.libralign.swing/src/GPL.txt -text svneol=unset#text/plain
