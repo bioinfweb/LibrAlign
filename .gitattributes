@@ -72,12 +72,12 @@ main/info.bioinfweb.libralign.core/include/GPL.txt -text svneol=unset#text/plain
 main/info.bioinfweb.libralign.core/include/LGPL.txt -text svneol=unset#text/plain
 main/info.bioinfweb.libralign.core/include/NOTICE.txt -text svneol=unset#text/plain
 main/info.bioinfweb.libralign.core/include/lib/bioinfweb-commons-java-bio-2.0.0.jar -text
-main/info.bioinfweb.libralign.core/include/lib/bioinfweb-commons-java-core-2.2.0.jar -text
-main/info.bioinfweb.libralign.core/include/lib/bioinfweb-commons-java-swing-2.2.0.jar -text
+main/info.bioinfweb.libralign.core/include/lib/bioinfweb-commons-java-core-2.3.0.jar -text
+main/info.bioinfweb.libralign.core/include/lib/bioinfweb-commons-java-swing-2.4.0.jar -text
 main/info.bioinfweb.libralign.core/include/lib/commons-beanutils-1.9.2.jar -text
 main/info.bioinfweb.libralign.core/include/lib/commons-collections4-4.1.jar -text
 main/info.bioinfweb.libralign.core/include/lib/commons-lang3-3.1.jar -text
-main/info.bioinfweb.libralign.core/include/lib/tic-core-2.0.0.jar -text
+main/info.bioinfweb.libralign.core/include/lib/tic-core-3.0.0.jar -text
 main/info.bioinfweb.libralign.core/pom.xml -text svneol=unset#text/plain
 main/info.bioinfweb.libralign.core/src/APACHE-LICENSE.txt -text svneol=unset#text/plain
 main/info.bioinfweb.libralign.core/src/GPL.txt -text svneol=unset#text/plain
