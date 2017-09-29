@@ -1,7 +1,0 @@
-<fileset dir="${tempFolder}">
-	<include name="${simpleProjectLabel}.core.jar" />
-	<include name="${simpleProjectLabel}.swing.jar" />
-	<include name="${simpleProjectLabel}.swt.jar" />
-	<include name="${simpleProjectLabel}.io.jar" />
-	<include name="${simpleProjectLabel}.biojava1.jar" />
-</fileset>

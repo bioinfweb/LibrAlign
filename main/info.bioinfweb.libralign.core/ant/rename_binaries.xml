@@ -1,5 +1,0 @@
-<move file="${tempFolder}/downloads/complete/bin/${simpleProjectLabel}.core.jar" tofile="${tempFolder}/downloads/complete/bin/${simpleProjectLabel}-core-${majorNo}.${minorNo}.${revisionNo}.jar"/>
-<move file="${tempFolder}/downloads/complete/bin/${simpleProjectLabel}.swing.jar" tofile="${tempFolder}/downloads/complete/bin/${simpleProjectLabel}-swing-${majorNo}.${minorNo}.${revisionNo}.jar"/>
-<move file="${tempFolder}/downloads/complete/bin/${simpleProjectLabel}.swt.jar" tofile="${tempFolder}/downloads/complete/bin/${simpleProjectLabel}-swt-${majorNo}.${minorNo}.${revisionNo}.jar"/>
-<move file="${tempFolder}/downloads/complete/bin/${simpleProjectLabel}.io.jar" tofile="${tempFolder}/downloads/complete/bin/${simpleProjectLabel}-io-${majorNo}.${minorNo}.${revisionNo}.jar"/>
-<move file="${tempFolder}/downloads/complete/bin/${simpleProjectLabel}.biojava1.jar" tofile="${tempFolder}/downloads/complete/bin/${simpleProjectLabel}-biojava1-${majorNo}.${minorNo}.${revisionNo}.jar"/>

@@ -3,8 +3,6 @@
 <!ENTITY libraryReleaseTargets SYSTEM "/srv/bioinfweb/data/ReleaseManager/shared/ant/Library_Release_Targets.xml">
 <!ENTITY additionalClasspathEntries SYSTEM "additional_classpath_entries.xml">
 <!ENTITY javadocLinks SYSTEM "javaDoc_links.xml">
-<!ENTITY binaries SYSTEM "binaries.xml">
-<!ENTITY renameBinaries SYSTEM "rename_binaries.xml">
 <!ENTITY sourcefiles SYSTEM "sourcefiles.xml">
 <!ENTITY libraryJars SYSTEM "library_jars.xml">
 <!ENTITY javadocSourceLocations SYSTEM "javaDoc_sourceLocations.xml">
@@ -23,12 +21,14 @@
 	<property name="webspaceJavaDocFolder" value="${webspaceRootFolder}/PROTECTED/tree/Documentation/API" />
 	<property name="webspaceDownloadFolder" value="${webspaceRootFolder}/Download" />	
 	<property name="svnRepositoryPath" value="https://secure.bioinfweb.info/Code/svn/LibrAlign/trunk/main/" />
+	<property name="javaVersion" value="1.8" /> 
 	<property name="styleName" value="LibrAlign" />
 	<property name="dbName" value="biw_LibrAlign" />
 	<property name="dbUser" value="biw_rm_LibrAlign" />
 	&dbPassword;
 	<property name="softwareID" value="14" />
 	<property name="containedItems" value="1 2 3 4 5 6" />
+	<property name="containedModuleItems" value="2 3 4 5 6" />
 	<property name="singleModuleDownloadTypes" value="1,6" />
 	<property name="completeDownloadTypes" value="4,5" /> 
 	<property name="defaultNewsTextEn" value="A [LINK http://bioinfweb.info/LibrAlign/Download new version] of our GUI library providing powerful components for displaying and editing multiple sequence alignments and attached raw- and metadata was released." />
