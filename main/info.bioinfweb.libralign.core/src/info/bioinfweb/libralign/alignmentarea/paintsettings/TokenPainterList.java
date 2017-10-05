@@ -199,7 +199,7 @@ public class TokenPainterList implements Iterable<TokenPainter> {
 			}
 			else {
 				if (size() > 1) {  // The previous model was a concatenated model.
-					painters.subList(1, size() - 1).clear();  // Remove all token painters except the first one.
+					painters.subList(1, size()).clear();  // Remove all token painters except the first one.
 				}
 			}
 		}
