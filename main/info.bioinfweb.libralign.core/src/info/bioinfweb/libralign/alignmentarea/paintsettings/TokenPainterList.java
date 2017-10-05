@@ -184,8 +184,8 @@ public class TokenPainterList implements Iterable<TokenPainter> {
 	 * alignment model. This could either be that a different model was set or that changes inside a concatenated
 	 * model happened.
 	 * <p>
-	 * This method is meant for internal use in LibrAlign and it should not be necessary to call it directly from
-	 * external code.
+	 * This method is meant for internal use in <i>LibrAlign</i> and it should not be necessary to call it directly
+	 * from external code.
 	 */
 	public void afterAlignmentModelChanged() {
 		if (getOwner().getOwner().getAlignmentModel() instanceof ConcatenatedAlignmentModel) {
@@ -198,8 +198,8 @@ public class TokenPainterList implements Iterable<TokenPainter> {
 				painters.add(null);
 			}
 			else {
-				while (size() > 1) {  // The previous model was a concatenated model.
-					painters.remove(size() - 1);
+				if (size() > 1) {  // The previous model was a concatenated model.
+					painters.subList(1, size() - 1).clear();  // Remove all token painters except the first one.
 				}
 			}
 		}
