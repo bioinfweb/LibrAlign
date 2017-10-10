@@ -70,7 +70,7 @@ public class SequenceIDManager {  //TODO What if the same name is added several 
    * <p>
    * If a shared ID manager is used, a previously defined ID is used, if one exists.
    * 
-   * @param sequenceName - the name of the new sequence
+   * @param sequenceName the name of the new sequence
    * @return the unique ID of the new sequence
 	 * 
 	 * @throws AlignmentSourceNotWritableException if the underlying data source is not writable for sequences
@@ -124,7 +124,7 @@ public class SequenceIDManager {  //TODO What if the same name is added several 
   /**
    * Returns the unique sequence ID associated with the specified name.
    * 
-   * @param sequenceName - the name of the sequence that would be visible to the application user
+   * @param sequenceName the name of the sequence that would be visible to the application user
    * @return the sequence ID or {@code null} if no sequence with the specified name is contained in this model
    */
   public String sequenceIDByName(String sequenceName) {
@@ -136,7 +136,7 @@ public class SequenceIDManager {  //TODO What if the same name is added several 
    * Returns the sequence name (that would be visible to the application user) associated with the 
    * specified unique ID.
    * 
-   * @param sequenceID - the unique unmodifiable ID the sequence is identified by
+   * @param sequenceID the unique unmodifiable ID the sequence is identified by
    * @return the sequence name or {@code null} if no sequence with this ID is contained in this model
    */
   public String sequenceNameByID(String sequenceID) {

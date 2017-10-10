@@ -145,7 +145,7 @@ public abstract class AbstractUndecoratedAlignmentModel<T> extends AbstractAlign
 	 * 
 	 * @param sequenceID - the unique identifier for the new sequence which has been generated before the
 	 *        call of this method
-	 * @param sequenceName - the initial name the new sequence shall have 
+	 * @param sequenceName the initial name the new sequence shall have 
 	 */
 	protected abstract void doAddSequence(String sequenceID, String sequenceName);
 	
@@ -170,7 +170,7 @@ public abstract class AbstractUndecoratedAlignmentModel<T> extends AbstractAlign
 	 * method. The according events or exceptions are already created by this class if necessary, therefore
 	 * this does not need to be done in the implementation of this method.
 	 * 
-	 * @param sequenceID - the unique identifier of the sequence to be removed
+	 * @param sequenceID the unique identifier of the sequence to be removed
 	 */
 	protected abstract void doRemoveSequence(String sequenceID);
 	
