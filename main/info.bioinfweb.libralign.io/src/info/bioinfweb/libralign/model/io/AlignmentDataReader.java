@@ -19,14 +19,19 @@
 package info.bioinfweb.libralign.model.io;
 
 
+import java.io.File;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
 import info.bioinfweb.jphyloio.JPhyloIOEventReader;
+import info.bioinfweb.jphyloio.ReadWriteParameterMap;
 import info.bioinfweb.jphyloio.events.JPhyloIOEvent;
+import info.bioinfweb.jphyloio.factory.JPhyloIOReaderWriterFactory;
 import info.bioinfweb.libralign.model.AlignmentModel;
 import info.bioinfweb.libralign.model.data.DataModel;
 import info.bioinfweb.libralign.model.factory.AlignmentModelFactory;
+import info.bioinfweb.libralign.model.factory.BioPolymerCharAlignmentModelFactory;
 
 
 
@@ -39,6 +44,9 @@ import info.bioinfweb.libralign.model.factory.AlignmentModelFactory;
  */
 public class AlignmentDataReader {
 	//TODO Could this class be inherited from EventForwarder?
+	
+	private static final JPhyloIOReaderWriterFactory FACTORY = new JPhyloIOReaderWriterFactory();
+	
 	
 	private JPhyloIOEventReader eventReader;
 	private AlignmentModelEventReader alignmentModelReader;
@@ -54,7 +62,7 @@ public class AlignmentDataReader {
 	 * @param alignmentModelFactory the factory to create alignment model instances during reading
 	 * @throws NullPointerException if {@code eventReader} or {@code alignmentModelReader} are {@code null} 
 	 */
-	public AlignmentDataReader(JPhyloIOEventReader eventReader, AlignmentModelFactory alignmentModelFactory) {
+	public AlignmentDataReader(JPhyloIOEventReader eventReader, AlignmentModelFactory<?> alignmentModelFactory) {
 		super();
 		if ((eventReader == null) || (alignmentModelFactory == null)) {
 			throw new NullPointerException("The specified event reader and alignment model factory must not be null.");
@@ -63,6 +71,78 @@ public class AlignmentDataReader {
 			this.eventReader = eventReader;
 			this.alignmentModelReader = new AlignmentModelEventReader(alignmentModelFactory);
 		}
+	}
+
+
+	/**
+	 * Creates a new instance of this class.
+	 * <p>
+	 * The format of the specified files is guessed using 
+	 * {@link JPhyloIOReaderWriterFactory#guessReader(File, ReadWriteParameterMap)}.
+	 * 
+	 * @param file the file to be loaded
+	 * @param alignmentModelFactory the factory to create alignment model instances during reading
+	 * @throws NullPointerException if {@code file} or {@code alignmentModelReader} are {@code null} 
+	 * @throws Exception if an exception is thrown by 
+	 *         {@link JPhyloIOReaderWriterFactory#guessReader(File, ReadWriteParameterMap)} while guessing
+	 *         the format of {@code file}
+	 */
+	public AlignmentDataReader(File file, AlignmentModelFactory<?> alignmentModelFactory) throws Exception {
+		this(FACTORY.guessReader(file, new ReadWriteParameterMap()), alignmentModelFactory);
+	}
+
+
+	/**
+	 * Creates a new instance of this class.
+	 * <p>
+	 * The format of the specified files is guessed using 
+	 * {@link JPhyloIOReaderWriterFactory#guessReader(InputStream, ReadWriteParameterMap)}.
+	 * 
+	 * @param stream the input stream providing the data to be loaded
+	 * @param alignmentModelFactory the factory to create alignment model instances during reading
+	 * @throws NullPointerException if {@code stream} or {@code alignmentModelReader} are {@code null} 
+	 * @throws Exception if an exception is thrown by 
+	 *         {@link JPhyloIOReaderWriterFactory#guessReader(InputStream, ReadWriteParameterMap)} while guessing
+	 *         the format of {@code stream}
+	 */
+	public AlignmentDataReader(InputStream stream, AlignmentModelFactory<?> alignmentModelFactory) throws Exception {
+		this(FACTORY.guessReader(stream, new ReadWriteParameterMap()), alignmentModelFactory);
+	}
+
+
+	/**
+	 * Creates a new instance of this class.
+	 * <p>
+	 * The format of the specified files is guessed using 
+	 * {@link JPhyloIOReaderWriterFactory#guessReader(File, ReadWriteParameterMap)} and an instance of
+	 * {@link BioPolymerCharAlignmentModelFactory} will be used to create new model instances for the loaded data. 
+	 * 
+	 * @param file the file to be loaded
+	 * @throws NullPointerException if {@code file} is {@code null} 
+	 * @throws Exception if an exception is thrown by 
+	 *         {@link JPhyloIOReaderWriterFactory#guessReader(File, ReadWriteParameterMap)} while guessing
+	 *         the format of {@code file}
+	 */
+	public AlignmentDataReader(File file) throws Exception {
+		this(file, new BioPolymerCharAlignmentModelFactory());
+	}
+
+
+	/**
+	 * Creates a new instance of this class.
+	 * <p>
+	 * The format of the specified files is guessed using 
+	 * {@link JPhyloIOReaderWriterFactory#guessReader(InputStream, ReadWriteParameterMap)} and an instance of
+	 * {@link BioPolymerCharAlignmentModelFactory} will be used to create new model instances for the loaded data. 
+	 * 
+	 * @param stream the input stream providing the data to be loaded
+	 * @throws NullPointerException if {@code stream} is {@code null} 
+	 * @throws Exception if an exception is thrown by 
+	 *         {@link JPhyloIOReaderWriterFactory#guessReader(InputStream, ReadWriteParameterMap)} while guessing
+	 *         the format of {@code stream}
+	 */
+	public AlignmentDataReader(InputStream stream) throws Exception {
+		this(stream, new BioPolymerCharAlignmentModelFactory());
 	}
 
 
