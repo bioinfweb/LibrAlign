@@ -48,12 +48,15 @@ public class PackedAlignmentModel<T> extends AbstractListAlignmentModel<T> {
 	 * 
 	 * @param tokenSet the token set to be used by this alignment model
 	 * @param idManager the ID manager to be used by the new instance (maybe shared among multiple instances) 
+	 * @param reuseSequenceIDs Specifies whether unused IDs of the underlying ID manager should be reused by this model.
+	 *        (See the documentation of {@link #isReuseSequenceIDs()} for details. Specify {@code false}, if you are unsure
+	 *        what this property does.) 
 	 * @param minTokenCount the minimal number of different tokens to be supported by the compression method
 	 *        of this model
 	 * @see #getMaxSequenceLength()
 	 */
-	public PackedAlignmentModel(TokenSet<T> tokenSet, SequenceIDManager idManager, int minTokenCount) {
-		super(tokenSet, idManager);
+	public PackedAlignmentModel(TokenSet<T> tokenSet, SequenceIDManager idManager, boolean reuseSequenceIDs, int minTokenCount) {
+		super(tokenSet, idManager, reuseSequenceIDs);
 		if (tokenSet.size() > minTokenCount) {
 			throw new IllegalArgumentException(
 					"The specified token count must be greater or equal to the number of tokens in the specified set.");
@@ -73,7 +76,7 @@ public class PackedAlignmentModel<T> extends AbstractListAlignmentModel<T> {
 	 * @see #getMaxSequenceLength()
 	 */
 	public PackedAlignmentModel(TokenSet<T> tokenSet, int minTokenCount) {
-		this(tokenSet, new SequenceIDManager(), minTokenCount);
+		this(tokenSet, new SequenceIDManager(), false, minTokenCount);
 	}
 
 
@@ -87,9 +90,12 @@ public class PackedAlignmentModel<T> extends AbstractListAlignmentModel<T> {
 	 * 
 	 * @param tokenSet the token set to be used by this alignment model
 	 * @param idManager the ID manager to be used by the new instance (maybe shared among multiple instances) 
+	 * @param reuseSequenceIDs Specifies whether unused IDs of the underlying ID manager should be reused by this model.
+	 *        (See the documentation of {@link #isReuseSequenceIDs()} for details. Specify {@code false}, if you are unsure
+	 *        what this property does.) 
 	 */
-	public PackedAlignmentModel(TokenSet<T> tokenSet, SequenceIDManager idManager) {
-		this(tokenSet, idManager, tokenSet.size());
+	public PackedAlignmentModel(TokenSet<T> tokenSet, SequenceIDManager idManager, boolean reuseSequenceIDs) {
+		this(tokenSet, idManager, reuseSequenceIDs, tokenSet.size());
 	}
 
 
@@ -105,7 +111,7 @@ public class PackedAlignmentModel<T> extends AbstractListAlignmentModel<T> {
 	 * @param idManager the ID manager to be used by the new instance (maybe shared among multiple instances) 
 	 */
 	public PackedAlignmentModel(TokenSet<T> tokenSet) {
-		this(tokenSet, new SequenceIDManager(), tokenSet.size());
+		this(tokenSet, new SequenceIDManager(), false, tokenSet.size());
 	}
 
 

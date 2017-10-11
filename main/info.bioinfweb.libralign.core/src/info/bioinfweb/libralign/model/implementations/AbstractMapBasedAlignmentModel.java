@@ -59,15 +59,18 @@ public abstract class AbstractMapBasedAlignmentModel<S, T> extends AbstractUndec
 	/**
 	 * Creates a new instance of this class with a custom map and list implementation.
 	 * 
-	 * @param tokenSet - the token set which is supported by the implementation
+	 * @param tokenSet the token set which is supported by the implementation
 	 * @param idManager the ID manager to be used by the new instance (maybe shared among multiple instances) 
-	 * @param sequenceMap - the map instance used to assign sequences to their IDs (must be empty)
-	 * @param sequenceOrder - the list object defining the order of the sequences
+	 * @param reuseSequenceIDs Specifies whether unused IDs of the underlying ID manager should be reused by this model.
+	 *        (See the documentation of {@link #isReuseSequenceIDs()} for details. Specify {@code false}, if you are unsure
+	 *        what this property does.) 
+	 * @param sequenceMap the map instance used to assign sequences to their IDs (must be empty)
+	 * @param sequenceOrder the list object defining the order of the sequences
 	 */
-	public AbstractMapBasedAlignmentModel(TokenSet<T> tokenSet, SequenceIDManager idManager, 
+	public AbstractMapBasedAlignmentModel(TokenSet<T> tokenSet, SequenceIDManager idManager, boolean reuseSequenceIDs, 
 			Map<String, S> sequenceMap, List<String> sequenceOrder) {
 		
-		super(tokenSet, idManager);
+		super(tokenSet, idManager, reuseSequenceIDs);
 		if (sequenceMap.isEmpty()) {
 			this.sequenceMap = sequenceMap;
 			this.sequenceOrder = sequenceOrder;
@@ -82,23 +85,29 @@ public abstract class AbstractMapBasedAlignmentModel<S, T> extends AbstractUndec
 	/**
 	 * Creates a new instance of this class with a custom map implementation.
 	 * 
-	 * @param tokenSet - the token set which is supported by the implementation
+	 * @param tokenSet the token set which is supported by the implementation
 	 * @param idManager the ID manager to be used by the new instance (maybe shared among multiple instances) 
-	 * @param sequenceMap - the map instance used to assign sequences to their IDs
+	 * @param reuseSequenceIDs Specifies whether unused IDs of the underlying ID manager should be reused by this model.
+	 *        (See the documentation of {@link #isReuseSequenceIDs()} for details. Specify {@code false}, if you are unsure
+	 *        what this property does.) 
+	 * @param sequenceMap the map instance used to assign sequences to their IDs
 	 */
-	public AbstractMapBasedAlignmentModel(TokenSet<T> tokenSet,	SequenceIDManager idManager, Map<String, S> sequenceMap) {
-		this(tokenSet, idManager, sequenceMap, new ArrayList<String>());
+	public AbstractMapBasedAlignmentModel(TokenSet<T> tokenSet,	SequenceIDManager idManager, boolean reuseSequenceIDs, Map<String, S> sequenceMap) {
+		this(tokenSet, idManager, reuseSequenceIDs, sequenceMap, new ArrayList<String>());
 	}
 
 
 	/**
 	 * Creates a new instance of this class relying on a {@link HashMap}.
 	 * 
-	 * @param tokenSet - the token set which is supported by the implementation
+	 * @param tokenSet the token set which is supported by the implementation
 	 * @param idManager the ID manager to be used by the new instance (maybe shared among multiple instances) 
+	 * @param reuseSequenceIDs Specifies whether unused IDs of the underlying ID manager should be reused by this model.
+	 *        (See the documentation of {@link #isReuseSequenceIDs()} for details. Specify {@code false}, if you are unsure
+	 *        what this property does.) 
 	 */
-	public AbstractMapBasedAlignmentModel(TokenSet<T> tokenSet, SequenceIDManager idManager) {
-		this(tokenSet, idManager, new HashMap<String, S>());
+	public AbstractMapBasedAlignmentModel(TokenSet<T> tokenSet, SequenceIDManager idManager, boolean reuseSequenceIDs) {
+		this(tokenSet, idManager, reuseSequenceIDs, new HashMap<String, S>());
 	}
 
 

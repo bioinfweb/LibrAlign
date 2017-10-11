@@ -48,38 +48,49 @@ public abstract class AbstractUnmodifyableAlignmentModel<S, T> extends AbstractM
 	/**
 	 * Creates a new instance of this class with a custom map and list implementation.
 	 * 
-	 * @param tokenSet - the token set which is supported by the implementation
+	 * @param tokenSet the token set which is supported by the implementation
 	 * @param idManager the ID manager to be used by the new instance (maybe shared among multiple instances) 
-	 * @param sequenceMap - the map instance used to assign sequences to their IDs
-	 * @param sequenceOrder - the list object defining the order of the sequences
+	 * @param reuseSequenceIDs Specifies whether unused IDs of the underlying ID manager should be reused by this model.
+	 *        (See the documentation of {@link #isReuseSequenceIDs()} for details. Specify {@code false}, if you are unsure
+	 *        what this property does.) 
+	 * @param sequenceMap the map instance used to assign sequences to their IDs
+	 * @param sequenceOrder the list object defining the order of the sequences
 	 */
-	public AbstractUnmodifyableAlignmentModel(TokenSet<T> tokenSet, SequenceIDManager idManager,	
+	public AbstractUnmodifyableAlignmentModel(TokenSet<T> tokenSet, SequenceIDManager idManager, boolean reuseSequenceIDs,	
 			Map<String, S> sequenceMap, List<String> sequenceOrder) {
 		
-		super(tokenSet, idManager, sequenceMap, sequenceOrder);
+		super(tokenSet, idManager, reuseSequenceIDs, sequenceMap, sequenceOrder);
 	}
 
 
 	/**
 	 * Creates a new instance of this class with a custom map and list implementation.
 	 * 
-	 * @param tokenSet - the token set which is supported by the implementation
+	 * @param tokenSet the token set which is supported by the implementation
 	 * @param idManager the ID manager to be used by the new instance (maybe shared among multiple instances) 
-	 * @param sequenceMap - the map instance used to assign sequences to their IDs
+	 * @param reuseSequenceIDs Specifies whether unused IDs of the underlying ID manager should be reused by this model.
+	 *        (See the documentation of {@link #isReuseSequenceIDs()} for details. Specify {@code false}, if you are unsure
+	 *        what this property does.) 
+	 * @param sequenceMap the map instance used to assign sequences to their IDs
 	 */
-	public AbstractUnmodifyableAlignmentModel(TokenSet<T> tokenSet, SequenceIDManager idManager, Map<String, S> sequenceMap) {
-		super(tokenSet, idManager, sequenceMap);
+	public AbstractUnmodifyableAlignmentModel(TokenSet<T> tokenSet, SequenceIDManager idManager, boolean reuseSequenceIDs, 
+			Map<String, S> sequenceMap) {
+		
+		super(tokenSet, idManager, reuseSequenceIDs, sequenceMap);
 	}
 
 
 	/**
 	 * Creates a new instance of this class relying on a {@link TreeMap}.
 	 * 
-	 * @param tokenSet - the token set which is supported by the implementation
+	 * @param tokenSet the token set which is supported by the implementation
 	 * @param idManager the ID manager to be used by the new instance (maybe shared among multiple instances) 
+	 * @param reuseSequenceIDs Specifies whether unused IDs of the underlying ID manager should be reused by this model.
+	 *        (See the documentation of {@link #isReuseSequenceIDs()} for details. Specify {@code false}, if you are unsure
+	 *        what this property does.) 
 	 */
-	public AbstractUnmodifyableAlignmentModel(TokenSet<T> tokenSet, SequenceIDManager idManager) {
-		super(tokenSet, idManager);
+	public AbstractUnmodifyableAlignmentModel(TokenSet<T> tokenSet, SequenceIDManager idManager, boolean reuseSequenceIDs) {
+		super(tokenSet, idManager, reuseSequenceIDs);
 	}
 
 

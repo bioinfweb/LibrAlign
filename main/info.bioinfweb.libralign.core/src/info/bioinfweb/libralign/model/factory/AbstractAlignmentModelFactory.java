@@ -20,6 +20,7 @@ package info.bioinfweb.libralign.model.factory;
 
 
 import info.bioinfweb.libralign.model.AlignmentModel;
+import info.bioinfweb.libralign.model.implementations.AbstractUndecoratedAlignmentModel;
 import info.bioinfweb.libralign.model.implementations.SequenceIDManager;
 import info.bioinfweb.libralign.model.tokenset.TokenSet;
 
@@ -35,6 +36,7 @@ import info.bioinfweb.libralign.model.tokenset.TokenSet;
  */
 public abstract class AbstractAlignmentModelFactory<T> implements AlignmentModelFactory<T> {
 	private SequenceIDManager sharedIDManager = null;
+	private boolean reuseSequenceIDs = false;
 	
 	
 	/**
@@ -52,9 +54,10 @@ public abstract class AbstractAlignmentModelFactory<T> implements AlignmentModel
 	 * @param sharedIDManager the sequence ID manager that will be shared by all model instances 
 	 *        created by this factory 
 	 */
-	public AbstractAlignmentModelFactory(SequenceIDManager sharedIDManager) {
+	public AbstractAlignmentModelFactory(SequenceIDManager sharedIDManager, boolean reuseSequenceIDs) {
 		super();
 		this.sharedIDManager = sharedIDManager;
+		this.reuseSequenceIDs = reuseSequenceIDs;
 	}
 
 
@@ -69,6 +72,18 @@ public abstract class AbstractAlignmentModelFactory<T> implements AlignmentModel
 	}
 	
 	
+	/**
+	 * Determines whether models created by this factory should reuse IDs already present in their associated 
+	 * ID manager or should always create new IDs. (See the documentation of 
+	 * {@link AbstractUndecoratedAlignmentModel#isReuseSequenceIDs()} for details.)
+	 * 
+	 * @return {@code true} if IDs should be reused, {@code false} otherwise
+	 */
+	public boolean isReuseSequenceIDs() {
+		return reuseSequenceIDs;
+	}
+
+
 	/**
 	 * Determines whether this instance uses a shared sequence ID manager.
 	 * 

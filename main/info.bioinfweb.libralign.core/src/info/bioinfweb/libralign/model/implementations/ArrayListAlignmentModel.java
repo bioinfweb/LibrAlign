@@ -43,11 +43,14 @@ public class ArrayListAlignmentModel<T> extends AbstractListAlignmentModel<T> {
 	 * which is only used if it is lower than {@link #getMaxSequenceLength()} to create new sequence array 
 	 * lists.
 	 * 
-	 * @param tokenSet - the token set which is supported by the implementation
+	 * @param tokenSet the token set which is supported by the implementation
 	 * @param idManager the ID manager to be used by the new instance (maybe shared among multiple instances) 
+	 * @param reuseSequenceIDs Specifies whether unused IDs of the underlying ID manager should be reused by this model.
+	 *        (See the documentation of {@link #isReuseSequenceIDs()} for details. Specify {@code false}, if you are unsure
+	 *        what this property does.) 
 	 */
-	public ArrayListAlignmentModel(TokenSet<T> tokenSet, SequenceIDManager idManager) {
-		super(tokenSet, idManager);
+	public ArrayListAlignmentModel(TokenSet<T> tokenSet, SequenceIDManager idManager, boolean reuseSequenceIDs) {
+		super(tokenSet, idManager, reuseSequenceIDs);
 	}
 
 
@@ -59,23 +62,26 @@ public class ArrayListAlignmentModel<T> extends AbstractListAlignmentModel<T> {
 	 * @param tokenSet - the token set which is supported by the implementation
 	 */
 	public ArrayListAlignmentModel(TokenSet<T> tokenSet) {
-		super(tokenSet, new SequenceIDManager());
+		super(tokenSet, new SequenceIDManager(), false);
 	}
 
 
 	/**
 	 * Creates a new instance of this class.
 	 * 
-	 * @param tokenSet - the token set which is supported by the implementation
+	 * @param tokenSet the token set which is supported by the implementation
 	 * @param idManager the ID manager to be used by the new instance (maybe shared among multiple instances) 
-	 * @param initialCapacity - the initial capacity newly generated array lists will have
-	 * @param useMaxLength - Specify {@code true} here if {@code initialCapacity} shall only be used if it 
+	 * @param reuseSequenceIDs Specifies whether unused IDs of the underlying ID manager should be reused by this model.
+	 *        (See the documentation of {@link #isReuseSequenceIDs()} for details. Specify {@code false}, if you are unsure
+	 *        what this property does.) 
+	 * @param initialCapacity the initial capacity newly generated array lists will have
+	 * @param useMaxLength Specify {@code true} here if {@code initialCapacity} shall only be used if it 
 	 *        is lower than {@link #getMaxSequenceLength()} to create new sequence array lists.
 	 */
-	public ArrayListAlignmentModel(TokenSet<T> tokenSet, SequenceIDManager idManager, int initialCapacity, 
+	public ArrayListAlignmentModel(TokenSet<T> tokenSet, SequenceIDManager idManager, boolean reuseSequenceIDs, int initialCapacity, 
 			boolean useMaxLength) {
 		
-		super(tokenSet, idManager, initialCapacity, useMaxLength);
+		super(tokenSet, idManager, reuseSequenceIDs, initialCapacity, useMaxLength);
 	}
 
 

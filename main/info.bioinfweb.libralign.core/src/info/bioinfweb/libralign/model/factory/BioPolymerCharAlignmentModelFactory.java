@@ -20,6 +20,7 @@ package info.bioinfweb.libralign.model.factory;
 
 
 import info.bioinfweb.libralign.model.AlignmentModel;
+import info.bioinfweb.libralign.model.implementations.AbstractUndecoratedAlignmentModel;
 import info.bioinfweb.libralign.model.implementations.ArrayListAlignmentModel;
 import info.bioinfweb.libralign.model.implementations.PackedAlignmentModel;
 import info.bioinfweb.libralign.model.implementations.SequenceIDManager;
@@ -68,9 +69,13 @@ public class BioPolymerCharAlignmentModelFactory extends AbstractAlignmentModelF
 	 * 
 	 * @param sharedIDManager the sequence ID manager that will be shared by all model instances 
 	 *        created by this factory 
+	 * @param reuseSequenceIDs Specifies whether unused IDs present in their underlying ID managers should be reused 
+	 *        by alignment model instances created by this factory. (See the documentation of 
+	 *        {@link AbstractUndecoratedAlignmentModel#isReuseSequenceIDs()} for details. Specify {@code false}, if 
+	 *        you are unsure what this property does.) 
 	 */
-	public BioPolymerCharAlignmentModelFactory(SequenceIDManager sharedIDManager) {
-		super(sharedIDManager);
+	public BioPolymerCharAlignmentModelFactory(SequenceIDManager sharedIDManager, boolean reuseSequenceIDs) {
+		super(sharedIDManager, reuseSequenceIDs);
 	}
 
 	
@@ -105,10 +110,10 @@ public class BioPolymerCharAlignmentModelFactory extends AbstractAlignmentModelF
 		// Create alignment model:
 		long charStateCount = Math.max(tokenSet.size(), parameterMap.getLong(NewAlignmentModelParameterMap.KEY_CHARACTER_STATE_COUNT, 0));
 		if (charStateCount > Integer.MAX_VALUE) {  //TODO This is not possible if the token type is Character!
-			return new ArrayListAlignmentModel<Character>(tokenSet, getSharedIDManager());  // null is allowed as ID manager
+			return new ArrayListAlignmentModel<Character>(tokenSet, getSharedIDManager(), isReuseSequenceIDs());  // null is allowed as ID manager
 		}
 		else {
-			return new PackedAlignmentModel<Character>(tokenSet, getSharedIDManager(), (int)charStateCount);  // null is allowed as ID manager
+			return new PackedAlignmentModel<Character>(tokenSet, getSharedIDManager(), isReuseSequenceIDs(), (int)charStateCount);  // null is allowed as ID manager
 		}
 	}
 }

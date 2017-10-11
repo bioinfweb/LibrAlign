@@ -43,21 +43,24 @@ public class CharSequenceAlignmentModel extends AbstractUnmodifyableAlignmentMod
 	/**
 	 * Creates a new instance of this class using a possibly shared ID manager.
 	 * 
-	 * @param tokenSet - the token set which is supported by the implementation
+	 * @param tokenSet the token set which is supported by the implementation
 	 * @param idManager the ID manager to be used by the new instance (maybe shared among multiple instances) 
+	 * @param reuseSequenceIDs Specifies whether unused IDs of the underlying ID manager should be reused by this model.
+	 *        (See the documentation of {@link #isReuseSequenceIDs()} for details. Specify {@code false}, if you are unsure
+	 *        what this property does.) 
 	 */
-	public CharSequenceAlignmentModel(TokenSet<Character> tokenSet, SequenceIDManager idManager) {
-		super(tokenSet, idManager);
+	public CharSequenceAlignmentModel(TokenSet<Character> tokenSet, SequenceIDManager idManager, boolean reuseSequenceIDs) {
+		super(tokenSet, idManager, reuseSequenceIDs);
 	}
 
 
 	/**
 	 * Creates a new instance of this class using its own ID manager.
 	 * 
-	 * @param tokenSet - the token set which is supported by the implementation
+	 * @param tokenSet the token set which is supported by the implementation
 	 */
 	public CharSequenceAlignmentModel(TokenSet<Character> tokenSet) {
-		this(tokenSet, new SequenceIDManager());
+		this(tokenSet, new SequenceIDManager(), false);
 	}
 
 

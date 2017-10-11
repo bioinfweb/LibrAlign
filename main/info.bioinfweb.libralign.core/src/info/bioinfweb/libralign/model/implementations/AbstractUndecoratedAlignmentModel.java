@@ -43,7 +43,8 @@ import info.bioinfweb.libralign.model.tokenset.TokenSet;
  * @param <T> - the type of sequence elements (tokens) the implementing provider object works with
  */
 public abstract class AbstractUndecoratedAlignmentModel<T> extends AbstractAlignmentModel<T> {
-	private SequenceIDManager idManager = new SequenceIDManager();
+	private SequenceIDManager idManager;
+	private boolean reuseSequenceIDs;
 	private TokenSet<T> tokenSet;
 	private int maxSequenceLength = 0;
 	private boolean recalculateMaxSequenceLength = true; 
@@ -55,8 +56,7 @@ public abstract class AbstractUndecoratedAlignmentModel<T> extends AbstractAlign
 	 * @param tokenSet - the set of allowed tokens in the sequences of the implementing class
 	 */
 	public AbstractUndecoratedAlignmentModel(TokenSet<T> tokenSet) {
-		super();
-		this.tokenSet =  tokenSet;
+		this(tokenSet, null, false);
 	}
 	
 
@@ -64,18 +64,22 @@ public abstract class AbstractUndecoratedAlignmentModel<T> extends AbstractAlign
 	 * Creates a new instance of this class.
 	 * 
 	 * @param tokenSet the set of allowed tokens in the sequences of the implementing class
-	 * @param idManager the ID manager to be used by the new instance (maybe shared among multiple instances) 
+	 * @param idManager the ID manager to be used by the new instance (maybe shared among multiple instances)
+	 * @param reuseSequenceIDs Specifies whether unused IDs of the underlying ID manager should be reused by this model.
+	 *        (See the documentation of {@link #isReuseSequenceIDs()} for details. Specify {@code false}, if you are unsure
+	 *        what this property does.) 
 	 */
-	public AbstractUndecoratedAlignmentModel(TokenSet<T> tokenSet, SequenceIDManager idManager) {
+	public AbstractUndecoratedAlignmentModel(TokenSet<T> tokenSet, SequenceIDManager idManager, boolean reuseSequenceIDs) {
 		super();
 		
+		this.tokenSet = tokenSet;
 		if (idManager == null) {
 			this.idManager = new SequenceIDManager();
 		}
 		else {
 			this.idManager = idManager;
 		}
-		this.tokenSet = tokenSet;
+		this.reuseSequenceIDs = reuseSequenceIDs;
 	}
 
 
@@ -88,6 +92,42 @@ public abstract class AbstractUndecoratedAlignmentModel<T> extends AbstractAlign
 	@Override
 	public void setTokenSet(TokenSet<T> set) {
 		tokenSet = set;
+	}
+
+
+	/**
+	 * Determines whether new sequence IDs should be created each time a new sequence is added or if existing IDs already 
+	 * present for a specified name in the ID manager should be reused. 
+	 * <p>
+	 * The default value for this property is {@code false}, which will be the best choice in most application. It can be 
+	 * set to {@code true} if specific IDs, e.g. provided by a shared ID manager should be used. (Removing a sequence 
+	 * with a certain name and later on adding another sequence with the same name will e.g. result in a reuse of the old 
+	 * ID for the new sequence.) Reusing IDs may cause problems, if out-dated IDs are stored in application code as 
+	 * references, since these refer to a new sequence, when such an ID is reused. Application developers must make sure 
+	 * to avoid respective problems, when setting this property to {@code true}.
+	 * <p>
+	 * If this property is set to {@code true}, IDs will only be reused if a sequences with a name is inserted for which 
+	 * the underlying ID manager already contains a mapping that is currently not used by this model. Sequences with names
+	 * without any present mapping in the ID manager will always get new IDs and there will never be two sequences with 
+	 * the same ID in one model, even if they have identical names.
+	 * <p>
+	 * If this property is set to {@code false}, IDs will never be reused.  
+	 * 
+	 * @return {@code true} if IDs should be reused or {@code false} otherwise
+	 */
+	public boolean isReuseSequenceIDs() {
+		return reuseSequenceIDs;
+	}
+
+
+	/**
+	 * Allows to specify whether unused IDs of the underlying ID manager should be reused by this model. (See the 
+	 * documentation of {@link #isReuseSequenceIDs()} for details.)
+	 * 
+	 * @param reuseSequenceIDs Specify {@code true} here if IDs should be reused or {@code false} otherwise.
+	 */
+	public void setReuseSequenceIDs(boolean reuseSequenceIDs) {
+		this.reuseSequenceIDs = reuseSequenceIDs;
 	}
 
 
@@ -153,13 +193,24 @@ public abstract class AbstractUndecoratedAlignmentModel<T> extends AbstractAlign
 	protected abstract void doAddSequence(String sequenceID, String sequenceName);
 	
 	
+	private String getNewSequenceID(String sequenceName) {
+		Set<String> set = getIDManager().sequenceIDsByName(sequenceName);
+		for (String id : set) {
+			if (!containsSequence(id)) {
+				return id;
+			}
+		}
+		return getIDManager().addSequenceName(sequenceName);  // Create new ID, if ID manager contains no more unused IDs for the specified name.
+	}
+	
+	
 	@Override
 	public String addSequence(String sequenceName) {
 		if (isSequencesReadOnly()) {
 			throw new AlignmentSourceNotWritableException(this);
 		}
 		else {
-			String sequenceID = getIDManager().addSequenceName(sequenceName);
+			String sequenceID = getNewSequenceID(sequenceName);
 			doAddSequence(sequenceID, sequenceName);
 			fireAfterSequenceChange(SequenceChangeEvent.newInsertInstance(this, sequenceID));
 			return sequenceID;
