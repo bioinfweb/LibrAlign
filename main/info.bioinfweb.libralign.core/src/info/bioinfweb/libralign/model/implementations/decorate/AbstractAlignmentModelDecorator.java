@@ -20,6 +20,7 @@ package info.bioinfweb.libralign.model.implementations.decorate;
 
 
 import java.util.Iterator;
+import java.util.Set;
 
 import info.bioinfweb.commons.collections.ListChangeType;
 import info.bioinfweb.libralign.model.AlignmentModel;
@@ -249,8 +250,8 @@ public abstract class AbstractAlignmentModelDecorator<T, U> extends AbstractAlig
 
 
 	@Override
-	public String sequenceIDByName(String sequenceName) {
-		return underlyingModel.sequenceIDByName(sequenceName);
+	public Set<String> sequenceIDsByName(String sequenceName) {
+		return underlyingModel.sequenceIDsByName(sequenceName);
 	}
 
 

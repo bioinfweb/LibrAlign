@@ -207,7 +207,6 @@ main/info.bioinfweb.libralign.core/src/info/bioinfweb/libralign/model/events/pac
 main/info.bioinfweb.libralign.core/src/info/bioinfweb/libralign/model/events/package-info.java -text svneol=unset#text/plain
 main/info.bioinfweb.libralign.core/src/info/bioinfweb/libralign/model/exception/AlignmentModelException.java -text svneol=unset#text/plain
 main/info.bioinfweb.libralign.core/src/info/bioinfweb/libralign/model/exception/AlignmentSourceNotWritableException.java -text svneol=unset#text/plain
-main/info.bioinfweb.libralign.core/src/info/bioinfweb/libralign/model/exception/DuplicateSequenceNameException.java -text svneol=unset#text/plain
 main/info.bioinfweb.libralign.core/src/info/bioinfweb/libralign/model/exception/InvalidTokenException.java -text svneol=unset#text/plain
 main/info.bioinfweb.libralign.core/src/info/bioinfweb/libralign/model/exception/InvalidTokenRepresentationException.java -text svneol=unset#text/plain
 main/info.bioinfweb.libralign.core/src/info/bioinfweb/libralign/model/exception/SequenceNotFoundException.java -text svneol=unset#text/plain

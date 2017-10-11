@@ -19,19 +19,18 @@
 package info.bioinfweb.libralign.model;
 
 
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.Set;
-
 import info.bioinfweb.libralign.alignmentarea.content.AlignmentContentArea;
 import info.bioinfweb.libralign.model.adapters.AbstractAlignmentModelAdapter;
 import info.bioinfweb.libralign.model.exception.AlignmentSourceNotWritableException;
-import info.bioinfweb.libralign.model.exception.DuplicateSequenceNameException;
 import info.bioinfweb.libralign.model.exception.SequenceNotFoundException;
 import info.bioinfweb.libralign.model.implementations.AbstractMapBasedAlignmentModel;
 import info.bioinfweb.libralign.model.implementations.AbstractUndecoratedAlignmentModel;
 import info.bioinfweb.libralign.model.tokenset.TokenSet;
 import info.bioinfweb.libralign.model.utils.AlignmentModelUtils;
+
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.Set;
 
 
 
@@ -100,7 +99,7 @@ public interface AlignmentModel<T> {
 	/**
 	 * Returns the length of the specified sequence.
 	 * 
-	 * @param sequenceID - the identifier the sequence in the alignment
+	 * @param sequenceID the identifier the sequence in the alignment
 	 * @return the length of the sequence or {@code -1} if no sequence with the specified name exists
 	 */
 	public int getSequenceLength(String sequenceID);
@@ -143,24 +142,25 @@ public interface AlignmentModel<T> {
   /**
    * Checks if a sequence associated with the specified unique identifier is contained in this model.
    * 
-   * @param sequenceID - the ID of the sequence to checked on
+   * @param sequenceID the ID of the sequence to checked on
    * @return {@code true} if an according sequence was found, {@code false} otherwise 
    */
   public boolean containsSequence(String sequenceID);
   
   /**
-   * Returns the unique sequence ID associated with the specified name.
+   * Returns the set of unique sequence IDs associated with the specified name.
    * 
-   * @param sequenceName - the name of the sequence that would be visible to the application user
-   * @return the sequence ID or {@code null} if no sequence with the specified name is contained in this model
+   * @param sequenceName the name of the sequence that would be visible to the application user
+   * @return the set of sequence IDs (The returned set maybe unmodifiable (depending on the implementation) 
+   *         and empty if no sequence with the specified name is present in this model.)
    */
-  public String sequenceIDByName(String sequenceName);
+  public Set<String> sequenceIDsByName(String sequenceName);
 
   /**
    * Returns the sequence name (that would be visible to the application user) associated with the 
    * specified unique ID.
    * 
-   * @param sequenceID - the unique unmodifiable ID the sequence is identified by
+   * @param sequenceID the unique unmodifiable ID the sequence is identified by
    * @return the sequence name or {@code null} if no sequence with this ID is contained in this model
    */
   public String sequenceNameByID(String sequenceID);
@@ -168,7 +168,7 @@ public interface AlignmentModel<T> {
   /**
    * Adds a new empty sequence to the underlying data source and generates an ID for it.
    * 
-   * @param sequenceName - the name of the new sequence
+   * @param sequenceName the name of the new sequence
    * @return the unique ID of the new sequence
 	 * 
 	 * @throws AlignmentSourceNotWritableException if the underlying data source is not writable for sequences
@@ -178,7 +178,7 @@ public interface AlignmentModel<T> {
   /**
    * Removes the specified sequence from the underlying data source.
    * 
-   * @param sequenceID - the unique ID of the sequence to be removed
+   * @param sequenceID the unique ID of the sequence to be removed
    * @return {@code true} if an sequence with the specified ID was removed, {@code false} 
    *         if no sequence with the specified ID was contained in this model
 	 * 
@@ -189,8 +189,8 @@ public interface AlignmentModel<T> {
   /**
    * Renames a sequence in the underlying data source.
    * 
-   * @param sequenceID - the ID of the sequence to be renamed
-   * @param newSequenceName - the new name the sequence shall have
+   * @param sequenceID the ID of the sequence to be renamed
+   * @param newSequenceName the new name the sequence shall have
    * @return the name the sequence had until now
 	 * 
 	 * @throws AlignmentSourceNotWritableException if the underlying data source is not writable for sequences
@@ -200,7 +200,7 @@ public interface AlignmentModel<T> {
 	 *         data source
    */
   public String renameSequence(String sequenceID, String newSequenceName) 
-  		throws AlignmentSourceNotWritableException, DuplicateSequenceNameException, SequenceNotFoundException;
+  		throws AlignmentSourceNotWritableException, SequenceNotFoundException;
   
 	/**
 	 * Returns an iterator over unique IDs of all sequences contained in the underlying data source
@@ -229,8 +229,8 @@ public interface AlignmentModel<T> {
 	/**
 	 * Returns the token at the specified position.
 	 * 
-	 * @param sequenceID - the identifier the sequence where the token is contained
-	 * @param index - the index of the element contained in the specified sequence (The first element has the index 0.)
+	 * @param sequenceID the identifier the sequence where the token is contained
+	 * @param index the index of the element contained in the specified sequence (The first element has the index 0.)
 	 * @return the token to be displayed in the GUI alignment view
 	 * @throws SequenceNotFoundException if no according sequence to the specified ID was found in this model
 	 * @throws IndexOutOfBoundsException if the specified index is below zero or greater or equal to the length of the
@@ -241,9 +241,9 @@ public interface AlignmentModel<T> {
 	/**
 	 * Replaces the token at the specified position by the passed token.
 	 * 
-	 * @param sequenceID - the identifier the sequence where the token is contained
-	 * @param index - the index of the element to be replaced (The first element has the index 0.)
-	 * @param token - the new token for the specified position
+	 * @param sequenceID the identifier the sequence where the token is contained
+	 * @param index the index of the element to be replaced (The first element has the index 0.)
+	 * @param token the new token for the specified position
 	 * 
 	 * @throws AlignmentSourceNotWritableException if the underlying data source is not writable for tokens 
 	 * @throws SequenceNotFoundException if no according sequence to the specified ID was found in this model
@@ -258,10 +258,10 @@ public interface AlignmentModel<T> {
 	 * contains more tokens than the currently present in the sequence at the specified start position
 	 * the additional tokens are appended.
 	 * 
-	 * @param sequenceID - the identifier the sequence where the token is contained
-	 * @param beginIndex - the index of the first element to be replaced 
+	 * @param sequenceID the identifier the sequence where the token is contained
+	 * @param beginIndex the index of the first element to be replaced 
 	 *        (The first element in the sequence has the index 0.)
-	 * @param tokens - the new tokens for the specified position
+	 * @param tokens the new tokens for the specified position
 	 * 
 	 * @throws AlignmentSourceNotWritableException if the underlying data source is not writable for tokens
 	 * @throws SequenceNotFoundException if no according sequence to the specified ID was found in this model
@@ -273,8 +273,8 @@ public interface AlignmentModel<T> {
 	/**
 	 * Appends a token at the end of the sequence.
 	 * 
-	 * @param sequenceID - the identifier the sequence in the alignment
-	 * @param token - the token to be inserted
+	 * @param sequenceID the identifier the sequence in the alignment
+	 * @param token the token to be inserted
 	 * 
 	 * @throws SequenceNotFoundException if no according sequence to the specified ID was found in this model
 	 * @throws AlignmentSourceNotWritableException if the underlying data source is not writable for tokens
@@ -284,8 +284,8 @@ public interface AlignmentModel<T> {
 	/**
 	 * Appends a sequence of tokens starting at the end of the current sequence.
 	 * 
-	 * @param sequenceID - the identifier the sequence where the token is contained
-	 * @param tokens - the new tokens for the specified position
+	 * @param sequenceID the identifier the sequence where the token is contained
+	 * @param tokens the new tokens for the specified position
 	 * 
 	 * @throws SequenceNotFoundException if no according sequence to the specified ID was found in this model
 	 * @throws AlignmentSourceNotWritableException if the underlying data source is not writable for tokens
@@ -297,10 +297,10 @@ public interface AlignmentModel<T> {
 	 * Inserts a token at the specified position. All tokens located behind the specified index are moved 
 	 * by 1.
 	 * 
-	 * @param sequenceID - the identifier the sequence in the alignment
-	 * @param index - the new index the inserted element will have 
+	 * @param sequenceID the identifier the sequence in the alignment
+	 * @param index the new index the inserted element will have 
 	 *        ({@code 0 <= elementIndex < sequenceLength}) 
-	 * @param token - the token to be inserted
+	 * @param token the token to be inserted
 	 * 
 	 * @throws SequenceNotFoundException if no according sequence to the specified ID was found in this model
 	 * @throws AlignmentSourceNotWritableException if the underlying data source is not writable for tokens
@@ -311,10 +311,10 @@ public interface AlignmentModel<T> {
 	 * Inserts a sequence of tokens starting at the specified position. All tokens located behind the 
 	 * specified index are moved by the number of tokens that are contained in {@code tokens}.
 	 * 
-	 * @param sequenceID - the identifier the sequence where the token is contained
-	 * @param beginIndex - the index of the first element to be replaced 
+	 * @param sequenceID the identifier the sequence where the token is contained
+	 * @param beginIndex the index of the first element to be replaced 
 	 *        (The first element in the sequence has the index 0.)
-	 * @param tokens - the new tokens for the specified position
+	 * @param tokens the new tokens for the specified position
 	 * 
 	 * @throws SequenceNotFoundException if no according sequence to the specified ID was found in this model
 	 * @throws AlignmentSourceNotWritableException if the underlying data source is not writable for tokens
@@ -325,8 +325,8 @@ public interface AlignmentModel<T> {
 	/**
 	 * Removes the token at the specified position from the underlying data source.
 	 * 
-	 * @param sequenceID - the identifier the sequence in the alignment
-	 * @param index - the index of the element to be removed (The first element has the index 0.)
+	 * @param sequenceID the identifier the sequence in the alignment
+	 * @param index the index of the element to be removed (The first element has the index 0.)
 	 * 
 	 * @throws SequenceNotFoundException if no according sequence to the specified ID was found in this model
 	 * @throws AlignmentSourceNotWritableException if the underlying data source is not writable for tokens
@@ -338,9 +338,9 @@ public interface AlignmentModel<T> {
 	 * The subsequence to be removed begins at the specified {@code beginIndex} and extends to the 
 	 * token at index {@code endIndex - 1). Thus the length of the subsequence is {@code endIndex - beginIndex}. 
 	 * 
-	 * @param sequenceID - the identifier the sequence in the alignment
-	 * @param beginIndex - the beginning index, inclusive
-	 * @param endIndex - the ending index, exclusive
+	 * @param sequenceID the identifier the sequence in the alignment
+	 * @param beginIndex the beginning index, inclusive
+	 * @param endIndex the ending index, exclusive
 	 * 
 	 * @throws SequenceNotFoundException if no according sequence to the specified ID was found in this model
 	 * @throws AlignmentSourceNotWritableException if the underlying data source is not writable for tokens

@@ -332,8 +332,8 @@ public class SwingUndoAlignmentModel<T> implements AlignmentModel<T>,
 
 
 	@Override
-	public String sequenceIDByName(String sequenceName) {
-		return underlyingModel.sequenceIDByName(sequenceName);
+	public Set<String> sequenceIDsByName(String sequenceName) {
+		return underlyingModel.sequenceIDsByName(sequenceName);
 	}
 
 

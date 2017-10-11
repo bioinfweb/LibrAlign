@@ -21,6 +21,8 @@ package info.bioinfweb.libralign.model.implementations;
 
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.Set;
+import java.util.TreeSet;
 
 import info.bioinfweb.libralign.model.AlignmentModelWriteType;
 import info.bioinfweb.libralign.model.events.SequenceChangeEvent;
@@ -126,14 +128,15 @@ public abstract class AbstractUndecoratedAlignmentModel<T> extends AbstractAlign
 	 * @see info.bioinfweb.libralign.alignmentprovider.SequenceDataProvider#sequenceIDByName(java.lang.String)
 	 */
 	@Override
-	public String sequenceIDByName(String sequenceName) {
-		String result = getIDManager().sequenceIDByName(sequenceName);
-		if ((result == null) || !containsSequence(result)) {
-			return null;
+	public Set<String> sequenceIDsByName(String sequenceName) {
+		Set<String> ids = getIDManager().sequenceIDsByName(sequenceName);
+		Set<String> result = new TreeSet<String>();
+		for (String id : ids) {
+			if (containsSequence(id)) {
+				result.add(id);
+			}
 		}
-		else {
-			return result;
-		}
+		return result;
 	}
 
 
@@ -143,7 +146,7 @@ public abstract class AbstractUndecoratedAlignmentModel<T> extends AbstractAlign
 	 * method. The according events or exceptions are already created by this class if necessary, therefore
 	 * this does not need to be done in the implementation of this method.
 	 * 
-	 * @param sequenceID - the unique identifier for the new sequence which has been generated before the
+	 * @param sequenceID the unique identifier for the new sequence which has been generated before the
 	 *        call of this method
 	 * @param sequenceName the initial name the new sequence shall have 
 	 */

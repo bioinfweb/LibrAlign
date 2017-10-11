@@ -21,13 +21,12 @@ package info.bioinfweb.libralign.model.implementations.decorate;
 
 import info.bioinfweb.commons.bio.CharacterStateSetType;
 import info.bioinfweb.commons.collections.PackedObjectArrayList;
-import info.bioinfweb.libralign.model.AlignmentModelChangeListener;
 import info.bioinfweb.libralign.model.AlignmentModel;
-import info.bioinfweb.libralign.model.AlignmentModelWriteType;
+import info.bioinfweb.libralign.model.AlignmentModelChangeListener;
 import info.bioinfweb.libralign.model.AlignmentModelView;
+import info.bioinfweb.libralign.model.AlignmentModelWriteType;
 import info.bioinfweb.libralign.model.events.TokenChangeEvent;
 import info.bioinfweb.libralign.model.exception.AlignmentSourceNotWritableException;
-import info.bioinfweb.libralign.model.exception.DuplicateSequenceNameException;
 import info.bioinfweb.libralign.model.exception.SequenceNotFoundException;
 import info.bioinfweb.libralign.model.tokenset.TokenSet;
 
@@ -369,7 +368,7 @@ public abstract class AbstractTokenReplacementAlignmentModelDecorator<T, U> exte
 
 	@Override
 	public String renameSequence(String sequenceID, String newSequenceName) throws AlignmentSourceNotWritableException,
-			DuplicateSequenceNameException, SequenceNotFoundException {
+			SequenceNotFoundException {
 		
 		String underlyingID = convertDecoratedSequenceID(sequenceID);
 		if (underlyingID != null) {
