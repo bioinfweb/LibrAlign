@@ -37,7 +37,7 @@ public class AbstractApplication {
 		AlignmentArea headArea = new AlignmentArea(result);
 		AlignmentArea mainArea = new AlignmentArea(result);
 		
-		// Prepare heaing area:
+		// Prepare heading area:
 		headArea.getDataAreas().getTopAreas().add(new SequenceIndexArea(headArea.getContentArea(), mainArea));
 		result.getAlignmentAreas().add(headArea);
 		
