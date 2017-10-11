@@ -25,7 +25,7 @@ public class DeleteSequenceAction extends AbstractAlignmentAreaAction implements
 	
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		String sequenceID = area.getAlignmentModel().sequenceIDByName(JOptionPane.showInputDialog("Name of sequence to be deleted"));
+		String sequenceID = area.getAlignmentModel().sequenceIDsByName(JOptionPane.showInputDialog("Name of sequence to be deleted")).iterator().next();
 		if (area.getAlignmentModel().containsSequence(sequenceID)) {
 			area.getAlignmentModel().removeSequence(sequenceID);
 		} else {
