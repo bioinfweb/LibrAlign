@@ -127,7 +127,7 @@ public class AbstractApplication {
 			mainArea.getPaintSettings().getTokenPainterList().set(0, new NucleotideTokenPainter());
 			
 			PherogramArea pherogramArea = new PherogramArea(mainArea.getContentArea(), new PherogramAreaModel(pherogramProvider));
-			mainArea.getDataAreas().getSequenceAreas(model.sequenceIDByName("Sequence 4")).add(pherogramArea);
+			mainArea.getDataAreas().getSequenceAreas(model.sequenceIDsByName("Sequence 4").iterator().next()).add(pherogramArea);
 			pherogramArea.getModel().setFirstSeqPos(5);
 			pherogramArea.getModel().setLeftCutPosition(34);
 			pherogramArea.getModel().setRightCutPosition(820);

@@ -36,8 +36,8 @@ public class GenericCollectionTest {
 		collection.add('b');
 		collection.add('c');
 		
-		provider.addSequence("Seq");
-		provider.insertTokensAt(provider.sequenceIDByName("Seq"), 0, collection);
-		System.out.println(provider.getSequenceLength(provider.sequenceIDByName("Seq")));
+		String id = provider.addSequence("Seq");
+		provider.insertTokensAt(id, 0, collection);
+		System.out.println(provider.getSequenceLength(id));
 	}	
 }

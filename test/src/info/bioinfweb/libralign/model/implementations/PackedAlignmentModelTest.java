@@ -32,8 +32,7 @@ public class PackedAlignmentModelTest {
 	@Test 
 	public void testEmptyModel() {
 		PackedAlignmentModel<Character> model = new PackedAlignmentModel(CharacterTokenSet.newDNAInstance());
-		model.addSequence("A");
-		String sequenceID = model.sequenceIDByName("A");
+		String sequenceID = model.addSequence("A");
 		assertEquals(0, model.getSequenceLength(sequenceID));
 	}
 }
