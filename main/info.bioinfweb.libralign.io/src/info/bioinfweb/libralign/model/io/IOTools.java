@@ -27,11 +27,13 @@ import info.bioinfweb.jphyloio.events.type.EventContentType;
 import info.bioinfweb.jphyloio.factory.JPhyloIOReaderWriterFactory;
 import info.bioinfweb.jphyloio.formats.JPhyloIOFormatIDs;
 import info.bioinfweb.libralign.model.AlignmentModel;
+import info.bioinfweb.libralign.model.factory.BioPolymerCharAlignmentModelFactory;
 
 import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.Writer;
+import java.util.List;
 
 
 
@@ -48,6 +50,48 @@ import java.io.Writer;
  */
 public class IOTools {
 	private static final JPhyloIOReaderWriterFactory FACTORY = new JPhyloIOReaderWriterFactory();
+	
+	
+	/**
+	 * Reads a set of alignments from a file into a list of alignment model instances.
+	 * <p>
+	 * This is a convenience method that uses {@link AlignmentDataReader} and 
+	 * {@link BioPolymerCharAlignmentModelFactory} internally.
+	 * 
+	 * @param file the file to read the alignment(s) from
+	 * @param parameters the writer parameters for the <i>JPhyloIO</i> writer that is used internally
+	 * @return a list if read alignments (May have the length 0, if no alignment was present in the 
+	 *         specified file.)
+	 * @throws Exception if an exception occurs while reading the file (See 
+	 *         {@link AlignmentDataReader#readAll()} and the documentation of its constructor for 
+	 *         details on exceptions that could occur.)
+	 */
+	public static List<AlignmentModel<?>> readAlignments(File file, ReadWriteParameterMap parameters) throws Exception {
+		AlignmentDataReader mainReader = new AlignmentDataReader(FACTORY.guessReader(file, parameters), 
+				new BioPolymerCharAlignmentModelFactory());
+		mainReader.readAll();
+		return mainReader.getAlignmentModelReader().getCompletedModels();
+	}
+	
+	
+	/**
+	 * Reads a set of alignments from a file into a list of alignment model instances.
+	 * <p>
+	 * This is a convenience method that uses {@link AlignmentDataReader} and 
+	 * {@link BioPolymerCharAlignmentModelFactory} internally. It uses an empty parameter
+	 * list for the <i>JPhyloIO</i> writer. Use {@link #readAlignments(File, ReadWriteParameterMap)}
+	 * instead, if you want to specify parameters.
+	 * 
+	 * @param file the file to read the alignment(s) from
+	 * @return a list if read alignments (May have the length 0, if no alignment was present in the 
+	 *         specified file.)
+	 * @throws Exception if an exception occurs while reading the file (See 
+	 *         {@link AlignmentDataReader#readAll()} and the documentation of its constructor for 
+	 *         details on exceptions that could occur.)
+	 */
+	public static List<AlignmentModel<?>> readAlignments(File file) throws Exception {
+		return readAlignments(file, new ReadWriteParameterMap());
+	}
 	
 	
 	/**
@@ -146,6 +190,28 @@ public class IOTools {
 	 * be written to a single file or if additional data or metadata should be included.
 	 * 
 	 * @param model the alignment model providing the content to be written
+	 * @param writer the writer to write the output to (Note that application code is responsible for
+	 *        closing the writer. This method does not close it.)
+	 * @param format the format of the output (Any format constant defined in {@link JPhyloIOFormatIDs} can 
+	 *        be passed here.)
+	 * @param parameters the reader parameters for the <i>JPhyloIO</i> reader that is used internally
+	 * @throws IOException if the underlying <i>JPhyloIO</i> writer thrown an exception during writing to the 
+	 *         writer
+	 */
+	public static <T> void writeSingleAlignment(AlignmentModel<T> model, String alignmentLabel, Writer writer, String format, 
+			ReadWriteParameterMap parameters) throws IOException {
+		
+		FACTORY.getWriter(format).writeDocument(createDocumentAdapter(model, alignmentLabel, false), writer, parameters);
+	}
+	
+	
+	/**
+	 * Writes the contents of an alignment model to a file in the specified format.
+	 * <p>
+	 * Note that this method is a convenience method, which cannot be used if more than one alignment should
+	 * be written to a single file or if additional data or metadata should be included.
+	 * 
+	 * @param model the alignment model providing the content to be written
 	 * @param stream the output stream to write the output to (Note that application code is responsible for
 	 *        closing the stream. This method does not close it.)
 	 * @param format the format of the output (Any format constant defined in {@link JPhyloIOFormatIDs} can 
@@ -165,6 +231,28 @@ public class IOTools {
 	 * be written to a single file or if additional data or metadata should be included.
 	 * 
 	 * @param model the alignment model providing the content to be written
+	 * @param stream the output stream to write the output to (Note that application code is responsible for
+	 *        closing the stream. This method does not close it.)
+	 * @param format the format of the output (Any format constant defined in {@link JPhyloIOFormatIDs} can 
+	 *        be passed here.)
+	 * @param parameters the reader parameters for the <i>JPhyloIO</i> reader that is used internally
+	 * @throws IOException if the underlying <i>JPhyloIO</i> writer thrown an exception during writing to the 
+	 *         stream
+	 */
+	public static <T> void writeSingleAlignment(AlignmentModel<T> model, String alignmentLabel, OutputStream stream, String format, 
+			ReadWriteParameterMap parameters) throws IOException {
+		
+		FACTORY.getWriter(format).writeDocument(createDocumentAdapter(model, alignmentLabel, false), stream, parameters);
+	}
+	
+	
+	/**
+	 * Writes the contents of an alignment model to a file in the specified format.
+	 * <p>
+	 * Note that this method is a convenience method, which cannot be used if more than one alignment should
+	 * be written to a single file or if additional data or metadata should be included.
+	 * 
+	 * @param model the alignment model providing the content to be written
 	 * @param alignmentLabel the label of the alignment to be written (Maybe {@code null}.)
 	 * @param file the file to write the output to
 	 * @param format the format of the output (Any format constant defined in {@link JPhyloIOFormatIDs} can 
@@ -174,5 +262,26 @@ public class IOTools {
 	 */
 	public static <T> void writeSingleAlignment(AlignmentModel<T> model, String alignmentLabel, File file, String format) throws IOException {
 		FACTORY.getWriter(format).writeDocument(createDocumentAdapter(model, alignmentLabel, false), file, new ReadWriteParameterMap());
+	}
+	
+	
+	/**
+	 * Writes the contents of an alignment model to a file in the specified format.
+	 * <p>
+	 * Note that this method is a convenience method, which cannot be used if more than one alignment should
+	 * be written to a single file or if additional data or metadata should be included.
+	 * 
+	 * @param model the alignment model providing the content to be written
+	 * @param file the file to write the output to
+	 * @param format the format of the output (Any format constant defined in {@link JPhyloIOFormatIDs} can 
+	 *        be passed here.)
+	 * @param parameters the reader parameters for the <i>JPhyloIO</i> reader that is used internally
+	 * @throws IOException if the underlying <i>JPhyloIO</i> writer thrown an exception during writing to the 
+	 *         file
+	 */
+	public static <T> void writeSingleAlignment(AlignmentModel<T> model, String alignmentLabel, File file, String format, 
+			ReadWriteParameterMap parameters) throws IOException {
+		
+		FACTORY.getWriter(format).writeDocument(createDocumentAdapter(model, alignmentLabel, false), file, parameters);
 	}
 }
