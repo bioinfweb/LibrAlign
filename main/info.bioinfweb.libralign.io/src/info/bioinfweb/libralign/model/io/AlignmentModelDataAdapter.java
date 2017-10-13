@@ -46,11 +46,11 @@ import info.bioinfweb.libralign.model.concatenated.ConcatenatedAlignmentModel;
  * An <i>JPhyloIO</i> data adapter that allows writing the contents of an implementation of {@link AlignmentModel}
  * to an implementation of {@link JPhyloIOEventWriter}.
  * <p>
- * Whether the sequence start events links an associated OTU or not can be defined by the constructor parameter
+ * Whether the sequence start events link an associated OTU or not can be defined by the constructor parameter
  * {@code linkOTUs}. If OTUs shall be linked, it will be assumed that such an OTU will have an ID consisting of the
  * concatenation of {@link ReadWriteConstants#DEFAULT_OTU_ID_PREFIX} and the sequence ID used in the underlying 
  * {@link AlignmentModel}. If a more complex OTU linking is necessary, the method {@link #getLinkedOTUID(int)} can
- * be overwritten accordingly. 
+ * be overwritten accordingly.
  * <p>
  * This implementation does not write any metadata associated with sequences or the alignment as a whole. If such data
  * shall be written the methods {@link #writeMetadata(JPhyloIOEventReceiver)} or 
