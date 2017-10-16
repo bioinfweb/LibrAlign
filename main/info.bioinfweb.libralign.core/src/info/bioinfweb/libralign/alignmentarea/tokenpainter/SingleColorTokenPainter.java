@@ -176,7 +176,7 @@ public class SingleColorTokenPainter extends AbstractTokenPainter implements Tok
 	
 	
 	public void calculatePreferredWidth(TokenSet<?> tokenSet) {
-		preferredWidth = FontCalculator.getInstance().getWidthToHeigth(getFontName(), getFontStyle(), 
+		preferredWidth = FontCalculator.getInstance().getTextWidthToTextHeigth(getFontName(), getFontStyle(), 
 				StringUtils.repeat("m", tokenSet.maxRepresentationLength()), (float)(getPreferredHeight() * FONT_SIZE_FACTOR));
 	}
 	

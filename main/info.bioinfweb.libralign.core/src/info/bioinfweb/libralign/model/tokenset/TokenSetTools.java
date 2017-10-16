@@ -29,7 +29,7 @@ import java.util.Iterator;
 
 
 /**
- * Provides static methods useful for implementing {@link TokenSet}.
+ * Provides tool methods useful for implementing {@link TokenSet}.
  * 
  * @author Ben St&ouml;ver
  * @since 0.1.0

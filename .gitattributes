@@ -122,6 +122,7 @@ main/info.bioinfweb.libralign.core/src/info/bioinfweb/libralign/alignmentarea/pa
 main/info.bioinfweb.libralign.core/src/info/bioinfweb/libralign/alignmentarea/paintsettings/PaintSettingsEvent.java -text svneol=unset#text/plain
 main/info.bioinfweb.libralign.core/src/info/bioinfweb/libralign/alignmentarea/paintsettings/PaintSettingsListener.java -text svneol=unset#text/plain
 main/info.bioinfweb.libralign.core/src/info/bioinfweb/libralign/alignmentarea/paintsettings/TokenPainterList.java -text svneol=unset#text/plain
+main/info.bioinfweb.libralign.core/src/info/bioinfweb/libralign/alignmentarea/paintsettings/TokenPainterMap.java -text svneol=unset#text/plain
 main/info.bioinfweb.libralign.core/src/info/bioinfweb/libralign/alignmentarea/paintsettings/TokenPainterReplacedEvent.java -text svneol=unset#text/plain
 main/info.bioinfweb.libralign.core/src/info/bioinfweb/libralign/alignmentarea/paintsettings/ZoomChangeEvent.java -text svneol=unset#text/plain
 main/info.bioinfweb.libralign.core/src/info/bioinfweb/libralign/alignmentarea/paintsettings/package-info.java -text svneol=unset#text/plain
