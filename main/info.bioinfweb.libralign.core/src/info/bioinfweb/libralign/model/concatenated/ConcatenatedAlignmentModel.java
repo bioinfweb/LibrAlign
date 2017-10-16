@@ -24,8 +24,15 @@ import info.bioinfweb.libralign.model.AlignmentModel;
 
 
 /**
- * This interface allows to concatenate multiple instances of {@link SequenceDataProvider} implementations.
- * It extends {@link SequenceDataProvider} by additional methods allowing to add and remove underlying
+ * <b>Warning:</b> This interface is currently a placeholder. Current versions of <i>LibrAlign</i> contain
+ * no implementations of it and a number of <i>LibrAlign</i> classes do not yet support concatenated 
+ * alignment models and would throw exceptions if such an implementation would be used together with 
+ * them. Support for concatenated models is planned for the future. If you are interested in using
+ * this functionality or want to contribute to implementing it, contact support@bioinfweb.info
+ * or ask a question on our <a href="http://r.bioinfweb.info/RGLibrAlign">ResearchGate project page</a>.
+ * <p>
+ * This interface allows to concatenate multiple instances of {@link AlignmentModel} implementations.
+ * It extends {@link AlignmentModel} by additional methods allowing to add and remove underlying
  * models which provide the contents a sets of subsequent columns of the concatenated alignment.
  * <p>
  * Each contained model may provide a different token set valid for the part of the alignment it models. 
@@ -37,6 +44,8 @@ import info.bioinfweb.libralign.model.AlignmentModel;
  * @since 0.4.0
  */
 public interface ConcatenatedAlignmentModel extends AlignmentModel<Object> {
+	//TODO Should this model also have a generic token parameter to allow specifying a common superclass or interface of all single token types?
+	
 	/**
 	 * Appends an additional part model at the end of this concatenated alignment.
 	 * 
