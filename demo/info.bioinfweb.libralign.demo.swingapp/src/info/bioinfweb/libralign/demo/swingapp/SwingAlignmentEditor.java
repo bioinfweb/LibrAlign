@@ -113,7 +113,7 @@ public class SwingAlignmentEditor extends javax.swing.JFrame {
 	 */
 	private void initialize() {
 		frame = new JFrame();
-		frame.setBounds(10, 10, 45, 30);
+		frame.setBounds(100, 100, 450, 300);
 		frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		frame.setTitle("Swing Alignment Editor Demo");
 		
