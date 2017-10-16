@@ -12,5 +12,7 @@
 	<classpathentry combineaccessrules="false" kind="src" path="/info.bioinfweb.tic.core"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/info.bioinfweb.tic.swing"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/info.bioinfweb.libralign.swing"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/info.bioinfweb.jphyloio.core"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/info.bioinfweb.libralign.io"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

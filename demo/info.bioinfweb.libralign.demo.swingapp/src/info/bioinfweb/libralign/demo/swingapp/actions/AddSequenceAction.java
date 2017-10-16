@@ -9,14 +9,15 @@ import javax.swing.Action;
 import javax.swing.JOptionPane;
 import javax.swing.KeyStroke;
 
-import info.bioinfweb.libralign.alignmentarea.AlignmentArea;
+import info.bioinfweb.libralign.demo.swingapp.SwingAlignmentEditor;
 
 
 
 
-public class AddSequenceAction extends AbstractAlignmentAreaAction implements Action {
-	public AddSequenceAction(AlignmentArea area) {
-		super(area);
+@SuppressWarnings("serial")
+public class AddSequenceAction extends AbstractAlignmentEditorAction implements Action {
+	public AddSequenceAction(SwingAlignmentEditor editor) {
+		super(editor);
 		putValue(Action.NAME, "Add sequence"); 
 		putValue(Action.MNEMONIC_KEY, KeyEvent.VK_A);
 		putValue(Action.ACCELERATOR_KEY, KeyStroke.getKeyStroke('A', Toolkit.getDefaultToolkit().getMenuShortcutKeyMask()));
@@ -25,6 +26,7 @@ public class AddSequenceAction extends AbstractAlignmentAreaAction implements Ac
 	
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		area.getAlignmentModel().addSequence(JOptionPane.showInputDialog("New sequence name"));
+		getEditor().getAlignmentArea().getAlignmentModel().addSequence(JOptionPane.showInputDialog("New sequence name"));
+		getEditor().setChanged(true);
 	}
 }
