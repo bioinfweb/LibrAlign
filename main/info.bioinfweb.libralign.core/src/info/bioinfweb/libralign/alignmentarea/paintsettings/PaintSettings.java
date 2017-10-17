@@ -289,58 +289,46 @@ public class PaintSettings {
 
 
 	/**
-	 * Returns the maximal token width in the list of token painters according to the current zoom factor.
-	 * The preferred with of the default painter is considered if the token list is empty or contains at
-	 * least one {@code null} element.
+	 * Returns the maximal token width in the alignment according to the current zoom factor.
+	 * <p>
+	 * The preferred with of a respective default painter is considered if a painter for at least one 
+	 * alignment model (if model models are present using {@link ConcatenatedAlignmentModel}) is missing 
+	 * in the list.
 	 *
-	 * @return the maximal width
+	 * @return the maximal token width in pixels
 	 */
 	public double maxTokenWidth() {
-		if (getTokenPainterList().isEmpty()) {
-			return getTokenPainterList().getDefaultTokenPainter().getPreferredWidth() * getZoomX();
+		int modelCount = 1;
+		if (getOwner().getAlignmentModel() instanceof ConcatenatedAlignmentModel) {
+			modelCount = ((ConcatenatedAlignmentModel)getOwner().getAlignmentModel()).getPartModelCount();
 		}
-		else {
-			double result = 0;
-			for (TokenPainter painter : getTokenPainterList()) {
-				double width;
-				if (painter == null) {
-					width = getTokenPainterList().getDefaultTokenPainter().getPreferredWidth();
-				}
-				else {
-					width = painter.getPreferredWidth();
-				}
-				result = Math.max(result, width);
-			}
-			return result * getZoomX();
+		double result = Double.NEGATIVE_INFINITY;
+		for (int i = 0; i < modelCount; i++) {
+			result = Math.max(result, getTokenPainterList().get(i).getPreferredWidth());
 		}
+		return result * getZoomX();
 	}
 
 
 	/**
-	 * Returns the minimal token width in the list of token painters according to the current zoom factor.
-	 * The preferred with of the default painter is considered if the token list is empty or contains at
-	 * least one {@code null} element.
+	 * Returns the minimal token width in the alignment according to the current zoom factor.
+	 * <p>
+	 * The preferred with of a respective default painter is considered if a painter for at least one 
+	 * alignment model (if model models are present using {@link ConcatenatedAlignmentModel}) is missing 
+	 * in the list.
 	 *
-	 * @return the minimal width
+	 * @return the minimal token width in pixels
 	 */
 	public double minTokenWidth() {
-		if (getTokenPainterList().isEmpty()) {
-			return getTokenPainterList().getDefaultTokenPainter().getPreferredWidth() * getZoomX();
+		int modelCount = 1;
+		if (getOwner().getAlignmentModel() instanceof ConcatenatedAlignmentModel) {
+			modelCount = ((ConcatenatedAlignmentModel)getOwner().getAlignmentModel()).getPartModelCount();
 		}
-		else {
-			double result = Double.POSITIVE_INFINITY;
-			for (TokenPainter painter : getTokenPainterList()) {
-				double width;
-				if (painter == null) {
-					width = getTokenPainterList().getDefaultTokenPainter().getPreferredWidth();
-				}
-				else {
-					width = painter.getPreferredWidth();
-				}
-				result = Math.min(result, width);
-			}
-			return result * getZoomX();
+		double result = Double.POSITIVE_INFINITY;
+		for (int i = 0; i < modelCount; i++) {
+			result = Math.min(result, getTokenPainterList().get(i).getPreferredWidth());
 		}
+		return result * getZoomX();
 	}
 
 
@@ -350,20 +338,15 @@ public class PaintSettings {
 	 * @return the height in pixels
 	 */
 	public double getTokenHeight() {
-		if (!getOwner().hasAlignmentModel()) {
-			return getTokenPainterList().getDefaultTokenPainter().getPreferredHeight() * getZoomY();
+		int modelCount = 1;
+		if (getOwner().getAlignmentModel() instanceof ConcatenatedAlignmentModel) {
+			modelCount = ((ConcatenatedAlignmentModel)getOwner().getAlignmentModel()).getPartModelCount();
 		}
-		else {
-			int index;
-			if (getOwner().getAlignmentModel() instanceof ConcatenatedAlignmentModel) {
-				throw new InternalError("not implemented");
-				// index = ?;   //TODO Which painter should define the height? All tokens have the same height anyway although the different painters may prefer different heights.
-			}
-			else {
-				index = 0;
-			}
-			return getTokenPainterList().painterByColumn(index).getPreferredHeight() * getZoomY();
+		double result = Double.NEGATIVE_INFINITY;
+		for (int i = 0; i < modelCount; i++) {
+			result = Math.max(result, getTokenPainterList().get(i).getPreferredHeight());
 		}
+		return result * getZoomY();
 	}
 
 

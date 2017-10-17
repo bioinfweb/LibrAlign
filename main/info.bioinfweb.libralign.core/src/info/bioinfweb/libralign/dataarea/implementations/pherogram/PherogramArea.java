@@ -447,7 +447,7 @@ public class PherogramArea extends DataArea implements PherogramComponent {
 	}
 	
 	
-	public TokenPainter getAccordingTokenPainter() {
+	public TokenPainter getRelatedTokenPainter() {
 		return getOwner().getOwner().getPaintSettings().getTokenPainterList().painterByColumn(getModel().getFirstSeqPos());
 	}
 

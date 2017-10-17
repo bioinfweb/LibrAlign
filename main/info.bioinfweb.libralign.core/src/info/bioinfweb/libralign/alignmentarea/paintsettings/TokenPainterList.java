@@ -19,22 +19,27 @@
 package info.bioinfweb.libralign.alignmentarea.paintsettings;
 
 
+import info.bioinfweb.commons.Math2;
+import info.bioinfweb.commons.bio.CharacterStateSetType;
+import info.bioinfweb.commons.collections.CollectionUtils;
+import info.bioinfweb.libralign.alignmentarea.AlignmentArea;
+import info.bioinfweb.libralign.alignmentarea.tokenpainter.TokenPainter;
+import info.bioinfweb.libralign.model.AlignmentModel;
+import info.bioinfweb.libralign.model.concatenated.ConcatenatedAlignmentModel;
+
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import info.bioinfweb.commons.collections.CollectionUtils;
-import info.bioinfweb.libralign.alignmentarea.AlignmentArea;
-import info.bioinfweb.libralign.alignmentarea.tokenpainter.SingleColorTokenPainter;
-import info.bioinfweb.libralign.alignmentarea.tokenpainter.TokenPainter;
-import info.bioinfweb.libralign.model.concatenated.ConcatenatedAlignmentModel;
-
 
 
 /**
- * Manages a list of {@link TokenPainter}s used by {@link AlignmentArea}. For usual alignment models
- * this list will contain only one token painter, but if an instance of {@link ConcatenatedAlignmentModel}
- * is used, it will contain one token painter for each part model.
+ * Manages a list of {@link TokenPainter}s used by {@link PaintSettings} and {@link AlignmentArea}. For usual 
+ * alignment models this list will contain only one token painter, but if an instance of 
+ * {@link ConcatenatedAlignmentModel} is used, it will contain one token painter for each part model.
+ * <p>
+ * Note that {@link ConcatenatedAlignmentModel} is just a placeholder for future functionality in current 
+ * versions of <i>LibrAlign</i>. See its documnentation for details.
  * 
  * @author Ben St&ouml;ver
  * @since 0.4.0
@@ -42,7 +47,7 @@ import info.bioinfweb.libralign.model.concatenated.ConcatenatedAlignmentModel;
 public class TokenPainterList implements Iterable<TokenPainter> {
 	private PaintSettings owner;
 	private List<TokenPainter> painters = new ArrayList<TokenPainter>();
-	private TokenPainter defaultTokenPainter = new SingleColorTokenPainter();  // Currently all elements would be painted in the default color.
+	private TokenPainterMap defaultPainters = new TokenPainterMap();
 	
 	
 	/**
@@ -67,14 +72,37 @@ public class TokenPainterList implements Iterable<TokenPainter> {
 
 
 	/**
-	 * Returns the painter at the specified index.
+	 * Returns the painter at the specified index. If no painter is defined for this index, a default
+	 * painter from {@link #getDefaultTokenMap()} is returned that best matches the alignment model
+	 * at the specified index. If the index is out of range, a default model will anyway be returned.
 	 * 
-	 * @param index the index of the painter to be returned
-	 * @return the painter or {@code null} if no painter was defined at that position
-	 * @throws IndexOutOfBoundsException if the index is out of range ({@code index < 0 || index >= size()})
+	 * @param index the index of the painter to be returned (identical with the index of the alignment part 
+	 *        model in {@link ConcatenatedAlignmentModel}s) 
+	 * @return the best matching painter for the alignment model at the specified position (never {@code null})
 	 */
 	public TokenPainter get(int index) {
-		return painters.get(index);
+		TokenPainter result = null;
+		if (Math2.isBetween(index, 0, painters.size() - 1)) {
+			result = painters.get(index);
+		}
+		
+		if (result == null) {
+			CharacterStateSetType type = null;
+			if (getOwner().getOwner().hasAlignmentModel()) {
+				AlignmentModel<?> model = getOwner().getOwner().getAlignmentModel();
+				if (model instanceof ConcatenatedAlignmentModel) {
+					ConcatenatedAlignmentModel concatenatedModel = (ConcatenatedAlignmentModel)model;
+					if (Math2.isBetween(index, 0, concatenatedModel.getPartModelCount() - 1)) {
+						type = concatenatedModel.getPartModel(index).getTokenSet().getType();
+					}
+				}
+				if (type == null) {  // Sets the type if the model is not concatenated or if the index was out of range for a concatenated model.  //TODO Check if using the parent token type makes sense, when a concatenated model implementation is available.
+					type = model.getTokenSet().getType();
+				}
+			}
+			return getDefaultTokenMap().getPainter(type);  // Specifying null here is valid.
+		}
+		return result;
 	}
 	
 	
@@ -86,20 +114,15 @@ public class TokenPainterList implements Iterable<TokenPainter> {
 	 * @return the associated painter or the default painter if no according painter is available
 	 */
 	public TokenPainter painterByColumn(int columnIndex) {
-		TokenPainter result = null;
 		if (getOwner().getOwner().hasAlignmentModel()) {
 			if (getOwner().getOwner().getAlignmentModel() instanceof ConcatenatedAlignmentModel) {
-				throw new InternalError("not implemented");
-				//TODO Implement returning painters for concatenated model
-			}
-			else {
-				result = get(0);  // In this case this list must have the length 1.
+				ConcatenatedAlignmentModel model = (ConcatenatedAlignmentModel)getOwner().getOwner().getAlignmentModel();
+				if (Math2.isBetween(columnIndex, 0, model.getPartModelCount() - 1)) {
+					return get(model.partModelIndex(model.partModelByColumn(columnIndex)));  // A default painter would be returned, if none is in the list.
+				}
 			}
 		}
-		if (result == null) {
-			return getDefaultTokenPainter();
-		}
-		return result;
+		return get(0);  // Return the first painter of no concatenated model is used or if the index was out of bounds.
 	}
 
 
@@ -169,13 +192,14 @@ public class TokenPainterList implements Iterable<TokenPainter> {
 
 
 	/**
-	 * Returns the default token painter that is used to paint tokens from the alignment model if no according
-	 * painter is defined in the list.
+	 * Returns the default token painter map that is used to paint tokens from the alignment model if no 
+	 * respective painter is defined in the list. See the documentation of {@link TokenPainterMap} for
+	 * further details.
 	 * 
-	 * @return the default token painter instance used by this alignment area
+	 * @return the token painter map instance used by this i
 	 */
-	public TokenPainter getDefaultTokenPainter() {
-		return defaultTokenPainter;
+	public TokenPainterMap getDefaultTokenMap() {
+		return defaultPainters;
 	}
 
 

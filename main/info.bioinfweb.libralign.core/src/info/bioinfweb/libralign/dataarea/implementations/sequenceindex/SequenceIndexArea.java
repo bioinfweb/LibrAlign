@@ -21,7 +21,6 @@ package info.bioinfweb.libralign.dataarea.implementations.sequenceindex;
 
 import info.bioinfweb.commons.Math2;
 import info.bioinfweb.commons.collections.ListChangeType;
-import info.bioinfweb.tic.TICPaintEvent;
 import info.bioinfweb.libralign.alignmentarea.AlignmentArea;
 import info.bioinfweb.libralign.alignmentarea.content.AlignmentContentArea;
 import info.bioinfweb.libralign.alignmentarea.content.AlignmentPaintEvent;
@@ -32,12 +31,10 @@ import info.bioinfweb.libralign.model.concatenated.ConcatenatedAlignmentModel;
 import info.bioinfweb.libralign.model.events.SequenceChangeEvent;
 import info.bioinfweb.libralign.model.events.SequenceRenamedEvent;
 import info.bioinfweb.libralign.model.events.TokenChangeEvent;
-import info.bioinfweb.libralign.pherogram.model.PherogramAreaModel;
 
 import java.awt.BasicStroke;
 import java.awt.FontMetrics;
 import java.awt.Graphics2D;
-import java.awt.Rectangle;
 import java.awt.RenderingHints;
 import java.awt.Stroke;
 import java.awt.SystemColor;
@@ -118,6 +115,15 @@ public class SequenceIndexArea extends DataArea {
 	}
 
 
+	/**
+	 * Calculates the number of columns that will at most be used to display a column index label.
+	 * The minimal token width is assumed for calculation so that the interval fits for all token types
+	 * in a {@link ConcatenatedAlignmentModel}. Areas with wider tokens would have more space more left 
+	 * space in between the labels. 
+	 * 
+	 * @param fontMetrics the font metrics object to calculate the width
+	 * @return the number of columns that will at most be used to display a sequence index label
+	 */
 	private int calculateLabelInterval(FontMetrics fontMetrics) {
 		double compoundWidth = getLabeledAlignmentArea().getPaintSettings().minTokenWidth();
 		return (int)Math2.roundUp((fontMetrics.stringWidth("0") *

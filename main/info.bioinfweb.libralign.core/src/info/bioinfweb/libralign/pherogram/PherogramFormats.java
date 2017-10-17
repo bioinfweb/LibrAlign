@@ -279,7 +279,7 @@ public class PherogramFormats {
 	public Color getNucleotideColor(char nucleotide) {
 		Color result = null;
 		if (owner instanceof PherogramArea) {
-			result = ((PherogramArea)owner).getAccordingTokenPainter().getColor(Character.toString(nucleotide));
+			result = ((PherogramArea)owner).getRelatedTokenPainter().getColor(Character.toString(nucleotide));
 		}
 		if (result == null) {
 			result = nucleotideColorMap.get(Character.toString(nucleotide));
