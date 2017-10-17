@@ -280,10 +280,8 @@ public class AlignmentModelEventReader implements JPhyloIOEventListener {
 //				break;
 			case TOKEN_SET_DEFINITION:
 				if (event.getType().getTopologyType().equals(EventTopologyType.START)) {
-					//TODO Handle concatenated case (Currently additional token sets are ignored.)
-					if (currentParameterMap.getCharacterStateSetType() == null) {
-						currentParameterMap.setCharacterStateSetType(event.asTokenSetDefinitionEvent().getSetType());
-					}
+					//TODO Handle concatenated case (Currently only the last token set is used.)
+					currentParameterMap.setCharacterStateSetType(event.asTokenSetDefinitionEvent().getSetType());
 				}
 				break;
 			case SEQUENCE:

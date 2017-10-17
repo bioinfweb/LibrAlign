@@ -200,7 +200,7 @@ public class AlignmentDataReader {
 	private JPhyloIOEvent processNextEvent() throws Exception {
 		if (eventReader.hasNextEvent()) {
 			JPhyloIOEvent event = eventReader.next();
-			
+
 			alignmentModelReader.processEvent(eventReader, event);
 			for (DataModelEventReader<?> dataModelReader : dataModelReaders) {
 				dataModelReader.processEvent(eventReader, event);
