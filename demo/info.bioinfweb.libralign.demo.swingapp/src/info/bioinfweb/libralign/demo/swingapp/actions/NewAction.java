@@ -16,7 +16,7 @@ import info.bioinfweb.libralign.model.tokenset.CharacterTokenSet;
 
 
 @SuppressWarnings("serial")
-public class NewAction extends AbstractAlignmentEditorAction {
+public class NewAction extends AbstractFileAction {
 	public NewAction(SwingAlignmentEditor editor) {
 		super(editor);
 		putValue(Action.NAME, "New"); 
@@ -32,11 +32,11 @@ public class NewAction extends AbstractAlignmentEditorAction {
 	
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		//TODO Ask to save
-		
-		getEditor().getAlignmentArea().setAlignmentModel(createAlignmentModel(), true);
-		getEditor().setFile(null);
-		getEditor().setFormat(SwingAlignmentEditor.DEFAULT_FORMAT);
-		getEditor().setChanged(false);
+		if (handleUnsavedChanges()) {
+			getEditor().getAlignmentArea().setAlignmentModel(createAlignmentModel(), true);
+			getEditor().setFile(null);
+			getEditor().setFormat(SwingAlignmentEditor.DEFAULT_FORMAT);
+			getEditor().setChanged(false);
+		}
 	}
 }

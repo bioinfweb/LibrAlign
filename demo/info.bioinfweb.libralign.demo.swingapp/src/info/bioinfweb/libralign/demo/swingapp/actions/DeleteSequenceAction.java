@@ -14,13 +14,8 @@ import info.bioinfweb.libralign.demo.swingapp.SwingAlignmentEditor;
 
 
 
+@SuppressWarnings("serial")
 public class DeleteSequenceAction extends AbstractAlignmentEditorAction implements Action {	
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
-
-
 	public DeleteSequenceAction(SwingAlignmentEditor editor) {
 		super(editor);
 		putValue(Action.NAME, "Delete sequence"); 
@@ -34,7 +29,8 @@ public class DeleteSequenceAction extends AbstractAlignmentEditorAction implemen
 		String sequenceID = getEditor().getAlignmentArea().getAlignmentModel().sequenceIDsByName(JOptionPane.showInputDialog("Name of sequence to be deleted")).iterator().next();
 		if (getEditor().getAlignmentArea().getAlignmentModel().containsSequence(sequenceID)) {
 			getEditor().getAlignmentArea().getAlignmentModel().removeSequence(sequenceID);
-		} else {
+		}
+		else {
 			JOptionPane.showMessageDialog(getEditor().getFrame(), "Sequence not found");
 		}		
 	}	

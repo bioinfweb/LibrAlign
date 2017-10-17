@@ -14,13 +14,8 @@ import info.bioinfweb.libralign.demo.swingapp.SwingAlignmentEditor;
 
 
 
+@SuppressWarnings("serial")
 public class RemoveGapsAction extends AbstractAlignmentEditorAction implements Action {
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
-
-
 	public RemoveGapsAction(SwingAlignmentEditor editor) {
 		super(editor);
 		putValue(Action.NAME, "Remove gaps"); 

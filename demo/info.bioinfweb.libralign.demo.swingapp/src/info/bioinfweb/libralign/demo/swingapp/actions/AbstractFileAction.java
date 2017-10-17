@@ -17,22 +17,28 @@ import info.bioinfweb.libralign.model.io.IOTools;
 
 
 @SuppressWarnings("serial")
-public abstract class AbstractSaveAction extends AbstractAlignmentEditorAction {
+public abstract class AbstractFileAction extends AbstractAlignmentEditorAction {
 	private static JPhyloIOReaderWriterFactory factory = new JPhyloIOReaderWriterFactory();
 	private static JFileChooser fileChooser = null;
 	
 	
-	public AbstractSaveAction(SwingAlignmentEditor editor) {
+	public AbstractFileAction(SwingAlignmentEditor editor) {
 		super(editor);
 	}
 	
 	
-	protected JFileChooser getFileChooser() {
+	protected static JFileChooser getFileChooser() {
 		if (fileChooser == null) {
 			fileChooser = new JFileChooser() {
 			    @Override
 			    public void approveSelection(){
 			        File f = getSelectedFile();
+			        JPhyloIOContentExtensionFileFilter filter = (JPhyloIOContentExtensionFileFilter)getFileFilter();
+			        if (!filter.accept(f)) {
+			        	f = new File(f.getAbsolutePath() + "." + filter.getDefaultExtension());
+			        	setSelectedFile(f);
+			        }
+			        
 			        if(f.exists()) {
 			            switch(JOptionPane.showConfirmDialog(this, "The file already exists. Do you want to overwrite?", "Existing file", JOptionPane.YES_NO_CANCEL_OPTION)) {
 			                case JOptionPane.YES_OPTION:
@@ -87,4 +93,32 @@ public abstract class AbstractSaveAction extends AbstractAlignmentEditorAction {
 			JOptionPane.showMessageDialog(getEditor().getFrame(), ex.getMessage(), "Error while writing file", JOptionPane.ERROR_MESSAGE);
 		}
 	}
+	
+	
+	protected boolean save() {
+		boolean result = promptFileName();
+		if (result) {
+			writeFile();
+		}
+		return result;
+	}
+	
+	
+	protected boolean handleUnsavedChanges() {
+		if (getEditor().isChanged()) {
+            switch (JOptionPane.showConfirmDialog(getEditor().getFrame(), "There are unsaved changes. Do you want to save the changes?", 
+            		"Unsaved changes", JOptionPane.YES_NO_CANCEL_OPTION)) {
+            
+	            case JOptionPane.YES_OPTION:
+	            	return save();
+	            case JOptionPane.NO_OPTION:
+	            	return true;
+            }
+    		return false;
+		}
+		else {
+			return true;
+		}
+	}
 }
+

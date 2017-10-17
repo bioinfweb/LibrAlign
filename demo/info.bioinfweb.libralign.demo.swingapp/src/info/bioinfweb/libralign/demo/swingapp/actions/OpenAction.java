@@ -27,7 +27,7 @@ import info.bioinfweb.libralign.model.io.AlignmentDataReader;
 
 
 @SuppressWarnings("serial")
-public class OpenAction extends AbstractAlignmentEditorAction {
+public class OpenAction extends AbstractFileAction {
 	private JPhyloIOReaderWriterFactory factory = new JPhyloIOReaderWriterFactory();
 	private JFileChooser fileChooser = null;
 	
@@ -40,7 +40,7 @@ public class OpenAction extends AbstractAlignmentEditorAction {
 	}
 
 	
-	public JFileChooser getFileChooser() {
+	public JFileChooser getOpenFileChooser() {
 		if (fileChooser == null) {
 			fileChooser = new JFileChooser();
 			fileChooser.setAcceptAllFileFilterUsed(true);
@@ -64,35 +64,36 @@ public class OpenAction extends AbstractAlignmentEditorAction {
 	
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		try {
-			//TODO Ask to save
-			if (getFileChooser().showOpenDialog(getEditor().getFrame()) == JFileChooser.APPROVE_OPTION) {
-				JPhyloIOEventReader eventReader = factory.guessReader(getFileChooser().getSelectedFile(), new ReadWriteParameterMap());
-				AlignmentDataReader mainReader = new AlignmentDataReader(eventReader, new BioPolymerCharAlignmentModelFactory());
-				mainReader.readAll();
-				
-				//File does not contain any alignments
-				if (mainReader.getAlignmentModelReader().getCompletedModels().size() == 0) {
-					JOptionPane.showMessageDialog(getEditor().getFrame(), "The file \"" +  getFileChooser().getSelectedFile().getAbsolutePath() + 
-							"\" does not contain any alignments.", "Error while loading file", JOptionPane.ERROR_MESSAGE);
-				}
-				else {
-					//File contains one alignment
-					getEditor().getAlignmentArea().setAlignmentModel(mainReader.getAlignmentModelReader().getCompletedModels().get(0), true);
-					getEditor().setFile(getFileChooser().getSelectedFile());
-					getEditor().setFormat(eventReader.getFormatID());
-					getEditor().setChanged(false);
-					
-					//File contains more than one alignment --> just the first one was loaded
-					if (mainReader.getAlignmentModelReader().getCompletedModels().size() > 1) {
-						JOptionPane.showMessageDialog(getEditor().getFrame(),
-								"The file contained more than one alignment. Only the first one was loaded.", "Multiple alignments found", JOptionPane.WARNING_MESSAGE);
+		if (handleUnsavedChanges()) {
+			try {
+				if (getOpenFileChooser().showOpenDialog(getEditor().getFrame()) == JFileChooser.APPROVE_OPTION) {
+					JPhyloIOEventReader eventReader = factory.guessReader(getOpenFileChooser().getSelectedFile(), new ReadWriteParameterMap());
+					AlignmentDataReader mainReader = new AlignmentDataReader(eventReader, new BioPolymerCharAlignmentModelFactory());
+					mainReader.readAll();
+
+					// File does not contain any alignments
+					if (mainReader.getAlignmentModelReader().getCompletedModels().size() == 0) {
+						JOptionPane.showMessageDialog(getEditor().getFrame(), "The file \"" +  getOpenFileChooser().getSelectedFile().getAbsolutePath() + 
+								"\" does not contain any alignments.", "Error while loading file", JOptionPane.ERROR_MESSAGE);
+					}
+					else {
+						// File contains one alignment
+						getEditor().getAlignmentArea().setAlignmentModel(mainReader.getAlignmentModelReader().getCompletedModels().get(0), true);
+						getEditor().setFile(getOpenFileChooser().getSelectedFile());
+						getEditor().setFormat(eventReader.getFormatID());
+						getEditor().setChanged(false);
+
+						// File contains more than one alignment --> just the first one was loaded
+						if (mainReader.getAlignmentModelReader().getCompletedModels().size() > 1) {
+							JOptionPane.showMessageDialog(getEditor().getFrame(),
+									"The file contained more than one alignment. Only the first one was loaded.", "Multiple alignments found", JOptionPane.WARNING_MESSAGE);
+						}
 					}
 				}
 			}
-		}
-		catch (Exception ex) {
-			JOptionPane.showMessageDialog(getEditor().getFrame(), ex.getMessage(), "Error while loading file", JOptionPane.ERROR_MESSAGE);
+			catch (Exception ex) {
+				JOptionPane.showMessageDialog(getEditor().getFrame(), ex.getMessage(), "Error while loading file", JOptionPane.ERROR_MESSAGE);
+			}
 		}
 	}
 

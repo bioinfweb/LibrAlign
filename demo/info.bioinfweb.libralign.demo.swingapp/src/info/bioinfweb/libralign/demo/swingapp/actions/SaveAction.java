@@ -13,7 +13,7 @@ import info.bioinfweb.libralign.demo.swingapp.SwingAlignmentEditor;
 
 
 @SuppressWarnings("serial")
-public class SaveAction extends AbstractSaveAction{
+public class SaveAction extends AbstractFileAction{
 	public SaveAction(SwingAlignmentEditor editor) {
 		super(editor);
 		putValue(Action.NAME, "Save"); 
@@ -25,9 +25,7 @@ public class SaveAction extends AbstractSaveAction{
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		if (getEditor().getFile() == null) {
-			if (promptFileName()) {
-				writeFile();
-			}
+			save();
 		}
 		else {
 			writeFile();

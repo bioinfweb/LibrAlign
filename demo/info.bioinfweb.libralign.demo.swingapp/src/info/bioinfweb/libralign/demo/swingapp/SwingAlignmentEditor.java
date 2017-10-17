@@ -12,7 +12,6 @@ import javax.swing.JMenuBar;
 
 import info.bioinfweb.jphyloio.formats.JPhyloIOFormatIDs;
 import info.bioinfweb.libralign.alignmentarea.AlignmentArea;
-import info.bioinfweb.libralign.alignmentarea.tokenpainter.NucleotideTokenPainter;
 import info.bioinfweb.libralign.demo.swingapp.actions.AddSequenceAction;
 import info.bioinfweb.libralign.demo.swingapp.actions.DeleteSequenceAction;
 import info.bioinfweb.libralign.demo.swingapp.actions.NewAction;
@@ -20,6 +19,11 @@ import info.bioinfweb.libralign.demo.swingapp.actions.OpenAction;
 import info.bioinfweb.libralign.demo.swingapp.actions.RemoveGapsAction;
 import info.bioinfweb.libralign.demo.swingapp.actions.SaveAction;
 import info.bioinfweb.libralign.demo.swingapp.actions.SaveAsAction;
+import info.bioinfweb.libralign.model.AlignmentModel;
+import info.bioinfweb.libralign.model.AlignmentModelChangeListener;
+import info.bioinfweb.libralign.model.events.SequenceChangeEvent;
+import info.bioinfweb.libralign.model.events.SequenceRenamedEvent;
+import info.bioinfweb.libralign.model.events.TokenChangeEvent;
 import info.bioinfweb.libralign.model.implementations.PackedAlignmentModel;
 import info.bioinfweb.libralign.model.tokenset.CharacterTokenSet;
 import info.bioinfweb.tic.SwingComponentFactory;
@@ -29,6 +33,7 @@ import info.bioinfweb.tic.SwingComponentFactory;
 @SuppressWarnings("serial")
 public class SwingAlignmentEditor extends javax.swing.JFrame {
 	public static final String DEFAULT_FORMAT = JPhyloIOFormatIDs.NEXML_FORMAT_ID;	
+	private static final String TITLE_PREFIX = "Swing Alignment Editor Demo";
 	
 	
 	private JFrame frame;
@@ -36,7 +41,7 @@ public class SwingAlignmentEditor extends javax.swing.JFrame {
 	
 	private File file = null;
 	private String format = DEFAULT_FORMAT;
-	private boolean changed = true;
+	private boolean changed = false;
 	
 	
 	/**
@@ -85,6 +90,7 @@ public class SwingAlignmentEditor extends javax.swing.JFrame {
 
 	public void setFile(File file) {
 		this.file = file;
+		refreshWindowTitle();
 	}
 
 
@@ -105,9 +111,27 @@ public class SwingAlignmentEditor extends javax.swing.JFrame {
 
 	public void setChanged(boolean changed) {
 		this.changed = changed;
+		refreshWindowTitle();
 	}
 
 
+	private void refreshWindowTitle() {
+		StringBuilder title = new StringBuilder();
+		title.append(TITLE_PREFIX);
+		title.append(" - ");
+		if (isChanged()) {
+			title.append("*");
+		}
+		if (getFile() != null) {
+			title.append(getFile().getAbsolutePath());
+		}
+		else {
+			title.append("Unsaved");
+		}
+		frame.setTitle(title.toString());
+	}
+	
+	
 	/**
 	 * Initialize the contents of the frame.
 	 */
@@ -115,11 +139,32 @@ public class SwingAlignmentEditor extends javax.swing.JFrame {
 		frame = new JFrame();
 		frame.setBounds(100, 100, 450, 300);
 		frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-		frame.setTitle("Swing Alignment Editor Demo");
+		refreshWindowTitle();
 		
 		// Create LibrAlign component instance:
 		alignmentArea = new AlignmentArea();
 		alignmentArea.setAlignmentModel(new PackedAlignmentModel<Character>(CharacterTokenSet.newNucleotideInstance()), false);
+		
+		// Register changes listener to know when to ask for saving changes:
+		alignmentArea.getAlignmentModel().getChangeListeners().add(new AlignmentModelChangeListener() {
+			@Override
+			public <T> void afterTokenChange(TokenChangeEvent<T> e) {
+				setChanged(true);
+			}
+			
+			@Override
+			public <T> void afterSequenceRenamed(SequenceRenamedEvent<T> e) {
+				setChanged(true);
+			}
+			
+			@Override
+			public <T> void afterSequenceChange(SequenceChangeEvent<T> e) {
+				setChanged(true);
+			}
+			
+			@Override
+			public <T, U> void afterProviderChanged(AlignmentModel<T> previous, AlignmentModel<U> current) {}
+		});
 		
 		// Create instance specific to Swing:
 		JComponent swingAlignmentArea = SwingComponentFactory.getInstance().getSwingComponent(alignmentArea);
@@ -127,7 +172,7 @@ public class SwingAlignmentEditor extends javax.swing.JFrame {
 		frame.getContentPane().setLayout(new BorderLayout(0, 0));
 		frame.getContentPane().add(swingAlignmentArea, BorderLayout.CENTER);
 		
-		alignmentArea.getPaintSettings().getTokenPainterList().set(0, new NucleotideTokenPainter());
+		//alignmentArea.getPaintSettings().getTokenPainterList().set(0, new NucleotideTokenPainter());
 		
 
 		// Create actions:

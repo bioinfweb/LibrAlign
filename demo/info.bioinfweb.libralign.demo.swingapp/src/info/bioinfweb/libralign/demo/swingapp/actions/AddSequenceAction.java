@@ -26,7 +26,9 @@ public class AddSequenceAction extends AbstractAlignmentEditorAction implements 
 	
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		getEditor().getAlignmentArea().getAlignmentModel().addSequence(JOptionPane.showInputDialog("New sequence name"));
-		getEditor().setChanged(true);
+		String name = JOptionPane.showInputDialog("New sequence name");
+		if (name != null) {
+			getEditor().getAlignmentArea().getAlignmentModel().addSequence(name);
+		}
 	}
 }
