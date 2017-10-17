@@ -9,6 +9,7 @@ import javax.swing.Action;
 import javax.swing.JOptionPane;
 import javax.swing.KeyStroke;
 
+import info.bioinfweb.libralign.alignmentarea.selection.SelectionModel;
 import info.bioinfweb.libralign.demo.swingapp.SwingAlignmentEditor;
 
 
@@ -26,12 +27,26 @@ public class DeleteSequenceAction extends AbstractAlignmentEditorAction implemen
 	
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		String sequenceID = getEditor().getAlignmentArea().getAlignmentModel().sequenceIDsByName(JOptionPane.showInputDialog("Name of sequence to be deleted")).iterator().next();
-		if (getEditor().getAlignmentArea().getAlignmentModel().containsSequence(sequenceID)) {
-			getEditor().getAlignmentArea().getAlignmentModel().removeSequence(sequenceID);
+		switch(JOptionPane.showConfirmDialog(getEditor().getFrame(),
+				"Do you want to delete the Sequence choosen by curser?", "Delete Sequence", JOptionPane.YES_NO_OPTION)) {
+		case JOptionPane.YES_OPTION:
+			SelectionModel selection = getEditor().getAlignmentArea().getSelection();
+
+			for (int row = selection.getFirstRow(); row <= selection.getLastRow(); row++) {
+				String id = getEditor().getAlignmentArea().getSequenceOrder().idByIndex(row);
+				getEditor().getAlignmentArea().getAlignmentModel().removeSequence(id);
+			}
+		case JOptionPane.NO_OPTION:
+			break;
 		}
-		else {
-			JOptionPane.showMessageDialog(getEditor().getFrame(), "Sequence not found");
-		}		
+
+		
+//		String sequenceID = getEditor().getAlignmentArea().getAlignmentModel().sequenceIDsByName(JOptionPane.showInputDialog("Name of sequence to be deleted")).iterator().next();
+//		if (getEditor().getAlignmentArea().getAlignmentModel().containsSequence(sequenceID)) {
+//			getEditor().getAlignmentArea().getAlignmentModel().removeSequence(sequenceID);
+//		}
+//		else {
+//			JOptionPane.showMessageDialog(getEditor().getFrame(), "Sequence not found");
+//		}		
 	}	
 }
