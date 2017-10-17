@@ -137,8 +137,7 @@ public abstract class AbstractTokenSet<T> extends HashSet<T> implements TokenSet
 
 	@Override
 	public boolean isMissingInformationToken(T token) {
-		// TODO Auto-generated method stub
-		return false;
+		return TokenSetTools.isMissingInformationToken(this, token);
 	}
 
 
