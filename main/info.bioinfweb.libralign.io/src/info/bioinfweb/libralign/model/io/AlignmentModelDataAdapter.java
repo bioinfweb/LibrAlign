@@ -78,7 +78,8 @@ public class AlignmentModelDataAdapter<T> extends NoCharDefsNoSetsMatrixDataAdap
 	 * Creates a new instance of this class.
 	 * 
 	 * @param idPrefix the ID prefix to be used for all generated <i>JPhyloIO</i> IDs of sequences and token sets.
-	 *        (Must be a valid <a href="https://www.w3.org/TR/1999/REC-xml-names-19990114/#NT-NCName">NCName</a>.)
+	 *        (Must be a valid <a href="https://www.w3.org/TR/1999/REC-xml-names-19990114/#NT-NCName">NCName</a>
+	 *        or an empty string. See {@link #getIDPrefix()} for further details.)
 	 * @param startEvent the <i>JPhyloIO</i> alignment start event to be used
 	 * @param model the <i>LibrAlign</i> alignment model which shall be the source for this adapter
 	 * @param linkOTUs Specify {@code true} here, if each sequence shall link an OTU or {@code false} otherwise.
@@ -86,8 +87,8 @@ public class AlignmentModelDataAdapter<T> extends NoCharDefsNoSetsMatrixDataAdap
 	 */
 	public AlignmentModelDataAdapter(String idPrefix, LinkedLabeledIDEvent startEvent, AlignmentModel<T> model, boolean linkOTUs) {
 		super();
-		if (!XMLUtils.isNCName(idPrefix)) {
-			throw new IllegalArgumentException("The ID prefix  (\"" + idPrefix + "\") is not a valid NCName.");
+		if (!("".equals(idPrefix) || XMLUtils.isNCName(idPrefix))) {
+			throw new IllegalArgumentException("The ID prefix  (\"" + idPrefix + "\") is not an empty string or a valid NCName.");
 		}
 		else if (startEvent == null) {
 			throw new NullPointerException("startEvent must not be null.");
@@ -105,6 +106,17 @@ public class AlignmentModelDataAdapter<T> extends NoCharDefsNoSetsMatrixDataAdap
 	}
 
 
+	/**
+	 * Returns the ID prefix used by this instance.
+	 * <p>
+	 * The prefix is added to <i>LibrAlign</i> sequence IDs to create <i>JPhyloIO</i> sequences IDs from them. It may be
+	 * an empty string, otherwise it needs to be a valid 
+	 * <a href="https://www.w3.org/TR/1999/REC-xml-names-19990114/#NT-NCName">NCName</a>. If multiple instance of this
+	 * class are combined to write a file containing multiple alignments (e.g. possible in <i>NeXML</i> or <i>Nexus</i>)
+	 * the prefixes of each instance need to be different in order to avoid ID conflicts.
+	 * 
+	 * @return the ID prefix of this instance as it was specified in the constructor
+	 */
 	public String getIDPrefix() {
 		return idPrefix;
 	}
