@@ -34,7 +34,6 @@ public class DeleteSequenceAction extends AbstractAlignmentEditorAction implemen
 			SelectionModel selection = getEditor().getAlignmentArea().getSelection();
 			
 			for (int row = selection.getFirstRow(); row <= selection.getLastRow(); row++) {
-				System.out.println(row + " " + getEditor().getAlignmentArea().getSequenceOrder().idByIndex(selection.getFirstRow()));
 				String id = getEditor().getAlignmentArea().getSequenceOrder().idByIndex(selection.getFirstRow());
 				getEditor().getAlignmentArea().getAlignmentModel().removeSequence(id);
 			}
