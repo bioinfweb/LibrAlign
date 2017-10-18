@@ -7,6 +7,7 @@ import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 
 import info.bioinfweb.commons.io.ContentExtensionFileFilter.TestStrategy;
+import info.bioinfweb.jphyloio.ReadWriteParameterMap;
 import info.bioinfweb.jphyloio.events.type.EventContentType;
 import info.bioinfweb.jphyloio.factory.JPhyloIOContentExtensionFileFilter;
 import info.bioinfweb.jphyloio.factory.JPhyloIOReaderWriterFactory;
@@ -82,7 +83,12 @@ public abstract class AbstractFileAction extends AbstractAlignmentEditorAction {
 	
 	protected void writeFile() {
 		try {
-			IOTools.writeSingleAlignment(getEditor().getAlignmentArea().getAlignmentModel(), null, getEditor().getFile(), getEditor().getFormat());
+			ReadWriteParameterMap parameters = new ReadWriteParameterMap();
+			parameters.put(ReadWriteParameterMap.KEY_APPLICATION_NAME, SwingAlignmentEditor.APPLICATION_NAME);
+			parameters.put(ReadWriteParameterMap.KEY_APPLICATION_VERSION, SwingAlignmentEditor.APPLICATION_VERSION);
+			parameters.put(ReadWriteParameterMap.KEY_APPLICATION_URL, SwingAlignmentEditor.APPLICATION_URL);
+			
+			IOTools.writeSingleAlignment(getEditor().getAlignmentArea().getAlignmentModel(), null, getEditor().getFile(), getEditor().getFormat(),parameters);
 			// Note that files containing multiple alignments or additional trees or OTU lists would be overwritten with a single alignment file here. 
 			// This problem is not handles here, to keep this example simple.
 			
@@ -104,7 +110,7 @@ public abstract class AbstractFileAction extends AbstractAlignmentEditorAction {
 	}
 	
 	
-	protected boolean handleUnsavedChanges() {
+	public boolean handleUnsavedChanges() {
 		if (getEditor().isChanged()) {
             switch (JOptionPane.showConfirmDialog(getEditor().getFrame(), "There are unsaved changes. Do you want to save the changes?", 
             		"Unsaved changes", JOptionPane.YES_NO_CANCEL_OPTION)) {

@@ -3,6 +3,8 @@ package info.bioinfweb.libralign.demo.swingapp;
 
 import java.awt.BorderLayout;
 import java.awt.EventQueue;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.io.File;
 
 import javax.swing.JComponent;
@@ -32,8 +34,20 @@ import info.bioinfweb.tic.SwingComponentFactory;
 
 @SuppressWarnings("serial")
 public class SwingAlignmentEditor extends javax.swing.JFrame {
+	public static final String APPLICATION_NAME = "LibrAlign Swing Alignment Editor Demo";
+	public static final String APPLICATION_VERSION = "0.0.0";
+	public static final String APPLICATION_URL = "http://r.bioinfweb.info/LibrAlignSwingDemoApp";
 	public static final String DEFAULT_FORMAT = JPhyloIOFormatIDs.NEXML_FORMAT_ID;	
-	private static final String TITLE_PREFIX = "Swing Alignment Editor Demo";
+	
+	// Create actions:
+	private NewAction newAction = new NewAction(this);
+	private OpenAction openAction = new OpenAction(this);
+	private SaveAction saveAction = new SaveAction(this);
+	private SaveAsAction saveAsAction = new SaveAsAction(this);
+	
+	private AddSequenceAction addSequence = new AddSequenceAction(this);
+	private DeleteSequenceAction deleteSequence = new DeleteSequenceAction(this);
+	private RemoveGapsAction removeGaps = new RemoveGapsAction(this);	
 	
 	
 	private JFrame frame;
@@ -117,7 +131,7 @@ public class SwingAlignmentEditor extends javax.swing.JFrame {
 
 	private void refreshWindowTitle() {
 		StringBuilder title = new StringBuilder();
-		title.append(TITLE_PREFIX);
+		title.append(APPLICATION_NAME);
 		title.append(" - ");
 		if (isChanged()) {
 			title.append("*");
@@ -138,7 +152,22 @@ public class SwingAlignmentEditor extends javax.swing.JFrame {
 	private void initialize() {
 		frame = new JFrame();
 		frame.setBounds(100, 100, 450, 300);
-		frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+		//frame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+		frame.addWindowListener(new WindowAdapter() {
+			
+			@Override
+			public void windowClosing(WindowEvent e) {
+				if(saveAction.handleUnsavedChanges()) {
+					//.handleUnsavedChanges()
+				//CurrentDirectoryModel.getInstance().removeFileChooser(getDocument().getFileChooser());
+				//ExtendedScrollPaneSelector.uninstallScrollPaneSelector(getScrollPane());
+				setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+				}
+				else {
+				setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
+				}
+			}
+		});
 		refreshWindowTitle();
 		
 		// Create LibrAlign component instance:
@@ -172,18 +201,7 @@ public class SwingAlignmentEditor extends javax.swing.JFrame {
 		frame.getContentPane().setLayout(new BorderLayout(0, 0));
 		frame.getContentPane().add(swingAlignmentArea, BorderLayout.CENTER);
 		
-		//alignmentArea.getPaintSettings().getTokenPainterList().set(0, new NucleotideTokenPainter());
-		
-
-		// Create actions:
-		NewAction newAction = new NewAction(this);
-		OpenAction openAction = new OpenAction(this);
-		SaveAction saveAction = new SaveAction(this);
-		SaveAsAction saveAsAction = new SaveAsAction(this);
-		
-		AddSequenceAction addSequence = new AddSequenceAction(this);
-		DeleteSequenceAction deleteSequence = new DeleteSequenceAction(this);
-		RemoveGapsAction removeGaps = new RemoveGapsAction(this);		
+		//alignmentArea.getPaintSettings().getTokenPainterList().set(0, new NucleotideTokenPainter());	
 		
 		
 		JMenuBar menuBar = new JMenuBar();
