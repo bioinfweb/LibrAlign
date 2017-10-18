@@ -86,7 +86,7 @@ public abstract class SwingInsertRemoveTokensEdit<T> extends SwingTokenEdit<T> {
 		int length = beginIndex - endIndex;
 		tokens = new ArrayList<T>(length);
 		for (int i = 0; i < length; i++) {
-			((ArrayList<T>)tokens).add(getProvider().getTokenAt(sequenceID, beginIndex + i));
+			((ArrayList<T>)tokens).add(getModel().getTokenAt(sequenceID, beginIndex + i));
 		}
 	}
 	
@@ -111,7 +111,7 @@ public abstract class SwingInsertRemoveTokensEdit<T> extends SwingTokenEdit<T> {
 	 * token(s) for deletions).
 	 */
 	protected void insert() {
-		getProvider().getUnderlyingModel().insertTokensAt(sequenceID, beginIndex, tokens);
+		getModel().getUnderlyingModel().insertTokensAt(sequenceID, beginIndex, tokens);
 	}
 	
 	
@@ -119,6 +119,6 @@ public abstract class SwingInsertRemoveTokensEdit<T> extends SwingTokenEdit<T> {
 	 * Performs the remove operation.
 	 */
 	protected void remove() {
-		getProvider().getUnderlyingModel().removeTokensAt(sequenceID, beginIndex, beginIndex + tokens.size());
+		getModel().getUnderlyingModel().removeTokensAt(sequenceID, beginIndex, beginIndex + tokens.size());
 	}
 }

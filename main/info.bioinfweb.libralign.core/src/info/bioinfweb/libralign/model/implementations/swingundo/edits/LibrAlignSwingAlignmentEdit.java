@@ -33,17 +33,17 @@ import info.bioinfweb.libralign.model.implementations.swingundo.SwingUndoAlignme
  * @see SwingUndoAlignmentModel
  */
 public abstract class LibrAlignSwingAlignmentEdit<T> extends AbstractDocumentEdit {
-  private SwingUndoAlignmentModel<T> provider;
+  private SwingUndoAlignmentModel<T> model;
 
   
 	/**
 	 * Creates a new instance of this class.
 	 * 
-	 * @param provider - the data provider creating this instance 
+	 * @param model the alignment model creating this instance 
 	 */
-	public LibrAlignSwingAlignmentEdit(SwingUndoAlignmentModel<T> provider) {
+	public LibrAlignSwingAlignmentEdit(SwingUndoAlignmentModel<T> model) {
 		super();
-		this.provider = provider;
+		this.model = model;
 	}
 
 
@@ -52,8 +52,8 @@ public abstract class LibrAlignSwingAlignmentEdit<T> extends AbstractDocumentEdi
 	 * 
 	 * @return an instance of {@link SwingUndoAlignmentModel}
 	 */
-	public SwingUndoAlignmentModel<T> getProvider() {
-		return provider;
+	public SwingUndoAlignmentModel<T> getModel() {
+		return model;
 	}
 
 
@@ -63,6 +63,6 @@ public abstract class LibrAlignSwingAlignmentEdit<T> extends AbstractDocumentEdi
 	 */
 	@Override
 	protected void registerDocumentChange() {
-		getProvider().registerDocumentChange();
+		getModel().registerDocumentChange();
 	}	
 }

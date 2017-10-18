@@ -46,16 +46,16 @@ public class SwingSetTokensEdit<T> extends SwingTokenEdit<T> {
 	/**
 	 * Creates a new instance of this class.
 	 * 
-	 * @param provider - the data provider creating this instance 
+	 * @param model the data provider creating this instance 
 	 * @param sequenceID - the identifier the sequence where the token is contained
 	 * @param beginIndex - the index of the first element to be replaced 
 	 *        (The first element in the sequence has the index 0.)
 	 * @param tokens - the new tokens for the specified position
 	 */
-	public SwingSetTokensEdit(SwingUndoAlignmentModel<T> provider, String sequenceID,
+	public SwingSetTokensEdit(SwingUndoAlignmentModel<T> model, String sequenceID,
 			int beginIndex, Collection<? extends T> tokens) {
 		
-		super(provider, sequenceID, beginIndex, tokens);
+		super(model, sequenceID, beginIndex, tokens);
 		
 		if (tokens.isEmpty()) {
 			throw new IllegalArgumentException("The list of new tokens must not be empty.");
@@ -63,7 +63,7 @@ public class SwingSetTokensEdit<T> extends SwingTokenEdit<T> {
 		else {
 			oldTokens = new ArrayList<Object>(tokens.size());
 			for (int i = 0; i < tokens.size(); i++) {
-				oldTokens.add(getProvider().getTokenAt(sequenceID, beginIndex + i));
+				oldTokens.add(getModel().getTokenAt(sequenceID, beginIndex + i));
 			}
 		}
 	}
@@ -72,11 +72,11 @@ public class SwingSetTokensEdit<T> extends SwingTokenEdit<T> {
 	/**
 	 * Creates a new instance of this class.
 	 * 
-	 * @param provider - the data provider creating this instance 
-	 * @param sequenceID - the identifier the sequence where the token is contained
-	 * @param index - the index of the element to be replaced 
+	 * @param provider the alignment model creating this instance 
+	 * @param sequenceID the identifier the sequence where the token is contained
+	 * @param index the index of the element to be replaced 
 	 *        (The first element in the sequence has the index 0.)
-	 * @param token - the new token for the specified position
+	 * @param token the new token for the specified position
 	 */
 	public SwingSetTokensEdit(SwingUndoAlignmentModel<T> provider, String sequenceID,
 			int index, T token) {
@@ -87,14 +87,14 @@ public class SwingSetTokensEdit<T> extends SwingTokenEdit<T> {
 
 	@Override
 	public void redo() throws CannotRedoException {
-		getProvider().getUnderlyingModel().setTokensAt(sequenceID, beginIndex, tokens);
+		getModel().getUnderlyingModel().setTokensAt(sequenceID, beginIndex, tokens);
 		super.redo();
 	}
 
 
 	@Override
 	public void undo() throws CannotUndoException {
-		getProvider().getUnderlyingModel().setTokensAt(sequenceID, beginIndex, oldTokens);
+		getModel().getUnderlyingModel().setTokensAt(sequenceID, beginIndex, oldTokens);
 		super.undo();
 	}
 

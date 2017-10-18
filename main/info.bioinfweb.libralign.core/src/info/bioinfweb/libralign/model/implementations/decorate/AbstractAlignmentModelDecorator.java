@@ -268,6 +268,12 @@ public abstract class AbstractAlignmentModelDecorator<T, U> extends AbstractAlig
 
 
 	@Override
+	public String addSequence(String sequenceName, String sequenceID) throws AlignmentSourceNotWritableException {
+		return underlyingModel.addSequence(sequenceName, sequenceID);
+	}
+
+
+	@Override
 	public boolean removeSequence(String sequenceID)	throws AlignmentSourceNotWritableException {
 		return underlyingModel.removeSequence(sequenceID);
 	}

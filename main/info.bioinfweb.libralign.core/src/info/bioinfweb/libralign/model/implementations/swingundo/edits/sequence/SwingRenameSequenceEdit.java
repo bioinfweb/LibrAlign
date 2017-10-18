@@ -47,14 +47,14 @@ public class SwingRenameSequenceEdit<T> extends SwingSequenceEdit<T> {
 
 	@Override
 	public void redo() throws CannotRedoException {
-		getProvider().getUnderlyingModel().renameSequence(sequenceID, newName);
+		getModel().getUnderlyingModel().renameSequence(sequenceID, newName);
 		super.redo();
 	}
 
 
 	@Override
 	public void undo() throws CannotUndoException {
-		getProvider().getUnderlyingModel().renameSequence(sequenceID, oldName);
+		getModel().getUnderlyingModel().renameSequence(sequenceID, oldName);
 		super.undo();
 	}
 

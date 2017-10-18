@@ -19,16 +19,14 @@
 package info.bioinfweb.libralign.model.implementations.swingundo.edits.sequence;
 
 
-import java.lang.reflect.Array;
+import info.bioinfweb.libralign.model.AlignmentModel;
+import info.bioinfweb.libralign.model.implementations.swingundo.SwingUndoAlignmentModel;
+
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 
 import javax.swing.undo.CannotRedoException;
 import javax.swing.undo.CannotUndoException;
-
-import info.bioinfweb.libralign.model.AlignmentModel;
-import info.bioinfweb.libralign.model.implementations.swingundo.SwingUndoAlignmentModel;
 
 
 
@@ -47,26 +45,26 @@ public class SwingRemoveSequenceEdit<T> extends SwingSequenceEdit<T> {
 	public SwingRemoveSequenceEdit(SwingUndoAlignmentModel<T> provider, String sequenceID) {
 		super(provider, sequenceID);
 		
-		name = getProvider().sequenceNameByID(sequenceID);
-		int length = getProvider().getSequenceLength(sequenceID);
+		name = getModel().sequenceNameByID(sequenceID);
+		int length = getModel().getSequenceLength(sequenceID);
 		tokens = new ArrayList<Object>(length);
 		for (int i = 0; i < length; i++) {
-			tokens.add(getProvider().getTokenAt(sequenceID, i));
+			tokens.add(getModel().getTokenAt(sequenceID, i));
 		}
 	}
 
 
 	@Override
 	public void redo() throws CannotRedoException {
-		getProvider().getUnderlyingModel().removeSequence(sequenceID);
+		getModel().getUnderlyingModel().removeSequence(sequenceID);
 		super.redo();
 	}
 
 
 	@Override
 	public void undo() throws CannotUndoException {
-		getProvider().getUnderlyingModel().addSequence(name);
-		getProvider().getUnderlyingModel().insertTokensAt(sequenceID, 0, tokens);		
+		getModel().getUnderlyingModel().addSequence(name);
+		getModel().getUnderlyingModel().insertTokensAt(sequenceID, 0, tokens);		
 		super.undo();
 	}
 

@@ -176,6 +176,18 @@ public interface AlignmentModel<T> {
   public String addSequence(String sequenceName) throws AlignmentSourceNotWritableException;
   
   /**
+   * Adds a new empty sequence to the underlying data source assigning the specified ID to it.
+   * 
+   * @param sequenceName the name of the new sequence
+   * @param sequenceID the ID the new sequence shall have
+   * @return the unique ID of the new sequence (identical with {@code sequenceID})
+	 * 
+	 * @throws AlignmentSourceNotWritableException if the underlying data source is not writable for sequences
+	 * @throws IllegalArgumentException if a sequence with the specified ID is already present in this model
+   */
+  public String addSequence(String sequenceName, String sequenceID) throws AlignmentSourceNotWritableException, IllegalArgumentException;
+  
+  /**
    * Removes the specified sequence from the underlying data source.
    * 
    * @param sequenceID the unique ID of the sequence to be removed

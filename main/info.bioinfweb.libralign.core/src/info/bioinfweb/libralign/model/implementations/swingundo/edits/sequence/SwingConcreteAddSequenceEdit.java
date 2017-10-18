@@ -38,22 +38,35 @@ public class SwingConcreteAddSequenceEdit<T> extends SwingSequenceEdit<T> implem
 	private String name;
 
 	
-	public SwingConcreteAddSequenceEdit(SwingUndoAlignmentModel<T> provider, String name) {
-		super(provider, null);
+	/**
+	 * Creates a new instance of this class.
+	 * 
+	 * @param model the alignment model creating this edit
+	 * @param name the name of the new sequence
+	 * @param sequenceID the ID of the new sequence (Maybe {@code null}, of the underlying model shall create an ID for it.)
+	 */
+	public SwingConcreteAddSequenceEdit(SwingUndoAlignmentModel<T> model, String name, String sequenceID) {
+		super(model, null);
 		this.name = name;
+		this.sequenceID = sequenceID;
 	}
 
 
 	@Override
 	public void redo() throws CannotRedoException {
-		sequenceID = getProvider().getUnderlyingModel().addSequence(name);
+		if (sequenceID == null) {  // Possibly create an ID on the first call of redo(), if none was specified.
+			sequenceID = getModel().getUnderlyingModel().addSequence(name);
+		}
+		else {
+			getModel().getUnderlyingModel().addSequence(name, sequenceID);
+		}
 		super.redo();
 	}
 
 
 	@Override
 	public void undo() throws CannotUndoException {
-		getProvider().getUnderlyingModel().removeSequence(sequenceID);
+		getModel().getUnderlyingModel().removeSequence(sequenceID);
 		super.undo();
 	} 
 

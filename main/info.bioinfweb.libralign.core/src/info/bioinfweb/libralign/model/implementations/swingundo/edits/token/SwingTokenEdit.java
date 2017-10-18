@@ -87,6 +87,6 @@ public abstract class SwingTokenEdit<T> extends LibrAlignSwingAlignmentEdit<T> {
 	@Override
 	public String getPresentationName() {
 		return getOperationName() + " " + tokens.size() + " sequence element(s) in \"" + 
-	      getProvider().sequenceNameByID(sequenceID) + "\" beginning at column " + beginIndex;
+	      getModel().sequenceNameByID(sequenceID) + "\" beginning at column " + beginIndex;
 	}
 }

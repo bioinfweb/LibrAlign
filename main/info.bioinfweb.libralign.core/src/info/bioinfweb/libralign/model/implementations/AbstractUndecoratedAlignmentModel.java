@@ -206,18 +206,27 @@ public abstract class AbstractUndecoratedAlignmentModel<T> extends AbstractAlign
 	
 	@Override
 	public String addSequence(String sequenceName) {
+		return addSequence(sequenceName, getNewSequenceID(sequenceName));
+	}
+	
+	
+	@Override
+	public String addSequence(String sequenceName, String sequenceID) throws AlignmentSourceNotWritableException, IllegalArgumentException {
 		if (isSequencesReadOnly()) {
 			throw new AlignmentSourceNotWritableException(this);
 		}
+		else if (containsSequence(sequenceID)) {
+			throw new IllegalArgumentException("A sequence with the ID \"" + sequenceID + 
+					"\" is already present in this model. Sequence IDs have to be unique.");
+		}
 		else {
-			String sequenceID = getNewSequenceID(sequenceName);
 			doAddSequence(sequenceID, sequenceName);
 			fireAfterSequenceChange(SequenceChangeEvent.newInsertInstance(this, sequenceID));
 			return sequenceID;
 		}
 	}
-	
-	
+
+
 	/**
 	 * This method is called by {@link #removeSequence(int)} if {@link #isReadOnly()} returns {@code false}. 
 	 * Implementing classes should remove the specified sequence from their underlying data source in this

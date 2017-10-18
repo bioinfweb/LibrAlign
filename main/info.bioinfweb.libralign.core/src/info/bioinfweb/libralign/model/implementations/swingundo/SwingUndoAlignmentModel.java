@@ -49,9 +49,10 @@ import info.bioinfweb.libralign.model.tokenset.TokenSet;
  * An implementation of {@link AlignmentModel} that creates an {@link UndoableEdit} object for every 
  * modification that is made to the underlying data source using any of the methods specified by
  * {@link AlignmentModel}. These edit objects are created every time a modification method is called 
- * and use the modification methods of another implementation of {@link AlignmentModel} which has to 
- * be provided on creation. This second instance is responsible for the actual manipulation of the underlying 
- * data source. (All non-modifying methods are directly delegated to the underlying instance.)
+ * and delegate to the modification methods of another implementation of {@link AlignmentModel} which 
+ * has to be provided on creation. This second instance is responsible for the actual manipulation of 
+ * the underlying data source. (All non-modifying methods are directly delegated to the underlying 
+ * instance.)
  * <p>
  * <b>Important:</b> The modification methods of the specified underlying {@link AlignmentModel} 
  * implementation that performs the actual data manipulation must never be called directly, because that
@@ -200,7 +201,7 @@ public class SwingUndoAlignmentModel<T> implements AlignmentModel<T>,
 
 	@Override
 	public void setLabel(String label) throws UnsupportedOperationException {
-		underlyingModel.setLabel(label);
+		underlyingModel.setLabel(label);  //TODO This should also be done by an edit.
 	}
 
 
@@ -212,7 +213,7 @@ public class SwingUndoAlignmentModel<T> implements AlignmentModel<T>,
 
 	@Override
 	public void setTokenSet(TokenSet<T> set) {
-		underlyingModel.setTokenSet(set);
+		underlyingModel.setTokenSet(set);  //TODO This should also be done by an edit. How to track changes of the token set?
 	}
 
 
@@ -229,7 +230,7 @@ public class SwingUndoAlignmentModel<T> implements AlignmentModel<T>,
 
 
 	@Override
-	public void setTokensAt(String sequenceID, int beginIndex,	Collection<? extends T> tokens)
+	public void setTokensAt(String sequenceID, int beginIndex, Collection<? extends T> tokens)
 			throws AlignmentSourceNotWritableException {
 		
 		if (underlyingModel.isTokensReadOnly()) {
@@ -345,11 +346,17 @@ public class SwingUndoAlignmentModel<T> implements AlignmentModel<T>,
 
 	@Override
 	public String addSequence(String sequenceName) {
+		return addSequence(sequenceName, null);
+	}
+
+
+	@Override
+	public String addSequence(String sequenceName, String sequenceID) {
 		if (isSequencesReadOnly()) {
 			throw new AlignmentSourceNotWritableException(this);
 		}
 		else {
-			SwingAddSequenceEdit edit = new SwingConcreteAddSequenceEdit<T>(this, sequenceName);
+			SwingAddSequenceEdit edit = new SwingConcreteAddSequenceEdit<T>(this, sequenceName, sequenceID);
 			if (hasEditFactory()) {
 				edit = editFactory.createAddSequenceEdit((SwingConcreteAddSequenceEdit<T>)edit);
 			}
