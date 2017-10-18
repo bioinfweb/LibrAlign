@@ -28,12 +28,14 @@ public class DeleteSequenceAction extends AbstractAlignmentEditorAction implemen
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		switch(JOptionPane.showConfirmDialog(getEditor().getFrame(),
-				"Do you want to delete the Sequence choosen by curser?", "Delete Sequence", JOptionPane.YES_NO_OPTION)) {
+				"Do you want to delete the choosen Sequences?", "Delete Sequence", JOptionPane.YES_NO_OPTION)) {
+		
 		case JOptionPane.YES_OPTION:
 			SelectionModel selection = getEditor().getAlignmentArea().getSelection();
-
+			
 			for (int row = selection.getFirstRow(); row <= selection.getLastRow(); row++) {
-				String id = getEditor().getAlignmentArea().getSequenceOrder().idByIndex(row);
+				System.out.println(row + " " + getEditor().getAlignmentArea().getSequenceOrder().idByIndex(selection.getFirstRow()));
+				String id = getEditor().getAlignmentArea().getSequenceOrder().idByIndex(selection.getFirstRow());
 				getEditor().getAlignmentArea().getAlignmentModel().removeSequence(id);
 			}
 		case JOptionPane.NO_OPTION:
