@@ -26,6 +26,8 @@ import java.util.Iterator;
 import org.semanticweb.owlapi.io.XMLUtils;
 
 import info.bioinfweb.commons.IntegerIDManager;
+import info.bioinfweb.commons.bio.CharacterSymbolMeaning;
+import info.bioinfweb.commons.bio.CharacterSymbolType;
 import info.bioinfweb.jphyloio.ReadWriteConstants;
 import info.bioinfweb.jphyloio.ReadWriteParameterMap;
 import info.bioinfweb.jphyloio.dataadapters.JPhyloIOEventReceiver;
@@ -75,7 +77,7 @@ public class TokenSetAdapter<T> implements ObjectListDataAdapter<TokenSetDefinit
 	}
 
 	
-	private boolean checkTokenSetID(String id) {
+	private boolean checkTokenSetID(String id) throws IllegalArgumentException {
 		if (tokenSetID.equals(id)) {
 			return true;
 		}
@@ -105,6 +107,7 @@ public class TokenSetAdapter<T> implements ObjectListDataAdapter<TokenSetDefinit
 
 	
 	private void writeSingleTokenDefinitionEvent(JPhyloIOEventReceiver receiver, IntegerIDManager idManager, T token) throws IOException {
+		//TODO Add constituents for ambiguity codes (Possibly model in token set? Should work in the same way, as the set of background colors is determined.)
 		receiver.add(new SingleTokenDefinitionEvent(idPrefix + idManager.createNewID(), tokenSet.descriptionByToken(token), 
 					tokenSet.representationByToken(token), tokenSet.getMeaning(token), tokenSet.getSymbolType(token)));
 		//TODO Possibly add metadata (e.g. for alternative gap symbols) if that will not anyway be done in JPhyloIO in the future.
@@ -127,8 +130,19 @@ public class TokenSetAdapter<T> implements ObjectListDataAdapter<TokenSetDefinit
 			writeSingleTokenDefinitionEvent(receiver, idManager, defaultMissingToken);  // Make sure the default missing data token in the first in the sequence.
 		}
 		
-		for (T token : tokenSet) {
-			if (!token.equals(defaultGapToken) && !token.equals(defaultMissingToken)) {
+		// The order is important. Ambiguity codes must be defined after atomic states, since they may reference them. (This is also relevant, if no constituents are defined, since JPhyloIO may add these for some formats.)
+		for (T token : tokenSet) {  // Write atomic states first.
+			if (!token.equals(defaultGapToken) && !token.equals(defaultMissingToken) && 
+					CharacterSymbolType.ATOMIC_STATE.equals(tokenSet.getSymbolType(token))) {
+				
+				writeSingleTokenDefinitionEvent(receiver, idManager, token);
+			}
+		}
+		
+		for (T token : tokenSet) {  // Write uncertain states that may reference atomic states later. (Uncertain states should not reference other uncertain states.)
+			if (!token.equals(defaultGapToken) && !token.equals(defaultMissingToken) && 
+					CharacterSymbolType.UNCERTAIN.equals(tokenSet.getSymbolType(token))) {
+				
 				writeSingleTokenDefinitionEvent(receiver, idManager, token);
 			}
 		}
