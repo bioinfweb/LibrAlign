@@ -212,6 +212,8 @@ public abstract class AbstractUndecoratedAlignmentModel<T> extends AbstractAlign
 	
 	@Override
 	public String addSequence(String sequenceName, String sequenceID) throws AlignmentSourceNotWritableException, IllegalArgumentException {
+		//TODO This method needs to make sure that IDs are registered in the associated ID manager. Additionally the ID manager needs to check, whether the ID has the required prefix. (The JavaDoc needs to be adjusted so that an IllegalArgumentException may also be thrown if an invalid prefix is used.)
+		
 		if (isSequencesReadOnly()) {
 			throw new AlignmentSourceNotWritableException(this);
 		}
