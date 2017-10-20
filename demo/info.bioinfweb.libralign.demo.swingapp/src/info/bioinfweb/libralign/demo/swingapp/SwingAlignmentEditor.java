@@ -50,8 +50,7 @@ import info.bioinfweb.tic.SwingComponentFactory;
 
 
 
-@SuppressWarnings("serial")
-public class SwingAlignmentEditor extends javax.swing.JFrame {
+public class SwingAlignmentEditor {
 	public static final String APPLICATION_NAME = "LibrAlign Swing Alignment Editor Demo";
 	public static final String APPLICATION_VERSION = "0.0.0";
 	public static final String APPLICATION_URL = "http://r.bioinfweb.info/LibrAlignSwingDemoApp";
@@ -172,17 +171,13 @@ public class SwingAlignmentEditor extends javax.swing.JFrame {
 		frame.setBounds(100, 100, 450, 300);
 		//frame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 		frame.addWindowListener(new WindowAdapter() {
-			
 			@Override
 			public void windowClosing(WindowEvent e) {
-				if(saveAction.handleUnsavedChanges()) {
-					//.handleUnsavedChanges()
-				//CurrentDirectoryModel.getInstance().removeFileChooser(getDocument().getFileChooser());
-				//ExtendedScrollPaneSelector.uninstallScrollPaneSelector(getScrollPane());
-				setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+				if (saveAction.handleUnsavedChanges()) {
+					frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 				}
 				else {
-				setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
+					frame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 				}
 			}
 		});
