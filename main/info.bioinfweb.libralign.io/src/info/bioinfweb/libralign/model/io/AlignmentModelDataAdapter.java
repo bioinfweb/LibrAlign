@@ -307,7 +307,7 @@ public class AlignmentModelDataAdapter<T> extends NoCharDefsNoSetsMatrixDataAdap
 		
 		String modelID = modelByJPhyloIOSequenceID(sequenceID);
 		int sequenceLength = model.getSequenceLength(modelID); 
-		if (Math2.isBetween(startColumn, 0, sequenceLength - 1) && Math2.isBetween(endColumn, startColumn, sequenceLength)) {
+		if (Math2.isBetween(startColumn, 0, sequenceLength) && Math2.isBetween(endColumn, startColumn, sequenceLength)) {
 			if (startColumn == 0) {
 				writeSequenceMetadata(receiver, sequenceID);
 			}
