@@ -9,6 +9,7 @@ demo/info.bioinfweb.libralign.demo.applicationold/src/info/bioinfweb/libralign/d
 demo/info.bioinfweb.libralign.demo.docexamples/.classpath -text svneol=unset#text/plain
 demo/info.bioinfweb.libralign.demo.docexamples/.project -text svneol=unset#text/plain
 demo/info.bioinfweb.libralign.demo.docexamples/.settings/org.eclipse.jdt.core.prefs -text svneol=unset#text/plain
+demo/info.bioinfweb.libralign.demo.docexamples/.settings/org.eclipse.jdt.ui.prefs -text svneol=unset#text/plain
 demo/info.bioinfweb.libralign.demo.docexamples/data/Test.fasta -text
 demo/info.bioinfweb.libralign.demo.docexamples/data/Test.nexml -text
 demo/info.bioinfweb.libralign.demo.docexamples/src/info/bionfweb/libralign/demo/docexamples/BasicAlignmentAreaDemo.java -text svneol=unset#text/plain
@@ -17,6 +18,8 @@ demo/info.bioinfweb.libralign.demo.docexamples/src/info/bionfweb/libralign/demo/
 demo/info.bioinfweb.libralign.demo.docexamples/src/info/bionfweb/libralign/demo/docexamples/toolkit/AbstractApplication.java -text svneol=unset#text/plain
 demo/info.bioinfweb.libralign.demo.docexamples/src/info/bionfweb/libralign/demo/docexamples/toolkit/SWTApplication.java -text svneol=unset#text/plain
 demo/info.bioinfweb.libralign.demo.docexamples/src/info/bionfweb/libralign/demo/docexamples/toolkit/SwingApplication.java -text svneol=unset#text/plain
+demo/info.bioinfweb.libralign.demo.docexamples/src/info/bionfweb/libralign/demo/paper/SWTApplication.java -text svneol=unset#text/plain
+demo/info.bioinfweb.libralign.demo.docexamples/src/info/bionfweb/libralign/demo/paper/SwingApplication.java -text svneol=unset#text/plain
 demo/info.bioinfweb.libralign.demo.swingapp/.classpath -text svneol=unset#text/plain
 demo/info.bioinfweb.libralign.demo.swingapp/.project -text svneol=unset#text/plain
 demo/info.bioinfweb.libralign.demo.swingapp/.settings/org.eclipse.jdt.core.prefs -text svneol=unset#text/plain
