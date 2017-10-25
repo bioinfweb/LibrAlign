@@ -110,7 +110,8 @@ public class OpenAction extends AbstractFileAction {
 				}
 			}
 			catch (Exception ex) {
-				JOptionPane.showMessageDialog(getEditor().getFrame(), ex.getMessage(), "Error while loading file", JOptionPane.ERROR_MESSAGE);
+				ex.printStackTrace();
+				JOptionPane.showMessageDialog(getEditor().getFrame(), ex.getMessage() + " (" + ex.getClass().getSimpleName() + ")", "Error while loading file", JOptionPane.ERROR_MESSAGE);
 			}
 		}
 	}
