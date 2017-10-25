@@ -46,7 +46,8 @@ public class SwingApplication {
 				try {
 					SwingApplication window = new SwingApplication();
 					window.frame.setVisible(true);
-				} catch (Exception e) {
+				}
+				catch (Exception e) {
 					e.printStackTrace();
 				}
 			}
@@ -75,7 +76,7 @@ public class SwingApplication {
 		frame.setLayout(new BorderLayout());
 		
 		// Read an alignment file:
-		List<AlignmentModel<?>> models = IOTools.readAlignments(new File("data/Test.nexml"));
+		List<AlignmentModel<?>> models = IOTools.readAlignments(new File("data/PaperExample.nexml"));
 		
 		// Create an alignment area displaying the first alignment from the file:
 		AlignmentArea area = new AlignmentArea();

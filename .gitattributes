@@ -10,6 +10,7 @@ demo/info.bioinfweb.libralign.demo.docexamples/.classpath -text svneol=unset#tex
 demo/info.bioinfweb.libralign.demo.docexamples/.project -text svneol=unset#text/plain
 demo/info.bioinfweb.libralign.demo.docexamples/.settings/org.eclipse.jdt.core.prefs -text svneol=unset#text/plain
 demo/info.bioinfweb.libralign.demo.docexamples/.settings/org.eclipse.jdt.ui.prefs -text svneol=unset#text/plain
+demo/info.bioinfweb.libralign.demo.docexamples/data/PaperExample.nexml -text
 demo/info.bioinfweb.libralign.demo.docexamples/data/Test.fasta -text
 demo/info.bioinfweb.libralign.demo.docexamples/data/Test.nexml -text
 demo/info.bioinfweb.libralign.demo.docexamples/src/info/bionfweb/libralign/demo/docexamples/BasicAlignmentAreaDemo.java -text svneol=unset#text/plain

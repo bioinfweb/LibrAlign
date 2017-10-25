@@ -46,7 +46,8 @@ public class SWTApplication {
 		try {
 			SWTApplication window = new SWTApplication();
 			window.open();
-		} catch (Exception e) {
+		}
+		catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
@@ -80,7 +81,7 @@ public class SWTApplication {
 		shell.setLayout(new FillLayout(SWT.HORIZONTAL));
 		
 		// Read an alignment file:
-		List<AlignmentModel<?>> models = IOTools.readAlignments(new File("data/Test.nexml"));
+		List<AlignmentModel<?>> models = IOTools.readAlignments(new File("data/PaperExample.nexml"));
 		
 		// Create an alignment area displaying the first alignment from the file:
 		AlignmentArea area = new AlignmentArea();
