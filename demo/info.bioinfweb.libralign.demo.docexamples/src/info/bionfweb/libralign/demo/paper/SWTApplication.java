@@ -40,6 +40,7 @@ public class SWTApplication {
 	
 	/**
 	 * Launch the application.
+	 * 
 	 * @param args
 	 */
 	public static void main(String[] args) {
@@ -55,6 +56,7 @@ public class SWTApplication {
 	
 	/**
 	 * Open the window.
+	 * 
 	 * @throws Exception 
 	 */
 	public void open() throws Exception {
@@ -72,6 +74,7 @@ public class SWTApplication {
 	
 	/**
 	 * Create contents of the window.
+	 * 
 	 * @throws Exception 
 	 */
 	protected void createContents() throws Exception {

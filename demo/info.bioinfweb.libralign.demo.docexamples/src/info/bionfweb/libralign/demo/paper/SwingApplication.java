@@ -57,6 +57,7 @@ public class SwingApplication {
 	
 	/**
 	 * Create the application.
+	 * 
 	 * @throws Exception if an I/O error occurs
 	 */
 	public SwingApplication() throws Exception {
@@ -66,6 +67,7 @@ public class SwingApplication {
 	
 	/**
 	 * Initialize the contents of the frame.
+	 * 
 	 * @throws Exception if an I/O error occurs
 	 */
 	private void initialize() throws Exception {
