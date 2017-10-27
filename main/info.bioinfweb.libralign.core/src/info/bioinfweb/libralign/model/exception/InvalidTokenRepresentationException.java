@@ -24,7 +24,7 @@ import info.bioinfweb.libralign.model.tokenset.TokenSet;
 
 
 /**
- * Indicates that not token according to a certain string representation was found in a token set.
+ * Indicates that no token associated with a certain string representation was found in a token set.
  * 
  * @author Ben St&ouml;ver
  * @since 0.4.0

@@ -54,13 +54,34 @@ import info.bioinfweb.libralign.model.tokenset.CharacterTokenSet;
 public class BioPolymerCharAlignmentModelFactory extends AbstractAlignmentModelFactory<Character> 
 		implements AlignmentModelFactory<Character> {
 	
+	private boolean distinguishCase;
+	
+	
+	/**
+	 * Creates a new instance of this class without an shared sequence ID manager. Each model instance,
+	 * that will be created by this factory, will have its own sequence ID manager. The resulting instance will
+	 * not distinguish between upper and lower case tokens and have no default token.
+	 */
+	public BioPolymerCharAlignmentModelFactory() {
+		this(null, false);
+	}
+
 	
 	/**
 	 * Creates a new instance of this class without an shared sequence ID manager. Each model instance,
 	 * that will be created by this factory, will have its own sequence ID manager.
+	 * 
+	 * @param defaultToken a default token to be used if invalid token representations are passed to 
+	 *        {@link #createToken(AlignmentModel, String)} (If {@code null}
+	 *        is specified here, {@link #createToken(AlignmentModel, String)} will throw an exception 
+	 *        instead in such cases.)
+	 * @param distinguishCase Specify {@code true} here, if upper and lower case letters (representing nucleotides
+	 *        or amino acids) should be supported as different tokens by created alignment models or {@code false} 
+	 *        if all token shall be converted to upper case letters in {@link #createToken(AlignmentModel, String)}.
 	 */
-	public BioPolymerCharAlignmentModelFactory() {
-		super();
+	public BioPolymerCharAlignmentModelFactory(Character defaultToken, boolean distinguishCase) {
+		super(defaultToken);
+		this.distinguishCase = distinguishCase;
 	}
 
 	
@@ -73,12 +94,35 @@ public class BioPolymerCharAlignmentModelFactory extends AbstractAlignmentModelF
 	 *        by alignment model instances created by this factory. (See the documentation of 
 	 *        {@link AbstractUndecoratedAlignmentModel#isReuseSequenceIDs()} for details. Specify {@code false}, if 
 	 *        you are unsure what this property does.) 
+	 * @param defaultToken a default token to be used if invalid token representations are passed to 
+	 *        {@link #createToken(AlignmentModel, String)} (If {@code null}
+	 *        is specified here, {@link #createToken(AlignmentModel, String)} will throw an exception 
+	 *        instead in such cases.)
+	 * @param distinguishCase Specify {@code true} here, if upper and lower case letters (representing nucleotides
+	 *        or amino acids) should be supported as different tokens by created alignment models or {@code false} 
+	 *        if all token shall be converted to upper case letters in {@link #createToken(AlignmentModel, String)}.
 	 */
-	public BioPolymerCharAlignmentModelFactory(SequenceIDManager sharedIDManager, boolean reuseSequenceIDs) {
-		super(sharedIDManager, reuseSequenceIDs);
+	public BioPolymerCharAlignmentModelFactory(SequenceIDManager sharedIDManager, boolean reuseSequenceIDs, 
+			Character defaultToken, boolean distinguishCase) {
+		
+		super(sharedIDManager, reuseSequenceIDs, defaultToken);
+		this.distinguishCase = distinguishCase;
 	}
 
 	
+	/**
+	 * Determines whether alignment models created by this instance should distinguish between upper and lower case
+	 * letters or not.
+	 * <p>
+	 * This property can be set using the respective constructor parameter.
+	 * 
+	 * @return {@code true} if upper and lower case letters are modeled as separate tokens or {@code false} otherwise
+	 */
+	public boolean isDistinguishCase() {
+		return distinguishCase;
+	}
+
+
 	@Override
 	public AlignmentModel<Character> doCreateNewModel(NewAlignmentModelParameterMap parameterMap) {
 		// Create initial set:
@@ -115,5 +159,14 @@ public class BioPolymerCharAlignmentModelFactory extends AbstractAlignmentModelF
 		else {
 			return new PackedAlignmentModel<Character>(tokenSet, getSharedIDManager(), isReuseSequenceIDs(), (int)charStateCount);  // null is allowed as ID manager
 		}
+	}
+
+
+	@Override
+	public Character createToken(AlignmentModel<Character> alignmentModel, String tokenRepresentation) {
+		if (!isDistinguishCase()) {
+			tokenRepresentation = tokenRepresentation.toUpperCase();
+		}
+		return super.createToken(alignmentModel, tokenRepresentation);
 	}
 }

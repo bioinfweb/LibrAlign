@@ -20,6 +20,7 @@ package info.bioinfweb.libralign.model.factory;
 
 
 import info.bioinfweb.libralign.model.AlignmentModel;
+import info.bioinfweb.libralign.model.exception.InvalidTokenRepresentationException;
 import info.bioinfweb.libralign.model.implementations.AbstractUndecoratedAlignmentModel;
 import info.bioinfweb.libralign.model.implementations.SequenceIDManager;
 import info.bioinfweb.libralign.model.tokenset.TokenSet;
@@ -37,14 +38,31 @@ import info.bioinfweb.libralign.model.tokenset.TokenSet;
 public abstract class AbstractAlignmentModelFactory<T> implements AlignmentModelFactory<T> {
 	private SequenceIDManager sharedIDManager = null;
 	private boolean reuseSequenceIDs = false;
+	private T defaultToken;
 	
 	
 	/**
-	 * Creates a new instance of this class without an shared sequence ID manager. Each model instance,
-	 * that will be created by this factory, will have its own sequence ID manager.
+	 * Creates a new instance of this class without an shared sequence ID manager. Each model instance, that 
+	 * will be created by this factory, will have its own sequence ID manager. No default token will be used.
 	 */
 	public AbstractAlignmentModelFactory() {
 		super();
+		defaultToken = null;
+	}
+
+
+	/**
+	 * Creates a new instance of this class without an shared sequence ID manager. Each model instance, that 
+	 * will be created by this factory, will have its own sequence ID manager.
+	 * 
+	 * @param defaultToken a default token to be used if invalid token representations are passed to 
+	 *        {@link #createToken(AlignmentModel, String)} (If {@code null}
+	 *        is specified here, {@link #createToken(AlignmentModel, String)} will throw an exception 
+	 *        instead in such cases.)
+	 */
+	public AbstractAlignmentModelFactory(T defaultToken) {
+		super();
+		this.defaultToken = defaultToken;
 	}
 
 
@@ -53,11 +71,19 @@ public abstract class AbstractAlignmentModelFactory<T> implements AlignmentModel
 	 * 
 	 * @param sharedIDManager the sequence ID manager that will be shared by all model instances 
 	 *        created by this factory 
+	 * @param reuseSequenceIDs Specify {@code true} if models created by this factory should reuse IDs already present 
+	 *        in their associated ID manager or {@code false} if new IDs should always be created. (See the documentation 
+	 *        of {@link AbstractUndecoratedAlignmentModel#isReuseSequenceIDs()} for details.)
+	 * @param defaultToken a default token to be used if invalid token representations are passed to 
+	 *        {@link #createToken(AlignmentModel, String)} (If {@code null}
+	 *        is specified here, {@link #createToken(AlignmentModel, String)} will throw an exception 
+	 *        instead in such cases.)
 	 */
-	public AbstractAlignmentModelFactory(SequenceIDManager sharedIDManager, boolean reuseSequenceIDs) {
+	public AbstractAlignmentModelFactory(SequenceIDManager sharedIDManager, boolean reuseSequenceIDs, T defaultToken) {
 		super();
 		this.sharedIDManager = sharedIDManager;
 		this.reuseSequenceIDs = reuseSequenceIDs;
+		this.defaultToken = defaultToken;
 	}
 
 
@@ -96,14 +122,36 @@ public abstract class AbstractAlignmentModelFactory<T> implements AlignmentModel
 
 
 	/**
+	 * Returns the default token to be used if invalid token representations are passed to
+	 * {@link #createToken(AlignmentModel, String)}.
+	 *  
+	 * @return the default token or {@code null} if none is defined
+	 */
+	public T getDefaultToken() {
+		return defaultToken;
+	}
+
+
+	/**
 	 * Creates a token using {@link TokenSet#tokenByRepresentation(String)}.
 	 * 
-	 * @return the token or {@code null} if no according representation was found in the set
+	 * @return the token or {@link #getDefaultToken()} if no according representation was found in the set
+	 * @throws InvalidTokenRepresentationException if a token representation is not found in the token set 
+	 *         of {@code alignmentModel} and no default token was specified
 	 * @see info.bioinfweb.libralign.model.factory.AlignmentModelFactory#createToken(info.bioinfweb.libralign.model.AlignmentModel, java.lang.String)
 	 */
 	@Override
-	public T createToken(AlignmentModel<T> alignmentModel, String tokenRepresentation) {
-		return alignmentModel.getTokenSet().tokenByRepresentation(tokenRepresentation);
+	public T createToken(AlignmentModel<T> alignmentModel, String tokenRepresentation) throws InvalidTokenRepresentationException {
+		T result = alignmentModel.getTokenSet().tokenByRepresentation(tokenRepresentation);
+		if (result == null) {
+			if (defaultToken != null) {
+				result = defaultToken;
+			}
+			else {
+				throw new InvalidTokenRepresentationException(alignmentModel.getTokenSet(), tokenRepresentation);
+			}
+		}
+		return result;
 	}
 
 

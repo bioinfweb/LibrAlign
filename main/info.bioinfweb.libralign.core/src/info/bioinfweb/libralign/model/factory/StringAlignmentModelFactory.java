@@ -29,7 +29,7 @@ import info.bioinfweb.libralign.model.tokenset.DefaultTokenSet;
 
 /**
  * Default factory implementation for creating alignment models. If a modified behavior is needed application
- * developers can overwrite methods of this class to catch according cases and delegate the remaining to the
+ * developers can overwrite methods of this class to handle respective cases and delegate the remaining to the
  * super implementation.
  * 
  * @author Ben St&ouml;ver
