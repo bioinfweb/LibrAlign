@@ -34,7 +34,7 @@ import info.bioinfweb.libralign.model.tokenset.BioJava3TokenSet;
 
 
 /**
- * Alignment model factory for models representing nucleotides as BioJava {@link NucleotideCompound} objects.
+ * Alignment model factory for models representing nucleotides as <i>BioJava</i> {@link NucleotideCompound} objects.
  * 
  * @author Ben St&ouml;ver
  * @bioinfweb.module info.bioinfweb.libralign.biojava3
