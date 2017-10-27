@@ -24,6 +24,7 @@ import info.bioinfweb.jphyloio.JPhyloIOEventReader;
 import info.bioinfweb.jphyloio.events.JPhyloIOEvent;
 import info.bioinfweb.jphyloio.events.LinkedLabeledIDEvent;
 import info.bioinfweb.jphyloio.events.SequenceTokensEvent;
+import info.bioinfweb.jphyloio.events.SingleTokenDefinitionEvent;
 import info.bioinfweb.jphyloio.events.type.EventTopologyType;
 import info.bioinfweb.jphyloio.push.JPhyloIOEventListener;
 import info.bioinfweb.libralign.model.AlignmentModel;
@@ -31,9 +32,9 @@ import info.bioinfweb.libralign.model.concatenated.ConcatenatedAlignmentModel;
 import info.bioinfweb.libralign.model.factory.AlignmentModelFactory;
 import info.bioinfweb.libralign.model.factory.NewAlignmentModelParameterMap;
 import info.bioinfweb.libralign.model.factory.StringAlignmentModelFactory;
+import info.bioinfweb.libralign.model.factory.TokenDefinition;
 import info.bioinfweb.libralign.model.factory.continuous.DoubleAlignmentModelFactory;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.EnumMap;
 import java.util.List;
@@ -267,21 +268,23 @@ public class AlignmentModelEventReader implements JPhyloIOEventListener {
 //					throw new IllegalStateException("Two global character state sets were defined in the same alignment.");
 //				}
 //				break;
-//			case SINGLE_TOKEN_DEFINITION:
-//				if ((currentModel == null) || (currentModel instanceof ConcatenatedAlignmentModel)) {
-//					SingleTokenDefinitionEvent definitionEvent = event.asSingleTokenDefinitionEvent(); 
-//					currentParameterMap.getDefinedTokens().add(
-//							new TokenDefinition(definitionEvent.getTokenName(), definitionEvent.getMeaning()));
-//					//TODO Will the character set name be needed for ConcantenatedAlignmentModels?
-//				}
-//				else {
-//					//TODO Possibly throw exception here or just ignore event.
-//				}
-//				break;
 			case TOKEN_SET_DEFINITION:
 				if (event.getType().getTopologyType().equals(EventTopologyType.START)) {
 					//TODO Handle concatenated case (Currently only the last token set is used.)
 					currentParameterMap.setCharacterStateSetType(event.asTokenSetDefinitionEvent().getSetType());
+				}
+				break;
+			case SINGLE_TOKEN_DEFINITION:
+				if (event.getType().getTopologyType().equals(EventTopologyType.START)) {
+					if ((currentModel == null) || (currentModel instanceof ConcatenatedAlignmentModel)) {
+						SingleTokenDefinitionEvent definitionEvent = event.asSingleTokenDefinitionEvent(); 
+						currentParameterMap.getDefinedTokens().add(
+								new TokenDefinition(definitionEvent.getTokenName(), definitionEvent.getMeaning()));
+						//TODO Will the character set name be needed for ConcantenatedAlignmentModels?
+					}
+					else {  // Token set definition encountered, after a model with token set was already created.
+						//TODO Possibly throw exception here or just ignore event.
+					}
 				}
 				break;
 			case SEQUENCE:
