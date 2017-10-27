@@ -380,6 +380,7 @@ test/.classpath -text svneol=unset#text/plain
 test/.project -text svneol=unset#text/plain
 test/.settings/org.eclipse.jdt.core.prefs -text svneol=unset#text/plain
 test/.settings/org.eclipse.jdt.ui.prefs -text svneol=unset#text/plain
+test/data/alignments/AdditionalDNATokens.nex -text
 test/data/charSet/CharSet.nex -text
 test/data/pherograms/Test_pel1PCR_Pel2Wdhg_PCR-7-A_1.ab1 -text
 test/data/pherograms/Test_pel1PCR_Pel2Wdhg_PCR-7-A_1.scf -text
@@ -395,6 +396,7 @@ test/src/info/bioinfweb/libralign/dataarea/DataAreaListTest.java -text svneol=un
 test/src/info/bioinfweb/libralign/dataarea/implementations/charset/CharSetEventReaderTest.java -text svneol=unset#text/plain
 test/src/info/bioinfweb/libralign/dataarea/implementations/pherogram/PherogramAlignmentModelTest.java -text svneol=unset#text/plain
 test/src/info/bioinfweb/libralign/model/implementations/PackedAlignmentModelTest.java -text svneol=unset#text/plain
+test/src/info/bioinfweb/libralign/model/io/AlignmentModelEventReaderTest.java -text svneol=unset#text/plain
 test/src/info/bioinfweb/libralign/model/utils/AlignmentModelUtilsTest.java -text svneol=unset#text/plain
 test/src/info/bioinfweb/libralign/model/utils/CharSequenceTokenScannerTest.java -text svneol=unset#text/plain
 test/src/info/bioinfweb/libralign/model/utils/indextranslation/RandomAccessIndexTranslatorTest.java -text svneol=unset#text/plain

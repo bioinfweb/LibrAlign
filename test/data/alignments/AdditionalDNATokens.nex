@@ -1,0 +1,11 @@
+#NEXUS
+
+BEGIN Characters;
+  Title someMatrix;
+  Dimensions NTax=4 NChar=7;
+  Format DataType=DNA Missing=? Gap=- Symbols=ACGT#;
+  Matrix A C#GTCAT
+         B CG-TCTT 
+         C CG-TC-T
+         D CGTCATG;
+END; 
