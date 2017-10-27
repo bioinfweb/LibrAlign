@@ -33,6 +33,7 @@ import info.bioinfweb.libralign.model.factory.BioPolymerCharAlignmentModelFactor
 import org.junit.*;
 
 
+
 public class AlignmentModelEventReaderTest {
 	@Test
 	public void testAdditionalDNATokens() throws IOException {
