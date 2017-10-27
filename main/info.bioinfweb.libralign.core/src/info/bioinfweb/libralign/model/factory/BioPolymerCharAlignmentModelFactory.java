@@ -147,8 +147,9 @@ public class BioPolymerCharAlignmentModelFactory extends AbstractAlignmentModelF
 		for (TokenDefinition tokenDefinition : parameterMap.getDefinedTokens()) {
 			String representation = tokenDefinition.getRepresentation();
 			if (representation.length() > 0) {
-				tokenSet.add(tokenDefinition.getRepresentation().charAt(0));  // Cuts off all representations longer than one character.
+				tokenSet.add(tokenDefinition.getRepresentation().charAt(0));  // Cuts off all representations longer than one character. CharacterTokenSet.tokenByRepresentation() does the same.
 			}
+			//TODO Warnings should be given, if tokens are ignored or cut.
 		}
 		
 		// Create alignment model:

@@ -37,6 +37,7 @@ import info.bioinfweb.libralign.model.tokenset.DefaultTokenSet;
  */
 public class StringAlignmentModelFactory implements AlignmentModelFactory<String> {
 	public static final int DEFAULT_AMINO_ACID_CHARACTER_STATE_COUNT = 32;  // 23 amino acids and stop are already more than 16.
+			//TODO Should this constant be defined here? It is currently not used, as it seems.
 	
 	
 	/**
