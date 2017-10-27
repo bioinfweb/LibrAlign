@@ -19,14 +19,7 @@
 package info.bioinfweb.libralign.model.io;
 
 
-import java.io.IOException;
-import java.util.Arrays;
-import java.util.Iterator;
-
-import org.semanticweb.owlapi.io.XMLUtils;
-
 import info.bioinfweb.commons.IntegerIDManager;
-import info.bioinfweb.commons.bio.CharacterSymbolMeaning;
 import info.bioinfweb.commons.bio.CharacterSymbolType;
 import info.bioinfweb.jphyloio.ReadWriteConstants;
 import info.bioinfweb.jphyloio.ReadWriteParameterMap;
@@ -38,6 +31,12 @@ import info.bioinfweb.jphyloio.events.SingleTokenDefinitionEvent;
 import info.bioinfweb.jphyloio.events.TokenSetDefinitionEvent;
 import info.bioinfweb.jphyloio.events.type.EventContentType;
 import info.bioinfweb.libralign.model.tokenset.TokenSet;
+
+import java.io.IOException;
+import java.util.Arrays;
+import java.util.Iterator;
+
+import org.semanticweb.owlapi.io.XMLUtils;
 
 
 
@@ -108,6 +107,7 @@ public class TokenSetAdapter<T> implements ObjectListDataAdapter<TokenSetDefinit
 	
 	private void writeSingleTokenDefinitionEvent(JPhyloIOEventReceiver receiver, IntegerIDManager idManager, T token) throws IOException {
 		//TODO Add constituents for ambiguity codes (Possibly model in token set? Should work in the same way, as the set of background colors is determined.)
+		//     Note that will JPhyloIO add them anyway for NeXML.
 		receiver.add(new SingleTokenDefinitionEvent(idPrefix + idManager.createNewID(), tokenSet.descriptionByToken(token), 
 					tokenSet.representationByToken(token), tokenSet.getMeaning(token), tokenSet.getSymbolType(token)));
 		//TODO Possibly add metadata (e.g. for alternative gap symbols) if that will not anyway be done in JPhyloIO in the future.
@@ -124,11 +124,7 @@ public class TokenSetAdapter<T> implements ObjectListDataAdapter<TokenSetDefinit
 		if (defaultGapToken != null) {
 			writeSingleTokenDefinitionEvent(receiver, idManager, defaultGapToken);  // Make sure the default gap token in the first in the sequence.
 		}
-		
 		T defaultMissingToken = tokenSet.getMissingInformationToken();
-		if (defaultMissingToken != null) {
-			writeSingleTokenDefinitionEvent(receiver, idManager, defaultMissingToken);  // Make sure the default missing data token in the first in the sequence.
-		}
 		
 		// The order is important. Ambiguity codes must be defined after atomic states, since they may reference them. (This is also relevant, if no constituents are defined, since JPhyloIO may add these for some formats.)
 		for (T token : tokenSet) {  // Write atomic states first.
@@ -137,6 +133,11 @@ public class TokenSetAdapter<T> implements ObjectListDataAdapter<TokenSetDefinit
 				
 				writeSingleTokenDefinitionEvent(receiver, idManager, token);
 			}
+		}
+		
+		// The missing token may reference atomic tokens and must therefore be written after them.
+		if (defaultMissingToken != null) {
+			writeSingleTokenDefinitionEvent(receiver, idManager, defaultMissingToken);  // Make sure the default missing data token in the first in the sequence.
 		}
 		
 		for (T token : tokenSet) {  // Write uncertain states that may reference atomic states later. (Uncertain states should not reference other uncertain states.)

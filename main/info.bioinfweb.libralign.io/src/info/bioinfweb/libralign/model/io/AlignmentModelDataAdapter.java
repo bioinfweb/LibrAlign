@@ -305,8 +305,8 @@ public class AlignmentModelDataAdapter<T> extends NoCharDefsNoSetsMatrixDataAdap
 	public void writeSequencePartContentData(ReadWriteParameterMap parameters, JPhyloIOEventReceiver receiver, String sequenceID, 
 			long startColumn, long endColumn) throws IOException, IllegalArgumentException {
 		
-		String modelID = modelByJPhyloIOSequenceID(sequenceID);
-		int sequenceLength = model.getSequenceLength(modelID); 
+		String modelSequenceID = modelByJPhyloIOSequenceID(sequenceID);
+		int sequenceLength = model.getSequenceLength(modelSequenceID); 
 		if (Math2.isBetween(startColumn, 0, sequenceLength) && Math2.isBetween(endColumn, startColumn, sequenceLength)) {
 			if (startColumn == 0) {
 				writeSequenceMetadata(receiver, sequenceID);
@@ -318,7 +318,7 @@ public class AlignmentModelDataAdapter<T> extends NoCharDefsNoSetsMatrixDataAdap
 					receiver.add(new SequenceTokensEvent(tokens));
 					tokens = new ArrayList<String>(MAX_TOKENS_PER_EVENT);
 				}
-				tokens.add(model.getTokenSet().representationByToken(model.getTokenAt(modelID, column)));
+				tokens.add(model.getTokenSet().representationByToken(model.getTokenAt(modelSequenceID, column)));
 			}
 			if (!tokens.isEmpty()) {
 				receiver.add(new SequenceTokensEvent(tokens));
