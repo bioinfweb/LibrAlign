@@ -39,7 +39,7 @@ public class AlignmentSubAreaIteratorTest {
 	public void test_next() {
 		AlignmentArea area = new AlignmentArea();
 		
-		AlignmentModel<Character> model = new PackedAlignmentModel<Character>(CharacterTokenSet.newDNAInstance());
+		AlignmentModel<Character> model = new PackedAlignmentModel<Character>(CharacterTokenSet.newDNAInstance(false));
 		String id1 = model.addSequence("Sequence 1");
 		model.appendTokens(id1, AlignmentModelUtils.charSequenceToTokenList("ATCGTAGATCGTAGATCGTAGATCGTAGATCGTAGATCGTAGATCGTAG", 
 				model.getTokenSet()));

@@ -38,7 +38,7 @@ public class AbstractEmptyAlignmentTest {
 		labelArea.getDataAreas().getTopAreas().add(new SequenceIndexArea(labelArea.getContentArea(), sequenceArea));
 		result.getAlignmentAreas().add(labelArea);
 		
-		AlignmentModel<Character> model = new PackedAlignmentModel<Character>(CharacterTokenSet.newNucleotideInstance()); 
+		AlignmentModel<Character> model = new PackedAlignmentModel<Character>(CharacterTokenSet.newNucleotideInstance(false)); 
 		sequenceArea.setAlignmentModel(model, false);
 		sequenceArea.getAlignmentModel().addSequence("A");
 		//model.appendToken(model.sequenceIDByName("A"), 'A');
