@@ -39,7 +39,6 @@ public class AlignmentModelEventReaderTest {
 		NexusEventReader eventReader = new NexusEventReader(new File("data/alignments/AdditionalDNATokens.nex"), new ReadWriteParameterMap());
 		try {
 			AlignmentModelEventReader modelReader = new AlignmentModelEventReader(new BioPolymerCharAlignmentModelFactory()); 
-			
 			while (eventReader.hasNextEvent()) {
 				modelReader.processEvent(eventReader, eventReader.next());
 			}
