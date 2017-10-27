@@ -38,7 +38,7 @@ import org.junit.* ;
 public class AlignmentModelUtilsTest {
 	@Test
 	public void test_reverseComplement() {
-		AlignmentModel<Character> model = new PackedAlignmentModel<Character>(CharacterTokenSet.newNucleotideInstance());
+		AlignmentModel<Character> model = new PackedAlignmentModel<Character>(CharacterTokenSet.newNucleotideInstance(false));
 		String sequenceID = model.addSequence("A");
 		model.appendTokens(sequenceID, AlignmentModelUtils.charSequenceToTokenList("ACGGT-ACT", model.getTokenSet()));
 		

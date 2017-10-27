@@ -37,7 +37,7 @@ import org.junit.*;
 public class RandomAccessIndexTranslatorTest {
 	@Test
 	public void test_degapedIndex() {
-		TokenSet<Character> tokenSet = CharacterTokenSet.newDNAInstance();
+		TokenSet<Character> tokenSet = CharacterTokenSet.newDNAInstance(false);
 		AlignmentModel<Character> model = new PackedAlignmentModel<Character>(tokenSet);
 		String id = model.addSequence("A");
 		model.appendTokens(id, AlignmentModelUtils.charSequenceToTokenList("--A-A-AA--AAA-", tokenSet));
@@ -70,7 +70,7 @@ public class RandomAccessIndexTranslatorTest {
 	
 	@Test
 	public void test_degapedIndex_onlyGaps() {
-		TokenSet<Character> tokenSet = CharacterTokenSet.newDNAInstance();
+		TokenSet<Character> tokenSet = CharacterTokenSet.newDNAInstance(false);
 		AlignmentModel<Character> model = new PackedAlignmentModel<Character>(tokenSet);
 		String id = model.addSequence("A");
 		model.appendTokens(id, AlignmentModelUtils.charSequenceToTokenList("---", tokenSet));
