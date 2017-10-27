@@ -52,8 +52,8 @@ import java.util.Map;
  * @bioinfweb.module info.bioinfweb.libralign.io
  */
 public class AlignmentModelEventReader implements JPhyloIOEventListener {
-	private final AlignmentModelFactory defaultFactory;
-	private final Map<CharacterStateSetType, AlignmentModelFactory> factoryMap;
+	private final AlignmentModelFactory<?> defaultFactory;
+	@SuppressWarnings("rawtypes") private final Map<CharacterStateSetType, AlignmentModelFactory> factoryMap;
 	private AlignmentModel<?> currentModel = null;
 	private final List<AlignmentModel<?>> completedModels = new ArrayList<AlignmentModel<?>>();
 	private String currentSequenceID = null; 
@@ -77,6 +77,7 @@ public class AlignmentModelEventReader implements JPhyloIOEventListener {
 	 * @param defaultFactory the factory to use to create new model instances for character state (token)
 	 *        set types which are not defined in the factory map
 	 */
+	@SuppressWarnings("rawtypes")
 	public AlignmentModelEventReader(AlignmentModelFactory<?> defaultFactory) {
 		this(defaultFactory, new EnumMap<CharacterStateSetType, AlignmentModelFactory>(CharacterStateSetType.class));
 	}
@@ -89,7 +90,8 @@ public class AlignmentModelEventReader implements JPhyloIOEventListener {
 	 *        which are not defined in the factory map
 	 * @param factoryMap a map of alignment model factories for different character state (token) set types
 	 */
-	public AlignmentModelEventReader(AlignmentModelFactory defaultFactory, Map<CharacterStateSetType, AlignmentModelFactory> factoryMap) {
+	@SuppressWarnings("rawtypes")
+	public AlignmentModelEventReader(AlignmentModelFactory<?> defaultFactory, Map<CharacterStateSetType, AlignmentModelFactory> factoryMap) {
 		super();
 		this.defaultFactory = defaultFactory;
 		this.factoryMap = factoryMap;
@@ -103,7 +105,7 @@ public class AlignmentModelEventReader implements JPhyloIOEventListener {
 	 * @return the default alignment model factory
 	 * @see #getFactoryMap()
 	 */
-	public AlignmentModelFactory getDefaultFactory() {
+	public AlignmentModelFactory<?> getDefaultFactory() {
 		return defaultFactory;
 	}
 
@@ -114,6 +116,7 @@ public class AlignmentModelEventReader implements JPhyloIOEventListener {
 	 * @return the map of factories
 	 * @see #getDefaultFactory()
 	 */
+	@SuppressWarnings("rawtypes")
 	public Map<CharacterStateSetType, AlignmentModelFactory> getFactoryMap() {
 		return factoryMap;
 	}
@@ -127,7 +130,7 @@ public class AlignmentModelEventReader implements JPhyloIOEventListener {
 	 *
 	 * @param factory the alignment model factory to be used for all nucleotide token set types
 	 */
-	public void setNucleotideFactories(AlignmentModelFactory factory) {
+	public void setNucleotideFactories(AlignmentModelFactory<?> factory) {
 		getFactoryMap().put(CharacterStateSetType.NUCLEOTIDE, factory);
 		getFactoryMap().put(CharacterStateSetType.DNA, factory);
 		getFactoryMap().put(CharacterStateSetType.RNA, factory);
@@ -237,6 +240,7 @@ public class AlignmentModelEventReader implements JPhyloIOEventListener {
 	}
 
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public void processEvent(JPhyloIOEventReader source, JPhyloIOEvent event) {
 		switch (event.getType().getContentType()) {
