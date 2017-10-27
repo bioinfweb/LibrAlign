@@ -19,6 +19,8 @@
 package info.bioinfweb.libralign.model.tokenset;
 
 
+import java.util.Set;
+
 import info.bioinfweb.commons.bio.CharacterStateSetType;
 import info.bioinfweb.commons.bio.SequenceUtils;
 
@@ -68,7 +70,7 @@ public class CharacterTokenSet extends AbstractTokenSet<Character> {
 	}
 	
 	
-	private static CharacterTokenSet createNucleotideInstance(CharacterStateSetType type) {
+	private static CharacterTokenSet createNucleotideInstance(CharacterStateSetType type, boolean distinguishCase) {
 		CharacterTokenSet result = new CharacterTokenSet(type);
 		result.addAll(SequenceUtils.getNucleotideCharacters());
 		if (CharacterStateSetType.DNA.equals(type)) {
@@ -77,6 +79,14 @@ public class CharacterTokenSet extends AbstractTokenSet<Character> {
 		else if (CharacterStateSetType.RNA.equals(type)) {
 			result.remove('T');
 		}
+		
+		if (distinguishCase) {
+			Character[] tokens = result.toArray(new Character[result.size()]);
+			for (int i = 0; i < tokens.length; i++) {
+				result.add(Character.toLowerCase(tokens[i]));
+			}
+		}
+		
 		result.add(SequenceUtils.GAP_CHAR);
 		result.add(SequenceUtils.MISSING_DATA_CHAR);
 		return result;
@@ -89,8 +99,8 @@ public class CharacterTokenSet extends AbstractTokenSet<Character> {
 	 * 
 	 * @return the new instance
 	 */
-	public static CharacterTokenSet newNucleotideInstance() {
-		return createNucleotideInstance(CharacterStateSetType.NUCLEOTIDE);
+	public static CharacterTokenSet newNucleotideInstance(boolean distinguishCase) {
+		return createNucleotideInstance(CharacterStateSetType.NUCLEOTIDE, distinguishCase);
 	}
 	
 	
@@ -100,8 +110,8 @@ public class CharacterTokenSet extends AbstractTokenSet<Character> {
 	 * 
 	 * @return the new instance
 	 */
-	public static CharacterTokenSet newDNAInstance() {
-		return createNucleotideInstance(CharacterStateSetType.DNA);
+	public static CharacterTokenSet newDNAInstance(boolean distinguishCase) {
+		return createNucleotideInstance(CharacterStateSetType.DNA, distinguishCase);
 	}
 	
 	
@@ -111,8 +121,8 @@ public class CharacterTokenSet extends AbstractTokenSet<Character> {
 	 * 
 	 * @return the new instance
 	 */
-	public static CharacterTokenSet newRNAInstance() {
-		return createNucleotideInstance(CharacterStateSetType.RNA);
+	public static CharacterTokenSet newRNAInstance(boolean distinguishCase) {
+		return createNucleotideInstance(CharacterStateSetType.RNA, distinguishCase);
 	}
 	
 	
@@ -127,9 +137,15 @@ public class CharacterTokenSet extends AbstractTokenSet<Character> {
 	 * 
 	 * @return the new instance
 	 */
-	public static CharacterTokenSet newAminoAcidInstance() {
+	public static CharacterTokenSet newAminoAcidInstance(boolean distinguishCase) {
 		CharacterTokenSet result = new CharacterTokenSet(CharacterStateSetType.AMINO_ACID);
-		result.addAll(SequenceUtils.getAminoAcidOneLetterCodes(true));
+		Set<Character> tokens = SequenceUtils.getAminoAcidOneLetterCodes(true);
+		result.addAll(tokens);
+		if (distinguishCase) {
+			for (Character token : tokens) {
+				result.add(Character.toLowerCase(token));
+			}
+		}
 		result.add(SequenceUtils.GAP_CHAR);
 		result.add(SequenceUtils.MISSING_DATA_CHAR);
 		return result;

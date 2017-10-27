@@ -129,17 +129,17 @@ public class BioPolymerCharAlignmentModelFactory extends AbstractAlignmentModelF
 		CharacterTokenSet tokenSet;
 		switch (parameterMap.getCharacterStateSetType()) {
 			case DNA:
-				tokenSet = CharacterTokenSet.newDNAInstance();
+				tokenSet = CharacterTokenSet.newDNAInstance(isDistinguishCase());
 				break;
 			case RNA:
-				tokenSet = CharacterTokenSet.newRNAInstance();
+				tokenSet = CharacterTokenSet.newRNAInstance(isDistinguishCase());
 				break;
 			case NUCLEOTIDE:
-				tokenSet = CharacterTokenSet.newNucleotideInstance();
+				tokenSet = CharacterTokenSet.newNucleotideInstance(isDistinguishCase());
 				break;
 			//TODO What about CONTINUES?
 			default:  // AMINO_ACID and UNKNOWN
-				tokenSet = CharacterTokenSet.newAminoAcidInstance();  // Also contains all nucleotide (ambiguity) codes.
+				tokenSet = CharacterTokenSet.newAminoAcidInstance(isDistinguishCase());  // Also contains all nucleotide (ambiguity) codes.
 				break;
 		}
 
