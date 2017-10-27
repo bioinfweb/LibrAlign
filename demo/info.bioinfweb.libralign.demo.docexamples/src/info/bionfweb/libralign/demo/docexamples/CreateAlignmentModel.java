@@ -39,7 +39,7 @@ import info.bioinfweb.libralign.model.utils.AlignmentModelUtils;
 public class CreateAlignmentModel {
 	public static void main(String[] args) {
 		// Create new model instance:
-		AlignmentModel<Character> model = new PackedAlignmentModel<Character>(CharacterTokenSet.newDNAInstance());
+		AlignmentModel<Character> model = new PackedAlignmentModel<Character>(CharacterTokenSet.newDNAInstance(false));
 		
 		// Add one sequence and add single tokens:
 		String id = model.addSequence("Seq1");

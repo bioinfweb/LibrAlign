@@ -75,7 +75,7 @@ public class BasicAlignmentAreaDemo {
 	
 	private AlignmentArea createAlignmentArea() {
 		AlignmentArea area = new AlignmentArea();
-		area.setAlignmentModel(new PackedAlignmentModel<Character>(CharacterTokenSet.newNucleotideInstance()), false);  // Define a model
+		area.setAlignmentModel(new PackedAlignmentModel<Character>(CharacterTokenSet.newNucleotideInstance(false)), false);  // Define a model
 		return area;
 	}
 }
