@@ -44,7 +44,7 @@ public class NewAction extends AbstractFileAction {
 	
 	
 	public static AlignmentModel<Character> createAlignmentModel() {
-		return new PackedAlignmentModel<Character>(CharacterTokenSet.newNucleotideInstance());
+		return new PackedAlignmentModel<Character>(CharacterTokenSet.newNucleotideInstance(false));
 	}
 
 	
