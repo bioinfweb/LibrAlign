@@ -86,7 +86,7 @@ public class OpenAction extends AbstractFileAction {
 			try {
 				if (getOpenFileChooser().showOpenDialog(getEditor().getFrame()) == JFileChooser.APPROVE_OPTION) {
 					JPhyloIOEventReader eventReader = factory.guessReader(getOpenFileChooser().getSelectedFile(), new ReadWriteParameterMap());
-					AlignmentDataReader mainReader = new AlignmentDataReader(eventReader, new BioPolymerCharAlignmentModelFactory());
+					AlignmentDataReader mainReader = new AlignmentDataReader(eventReader, new BioPolymerCharAlignmentModelFactory(null/*'?'*/, false));  // All unknown tokens (which are not nucleotide, amino acid, ambiguity or gap) will be set to '?'.
 					mainReader.readAll();
 
 					// File does not contain any alignments
