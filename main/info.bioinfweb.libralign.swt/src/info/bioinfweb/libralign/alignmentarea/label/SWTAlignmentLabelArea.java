@@ -91,17 +91,15 @@ public class SWTAlignmentLabelArea extends SWTAlignmentRowsArea<AlignmentLabelSu
 	 */
 	@Override
 	public void reinsertSubelements() {
-		if (getIndependentComponent().getOwner().getContentArea().hasToolkitComponent()) {
-			removeAll();
-			SWTComponentFactory factory = SWTComponentFactory.getInstance();
-			Iterator<AlignmentLabelSubArea> iterator = getIndependentComponent().subAreaIterator();
-			while (iterator.hasNext()) {
-				final AlignmentLabelSubArea subArea = iterator.next();
-				factory.getSWTComponent(subArea, this, SWT.NONE);
-				subArea.assignSize();
-			}
-			getIndependentComponent().assignSize(); 
-			layout(); // Needed to reposition elements if this methods is called again after the construction of the instance (e.g. when a new sequence was added).
+		removeAll();
+		SWTComponentFactory factory = SWTComponentFactory.getInstance();
+		Iterator<AlignmentLabelSubArea> iterator = getIndependentComponent().subAreaIterator();
+		while (iterator.hasNext()) {
+			final AlignmentLabelSubArea subArea = iterator.next();
+			factory.getSWTComponent(subArea, this, SWT.NONE);
+			subArea.assignSize();
 		}
+		getIndependentComponent().assignSize(); 
+		layout(); // Needed to reposition elements if this methods is called again after the construction of the instance (e.g. when a new sequence was added).
 	}
 }
