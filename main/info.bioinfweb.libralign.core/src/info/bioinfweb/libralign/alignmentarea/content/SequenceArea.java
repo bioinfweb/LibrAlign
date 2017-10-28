@@ -108,6 +108,8 @@ public class SequenceArea extends AlignmentSubArea {
 		}
 		
 		event.getGraphics().setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+		event.getGraphics().setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_LCD_HRGB);  //TODO Is this optimal also for other monitor types?
+		event.getGraphics().setRenderingHint(RenderingHints.KEY_FRACTIONALMETRICS, RenderingHints.VALUE_FRACTIONALMETRICS_ON);
 		
 		double x = getOwner().paintXByColumn(firstIndex);
 		PaintSettings paintSettings = getOwner().getOwner().getPaintSettings();

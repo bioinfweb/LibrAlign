@@ -44,8 +44,10 @@ public abstract class TextLabelArea extends AlignmentLabelSubArea {
 	public void paint(TICPaintEvent e) {
 		Graphics2D g  = e.getGraphics();
 		g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+		g.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_LCD_HRGB);  //TODO Is this optimal also for other monitor types?
+		g.setRenderingHint(RenderingHints.KEY_FRACTIONALMETRICS, RenderingHints.VALUE_FRACTIONALMETRICS_ON);
 
-  		// Paint background:
+		// Paint background:
 		g.setColor(SystemColor.menu);
 		g.fill(e.getRectangle());
 		
