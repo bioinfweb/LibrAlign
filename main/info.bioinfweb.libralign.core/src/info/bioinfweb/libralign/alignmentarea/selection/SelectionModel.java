@@ -460,7 +460,7 @@ public class SelectionModel {
 	 */
 	protected void fireSelectionChanged() {
 		SelectionChangeEvent e = new SelectionChangeEvent(this);
-        for (SelectionListener listener : selectionListeners.toArray(new SelectionListener[selectionListeners.size()])) {  // Copying the list is necessary to allow listeners to remove themselves from the list without a ConcurrentModificationException being thrown.
+		for (SelectionListener listener : selectionListeners.toArray(new SelectionListener[selectionListeners.size()])) {  // Copying the list is necessary to allow listeners to remove themselves from the list without a ConcurrentModificationException being thrown.
 			listener.selectionChanged(e);
 		}
 	}

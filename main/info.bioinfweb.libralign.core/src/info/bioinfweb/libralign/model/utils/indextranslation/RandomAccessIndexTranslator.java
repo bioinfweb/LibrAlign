@@ -29,12 +29,12 @@ import info.bioinfweb.libralign.model.AlignmentModel;
 
 /**
  * Instance of this tool class allow fast translation between aligned and unaligned indices of tokens in an {@link AlignmentModel}. 
- * A set of tokens to be considered as gaps can be defined using .
+ * A set of tokens to be considered as gaps can be defined using the {@code gapTokens} constructor parameter.
  * <p>
- * In contrast to {@link SequentialAccessIndexTranslator} this class stores the mapping for all positions of all sequences to allow fast
- * random access, while {@link SequentialAccessIndexTranslator} calculates the mapping in each call with a runtime proportional to the 
- * distance between the indices used in two subsequent calls. Therefore this implementation is faster for random access but uses
- * more memory. 
+ * In contrast to {@link SequentialAccessIndexTranslator} this class stores the mapping for all positions of all sequences to 
+ * allow fast random access, while {@link SequentialAccessIndexTranslator} calculates the mapping in each call with a runtime 
+ * proportional to the distance between the indices used in two subsequent calls. Therefore this implementation is faster for 
+ * random access but uses more memory. 
  * 
  * @author Ben St&ouml;ver
  * @since 0.5.0
