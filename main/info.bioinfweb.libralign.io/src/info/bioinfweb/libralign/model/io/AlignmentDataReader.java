@@ -197,7 +197,7 @@ public class AlignmentDataReader {
 	}
 	
 	
-	private JPhyloIOEvent processNextEvent() throws Exception {
+	protected JPhyloIOEvent processNextEvent() throws Exception {
 		if (eventReader.hasNextEvent()) {
 			JPhyloIOEvent event = eventReader.next();
 
