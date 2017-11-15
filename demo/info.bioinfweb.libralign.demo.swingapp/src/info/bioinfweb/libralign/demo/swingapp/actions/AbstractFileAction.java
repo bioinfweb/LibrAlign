@@ -92,8 +92,8 @@ public abstract class AbstractFileAction extends AbstractAlignmentEditorAction {
 	protected boolean promptFileName() {
 		boolean result = (getFileChooser().showSaveDialog(getEditor().getFrame()) == JFileChooser.APPROVE_OPTION);
 		if (result) {
-	    	getEditor().setFile(getFileChooser().getSelectedFile());
-	    	getEditor().setFormat(((JPhyloIOContentExtensionFileFilter)getFileChooser().getFileFilter()).getFormatID());
+			getEditor().setFile(getFileChooser().getSelectedFile());
+			getEditor().setFormat(((JPhyloIOContentExtensionFileFilter)getFileChooser().getFileFilter()).getFormatID());
 		}
 		return result;
 	}
