@@ -19,6 +19,7 @@
 package info.bioinfweb.libralign.dataarea.implementations.charset;
 
 
+import info.bioinfweb.commons.graphics.GraphicsUtils;
 import info.bioinfweb.libralign.alignmentarea.AlignmentArea;
 import info.bioinfweb.libralign.alignmentarea.content.AlignmentContentArea;
 import info.bioinfweb.libralign.alignmentarea.content.AlignmentPaintEvent;
@@ -32,7 +33,10 @@ import info.bioinfweb.libralign.model.events.SequenceChangeEvent;
 import info.bioinfweb.libralign.model.events.SequenceRenamedEvent;
 import info.bioinfweb.libralign.model.events.TokenChangeEvent;
 import info.bioinfweb.libralign.multiplealignments.MultipleAlignmentsContainer;
+import info.bioinfweb.tic.input.TICMouseAdapter;
+import info.bioinfweb.tic.input.TICMouseEvent;
 
+import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.SystemColor;
 import java.awt.geom.Rectangle2D;
@@ -44,7 +48,7 @@ import java.util.Set;
 
 /**
  * A data area displaying different character sets associated with the current alignment, as they are e.g. defined
- * in Nexus files.
+ * in <i>Nexus</i> files.
  * 
  * @author Ben St&ouml;ver
  * @since 0.2.0
@@ -54,6 +58,7 @@ public class CharSetArea extends DataArea {
 	
 	
 	private CharSetDataModel model;
+	private int selectedIndex = -1;
 	
 	
 	/**
@@ -69,6 +74,23 @@ public class CharSetArea extends DataArea {
 	public CharSetArea(AlignmentContentArea owner, AlignmentArea labeledAlignmentArea, CharSetDataModel model) {
 		super(owner, labeledAlignmentArea);
 		this.model = model;
+		
+		addMouseListener(new TICMouseAdapter() {
+			@Override
+			public boolean mousePressed(TICMouseEvent event) {
+				if (event.getClickCount() == 1) {
+					if (event.isMouseButton1Down()) {
+						setSelectedIndex((int)(event.getComponentY() / getLabeledAlignmentArea().getPaintSettings().getTokenHeight()));
+						return true;
+					}
+					else if (event.isMouseButton3Down()) {
+						setSelectedIndex(-1);
+						return true;
+					}
+				}
+				return false;
+			}
+		});
 	}
 
 
@@ -93,6 +115,19 @@ public class CharSetArea extends DataArea {
 	 */
 	public CharSetDataModel getModel() {
 		return model;
+	}
+
+
+	public int getSelectedIndex() {
+		return selectedIndex;
+	}
+
+
+	public void setSelectedIndex(int selectedIndex) {
+		if (this.selectedIndex != selectedIndex) {
+			this.selectedIndex = selectedIndex;
+			repaint();
+		}
 	}
 
 
@@ -125,18 +160,31 @@ public class CharSetArea extends DataArea {
 		PaintSettings paintSettings = getLabeledAlignmentArea().getPaintSettings();
 		final double borderHeight = paintSettings.getTokenHeight() * BORDER_FRACTION;
 		final double height = paintSettings.getTokenHeight() - 2 * borderHeight;
+		int lineIndex = 0;
 		while (iterator.hasNext()) {
 			CharSet charSet = iterator.next();
-			g.setColor(charSet.getColor());
+			Color charSetColor = charSet.getColor();
+			
+			// Paint selection:
+			if (lineIndex == getSelectedIndex()) {
+				g.setColor(paintSettings.getSelectionColor());
+				g.fill(new Rectangle2D.Double(event.getRectangle().getMinX(), y, event.getRectangle().getMaxX(), paintSettings.getTokenHeight()));
+				charSetColor = GraphicsUtils.blend(charSetColor, paintSettings.getSelectionColor());
+			}
+			
+			// Paint contained columns:
+			g.setColor(charSetColor);
 			double x = contentArea.paintXByColumn(firstIndex);
-			for (int index = firstIndex; index <= lastIndex; index++) {
-				double width = paintSettings.getTokenWidth(index);
-				if (charSet.contains(index)) {
+			for (int columnIndex = firstIndex; columnIndex <= lastIndex; columnIndex++) {
+				double width = paintSettings.getTokenWidth(columnIndex);
+				if (charSet.contains(columnIndex)) {
 					g.fill(new Rectangle2D.Double(x, y + borderHeight, width, height));
 				}
 				x += width;
 			}
+			
 			y += paintSettings.getTokenHeight();
+			lineIndex++;
 		}
 	}
 
