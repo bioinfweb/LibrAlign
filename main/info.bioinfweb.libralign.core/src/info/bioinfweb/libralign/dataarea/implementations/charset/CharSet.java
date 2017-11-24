@@ -24,6 +24,9 @@ import java.util.HashSet;
 import java.util.Set;
 
 import info.bioinfweb.commons.collections.NonOverlappingIntervalList;
+import info.bioinfweb.commons.collections.SimpleSequenceInterval;
+import info.bioinfweb.libralign.dataarea.implementations.charset.events.CharSetColorChangeEvent;
+import info.bioinfweb.libralign.dataarea.implementations.charset.events.CharSetColumnChangeEvent;
 import info.bioinfweb.libralign.dataarea.implementations.charset.events.CharSetRenamedEvent;
 
 
@@ -32,6 +35,7 @@ public class CharSet extends NonOverlappingIntervalList {
 	private String name;
 	private Color color;
 	private Set<CharSetDataModel> models = new HashSet<CharSetDataModel>();
+	private boolean isRemoving = false;
 	
 	
 	public CharSet(String name, Color color) {
@@ -54,7 +58,7 @@ public class CharSet extends NonOverlappingIntervalList {
 			this.name = name;
 			
 			for (CharSetDataModel model : models) {
-				//model.fireAfterCharSetRenamed(new CharSetRenamedEvent(model, true, , this, previousName));
+				model.fireAfterCharSetRenamed(new CharSetRenamedEvent(model, true, null, this, previousName));  // The ID is unknown here and could only be found out by searching the whole model.
 			}
 		}
 	}
@@ -66,8 +70,74 @@ public class CharSet extends NonOverlappingIntervalList {
 
 
 	public void setColor(Color color) {
-		//TODO Inform models
-		this.color = color;
+		if (this.color != color) {
+			Color previousColor = this.color;
+			this.color = color;
+			
+			for (CharSetDataModel model : models) {
+				model.fireAfterCharSetColorChanged(new CharSetColorChangeEvent(model, true, null, this, previousColor));  // The ID is unknown here and could only be found out by searching the whole model.
+			}
+		}
+	}
+
+
+	@Override
+	public boolean add(int firstPos, int lastPos) {
+		boolean result = super.add(firstPos, lastPos);
+		
+		if (result) {
+			for (CharSetDataModel model : models) {
+				model.fireAfterCharSetColumnChange(new CharSetColumnChangeEvent(model, true, null, this, true, firstPos, lastPos));  // The ID is unknown here and could only be found out by searching the whole model.
+			}
+		}
+		return result;
+	}
+
+
+	@Override
+	public boolean remove(Object o) {
+		if (isRemoving) {
+			return super.remove(o);
+		}
+		else {
+			isRemoving = true;
+			try {
+				boolean result = super.remove(o);
+				if (result) {
+					SimpleSequenceInterval interval = (SimpleSequenceInterval)o;  // If o would have another type, result could not have been true.
+					for (CharSetDataModel model : models) {
+						model.fireAfterCharSetColumnChange(new CharSetColumnChangeEvent(model, true, null, this, false, interval.getFirstPos(), interval.getLastPos()));  // The ID is unknown here and could only be found out by searching the whole model.
+					}
+				}
+				return result;
+			}
+			finally {
+				isRemoving = false;
+			}
+		}
+	}
+
+
+	@Override
+	public boolean remove(int firstPos, int lastPos) {
+		if (isRemoving) {
+			return super.remove(firstPos, lastPos);
+		}
+		else {
+			isRemoving = true;
+			try {
+				boolean result = super.remove(firstPos, lastPos);
+				if (result) {
+					for (CharSetDataModel model : models) {
+						model.fireAfterCharSetColumnChange(new CharSetColumnChangeEvent(model, true, null, this, false, firstPos, lastPos));  // The ID is unknown here and could only be found out by searching the whole model.
+					}
+				}
+				return result;
+			}
+			finally {
+				isRemoving = false;
+			}
+		}
 	}
 
 

@@ -43,18 +43,9 @@ public class CharSetDataModelChangeEvent extends ChangeEvent {
 	
 	public CharSetDataModelChangeEvent(CharSetDataModel source, boolean lastEvent, String charSetID, CharSet charSet) {
 		super(source);
-		
-		if (charSetID == null) {
-			throw new IllegalArgumentException("The character set ID must not be null.");
-		}
-		else if (charSet == null) {
-			throw new IllegalArgumentException("The character set must not be null.");
-		}
-		else {
-			this.lastEvent = lastEvent;
-			this.charSetID = charSetID;
-			this.charSet = charSet;
-		}
+		this.lastEvent = lastEvent;
+		this.charSetID = charSetID;
+		this.charSet = charSet;
 	}
 
 
@@ -81,8 +72,11 @@ public class CharSetDataModelChangeEvent extends ChangeEvent {
 
 	/**
 	 * Returns the ID of the affected character set used by the associated model.
+	 * <p>
+	 * If the ID is unknown, only {@link #getCharSet()} can be used to find out which character set is 
+	 * affected. 
 	 * 
-	 * @return the ID of the character set, never {@code null}
+	 * @return the ID of the character set or {@code null} if the ID is unknown
 	 */
 	public String getCharSetID() {
 		return charSetID;
