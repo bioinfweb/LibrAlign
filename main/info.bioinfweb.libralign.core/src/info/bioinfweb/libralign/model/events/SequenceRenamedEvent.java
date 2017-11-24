@@ -52,4 +52,16 @@ public class SequenceRenamedEvent<T> extends AlignmentModelChangeEvent<T> {
 	public String getNewName() {
 		return newName;
 	}
+
+
+	@Override
+	public SequenceRenamedEvent<T> cloneWithNewSource(AlignmentModel<T> source) {
+		return (SequenceRenamedEvent<T>)super.cloneWithNewSource(source);
+	}
+
+
+	@Override
+	public SequenceRenamedEvent<T> clone() {
+		return (SequenceRenamedEvent<T>)super.clone();
+	}
 }

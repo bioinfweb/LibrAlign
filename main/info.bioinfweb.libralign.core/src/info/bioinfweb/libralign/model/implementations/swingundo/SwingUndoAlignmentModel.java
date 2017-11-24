@@ -32,7 +32,11 @@ import info.bioinfweb.libralign.model.AlignmentModelChangeListener;
 import info.bioinfweb.libralign.model.AlignmentModel;
 import info.bioinfweb.libralign.model.AlignmentModelWriteType;
 import info.bioinfweb.libralign.model.AlignmentModelView;
+import info.bioinfweb.libralign.model.events.SequenceChangeEvent;
+import info.bioinfweb.libralign.model.events.SequenceRenamedEvent;
+import info.bioinfweb.libralign.model.events.TokenChangeEvent;
 import info.bioinfweb.libralign.model.exception.AlignmentSourceNotWritableException;
+import info.bioinfweb.libralign.model.implementations.AbstractAlignmentModel;
 import info.bioinfweb.libralign.model.implementations.swingundo.edits.LibrAlignSwingAlignmentEdit;
 import info.bioinfweb.libralign.model.implementations.swingundo.edits.sequence.SwingAddSequenceEdit;
 import info.bioinfweb.libralign.model.implementations.swingundo.edits.sequence.SwingConcreteAddSequenceEdit;
@@ -75,8 +79,8 @@ import info.bioinfweb.libralign.model.tokenset.TokenSet;
  * 
  * @param <T> - the type of sequence elements (tokens) the implementing provider object works with
  */
-public class SwingUndoAlignmentModel<T> implements AlignmentModel<T>, 
-    AlignmentModelView<T, T> {
+public class SwingUndoAlignmentModel<T> extends AbstractAlignmentModel<T> 
+		implements AlignmentModel<T>, AlignmentModelView<T, T> {
 	
 	protected AlignmentModel<T> underlyingModel;
 	private UndoManager undoManager;
@@ -111,6 +115,31 @@ public class SwingUndoAlignmentModel<T> implements AlignmentModel<T>,
 			this.underlyingModel = underlyingModel;
 			this.undoManager = undoManager;
 			this.editFactory = editFactory;
+			
+			@SuppressWarnings("rawtypes")
+			final SwingUndoAlignmentModel newModel = this;
+			underlyingModel.getChangeListeners().add(new AlignmentModelChangeListener() {
+				@SuppressWarnings("unchecked")
+				@Override
+				public <V> void afterTokenChange(TokenChangeEvent<V> e) {
+					fireAfterTokenChange((TokenChangeEvent<T>)e.cloneWithNewSource(newModel));
+				}
+				
+				@SuppressWarnings("unchecked")
+				@Override
+				public <V> void afterSequenceRenamed(SequenceRenamedEvent<V> e) {
+					fireAfterSequenceRenamed((SequenceRenamedEvent<T>)e.cloneWithNewSource(newModel));
+				}
+				
+				@SuppressWarnings("unchecked")
+				@Override
+				public <V> void afterSequenceChange(SequenceChangeEvent<V> e) {
+					fireAfterSequenceChange((SequenceChangeEvent<T>)e.cloneWithNewSource(newModel));
+				}
+				
+				@Override
+				public <V, W> void afterProviderChanged(AlignmentModel<V> previous, AlignmentModel<W> current) {}  // Forwarding this event does not make sence, since the underlying model should not be contained in any alignment area. If it anyway is, it would be independet of the alignment area this model is contained in.
+			});
 		}
 	}
 	
@@ -401,11 +430,5 @@ public class SwingUndoAlignmentModel<T> implements AlignmentModel<T>,
 	@Override
 	public int getSequenceCount() {
 		return underlyingModel.getSequenceCount();
-	}
-
-
-	@Override
-	public Set<AlignmentModelChangeListener> getChangeListeners() {
-		return underlyingModel.getChangeListeners();
 	}
 }

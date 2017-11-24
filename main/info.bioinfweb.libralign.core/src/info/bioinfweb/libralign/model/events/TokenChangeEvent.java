@@ -189,4 +189,16 @@ public class TokenChangeEvent<T> extends SequenceChangeEvent<T> {
 			return null;
 		}
 	}
+	
+	
+	@Override
+	public TokenChangeEvent<T> cloneWithNewSource(AlignmentModel<T> source) {
+		return (TokenChangeEvent<T>)super.cloneWithNewSource(source);
+	}
+
+
+	@Override
+	public TokenChangeEvent<T> clone() {
+		return (TokenChangeEvent<T>)super.clone();
+	}
 }

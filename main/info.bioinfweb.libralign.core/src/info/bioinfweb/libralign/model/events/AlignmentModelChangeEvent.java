@@ -20,6 +20,8 @@ package info.bioinfweb.libralign.model.events;
 
 
 import info.bioinfweb.libralign.model.AlignmentModel;
+import info.bioinfweb.tic.TICComponent;
+import info.bioinfweb.tic.input.TICEvent;
 
 import java.util.EventObject;
 
@@ -34,7 +36,7 @@ import java.util.EventObject;
  * 
  * @param <T> - the type of sequence elements (tokens) the implementing provider object works with
  */
-public class AlignmentModelChangeEvent<T> extends EventObject {
+public class AlignmentModelChangeEvent<T> extends EventObject implements Cloneable {
 	private String sequenceID;
 
 	
@@ -68,5 +70,31 @@ public class AlignmentModelChangeEvent<T> extends EventObject {
 	 */
 	public String getSequenceID() {
 		return sequenceID;
+	}
+	
+	
+  /**
+   * Creates a copy of this event with all properties set to identical values but with a 
+   * different source.
+   * 
+   * @param source the source model to be used for the created copy
+   * @return the modified copy of this instance
+   */
+  public AlignmentModelChangeEvent<T> cloneWithNewSource(AlignmentModel<T> source) {
+  	AlignmentModelChangeEvent<T> result = clone();
+  	result.source = source;
+  	return result;
+  }
+
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public AlignmentModelChangeEvent<T> clone() {
+		try {
+			return (AlignmentModelChangeEvent<T>)super.clone();
+		}
+		catch (CloneNotSupportedException e) {
+			throw new InternalError(e);
+		}
 	}
 }

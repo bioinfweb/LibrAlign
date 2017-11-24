@@ -56,4 +56,16 @@ public class SequenceChangeEvent<T> extends AlignmentModelChangeEvent<T> {
 	public ListChangeType getType() {
 		return type;
 	}
+
+
+	@Override
+	public SequenceChangeEvent<T> cloneWithNewSource(AlignmentModel<T> source) {
+		return (SequenceChangeEvent<T>)super.cloneWithNewSource(source);
+	}
+
+
+	@Override
+	public SequenceChangeEvent<T> clone() {
+		return (SequenceChangeEvent<T>)super.clone();
+	}
 }
