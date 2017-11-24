@@ -19,9 +19,19 @@
 package info.bioinfweb.libralign.dataarea.implementations.charset;
 
 
-import org.apache.commons.collections4.map.ListOrderedMap;
-
+import info.bioinfweb.libralign.dataarea.implementations.charset.events.CharSetChangeEvent;
+import info.bioinfweb.libralign.dataarea.implementations.charset.events.CharSetColorChangeEvent;
+import info.bioinfweb.libralign.dataarea.implementations.charset.events.CharSetColumnChangeEvent;
+import info.bioinfweb.libralign.dataarea.implementations.charset.events.CharSetRenamedEvent;
 import info.bioinfweb.libralign.model.data.DataModel;
+
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Set;
+
+import org.apache.commons.collections4.map.ListOrderedMap;
 
 
 
@@ -33,6 +43,9 @@ import info.bioinfweb.libralign.model.data.DataModel;
  * @since 0.4.0
  */
 public class CharSetDataModel extends ListOrderedMap<String, CharSet> implements DataModel {
+	private Set<CharSetDataModelListener> listeners = new HashSet<CharSetDataModelListener>();
+	
+	
 	public CharSet getByName(String name) {
 		for (CharSet charSet : valueList()) {
 			if (charSet.getName().equals(name)) {
@@ -40,5 +53,95 @@ public class CharSetDataModel extends ListOrderedMap<String, CharSet> implements
 			}
 		}
 		return null;
+	}
+	
+
+	@Override
+	public CharSet put(String key, CharSet value) {
+		// All other methods that add content delegate here.
+
+		value.getModels().add(this);
+		CharSet result = super.put(key, value);
+		if (result == null) {
+			fireAfterCharSetChange(new CharSetChangeEvent(this, true, key, value, true));
+		}
+		else {
+			fireAfterCharSetChange(new CharSetChangeEvent(this, true, key, value, result));
+		}
+		return result;
+	}
+
+
+	@Override
+	public CharSet remove(Object key) {
+		// remove(index) and valueList().subList().clear() delegate here.
+		
+		CharSet result = super.remove(key);
+		if (result != null) {
+			result.getModels().remove(this);
+			fireAfterCharSetChange(new CharSetChangeEvent(this, true, key.toString(), result, false));
+		}
+		return result;
+	}
+
+
+	@Override
+	public void clear() {
+		// valueList().clear() delegates here.
+		
+		Map<String, CharSet> map = new HashMap<String, CharSet>();
+		map.putAll(this);
+		super.clear();
+		
+		Iterator<String> iterator = map.keySet().iterator();
+		while (iterator.hasNext()) {
+			String id = iterator.next();
+			fireAfterCharSetChange(new CharSetChangeEvent(this, !iterator.hasNext(), id, map.get(id), false));
+		}
+	}
+
+
+	public Set<CharSetDataModelListener> getChangeListeners() {
+		return listeners;
+	}
+	
+	
+	/**
+	 * Informs all listeners that a character set has been inserted, removed or replaced.
+	 */
+	protected void fireAfterCharSetChange(CharSetChangeEvent e) {
+		for (CharSetDataModelListener listener : getChangeListeners().toArray(new CharSetDataModelListener[getChangeListeners().size()])) {  // Copying the list is necessary to allow listeners to remove themselves from the list without a ConcurrentModificationException being thrown.
+			listener.afterCharSetChange(e);
+		}
+	}
+
+
+	/**
+	 * Informs all listeners that a character set has been renamed.
+	 */
+	protected void fireAfterCharSetRenamed(CharSetRenamedEvent e) {
+		for (CharSetDataModelListener listener : getChangeListeners().toArray(new CharSetDataModelListener[getChangeListeners().size()])) {  // Copying the list is necessary to allow listeners to remove themselves from the list without a ConcurrentModificationException being thrown.
+			listener.afterCharSetRenamed(e);
+		}
+	}
+
+
+	/**
+	 * Informs all listeners that one or more neighboring columns have been added to or removed from a character set.
+	 */
+	protected void fireAfterCharSetColumnChange(CharSetColumnChangeEvent e) {
+		for (CharSetDataModelListener listener : getChangeListeners().toArray(new CharSetDataModelListener[getChangeListeners().size()])) {  // Copying the list is necessary to allow listeners to remove themselves from the list without a ConcurrentModificationException being thrown.
+			listener.afterCharSetColumnChange(e);
+		}
+	}
+
+
+	/**
+	 * Informs all listeners that the color of a character set has been changed.
+	 */
+	protected void fireAfterCharSetColorChanged(CharSetColorChangeEvent e) {
+		for (CharSetDataModelListener listener : getChangeListeners().toArray(new CharSetDataModelListener[getChangeListeners().size()])) {  // Copying the list is necessary to allow listeners to remove themselves from the list without a ConcurrentModificationException being thrown.
+			listener.afterCharSetColorChange(e);
+		}
 	}
 }

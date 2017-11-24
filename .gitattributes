@@ -163,7 +163,14 @@ main/info.bioinfweb.libralign.core/src/info/bioinfweb/libralign/dataarea/impleme
 main/info.bioinfweb.libralign.core/src/info/bioinfweb/libralign/dataarea/implementations/charset/CharSet.java -text svneol=unset#text/plain
 main/info.bioinfweb.libralign.core/src/info/bioinfweb/libralign/dataarea/implementations/charset/CharSetArea.java -text svneol=unset#text/plain
 main/info.bioinfweb.libralign.core/src/info/bioinfweb/libralign/dataarea/implementations/charset/CharSetDataModel.java -text svneol=unset#text/plain
+main/info.bioinfweb.libralign.core/src/info/bioinfweb/libralign/dataarea/implementations/charset/CharSetDataModelListener.java -text svneol=unset#text/plain
 main/info.bioinfweb.libralign.core/src/info/bioinfweb/libralign/dataarea/implementations/charset/CharSetNameArea.java -text svneol=unset#text/plain
+main/info.bioinfweb.libralign.core/src/info/bioinfweb/libralign/dataarea/implementations/charset/events/CharSetChangeEvent.java -text svneol=unset#text/plain
+main/info.bioinfweb.libralign.core/src/info/bioinfweb/libralign/dataarea/implementations/charset/events/CharSetColorChangeEvent.java -text svneol=unset#text/plain
+main/info.bioinfweb.libralign.core/src/info/bioinfweb/libralign/dataarea/implementations/charset/events/CharSetColumnChangeEvent.java -text svneol=unset#text/plain
+main/info.bioinfweb.libralign.core/src/info/bioinfweb/libralign/dataarea/implementations/charset/events/CharSetDataModelChangeEvent.java -text svneol=unset#text/plain
+main/info.bioinfweb.libralign.core/src/info/bioinfweb/libralign/dataarea/implementations/charset/events/CharSetRenamedEvent.java -text svneol=unset#text/plain
+main/info.bioinfweb.libralign.core/src/info/bioinfweb/libralign/dataarea/implementations/charset/events/package-info.java -text svneol=unset#text/plain
 main/info.bioinfweb.libralign.core/src/info/bioinfweb/libralign/dataarea/implementations/charset/package-info.java -text svneol=unset#text/plain
 main/info.bioinfweb.libralign.core/src/info/bioinfweb/libralign/dataarea/implementations/package-info.java -text svneol=unset#text/plain
 main/info.bioinfweb.libralign.core/src/info/bioinfweb/libralign/dataarea/implementations/pherogram/PherogramArea.java -text svneol=unset#text/plain

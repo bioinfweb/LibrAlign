@@ -20,14 +20,18 @@ package info.bioinfweb.libralign.dataarea.implementations.charset;
 
 
 import java.awt.Color;
+import java.util.HashSet;
+import java.util.Set;
 
 import info.bioinfweb.commons.collections.NonOverlappingIntervalList;
+import info.bioinfweb.libralign.dataarea.implementations.charset.events.CharSetRenamedEvent;
 
 
 
 public class CharSet extends NonOverlappingIntervalList {
 	private String name;
 	private Color color;
+	private Set<CharSetDataModel> models = new HashSet<CharSetDataModel>();
 	
 	
 	public CharSet(String name, Color color) {
@@ -36,6 +40,8 @@ public class CharSet extends NonOverlappingIntervalList {
 		this.color = color;
 	}
 
+	
+	//TODO Which inherited methods need to be overwritten? (Which of the remove() methods.)
 
 	public String getName() {
 		return name;
@@ -43,7 +49,14 @@ public class CharSet extends NonOverlappingIntervalList {
 	
 	
 	public void setName(String name) {
-		this.name = name;
+		if (this.name != name) {
+			String previousName = this.name;
+			this.name = name;
+			
+			for (CharSetDataModel model : models) {
+				//model.fireAfterCharSetRenamed(new CharSetRenamedEvent(model, true, , this, previousName));
+			}
+		}
 	}
 
 
@@ -53,6 +66,21 @@ public class CharSet extends NonOverlappingIntervalList {
 
 
 	public void setColor(Color color) {
+		//TODO Inform models
 		this.color = color;
+	}
+
+
+	/**
+	 * Returns a set of model classes that contain this character set.
+	 * <p>
+	 * This property is only meant for internal use in <i>LibrAlign</i> and should not be used 
+	 * in application code directly and is not visible there. It is used to inform model classes
+	 * of property changes of an contained character set.
+	 * 
+	 * @return the set of models containing this instance
+	 */
+	protected Set<CharSetDataModel> getModels() {
+		return models;
 	}
 }

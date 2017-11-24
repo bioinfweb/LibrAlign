@@ -20,10 +20,8 @@ package info.bioinfweb.libralign.model.events;
 
 
 import info.bioinfweb.libralign.model.AlignmentModel;
-import info.bioinfweb.tic.TICComponent;
-import info.bioinfweb.tic.input.TICEvent;
 
-import java.util.EventObject;
+import javax.swing.event.ChangeEvent;
 
 
 
@@ -36,7 +34,7 @@ import java.util.EventObject;
  * 
  * @param <T> - the type of sequence elements (tokens) the implementing provider object works with
  */
-public class AlignmentModelChangeEvent<T> extends EventObject implements Cloneable {
+public class AlignmentModelChangeEvent<T> extends ChangeEvent implements Cloneable {
 	private String sequenceID;
 
 	
