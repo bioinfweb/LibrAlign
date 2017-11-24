@@ -28,6 +28,10 @@ import info.bioinfweb.libralign.alignmentarea.label.AlignmentLabelSubArea;
 import info.bioinfweb.libralign.alignmentarea.paintsettings.PaintSettings;
 import info.bioinfweb.libralign.dataarea.DataArea;
 import info.bioinfweb.libralign.dataarea.DataAreaListType;
+import info.bioinfweb.libralign.dataarea.implementations.charset.events.CharSetChangeEvent;
+import info.bioinfweb.libralign.dataarea.implementations.charset.events.CharSetColorChangeEvent;
+import info.bioinfweb.libralign.dataarea.implementations.charset.events.CharSetColumnChangeEvent;
+import info.bioinfweb.libralign.dataarea.implementations.charset.events.CharSetRenamedEvent;
 import info.bioinfweb.libralign.model.AlignmentModel;
 import info.bioinfweb.libralign.model.events.SequenceChangeEvent;
 import info.bioinfweb.libralign.model.events.SequenceRenamedEvent;
@@ -74,6 +78,30 @@ public class CharSetArea extends DataArea {
 	public CharSetArea(AlignmentContentArea owner, AlignmentArea labeledAlignmentArea, CharSetDataModel model) {
 		super(owner, labeledAlignmentArea);
 		this.model = model;
+		
+		model.getChangeListeners().add(new CharSetDataModelListener() {
+			@Override
+			public void afterCharSetRenamed(CharSetRenamedEvent e) {
+				getOwner().getOwner().revalidate();  //TODO Does this new method work sufficiently?
+				repaint();
+			}
+			
+			@Override
+			public void afterCharSetColumnChange(CharSetColumnChangeEvent e) {
+				repaint();
+			}
+			
+			@Override
+			public void afterCharSetColorChange(CharSetColorChangeEvent e) {
+				repaint();
+			}
+			
+			@Override
+			public void afterCharSetChange(CharSetChangeEvent e) {
+				getOwner().getOwner().revalidate();  //TODO Does this new method work sufficiently?
+				repaint();
+			}
+		});
 		
 		addMouseListener(new TICMouseAdapter() {
 			@Override

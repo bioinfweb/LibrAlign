@@ -632,6 +632,24 @@ public class AlignmentArea extends ScrollingTICComponent implements AlignmentMod
 	}
 	
 	
+	/**
+	 * Recalculates the size of this and all subcomponents. If this area is contained within a 
+	 * {@link MultipleAlignmentsContainer} this container and all its subcomponents will do the
+	 * same.
+	 * <p>
+	 * This method can be used e.g. by data areas to make sure that their owning alignment area
+	 * adjusts to their content changes that possibly result in size changes.
+	 */
+	public void revalidate() {
+		if (hasContainer()) {
+			getContainer().assignSizeToAll();
+		}
+		else {
+			assignSizeToAll();
+		}
+		//TODO Are additional repaint operations necessary?
+	}
+	
 	
 	/**
 	 * Reinserts subelements in the contained label and content areas if they already have created a toolkit specific component.
