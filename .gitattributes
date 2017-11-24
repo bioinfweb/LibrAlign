@@ -400,6 +400,7 @@ test/src/info/bioinfweb/libralign/alignmentarea/content/AlignmentSubAreaIterator
 test/src/info/bioinfweb/libralign/alignmentarea/order/SequenceOrderTest.java -text svneol=unset#text/plain
 test/src/info/bioinfweb/libralign/alignmentarea/paintsettings/TokenPainterMapTest.java -text svneol=unset#text/plain
 test/src/info/bioinfweb/libralign/dataarea/DataAreaListTest.java -text svneol=unset#text/plain
+test/src/info/bioinfweb/libralign/dataarea/implementations/charset/CharSetDataModelTest.java -text svneol=unset#text/plain
 test/src/info/bioinfweb/libralign/dataarea/implementations/charset/CharSetEventReaderTest.java -text svneol=unset#text/plain
 test/src/info/bioinfweb/libralign/dataarea/implementations/pherogram/PherogramAlignmentModelTest.java -text svneol=unset#text/plain
 test/src/info/bioinfweb/libralign/model/implementations/PackedAlignmentModelTest.java -text svneol=unset#text/plain
