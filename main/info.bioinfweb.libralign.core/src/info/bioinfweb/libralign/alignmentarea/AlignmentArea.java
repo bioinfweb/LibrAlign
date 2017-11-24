@@ -641,6 +641,7 @@ public class AlignmentArea extends ScrollingTICComponent implements AlignmentMod
 	 * adjusts to their content changes that possibly result in size changes.
 	 */
 	public void revalidate() {
+		getLabelArea().setLocalMaxWidthRecalculateToAll();
 		if (hasContainer()) {
 			getContainer().assignSizeToAll();
 		}

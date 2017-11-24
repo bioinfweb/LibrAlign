@@ -82,24 +82,32 @@ public class CharSetArea extends DataArea {
 		model.getChangeListeners().add(new CharSetDataModelListener() {
 			@Override
 			public void afterCharSetRenamed(CharSetRenamedEvent e) {
-				getOwner().getOwner().revalidate();  //TODO Does this new method work sufficiently?
-				repaint();
+				if (e.isLastEvent()) {
+					getOwner().getOwner().revalidate();  //TODO Does this new method work sufficiently?
+					repaint();
+				}
 			}
 			
 			@Override
 			public void afterCharSetColumnChange(CharSetColumnChangeEvent e) {
-				repaint();
+				if (e.isLastEvent()) {
+					repaint();
+				}
 			}
 			
 			@Override
 			public void afterCharSetColorChange(CharSetColorChangeEvent e) {
-				repaint();
+				if (e.isLastEvent()) {
+					repaint();
+				}
 			}
 			
 			@Override
 			public void afterCharSetChange(CharSetChangeEvent e) {
-				getOwner().getOwner().revalidate();  //TODO Does this new method work sufficiently?
-				repaint();
+				if (e.isLastEvent()) {
+					getOwner().getOwner().revalidate();  //TODO Does this new method work sufficiently?
+					repaint();
+				}
 			}
 		});
 		
