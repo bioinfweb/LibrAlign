@@ -89,8 +89,7 @@ public class AlignmentActionProvider<T> {
 				String sequenceID = getAlignmentArea().getSequenceOrder().idByIndex(row);
 				int sequenceLength = getModel().getSequenceLength(sequenceID);
 				if (selection.getFirstColumn() < sequenceLength) {
-					getModel().removeTokensAt(sequenceID,
-							selection.getFirstColumn(), Math.min(sequenceLength, selection.getFirstColumn() + selection.getWidth()));
+					getModel().removeTokensAt(sequenceID, selection.getFirstColumn(), Math.min(sequenceLength, selection.getLastColumn()));
 				}
 			}
 			selection.setNewCursorColumn(selection.getFirstColumn());

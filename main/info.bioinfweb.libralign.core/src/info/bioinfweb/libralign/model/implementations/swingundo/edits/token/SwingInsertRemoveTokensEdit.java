@@ -82,8 +82,7 @@ public abstract class SwingInsertRemoveTokensEdit<T> extends SwingTokenEdit<T> {
 			int endIndex) {
 
 		super(provider, sequenceID, beginIndex, null);
-		
-		int length = beginIndex - endIndex;
+		int length = endIndex - beginIndex;
 		tokens = new ArrayList<T>(length);
 		for (int i = 0; i < length; i++) {
 			((ArrayList<T>)tokens).add(getModel().getTokenAt(sequenceID, beginIndex + i));
