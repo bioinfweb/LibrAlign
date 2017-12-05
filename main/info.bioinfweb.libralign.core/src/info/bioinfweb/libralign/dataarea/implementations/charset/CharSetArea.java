@@ -158,6 +158,12 @@ public class CharSetArea extends DataArea {
 		return model;
 	}
 
+	
+	public void setModel(CharSetDataModel model) {
+		this.model = model;
+		//TODO Do event listeners need to be informed or moved?
+	}
+
 
 	public int getSelectedIndex() {
 		return selectedIndex;

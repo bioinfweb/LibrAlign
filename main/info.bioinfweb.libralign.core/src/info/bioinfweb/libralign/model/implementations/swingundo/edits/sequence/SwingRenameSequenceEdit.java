@@ -35,13 +35,14 @@ import info.bioinfweb.libralign.model.implementations.swingundo.SwingUndoAlignme
  * @see SwingUndoAlignmentModel
  */
 public class SwingRenameSequenceEdit<T> extends SwingSequenceEdit<T> {
-  private String newName;
+	private String newName;
 	private String oldName;
   
   
-  public SwingRenameSequenceEdit(SwingUndoAlignmentModel<T> provider, String sequenceID, String newName) {
-		super(provider, sequenceID);
+  public SwingRenameSequenceEdit(SwingUndoAlignmentModel<T> model, String sequenceID, String newName) {
+		super(model, sequenceID);
 		this.newName = newName;
+		this.oldName = model.sequenceNameByID(sequenceID);
 	}
 
 
