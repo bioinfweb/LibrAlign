@@ -19,6 +19,8 @@
 package info.bioinfweb.libralign.alignmentarea.selection;
 
 
+import info.bioinfweb.commons.events.GenericEventObject;
+
 import java.awt.EventQueue;
 import java.util.ArrayList;
 import java.util.List;
@@ -40,9 +42,9 @@ import java.util.List;
  * @since 0.3.0
  */
 public class SelectionSynchronizer {
-	private final SelectionListener LISTENER = new SelectionListener() {
+	private final SelectionListener<GenericEventObject<SelectionModel>> LISTENER = new SelectionListener<GenericEventObject<SelectionModel>>() {
 				@Override
-				public void selectionChanged(SelectionChangeEvent event) {
+				public void selectionChanged(GenericEventObject<SelectionModel> event) {
 					if (enabled && !isAdopting) {  // Avoid processing events that have been fired from this method. (Not thread save.)
 						isAdopting = true;
 						try {

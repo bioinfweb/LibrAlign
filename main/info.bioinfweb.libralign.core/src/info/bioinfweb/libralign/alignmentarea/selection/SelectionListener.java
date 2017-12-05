@@ -26,15 +26,19 @@ import java.util.EventListener;
 /**
  * This interface should be implemented by classes that want to track changes of the selection
  * represented by an {@link SelectionModel} object.
+ * <p>
+ * Additionally, data area implementations may make use of this interface to allow tracking 
+ * changes of their selection. 
  * 
  * @author Ben St&ouml;ver
  * @since 0.0.0
+ * @param <E> the type of event fired on a selection change
  */
-public interface SelectionListener extends EventListener {
+public interface SelectionListener<E> extends EventListener {
 	/**
-	 * This method is called every time the selected area changes.
+	 * This method is called every time the selection changes.
 	 * 
-	 * @param event - an object containing further information on this event
+	 * @param event an object containing further information on this event
 	 */
-	public void selectionChanged(SelectionChangeEvent event);
+	public void selectionChanged(E event);
 }

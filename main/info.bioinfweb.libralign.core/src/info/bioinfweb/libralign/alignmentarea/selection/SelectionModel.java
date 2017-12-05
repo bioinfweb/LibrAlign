@@ -19,6 +19,7 @@
 package info.bioinfweb.libralign.alignmentarea.selection;
 
 
+import info.bioinfweb.commons.events.GenericEventObject;
 import info.bioinfweb.libralign.alignmentarea.AlignmentArea;
 import info.bioinfweb.libralign.model.AlignmentModel;
 
@@ -44,7 +45,8 @@ public class SelectionModel {
   private boolean cursorOnly = true;
   private int cursorStartRow = 0;
   private int cursorStartColumn = 0;
-	private List<SelectionListener> selectionListeners = new ArrayList<SelectionListener>(16);
+	private List<SelectionListener<GenericEventObject<SelectionModel>>> selectionListeners = 
+			new ArrayList<SelectionListener<GenericEventObject<SelectionModel>>>(16);
 
 
 	/**
@@ -439,7 +441,7 @@ public class SelectionModel {
 	 * @param listener - the listener object to be notified in the future
 	 * @return {@code true} (as specified by {@link Collection#add(Object)})
 	 */
-	public boolean addSelectionListener(SelectionListener listener) {
+	public boolean addSelectionListener(SelectionListener<GenericEventObject<SelectionModel>> listener) {
 		return selectionListeners.add(listener);
 	}
 
@@ -450,7 +452,7 @@ public class SelectionModel {
 	 * @param listener - the listener to be removed
 	 * @return {@code true} if this list contained the specified element
 	 */
-	public boolean removeSelectionListener(SelectionListener listener) {
+	public boolean removeSelectionListener(SelectionListener<GenericEventObject<SelectionModel>> listener) {
 		return selectionListeners.remove(listener);
 	}
 
@@ -458,9 +460,10 @@ public class SelectionModel {
 	/**
 	 * Informs all listeners that the selection changed.
 	 */
+	@SuppressWarnings("unchecked")
 	protected void fireSelectionChanged() {
-		SelectionChangeEvent e = new SelectionChangeEvent(this);
-		for (SelectionListener listener : selectionListeners.toArray(new SelectionListener[selectionListeners.size()])) {  // Copying the list is necessary to allow listeners to remove themselves from the list without a ConcurrentModificationException being thrown.
+		GenericEventObject<SelectionModel> e = new GenericEventObject<SelectionModel>(this);
+		for (SelectionListener<GenericEventObject<SelectionModel>> listener : selectionListeners.toArray(new SelectionListener[selectionListeners.size()])) {  // Copying the list is necessary to allow listeners to remove themselves from the list without a ConcurrentModificationException being thrown.
 			listener.selectionChanged(e);
 		}
 	}

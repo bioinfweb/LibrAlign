@@ -135,7 +135,6 @@ main/info.bioinfweb.libralign.core/src/info/bioinfweb/libralign/alignmentarea/ro
 main/info.bioinfweb.libralign.core/src/info/bioinfweb/libralign/alignmentarea/rowsarea/package-info.java -text svneol=unset#text/plain
 main/info.bioinfweb.libralign.core/src/info/bioinfweb/libralign/alignmentarea/selection/AlignmentCursor.java -text svneol=unset#text/plain
 main/info.bioinfweb.libralign.core/src/info/bioinfweb/libralign/alignmentarea/selection/OneDimensionalSelection.java -text svneol=unset#text/plain
-main/info.bioinfweb.libralign.core/src/info/bioinfweb/libralign/alignmentarea/selection/SelectionChangeEvent.java -text svneol=unset#text/plain
 main/info.bioinfweb.libralign.core/src/info/bioinfweb/libralign/alignmentarea/selection/SelectionDimension.java -text svneol=unset#text/plain
 main/info.bioinfweb.libralign.core/src/info/bioinfweb/libralign/alignmentarea/selection/SelectionListener.java -text svneol=unset#text/plain
 main/info.bioinfweb.libralign.core/src/info/bioinfweb/libralign/alignmentarea/selection/SelectionModel.java -text svneol=unset#text/plain

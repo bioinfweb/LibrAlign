@@ -19,6 +19,7 @@
 package info.bioinfweb.libralign.dataarea.implementations.charset;
 
 
+import info.bioinfweb.commons.events.GenericEventObject;
 import info.bioinfweb.commons.graphics.GraphicsUtils;
 import info.bioinfweb.libralign.alignmentarea.AlignmentArea;
 import info.bioinfweb.libralign.alignmentarea.content.AlignmentContentArea;
@@ -26,6 +27,7 @@ import info.bioinfweb.libralign.alignmentarea.content.AlignmentPaintEvent;
 import info.bioinfweb.libralign.alignmentarea.label.AlignmentLabelArea;
 import info.bioinfweb.libralign.alignmentarea.label.AlignmentLabelSubArea;
 import info.bioinfweb.libralign.alignmentarea.paintsettings.PaintSettings;
+import info.bioinfweb.libralign.alignmentarea.selection.SelectionListener;
 import info.bioinfweb.libralign.dataarea.DataArea;
 import info.bioinfweb.libralign.dataarea.DataAreaListType;
 import info.bioinfweb.libralign.dataarea.implementations.charset.events.CharSetChangeEvent;
@@ -45,6 +47,7 @@ import java.awt.Graphics2D;
 import java.awt.SystemColor;
 import java.awt.geom.Rectangle2D;
 import java.util.EnumSet;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 
@@ -63,6 +66,8 @@ public class CharSetArea extends DataArea {
 	
 	private CharSetDataModel model;
 	private int selectedIndex = -1;
+	private Set<SelectionListener<GenericEventObject<CharSetArea>>> selectionListeners = 
+			new HashSet<SelectionListener<GenericEventObject<CharSetArea>>>();
 	
 	
 	/**
@@ -163,6 +168,7 @@ public class CharSetArea extends DataArea {
 		if (this.selectedIndex != selectedIndex) {
 			this.selectedIndex = selectedIndex;
 			repaint();
+			fireSelectionChanged();
 		}
 	}
 
@@ -270,5 +276,18 @@ public class CharSetArea extends DataArea {
 	@Override
 	protected AlignmentLabelSubArea createLabelSubArea(AlignmentLabelArea owner) {
 		return new CharSetNameArea(owner, this);
+	}
+
+
+	protected void fireSelectionChanged() {
+		GenericEventObject<CharSetArea> event = new GenericEventObject<CharSetArea>(this);
+		for (SelectionListener<GenericEventObject<CharSetArea>> listener : selectionListeners) {
+			listener.selectionChanged(event);
+		}
+	}
+	
+	
+	public Set<SelectionListener<GenericEventObject<CharSetArea>>> getSelectionListeners() {
+		return selectionListeners;
 	}
 }

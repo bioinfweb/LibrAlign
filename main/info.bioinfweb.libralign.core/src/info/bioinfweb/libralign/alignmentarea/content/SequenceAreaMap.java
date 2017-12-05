@@ -19,8 +19,9 @@
 package info.bioinfweb.libralign.alignmentarea.content;
 
 
-import info.bioinfweb.libralign.alignmentarea.selection.SelectionChangeEvent;
+import info.bioinfweb.commons.events.GenericEventObject;
 import info.bioinfweb.libralign.alignmentarea.selection.SelectionListener;
+import info.bioinfweb.libralign.alignmentarea.selection.SelectionModel;
 import info.bioinfweb.libralign.model.AlignmentModel;
 import info.bioinfweb.libralign.multiplealignments.ToolkitSpecificMultipleAlignmentsContainer;
 
@@ -37,7 +38,7 @@ import java.util.TreeMap;
  * @author Ben St&ouml;ver
  * @since 0.0.0
  */
-public class SequenceAreaMap extends TreeMap<String, SequenceArea> implements SelectionListener {
+public class SequenceAreaMap extends TreeMap<String, SequenceArea> implements SelectionListener<GenericEventObject<SelectionModel>> {
 	private AlignmentContentArea owner;
 	private CursorSelectionInputListener selectionInputListener;
 
@@ -106,7 +107,7 @@ public class SequenceAreaMap extends TreeMap<String, SequenceArea> implements Se
 	
 	
 	@Override
-	public void selectionChanged(SelectionChangeEvent e) {
+	public void selectionChanged(GenericEventObject<SelectionModel> e) {
 		repaintSequenceAreas();  // Just repainting the areas in the selection is not enough, because other might have just become deselected.
 		//TODO Painting of unnecessary areas and cells should be avoided here. This call is maybe responsible for flickering in SWT.
 		//     In the future only cells that were previously and are newly selected should be repainted. (Is flickering in SWT currently still an issue?)

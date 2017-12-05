@@ -19,6 +19,7 @@
 package info.bioinfweb.libralign.alignmentarea;
 
 
+import info.bioinfweb.commons.events.GenericEventObject;
 import info.bioinfweb.libralign.actions.AlignmentActionProvider;
 import info.bioinfweb.libralign.alignmentarea.content.AlignmentContentArea;
 import info.bioinfweb.libralign.alignmentarea.content.AlignmentSubArea;
@@ -31,7 +32,6 @@ import info.bioinfweb.libralign.alignmentarea.paintsettings.PaintSettingsEvent;
 import info.bioinfweb.libralign.alignmentarea.paintsettings.PaintSettingsListener;
 import info.bioinfweb.libralign.alignmentarea.paintsettings.TokenPainterReplacedEvent;
 import info.bioinfweb.libralign.alignmentarea.paintsettings.ZoomChangeEvent;
-import info.bioinfweb.libralign.alignmentarea.selection.SelectionChangeEvent;
 import info.bioinfweb.libralign.alignmentarea.selection.SelectionListener;
 import info.bioinfweb.libralign.alignmentarea.selection.SelectionModel;
 import info.bioinfweb.libralign.dataarea.DataArea;
@@ -217,9 +217,9 @@ public class AlignmentArea extends ScrollingTICComponent implements AlignmentMod
 		}
 		
 		selection = new SelectionModel(this);
-		selection.addSelectionListener(new SelectionListener() {
+		selection.addSelectionListener(new SelectionListener<GenericEventObject<SelectionModel>>() {
 					@Override
-					public void selectionChanged(SelectionChangeEvent event) {
+					public void selectionChanged(GenericEventObject<SelectionModel> event) {
 						scrollCursorToVisible();
 					}
 				});
