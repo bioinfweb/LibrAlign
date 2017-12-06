@@ -19,12 +19,16 @@
 package info.bioinfweb.libralign.dataarea.implementations.charset;
 
 
+import java.awt.Color;
+
 import info.bioinfweb.commons.graphics.UniqueColorLister;
 import info.bioinfweb.jphyloio.JPhyloIOEventReader;
 import info.bioinfweb.jphyloio.events.CharacterSetIntervalEvent;
 import info.bioinfweb.jphyloio.events.JPhyloIOEvent;
 import info.bioinfweb.jphyloio.events.LinkedLabeledIDEvent;
+import info.bioinfweb.jphyloio.events.meta.URIOrStringIdentifier;
 import info.bioinfweb.jphyloio.events.type.EventTopologyType;
+import info.bioinfweb.jphyloio.objecttranslation.ObjectTranslator;
 import info.bioinfweb.libralign.model.data.NoArgDataModelFactory;
 import info.bioinfweb.libralign.model.io.AbstractDataModelEventReader;
 import info.bioinfweb.libralign.model.io.AlignmentDataReader;
@@ -40,12 +44,17 @@ import info.bioinfweb.libralign.model.io.DataModelReadInfo;
  * global model not associated with any alignment model. This global model is returned when the end
  * of the event stream was reached (if any according events occurred).
  * <p>
- * For parsing Nexus files that would mean that all character sets defined in {@code SETS} blocks
- * are stored in the global model. Additionally the supported MrBayes {@code MIXED} data type 
- * extension may lead to character set events within alignments. These are than stored in separate
- * models, because different sets may be defined for each alignment block in the file. If this
- * MrBayes extension is not used all character sets (also from separate {@code SETS} blocks
- * will be stored in one global model, which will be the only returned instance.
+ * For parsing <i>Nexus</i> files that would mean that all character sets defined in {@code SETS} 
+ * blocks are stored in the global model. Additionally the supported <i>MrBayes</i> {@code MIXED} 
+ * data type extension may lead to character set events within alignments. These are than stored in 
+ * separate models, because different sets may be defined for each alignment block in the file. If 
+ * this <i>MrBayes</i> extension is not used all character sets (also from separate {@code SETS} 
+ * blocks will be stored in one global model, which will be the only returned instance.
+ * <p>
+ * This reader is able to read metadata that specifies the color associated with a character set.
+ * Note that an {@link ObjectTranslator} for the respective data type that creates {@link Color}
+ * objects must be used. Otherwise the metadata will be ignored. Colors will be generated for sets
+ * for which no metadata could be read. 
  *
  * @bioinfweb.module info.bioinfweb.libralign.io
  * @author Ben St&ouml;ver
@@ -53,16 +62,27 @@ import info.bioinfweb.libralign.model.io.DataModelReadInfo;
  */
 public class CharSetEventReader extends AbstractDataModelEventReader<CharSetDataModel> {
 	//TODO If models are stored associated or globally should not be determined by the position of their events in the stream, 
-	//     but by their linked matrix.
-	//TODO Multiple global models should be possible, if start events with different IDs that do not link a matrix are encountered. 
+	//     but by their linked matrix. This way SETS blocks from Nexus may also be interpreted correctly, if they use LINK commands.
+	//TODO Multiple global models should be possible, if start events with different IDs that do not link a matrix are encountered.
+	//TODO Read color metadata as the data adapter writes them.
 	
 	private CharSetDataModel globalModel = null;
 	private LinkedLabeledIDEvent currentStartEvent = null;
+	
+	private URIOrStringIdentifier colorPredicate;
+	private boolean isReadingColor;
+	private Color currentColor = null;
 	private UniqueColorLister colorLister = new UniqueColorLister();
 	
 	
-	public CharSetEventReader(AlignmentDataReader mainReader) {
+	public CharSetEventReader(AlignmentDataReader mainReader, URIOrStringIdentifier colorPredicate) {
 		super(mainReader, new NoArgDataModelFactory<CharSetDataModel>(CharSetDataModel.class));
+		this.colorPredicate = colorPredicate;
+	}
+
+
+	public CharSetEventReader(AlignmentDataReader mainReader) {
+		this(mainReader, null);
 	}
 
 
@@ -77,9 +97,31 @@ public class CharSetEventReader extends AbstractDataModelEventReader<CharSetData
 			case CHARACTER_SET:
 				if (event.getType().getTopologyType().equals(EventTopologyType.START)) {
 					currentStartEvent = event.asLinkedLabeledIDEvent();
+					currentColor = null;
 				}
 				else {
 					currentStartEvent = null;
+				}
+				break;
+			case LITERAL_META:
+				isReadingColor = false;
+				if (event.getType().getTopologyType().equals(EventTopologyType.START) && 
+						event.asLiteralMetadataEvent().getPredicate().equalsStringOrURI(colorPredicate)) {
+						// Will also return false if a respective event is found and colorPredicate is null.
+					
+					isReadingColor = true;
+				}
+				
+				break;
+			case LITERAL_META_CONTENT:
+				if (isReadingColor) {
+					Object value = event.asLiteralMetadataContentEvent().getObjectValue();
+					if (value instanceof Color) {
+						currentColor = (Color)value;
+					}
+					else {
+						//TODO Log warning?
+					}
 				}
 				break;
 			case CHARACTER_SET_INTERVAL:
@@ -102,7 +144,10 @@ public class CharSetEventReader extends AbstractDataModelEventReader<CharSetData
 				CharacterSetIntervalEvent intervalEvent = event.asCharacterSetIntervalEvent();
 				CharSet charSet = model.get(currentStartEvent.getID());
 				if (charSet == null) {
-					charSet = new CharSet(currentStartEvent.getLabel(), colorLister.generateNext());  //TODO Create default name if label is null?
+					if (currentColor == null) {
+						currentColor = colorLister.generateNext();
+					}
+					charSet = new CharSet(currentStartEvent.getLabel(), currentColor);  //TODO Create default name if label is null?
 					model.put(currentStartEvent.getID(), charSet);
 				}
 				charSet.add((int)intervalEvent.getStart(), (int)intervalEvent.getEnd() - 1);  //TODO Refactor NonOverlappingIntervalList so that end index is also behind the interval.
