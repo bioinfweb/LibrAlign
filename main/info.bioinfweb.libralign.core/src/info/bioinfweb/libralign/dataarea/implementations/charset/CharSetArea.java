@@ -19,6 +19,7 @@
 package info.bioinfweb.libralign.dataarea.implementations.charset;
 
 
+import info.bioinfweb.commons.Math2;
 import info.bioinfweb.commons.events.GenericEventObject;
 import info.bioinfweb.commons.graphics.GraphicsUtils;
 import info.bioinfweb.libralign.alignmentarea.AlignmentArea;
@@ -80,66 +81,74 @@ public class CharSetArea extends DataArea {
 	 *        placed in a different alignment area than the sequence data in a scenario with a
 	 *        {@link MultipleAlignmentsContainer}.) 
 	 * @param model the model providing the character set data
+	 * @throws IllegalArgumentException if {@code model} is {@code null}
 	 */
 	public CharSetArea(AlignmentContentArea owner, AlignmentArea labeledAlignmentArea, CharSetDataModel model) {
 		super(owner, labeledAlignmentArea);
-		this.model = model;
-		
-		modelListener = new CharSetDataModelListener() {
-			@Override
-			public void afterCharSetRenamed(CharSetRenamedEvent e) {
-				if (e.isLastEvent()) {
+		if (model == null) {
+			throw new IllegalArgumentException("The model must not be null.");
+		}
+		else {
+			this.model = model;
+			
+			modelListener = new CharSetDataModelListener() {
+				@Override
+				public void afterCharSetRenamed(CharSetRenamedEvent e) {
+					if (e.isLastEvent()) {
+						getOwner().getOwner().revalidate();
+						repaint();
+					}
+				}
+				
+				@Override
+				public void afterCharSetColumnChange(CharSetColumnChangeEvent e) {
+					if (e.isLastEvent()) {
+						repaint();
+					}
+				}
+				
+				@Override
+				public void afterCharSetColorChange(CharSetColorChangeEvent e) {
+					if (e.isLastEvent()) {
+						repaint();
+					}
+				}
+				
+				@Override
+				public void afterCharSetChange(CharSetChangeEvent e) {
+					if (e.isLastEvent()) {
+						checkSelectedIndex();
+						getOwner().getOwner().revalidate();
+						repaint();
+					}
+				}
+	
+				@Override
+				public void afterModelChanged(CharSetDataModel previous, CharSetDataModel current) {
+					checkSelectedIndex();
 					getOwner().getOwner().revalidate();
 					repaint();
 				}
-			}
+			};
+			model.getChangeListeners().add(modelListener);
 			
-			@Override
-			public void afterCharSetColumnChange(CharSetColumnChangeEvent e) {
-				if (e.isLastEvent()) {
-					repaint();
-				}
-			}
-			
-			@Override
-			public void afterCharSetColorChange(CharSetColorChangeEvent e) {
-				if (e.isLastEvent()) {
-					repaint();
-				}
-			}
-			
-			@Override
-			public void afterCharSetChange(CharSetChangeEvent e) {
-				if (e.isLastEvent()) {
-					getOwner().getOwner().revalidate();
-					repaint();
-				}
-			}
-
-			@Override
-			public void afterModelChanged(CharSetDataModel previous, CharSetDataModel current) {
-				getOwner().getOwner().revalidate();
-				repaint();
-			}
-		};
-		model.getChangeListeners().add(modelListener);
-		
-		addMouseListener(new TICMouseAdapter() {
-			@Override
-			public boolean mousePressed(TICMouseEvent event) {
-				if (event.getClickCount() == 1) {
-					if (event.isMouseButton1Down()) {
-						setSelectedIndex((int)(event.getComponentY() / getLabeledAlignmentArea().getPaintSettings().getTokenHeight()));
-						return true;
+			addMouseListener(new TICMouseAdapter() {
+				@Override
+				public boolean mousePressed(TICMouseEvent event) {
+					if (event.getClickCount() == 1) {
+						if (event.isMouseButton1Down()) {
+							setSelectedIndex((int)(event.getComponentY() / getLabeledAlignmentArea().getPaintSettings().getTokenHeight()));
+							return true;
+						}
+						else if (event.isMouseButton3Down()) {
+							setSelectedIndex(-1);
+							return true;
+						}
 					}
-					else if (event.isMouseButton3Down()) {
-						setSelectedIndex(-1);
-						return true;
-					}
+					return false;
 				}
-				return false;
-			}
-		});
+			});
+		}
 	}
 
 
@@ -167,40 +176,54 @@ public class CharSetArea extends DataArea {
 	}
 
 	
+	/**
+	 * Changes the model instance that is displayed by this area.
+	 * 
+	 * @param model the new model
+	 * @param moveListeners Specify {@code true} here if all listers registered to the current model should be 
+	 *        moved to the new model or {@code false} otherwise
+	 * @return the previous model
+	 * @throws IllegalArgumentException if {@code model} is {@code null}
+	 */
 	public CharSetDataModel setModel(CharSetDataModel model, boolean moveListeners) {
-		CharSetDataModel result = this.model;
-		if (!model.equals(this.model)) {
-			if (this.model != null) {
-				if (moveListeners) {  // Move all listeners
-					model.getChangeListeners().addAll(this.model.getChangeListeners());
-					this.model.getChangeListeners().clear();
-				}
-				else {  // Move this instance as the listener anyway:
-					this.model.getChangeListeners().remove(modelListener);
-					model.getChangeListeners().add(modelListener);
-				}
-			}
-			
-			this.model = model;
-			
-      // Fire events for listener move after the process finished
-			if (this.model != null) {
-				if (!this.model.getChangeListeners().contains(modelListener)) {  // Add this object as a listener if it was not already moved from the previous provider.
-					this.model.getChangeListeners().add(modelListener);
-				}
-				
-				if (moveListeners) {
-					Iterator<CharSetDataModelListener> iterator = this.model.getChangeListeners().iterator();
-					while (iterator.hasNext()) {
-						iterator.next().afterModelChanged(result, this.model);
+		if (model == null) {
+			throw new IllegalArgumentException("The model must not be null");
+		}
+		else {
+			CharSetDataModel result = this.model;
+			if (!model.equals(this.model)) {
+				if (this.model != null) {
+					if (moveListeners) {  // Move all listeners
+						model.getChangeListeners().addAll(this.model.getChangeListeners());
+						this.model.getChangeListeners().clear();
+					}
+					else {  // Move this instance as the listener anyway:
+						this.model.getChangeListeners().remove(modelListener);
+						model.getChangeListeners().add(modelListener);
 					}
 				}
-				else {
-					modelListener.afterModelChanged(result, this.model);
+				
+				this.model = model;
+				
+	      // Fire events for listener move after the process finished
+				if (this.model != null) {
+					if (!this.model.getChangeListeners().contains(modelListener)) {  // Add this object as a listener if it was not already moved from the previous provider.
+						this.model.getChangeListeners().add(modelListener);
+					}
+					
+					if (moveListeners) {
+						Iterator<CharSetDataModelListener> iterator = this.model.getChangeListeners().iterator();
+						while (iterator.hasNext()) {
+							iterator.next().afterModelChanged(result, this.model);
+						}
+					}
+					else {
+						modelListener.afterModelChanged(result, this.model);
+					}
 				}
 			}
+			return result;
 		}
-		return result;
 	}
 
 
@@ -210,10 +233,25 @@ public class CharSetArea extends DataArea {
 
 
 	public void setSelectedIndex(int selectedIndex) {
-		if (this.selectedIndex != selectedIndex) {
-			this.selectedIndex = selectedIndex;
-			repaint();
-			fireSelectionChanged();
+		if ((selectedIndex == -1) || Math2.isBetween(selectedIndex, 0, model.size() - 1)) {
+			if (this.selectedIndex != selectedIndex) {
+				this.selectedIndex = selectedIndex;
+				repaint();
+				fireSelectionChanged();
+			}
+		}
+		else {
+			throw new IllegalArgumentException("The index " + selectedIndex + " does not refer to a valid line in this area.");
+		}
+	}
+	
+	
+	private void checkSelectedIndex() {
+		if (model.size() > 0) {
+			selectedIndex = Math.min(selectedIndex, model.size() - 1);
+		}
+		else {
+			selectedIndex = -1;
 		}
 	}
 
