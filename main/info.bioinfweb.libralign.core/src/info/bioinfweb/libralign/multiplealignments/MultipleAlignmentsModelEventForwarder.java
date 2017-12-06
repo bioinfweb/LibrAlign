@@ -83,7 +83,7 @@ public class MultipleAlignmentsModelEventForwarder implements AlignmentModelChan
 
 
 	@Override
-	public <T, U> void afterProviderChanged(AlignmentModel<T> previous, AlignmentModel<U> current) {
+	public <T, U> void afterModelChanged(AlignmentModel<T> previous, AlignmentModel<U> current) {
 		previous.getChangeListeners().remove(this);
 		if (!current.getChangeListeners().contains(this)) {
 			current.getChangeListeners().add(this);
@@ -91,7 +91,7 @@ public class MultipleAlignmentsModelEventForwarder implements AlignmentModelChan
 
 		for (AlignmentArea alignmentArea : getOwner().getAlignmentAreas()) {
 			if ((current != null) && !current.equals(alignmentArea.getAlignmentModel())) {
-				alignmentArea.afterProviderChanged(previous, current);
+				alignmentArea.afterModelChanged(previous, current);
 			}
 		}
 	}

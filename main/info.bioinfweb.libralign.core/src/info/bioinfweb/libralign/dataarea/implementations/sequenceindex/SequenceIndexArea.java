@@ -251,7 +251,7 @@ public class SequenceIndexArea extends DataArea {
 
 
 	@Override
-	public <T, U> void afterProviderChanged(AlignmentModel<T> previous,	AlignmentModel<U> current) {
+	public <T, U> void afterModelChanged(AlignmentModel<T> previous,	AlignmentModel<U> current) {
 		assignSize();
 		repaint();  // In case the size did not change, but the space before the alignment did.
 	}

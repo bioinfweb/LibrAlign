@@ -138,7 +138,7 @@ public class SwingUndoAlignmentModel<T> extends AbstractAlignmentModel<T>
 				}
 				
 				@Override
-				public <V, W> void afterProviderChanged(AlignmentModel<V> previous, AlignmentModel<W> current) {}  // Forwarding this event does not make sence, since the underlying model should not be contained in any alignment area. If it anyway is, it would be independet of the alignment area this model is contained in.
+				public <V, W> void afterModelChanged(AlignmentModel<V> previous, AlignmentModel<W> current) {}  // Forwarding this event does not make sence, since the underlying model should not be contained in any alignment area. If it anyway is, it would be independet of the alignment area this model is contained in.
 			});
 		}
 	}

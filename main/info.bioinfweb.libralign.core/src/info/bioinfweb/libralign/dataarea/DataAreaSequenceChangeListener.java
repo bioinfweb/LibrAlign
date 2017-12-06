@@ -125,13 +125,13 @@ public class DataAreaSequenceChangeListener implements AlignmentModelChangeListe
 			AlignmentModel<U> current) {
 
         for (DataArea listener : list.toArray(new DataArea[list.size()])) {  // Copying the list is necessary to allow listeners to remove themselves from the list without a ConcurrentModificationException being thrown.
-			listener.afterProviderChanged(previous, current);
+			listener.afterModelChanged(previous, current);
 		}
 	}
 
 
 	@Override
-	public <T, U> void afterProviderChanged(AlignmentModel<T> previous,
+	public <T, U> void afterModelChanged(AlignmentModel<T> previous,
 			AlignmentModel<U> current) {
 
 		fireAfterProviderChanged(getOwner().getTopAreas(), previous, current);

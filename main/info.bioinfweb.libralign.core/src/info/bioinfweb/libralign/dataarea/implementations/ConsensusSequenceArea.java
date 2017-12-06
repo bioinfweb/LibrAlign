@@ -23,7 +23,6 @@ import info.bioinfweb.commons.bio.CharacterStateSetType;
 import info.bioinfweb.commons.bio.SequenceUtils;
 import info.bioinfweb.commons.graphics.FontCalculator;
 import info.bioinfweb.commons.graphics.GraphicsUtils;
-import info.bioinfweb.tic.TICPaintEvent;
 import info.bioinfweb.libralign.alignmentarea.AlignmentArea;
 import info.bioinfweb.libralign.alignmentarea.content.AlignmentContentArea;
 import info.bioinfweb.libralign.alignmentarea.content.AlignmentPaintEvent;
@@ -303,7 +302,7 @@ public class ConsensusSequenceArea extends DataArea {
 
 
 	@Override
-	public void afterProviderChanged(AlignmentModel previous,	AlignmentModel current) {
+	public void afterModelChanged(AlignmentModel previous,	AlignmentModel current) {
 		refreshConsensus();
 	}
 }

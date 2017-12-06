@@ -50,7 +50,7 @@ public abstract class AbstractIndexTranslator<T, D> {
 		}
 		
 		@Override
-		public <T, U> void afterProviderChanged(AlignmentModel<T> previous,	AlignmentModel<U> current) {}
+		public <T, U> void afterModelChanged(AlignmentModel<T> previous,	AlignmentModel<U> current) {}
 	};
 	
 	

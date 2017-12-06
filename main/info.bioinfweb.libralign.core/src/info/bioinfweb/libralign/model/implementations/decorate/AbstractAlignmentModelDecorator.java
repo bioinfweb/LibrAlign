@@ -84,7 +84,7 @@ public abstract class AbstractAlignmentModelDecorator<T, U> extends AbstractAlig
 			}
 			
 			@Override
-			public <V, W> void afterProviderChanged(AlignmentModel<V> previous,	AlignmentModel<W> current) {
+			public <V, W> void afterModelChanged(AlignmentModel<V> previous,	AlignmentModel<W> current) {
 				// TODO Does this have to be forwarded in any way? (Will this method be moved away from this listener anyway?)
 			}
 		});

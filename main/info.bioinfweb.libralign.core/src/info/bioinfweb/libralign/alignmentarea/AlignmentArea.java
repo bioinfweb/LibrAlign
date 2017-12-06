@@ -303,11 +303,11 @@ public class AlignmentArea extends ScrollingTICComponent implements AlignmentMod
 				if (moveListeners) {
 					Iterator<AlignmentModelChangeListener> iterator = this.alignmentModel.getChangeListeners().iterator();
 					while (iterator.hasNext()) {
-						iterator.next().afterProviderChanged(result, this.alignmentModel);
+						iterator.next().afterModelChanged(result, this.alignmentModel);
 					}
 				}
 				else {
-					afterProviderChanged(result, this.alignmentModel);
+					afterModelChanged(result, this.alignmentModel);
 				}
 			}
 		}
@@ -703,10 +703,10 @@ public class AlignmentArea extends ScrollingTICComponent implements AlignmentMod
 
 
 	@Override
-	public <T, U> void afterProviderChanged(AlignmentModel<T> previous, AlignmentModel<U> current) {
+	public <T, U> void afterModelChanged(AlignmentModel<T> previous, AlignmentModel<U> current) {
 		getLabelArea().setLocalMaxWidthRecalculateToAll();  // Needs to be called before assignSizeToAll().
 		//TODO Remove some data areas? (Some might be data specific (e.g. pherograms), some not (e.g. consensus sequence).)
-		getDataAreas().getSequenceDataChangeListener().afterProviderChanged(previous, current);
+		getDataAreas().getSequenceDataChangeListener().afterModelChanged(previous, current);
 		assignSizeToAll();  //TODO reinsertSubements()?
 	}
 

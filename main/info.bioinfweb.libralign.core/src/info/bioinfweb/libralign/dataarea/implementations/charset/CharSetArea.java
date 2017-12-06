@@ -68,6 +68,7 @@ public class CharSetArea extends DataArea {
 	private int selectedIndex = -1;
 	private Set<SelectionListener<GenericEventObject<CharSetArea>>> selectionListeners = 
 			new HashSet<SelectionListener<GenericEventObject<CharSetArea>>>();
+	private CharSetDataModelListener modelListener;
 	
 	
 	/**
@@ -84,11 +85,11 @@ public class CharSetArea extends DataArea {
 		super(owner, labeledAlignmentArea);
 		this.model = model;
 		
-		model.getChangeListeners().add(new CharSetDataModelListener() {
+		modelListener = new CharSetDataModelListener() {
 			@Override
 			public void afterCharSetRenamed(CharSetRenamedEvent e) {
 				if (e.isLastEvent()) {
-					getOwner().getOwner().revalidate();  //TODO Does this new method work sufficiently?
+					getOwner().getOwner().revalidate();
 					repaint();
 				}
 			}
@@ -110,11 +111,18 @@ public class CharSetArea extends DataArea {
 			@Override
 			public void afterCharSetChange(CharSetChangeEvent e) {
 				if (e.isLastEvent()) {
-					getOwner().getOwner().revalidate();  //TODO Does this new method work sufficiently?
+					getOwner().getOwner().revalidate();
 					repaint();
 				}
 			}
-		});
+
+			@Override
+			public void afterModelChanged(CharSetDataModel previous, CharSetDataModel current) {
+				getOwner().getOwner().revalidate();
+				repaint();
+			}
+		};
+		model.getChangeListeners().add(modelListener);
 		
 		addMouseListener(new TICMouseAdapter() {
 			@Override
@@ -138,7 +146,7 @@ public class CharSetArea extends DataArea {
 	/**
 	 * Creates a new instance of this class with an empty data model.
 	 * 
-	 * @param owner - the alignment area that will be containing the returned data area instance
+	 * @param owner the alignment area that will be containing the returned data area instance
 	 * @param labeledAlignmentArea the alignment area that shall determine the token widths considered when painting
 	 *        the character sets (Should only be different from {@code owner.getOwner()} if the new instance will be
 	 *        placed in a different alignment area than the sequence data in a scenario with a
@@ -159,9 +167,40 @@ public class CharSetArea extends DataArea {
 	}
 
 	
-	public void setModel(CharSetDataModel model) {
-		this.model = model;
-		//TODO Do event listeners need to be informed or moved?
+	public CharSetDataModel setModel(CharSetDataModel model, boolean moveListeners) {
+		CharSetDataModel result = this.model;
+		if (!model.equals(this.model)) {
+			if (this.model != null) {
+				if (moveListeners) {  // Move all listeners
+					model.getChangeListeners().addAll(this.model.getChangeListeners());
+					this.model.getChangeListeners().clear();
+				}
+				else {  // Move this instance as the listener anyway:
+					this.model.getChangeListeners().remove(modelListener);
+					model.getChangeListeners().add(modelListener);
+				}
+			}
+			
+			this.model = model;
+			
+      // Fire events for listener move after the process finished
+			if (this.model != null) {
+				if (!this.model.getChangeListeners().contains(modelListener)) {  // Add this object as a listener if it was not already moved from the previous provider.
+					this.model.getChangeListeners().add(modelListener);
+				}
+				
+				if (moveListeners) {
+					Iterator<CharSetDataModelListener> iterator = this.model.getChangeListeners().iterator();
+					while (iterator.hasNext()) {
+						iterator.next().afterModelChanged(result, this.model);
+					}
+				}
+				else {
+					modelListener.afterModelChanged(result, this.model);
+				}
+			}
+		}
+		return result;
 	}
 
 
@@ -272,7 +311,7 @@ public class CharSetArea extends DataArea {
 
 
 	@Override
-	public <T, U> void afterProviderChanged(AlignmentModel<T> previous,
+	public <T, U> void afterModelChanged(AlignmentModel<T> previous,
 			AlignmentModel<U> current) {
 		
 		// TODO Auto-generated method stub		

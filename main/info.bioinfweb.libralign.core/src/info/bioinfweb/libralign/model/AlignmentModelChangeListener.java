@@ -41,32 +41,31 @@ public interface AlignmentModelChangeListener {
 	/**
 	 * Called after a sequence has been inserted, removed or replaced.
 	 * 
-	 * @param e - the event object containing information on the change
+	 * @param e the event object containing information on the change
 	 */
 	public <T> void afterSequenceChange(SequenceChangeEvent<T> e);
 
 	/**
 	 * Called after a sequence was renamed.
 	 * 
-	 * @param e - the event object containing information on the change
+	 * @param e the event object containing information on the change
 	 */
 	public <T> void afterSequenceRenamed(SequenceRenamedEvent<T> e);
 
 	/**
 	 * Called after a single token or a set of tokens has been inserted, removed or replaced.
 	 * 
-	 * @param e - the event object containing information on the change
+	 * @param e the event object containing information on the change
 	 */
 	public <T> void afterTokenChange(TokenChangeEvent<T> e);
 
 	/**
 	 * Called if this listener was moved to another instance of {@link AlignmentModel}.
 	 * <p>
-	 * This might e.g. happen, if the data provider of an {@link AlignmentArea} was changed.
+	 * This happens if the alignment model of an {@link AlignmentArea} was changed.
 	 * 
-	 * @param previous - the data provider this listener was attached to before the event happened
-	 * @param current - the new data provider this listener is attached to now
+	 * @param previous the alignment model this listener was attached to before the event happened
+	 * @param current the new alignment model this listener is attached to now
 	 */
-	public <T, U> void afterProviderChanged(AlignmentModel<T> previous, 
-			AlignmentModel<U> current);
+	public <T, U> void afterModelChanged(AlignmentModel<T> previous, AlignmentModel<U> current);
 }
