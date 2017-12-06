@@ -187,7 +187,7 @@ public class CharSetArea extends DataArea {
 	 */
 	public CharSetDataModel setModel(CharSetDataModel model, boolean moveListeners) {
 		if (model == null) {
-			throw new IllegalArgumentException("The model must not be null");
+			throw new IllegalArgumentException("The model must not be null.");
 		}
 		else {
 			CharSetDataModel result = this.model;
