@@ -19,16 +19,7 @@
 package info.bioinfweb.libralign.dataarea;
 
 
-import static org.junit.Assert.*;
-
-
-import info.bioinfweb.tic.TICPaintEvent;
-import info.bioinfweb.libralign.alignmentarea.AlignmentArea;
-import info.bioinfweb.libralign.alignmentarea.content.AlignmentContentArea;
-import info.bioinfweb.libralign.model.AlignmentModel;
-import info.bioinfweb.libralign.model.events.SequenceChangeEvent;
-import info.bioinfweb.libralign.model.events.SequenceRenamedEvent;
-import info.bioinfweb.libralign.model.events.TokenChangeEvent;
+import static org.junit.Assert.assertEquals;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -37,7 +28,14 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
-import org.junit.* ;
+import org.junit.Test;
+
+import info.bioinfweb.libralign.alignmentarea.AlignmentArea;
+import info.bioinfweb.libralign.alignmentarea.content.AlignmentContentArea;
+import info.bioinfweb.libralign.model.AlignmentModel;
+import info.bioinfweb.libralign.model.events.SequenceChangeEvent;
+import info.bioinfweb.libralign.model.events.SequenceRenamedEvent;
+import info.bioinfweb.libralign.model.events.TokenChangeEvent;
 
 
 
@@ -81,7 +79,7 @@ public class DataAreaListTest {
 						public <T> void afterTokenChange(TokenChangeEvent<T> e) {}
 
 						@Override
-						public <T, U> void afterProviderChanged(AlignmentModel<T> previous,	AlignmentModel<U> current) {}
+						public <T, U> void afterModelChanged(AlignmentModel<T> previous,	AlignmentModel<U> current) {}
 					};
 		}
   
