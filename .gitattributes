@@ -336,6 +336,7 @@ main/info.bioinfweb.libralign.io/src/APACHE-LICENSE.txt -text svneol=unset#text/
 main/info.bioinfweb.libralign.io/src/GPL.txt -text svneol=unset#text/plain
 main/info.bioinfweb.libralign.io/src/LGPL.txt -text svneol=unset#text/plain
 main/info.bioinfweb.libralign.io/src/NOTICE.txt -text svneol=unset#text/plain
+main/info.bioinfweb.libralign.io/src/info/bioinfweb/libralign/dataarea/implementations/charset/CharSetDataAdapter.java -text svneol=unset#text/plain
 main/info.bioinfweb.libralign.io/src/info/bioinfweb/libralign/dataarea/implementations/charset/CharSetEventReader.java -text svneol=unset#text/plain
 main/info.bioinfweb.libralign.io/src/info/bioinfweb/libralign/model/io/AbstractDataModelEventReader.java -text svneol=unset#text/plain
 main/info.bioinfweb.libralign.io/src/info/bioinfweb/libralign/model/io/AlignmentDataReader.java -text svneol=unset#text/plain
