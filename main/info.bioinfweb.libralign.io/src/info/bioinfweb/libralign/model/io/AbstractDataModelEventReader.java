@@ -37,6 +37,8 @@ import info.bioinfweb.libralign.model.data.DataModelFactory;
  * @bioinfweb.module info.bioinfweb.libralign.io
  */
 public abstract class AbstractDataModelEventReader<M extends DataModel> implements DataModelEventReader<M> {
+	//TODO AbstractDataModelEventReader sollte eine Liste von aktuell ladenden Modellen und nicht nur eins haben. Zusätzlich bleibt die Liste der vollständigen Modelle bestehen.
+	
 	private AlignmentDataReader mainReader;
 	private DataModelFactory<M> factory;
 	private DataModelReadInfo<M> currentInfo = null;

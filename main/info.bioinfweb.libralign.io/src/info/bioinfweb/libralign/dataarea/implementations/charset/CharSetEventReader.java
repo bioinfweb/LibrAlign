@@ -37,7 +37,7 @@ import info.bioinfweb.libralign.model.io.DataModelReadInfo;
 
 
 /**
- * Reads {@link CharacterSetEvent}s from JPhyloIO into instances of {@link CharSetDataModel}.
+ * Reads {@link CharacterSetEvent}s from <i>JPhyloIO</i> into instances of {@link CharSetDataModel}.
  * <p>
  * {@link CharacterSetEvent}s between alignment start and end events are stored as associated
  * with the according alignment model. Events fired outside alignments are stored in an additional
