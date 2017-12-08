@@ -20,24 +20,18 @@ package info.bioinfweb.libralign.model.io;
 
 
 import info.bioinfweb.libralign.model.AlignmentModel;
-import info.bioinfweb.libralign.model.data.DataModel;
 
 
 
 /**
- * Stores information about a data model that has been read from a data source (e.g. a file). 
- * <p>
- * This information includes the new model as well as information about alignments and 
- * sequences its data is possibly associated with.
+ * Stores information to access a data model that has been read from a data source (e.g. a file). 
+ * This information includes the alignment model and the sequence its data is possibly associated with.
  * 
  * @author Ben St&ouml;ver
- * @since 0.4.0
+ * @since 0.6.0
  * @bioinfweb.module info.bioinfweb.libralign.io
- *
- * @param <M> the type of data model that was read
  */
-public class DataModelReadInfo<M extends DataModel> {
-	private M dataModel;
+public class DataModelKey {
 	private AlignmentModel<?> alignmentModel;
 	private String sequenceID;
 	
@@ -45,20 +39,18 @@ public class DataModelReadInfo<M extends DataModel> {
 	/**
 	 * Creates a new instance of this class.
 	 * 
-	 * @param dataModel the data model that was read
 	 * @param alignmentModel the alignment model the read data is associated with (Can be {@code null}.)
 	 * @param sequenceID the ID of the sequence in the alignment model the read data is associated with 
-	 *        (Can be {@link AlignmentModel#NO_SEQUENCE_FOUND}.)
+	 *        (Can be {@code null}.)
 	 * @throws IllegalArgumentException if {@code null} was specified as the alignment model, but still 
 	 *         a sequence ID (which is not {@code null}) was specified.
 	 */
-	public DataModelReadInfo(M dataModel, AlignmentModel<?> alignmentModel,	String sequenceID) {
+	public DataModelKey(AlignmentModel<?> alignmentModel,	String sequenceID) {
 		super();
 		if ((alignmentModel == null) && (sequenceID != null)) {
 			throw new IllegalArgumentException("A sequence ID can only be specified, if an alignment model was specified as well.");
 		}
 		else {
-			this.dataModel = dataModel;
 			this.alignmentModel = alignmentModel;
 			this.sequenceID = sequenceID;
 		}
@@ -68,33 +60,15 @@ public class DataModelReadInfo<M extends DataModel> {
 	/**
 	 * Creates a new instance of this class with no sequence ID.
 	 * 
-	 * @param dataModel the data model that was read
 	 * @param alignmentModel the alignment model the read data is associated with (Can be {@code null}.)
 	 * @throws IllegalArgumentException if {@code null} was specified as the alignment model, but still 
 	 *         a sequence ID (which is not {@code null}) was specified.
 	 */
-	public DataModelReadInfo(M dataModel, AlignmentModel<?> alignmentModel) {
-		this(dataModel, alignmentModel, null);
+	public DataModelKey(AlignmentModel<?> alignmentModel) {
+		this(alignmentModel, null);
 	}
 	
 	
-	/**
-	 * Creates a new instance of this class with associated aligmment model.
-	 * 
-	 * @param dataModel the data model that was read
-	 * @throws IllegalArgumentException if {@code null} was specified as the alignment model, but still 
-	 *         a sequence ID (which is not {@code null}) was specified.
-	 */
-	public DataModelReadInfo(M dataModel) {
-		this(dataModel, null, null);
-	}
-	
-	
-	public M getDataModel() {
-		return dataModel;
-	}
-
-
 	public AlignmentModel<?> getAlignmentModel() {
 		return alignmentModel;
 	}

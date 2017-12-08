@@ -19,7 +19,7 @@
 package info.bioinfweb.libralign.model.io;
 
 
-import java.util.List;
+import org.apache.commons.collections4.MultiValuedMap;
 
 import info.bioinfweb.jphyloio.push.JPhyloIOEventListener;
 import info.bioinfweb.libralign.model.data.DataModel;
@@ -28,7 +28,7 @@ import info.bioinfweb.libralign.model.data.DataModelFactory;
 
 
 /**
- * Interface to be implemented by all readers that process JPhyloIO events to read data to be stored in
+ * Interface to be implemented by all readers that process <i>JPhyloIO</i> events to read data to be stored in
  * implementations of {@link DataModel}.
  * <p>
  * All implementations should accept an instance of {@link DataModel} as a constructor parameter that
@@ -54,12 +54,12 @@ public interface DataModelEventReader<M extends DataModel> extends JPhyloIOEvent
 	
 	/**
 	 * Returns the model objects that have been read from the underlying <i>JPhyloIO</i> event stream until now.
-	 * New objects will always be added at the end of the list. The list may be modified by application classes
-	 * (e.g. to remove consumed objects).
+	 * The list may be modified by application classes (e.g. to remove consumed objects), but this may change 
+	 * the future behavior of some implementations.
 	 * 
 	 * @return the associated model
 	 */
-	public List<DataModelReadInfo<M>> getModels();
+	public MultiValuedMap<DataModelKey, M> getCompletedModels();
 	
 	/**
 	 * Returns the factory used to create new data models in this instance.

@@ -22,6 +22,7 @@ package info.bioinfweb.libralign.model.io;
 import info.bioinfweb.commons.bio.CharacterStateSetType;
 import info.bioinfweb.jphyloio.JPhyloIOEventReader;
 import info.bioinfweb.jphyloio.events.JPhyloIOEvent;
+import info.bioinfweb.jphyloio.events.LabeledIDEvent;
 import info.bioinfweb.jphyloio.events.LinkedLabeledIDEvent;
 import info.bioinfweb.jphyloio.events.SequenceTokensEvent;
 import info.bioinfweb.jphyloio.events.SingleTokenDefinitionEvent;
@@ -40,6 +41,8 @@ import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.collections4.map.ListOrderedMap;
+
 
 
 /**
@@ -54,8 +57,9 @@ import java.util.Map;
 public class AlignmentModelEventReader implements JPhyloIOEventListener {
 	private final AlignmentModelFactory<?> defaultFactory;
 	@SuppressWarnings("rawtypes") private final Map<CharacterStateSetType, AlignmentModelFactory> factoryMap;
+	private String currentAlignmentID = null;
 	private AlignmentModel<?> currentModel = null;
-	private final List<AlignmentModel<?>> completedModels = new ArrayList<AlignmentModel<?>>();
+	private final ListOrderedMap<String, AlignmentModel<?>> completedModels = new ListOrderedMap<String, AlignmentModel<?>>();
 	private String currentSequenceID = null; 
 	private NewAlignmentModelParameterMap currentParameterMap = null;
 
@@ -149,6 +153,17 @@ public class AlignmentModelEventReader implements JPhyloIOEventListener {
 	public AlignmentModel<?> getCurrentModel() {
 		return currentModel;
 	}
+	
+	
+	/**
+	 * Returns the <i>JPhyloIO</i> ID of the alignment model that is currently read and returned by 
+	 * {@link #getCurrentModel()}.
+	 * 
+	 * @return the ID or {@code null} if no model is currently read
+	 */
+	public String getCurrentAlignmentID() {
+		return currentAlignmentID;
+	}
 
 
 	/**
@@ -198,7 +213,27 @@ public class AlignmentModelEventReader implements JPhyloIOEventListener {
 	 * @return the list of models (may be empty, but is never {@code null})
 	 */
 	public List<AlignmentModel<?>> getCompletedModels() {
-		return completedModels;
+		return completedModels.valueList();
+	}
+	
+	
+	/**
+	 * Returns the alignment model associated with the specified <i>JPhyloIO</i> ID. (The ID of the alignment
+	 * start event in <i>JPhyloIO</i>.) This method will first test if the currently loading model is
+	 * associated with this ID and return it. Otherwise a completed model associated with this ID will be
+	 * returned. (Note that the model that is currently loading might not yet be complete.)
+	 * 
+	 * @param id the <i>JPhyloIO</i> of the alignment model
+	 * @return the alignment model or {@code null} is no model associated with the specified ID has yet been 
+	 *         started to be loaded
+	 */
+	public AlignmentModel<?> getModelByJPhyloIOID(String id) {
+		if (id.equals(getCurrentAlignmentID())) {
+			return getCurrentModel();
+		}
+		else {
+			return completedModels.get(id);
+		}
 	}
 
 
@@ -315,13 +350,16 @@ public class AlignmentModelEventReader implements JPhyloIOEventListener {
 				break;
 			case ALIGNMENT:
 				if (event.getType().getTopologyType().equals(EventTopologyType.START)) {
+					LabeledIDEvent alignmentEvent = event.asLabeledIDEvent();
 					currentParameterMap = new NewAlignmentModelParameterMap();
-					currentParameterMap.put(NewAlignmentModelParameterMap.KEY_ALIGNMENT_LABEL, event.asLabeledIDEvent().getLabel());
+					currentParameterMap.put(NewAlignmentModelParameterMap.KEY_ALIGNMENT_LABEL, alignmentEvent.getLabel());
+					currentAlignmentID = alignmentEvent.getID();
 				}
 				else {
 					if (currentModel != null) {
-						completedModels.add(currentModel);
+						completedModels.put(currentAlignmentID, currentModel);
 						currentModel = null;
+						currentAlignmentID = null;
 					}
 				}
 				break;

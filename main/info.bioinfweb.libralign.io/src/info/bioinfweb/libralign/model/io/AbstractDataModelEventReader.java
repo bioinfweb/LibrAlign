@@ -19,18 +19,20 @@
 package info.bioinfweb.libralign.model.io;
 
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
-import info.bioinfweb.libralign.model.AlignmentModel;
+import org.apache.commons.collections4.MultiValuedMap;
+import org.apache.commons.collections4.multimap.ArrayListValuedHashMap;
+
 import info.bioinfweb.libralign.model.data.DataModel;
 import info.bioinfweb.libralign.model.data.DataModelFactory;
 
 
 
 /**
- * Implements shared functionality for all classes reading data from JPhyloIO events into implementations
- * of {@link DataModel}.
+ * Implements shared functionality for all classes reading data from <i>JPhyloIO</i> events into 
+ * implementations of {@link DataModel}.
  * 
  * @author Ben St&ouml;ver
  * @since 0.4.0
@@ -41,8 +43,8 @@ public abstract class AbstractDataModelEventReader<M extends DataModel> implemen
 	
 	private AlignmentDataReader mainReader;
 	private DataModelFactory<M> factory;
-	private DataModelReadInfo<M> currentInfo = null;
-	private List<DataModelReadInfo<M>> models = new ArrayList<DataModelReadInfo<M>>();
+	private Map<DataModelKey, M> loadingModels = new HashMap<DataModelKey, M>();
+	private MultiValuedMap<DataModelKey, M> completedModels = new ArrayListValuedHashMap<DataModelKey, M>();
 
 
 	/**
@@ -63,52 +65,19 @@ public abstract class AbstractDataModelEventReader<M extends DataModel> implemen
 	}
 
 
-	protected void createNewInfo(AlignmentModel<?> alignmentModel) {
-		createNewInfo(alignmentModel, null);
-	}
-	
-	
-	protected void createNewInfo(AlignmentModel<?> alignmentModel, String sequenceID) {
-		publishCurrentInfo();
-		currentInfo = new DataModelReadInfo<M>(factory.createNewModel(), alignmentModel, sequenceID);
-	}
-	
-	
-	/**
-	 * Adds the current info object to the model list, if one is present.
-	 */
-	protected void publishCurrentInfo() {
-		if (isReadingInstance()) {
-			models.add(currentInfo);
-			currentInfo = null;
-		}
-	}
-
-
-	protected DataModelReadInfo<M> getCurrentInfo() {
-		return currentInfo;
-	}
-	
-	
-	/**
-	 * Determines whether this object contains an unpublished data model that is currently read.
-	 * It will be added to {@link #getModels()} as soon as it is completely read. 
-	 * 
-	 * @return {@code true} if an unpublished object is present, {@code false} otherwise.
-	 */
-	public boolean isReadingInstance() {
-		return currentInfo != null;
-	}
-
-
 	@Override
 	public DataModelFactory<M> getFactory() {
 		return factory;
 	}
 
 
+	protected Map<DataModelKey, M> getLoadingModels() {
+		return loadingModels;
+	}
+
+
 	@Override
-	public List<DataModelReadInfo<M>> getModels() {
-		return models;
+	public MultiValuedMap<DataModelKey, M> getCompletedModels() {
+		return completedModels;
 	}
 }

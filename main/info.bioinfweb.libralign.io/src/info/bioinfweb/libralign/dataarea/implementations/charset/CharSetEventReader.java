@@ -20,19 +20,24 @@ package info.bioinfweb.libralign.dataarea.implementations.charset;
 
 
 import java.awt.Color;
+import java.util.HashMap;
+import java.util.Map;
 
 import info.bioinfweb.commons.graphics.UniqueColorLister;
 import info.bioinfweb.jphyloio.JPhyloIOEventReader;
 import info.bioinfweb.jphyloio.events.CharacterSetIntervalEvent;
 import info.bioinfweb.jphyloio.events.JPhyloIOEvent;
 import info.bioinfweb.jphyloio.events.LinkedLabeledIDEvent;
+import info.bioinfweb.jphyloio.events.SetElementEvent;
 import info.bioinfweb.jphyloio.events.meta.URIOrStringIdentifier;
+import info.bioinfweb.jphyloio.events.type.EventContentType;
 import info.bioinfweb.jphyloio.events.type.EventTopologyType;
 import info.bioinfweb.jphyloio.objecttranslation.ObjectTranslator;
+import info.bioinfweb.libralign.model.AlignmentModel;
 import info.bioinfweb.libralign.model.data.NoArgDataModelFactory;
 import info.bioinfweb.libralign.model.io.AbstractDataModelEventReader;
 import info.bioinfweb.libralign.model.io.AlignmentDataReader;
-import info.bioinfweb.libralign.model.io.DataModelReadInfo;
+import info.bioinfweb.libralign.model.io.DataModelKey;
 
 
 
@@ -63,11 +68,11 @@ import info.bioinfweb.libralign.model.io.DataModelReadInfo;
 public class CharSetEventReader extends AbstractDataModelEventReader<CharSetDataModel> {
 	//TODO If models are stored associated or globally should not be determined by the position of their events in the stream, 
 	//     but by their linked matrix. This way SETS blocks from Nexus may also be interpreted correctly, if they use LINK commands.
-	//TODO Multiple global models should be possible, if start events with different IDs that do not link a matrix are encountered.
-	//TODO Read color metadata as the data adapter writes them.
 	
-	private CharSetDataModel globalModel = null;
+	private boolean publishOnAlignmentEnd = false;
 	private LinkedLabeledIDEvent currentStartEvent = null;
+	private String currentAlignmentID = null;
+	private Map<String, CharSet> loadedCharacterSets = new HashMap<String, CharSet>();
 	
 	private URIOrStringIdentifier colorPredicate;
 	private boolean isReadingColor;
@@ -84,14 +89,77 @@ public class CharSetEventReader extends AbstractDataModelEventReader<CharSetData
 	public CharSetEventReader(AlignmentDataReader mainReader) {
 		this(mainReader, null);
 	}
+	
+	
+	/**
+	 * Determines whether loaded models should be published when reading their associated alignment is finished or not. By
+	 * default all character set models will be published when the end of the document is reached. If access to character 
+	 * sets is needed directly after having loaded each alignment model, this property should be set to {@code true} 
+	 * instead.
+	 * <p>
+	 * Note that this will work e.g. for <i>NeXML</i> but will not have a benefit for formats that define character sets 
+	 * after alignments, such as <i>Nexus</i>. If character sets are encountered after their associated alignment, these
+	 * will be published at the end of the file, no matter if this property is set or not.
+	 * 
+	 * @return {@code true} if models are published as the end of their associated alignment was read, or {@code false}
+	 *         if models are all published when the end of the file is reached. 
+	 */
+	public boolean isPublishOnAlignmentEnd() {
+		return publishOnAlignmentEnd;
+	}
 
+
+	public void setPublishOnAlignmentEnd(boolean publishOnAlignmentEnd) {
+		this.publishOnAlignmentEnd = publishOnAlignmentEnd;
+	}
+
+	
+	private CharSet getCurrentCharSet() {
+		// Determine model to write to:
+		CharSetDataModel model;
+		DataModelKey key;
+		if ((currentStartEvent != null) && currentStartEvent.hasLink()) {
+			key = new DataModelKey(getMainReader().getAlignmentModelReader().getModelByJPhyloIOID(currentStartEvent.getLinkedID()));  // If the linked alignment model ID references a not (yet) existing alignment model, the returned model would also be null.
+		}
+		else {
+			key = new DataModelKey(null);
+		}
+		model = getLoadingModels().get(key);
+		if (model == null) {
+			model = getFactory().createNewModel();
+			getLoadingModels().put(key, model);
+		}
+		
+		// Read data:
+		CharSet result = model.get(currentStartEvent.getID());
+		if (result == null) {
+			if (currentColor == null) {
+				currentColor = colorLister.generateNext();
+			}
+			result = new CharSet(currentStartEvent.getLabel(), currentColor);  //TODO Create default name if label is null?
+			model.put(currentStartEvent.getID(), result);
+			loadedCharacterSets.put(currentStartEvent.getID(), result);
+		}
+		return result;
+	}
+	
 
 	@Override
 	public void processEvent(JPhyloIOEventReader source, JPhyloIOEvent event) {
 		switch (event.getType().getContentType()) {
 			case ALIGNMENT:
-				if (event.getType().getTopologyType().equals(EventTopologyType.END)) {  //TODO Does this work if character sets are specified after the alignment (e.g. in Nexus)? When is the global model published?
-					publishCurrentInfo();  // Adds alignment specific model to the result list, if one is present.
+				if (event.getType().getTopologyType().equals(EventTopologyType.START)) {
+					currentAlignmentID = event.asLabeledIDEvent().getID();
+				}
+				else if (publishOnAlignmentEnd) {
+					AlignmentModel<?> alignmentModel = getMainReader().getAlignmentModelReader().getModelByJPhyloIOID(currentAlignmentID);
+					if (alignmentModel != null) {
+						DataModelKey key = new DataModelKey(alignmentModel);
+						CharSetDataModel model = getLoadingModels().remove(key);
+						if (model != null) {
+							getCompletedModels().put(key, model);
+						}
+					}
 				}
 				break;
 			case CHARACTER_SET:
@@ -125,46 +193,30 @@ public class CharSetEventReader extends AbstractDataModelEventReader<CharSetData
 				}
 				break;
 			case CHARACTER_SET_INTERVAL:
-				// Determine model to write to:
-				CharSetDataModel model;
-				if (getMainReader().getAlignmentModelReader().hasCurrentModel()) {  //TODO The linked ID is relevant, not the position.
-					if (!super.isReadingInstance()) {
-						createNewInfo(getMainReader().getAlignmentModelReader().getCurrentModel());  //TODO Publishing here is not possible, since character set definitions may be continued (e.g. in interleaved MEGA).
-					}
-					model = getCurrentInfo().getDataModel();
-				}
-				else {  // Use gobal character set model
-					if (globalModel == null) {
-						globalModel = getFactory().createNewModel();
-					}
-					model = globalModel;
-				}
-				
-				// Read data:
 				CharacterSetIntervalEvent intervalEvent = event.asCharacterSetIntervalEvent();
-				CharSet charSet = model.get(currentStartEvent.getID());
-				if (charSet == null) {
-					if (currentColor == null) {
-						currentColor = colorLister.generateNext();
+				getCurrentCharSet().add((int)intervalEvent.getStart(), (int)intervalEvent.getEnd() - 1);  //TODO Refactor NonOverlappingIntervalList so that end index is also behind the interval.
+				break;
+			case SET_ELEMENT:
+				SetElementEvent setEvent = event.asSetElementEvent();
+				if (setEvent.getLinkedObjectType().equals(EventContentType.CHARACTER_SET)) {  //TODO Can anything else happen?
+					CharSet linkedCharSet = loadedCharacterSets.get(setEvent.getLinkedID());
+					if (linkedCharSet != null) {
+						getCurrentCharSet().addAll(linkedCharSet);
 					}
-					charSet = new CharSet(currentStartEvent.getLabel(), currentColor);  //TODO Create default name if label is null?
-					model.put(currentStartEvent.getID(), charSet);
+					else {
+						//TODO Log warning?
+					}
 				}
-				charSet.add((int)intervalEvent.getStart(), (int)intervalEvent.getEnd() - 1);  //TODO Refactor NonOverlappingIntervalList so that end index is also behind the interval.
 				break;
 			case DOCUMENT:
 				if (event.getType().getTopologyType().equals(EventTopologyType.END)) {
-					getModels().add(new DataModelReadInfo<CharSetDataModel>(globalModel));
+					getCompletedModels().putAll(getLoadingModels());
+					getLoadingModels().clear();
+					loadedCharacterSets.clear();
 				}
 				break;
 			default:  // Nothing to do
 				break;
 		}
-	}
-
-
-	@Override
-	public boolean isReadingInstance() {
-		return super.isReadingInstance() || (globalModel != null);
 	}
 }
