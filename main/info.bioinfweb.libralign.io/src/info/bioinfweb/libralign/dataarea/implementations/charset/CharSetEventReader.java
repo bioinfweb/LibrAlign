@@ -66,9 +66,6 @@ import info.bioinfweb.libralign.model.io.DataModelKey;
  * @since 0.4.0
  */
 public class CharSetEventReader extends AbstractDataModelEventReader<CharSetDataModel> {
-	//TODO If models are stored associated or globally should not be determined by the position of their events in the stream, 
-	//     but by their linked matrix. This way SETS blocks from Nexus may also be interpreted correctly, if they use LINK commands.
-	
 	private boolean publishOnAlignmentEnd = false;
 	private LinkedLabeledIDEvent currentStartEvent = null;
 	private String currentAlignmentID = null;
@@ -115,32 +112,37 @@ public class CharSetEventReader extends AbstractDataModelEventReader<CharSetData
 
 	
 	private CharSet getCurrentCharSet() {
-		// Determine model to write to:
-		CharSetDataModel model;
-		DataModelKey key;
-		if ((currentStartEvent != null) && currentStartEvent.hasLink()) {
-			key = new DataModelKey(getMainReader().getAlignmentModelReader().getModelByJPhyloIOID(currentStartEvent.getLinkedID()));  // If the linked alignment model ID references a not (yet) existing alignment model, the returned model would also be null.
+		if (currentStartEvent != null) {
+			// Determine model to write to:
+			CharSetDataModel model;
+			DataModelKey key;
+			if (currentStartEvent.hasLink()) {
+				key = new DataModelKey(currentStartEvent.getLinkedID());  // If the linked alignment model ID references a not (yet) existing alignment model, the returned model would also be null.
+			}
+			else {
+				key = new DataModelKey(null);
+			}
+			model = getLoadingModels().get(key);
+			if (model == null) {
+				model = getFactory().createNewModel();
+				getLoadingModels().put(key, model);
+			}
+			
+			// Read data:
+			CharSet result = model.get(currentStartEvent.getID());
+			if (result == null) {
+				if (currentColor == null) {
+					currentColor = colorLister.generateNext();
+				}
+				result = new CharSet(currentStartEvent.getLabel(), currentColor);  //TODO Create default name if label is null?
+				model.put(currentStartEvent.getID(), result);
+				loadedCharacterSets.put(currentStartEvent.getID(), result);
+			}
+			return result;
 		}
 		else {
-			key = new DataModelKey(null);
+			return null;
 		}
-		model = getLoadingModels().get(key);
-		if (model == null) {
-			model = getFactory().createNewModel();
-			getLoadingModels().put(key, model);
-		}
-		
-		// Read data:
-		CharSet result = model.get(currentStartEvent.getID());
-		if (result == null) {
-			if (currentColor == null) {
-				currentColor = colorLister.generateNext();
-			}
-			result = new CharSet(currentStartEvent.getLabel(), currentColor);  //TODO Create default name if label is null?
-			model.put(currentStartEvent.getID(), result);
-			loadedCharacterSets.put(currentStartEvent.getID(), result);
-		}
-		return result;
 	}
 	
 
@@ -152,9 +154,8 @@ public class CharSetEventReader extends AbstractDataModelEventReader<CharSetData
 					currentAlignmentID = event.asLabeledIDEvent().getID();
 				}
 				else if (publishOnAlignmentEnd) {
-					AlignmentModel<?> alignmentModel = getMainReader().getAlignmentModelReader().getModelByJPhyloIOID(currentAlignmentID);
-					if (alignmentModel != null) {
-						DataModelKey key = new DataModelKey(alignmentModel);
+					if (currentAlignmentID != null) {
+						DataModelKey key = new DataModelKey(currentAlignmentID);
 						CharSetDataModel model = getLoadingModels().remove(key);
 						if (model != null) {
 							getCompletedModels().put(key, model);
@@ -194,7 +195,14 @@ public class CharSetEventReader extends AbstractDataModelEventReader<CharSetData
 				break;
 			case CHARACTER_SET_INTERVAL:
 				CharacterSetIntervalEvent intervalEvent = event.asCharacterSetIntervalEvent();
-				getCurrentCharSet().add((int)intervalEvent.getStart(), (int)intervalEvent.getEnd() - 1);  //TODO Refactor NonOverlappingIntervalList so that end index is also behind the interval.
+				CharSet charSet = getCurrentCharSet();
+				if (charSet != null) {
+					charSet.add((int)intervalEvent.getStart(), (int)intervalEvent.getEnd() - 1);  //TODO Refactor NonOverlappingIntervalList so that end index is also behind the interval.
+				}
+				else {
+					//TODO Log warning? Where are such events comming from in NeXML?
+					System.err.println("Character set interval event outside of a character set encountered.");
+				}
 				break;
 			case SET_ELEMENT:
 				SetElementEvent setEvent = event.asSetElementEvent();

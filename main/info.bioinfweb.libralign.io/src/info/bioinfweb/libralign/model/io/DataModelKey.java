@@ -19,9 +19,6 @@
 package info.bioinfweb.libralign.model.io;
 
 
-import info.bioinfweb.libralign.model.AlignmentModel;
-
-
 
 /**
  * Stores information to access a data model that has been read from a data source (e.g. a file). 
@@ -32,26 +29,27 @@ import info.bioinfweb.libralign.model.AlignmentModel;
  * @bioinfweb.module info.bioinfweb.libralign.io
  */
 public class DataModelKey {
-	private AlignmentModel<?> alignmentModel;
+	private String alignmentID;
 	private String sequenceID;
 	
 	
 	/**
 	 * Creates a new instance of this class.
 	 * 
-	 * @param alignmentModel the alignment model the read data is associated with (Can be {@code null}.)
+	 * @param alignmentID the ID of the alignment model the read data is associated with (Can be 
+	 *        {@code null}.)
 	 * @param sequenceID the ID of the sequence in the alignment model the read data is associated with 
 	 *        (Can be {@code null}.)
-	 * @throws IllegalArgumentException if {@code null} was specified as the alignment model, but still 
-	 *         a sequence ID (which is not {@code null}) was specified.
+	 * @throws IllegalArgumentException if {@code null} was specified as the alignment model ID, but 
+	 *         still a sequence ID (which is not {@code null}) was specified.
 	 */
-	public DataModelKey(AlignmentModel<?> alignmentModel,	String sequenceID) {
+	public DataModelKey(String alignmentID,	String sequenceID) {
 		super();
-		if ((alignmentModel == null) && (sequenceID != null)) {
-			throw new IllegalArgumentException("A sequence ID can only be specified, if an alignment model was specified as well.");
+		if ((alignmentID == null) && (sequenceID != null)) {
+			throw new IllegalArgumentException("A sequence ID can only be specified, if an alignment model ID was specified as well.");
 		}
 		else {
-			this.alignmentModel = alignmentModel;
+			this.alignmentID = alignmentID;
 			this.sequenceID = sequenceID;
 		}
 	}
@@ -60,21 +58,56 @@ public class DataModelKey {
 	/**
 	 * Creates a new instance of this class with no sequence ID.
 	 * 
-	 * @param alignmentModel the alignment model the read data is associated with (Can be {@code null}.)
-	 * @throws IllegalArgumentException if {@code null} was specified as the alignment model, but still 
+	 * @param alignmentModel the alignment model ID the read data is associated with (Can be {@code null}.)
+	 * @throws IllegalArgumentException if {@code null} was specified as the alignment model ID, but still 
 	 *         a sequence ID (which is not {@code null}) was specified.
 	 */
-	public DataModelKey(AlignmentModel<?> alignmentModel) {
-		this(alignmentModel, null);
+	public DataModelKey(String alignmentID) {
+		this(alignmentID, null);
 	}
 	
 	
-	public AlignmentModel<?> getAlignmentModel() {
-		return alignmentModel;
+	public String getAlignmentID() {
+		return alignmentID;
 	}
 
 
 	public String getSequenceID() {
 		return sequenceID;
+	}
+
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result
+				+ ((alignmentID == null) ? 0 : alignmentID.hashCode());
+		result = prime * result
+				+ ((sequenceID == null) ? 0 : sequenceID.hashCode());
+		return result;
+	}
+
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		DataModelKey other = (DataModelKey) obj;
+		if (alignmentID == null) {
+			if (other.alignmentID != null)
+				return false;
+		} else if (!alignmentID.equals(other.alignmentID))
+			return false;
+		if (sequenceID == null) {
+			if (other.sequenceID != null)
+				return false;
+		} else if (!sequenceID.equals(other.sequenceID))
+			return false;
+		return true;
 	}
 }

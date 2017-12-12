@@ -19,6 +19,7 @@
 package info.bioinfweb.libralign.model.io;
 
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -75,6 +76,17 @@ public abstract class AbstractDataModelEventReader<M extends DataModel> implemen
 		return loadingModels;
 	}
 
+	
+	public M getFirstCompletedModel(DataModelKey key) {
+		Collection<M> collection = completedModels.get(key);
+		if (!collection.isEmpty()) {
+			return collection.iterator().next();
+		}
+		else {
+			return null;
+		}
+	}
+	
 
 	@Override
 	public MultiValuedMap<DataModelKey, M> getCompletedModels() {

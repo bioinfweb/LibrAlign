@@ -354,6 +354,7 @@ public class AlignmentModelEventReader implements JPhyloIOEventListener {
 					currentParameterMap = new NewAlignmentModelParameterMap();
 					currentParameterMap.put(NewAlignmentModelParameterMap.KEY_ALIGNMENT_LABEL, alignmentEvent.getLabel());
 					currentAlignmentID = alignmentEvent.getID();
+					currentParameterMap.put(NewAlignmentModelParameterMap.KEY_ALIGNMENT_ID, currentAlignmentID);
 				}
 				else {
 					if (currentModel != null) {
