@@ -200,12 +200,8 @@ public class CharSetEventReader extends AbstractDataModelEventReader<CharSetData
 			case CHARACTER_SET_INTERVAL:
 				CharacterSetIntervalEvent intervalEvent = event.asCharacterSetIntervalEvent();
 				CharSet charSet = getCurrentCharSet();
-				if (charSet != null) {
+				if (charSet != null) {  // Interval events may also occur within a token set definition.
 					charSet.add((int)intervalEvent.getStart(), (int)intervalEvent.getEnd() - 1);  //TODO Refactor NonOverlappingIntervalList so that end index is also behind the interval.
-				}
-				else {
-					//TODO Log warning? Where are such events comming from in NeXML?
-					System.err.println("Character set interval event outside of a character set encountered.");
 				}
 				break;
 			case SET_ELEMENT:
