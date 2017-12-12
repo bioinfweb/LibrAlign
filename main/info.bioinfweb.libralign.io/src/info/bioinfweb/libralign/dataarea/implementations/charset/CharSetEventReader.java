@@ -186,7 +186,11 @@ public class CharSetEventReader extends AbstractDataModelEventReader<CharSetData
 				if (isReadingColor) {
 					Object value = event.asLiteralMetadataContentEvent().getObjectValue();
 					if (value instanceof Color) {
+						CharSet charSet = getCurrentCharSet();
 						currentColor = (Color)value;
+						if (charSet != null) {
+							charSet.setColor(currentColor);
+						}
 					}
 					else {
 						//TODO Log warning?
