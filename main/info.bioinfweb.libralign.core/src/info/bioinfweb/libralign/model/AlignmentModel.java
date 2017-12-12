@@ -64,6 +64,22 @@ import java.util.Set;
  */
 public interface AlignmentModel<T> {
 	/**
+	 * Some implementations may specify string identifying an alignment, which is then returned 
+	 * by this method. Such string IDs will usually be unique in some context and immutable. 
+	 * 
+	 * @return the ID of this alignment or {@code null} if none is assigned
+	 */
+	public String getID();
+	
+	/**
+	 * Allows to specify a new ID for this alignment.
+	 * 
+	 * @param id the new ID
+	 * @throws UnsupportedOperationException if this implementation does not allow to change IDs
+	 */
+	public void setID(String id);
+	
+	/**
 	 * Returns a string labeling this alignment.
 	 * 
 	 * @return the name or title of this alignment

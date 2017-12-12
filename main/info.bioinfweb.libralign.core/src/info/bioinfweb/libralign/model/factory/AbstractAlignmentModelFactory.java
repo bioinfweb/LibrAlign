@@ -162,7 +162,14 @@ public abstract class AbstractAlignmentModelFactory<T> implements AlignmentModel
 	public AlignmentModel<T> createNewModel(NewAlignmentModelParameterMap parameterMap) {
 		AlignmentModel<T> result = doCreateNewModel(parameterMap);
 		if (result != null) {
-			result.setLabel(parameterMap.getString(NewAlignmentModelParameterMap.KEY_ALIGNMENT_LABEL));
+			try {
+				result.setID(parameterMap.getString(NewAlignmentModelParameterMap.KEY_ALIGNMENT_ID));
+			}
+			catch (UnsupportedOperationException e) {}
+			try {
+				result.setLabel(parameterMap.getString(NewAlignmentModelParameterMap.KEY_ALIGNMENT_LABEL));
+			}
+			catch (UnsupportedOperationException e) {}
 		}
 		return result;
 	}

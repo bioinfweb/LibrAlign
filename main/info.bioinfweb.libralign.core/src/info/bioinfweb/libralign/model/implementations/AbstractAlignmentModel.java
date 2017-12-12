@@ -40,8 +40,21 @@ import java.util.Set;
  * @param <T> - the type of sequence elements (tokens) the implementing provider object works with
  */
 public abstract class AbstractAlignmentModel<T> implements AlignmentModel<T> {
-	private String label;
+	private String id = null;
+	private String label = null;
 	private Set<AlignmentModelChangeListener> changeListeners = new HashSet<AlignmentModelChangeListener>();
+
+
+	@Override
+	public String getID() {
+		return id;
+	}
+
+
+	@Override
+	public void setID(String id) {
+		this.id = id;
+	}
 
 
 	@Override
