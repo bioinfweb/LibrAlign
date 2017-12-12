@@ -160,9 +160,9 @@ public class CharSetDataAdapter implements ObjectListDataAdapter<LinkedLabeledID
 			}
 			
 			for (SimpleSequenceInterval interval : charSet) {
-				receiver.add(new CharacterSetIntervalEvent(interval.getFirstPos(), interval.getLastPos()));  //TODO lastPos + 1?
+				receiver.add(new CharacterSetIntervalEvent(interval.getFirstPos(), interval.getLastPos() + 1));  //TODO lastPos + 1?
 			}
-			receiver.add(new PartEndEvent(EventContentType.CHARACTER_SET, true));
+			//receiver.add(new PartEndEvent(EventContentType.CHARACTER_SET, true));  //TODO Why does writing the end event here result in an exception in JPhyloIO?
 		}
 	}
 }
