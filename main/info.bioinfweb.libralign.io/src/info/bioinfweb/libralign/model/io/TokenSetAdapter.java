@@ -148,11 +148,13 @@ public class TokenSetAdapter<T> implements ObjectListDataAdapter<TokenSetDefinit
 			}
 		}
 		
-		receiver.add(new CharacterSetIntervalEvent(start, end));
+		if (start < end) {  // Interval events must not be created for alignments with the length 0.
+			receiver.add(new CharacterSetIntervalEvent(start, end));
+		}
 		
 		//TODO JPhyloIO sollte auch mehrere Gap- und Missing-Tokens im Modell akzeptieren (falls später Formate auftauchen, die
 		//     das auch unterstützen). Bei Formaten, die nur eins zulassen, soll immer das erste (aus writeData()) verwendet werden
-    //     und die anderen als zusätzliche Zustände geschrieben werden.
+    	//     und die anderen als zusätzliche Zustände geschrieben werden.
 		//     In NeXML gäbe es weiterhin die Möglichkeit bei den alternativen Tokens entsprechende Metadaten zu schreiben. Dies 
 		//     könnte in JPhyloIO direkt geschehen oder aus LibrAlign oder der Anwendung. (Im Fall von AC würde man z.B. zu den 
 		//     supergaps weitere Informationen als nur "alternative Lücke" speichern wollen. (Außer bei einem evtl. Export wird
