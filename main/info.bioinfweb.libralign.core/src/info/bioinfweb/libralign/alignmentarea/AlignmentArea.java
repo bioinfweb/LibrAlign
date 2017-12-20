@@ -278,7 +278,7 @@ public class AlignmentArea extends ScrollingTICComponent implements AlignmentMod
 	 */
 	public AlignmentModel<?> setAlignmentModel(AlignmentModel<?> alignmentModel, boolean moveListeners) {
 		AlignmentModel<?> result = this.alignmentModel;
-		if (!alignmentModel.equals(this.alignmentModel)) {
+		if (alignmentModel != this.alignmentModel) {
 			if (this.alignmentModel != null) {
 				if (moveListeners) {  // Move all listeners
 					alignmentModel.getChangeListeners().addAll(this.alignmentModel.getChangeListeners());
