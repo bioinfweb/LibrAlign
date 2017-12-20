@@ -191,7 +191,7 @@ public class CharSetArea extends DataArea {
 		}
 		else {
 			CharSetDataModel result = this.model;
-			if (!model.equals(this.model)) {
+			if (model != this.model) {  // equals() would, e.g., consider two different empty models as equal, which is not suitable here.
 				if (this.model != null) {
 					if (moveListeners) {  // Move all listeners
 						model.getChangeListeners().addAll(this.model.getChangeListeners());
