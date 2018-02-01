@@ -29,6 +29,7 @@ import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
+import javax.swing.UIManager;
 
 import info.bioinfweb.jphyloio.formats.JPhyloIOFormatIDs;
 import info.bioinfweb.libralign.alignmentarea.AlignmentArea;
@@ -79,6 +80,15 @@ public class SwingAlignmentEditor {
 	 * Launch the application.
 	 */
 	public static void main(String[] args) {
+		// Set default look and feel of the current operating system:
+		try {
+			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		// Start application:
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
