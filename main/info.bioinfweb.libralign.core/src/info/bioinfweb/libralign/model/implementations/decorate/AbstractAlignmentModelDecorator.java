@@ -36,9 +36,9 @@ import info.bioinfweb.libralign.model.tokenset.TokenSet;
 
 
 /**
- * Basic implementation of {@link AlignmentModelView} which references the underlying model
- * by a property and delegates sequence specific methods (which are independent of the token
- * type) to the underlying model.
+ * Basic implementation of {@link AlignmentModelView} which delegates sequence specific methods 
+ * (which are independent of the token type) to the underlying model. Inherited classes may 
+ * provide modified views of the underlying sequences possibly using a different token set.
  * 
  * @author Ben St&ouml;ver
  *
@@ -53,7 +53,7 @@ public abstract class AbstractAlignmentModelDecorator<T, U> extends AbstractAlig
 	/**
 	 * Creates a new instance of this class.
 	 * 
-	 * @param underlyingModel - the underlying model to be viewed
+	 * @param underlyingModel the underlying model to be viewed
 	 */
 	public AbstractAlignmentModelDecorator(TokenSet<T> tokenSet, AlignmentModel<U> underlyingModel) {
 		super();

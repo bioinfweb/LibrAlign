@@ -20,11 +20,12 @@ package info.bioinfweb.libralign.model;
 
 
 import info.bioinfweb.libralign.alignmentarea.content.AlignmentContentArea;
-import info.bioinfweb.libralign.model.adapters.AbstractAlignmentModelAdapter;
+import info.bioinfweb.libralign.model.adapters.AbstractBasicAlignmentModelView;
 import info.bioinfweb.libralign.model.exception.AlignmentSourceNotWritableException;
 import info.bioinfweb.libralign.model.exception.SequenceNotFoundException;
 import info.bioinfweb.libralign.model.implementations.AbstractMapBasedAlignmentModel;
 import info.bioinfweb.libralign.model.implementations.AbstractUndecoratedAlignmentModel;
+import info.bioinfweb.libralign.model.implementations.decorate.DelegatedAlignmentModelView;
 import info.bioinfweb.libralign.model.tokenset.TokenSet;
 import info.bioinfweb.libralign.model.utils.AlignmentModelUtils;
 
@@ -58,7 +59,8 @@ import java.util.Set;
  * @see SequenceAccessAlignmentModel
  * @see AbstractUndecoratedAlignmentModel
  * @see AbstractMapBasedAlignmentModel
- * @see AbstractAlignmentModelAdapter
+ * @see AbstractBasicAlignmentModelView
+ * @see DelegatedAlignmentModelView
  *
  * @param <T> the type of sequence elements (tokens) the implementing model object works with
  */

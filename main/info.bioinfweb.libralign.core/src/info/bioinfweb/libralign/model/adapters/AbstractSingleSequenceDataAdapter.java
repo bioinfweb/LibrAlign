@@ -24,8 +24,8 @@ import info.bioinfweb.libralign.model.AlignmentModel;
 
 
 /**
- * Implements basic functionality of {@link SingleSequenceDataAdapter}. Specifically a sequence ID
- * of the viewed sequence, the index of the first viewed token and the length of the viewed representation
+ * Implements basic functionality of {@link SingleSequenceDataAdapter}. Specifically the sequence ID
+ * of the viewed sequence, the index of its first viewed token and the length of the viewed part
  * are stored. Additionally protected setter methods are offered.
  * 
  * @author Ben St&ouml;ver
@@ -33,7 +33,7 @@ import info.bioinfweb.libralign.model.AlignmentModel;
  *
  * @param <T>
  */
-public class AbstractSingleSequenceDataAdapter<T> extends AbstractAlignmentModelAdapter<T> 
+public class AbstractSingleSequenceDataAdapter<T> extends AbstractBasicAlignmentModelView<T> 
     implements SingleSequenceDataAdapter<T> {
 	
 	private String sequenceID;
@@ -44,7 +44,7 @@ public class AbstractSingleSequenceDataAdapter<T> extends AbstractAlignmentModel
 	/**
 	 * Creates a new instance of this class.
 	 * 
-	 * @param underlyingModel the sequence data provider that contains the sequence to be viewed
+	 * @param underlyingModel the alignment model that contains the sequence to be viewed
 	 * @param sequenceID the ID used in {@code provider} of the sequence to be viewed
 	 * @param offset the start index of the subsequence to be viewed (The first token has the index 0.)
 	 * @param length the length of the subsequence to be viewed

@@ -32,7 +32,7 @@ import info.bioinfweb.libralign.model.AlignmentModel;
  *
  * @param <T> - the token type used by the underlying provider
  */
-public class CharSequenceAdapter<T> extends AbstractAlignmentModelAdapter<T> 
+public class CharSequenceAdapter<T> extends AbstractBasicAlignmentModelView<T> 
     implements SequenceDataAdapter<CharSequence, T> {
 	
 	private boolean cutLongRepresentations;

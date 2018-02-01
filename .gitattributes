@@ -189,7 +189,7 @@ main/info.bioinfweb.libralign.core/src/info/bioinfweb/libralign/model/AlignmentM
 main/info.bioinfweb.libralign.core/src/info/bioinfweb/libralign/model/BasicAlignmentModelView.java -text svneol=unset#text/plain
 main/info.bioinfweb.libralign.core/src/info/bioinfweb/libralign/model/SequenceAccess.java -text svneol=unset#text/plain
 main/info.bioinfweb.libralign.core/src/info/bioinfweb/libralign/model/SequenceAccessAlignmentModel.java -text svneol=unset#text/plain
-main/info.bioinfweb.libralign.core/src/info/bioinfweb/libralign/model/adapters/AbstractAlignmentModelAdapter.java -text svneol=unset#text/plain
+main/info.bioinfweb.libralign.core/src/info/bioinfweb/libralign/model/adapters/AbstractBasicAlignmentModelView.java -text svneol=unset#text/plain
 main/info.bioinfweb.libralign.core/src/info/bioinfweb/libralign/model/adapters/AbstractSequenceDataAdapter.class -text
 main/info.bioinfweb.libralign.core/src/info/bioinfweb/libralign/model/adapters/AbstractSingleSequenceDataAdapter.class -text
 main/info.bioinfweb.libralign.core/src/info/bioinfweb/libralign/model/adapters/AbstractSingleSequenceDataAdapter.java -text svneol=unset#text/plain
@@ -251,6 +251,7 @@ main/info.bioinfweb.libralign.core/src/info/bioinfweb/libralign/model/implementa
 main/info.bioinfweb.libralign.core/src/info/bioinfweb/libralign/model/implementations/decorate/AbstractAlignmentModelDecorator.java -text svneol=unset#text/plain
 main/info.bioinfweb.libralign.core/src/info/bioinfweb/libralign/model/implementations/decorate/AbstractTokenReplacementAlignmentModelDecorator.java -text svneol=unset#text/plain
 main/info.bioinfweb.libralign.core/src/info/bioinfweb/libralign/model/implementations/decorate/DNAAlignmentModelDecorator.java -text svneol=unset#text/plain
+main/info.bioinfweb.libralign.core/src/info/bioinfweb/libralign/model/implementations/decorate/DelegatedAlignmentModelView.java -text svneol=unset#text/plain
 main/info.bioinfweb.libralign.core/src/info/bioinfweb/libralign/model/implementations/decorate/RNAAlignmentModelDecorator.java -text svneol=unset#text/plain
 main/info.bioinfweb.libralign.core/src/info/bioinfweb/libralign/model/implementations/decorate/package-info.java -text svneol=unset#text/plain
 main/info.bioinfweb.libralign.core/src/info/bioinfweb/libralign/model/implementations/package-info.java -text svneol=unset#text/plain

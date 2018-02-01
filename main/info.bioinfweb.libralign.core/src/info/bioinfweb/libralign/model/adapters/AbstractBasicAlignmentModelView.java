@@ -32,13 +32,13 @@ import info.bioinfweb.libralign.model.AlignmentModel;
  * @author Ben St&ouml;ver
  * @since 0.1.0
  *
- * @param <T> - the token type used by the underlying provider
+ * @param <T> the token type used by the underlying model
  */
-public class AbstractAlignmentModelAdapter<T> implements BasicAlignmentModelView<T> {
+public class AbstractBasicAlignmentModelView<T> implements BasicAlignmentModelView<T> {
 	private AlignmentModel<T> underlyingModel;
 
 	
-	protected AbstractAlignmentModelAdapter(AlignmentModel<T> underlyingModel) {
+	protected AbstractBasicAlignmentModelView(AlignmentModel<T> underlyingModel) {
 		super();
 		this.underlyingModel = underlyingModel;
 	}

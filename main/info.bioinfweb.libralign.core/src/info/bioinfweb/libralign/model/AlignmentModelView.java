@@ -22,12 +22,12 @@ package info.bioinfweb.libralign.model;
 
 /**
  * This interface should be implemented by all classes which return the contents of another implementation
- * of {@link AlignmentModel} in a modified way but can still act as sequence data providers.
+ * of {@link AlignmentModel} in a modified way.
  * 
  * @author Ben St&ouml;ver
  * @since 0.1.0
  *
- * @param <T> - the type of sequence elements (tokens) the implementing view works with
- * @param <U> - the type of sequence elements (tokens) the underlying provider works with
+ * @param <T> the type of sequence elements (tokens) the implementing view works with
+ * @param <U> the type of sequence elements (tokens) the underlying model works with
  */
 public interface AlignmentModelView<T, U> extends AlignmentModel<T>, BasicAlignmentModelView<U> {}

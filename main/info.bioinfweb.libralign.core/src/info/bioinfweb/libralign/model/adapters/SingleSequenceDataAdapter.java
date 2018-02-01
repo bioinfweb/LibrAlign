@@ -25,13 +25,13 @@ import info.bioinfweb.libralign.model.AlignmentModel;
 
 
 /**
- * Adapter classes providing views of (sub-) sequences of single rows of alignment data provided by an 
- * implementation of {@link AlignmentModel} should implement this interface.
+ * Adapter classes providing views of (sub-) sequences of single rows of an implementation of 
+ * {@link AlignmentModel} should implement this interface.
  * 
  * @author Ben St&ouml;ver
  * @since 0.1.0
  *
- * @param <T> - the token type used by the underlying sequence data provider
+ * @param <T> the token type used by the underlying alignment model
  */
 public interface SingleSequenceDataAdapter<T> extends BasicAlignmentModelView<T> {
 	/**

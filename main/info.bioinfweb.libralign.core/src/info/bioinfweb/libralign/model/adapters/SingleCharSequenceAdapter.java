@@ -28,13 +28,13 @@ import info.bioinfweb.libralign.model.AlignmentModel;
  * An adapter class allowing to view a single sequence provided by an implementation of 
  * {@link AlignmentModel} as a {@link CharSequence}.
  * <p>
- * Note that the underlying sequence data provider is directly used to that all changes in that provider
- * are also reflected by the instance of this class.
+ * Note this implementation directly delegates to the underlying alignment model so that all changes 
+ * there automatically affect the instance of this class.
  * 
  * @author Ben St&ouml;ver
  * @since 0.1.0
  *
- * @param <T> - the token type that is used by the underlying sequence data provider
+ * @param <T> the token type that is used by the underlying alignment model
  */
 public class SingleCharSequenceAdapter<T> extends AbstractSingleSequenceDataAdapter<T> 
     implements CharSequence, SingleSequenceDataAdapter<T> {
@@ -45,18 +45,18 @@ public class SingleCharSequenceAdapter<T> extends AbstractSingleSequenceDataAdap
 	/**
 	 * Creates a new instance of this class specifying a subsequence to be viewed.
 	 * 
-	 * @param provider - the sequence data provider that contains the sequence to be viewed
-	 * @param sequenceID - the ID used in {@code provider} of the sequence to be viewed
-	 * @param offset - the start index of the subsequence to be viewed (The first token has the index 0.)
-	 * @param length - the length of the subsequence to be viewed
-	 * @param cutLongRepresentations - Specify {@code true} here if tokens that have a string representation 
+	 * @param underlyingModel the alignment model that contains the sequence to be viewed
+	 * @param sequenceID the ID used in {@code provider} of the sequence to be viewed
+	 * @param offset the start index of the subsequence to be viewed (The first token has the index 0.)
+	 * @param length the length of the subsequence to be viewed
+	 * @param cutLongRepresentations Specify {@code true} here if tokens that have a string representation 
 	 *        that is not exactly one character long shall be exported with the first character of their
 	 *        representation or {@code false} if an exception shall be thrown if such a token is found.
 	 */
-	public SingleCharSequenceAdapter(AlignmentModel<T> provider, String sequenceID, int offset, int length,
+	public SingleCharSequenceAdapter(AlignmentModel<T> underlyingModel, String sequenceID, int offset, int length,
 			boolean cutLongRepresentations) {
 		
-		super(provider, sequenceID, offset, length);
+		super(underlyingModel, sequenceID, offset, length);
 		this.cutLongRepresentations = cutLongRepresentations;
 	}
 
@@ -64,16 +64,16 @@ public class SingleCharSequenceAdapter<T> extends AbstractSingleSequenceDataAdap
 	/**
 	 * Creates a new instance of this class specifying a whole sequence to be viewed.
 	 * 
-	 * @param provider - the sequence data provider that contains the sequence to be viewed
-	 * @param sequenceID - the ID used in {@code provider} of the sequence to be viewed
-	 * @param cutLongRepresentations - Specify {@code true} here if tokens that have a string representation 
+	 * @param underlyingModel the alignment model that contains the sequence to be viewed
+	 * @param sequenceID the ID used in {@code provider} of the sequence to be viewed
+	 * @param cutLongRepresentations Specify {@code true} here if tokens that have a string representation 
 	 *        that is not exactly one character long shall be exported with the first character of their
 	 *        representation or {@code false} if an exception shall be thrown if such a token is found.
 	 */
-	public SingleCharSequenceAdapter(AlignmentModel<T> provider, String sequenceID, 
+	public SingleCharSequenceAdapter(AlignmentModel<T> underlyingModel, String sequenceID, 
 			boolean cutLongRepresentations) {
 		
-		this(provider, sequenceID, 0, Integer.MAX_VALUE, cutLongRepresentations);  // The real length will always be returned by length() since it will be smaller.
+		this(underlyingModel, sequenceID, 0, Integer.MAX_VALUE, cutLongRepresentations);  // The real length will always be returned by length() since it will be smaller.
 	}
 
 
