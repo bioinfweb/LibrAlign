@@ -25,7 +25,7 @@ import info.bioinfweb.libralign.model.AlignmentModel;
 
 /**
  * Implements basic functionality of {@link SingleSequenceDataAdapter}. Specifically a sequence ID
- * of the viewed sequence that index of the first viewed token and the length of the viewed representation
+ * of the viewed sequence, the index of the first viewed token and the length of the viewed representation
  * are stored. Additionally protected setter methods are offered.
  * 
  * @author Ben St&ouml;ver
