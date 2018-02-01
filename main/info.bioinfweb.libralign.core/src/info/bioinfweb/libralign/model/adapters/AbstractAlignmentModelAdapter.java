@@ -38,9 +38,9 @@ public class AbstractAlignmentModelAdapter<T> implements BasicAlignmentModelView
 	private AlignmentModel<T> underlyingModel;
 
 	
-	protected AbstractAlignmentModelAdapter(AlignmentModel<T> underlyingProvider) {
+	protected AbstractAlignmentModelAdapter(AlignmentModel<T> underlyingModel) {
 		super();
-		this.underlyingModel = underlyingProvider;
+		this.underlyingModel = underlyingModel;
 	}
 	
 
@@ -50,7 +50,7 @@ public class AbstractAlignmentModelAdapter<T> implements BasicAlignmentModelView
 	}
 
 	
-	public void setUnderlyingModel(AlignmentModel<T> underlyingProvider) {
-		this.underlyingModel = underlyingProvider;
+	public void setUnderlyingModel(AlignmentModel<T> underlyingModel) {
+		this.underlyingModel = underlyingModel;
 	}
 }

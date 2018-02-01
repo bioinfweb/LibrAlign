@@ -44,15 +44,15 @@ public class AbstractSingleSequenceDataAdapter<T> extends AbstractAlignmentModel
 	/**
 	 * Creates a new instance of this class.
 	 * 
-	 * @param provider - the sequence data provider that contains the sequence to be viewed
-	 * @param sequenceID - the ID used in {@code provider} of the sequence to be viewed
-	 * @param offset - the start index of the subsequence to be viewed (The first token has the index 0.)
-	 * @param length - the length of the subsequence to be viewed
+	 * @param underlyingModel the sequence data provider that contains the sequence to be viewed
+	 * @param sequenceID the ID used in {@code provider} of the sequence to be viewed
+	 * @param offset the start index of the subsequence to be viewed (The first token has the index 0.)
+	 * @param length the length of the subsequence to be viewed
 	 */
-	protected AbstractSingleSequenceDataAdapter(AlignmentModel<T> underlyingProvider, String sequenceID, 
+	protected AbstractSingleSequenceDataAdapter(AlignmentModel<T> underlyingModel, String sequenceID, 
 			int offset,	int length) {
 		
-		super(underlyingProvider);
+		super(underlyingModel);
 		this.sequenceID = sequenceID;
 		this.offset = offset;
 		this.length = length;
@@ -63,12 +63,11 @@ public class AbstractSingleSequenceDataAdapter<T> extends AbstractAlignmentModel
 	 * Creates a new instance of this class which views the whole length of a sequence in the underlying data 
 	 * source.
 	 * 
-	 * @param provider - the sequence data provider that contains the sequence to be viewed
-	 * @param sequenceID - the ID used in {@code provider} of the sequence to be viewed
+	 * @param underlyingModel the sequence data provider that contains the sequence to be viewed
+	 * @param sequenceID the ID used in {@code provider} of the sequence to be viewed
 	 */
-	protected AbstractSingleSequenceDataAdapter(AlignmentModel<T> underlyingProvider, String sequenceID) {
-		
-		super(underlyingProvider);
+	protected AbstractSingleSequenceDataAdapter(AlignmentModel<T> underlyingModel, String sequenceID) {
+		super(underlyingModel);
 		this.sequenceID = sequenceID;
 		this.offset = 0;
 		this.length = Integer.MAX_VALUE;
