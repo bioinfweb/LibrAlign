@@ -47,7 +47,7 @@ public class AlignmentModelUtils {
 	
 	/**
 	 * Converts a character sequence to a sequence of tokens. Each character in {@code sequence} is considered
-	 * to be a valid token representation in the specified set.#
+	 * to be a valid token representation in the specified set.
 	 * <p>
 	 * Note that {@link CharSequenceTokenScanner} or {@link #charSequenceToTokenList(CharSequence, TokenSet, boolean, Object)}
 	 * are more powerful alternatives to this method that allow longer token representations and handled invalid 
