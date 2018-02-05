@@ -44,7 +44,7 @@ import org.biojava3.core.sequence.template.Sequence;
  * @param <T> - the token type used by the underlying provider
  * @param <C> - the compound class to be used in the returned sequences
  */
-public class BioJava3SequenceAdapter<T, C extends Compound> extends AbstractAlignmentModelAdapter<T> 
+public class BioJava3SequenceAdapter<T, C extends Compound> extends AbstractBasicAlignmentModelView<T> 
     implements SequenceDataAdapter<SingleBioJava3SequenceAdapter<T, C>, T> {
 
 	private CompoundSet<C> compoundSet;

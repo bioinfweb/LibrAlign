@@ -56,11 +56,14 @@ public class BioJava3SequenceAlignmentModel<S extends Sequence<C>, C extends Com
 	/**
 	 * Creates a new instance of this class using a possibly shared ID manager.
 	 * 
-	 * @param tokenSet - the token set which is supported by the implementation
+	 * @param tokenSet the token set which is supported by the implementation
 	 * @param idManager the ID manager to be used by the new instance (maybe shared among multiple instances) 
+	 * @param reuseSequenceIDs Specifies whether unused IDs of the underlying ID manager should be reused by this model.
+	 *        (See the documentation of {@link #isReuseSequenceIDs()} for details. Specify {@code false}, if you are unsure
+	 *        what this property does.) 
 	 */
-	public BioJava3SequenceAlignmentModel(TokenSet<C> tokenSet, SequenceIDManager idManager) {
-		super(tokenSet, idManager);
+	public BioJava3SequenceAlignmentModel(TokenSet<C> tokenSet, SequenceIDManager idManager, boolean reuseSequenceIDs) {
+		super(tokenSet, idManager, reuseSequenceIDs);
 	}
 	
 	
@@ -70,7 +73,7 @@ public class BioJava3SequenceAlignmentModel<S extends Sequence<C>, C extends Com
 	 * @param tokenSet - the token set which is supported by the implementation
 	 */
 	public BioJava3SequenceAlignmentModel(TokenSet<C> tokenSet) {
-		this(tokenSet, new SequenceIDManager());
+		this(tokenSet, new SequenceIDManager(), false);
 	}
 	
 	
@@ -135,11 +138,11 @@ public class BioJava3SequenceAlignmentModel<S extends Sequence<C>, C extends Com
 	 */
 	public static <C extends Compound> BioJava3SequenceAlignmentModel<AlignedSequence<? extends Sequence<C>, C>, C> 
 			newInstanceFromProfile(Profile<Sequence<C>, C> underlyingModel, String namePrefix, CharacterStateSetType setType, 
-					boolean spaceForGap, SequenceIDManager idManager) {
+					boolean spaceForGap, SequenceIDManager idManager, boolean reuseSequenceIDs) {
 		
 		BioJava3SequenceAlignmentModel<AlignedSequence<? extends Sequence<C>, C>, C> result = 
 				new BioJava3SequenceAlignmentModel<AlignedSequence<? extends Sequence<C>,C>, C>(
-						new BioJava3TokenSet<C>(setType, underlyingModel.getCompoundSet(), spaceForGap), idManager);
+						new BioJava3TokenSet<C>(setType, underlyingModel.getCompoundSet(), spaceForGap), idManager, reuseSequenceIDs);
 		
 		if (namePrefix == null) {
 			namePrefix = "";
@@ -167,7 +170,7 @@ public class BioJava3SequenceAlignmentModel<S extends Sequence<C>, C extends Com
 			newInstanceFromProfile(Profile<Sequence<C>, C> underlyingModel, String namePrefix, CharacterStateSetType setType, 
 					boolean spaceForGap) {
 		
-		return newInstanceFromProfile(underlyingModel, namePrefix, setType, spaceForGap, new SequenceIDManager());
+		return newInstanceFromProfile(underlyingModel, namePrefix, setType, spaceForGap, new SequenceIDManager(), false);
 	}
 	
 		
