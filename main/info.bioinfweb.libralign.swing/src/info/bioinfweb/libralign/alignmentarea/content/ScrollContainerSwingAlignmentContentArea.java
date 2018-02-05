@@ -31,7 +31,7 @@ import javax.swing.Scrollable;
 
 
 /**
- * The Swing component displaying a {@link AlignmentContentArea}.
+ * The <i>Swing</i> component displaying the contents of an {@link AlignmentContentArea}.
  * 
  * @author Ben St&ouml;ver
  * @since 0.3.0
