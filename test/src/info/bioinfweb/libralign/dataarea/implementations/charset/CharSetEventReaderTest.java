@@ -19,18 +19,17 @@
 package info.bioinfweb.libralign.dataarea.implementations.charset;
 
 
-import java.io.File;
-import java.io.IOException;
-
+import static org.junit.Assert.*;
 import info.bioinfweb.jphyloio.ReadWriteParameterMap;
 import info.bioinfweb.jphyloio.formats.nexus.NexusEventReader;
 import info.bioinfweb.libralign.model.factory.StringAlignmentModelFactory;
 import info.bioinfweb.libralign.model.io.AlignmentDataReader;
-import info.bioinfweb.libralign.model.io.DataModelReadInfo;
+import info.bioinfweb.libralign.model.io.DataModelKey;
 
-import org.junit.* ;
+import java.io.File;
+import java.io.IOException;
 
-import static org.junit.Assert.* ;
+import org.junit.Test;
 
 
 
@@ -58,43 +57,47 @@ public class CharSetEventReaderTest {
 				fail(e.getLocalizedMessage());
 			}
 			
-			assertEquals(1, charSetReader.getModels().size());
-			DataModelReadInfo<CharSetDataModel> info = charSetReader.getModels().get(0);
-			assertNull(info.getAlignmentModel());
-			assertNull(info.getSequenceID());
-			CharSetDataModel model = info.getDataModel();			
+			assertEquals(1, charSetReader.getCompletedModels().size());
+//			DataModelReadInfo<CharSetDataModel> info = charSetReader.getCompletedModels().get(0);
+//			assertNull(info.getAlignmentModel());
+//			assertNull(info.getSequenceID());
+			
+			CharSetDataModel model = charSetReader.getFirstCompletedModel(new DataModelKey(null, null));
+			assertNotNull(model);
+			
+			//CharSetDataModel model = charSetReader.getCompletedModels().values().iterator().next();  //info.getDataModel();			
 			
 			CharSet set = model.getByName("set01");
 			assertNotNull(set);
-			assertCharSet(0, 3, false, set);
-			assertCharSet(3, 6, true, set);
-			assertCharSet(6, 9, false, set);
-			assertCharSet(9, 10, true, set);
-			assertCharSet(10, 12, false, set);
-			assertCharSet(12, 17, true, set);
-			assertCharSet(17, 200, false, set);
+			assertCharSet(0, 2, false, set);  // Nexus indices start with 1. The indices here start with 0.
+			assertCharSet(2, 5, true, set);
+			assertCharSet(5, 8, false, set);
+			assertCharSet(8, 9, true, set);
+			assertCharSet(9, 11, false, set);
+			assertCharSet(11, 16, true, set);
+			assertCharSet(16, 200, false, set);
 			
 			set = model.getByName("set02");
 			assertNotNull(set);
-			assertCharSet(0, 4, false, set);
-			assertCharSet(4, 10, true, set);
-			assertCharSet(10, 200, false, set);
+			assertCharSet(0, 3, false, set);
+			assertCharSet(3, 9, true, set);
+			assertCharSet(9, 200, false, set);
 			
 			set = model.getByName("set03");
 			assertNotNull(set);
-			assertCharSet(0, 4, false, set);
-			assertCharSet(4, 7, true, set);
-			assertCharSet(7, 12, false, set);
-			assertCharSet(12, 13, true, set);
-			assertCharSet(13, 200, false, set);
+			assertCharSet(0, 3, false, set);
+			assertCharSet(3, 6, true, set);
+			assertCharSet(6, 11, false, set);
+			assertCharSet(11, 12, true, set);
+			assertCharSet(12, 200, false, set);
 			
 			set = model.getByName("set04");
 			assertNotNull(set);
-			assertCharSet(0, 4, false, set);
-			assertCharSet(4, 7, true, set);
-			assertCharSet(7, 12, false, set);
-			assertCharSet(12, 13, true, set);
-			assertCharSet(13, 200, false, set);
+			assertCharSet(0, 3, false, set);
+			assertCharSet(3, 6, true, set);
+			assertCharSet(6, 11, false, set);
+			assertCharSet(11, 12, true, set);
+			assertCharSet(12, 200, false, set);
 			
 			set = model.getByName("set05");
 			assertNotNull(set);
@@ -110,9 +113,9 @@ public class CharSetEventReaderTest {
 			
 			set = model.getByName("set06");
 			assertNotNull(set);
-			assertCharSet(0, 3, false, set);
-			assertCharSet(3, 4, true, set);
-			assertCharSet(4, 200, false, set);
+			assertCharSet(0, 2, false, set);
+			assertCharSet(2, 3, true, set);
+			assertCharSet(3, 200, false, set);
 			
 			assertEquals(6, model.size());  // Check that no additional sets are present.
 		}

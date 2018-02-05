@@ -20,17 +20,12 @@ package info.bioinfweb.libralign.alignmentarea.order;
 
 
 import static org.junit.Assert.assertEquals;
-
-
-import info.bioinfweb.commons.bio.biojava3.alignment.SimpleAlignment;
-import info.bioinfweb.commons.bio.biojava3.alignment.template.Alignment;
-import info.bioinfweb.commons.bio.biojava3.core.sequence.compound.AlignmentAmbiguityNucleotideCompoundSet;
 import info.bioinfweb.libralign.alignmentarea.AlignmentArea;
 import info.bioinfweb.libralign.model.AlignmentModel;
-import info.bioinfweb.libralign.model.tokenset.BioJava3TokenSet;
+import info.bioinfweb.libralign.model.implementations.PackedAlignmentModel;
+import info.bioinfweb.libralign.model.tokenset.CharacterTokenSet;
+import info.bioinfweb.libralign.model.utils.AlignmentModelUtils;
 
-import org.biojava3.core.sequence.DNASequence;
-import org.biojava3.core.sequence.compound.NucleotideCompound;
 import org.junit.Test;
 
 
@@ -41,18 +36,21 @@ import org.junit.Test;
  * @author Ben St&ouml;ver
  */
 public class SequenceOrderTest {
+	private void addSequence(String name, String sequence, AlignmentModel<Character> model) {
+		String id = model.addSequence(name);
+		model.appendTokens(id, AlignmentModelUtils.charSequenceToTokenList("ATGGGCT", model.getTokenSet()));
+	}
+	
+	
 	private SequenceOrder createSequenceOrder() {
-		Alignment<DNASequence, NucleotideCompound> alignment = new SimpleAlignment<DNASequence, NucleotideCompound>();
-		alignment.add("Sequence C", new DNASequence("ATGGGCT"));
-		alignment.add("Sequence D", new DNASequence("ATG-GCA"));
-		alignment.add("Sequence A", new DNASequence("ACGGGCA"));
-		alignment.add("Sequence B", new DNASequence("ATG--CT"));
+		PackedAlignmentModel<Character> model = new PackedAlignmentModel<>(CharacterTokenSet.newNucleotideInstance(false));
+		addSequence("Sequence C", "ATGGGCT", model);
+		addSequence("Sequence D", "ATG-GCA", model);
+		addSequence("Sequence A", "ACGGGCA", model);
+		addSequence("Sequence B", "ATG--CT", model);
 		
 		AlignmentArea alignmentArea = new AlignmentArea();
-		alignmentArea.setAlignmentModel(new BioJava3AlignmentModel<DNASequence, NucleotideCompound>(
-				new BioJava3TokenSet<NucleotideCompound>(CharacterStateType.NUCLEOTIDE,
-						AlignmentAmbiguityNucleotideCompoundSet.getAlignmentAmbiguityNucleotideCompoundSet(), true),
-				alignment), false);
+		alignmentArea.setAlignmentModel(model, false);
 		return new SequenceOrder(alignmentArea);
 	}
 	
