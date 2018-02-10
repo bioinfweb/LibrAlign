@@ -1,6 +1,6 @@
 /*
  * LibrAlign - A GUI library for displaying and editing multiple sequence alignments and attached data
- * Copyright (C) 2014-2017  Ben Stöver
+ * Copyright (C) 2014-2018  Ben Stöver
  * <http://bioinfweb.info/LibrAlign>
  *
  * This program is free software: you can redistribute it and/or modify
