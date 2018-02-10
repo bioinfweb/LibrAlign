@@ -13,6 +13,10 @@ demo/info.bioinfweb.libralign.demo.docexamples/.settings/org.eclipse.jdt.ui.pref
 demo/info.bioinfweb.libralign.demo.docexamples/data/PaperExample.nexml -text
 demo/info.bioinfweb.libralign.demo.docexamples/data/Test.fasta -text
 demo/info.bioinfweb.libralign.demo.docexamples/data/Test.nexml -text
+demo/info.bioinfweb.libralign.demo.docexamples/src/APACHE-LICENSE.txt -text svneol=unset#text/plain
+demo/info.bioinfweb.libralign.demo.docexamples/src/GPL.txt -text svneol=unset#text/plain
+demo/info.bioinfweb.libralign.demo.docexamples/src/LGPL.txt -text svneol=unset#text/plain
+demo/info.bioinfweb.libralign.demo.docexamples/src/NOTICE.txt -text svneol=unset#text/plain
 demo/info.bioinfweb.libralign.demo.docexamples/src/info/bionfweb/libralign/demo/docexamples/BasicAlignmentAreaDemo.java -text svneol=unset#text/plain
 demo/info.bioinfweb.libralign.demo.docexamples/src/info/bionfweb/libralign/demo/docexamples/CreateAlignmentModel.java -text svneol=unset#text/plain
 demo/info.bioinfweb.libralign.demo.docexamples/src/info/bionfweb/libralign/demo/docexamples/io/AlignmentIODemo.java -text svneol=unset#text/plain
