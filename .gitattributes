@@ -409,6 +409,10 @@ test/data/pherograms/Test_qualityScore.scf -text
 test/lib/gui-1.9.2.jar -text
 test/lib/hamcrest-core-1.3.jar -text
 test/lib/junit-4.11.jar -text
+test/src/APACHE-LICENSE.txt -text svneol=unset#text/plain
+test/src/GPL.txt -text svneol=unset#text/plain
+test/src/LGPL.txt -text svneol=unset#text/plain
+test/src/NOTICE.txt -text svneol=unset#text/plain
 test/src/info/bioinfweb/libralign/alignmentarea/content/AlignmentSubAreaIteratorTest.java -text svneol=unset#text/plain
 test/src/info/bioinfweb/libralign/alignmentarea/order/SequenceOrderTest.java -text svneol=unset#text/plain
 test/src/info/bioinfweb/libralign/alignmentarea/paintsettings/TokenPainterMapTest.java -text svneol=unset#text/plain
