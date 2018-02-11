@@ -128,10 +128,6 @@ public class SequentialAccessIndexTranslator<T> extends AbstractIndexTranslator<
 	/**
 	 * Calculates the ungapped index associated with a position in a sequence with gaps.
 	 * <p>
-	 * If {@code originalIndex} refers to a position in the original sequence of a gap,
-	 * the ungapped index of the next non-gap token on the left is returned. If no non-gap
-	 * token exists left of the specified position, 0 is returned.
-	 * <p>
 	 * The runtime of this method scales linearly with the distance between {@code originalIndex}
 	 * in this call of the method and {@code originalIndex} in the previous call with the same 
 	 * sequence ID. If this is the first call with the specified sequence ID ever or since the 
@@ -140,8 +136,8 @@ public class SequentialAccessIndexTranslator<T> extends AbstractIndexTranslator<
 	 * 
 	 * @param sequenceID the ID of the sequence where the ungapped index shall be determined
 	 * @param alignedIndex the index in the original sequence including gaps
-	 * @return the index the token at the specified position would have, if there were no gaps
-	 *         in the sequence
+	 * @return an object describing the index the token at the specified position would have, if 
+	 *         there were no gaps in the sequence
 	 */
 	@Override
 	public IndexRelation getUnalignedIndex(String sequenceID, int alignedIndex) {
