@@ -56,10 +56,16 @@ public class SequentialAccessIndexTranslatorTest {
 		assertIndexRelation(6, IndexRelation.GAP, IndexRelation.OUT_OF_RANGE, calculator.getUnalignedIndex(id, 13));
 		assertIndexRelation(6, IndexRelation.GAP, IndexRelation.OUT_OF_RANGE, calculator.getUnalignedIndex(id, 14));
 
-		assertIndexRelation(1, IndexRelation.GAP, 2, calculator.getUnalignedIndex(id, 5));
+		// Direction change on gap forward:
 		assertIndexRelation(0, 0, 0, calculator.getUnalignedIndex(id, 2));
-		assertIndexRelation(4, 4, 4, calculator.getUnalignedIndex(id, 10));
-		assertIndexRelation(1, 1, 1, calculator.getUnalignedIndex(id, 4));
+		assertIndexRelation(3, IndexRelation.GAP, 4, calculator.getUnalignedIndex(id, 8));
+		assertIndexRelation(2, 2, 2, calculator.getUnalignedIndex(id, 6));
+
+		// Direction change on gap backward:
+//		assertIndexRelation(0, IndexRelation.GAP, 1, calculator.getUnalignedIndex(id, 3));
+//		//assertIndexRelation(0, 0, 0, calculator.getUnalignedIndex(id, 2));
+//		assertIndexRelation(5, 5, 5, calculator.getUnalignedIndex(id, 11));
+//		assertIndexRelation(1, 1, 1, calculator.getUnalignedIndex(id, 4));
 		
 		assertEquals(2, calculator.getAlignedIndex(id, 0));
 		assertEquals(4, calculator.getAlignedIndex(id, 1));
@@ -77,6 +83,31 @@ public class SequentialAccessIndexTranslatorTest {
 		assertEquals(2, calculator.getAlignedIndex(id, 0));
 	}
 	
+	
+	@Test
+	public void test_degapedIndex_tokenAtStart() {
+		TokenSet<Character> tokenSet = CharacterTokenSet.newDNAInstance(false);
+		AlignmentModel<Character> model = new PackedAlignmentModel<Character>(tokenSet);
+		String id = model.addSequence("A");
+		model.appendTokens(id, AlignmentModelUtils.charSequenceToTokenList("GT-ACG-TA", tokenSet));
+		
+		SequentialAccessIndexTranslator<Character> calculator = new SequentialAccessIndexTranslator<Character>(model);
+		assertIndexRelation(0, 0, 0, calculator.getUnalignedIndex(id, 0));
+		assertIndexRelation(1, 1, 1, calculator.getUnalignedIndex(id, 1));
+		assertIndexRelation(1, IndexRelation.GAP, 2, calculator.getUnalignedIndex(id, 2));
+		assertIndexRelation(2, 2, 2, calculator.getUnalignedIndex(id, 3));
+		assertIndexRelation(3, 3, 3, calculator.getUnalignedIndex(id, 4));
+		assertIndexRelation(4, 4, 4, calculator.getUnalignedIndex(id, 5));
+		assertIndexRelation(4, IndexRelation.GAP, 5, calculator.getUnalignedIndex(id, 6));
+		assertIndexRelation(5, 5, 5, calculator.getUnalignedIndex(id, 7));
+		assertIndexRelation(6, 6, 6, calculator.getUnalignedIndex(id, 8));
+		
+		assertIndexRelation(1, IndexRelation.GAP, 2, calculator.getUnalignedIndex(id, 2));
+		assertIndexRelation(5, 5, 5, calculator.getUnalignedIndex(id, 7));
+		//TODO Do additional tests?
+		//TODO Add the same case for random access
+	}
+
 	
 	@Test
 	public void test_degapedIndex_onlyGaps() {
