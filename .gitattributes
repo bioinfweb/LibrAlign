@@ -424,7 +424,6 @@ test/src/info/bioinfweb/libralign/model/io/AlignmentModelEventReaderTest.java -t
 test/src/info/bioinfweb/libralign/model/utils/AlignmentModelUtilsTest.java -text svneol=unset#text/plain
 test/src/info/bioinfweb/libralign/model/utils/CharSequenceTokenScannerTest.java -text svneol=unset#text/plain
 test/src/info/bioinfweb/libralign/model/utils/indextranslation/RandomAccessIndexTranslatorTest.java -text svneol=unset#text/plain
-test/src/info/bioinfweb/libralign/model/utils/indextranslation/SequentialAccessIndexTranslatorTest.java -text svneol=unset#text/plain
 test/src/info/bioinfweb/libralign/pherogram/DefaultPherogramAlignmentModelTest.java -text svneol=unset#text/plain
 test/src/info/bioinfweb/libralign/test/LibrAlignTestTools.java -text svneol=unset#text/plain
 test/src/info/bioinfweb/libralign/test/tests/BioJavaAlignmentRendererTest.java -text svneol=unset#text/plain
