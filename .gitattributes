@@ -300,7 +300,6 @@ main/info.bioinfweb.libralign.core/src/info/bioinfweb/libralign/model/utils/Char
 main/info.bioinfweb.libralign.core/src/info/bioinfweb/libralign/model/utils/indextranslation/AbstractIndexTranslator.java -text svneol=unset#text/plain
 main/info.bioinfweb.libralign.core/src/info/bioinfweb/libralign/model/utils/indextranslation/IndexRelation.java -text svneol=unset#text/plain
 main/info.bioinfweb.libralign.core/src/info/bioinfweb/libralign/model/utils/indextranslation/RandomAccessIndexTranslator.java -text svneol=unset#text/plain
-main/info.bioinfweb.libralign.core/src/info/bioinfweb/libralign/model/utils/indextranslation/SequentialAccessIndexTranslator.java -text svneol=unset#text/plain
 main/info.bioinfweb.libralign.core/src/info/bioinfweb/libralign/model/utils/package-info.java -text svneol=unset#text/plain
 main/info.bioinfweb.libralign.core/src/info/bioinfweb/libralign/multiplealignments/AlignmentAreaList.java -text svneol=unset#text/plain
 main/info.bioinfweb.libralign.core/src/info/bioinfweb/libralign/multiplealignments/HorizontalScrollingSynchronizer.java -text svneol=unset#text/plain
