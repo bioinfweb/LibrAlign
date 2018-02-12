@@ -32,8 +32,8 @@ import info.bioinfweb.tic.scrolling.TICScrollListener;
  * <p>
  * <b>Warning:</b> This class is used by {@link AlignmentAreaList} within {@link MultipleAlignmentsContainer}. It is 
  * designed for internal use in <i>LibrAlign</i> only and should not be referenced in application code directly. API 
- * stability is not guaranteed for this class for any release of LibrAlign (no matter if the major version number is 
- * increased or not). 
+ * stability is not guaranteed for this class for any release of <i>LibrAlign</i> (no matter if the major version 
+ * number is increased or not). 
  * 
  * @author Ben St&ouml;ver
  * @since 0.5.0
