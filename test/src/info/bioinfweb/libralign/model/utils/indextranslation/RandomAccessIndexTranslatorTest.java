@@ -58,6 +58,11 @@ public class RandomAccessIndexTranslatorTest {
 		assertIndexRelation(6, 6, 6, calculator.getUnalignedIndex(id, 12));
 		assertIndexRelation(6, IndexRelation.GAP, IndexRelation.OUT_OF_RANGE, calculator.getUnalignedIndex(id, 13));
 		
+		assertIndexRelation(1, IndexRelation.GAP, 2, calculator.getUnalignedIndex(id, 5));
+		assertIndexRelation(3, 3, 3, calculator.getUnalignedIndex(id, 7));
+		assertIndexRelation(3, IndexRelation.GAP, 4, calculator.getUnalignedIndex(id, 8));
+		assertIndexRelation(0, 0, 0, calculator.getUnalignedIndex(id, 2));
+		
 		assertEquals(2, calculator.getAlignedIndex(id, 0));
 		assertEquals(4, calculator.getAlignedIndex(id, 1));
 		assertEquals(6, calculator.getAlignedIndex(id, 2));
