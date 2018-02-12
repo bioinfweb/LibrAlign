@@ -43,13 +43,14 @@ import java.util.Set;
 public class SequentialAccessIndexTranslator<T> extends AbstractIndexTranslator<T, SequentialAccessIndexTranslator.IndexInfo> {
 	protected static final class IndexInfo {
 		public int alignedIndex = 0;
-		public int unalignedIndex = IndexRelation.OUT_OF_RANGE;
+		public int unalignedIndex;
 		public boolean lastMoveRight = false;
 		public int unalignedLength;
 		public int lastAlignedPosition;
 		
-		public IndexInfo(int unalignedLength, int lastAlignedPosition) {
+		public IndexInfo(int unalignedIndex, int unalignedLength, int lastAlignedPosition) {
 			super();
+			this.unalignedIndex = unalignedIndex;
 			this.unalignedLength = unalignedLength;
 			this.lastAlignedPosition = lastAlignedPosition;
 		}
@@ -83,13 +84,17 @@ public class SequentialAccessIndexTranslator<T> extends AbstractIndexTranslator<
 	protected IndexInfo createSequenceData(String sequenceID) {
 		int unalignedLength = 0;
 		int lastAlignedPosition = 0;
-		for (int alignedIndex = 0; alignedIndex < getModel().getSequenceLength(sequenceID); alignedIndex++) {
+		for (int alignedIndex = 0; alignedIndex < getModel().getSequenceLength(sequenceID); alignedIndex++) {  //TODO Is this calculation really necessary here? Seems to be expensive for large alignments.
 			if (!getGapTokens().contains(getModel().getTokenAt(sequenceID, alignedIndex))) {
 				unalignedLength++;
 				lastAlignedPosition = alignedIndex;
 			}
 		}
-		return new IndexInfo(unalignedLength, lastAlignedPosition);
+		int unalignedIndex = 0;
+		if ((getModel().getSequenceLength(sequenceID) > 0) && getGapTokens().contains(getModel().getTokenAt(sequenceID, 0))) {
+			unalignedIndex = IndexRelation.OUT_OF_RANGE;
+		}
+		return new IndexInfo(unalignedIndex, unalignedLength, lastAlignedPosition);
 	}
 	
 	
