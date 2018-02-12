@@ -41,19 +41,30 @@ import java.util.Set;
  * @param <T> the token type used in the associated alignment model
  */
 public class SequentialAccessIndexTranslator<T> extends AbstractIndexTranslator<T, SequentialAccessIndexTranslator.IndexInfo> {
+	//TODO This class is currently refactored to fully determine the gap borders every time a gap is reached. The previous 
+	//     implementation (until r993) did loose count if the direction was changes within a gap. Since the code was not 
+	//     easy to understand anymore, a major refactoring was planned. Since AlignmentComparator currently uses 
+	//     RandomAccessIndexTranslator, refactoring was postponed.
+	
+	
 	protected static final class IndexInfo {
+		/** The aligned index related to the current token or the first position in the current gap. */
 		public int alignedIndex = 0;
-		public int unalignedIndex;
-		public boolean lastMoveRight = false;
-		public int unalignedLength;
-		public int lastAlignedPosition;
 		
-		public IndexInfo(int unalignedIndex, int unalignedLength, int lastAlignedPosition) {
-			super();
-			this.unalignedIndex = unalignedIndex;
-			this.unalignedLength = unalignedLength;
-			this.lastAlignedPosition = lastAlignedPosition;
-		}
+		/** The last position in the current gap or -1 if there is currently no gap. */
+		public int lastAlignedIndexInGap = -1;
+		
+		/** 
+		 * The unaligned index of token at the current aligned position or of the first token before the current gap 
+		 * (or {@link IndexRelation#OUT_OF_RANGE}).
+		 */
+		public int unalignedIndex = 0;
+		
+		/** 
+		 * The unaligned index of the first token after the current gap or {@link IndexRelation#OUT_OF_RANGE}. (Identical to 
+		 * {{@link #unalignedIndex} if there is currently no gap.)
+		 */
+		public int unalignedIndexAfterGap = 0;
 	}
 	
 	
@@ -82,52 +93,54 @@ public class SequentialAccessIndexTranslator<T> extends AbstractIndexTranslator<
 
 	@Override
 	protected IndexInfo createSequenceData(String sequenceID) {
-		int unalignedLength = 0;
-		int lastAlignedPosition = 0;
-		for (int alignedIndex = 0; alignedIndex < getModel().getSequenceLength(sequenceID); alignedIndex++) {  //TODO Is this calculation really necessary here? Seems to be expensive for large alignments.
-			if (!getGapTokens().contains(getModel().getTokenAt(sequenceID, alignedIndex))) {
-				unalignedLength++;
-				lastAlignedPosition = alignedIndex;
+		IndexInfo result = new IndexInfo();
+		if ((getModel().getSequenceLength(sequenceID) > 0) && getGapTokens().contains(getModel().getTokenAt(sequenceID, result.alignedIndex))) {
+			result.unalignedIndex = IndexRelation.OUT_OF_RANGE;  // There is no position left of leading gaps.
+			result.lastAlignedIndexInGap = 0;
+			while ((getModel().getSequenceLength(sequenceID) > result.lastAlignedIndexInGap + 1) && 
+					getGapTokens().contains(getModel().getTokenAt(sequenceID, result.lastAlignedIndexInGap + 1))) {
+				
+				result.lastAlignedIndexInGap++;
 			}
 		}
-		int unalignedIndex = 0;
-		if ((getModel().getSequenceLength(sequenceID) > 0) && getGapTokens().contains(getModel().getTokenAt(sequenceID, 0))) {
-			unalignedIndex = IndexRelation.OUT_OF_RANGE;
+		
+		if ((getModel().getSequenceLength(sequenceID) == result.lastAlignedIndexInGap + 1)) {  // The whole sequence only contains gaps.
+			result.unalignedIndexAfterGap = IndexRelation.OUT_OF_RANGE;  // There is no position right of a gap spanning the whole sequence.
 		}
-		return new IndexInfo(unalignedIndex, unalignedLength, lastAlignedPosition);
+		return result;
 	}
 	
 	
-	private IndexRelation determineGapBorders(String sequenceID, IndexInfo info) {
-		if (info.unalignedIndex == IndexRelation.OUT_OF_RANGE) {  // Cursor has never left the leading gap.
-			int after = 0;
-			if (info.unalignedLength == 0) {
-				after = IndexRelation.OUT_OF_RANGE;
-			}
-			return new IndexRelation(IndexRelation.OUT_OF_RANGE, IndexRelation.GAP, after);
-		}
-		else {
-			int before;
-			int after;
-			if (info.lastMoveRight) {
-				before = info.unalignedIndex;
-				after = info.unalignedIndex + 1;
-				if (after >= info.unalignedLength) {
-					after = IndexRelation.OUT_OF_RANGE;
-				}
-			}
-			else {
-				if (info.unalignedIndex == 0) {
-					before = IndexRelation.OUT_OF_RANGE;
-				}
-				else {
-					before = info.unalignedIndex - 1;
-				}
-				after = info.unalignedIndex;
-			}
-			return new IndexRelation(before, IndexRelation.GAP, after);
-		}
-	}
+//	private IndexRelation determineGapBorders(String sequenceID, IndexInfo info) {
+//		if (info.unalignedIndex == IndexRelation.OUT_OF_RANGE) {  // Cursor has never left the leading gap.
+//			int after = 0;
+//			if (info.unalignedLength == 0) {
+//				after = IndexRelation.OUT_OF_RANGE;
+//			}
+//			return new IndexRelation(IndexRelation.OUT_OF_RANGE, IndexRelation.GAP, after);
+//		}
+//		else {
+//			int before;
+//			int after;
+//			if (info.lastMoveRight) {
+//				before = info.unalignedIndex;
+//				after = info.unalignedIndex + 1;
+//				if (after >= info.unalignedLength) {
+//					after = IndexRelation.OUT_OF_RANGE;
+//				}
+//			}
+//			else {
+//				if (info.unalignedIndex == 0) {
+//					before = IndexRelation.OUT_OF_RANGE;
+//				}
+//				else {
+//					before = info.unalignedIndex - 1;
+//				}
+//				after = info.unalignedIndex;
+//			}
+//			return new IndexRelation(before, IndexRelation.GAP, after);
+//		}
+//	}
 
 
 	/**
@@ -149,40 +162,66 @@ public class SequentialAccessIndexTranslator<T> extends AbstractIndexTranslator<
 		if (Math2.isBetween(alignedIndex, 0, getModel().getSequenceLength(sequenceID) - 1)) {
 			IndexInfo info = getSequenceData(sequenceID);
 			
-			// Move left: (Only one of both loops will be used.)
-			while (alignedIndex < info.alignedIndex) {
-				info.alignedIndex--;
-				if (!getGapTokens().contains(getModel().getTokenAt(sequenceID, info.alignedIndex))) {
-					if (info.unalignedIndex == IndexRelation.OUT_OF_RANGE) {
-						info.unalignedIndex = 0;
-					}
-					else {
-						info.unalignedIndex--;
-					}
-				}
-				info.lastMoveRight = false;
-			}
-
-			// Move right: (Only one of both loops will be used.)
-			while ((alignedIndex > info.alignedIndex) && (info.alignedIndex < info.lastAlignedPosition)) {  // If going into the trailing gap would be allowed, alignedIndex would be set to a value not matching the unaligned index.
-				info.alignedIndex++;
-				if (!getGapTokens().contains(getModel().getTokenAt(sequenceID, info.alignedIndex))) {
-					if (info.unalignedIndex == IndexRelation.OUT_OF_RANGE) {
-						info.unalignedIndex = 0;
-					}
-					else {
-						info.unalignedIndex++;
-					}
-				}
-				info.lastMoveRight = true;
-			}
-
-			if (getGapTokens().contains(getModel().getTokenAt(sequenceID, alignedIndex))) {
-				return determineGapBorders(sequenceID, info);
+			if (Math2.isBetween(alignedIndex, info.alignedIndex, info.lastAlignedIndexInGap)) {
+				return new IndexRelation(info.unalignedIndex, IndexRelation.GAP, info.unalignedIndexAfterGap);
 			}
 			else {
-				return new IndexRelation(info.unalignedIndex, info.unalignedIndex, info.unalignedIndex);
+				if (alignedIndex < info.alignedIndex) {
+					// info.unalignedIndex cannot be OUT_OF_RANGE here, since info.alignedIndex would be 0 then and the range check above would have applied.
+					if (info.lastAlignedIndexInGap != -1) {  // Currently positioned in gap.
+						info.alignedIndex--;  // Position the unaligned index on the first token before the current gap, which matches the current info.unalignedIndex.
+						info.lastAlignedIndexInGap = -1;  // Indicate that the gap was left.
+					}
+					while (alignedIndex < info.alignedIndex) {
+						info.alignedIndex--;
+						if (!getGapTokens().contains(getModel().getTokenAt(sequenceID, info.alignedIndex))) {
+							info.unalignedIndex--;
+						}
+						else {  // New gap was reached.
+							
+							//TODO Determine and save gap borders.
+						}
+					}
+				}
 			}
+			//TODO Finish implementation.
+			
+			return null;
+			
+//			// Move left: (Only one of both loops will be used.)
+//			while (alignedIndex < info.alignedIndex) {
+//				info.alignedIndex--;
+//				if (!getGapTokens().contains(getModel().getTokenAt(sequenceID, info.alignedIndex))) {
+//					if (info.unalignedIndex == IndexRelation.OUT_OF_RANGE) {
+//						info.unalignedIndex = 0;
+//					}
+//					else {
+//						info.unalignedIndex--;
+//					}
+//				}
+//				info.lastMoveRight = false;
+//			}
+//
+//			// Move right: (Only one of both loops will be used.)
+//			while ((alignedIndex > info.alignedIndex) && (info.alignedIndex < info.lastAlignedPosition)) {  // If going into the trailing gap would be allowed, alignedIndex would be set to a value not matching the unaligned index.
+//				info.alignedIndex++;
+//				if (!getGapTokens().contains(getModel().getTokenAt(sequenceID, info.alignedIndex))) {
+//					if (info.unalignedIndex == IndexRelation.OUT_OF_RANGE) {
+//						info.unalignedIndex = 0;
+//					}
+//					else {
+//						info.unalignedIndex++;
+//					}
+//				}
+//				info.lastMoveRight = true;
+//			}
+//
+//			if (getGapTokens().contains(getModel().getTokenAt(sequenceID, alignedIndex))) {
+//				return determineGapBorders(sequenceID, info);
+//			}
+//			else {
+//				return new IndexRelation(info.unalignedIndex, info.unalignedIndex, info.unalignedIndex);
+//			}
 		}
 		else {  // Throw exception:
 			String message;
@@ -201,6 +240,8 @@ public class SequentialAccessIndexTranslator<T> extends AbstractIndexTranslator<
 
 	@Override
 	public int getAlignedIndex(String sequenceID, int unalignedIndex) {
+		//TODO Refactor/reimplement according to new strategy.
+		
 		IndexInfo info = getSequenceData(sequenceID);
 
 		// Move left: (Only one of both loops will be used.)
