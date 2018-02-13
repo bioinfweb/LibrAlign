@@ -34,7 +34,7 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/ma
 	<dependency>
 		<groupId>info.bioinfweb.libralign</groupId>
 		<artifactId>libralign-core</artifactId>
-		<version>0.4.0</version>
+		<version>0.6.0</version>
 	</dependency>
 	<dependency>
       <groupId>org.biojava</groupId>
