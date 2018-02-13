@@ -6,7 +6,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>info.bioinfweb.libralign</groupId>
   <artifactId>libralign-core</artifactId>
-  <version>0.4.0</version>
+  <version>0.6.0</version>
   <packaging>jar</packaging>
   <name>LibrAlign core</name>
   <description>The core module of LibrAlign.</description>
@@ -36,24 +36,24 @@
 	<dependency>
 		<groupId>info.bioinfweb.commons.java</groupId>
 		<artifactId>bioinfweb-commons-java-core</artifactId>
-		<version>2.2.0</version>
+		<version>3.0.0</version>
 	</dependency>
 	<dependency>
 		<groupId>info.bioinfweb.commons.java</groupId>
 		<artifactId>bioinfweb-commons-java-bio</artifactId>
-		<version>2.0.0</version>
+		<version>3.0.0</version>
 	</dependency>
 	<dependency>
 		<groupId>info.bioinfweb.commons.java</groupId>
 		<artifactId>bioinfweb-commons-java-swing</artifactId>
-		<version>2.2.0</version>
+		<version>3.0.0</version>
 	</dependency>
 	
 	<!-- TIC -->
 	<dependency>
 		<groupId>info.bioinfweb.tic</groupId>
 		<artifactId>tic-core</artifactId>
-		<version>2.0.0</version>
+		<version>3.0.1</version>
 	</dependency>
 	
 	<!-- Apache commons -->
