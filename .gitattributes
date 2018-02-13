@@ -341,7 +341,7 @@ main/info.bioinfweb.libralign.io/.classpath -text svneol=unset#text/plain
 main/info.bioinfweb.libralign.io/.project -text svneol=unset#text/plain
 main/info.bioinfweb.libralign.io/.settings/org.eclipse.jdt.core.prefs -text svneol=unset#text/plain
 main/info.bioinfweb.libralign.io/.settings/org.eclipse.jdt.ui.prefs -text svneol=unset#text/plain
-main/info.bioinfweb.libralign.io/include/lib/jphyloio-core-0.3.0.jar -text
+main/info.bioinfweb.libralign.io/include/lib/jphyloio-core-0.5.1.jar -text
 main/info.bioinfweb.libralign.io/include/lib/owlapi-XMLUtils-4.1.4.jar -text
 main/info.bioinfweb.libralign.io/pom.xml -text svneol=unset#text/plain
 main/info.bioinfweb.libralign.io/src/APACHE-LICENSE.txt -text svneol=unset#text/plain
