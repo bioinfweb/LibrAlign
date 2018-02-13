@@ -5,7 +5,7 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/ma
   <modelVersion>4.0.0</modelVersion>
   <groupId>info.bioinfweb.libralign</groupId>
   <artifactId>libralign-io</artifactId>
-  <version>0.4.0</version>
+  <version>0.6.0</version>
   <packaging>jar</packaging>
   <name>LibrAlign I/O</name>
   <description>The I/O module of LibrAlign.</description>
@@ -37,7 +37,7 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/ma
 	<dependency>
 	  <groupId>info.bioinfweb.commons.java</groupId>
 	  <artifactId>bioinfweb-commons-java-core</artifactId>
-	  <version>2.2.0</version>
+	  <version>3.0.0</version>
 	</dependency>
 	<!-- commons.bio is currently indirectly referenced. -->
 	
@@ -45,14 +45,14 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/ma
 	<dependency>
 	  <groupId>info.bioinfweb.libralign</groupId>
 	  <artifactId>libralign-core</artifactId>
-	  <version>0.4.0</version>
+	  <version>0.6.0</version>
 	</dependency>
 	
 	<!-- JPhyloIO -->
 	<dependency>
       <groupId>info.bioinfweb.jphyloio</groupId>
       <artifactId>jphyloio-core</artifactId>
-      <version>0.3.0</version>
+      <version>0.5.1</version>
 	</dependency>
   </dependencies>
 </project>
