@@ -32,7 +32,7 @@ import java.util.Set;
 
 
 
-public abstract class AbstractIndexTranslator<T, D> {
+public abstract class AbstractIndexTranslator<T, D> implements IndexTranslator<T> {
 	private final AlignmentModelChangeListener MODEL_LISTENER = new AlignmentModelChangeListener() {
 		@Override
 		public <T> void afterTokenChange(TokenChangeEvent<T> e) {
@@ -68,29 +68,35 @@ public abstract class AbstractIndexTranslator<T, D> {
 	}
 	
 	
-	/**
-	 * Returns the alignment model this instance works on.
-	 * 
-	 * @return the associated alignment model
+	/* (non-Javadoc)
+	 * @see info.bioinfweb.libralign.model.utils.indextranslation.IndexTranslator#getModel()
 	 */
+	@Override
 	public AlignmentModel<T> getModel() {
 		return model;
 	}
 
 
-	/**
-	 * Returns the set of gap tokens used by this instance.  
-	 * 
-	 * @return a set of tokens to be considered as gaps
+	/* (non-Javadoc)
+	 * @see info.bioinfweb.libralign.model.utils.indextranslation.IndexTranslator#getGapTokens()
 	 */
+	@Override
 	public Set<T> getGapTokens() {
 		return gapTokens;
 	}
 
 	
+	/* (non-Javadoc)
+	 * @see info.bioinfweb.libralign.model.utils.indextranslation.IndexTranslator#getUnalignedIndex(java.lang.String, int)
+	 */
+	@Override
 	public abstract IndexRelation getUnalignedIndex(String sequenceID, int alignedIndex);
 
 	
+	/* (non-Javadoc)
+	 * @see info.bioinfweb.libralign.model.utils.indextranslation.IndexTranslator#getAlignedIndex(java.lang.String, int)
+	 */
+	@Override
 	public abstract int getAlignedIndex(String sequenceID, int unalignedIndex);
 	
 	
