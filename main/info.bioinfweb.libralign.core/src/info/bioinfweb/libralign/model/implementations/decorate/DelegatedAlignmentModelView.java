@@ -18,6 +18,7 @@
  */
 package info.bioinfweb.libralign.model.implementations.decorate;
 
+
 import info.bioinfweb.libralign.model.AlignmentModel;
 import info.bioinfweb.libralign.model.AlignmentModelChangeListener;
 import info.bioinfweb.libralign.model.AlignmentModelView;
@@ -42,7 +43,7 @@ import java.util.Set;
  * modifying this list, actually modifies the listener list of the underlying model.
  * <p>
  * This class is marked as abstract, since it does not behave different then the underlying model,
- * if no method is overwritten in inherited classes.
+ * if no method is overwritten or added in inherited classes.
  * 
  * @author Ben St&ouml;ver
  *
