@@ -70,6 +70,8 @@ public class RandomAccessIndexTranslatorTest {
 		assertEquals(10, calculator.getAlignedIndex(id, 4));
 		assertEquals(11, calculator.getAlignedIndex(id, 5));
 		assertEquals(12, calculator.getAlignedIndex(id, 6));
+		
+		assertEquals(7, calculator.getUnalignedLength(id));
 	}	
 	
 	
@@ -84,5 +86,46 @@ public class RandomAccessIndexTranslatorTest {
 		assertIndexRelation(IndexRelation.OUT_OF_RANGE, IndexRelation.GAP, IndexRelation.OUT_OF_RANGE, calculator.getUnalignedIndex(id, 0));
 		assertIndexRelation(IndexRelation.OUT_OF_RANGE, IndexRelation.GAP, IndexRelation.OUT_OF_RANGE, calculator.getUnalignedIndex(id, 1));
 		assertIndexRelation(IndexRelation.OUT_OF_RANGE, IndexRelation.GAP, IndexRelation.OUT_OF_RANGE, calculator.getUnalignedIndex(id, 2));
+
+		assertEquals(0, calculator.getUnalignedLength(id));
+	}	
+	
+	
+	@Test
+	public void test_getUnalignedLength() {
+		TokenSet<Character> tokenSet = CharacterTokenSet.newDNAInstance(false);
+		AlignmentModel<Character> model = new PackedAlignmentModel<Character>(tokenSet);
+		RandomAccessIndexTranslator<Character> calculator = new RandomAccessIndexTranslator<Character>(model);
+		
+		String id = model.addSequence("A");
+		model.appendTokens(id, AlignmentModelUtils.charSequenceToTokenList("---", tokenSet));
+		assertEquals(0, calculator.getUnalignedLength(id));
+
+		id = model.addSequence("B");
+		assertEquals(0, calculator.getUnalignedLength(id));
+
+		id = model.addSequence("C");
+		model.appendTokens(id, AlignmentModelUtils.charSequenceToTokenList("ACGT", tokenSet));
+		assertEquals(4, calculator.getUnalignedLength(id));
+
+		id = model.addSequence("D");
+		model.appendTokens(id, AlignmentModelUtils.charSequenceToTokenList("-ACGT", tokenSet));
+		assertEquals(4, calculator.getUnalignedLength(id));
+
+		id = model.addSequence("E");
+		model.appendTokens(id, AlignmentModelUtils.charSequenceToTokenList("ACGT-", tokenSet));
+		assertEquals(4, calculator.getUnalignedLength(id));
+
+		id = model.addSequence("F");
+		model.appendTokens(id, AlignmentModelUtils.charSequenceToTokenList("AC--G-T-", tokenSet));
+		assertEquals(4, calculator.getUnalignedLength(id));
+
+		id = model.addSequence("G");
+		model.appendTokens(id, AlignmentModelUtils.charSequenceToTokenList("---ACGT-", tokenSet));
+		assertEquals(4, calculator.getUnalignedLength(id));
+		
+		id = model.addSequence("H");
+		model.appendTokens(id, AlignmentModelUtils.charSequenceToTokenList("G", tokenSet));
+		assertEquals(1, calculator.getUnalignedLength(id));
 	}	
 }
