@@ -196,6 +196,7 @@ main/info.bioinfweb.libralign.core/src/info/bioinfweb/libralign/editsettings/Edi
 main/info.bioinfweb.libralign.core/src/info/bioinfweb/libralign/editsettings/WorkingMode.java -text svneol=unset#text/plain
 main/info.bioinfweb.libralign.core/src/info/bioinfweb/libralign/editsettings/package-info.java -text svneol=unset#text/plain
 main/info.bioinfweb.libralign.core/src/info/bioinfweb/libralign/model/AlignmentModel.java -text svneol=unset#text/plain
+main/info.bioinfweb.libralign.core/src/info/bioinfweb/libralign/model/AlignmentModelChangeAdapter.java -text svneol=unset#text/plain
 main/info.bioinfweb.libralign.core/src/info/bioinfweb/libralign/model/AlignmentModelChangeListener.java -text svneol=unset#text/plain
 main/info.bioinfweb.libralign.core/src/info/bioinfweb/libralign/model/AlignmentModelView.java -text svneol=unset#text/plain
 main/info.bioinfweb.libralign.core/src/info/bioinfweb/libralign/model/AlignmentModelWriteType.java -text svneol=unset#text/plain
