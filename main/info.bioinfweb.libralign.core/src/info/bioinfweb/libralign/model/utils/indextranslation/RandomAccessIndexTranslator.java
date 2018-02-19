@@ -87,7 +87,9 @@ public class RandomAccessIndexTranslator<T> extends AbstractIndexTranslator<T, R
 			result.unalignedIndices.add(unalignedIndex);
 			alignedIndex++;
 		}
-		result.unalignedLength = unalignedIndex + 1;
+		if (unalignedIndex >= 0) {  // The default value 0 will be left unchanged, if the unaligned index is still OUT_OF_RANGE (the sequence contained only gaps).
+			result.unalignedLength = unalignedIndex + 1;
+		}
 		return result;
 	}
 
