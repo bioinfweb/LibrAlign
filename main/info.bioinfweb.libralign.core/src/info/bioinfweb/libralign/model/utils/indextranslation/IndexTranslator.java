@@ -73,4 +73,5 @@ public interface IndexTranslator<T> {
 	 */
 	public int getAlignedIndex(String sequenceID, int unalignedIndex);
 	
+	public int getUnalignedLength(String sequenceID);
 }

@@ -43,6 +43,7 @@ public class RandomAccessIndexTranslator<T> extends AbstractIndexTranslator<T, R
 	protected static final class IndexTranslations {
 		private PackedIntegerArrayList unalignedIndices;
 		private PackedIntegerArrayList alignedIndices;
+		private int unalignedLength = 0;
 	}
 	
 	
@@ -86,6 +87,7 @@ public class RandomAccessIndexTranslator<T> extends AbstractIndexTranslator<T, R
 			result.unalignedIndices.add(unalignedIndex);
 			alignedIndex++;
 		}
+		result.unalignedLength = unalignedIndex + 1;
 		return result;
 	}
 
@@ -117,5 +119,11 @@ public class RandomAccessIndexTranslator<T> extends AbstractIndexTranslator<T, R
 	public int getAlignedIndex(String sequenceID, int unalignedIndex) {
 		//TODO Range check? Return OUT_OF_RANGE or exception?
 		return (int)getSequenceData(sequenceID).alignedIndices.get(unalignedIndex);
+	}
+
+
+	@Override
+	public int getUnalignedLength(String sequenceID) {
+		return getSequenceData(sequenceID).unalignedLength;
 	}
 }
