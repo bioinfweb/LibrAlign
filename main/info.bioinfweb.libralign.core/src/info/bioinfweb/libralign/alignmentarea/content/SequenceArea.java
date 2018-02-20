@@ -99,7 +99,7 @@ public class SequenceArea extends AlignmentSubArea {
   	event.getGraphics().setColor(DEFAULT_BACKGROUND_COLOR);  //TODO Define different background color for whole component and unknown tokens
   	event.getGraphics().fill(event.getRectangle());
 
-  	//TODO Replace the following blick by using values from the event.
+  	//TODO Replace the following block by using values from the event.
 		int firstIndex = Math.max(0, getOwner().columnByPaintX((int)event.getRectangle().getMinX()));
 		int lastIndex = getOwner().columnByPaintX((int)event.getRectangle().getMaxX());
 		int lastColumn = getOwner().getOwner().getAlignmentModel().getSequenceLength(getSequenceID()) - 1;
