@@ -80,7 +80,6 @@ public class SequenceIndexArea extends DataArea {
 
 
 	private int firstIndex = DEFAULT_FIRST_INDEX;
-	private SequenceIndexModel model;
 
 
 	/**
