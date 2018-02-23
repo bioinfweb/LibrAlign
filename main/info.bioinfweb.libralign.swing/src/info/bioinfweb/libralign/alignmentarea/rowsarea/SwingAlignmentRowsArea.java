@@ -56,7 +56,7 @@ public abstract class SwingAlignmentRowsArea<C extends TICComponent> extends Abs
 
 
 	@Override
-	public int getScrollableBlockIncrement(Rectangle arg0, int arg1, int arg2) {
+	public int getScrollableBlockIncrement(Rectangle visibleRect, int orientation, int direction) {
 		return 50;  //TODO Implement method to exactly expose five new rows or columns 
 	}
 
@@ -76,7 +76,7 @@ public abstract class SwingAlignmentRowsArea<C extends TICComponent> extends Abs
 
 
 	@Override
-	public int getScrollableUnitIncrement(Rectangle arg0, int arg1, int arg2) {
+	public int getScrollableUnitIncrement(Rectangle visibleRect, int orientation, int direction) {
 		return 10;  //TODO Implement method to exactly expose one new row or column
 	}
 }
