@@ -19,15 +19,6 @@
 package info.bioinfweb.libralign.dataarea.implementations;
 
 
-import java.awt.Color;
-import java.awt.Font;
-import java.awt.Graphics2D;
-import java.awt.RenderingHints;
-import java.awt.SystemColor;
-import java.awt.geom.Rectangle2D;
-import java.util.EnumSet;
-import java.util.Set;
-
 import info.bioinfweb.commons.graphics.FontCalculator;
 import info.bioinfweb.libralign.alignmentarea.AlignmentArea;
 import info.bioinfweb.libralign.alignmentarea.content.AlignmentContentArea;
@@ -39,6 +30,15 @@ import info.bioinfweb.libralign.model.events.SequenceChangeEvent;
 import info.bioinfweb.libralign.model.events.SequenceRenamedEvent;
 import info.bioinfweb.libralign.model.events.TokenChangeEvent;
 
+import java.awt.Color;
+import java.awt.Font;
+import java.awt.Graphics2D;
+import java.awt.RenderingHints;
+import java.awt.SystemColor;
+import java.awt.geom.Rectangle2D;
+import java.util.EnumSet;
+import java.util.Set;
+
 
 
 /**
@@ -48,10 +48,17 @@ import info.bioinfweb.libralign.model.events.TokenChangeEvent;
  * @since 0.7.0
  */
 public class LabelDataArea extends DataArea {
+	/** The factor between the component height and the space left before the start of the text. */
+	private static final double LEFT_DISTANCE_FACTOR = 0.1; 
+	
+	
 	private String text;
 	private Font font;
 	private Color textColor = SystemColor.menuText;
 	private Color backgroundColor = SystemColor.menu;
+	private boolean alignToScrollPosition;
+	private boolean alignToFirstColumn;
+	private boolean isRepainting = false;
 	
 	
 	public LabelDataArea(AlignmentContentArea owner, AlignmentArea labeledArea) {
@@ -60,8 +67,17 @@ public class LabelDataArea extends DataArea {
 	
 	
 	public LabelDataArea(AlignmentContentArea owner, AlignmentArea labeledArea, String text) {
+		this(owner, labeledArea, text, false, false);
+	}
+	
+	
+	public LabelDataArea(AlignmentContentArea owner, AlignmentArea labeledArea, String text, boolean alignToFirstColumn, 
+			boolean alignToScrollPosition) {
+		
 		super(owner, labeledArea);
 		this.text = text;
+		this.alignToFirstColumn = alignToFirstColumn;
+		this.alignToScrollPosition = alignToScrollPosition;
 		font = getLabeledAlignmentArea().getPaintSettings().getTokenHeightFont();
 	}
 
@@ -82,6 +98,13 @@ public class LabelDataArea extends DataArea {
 	}
 
 
+	/**
+	 * Returns the font used to display the text in this data area.
+	 * <p>
+	 * Note that the size of the returned font applies to 100 % zoom.
+	 * 
+	 * @return the font object for 100 % zoom
+	 */
 	public Font getFont() {
 		return font;
 	}
@@ -94,6 +117,50 @@ public class LabelDataArea extends DataArea {
 		else if (!this.font.equals(font)) {
 			this.font = font;
 			getOwner().getOwner().assignSizeToAll();  // A changed font height would mean a changes component height.
+			repaint();
+		}
+	}
+
+
+	/**
+	 * Determines whether the start of the text of this component should move if the component is scrolled
+	 * horizontally.
+	 * 
+	 * @return {@code true} if the start of the text moves within the component to stay visible during scrolling
+	 *         or {@code false} if it remains at a fixed position
+	 */
+	public boolean isAlignToScrollPosition() {
+		return alignToScrollPosition;
+	}
+
+
+	public void setAlignToScrollPosition(boolean alignToScrollPosition) {
+		if (this.alignToScrollPosition != alignToScrollPosition) {
+			this.alignToScrollPosition = alignToScrollPosition;
+			repaint();
+		}
+	}
+
+
+	/**
+	 * Determines whether the start of the text is displayed at the left end of the component or at the left 
+	 * end of the first column of the alignment. (These two positions are different if data areas occupy space
+	 * left of the alignment.)
+	 * <p>
+	 * Note that the text may start even further right, if {@link #isAlignToScrollPosition()} is set too, 
+	 * depending on the scroll position.
+	 * 
+	 * @return {@code true} if the text should start above the first column or {@code false} if it always 
+	 *         starts at the left of the component
+	 */
+	public boolean isAlignToFirstColumn() {
+		return alignToFirstColumn;
+	}
+
+
+	public void setAlignToFirstColumn(boolean alignToFirstColumn) {
+		if (this.alignToFirstColumn != alignToFirstColumn) {
+			this.alignToFirstColumn = alignToFirstColumn;
 			repaint();
 		}
 	}
@@ -137,21 +204,44 @@ public class LabelDataArea extends DataArea {
 	}
 
 	
+	private double calculateHorizontalShift() {
+		double result = 0;
+		if (isAlignToFirstColumn()) {
+			result = getOwner().getOwner().getDataAreas().getGlobalMaxLengthBeforeStart();  // Considers the current zoom factor.
+		}
+		if (isAlignToScrollPosition()) {
+			result = Math.max(result, getOwner().getOwner().getVisibleRectangle().getMinX());
+		}
+		return result;
+	}
+	
+	
 	@Override
 	public void paintPart(AlignmentPaintEvent e) {
-		Graphics2D g = e.getGraphics();
-    g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-
-    // Paint background:
-    Rectangle2D visibleRect = e.getRectangle();
-		g.setColor(getBackgroundColor());
-		g.fill(visibleRect);
+		if (!isRepainting && isAlignToScrollPosition()) {
+			isRepainting = true;
+			repaint();  // Make sure the whole visible component is repainted, since otherwise parts of the moved text may be missing. (Does not repaint now but queues the event for later processing.)
+		}
+		else {
+			try {
+				Graphics2D g = e.getGraphics();
+		    g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 		
-		// Paint text:
-		g.setColor(getTextColor());
-		Font font = getOwner().getOwner().getPaintSettings().zoomFont(getFont());
-		g.setFont(font);
-		g.drawString(getText(), 3f, FontCalculator.getInstance().getAscent(font));
+		    // Paint background:
+				g.setColor(getBackgroundColor());
+				g.fill(e.getRectangle());
+				
+				// Paint text:
+				g.setColor(getTextColor());
+				Font font = getOwner().getOwner().getPaintSettings().zoomFont(getFont());
+				g.setFont(font);
+				g.drawString(getText(), (float)(calculateHorizontalShift() + LEFT_DISTANCE_FACTOR * getHeight()), 
+						FontCalculator.getInstance().getAscent(font));
+			}
+			finally {
+				isRepainting = false;
+			}
+		}
 	}
 
 
