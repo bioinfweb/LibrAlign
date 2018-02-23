@@ -360,6 +360,11 @@ public class PaintSettings {
 				(int)Math.round(SingleColorTokenPainter.FONT_SIZE_FACTOR * getTokenHeight()));
 	}
 
+	
+	public Font zoomFont(Font font) {
+		return font.deriveFont(font.getSize2D() * (float)getZoomY());
+	}
+	
 
 	/**
 	 * Attaches a paint settings listener to this instance.

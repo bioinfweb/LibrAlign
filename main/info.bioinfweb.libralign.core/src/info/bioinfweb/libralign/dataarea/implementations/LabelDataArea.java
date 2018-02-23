@@ -149,13 +149,15 @@ public class LabelDataArea extends DataArea {
 		
 		// Paint text:
 		g.setColor(getTextColor());
-		g.drawString(getText(), 3f, (float)(0.7 * getHeight()));
+		Font font = getOwner().getOwner().getPaintSettings().zoomFont(getFont());
+		g.setFont(font);
+		g.drawString(getText(), 3f, FontCalculator.getInstance().getAscent(font));
 	}
 
 
 	@Override
 	public double getHeight() {
-		return 1.2 * getLabeledAlignmentArea().getPaintSettings().getZoomY() * FontCalculator.getInstance().getTextHeightByFontSize(getFont());
+		return getLabeledAlignmentArea().getPaintSettings().getZoomY() * FontCalculator.getInstance().getTextHeightByFontSize(getFont());
 		//TODO Adjust factor and declare as constant.
 	}
 	
