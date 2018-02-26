@@ -36,7 +36,7 @@
 	<dependency>
 		<groupId>info.bioinfweb.commons.java</groupId>
 		<artifactId>bioinfweb-commons-java-core</artifactId>
-		<version>3.0.0</version>
+		<version>3.2.0</version>
 	</dependency>
 	<dependency>
 		<groupId>info.bioinfweb.commons.java</groupId>
@@ -46,7 +46,7 @@
 	<dependency>
 		<groupId>info.bioinfweb.commons.java</groupId>
 		<artifactId>bioinfweb-commons-java-swing</artifactId>
-		<version>3.0.0</version>
+		<version>3.1.0</version>
 	</dependency>
 	
 	<!-- TIC -->
