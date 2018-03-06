@@ -33,6 +33,7 @@ import java.util.List;
 
 /**
  * Implements shared functionality between implementations of {@link TokenPainter}.
+ * This includes calculating the overlay color for single tokens.
  * 
  * @author Ben St&ouml;ver
  * @since 0.4.0

@@ -31,6 +31,13 @@ import java.awt.geom.Rectangle2D;
 /**
  * Interface to be implemented by all classes responsible for painting tokens from an {@link AlignmentModel}
  * in an {@link AlignmentArea}.
+ * <p>
+ * Note that implementing classes should always consider if a token is selected and if any overlay colors are
+ * set.  (See also {@link AlignmentArea#getSelection()} and {@link AlignmentArea#getOverlays()}.) The preferred 
+ * way to implement a new token painter would be to inherit it from {@link AbstractTokenPainter} which already 
+ * provides respective functionality by providing an {@code overlayColor} parameter in its 
+ * {@link AbstractTokenPainter#doPaintToken(AlignmentArea, String, int, Object, String, Graphics2D, Rectangle2D, Color)}
+ * method. All token painters provided with <i>LibrAlign</i> have respective functionality. 
  * 
  * @author Ben St&ouml;ver
  * @since 0.4.0
@@ -40,7 +47,7 @@ public interface TokenPainter {
 	 * Paints a representation of the specified token filling up the specified area. The dimensions (including aspect ratio) 
 	 * of {@code area} may be different from the preferred width and height specified by this instance, if necessary.
 	 * <p>
-	 * Tokens are identified by the alignment area they are contained, the sequence ID of their sequence and
+	 * Tokens are identified by the alignment area they are contained in, the sequence ID of their sequence and
 	 * their column index instead of a direct reference, to allow implementing classes to consider information
 	 * e.g. on neighboring tokens.
 	 * 
