@@ -157,6 +157,7 @@ main/info.bioinfweb.libralign.core/src/info/bioinfweb/libralign/alignmentarea/se
 main/info.bioinfweb.libralign.core/src/info/bioinfweb/libralign/alignmentarea/tokenpainter/AbstractBioPolymerTokenPainter.java -text svneol=unset#text/plain
 main/info.bioinfweb.libralign.core/src/info/bioinfweb/libralign/alignmentarea/tokenpainter/AbstractTokenPainter.java -text svneol=unset#text/plain
 main/info.bioinfweb.libralign.core/src/info/bioinfweb/libralign/alignmentarea/tokenpainter/AminoAcidTokenPainter.java -text svneol=unset#text/plain
+main/info.bioinfweb.libralign.core/src/info/bioinfweb/libralign/alignmentarea/tokenpainter/ColorOverlay.java -text svneol=unset#text/plain
 main/info.bioinfweb.libralign.core/src/info/bioinfweb/libralign/alignmentarea/tokenpainter/NucleotideTokenPainter.java -text svneol=unset#text/plain
 main/info.bioinfweb.libralign.core/src/info/bioinfweb/libralign/alignmentarea/tokenpainter/SingleColorTokenPainter.java -text svneol=unset#text/plain
 main/info.bioinfweb.libralign.core/src/info/bioinfweb/libralign/alignmentarea/tokenpainter/TokenPainter.java -text svneol=unset#text/plain

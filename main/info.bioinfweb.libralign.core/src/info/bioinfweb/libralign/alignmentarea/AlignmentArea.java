@@ -19,6 +19,11 @@
 package info.bioinfweb.libralign.alignmentarea;
 
 
+import info.bioinfweb.commons.collections.observable.ListAddEvent;
+import info.bioinfweb.commons.collections.observable.ListChangeListener;
+import info.bioinfweb.commons.collections.observable.ListRemoveEvent;
+import info.bioinfweb.commons.collections.observable.ListReplaceEvent;
+import info.bioinfweb.commons.collections.observable.ObservableList;
 import info.bioinfweb.commons.events.GenericEventObject;
 import info.bioinfweb.libralign.actions.AlignmentActionProvider;
 import info.bioinfweb.libralign.alignmentarea.content.AlignmentContentArea;
@@ -34,6 +39,7 @@ import info.bioinfweb.libralign.alignmentarea.paintsettings.TokenPainterReplaced
 import info.bioinfweb.libralign.alignmentarea.paintsettings.ZoomChangeEvent;
 import info.bioinfweb.libralign.alignmentarea.selection.SelectionListener;
 import info.bioinfweb.libralign.alignmentarea.selection.SelectionModel;
+import info.bioinfweb.libralign.alignmentarea.tokenpainter.ColorOverlay;
 import info.bioinfweb.libralign.dataarea.DataArea;
 import info.bioinfweb.libralign.dataarea.DataAreaChangeEvent;
 import info.bioinfweb.libralign.dataarea.DataAreasModel;
@@ -53,7 +59,9 @@ import info.bioinfweb.tic.scrolling.ScrollingTICComponent;
 import java.awt.Dimension;
 import java.awt.Rectangle;
 import java.beans.PropertyChangeEvent;
+import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 
 
 
@@ -143,6 +151,7 @@ public class AlignmentArea extends ScrollingTICComponent implements AlignmentMod
 	private PaintSettings paintSettings;
 	private EditSettings editSettings;
 	private SelectionModel selection;
+	private ObservableList<ColorOverlay> overlays;
 	private AlignmentActionProvider<Object> actionProvider = new AlignmentActionProvider<Object>(this);
 
 	private MultipleAlignmentsContainer container = null;
@@ -223,6 +232,33 @@ public class AlignmentArea extends ScrollingTICComponent implements AlignmentMod
 						scrollCursorToVisible();
 					}
 				});
+		
+		overlays = new ObservableList<ColorOverlay>(new ArrayList<ColorOverlay>());
+		overlays.addListChangeListener(new ListChangeListener<ColorOverlay>() {
+			@Override
+			public void beforeElementsRemoved(ListRemoveEvent<ColorOverlay, Object> event) {}
+			
+			@Override
+			public void beforeElementsAdded(ListAddEvent<ColorOverlay> event) {}
+			
+			@Override
+			public void beforeElementReplaced(ListReplaceEvent<ColorOverlay> event) {}
+			
+			@Override
+			public void afterElementsRemoved(ListRemoveEvent<ColorOverlay, ColorOverlay> event) {
+				repaint();
+			}
+			
+			@Override
+			public void afterElementsAdded(ListAddEvent<ColorOverlay> event) {
+				repaint();
+			}
+			
+			@Override
+			public void afterElementReplaced(ListReplaceEvent<ColorOverlay> event) {
+				repaint();
+			}
+		});
 		
 		alignmentContentArea = new AlignmentContentArea(this);  // The selection object must already have been created here.
 		alignmentLabelArea = new AlignmentLabelArea(this);  // Must be called after alignmentContentArea has been created.
@@ -358,8 +394,18 @@ public class AlignmentArea extends ScrollingTICComponent implements AlignmentMod
 	public SelectionModel getSelection() {
 		return selection;
 	}
-
 	
+	
+	/**
+	 * Returns an editable list of color overlays to be used when painting the contents of this area.
+	 * 
+	 * @return a (possibly empty) editable list
+	 */
+	public List<ColorOverlay> getOverlays() {
+		return overlays;
+	}
+
+
 	/**
 	 * Tool object that implements business logic methods to manipulate the alignment model. All operations will
 	 * be performed on the current model of this alignment area.

@@ -19,12 +19,15 @@
 package info.bioinfweb.libralign.alignmentarea.tokenpainter;
 
 
+import info.bioinfweb.commons.graphics.GraphicsUtils;
 import info.bioinfweb.libralign.alignmentarea.AlignmentArea;
 import info.bioinfweb.libralign.model.AlignmentModel;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.geom.Rectangle2D;
+import java.util.ArrayList;
+import java.util.List;
 
 
 
@@ -48,10 +51,33 @@ public abstract class AbstractTokenPainter implements TokenPainter {
 	 *        {@code alignmentModel} 
 	 * @param g the graphics context to paint to
 	 * @param paintArea the rectangle to be filled with the representation of the token
-	 * @param selectionColor this color must be mixed by half with the painted output if it is not {@code null}
+	 * @param overlayColor this color must be mixed by half with the painted output if it is not {@code null}
 	 */
 	protected abstract void doPaintToken(AlignmentArea alignmentModel, String sequenceID,	int columnIndex, Object token, 
-			String tokenRepresentation,	Graphics2D g, Rectangle2D paintArea, Color selectionColor);
+			String tokenRepresentation,	Graphics2D g, Rectangle2D paintArea, Color overlayColor);
+	
+	
+	private Color calculateOverlayColor(AlignmentArea area, String sequenceID,	int columnIndex, Color selectionColor) {
+		List<Color> colors = new ArrayList<Color>(area.getOverlays().size() + 1);
+		
+		if (selectionColor != null) {
+			colors.add(selectionColor);
+		}
+		
+		for (ColorOverlay overlay : area.getOverlays()) {
+			Color color = overlay.getColor(area, sequenceID, columnIndex);
+			if (color != null) {
+				colors.add(color);
+			}
+		}
+		
+		if (colors.isEmpty()) {
+			return null;
+		}
+		else {
+			return GraphicsUtils.blend(colors.toArray(new Color[colors.size()]));
+		}
+	}
 	
 	
 	/**
@@ -77,6 +103,8 @@ public abstract class AbstractTokenPainter implements TokenPainter {
 		if (!alignmentArea.getSelection().isSelected(columnIndex, alignmentArea.getSequenceOrder().indexByID(sequenceID))) {
 			selectionColor = null;
 		}
+		selectionColor = calculateOverlayColor(alignmentArea, sequenceID, columnIndex, selectionColor);
+		
 		doPaintToken(alignmentArea, sequenceID, columnIndex, token, alignmentModel.getTokenSet().representationByToken(token), 
 				g, paintArea, selectionColor);
 	}
