@@ -226,14 +226,15 @@ public class MultipleAlignmentsContainer extends TICComponent {
    * Returns the alignment area contained in this component, that currently has the focus. (It is also possible,
    * that a subcomponent if the returned area (e.g. a sequence or data area) has the focus.)
    * <p>
-   * Note that this method behaves slightly different in Swing and SWT. In Swing applications the components contained
-   * in an alignment area may loose their focus, if the user clicks on a menu entry (unless the {@link JRootPane} is not
-   * set unfocusable) or button. Therefore the focused alignment area may not be correctly determined inside an action 
-   * attached to another Swing component (e.g. a button or a menu item), because this component then has the focus. 
-   * This problem will not occur if an action is invoked using a keyboard shortcut.
+   * Note that this method behaves slightly different if used in <i>Swing</i> or in <i>SWT</i>. In <i>Swing</i> 
+   * applications the components contained in an alignment area may loose their focus, if the user clicks on a menu 
+   * entry (unless the {@link JRootPane} is not set unfocusable) or a button. Therefore the focused alignment area 
+   * may not be correctly determined inside an action attached to another <i>Swing</i> component (e.g. a button or a 
+   * menu item), because this component then has the focus. This problem will not occur if an action is invoked 
+   * using a keyboard shortcut.
    * <p>
-   * In SWT applications the focused alignment area can usually still be determined, even if a button or menu item is 
-   * currently active. 
+   * In <i>SWT</i> applications the focused alignment area can usually still be determined, even if a button or menu 
+   * item is currently active. 
    * 
    * @return the focused alignment area in this component or {@code null} of the focus is not inside this container
    */
