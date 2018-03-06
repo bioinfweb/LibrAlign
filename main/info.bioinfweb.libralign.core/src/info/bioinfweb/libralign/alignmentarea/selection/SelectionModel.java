@@ -428,7 +428,7 @@ public class SelectionModel {
 	/**
 	 * Checks if any columns or rows are currently selected.
 	 *
-	 * @return {@code true} if any cells are currently contained in the selection, {@code false} otherwise
+	 * @return {@code true} if no cells are currently contained in the selection, {@code false} otherwise
 	 */
 	public boolean isEmpty() {
 		return columnSelection.isEmpty() && rowSelection.isEmpty();

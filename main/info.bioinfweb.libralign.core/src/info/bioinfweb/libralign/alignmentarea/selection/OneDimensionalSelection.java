@@ -335,7 +335,7 @@ public class OneDimensionalSelection {
 	/**
 	 * Checks if any columns or row (depending on {@link #getDimension()}) is selected.
 	 * 
-	 * @return {@code true} if any column or row is selected, {@code false} otherwise.
+	 * @return {@code true} if no column or row is selected, {@code false} otherwise.
 	 */
 	public boolean isEmpty() {
 		return getFirstPos() == NO_SELECTION;
