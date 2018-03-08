@@ -96,31 +96,50 @@ public class RandomAccessIndexTranslator<T> extends AbstractIndexTranslator<T, R
 
 	@Override
 	public IndexRelation getUnalignedIndex(String sequenceID, int alignedIndex) {
-		//TODO Range check? Return OUT_OF_RANGE or exception?
-		
 		IndexTranslations translations = getSequenceData(sequenceID);
-		int unalignedIndex = (int)translations.unalignedIndices.get(alignedIndex);
-		if (getGapTokens().contains(getModel().getTokenAt(sequenceID, alignedIndex))) {
-			int unalignedIndexAfter = unalignedIndex + 1;
-			if (unalignedIndex == IndexRelation.OUT_OF_RANGE) {  // Possible if requested position is part of a leading gap.
-				unalignedIndexAfter = 0;
-			}
-			
-			if (unalignedIndexAfter >= translations.alignedIndices.size()) {
+		
+		if (alignedIndex < 0) {  // before alignment
+			int unalignedIndexAfter = 0;
+			if (translations.alignedIndices.size() == 0) {
 				unalignedIndexAfter = IndexRelation.OUT_OF_RANGE;
 			}
-			return new IndexRelation(unalignedIndex, IndexRelation.GAP, unalignedIndexAfter);
+			return new IndexRelation(IndexRelation.OUT_OF_RANGE, IndexRelation.OUT_OF_RANGE, unalignedIndexAfter);
 		}
-		else {
-			return new IndexRelation(unalignedIndex, unalignedIndex, unalignedIndex);
+		else if (alignedIndex >= getSequenceData(sequenceID).unalignedIndices.size()) {  // behind alignment
+			int unalignedIndexBefore = (int)translations.alignedIndices.size() - 1;
+			if (translations.alignedIndices.size() == 0) {
+				unalignedIndexBefore = IndexRelation.OUT_OF_RANGE;
+			}
+			return new IndexRelation(unalignedIndexBefore, IndexRelation.OUT_OF_RANGE, IndexRelation.OUT_OF_RANGE);
+		}
+		else {  // in alignment
+			int unalignedIndex = (int)translations.unalignedIndices.get(alignedIndex);
+			if (getGapTokens().contains(getModel().getTokenAt(sequenceID, alignedIndex))) {
+				int unalignedIndexAfter = unalignedIndex + 1;
+				if (unalignedIndex == IndexRelation.OUT_OF_RANGE) {  // Possible if requested position is part of a leading gap.
+					unalignedIndexAfter = 0;
+				}
+				
+				if (unalignedIndexAfter >= translations.alignedIndices.size()) {
+					unalignedIndexAfter = IndexRelation.OUT_OF_RANGE;
+				}
+				return new IndexRelation(unalignedIndex, IndexRelation.GAP, unalignedIndexAfter);
+			}
+			else {
+				return new IndexRelation(unalignedIndex, unalignedIndex, unalignedIndex);
+			}
 		}
 	}
 
 
 	@Override
 	public int getAlignedIndex(String sequenceID, int unalignedIndex) {
-		//TODO Range check? Return OUT_OF_RANGE or exception?
-		return (int)getSequenceData(sequenceID).alignedIndices.get(unalignedIndex);
+		if ((unalignedIndex < 0) || (unalignedIndex >= getSequenceData(sequenceID).alignedIndices.size())) {
+			return IndexRelation.OUT_OF_RANGE;
+		}
+		else {
+			return (int)getSequenceData(sequenceID).alignedIndices.get(unalignedIndex);
+		}
 	}
 
 
