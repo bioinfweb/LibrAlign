@@ -36,13 +36,14 @@ import org.junit.*;
 
 public class RandomAccessIndexTranslatorTest {
 	@Test
-	public void test_degapedIndex() {
+	public void test_getUnalignedAlignedIndex() {
 		TokenSet<Character> tokenSet = CharacterTokenSet.newDNAInstance(false);
 		AlignmentModel<Character> model = new PackedAlignmentModel<Character>(tokenSet);
 		String id = model.addSequence("A");
 		model.appendTokens(id, AlignmentModelUtils.charSequenceToTokenList("--A-A-AA--AAA-", tokenSet));
 		
 		RandomAccessIndexTranslator<Character> calculator = new RandomAccessIndexTranslator<Character>(model);
+		assertIndexRelation(IndexRelation.OUT_OF_RANGE, IndexRelation.OUT_OF_RANGE, 0, calculator.getUnalignedIndex(id, -1));
 		assertIndexRelation(IndexRelation.OUT_OF_RANGE, IndexRelation.GAP, 0, calculator.getUnalignedIndex(id, 0));
 		assertIndexRelation(IndexRelation.OUT_OF_RANGE, IndexRelation.GAP, 0, calculator.getUnalignedIndex(id, 1));
 		assertIndexRelation(0, 0, 0, calculator.getUnalignedIndex(id, 2));
@@ -57,12 +58,14 @@ public class RandomAccessIndexTranslatorTest {
 		assertIndexRelation(5, 5, 5, calculator.getUnalignedIndex(id, 11));
 		assertIndexRelation(6, 6, 6, calculator.getUnalignedIndex(id, 12));
 		assertIndexRelation(6, IndexRelation.GAP, IndexRelation.OUT_OF_RANGE, calculator.getUnalignedIndex(id, 13));
+		assertIndexRelation(6, IndexRelation.OUT_OF_RANGE, IndexRelation.OUT_OF_RANGE, calculator.getUnalignedIndex(id, 14));
 		
 		assertIndexRelation(1, IndexRelation.GAP, 2, calculator.getUnalignedIndex(id, 5));
 		assertIndexRelation(3, 3, 3, calculator.getUnalignedIndex(id, 7));
 		assertIndexRelation(3, IndexRelation.GAP, 4, calculator.getUnalignedIndex(id, 8));
 		assertIndexRelation(0, 0, 0, calculator.getUnalignedIndex(id, 2));
 		
+		assertEquals(IndexRelation.OUT_OF_RANGE, calculator.getAlignedIndex(id, -1));
 		assertEquals(2, calculator.getAlignedIndex(id, 0));
 		assertEquals(4, calculator.getAlignedIndex(id, 1));
 		assertEquals(6, calculator.getAlignedIndex(id, 2));
@@ -70,23 +73,32 @@ public class RandomAccessIndexTranslatorTest {
 		assertEquals(10, calculator.getAlignedIndex(id, 4));
 		assertEquals(11, calculator.getAlignedIndex(id, 5));
 		assertEquals(12, calculator.getAlignedIndex(id, 6));
+		assertEquals(IndexRelation.OUT_OF_RANGE, calculator.getAlignedIndex(id, 7));
 		
 		assertEquals(7, calculator.getUnalignedLength(id));
 	}	
 	
 	
 	@Test
-	public void test_degapedIndex_onlyGaps() {
+	public void test_getUnalignedIndex_onlyGaps() {
 		TokenSet<Character> tokenSet = CharacterTokenSet.newDNAInstance(false);
 		AlignmentModel<Character> model = new PackedAlignmentModel<Character>(tokenSet);
 		String id = model.addSequence("A");
 		model.appendTokens(id, AlignmentModelUtils.charSequenceToTokenList("---", tokenSet));
 		
 		RandomAccessIndexTranslator<Character> calculator = new RandomAccessIndexTranslator<Character>(model);
+		assertIndexRelation(IndexRelation.OUT_OF_RANGE, IndexRelation.OUT_OF_RANGE, IndexRelation.OUT_OF_RANGE, 
+				calculator.getUnalignedIndex(id, -1));
 		assertIndexRelation(IndexRelation.OUT_OF_RANGE, IndexRelation.GAP, IndexRelation.OUT_OF_RANGE, calculator.getUnalignedIndex(id, 0));
 		assertIndexRelation(IndexRelation.OUT_OF_RANGE, IndexRelation.GAP, IndexRelation.OUT_OF_RANGE, calculator.getUnalignedIndex(id, 1));
 		assertIndexRelation(IndexRelation.OUT_OF_RANGE, IndexRelation.GAP, IndexRelation.OUT_OF_RANGE, calculator.getUnalignedIndex(id, 2));
+		assertIndexRelation(IndexRelation.OUT_OF_RANGE, IndexRelation.OUT_OF_RANGE, IndexRelation.OUT_OF_RANGE, 
+				calculator.getUnalignedIndex(id, 3));
 
+		assertEquals(IndexRelation.OUT_OF_RANGE, calculator.getAlignedIndex(id, -1));
+		assertEquals(IndexRelation.OUT_OF_RANGE, calculator.getAlignedIndex(id, 0));
+		assertEquals(IndexRelation.OUT_OF_RANGE, calculator.getAlignedIndex(id, 18));
+		
 		assertEquals(0, calculator.getUnalignedLength(id));
 	}	
 	
