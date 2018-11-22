@@ -6,15 +6,12 @@ import info.bioinfweb.libralign.dataarea.DataArea;
 import info.bioinfweb.libralign.dataarea.implementations.pherogram.PherogramArea;
 import info.bioinfweb.libralign.model.AlignmentModel;
 import info.bioinfweb.libralign.model.implementations.PackedAlignmentModel;
-import info.bioinfweb.libralign.model.implementations.swingundo.SwingUndoAlignmentModel;
 import info.bioinfweb.libralign.model.tokenset.CharacterTokenSet;
 import info.bioinfweb.libralign.pherogram.model.PherogramAreaModel;
-import info.bioinfweb.libralign.pherogram.model.PherogramModelChangeEvent;
 import info.bioinfweb.libralign.pherogram.provider.BioJavaPherogramProvider;
 import info.bioinfweb.libralign.pherogram.provider.PherogramProvider;
 import info.bioinfweb.tic.SwingComponentFactory;
 
-import java.awt.BorderLayout;
 import java.awt.EventQueue;
 import java.io.File;
 import java.io.IOException;
