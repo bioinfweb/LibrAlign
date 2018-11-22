@@ -6,6 +6,13 @@ demo/info.bioinfweb.libralign.demo.applicationold/data/Test_qualityScore.scf -te
 demo/info.bioinfweb.libralign.demo.applicationold/src/info/bioinfweb/libralign/demo/AbstractTestApplication.java -text svneol=unset#text/plain
 demo/info.bioinfweb.libralign.demo.applicationold/src/info/bioinfweb/libralign/demo/swing/Main.java -text svneol=unset#text/plain
 demo/info.bioinfweb.libralign.demo.applicationold/src/info/bioinfweb/libralign/demo/swt/Main.java -text svneol=unset#text/plain
+demo/info.bioinfweb.libralign.demo.basicpherogram/.classpath -text svneol=unset#text/plain
+demo/info.bioinfweb.libralign.demo.basicpherogram/.project -text svneol=unset#text/plain
+demo/info.bioinfweb.libralign.demo.basicpherogram/.settings/org.eclipse.jdt.core.prefs -text svneol=unset#text/plain
+demo/info.bioinfweb.libralign.demo.basicpherogram/src/APACHE-LICENSE.txt -text svneol=unset#text/plain
+demo/info.bioinfweb.libralign.demo.basicpherogram/src/GPL.txt -text svneol=unset#text/plain
+demo/info.bioinfweb.libralign.demo.basicpherogram/src/LGPL.txt -text svneol=unset#text/plain
+demo/info.bioinfweb.libralign.demo.basicpherogram/src/NOTICE.txt -text svneol=unset#text/plain
 demo/info.bioinfweb.libralign.demo.docexamples/.classpath -text svneol=unset#text/plain
 demo/info.bioinfweb.libralign.demo.docexamples/.project -text svneol=unset#text/plain
 demo/info.bioinfweb.libralign.demo.docexamples/.settings/org.eclipse.jdt.core.prefs -text svneol=unset#text/plain
