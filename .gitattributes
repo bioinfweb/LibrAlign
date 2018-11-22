@@ -1,4 +1,11 @@
 * text=auto !eol
+demo/info.bioinfweb.libralign.demo.advancedpherogram/.classpath -text svneol=unset#text/plain
+demo/info.bioinfweb.libralign.demo.advancedpherogram/.project -text svneol=unset#text/plain
+demo/info.bioinfweb.libralign.demo.advancedpherogram/.settings/org.eclipse.jdt.core.prefs -text svneol=unset#text/plain
+demo/info.bioinfweb.libralign.demo.advancedpherogram/src/APACHE-LICENSE.txt -text svneol=unset#text/plain
+demo/info.bioinfweb.libralign.demo.advancedpherogram/src/GPL.txt -text svneol=unset#text/plain
+demo/info.bioinfweb.libralign.demo.advancedpherogram/src/LGPL.txt -text svneol=unset#text/plain
+demo/info.bioinfweb.libralign.demo.advancedpherogram/src/NOTICE.txt -text svneol=unset#text/plain
 demo/info.bioinfweb.libralign.demo.applicationold/.classpath -text svneol=unset#text/plain
 demo/info.bioinfweb.libralign.demo.applicationold/.project -text svneol=unset#text/plain
 demo/info.bioinfweb.libralign.demo.applicationold/.settings/org.eclipse.jdt.core.prefs -text svneol=unset#text/plain
