@@ -4,7 +4,10 @@ package info.bioinfweb.libralign.demo.advancedpherogram;
 import info.bioinfweb.libralign.alignmentarea.AlignmentArea;
 import info.bioinfweb.libralign.dataarea.DataArea;
 import info.bioinfweb.libralign.dataarea.implementations.pherogram.PherogramArea;
+import info.bioinfweb.libralign.demo.advancedpherogram.actions.DisplayProbabilityValuesAction;
 import info.bioinfweb.libralign.demo.advancedpherogram.actions.DisplayQualityScoresAction;
+import info.bioinfweb.libralign.demo.advancedpherogram.actions.ShowHideBasecalllinesAction;
+import info.bioinfweb.libralign.demo.advancedpherogram.actions.SwitchLeftRightInsertionAction;
 import info.bioinfweb.libralign.model.AlignmentModel;
 import info.bioinfweb.libralign.model.implementations.PackedAlignmentModel;
 import info.bioinfweb.libralign.model.tokenset.CharacterTokenSet;
@@ -32,7 +35,11 @@ public class Application {
 	private JFrame frame;
 	private PherogramArea pherogramDataArea;
 	private AlignmentArea alignmentArea;
-	private DisplayQualityScoresAction displayQualityScoresAction = new DisplayQualityScoresAction (this);
+	private DisplayQualityScoresAction displayQualityScoresAction = new DisplayQualityScoresAction(this);
+	private DisplayProbabilityValuesAction displayProbabilityValuesAction = new DisplayProbabilityValuesAction(this);
+	private ShowHideBasecalllinesAction showHideBasecalllinesAction = new ShowHideBasecalllinesAction(this);
+	private SwitchLeftRightInsertionAction switchLeftRightInsertionAction = new SwitchLeftRightInsertionAction (this);
+	
 	/**
 	 * Launch the application.
 	 */
@@ -116,10 +123,19 @@ public class Application {
 		
 		
 		// Create file menu:
-		JMenu mnFile = new JMenu("View");
-		menuBar.add(mnFile);
+		JMenu mnEdit = new JMenu("Edit");
+		menuBar.add(mnEdit);
+		mnEdit.add(switchLeftRightInsertionAction);
 		
-		mnFile.add(displayQualityScoresAction);
+		JMenu mnView = new JMenu("View");
+		menuBar.add(mnView);
+		
+		mnView.add(displayQualityScoresAction);
+		mnView.add(displayProbabilityValuesAction);
+		mnView.add(showHideBasecalllinesAction);
+		
+		
+		
 	}
 
 
