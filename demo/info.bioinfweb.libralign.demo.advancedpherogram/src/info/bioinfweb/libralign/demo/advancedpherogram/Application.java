@@ -2,11 +2,14 @@ package info.bioinfweb.libralign.demo.advancedpherogram;
 
 
 import info.bioinfweb.libralign.alignmentarea.AlignmentArea;
-import info.bioinfweb.libralign.dataarea.DataArea;
 import info.bioinfweb.libralign.dataarea.implementations.pherogram.PherogramArea;
+import info.bioinfweb.libralign.demo.advancedpherogram.actions.CutLeftAction;
+import info.bioinfweb.libralign.demo.advancedpherogram.actions.CutRightAction;
 import info.bioinfweb.libralign.demo.advancedpherogram.actions.DisplayProbabilityValuesAction;
 import info.bioinfweb.libralign.demo.advancedpherogram.actions.DisplayQualityScoresAction;
+import info.bioinfweb.libralign.demo.advancedpherogram.actions.ReverseComplementAction;
 import info.bioinfweb.libralign.demo.advancedpherogram.actions.ShowHideBasecalllinesAction;
+import info.bioinfweb.libralign.demo.advancedpherogram.actions.SwitchInsertOverwriteAction;
 import info.bioinfweb.libralign.demo.advancedpherogram.actions.SwitchLeftRightInsertionAction;
 import info.bioinfweb.libralign.model.AlignmentModel;
 import info.bioinfweb.libralign.model.implementations.PackedAlignmentModel;
@@ -38,7 +41,11 @@ public class Application {
 	private DisplayQualityScoresAction displayQualityScoresAction = new DisplayQualityScoresAction(this);
 	private DisplayProbabilityValuesAction displayProbabilityValuesAction = new DisplayProbabilityValuesAction(this);
 	private ShowHideBasecalllinesAction showHideBasecalllinesAction = new ShowHideBasecalllinesAction(this);
-	private SwitchLeftRightInsertionAction switchLeftRightInsertionAction = new SwitchLeftRightInsertionAction (this);
+	private SwitchLeftRightInsertionAction switchLeftRightInsertionAction = new SwitchLeftRightInsertionAction(this);
+	private CutLeftAction cutLeftAction = new CutLeftAction(this);
+	private CutRightAction cutRightAction = new CutRightAction(this);
+	private SwitchInsertOverwriteAction switchInsertOverwriteAction = new SwitchInsertOverwriteAction(this);
+	private ReverseComplementAction reverseComplementAction = new ReverseComplementAction(this);
 	
 	/**
 	 * Launch the application.
@@ -126,6 +133,10 @@ public class Application {
 		JMenu mnEdit = new JMenu("Edit");
 		menuBar.add(mnEdit);
 		mnEdit.add(switchLeftRightInsertionAction);
+		mnEdit.add(cutRightAction);
+		mnEdit.add(cutLeftAction);
+		mnEdit.add(switchInsertOverwriteAction);
+		//mnEdit.add(reverseComplementAction);
 		
 		JMenu mnView = new JMenu("View");
 		menuBar.add(mnView);
@@ -133,6 +144,7 @@ public class Application {
 		mnView.add(displayQualityScoresAction);
 		mnView.add(displayProbabilityValuesAction);
 		mnView.add(showHideBasecalllinesAction);
+	
 		
 		
 		
