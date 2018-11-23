@@ -19,10 +19,12 @@ public class CutLeftAction extends AbstractAdvancedPherogramAction implements Ac
 	
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		boolean result = getApplication().getPherogramDataArea().setLeftCutPositionBySelection();
-		if (result == false)
-		{
-			JOptionPane jpane = new JOptionPane("The left cut position must not be behind the right cut position");
+		try {
+			getApplication().getPherogramDataArea().setLeftCutPositionBySelection();
+		}
+		
+		catch (IndexOutOfBoundsException i) {
+			JOptionPane.showMessageDialog(getApplication().getFrame(), i.getLocalizedMessage());
 		}
 	}
 }
