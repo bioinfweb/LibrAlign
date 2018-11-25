@@ -136,7 +136,7 @@ public class Application {
 		mnEdit.add(cutRightAction);
 		mnEdit.add(cutLeftAction);
 		mnEdit.add(switchInsertOverwriteAction);
-		//mnEdit.add(reverseComplementAction);
+		mnEdit.add(reverseComplementAction);
 		
 		JMenu mnView = new JMenu("View");
 		menuBar.add(mnView);
