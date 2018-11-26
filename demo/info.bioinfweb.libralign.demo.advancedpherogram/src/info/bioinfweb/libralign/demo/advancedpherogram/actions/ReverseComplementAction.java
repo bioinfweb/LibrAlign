@@ -20,43 +20,24 @@ public class ReverseComplementAction extends AbstractAdvancedPherogramAction imp
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		//Does not work
+
 		 AlignmentModel<?> alignmentModel = getApplication().getAlignmentArea().getAlignmentModel();
 		 PherogramArea area = getApplication().getPherogramDataArea();
 		 PherogramAreaModel pherogramAlignmentModel = area.getModel();
 		 String sequenceID = getApplication().getAlignmentArea().getSequenceOrder().idByIndex(0);
-		 int sequenceLength =  getApplication().getAlignmentArea().getAlignmentModel().getSequenceLength(sequenceID);
-		 PherogramAlignmentRelation leftRelation = pherogramAlignmentModel.editableIndexByBaseCallIndex(
-				 pherogramAlignmentModel.getLeftCutPosition());
-		         int leftBorder;
-		          if (leftRelation.getCorresponding() == PherogramAlignmentRelation.OUT_OF_RANGE) {
-		        	  	leftBorder = leftRelation.getBeforeValidIndex() + 1;
+
+		 PherogramAlignmentRelation rightRelation = pherogramAlignmentModel.editableIndexByBaseCallIndex(
+				 pherogramAlignmentModel.getRightCutPosition());
+		         int rightBorder;
+		          if (rightRelation.getCorresponding() == PherogramAlignmentRelation.OUT_OF_RANGE) {
+		        	  	rightBorder = rightRelation.getBeforeValidIndex() + 1;
 		           }
 		          else {
-		        	  leftBorder = leftRelation.getAfterValidIndex();
+		        	  rightBorder = rightRelation.getAfterValidIndex();
 		          }
-		          System.out.println(leftBorder);
 		          
-		  
-		        //pherogramAlignmentModel.getPherogramProvider().getBaseCallPosition(baseIndex) 
-		        // sowas wie : wenn getCharAt (i) von der Pherogram Area nicht getCharAt(i) von dem anderen entspricht, dann
-		        // muss das irgendwie zugeordnet werden.
-		          
-		        //pherogramAlignmentModel.editableIndexByBaseCallIndex(0); 
-		        //Returns the index in the editable alignment sequence that corresponds to the specified index in the base call sequence
-		        //Das heißt, wenn die nicht gleich sind, dann müssen sie gleich gesetzt werden.
-		    
-		       //pherogramAlignmentModel.setShiftChange(0, (leftBorder));
-		     
-		        
-		        pherogramAlignmentModel.setFirstSeqPos(0);
-		        //pherogramAlignmentModel.deleteCutOffDistortions();
-		          
-		 	
-		
+		 AlignmentModelUtils.reverseComplement(alignmentModel, sequenceID, pherogramAlignmentModel.editableIndexByBaseCallIndex(pherogramAlignmentModel.getLeftCutPosition()).getBeforeValidIndex(),rightBorder);
 		 pherogramAlignmentModel.reverseComplement();
-		 AlignmentModelUtils.reverseComplement(alignmentModel, sequenceID); //idByIndex(0), because there is only one sequence in this demo application.
-		 
 	}
 
 }
