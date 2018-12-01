@@ -81,7 +81,6 @@ public class PherogramFormats {
 	
 	private static final double VIEW_FONT_HEIGHT_FACTOR = 0.8;
 	
-	private PherogramComponent owner;
 	private Color backgroundColor;
 	private Color cutBackgroundColor;
 	private Color headingBackgroundColor;
@@ -115,9 +114,8 @@ public class PherogramFormats {
 	/**
 	 * Creates a new instance of this class with default values.
 	 */
-	public PherogramFormats(PherogramComponent owner) {
+	public PherogramFormats() {
 		super();
-		this.owner = owner;
 		
 		backgroundColor = Color.LIGHT_GRAY.brighter();
 		headingBackgroundColor = backgroundColor;
@@ -132,16 +130,6 @@ public class PherogramFormats {
 		baseCallFont = createFont("baseCallFont.", Font.BOLD, 15);
 		indexFont = createFont("indexFont.", Font.PLAIN, 10);
 		annotationFont = createFont("annotationFont.", Font.PLAIN, 10);
-	}
-
-
-	/**
-	 * Returns the owning trace curve view or pherogram data area using this instance.
-	 * 
-	 * @return the owning object
-	 */
-	public PherogramComponent getOwner() {
-		return owner;
 	}
 
 
@@ -276,10 +264,10 @@ public class PherogramFormats {
 	 * @param nucleotide the token representation (nucleotide characters or the gap or unknown character are valid here)
 	 * @return the color determined by the algorithm described above.
 	 */
-	public Color getNucleotideColor(char nucleotide) {
+	public Color getNucleotideColor(PherogramComponent pherogramComponent, char nucleotide) {
 		Color result = null;
-		if (owner instanceof PherogramArea) {
-			result = ((PherogramArea)owner).getRelatedTokenPainter().getColor(Character.toString(nucleotide));
+		if (pherogramComponent instanceof PherogramArea) {
+			result = ((PherogramArea)pherogramComponent).getRelatedTokenPainter().getColor(Character.toString(nucleotide));
 		}
 		if (result == null) {
 			result = nucleotideColorMap.get(Character.toString(nucleotide));
@@ -419,12 +407,12 @@ public class PherogramFormats {
 	 * 
 	 * @return the height needed to display the quality output
 	 */
-	public double qualityOutputHeight() {
+	public double qualityOutputHeight(PherogramComponent pherogramComponent) {
 		switch (getQualityOutputType()) {
 			case ALL:
-				return 4 * getAnnotationFont().createFont(calculateFontZoomFactor()).getSize2D() * FONT_HEIGHT_FACTOR;
+				return 4 * getAnnotationFont().createFont(calculateFontZoomFactor(pherogramComponent)).getSize2D() * FONT_HEIGHT_FACTOR;
 			case MAXIMUM:
-				return getAnnotationFont().createFont(calculateFontZoomFactor()).getSize2D() * FONT_HEIGHT_FACTOR;
+				return getAnnotationFont().createFont(calculateFontZoomFactor(pherogramComponent)).getSize2D() * FONT_HEIGHT_FACTOR;
 			default:
 				return 0;
 		}
@@ -496,19 +484,19 @@ public class PherogramFormats {
 	 * @throws IllegalStateException if the owner is neither an instance of {@link PherogramArea} or
 	 *         {@link PherogramTraceCurveView}
 	 */
-	public double calculateFontZoomFactor() {
-		if (getOwner() instanceof PherogramArea) {
-			PherogramArea area = (PherogramArea)getOwner();
+	public double calculateFontZoomFactor(PherogramComponent pherogramComponent) {
+		if (pherogramComponent instanceof PherogramArea) {
+			PherogramArea area = (PherogramArea)pherogramComponent;
 			PaintSettings paintSettings = area.getOwner().getOwner().getPaintSettings();
 			return Math.min(paintSettings.getZoomY(),
 					(area.getEditableTokenWidth() / area.getOwner().getOwner().getPaintSettings().getTokenHeight()) * 
 					paintSettings.getZoomY());
 		}
-		else if (getOwner() instanceof PherogramTraceCurveView) {
-			return ((PherogramTraceCurveView)getOwner()).getHorizontalScale() * VIEW_FONT_HEIGHT_FACTOR;
+		else if (pherogramComponent instanceof PherogramTraceCurveView) {
+			return ((PherogramTraceCurveView)pherogramComponent).getHorizontalScale() * VIEW_FONT_HEIGHT_FACTOR;
 		}
 		else {
-			throw new IllegalStateException("Reading the zoom from an owner of type " + getOwner().getClass() + 
+			throw new IllegalStateException("Reading the zoom from an owner of type " + pherogramComponent.getClass() + 
 					" is not supported by this implementation.");
 		}
 	}

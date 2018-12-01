@@ -60,7 +60,7 @@ public class PherogramHeadingView extends TICComponent {
 	public void paint(TICPaintEvent e) {
 		PherogramFormats formats = getTraceCurveView().getFormats();
 		PherogramPainter painter = getTraceCurveView().getPainter();
-		double fontZoom = formats.calculateFontZoomFactor();
+		double fontZoom = formats.calculateFontZoomFactor(getTraceCurveView());
 		e.getGraphics().setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 		
 		painter.paintUnscaledBackground(e.getGraphics(), e.getRectangle(), getTraceCurveView().getHorizontalScale());
@@ -83,10 +83,10 @@ public class PherogramHeadingView extends TICComponent {
 	@Override
 	public Dimension getSize() {
 		PherogramFormats formats = getTraceCurveView().getFormats(); 
-		double fontZoom = formats.calculateFontZoomFactor();
+		double fontZoom = formats.calculateFontZoomFactor(getTraceCurveView());
 		double height = ((formats.getBaseCallFont().getOriginalHeight() + formats.getIndexFont().getOriginalHeight()) 
 				* PherogramFormats.FONT_HEIGHT_FACTOR * fontZoom) + 
-				formats.qualityOutputHeight();
+				formats.qualityOutputHeight(getTraceCurveView());
 		if (formats.isShowProbabilityValues()) {
 			height += 3 * formats.getAnnotationFont().getOriginalHeight() * PherogramFormats.FONT_HEIGHT_FACTOR * fontZoom;
 		}

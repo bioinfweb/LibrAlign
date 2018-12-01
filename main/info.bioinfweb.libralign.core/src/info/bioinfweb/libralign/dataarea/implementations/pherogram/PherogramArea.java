@@ -171,7 +171,7 @@ public class PherogramArea extends DataArea implements PherogramComponent {
 		else {
 			this.model = model;
 			model.addListener(MODEL_LISTENER);
-			formats = new PherogramFormats(this);
+			formats = new PherogramFormats();
 			formats.addPropertyChangeListener(FORMATS_LISTENER);
 			verticalScale = getHeight();
 		}
@@ -238,7 +238,7 @@ public class PherogramArea extends DataArea implements PherogramComponent {
 		double x = getLabeledAlignmentArea().getContentArea().paintXByColumn(getModel().getFirstSeqPos() - getModel().getLeftCutPosition());
 		double y = 0; 
 		double height = getHeight();
-		double fontZoom = getFormats().calculateFontZoomFactor();
+		double fontZoom = getFormats().calculateFontZoomFactor(this);
 		ScaledPherogramDistortion distortion = getModel().createPherogramDistortion();
 		
 		// Paint gaps:

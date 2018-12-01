@@ -98,7 +98,7 @@ public class PherogramTraceCurveView extends TICComponent implements PherogramCo
 	
 	public PherogramTraceCurveView() {
 		super();
-		formats = new PherogramFormats(this);
+		formats = new PherogramFormats();
 		formats.addPropertyChangeListener(FORMATS_LISTENER);
   }
 

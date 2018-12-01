@@ -55,6 +55,11 @@ public class PherogramPainter {
 	}
 
 	
+	public PherogramComponent getOwner() {
+		return owner;
+	}
+
+
 	private double paintAnnotation(Graphics2D g, int annotation, double paintX, double paintY) {
 		if (annotation >= 0) {
 			paintBaseCallText(g, "" + annotation, paintX, paintY);
@@ -67,10 +72,10 @@ public class PherogramPainter {
 		PherogramFormats formats = owner.getFormats();
 		PherogramProvider provider = owner.getModel().getPherogramProvider();
 		char nucleotide = Character.toUpperCase(provider.getBaseCall(index));
-		double fontZoom = formats.calculateFontZoomFactor();
+		double fontZoom = formats.calculateFontZoomFactor(getOwner());
 		
 		g.setFont(formats.getBaseCallFont().createFont(fontZoom));
-		g.setColor(formats.getNucleotideColor(nucleotide));
+		g.setColor(formats.getNucleotideColor(getOwner(), nucleotide));
 		paintBaseCallText(g, Character.toString(nucleotide), paintX, paintY);
 		
 		paintY += g.getFont().getSize() * PherogramFormats.FONT_HEIGHT_FACTOR;
@@ -82,7 +87,7 @@ public class PherogramPainter {
 			}
 			else {  // QualityOutputType.ALL
 				for (Character qualityNucleotide: PherogramProvider.TRACE_CURVE_NUCLEOTIDES) {
-					g.setColor(formats.getNucleotideColor(qualityNucleotide));
+					g.setColor(formats.getNucleotideColor(getOwner(), qualityNucleotide));
 					paintY = paintAnnotation(g, provider.getQuality(qualityNucleotide, index), paintX, paintY);
 				}
 			}
@@ -232,7 +237,7 @@ public class PherogramPainter {
 						provider.getTraceValue(nucleotide, traceX) * owner.getVerticalScale());  //TODO curveTo() could be used alternatively.
 			}
 
-			g.setColor(owner.getFormats().getNucleotideColor(nucleotide.toString().charAt(0)));
+			g.setColor(owner.getFormats().getNucleotideColor(getOwner(), nucleotide.toString().charAt(0)));
 			g.draw(path);
 		}
 		
@@ -400,7 +405,7 @@ public class PherogramPainter {
 			}
 
 			// Paint trace curve path:
-			g.setColor(owner.getFormats().getNucleotideColor(nucleotide.toString().charAt(0)));
+			g.setColor(owner.getFormats().getNucleotideColor(getOwner(), nucleotide.toString().charAt(0)));
 			g.draw(path);
 		}
 		
@@ -411,7 +416,7 @@ public class PherogramPainter {
 	public void paintGaps(Graphics2D g, int firstBaseCallIndex, int lastBaseCallIndex, double startX, double startY, 
 			double height, PherogramDistortion distortion, double compoundWidth) {
 		
-		g.setColor(owner.getFormats().getNucleotideColor(SequenceUtils.GAP_CHAR));
+		g.setColor(owner.getFormats().getNucleotideColor(getOwner(), SequenceUtils.GAP_CHAR));
 		
 		for (int baseCallIndex = firstBaseCallIndex; baseCallIndex <= lastBaseCallIndex; baseCallIndex++) {
 			if (distortion.getGapPattern(baseCallIndex) != null) {
