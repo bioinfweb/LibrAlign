@@ -199,13 +199,27 @@ public class AlignmentArea extends ScrollingTICComponent implements AlignmentMod
 	
 	
 	/**
-	 * Creates a new instance of this class that shall not part of a {@link MultipleAlignmentsContainer}.
+	 * Creates a new instance of this class that shall not part of a {@link MultipleAlignmentsContainer} and has its own
+	 * instance of {@link EditSettings}
 	 * <p>
 	 * If you want to create an alignment area that shall be inserted into a {@link MultipleAlignmentsContainer}
 	 * use {@link #AlignmentArea(MultipleAlignmentsContainer))} instead.
 	 */
 	public AlignmentArea() {
-		this(null);
+		this(null, new EditSettings());
+	}
+	
+	
+	/**
+	 * Creates a new instance of this class that shall not part of a {@link MultipleAlignmentsContainer}.
+	 * <p>
+	 * If you want to create an alignment area that shall be inserted into a {@link MultipleAlignmentsContainer}
+	 * use {@link #AlignmentArea(MultipleAlignmentsContainer))} instead.
+	 * 
+	 * @param editSettings the edit settings object to be used with the new instance
+	 */
+	public AlignmentArea(EditSettings editSettings) {
+		this(null, editSettings);
 	}
 	
 	
@@ -215,14 +229,29 @@ public class AlignmentArea extends ScrollingTICComponent implements AlignmentMod
 	 * @param container the container where the returned instance will be contained in
 	 */
 	public AlignmentArea(MultipleAlignmentsContainer container) {
+		this(container, null);
+	}
+	
+	
+	/**
+	 * Creates a new instance of this class to be inserted into a {@link MultipleAlignmentsContainer}.
+	 * 
+	 * @param container the container where the returned instance will be contained in
+	 * @param editSettings the edit settings object to be used with the new instance (Must not be {@code null} if 
+	 *        {@code container} is {@code null}.
+	 */
+	protected AlignmentArea(MultipleAlignmentsContainer container, EditSettings editSettings) {
 		super();
 		this.container = container;
 		
 		if (hasContainer()) {
-			editSettings = getContainer().getEditSettings();
+			this.editSettings = getContainer().getEditSettings();
 		}
 		else {
-			editSettings = new EditSettings();
+			this.editSettings = editSettings;
+		}
+		if (this.editSettings == null) {
+			throw new NullPointerException("The EditSettings object associated with an AlignmentArea must not be null.");
 		}
 		
 		selection = new SelectionModel(this);

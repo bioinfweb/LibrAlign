@@ -50,10 +50,31 @@ import info.bioinfweb.libralign.editsettings.EditSettings;
  */
 public class MultipleAlignmentsContainer extends TICComponent {
 	private AlignmentAreaList alignmentAreas = new AlignmentAreaList(this);
-	private EditSettings editSettings = new EditSettings();
+	private EditSettings editSettings;
 	private boolean distributeRemainingSpace = false;
 
 	
+	/**
+	 * Creates a new instance of this class with its own instance of {@link EditSettings}.
+	 */
+	public MultipleAlignmentsContainer() {
+		this(new EditSettings());
+	}
+
+
+	/**
+	 * Creates a new instance of this class that uses the specified instance of {@link EditSettings}.
+	 * <p>
+	 * Use this constructor to share an edit settings object between multple container instances.
+	 * 
+	 * @param editSettings the edit settings object to be used
+	 */
+	public MultipleAlignmentsContainer(EditSettings editSettings) {
+		super();
+		this.editSettings = editSettings;
+	}
+
+
 	/**
 	 * Use the returned instance to change the alignment areas contained in this container.
 	 * 

@@ -152,7 +152,7 @@ public class PherogramArea extends DataArea implements PherogramComponent {
 	
 	
 	/**
-	 * Creates a new instance of this class.
+	 * Creates a new instance of this class with its own {@link PherogramFormats} instance.
 	 * 
 	 * @param owner the alignment area that will be containing the returned data area instance
 	 * @param model the provider for the pherogram data to be displayed by the returned instance (Note that each
@@ -161,6 +161,21 @@ public class PherogramArea extends DataArea implements PherogramComponent {
 	 * @throws IllegalArgumentException if {@code model} is already owned by another pherogram area 
 	 */
 	public PherogramArea(AlignmentContentArea owner, PherogramAreaModel model) {
+		this(owner, model, new PherogramFormats());
+	}
+	
+	
+	/**
+	 * Creates a new instance of this class.
+	 * 
+	 * @param owner the alignment area that will be containing the returned data area instance
+	 * @param model the provider for the pherogram data to be displayed by the returned instance (Note that each
+	 *        instance of this class needs a separate model instance. {@code model} can anyway be shared with instances
+	 *        of {@link PherogramTraceCurveView}.)
+	 * @param formats the formats object to be used with this area
+	 * @throws IllegalArgumentException if {@code model} is already owned by another pherogram area 
+	 */
+	public PherogramArea(AlignmentContentArea owner, PherogramAreaModel model, PherogramFormats formats) {
 		super(owner, owner.getOwner());  // Pherogram areas are always directly attached to their sequences.
 		if (model.getOwner() == null) {
 			model.setOwner(this);
@@ -171,7 +186,7 @@ public class PherogramArea extends DataArea implements PherogramComponent {
 		else {
 			this.model = model;
 			model.addListener(MODEL_LISTENER);
-			formats = new PherogramFormats();
+			this.formats = formats;
 			formats.addPropertyChangeListener(FORMATS_LISTENER);
 			verticalScale = getHeight();
 		}
