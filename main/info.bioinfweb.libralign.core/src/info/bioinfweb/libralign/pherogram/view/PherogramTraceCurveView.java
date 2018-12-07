@@ -226,15 +226,17 @@ public class PherogramTraceCurveView extends TICComponent implements PherogramCo
 	@Override
 	public void paint(TICPaintEvent e) {
 		e.getGraphics().setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-		getPainter().paintUnscaledBackground(e.getGraphics(), e.getRectangle(), getHorizontalScale());
-		
-		SimpleSequenceInterval paintRange = calculatePaintRange(e);
-		if (getFormats().isShowBaseCallLines()) {
-			e.getGraphics().setColor(getFormats().getBaseCallLineColor());
-			getPainter().paintUnscaledBaseCallLines(paintRange.getFirstPos(), paintRange.getLastPos(), 
-					e.getGraphics(), e.getRectangle().getMinX(), 0, getSize().getHeight(), getHorizontalScale());
+		if (getModel() != null) {
+			getPainter().paintUnscaledBackground(e.getGraphics(), e.getRectangle(), getHorizontalScale());
+			
+			SimpleSequenceInterval paintRange = calculatePaintRange(e);
+			if (getFormats().isShowBaseCallLines()) {
+				e.getGraphics().setColor(getFormats().getBaseCallLineColor());
+				getPainter().paintUnscaledBaseCallLines(paintRange.getFirstPos(), paintRange.getLastPos(), 
+						e.getGraphics(), e.getRectangle().getMinX(), 0, getSize().getHeight(), getHorizontalScale());
+			}
+			getPainter().paintUnscaledTraceCurves(paintRange.getFirstPos(), paintRange.getLastPos(), 
+					e.getGraphics(), e.getRectangle().getMinX(), 0, getHorizontalScale());
 		}
-		getPainter().paintUnscaledTraceCurves(paintRange.getFirstPos(), paintRange.getLastPos(), 
-				e.getGraphics(), e.getRectangle().getMinX(), 0, getHorizontalScale());		
 	}
 }

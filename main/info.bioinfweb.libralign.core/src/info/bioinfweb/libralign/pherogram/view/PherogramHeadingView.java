@@ -63,20 +63,21 @@ public class PherogramHeadingView extends TICComponent {
 		double fontZoom = formats.calculateFontZoomFactor(getTraceCurveView());
 		e.getGraphics().setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 		
-		painter.paintUnscaledBackground(e.getGraphics(), e.getRectangle(), getTraceCurveView().getHorizontalScale());
-		SimpleSequenceInterval paintRange = getTraceCurveView().calculatePaintRange(e);
-		
-		Font indexFont = formats.getIndexFont().createFont(fontZoom);
-		e.getGraphics().setFont(indexFont);
-		e.getGraphics().setColor(Color.BLACK);
-		painter.paintUnscaledBaseCallIndices(paintRange.getFirstPos(), paintRange.getLastPos(), 
-				e.getGraphics(), e.getRectangle().getMinX(), 0, getTraceCurveView().getHorizontalScale());
-
-		e.getGraphics().setFont(formats.getBaseCallFont().createFont(fontZoom));
-		painter.paintUnscaledBaseCalls(paintRange.getFirstPos(), paintRange.getLastPos(), 
-				e.getGraphics(), e.getRectangle().getMinX(), indexFont.getSize2D() * PherogramFormats.FONT_HEIGHT_FACTOR, 
-				getTraceCurveView().getHorizontalScale());
-
+		if (getTraceCurveView().getModel() != null) {
+			painter.paintUnscaledBackground(e.getGraphics(), e.getRectangle(), getTraceCurveView().getHorizontalScale());
+			SimpleSequenceInterval paintRange = getTraceCurveView().calculatePaintRange(e);
+			
+			Font indexFont = formats.getIndexFont().createFont(fontZoom);
+			e.getGraphics().setFont(indexFont);
+			e.getGraphics().setColor(Color.BLACK);
+			painter.paintUnscaledBaseCallIndices(paintRange.getFirstPos(), paintRange.getLastPos(), 
+					e.getGraphics(), e.getRectangle().getMinX(), 0, getTraceCurveView().getHorizontalScale());
+	
+			e.getGraphics().setFont(formats.getBaseCallFont().createFont(fontZoom));
+			painter.paintUnscaledBaseCalls(paintRange.getFirstPos(), paintRange.getLastPos(), 
+					e.getGraphics(), e.getRectangle().getMinX(), indexFont.getSize2D() * PherogramFormats.FONT_HEIGHT_FACTOR, 
+					getTraceCurveView().getHorizontalScale());
+		}
 	}
 
 	
