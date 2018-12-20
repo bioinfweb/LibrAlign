@@ -330,7 +330,7 @@ public class AlignmentModelEventReader implements JPhyloIOEventListener {
 				if (event.getType().getTopologyType().equals(EventTopologyType.START)) {
 					LinkedLabeledIDEvent sequenceEvent = event.asLinkedLabeledIDEvent();
 					ensureCurrentModelInstance();
-					currentSequenceID = currentModel.addSequence(sequenceEvent.getLabel());  //TODO Handle case that no label is present or labels are not unique.
+					currentSequenceID = currentModel.addSequence(sequenceEvent.getLabel()/*, sequenceEvent.getID()*/);  //TODO Handle case that no label is present or labels are not unique.
 					//TODO Can't sequences be continued by an additional start event? It that case addSequence() should not be called again. => Create test case e.g. with MEGA or interleaved Nexus.
 				}
 				else {  // END
