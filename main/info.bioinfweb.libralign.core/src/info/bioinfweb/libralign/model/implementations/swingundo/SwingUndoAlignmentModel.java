@@ -180,6 +180,18 @@ public class SwingUndoAlignmentModel<T> extends AbstractAlignmentModel<T>
 	}
 
 
+	@Override
+	public String getID() {
+		return underlyingModel.getID();
+	}
+
+
+	@Override
+	public void setID(String id) {
+		underlyingModel.setID(id);
+	}
+
+
 	/**
 	 * Returns the edit factory used by this instance to create new edit objects, if one was passed to 
 	 * when this instance was created.
