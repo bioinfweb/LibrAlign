@@ -31,7 +31,7 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/ma
   </scm>
 
   <dependencies>
-    <!-- Apache commons collections 4-4.1, lang-3-3.1 and OWLAPI-XMLUtils-4.1.4 are currently indirectly referenced. -->
+    <!-- Apache commons collections 4-4.1, lang-3-3.1, OWLAPI-XMLUtils-4.1.4 and JAX-B are currently indirectly referenced. -->
   
     <!-- bioinfweb.commons -->
 	<dependency>
