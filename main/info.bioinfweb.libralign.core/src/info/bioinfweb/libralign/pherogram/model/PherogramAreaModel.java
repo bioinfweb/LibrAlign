@@ -131,7 +131,7 @@ public class PherogramAreaModel extends PherogramComponentModel implements DataM
 	 * Sets the index in the sequence this pherogram is attached to where the displaying of the visible part 
 	 * of the pherogram starts. 
 	 * 
-	 * @param firstSeqPos - the new index
+	 * @param firstSeqPos the new index
 	 */
 	public void setFirstSeqPos(int firstSeqPos) {
 		if ((getOwner().getList() == null) ||  // Range check is only performed, if the position of the data area is already set. 

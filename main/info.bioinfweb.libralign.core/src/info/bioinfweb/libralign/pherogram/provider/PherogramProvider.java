@@ -34,7 +34,7 @@ import info.bioinfweb.libralign.pherogram.PherogramUtils;
  * @author Ben St&ouml;ver
  * @since 0.1.0
  */
-public interface PherogramProvider extends DataModel {  //TODO Should DataModel be implemented here?
+public interface PherogramProvider {
 	/** A list of the nucleotides A, T, C and G to which trace curves exist in a trace file from Sanger sequencing. */ 
   public static final Set<Character> TRACE_CURVE_NUCLEOTIDES = PherogramUtils.createTraceCurveNucleotideList();
   
