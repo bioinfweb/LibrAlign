@@ -19,21 +19,18 @@
 package info.bioinfweb.libralign.pherogram.model;
 
 
-import info.bioinfweb.commons.Math2;
-import info.bioinfweb.libralign.dataarea.implementations.pherogram.PherogramArea;
-import info.bioinfweb.libralign.model.AlignmentModel;
-import info.bioinfweb.libralign.model.concatenated.ConcatenatedAlignmentModel;
-import info.bioinfweb.libralign.model.data.DataModel;
-import info.bioinfweb.libralign.pherogram.PherogramUtils;
-import info.bioinfweb.libralign.pherogram.distortion.GapPattern;
-import info.bioinfweb.libralign.pherogram.distortion.ScaledPherogramDistortion;
-import info.bioinfweb.libralign.pherogram.provider.PherogramProvider;
-import info.bioinfweb.libralign.pherogram.view.PherogramTraceCurveView;
-
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
+
+import info.bioinfweb.commons.Math2;
+import info.bioinfweb.libralign.dataarea.implementations.pherogram.PherogramArea;
+import info.bioinfweb.libralign.model.AlignmentModel;
+import info.bioinfweb.libralign.model.data.DataModel;
+import info.bioinfweb.libralign.pherogram.distortion.GapPattern;
+import info.bioinfweb.libralign.pherogram.provider.PherogramProvider;
+import info.bioinfweb.libralign.pherogram.view.PherogramTraceCurveView;
 
 
 
@@ -45,7 +42,8 @@ import java.util.ListIterator;
  * @since 0.4.0
  */
 public class PherogramAreaModel extends PherogramComponentModel implements DataModel {
-	private PherogramArea owner;
+	private AlignmentModel<?> alignmentModel;
+	private String labeledSequenceID;
 	private int firstSeqPos;
 	private List<ShiftChange> shiftChangeList = new ArrayList<ShiftChange>();
 	private boolean firstSeqPosUpdateOngoing = false;
@@ -63,8 +61,10 @@ public class PherogramAreaModel extends PherogramComponentModel implements DataM
 	 * @param pherogramProvider the pherogram provider
 	 * @throws NullPointerException if {@code null} is specified for {@code pherogramProvider}
 	 */
-	public PherogramAreaModel(PherogramProvider provider) {
+	public PherogramAreaModel(PherogramProvider provider, AlignmentModel<?> alignmentModel, String labeledSequenceID) {
 		super(provider);
+		setAlignmentModel(alignmentModel);
+		setLabeledSequenceID(labeledSequenceID);
 	}
 
 
@@ -81,41 +81,44 @@ public class PherogramAreaModel extends PherogramComponentModel implements DataM
 	 * @param model the source pherogram component model
 	 * @throws NullPointerException if {@code null} is specified for {@code model}
 	 */
-	public PherogramAreaModel(PherogramComponentModel model) {
+	public PherogramAreaModel(PherogramComponentModel model, AlignmentModel<?> alignmentModel, String labeledSequenceID) {
 		super(model);
+		setAlignmentModel(alignmentModel);
+		setLabeledSequenceID(labeledSequenceID);
 	}
 	
 	
-	/**
-	 * The pherogram area associated with this model.
-	 * 
-	 * @return the associated data area
-	 */
-	public PherogramArea getOwner() {
-		return owner;
+	@Override
+	public AlignmentModel<?> getAlignmentModel() {
+		return alignmentModel;
 	}
 
-	
-	/**
-	 * Specifies a new owning pherogram area for this instance. This method will usually not need to be called
-	 * from application code directly, since it is called in the constructor of {@link PherogramArea}.
-	 * <p>
-	 * Note that specifying a different pherogram area here, than the one that currently uses this instance
-	 * is illegal and can lead to unexpected behavior of the displaying pherogram area.
-	 * 
-	 * @param owner the pherogram area that uses this model
-	 * @throws NullPointerException if {@code null} is specified for {@code owner}
-	 */
-	public void setOwner(PherogramArea owner) {
-		if (owner != null) {
-			this.owner = owner;
+
+	private void setAlignmentModel(AlignmentModel<?> alignmentModel) {
+		if (alignmentModel == null) {
+			throw new IllegalArgumentException("The associated AlignmentModel must not be null.");
 		}
 		else {
-			throw new NullPointerException("The owner of this instance must not be set to null.");
+			this.alignmentModel = alignmentModel;
 		}
+	}
+	
+	
+	public String getLabeledSequenceID() {
+		return labeledSequenceID;
 	}
 
 
+	private void setLabeledSequenceID(String labeledSequenceID) {
+		if (labeledSequenceID == null) {
+			throw new IllegalArgumentException("The associated sequence ID must not be null.");
+		}
+		else {
+			this.labeledSequenceID = labeledSequenceID;
+		}
+	}
+	
+	
 	/**
 	 * Returns the position in the sequence this pherogram is attached to where the output of the visible part
 	 * of the pherogram starts.
@@ -134,15 +137,15 @@ public class PherogramAreaModel extends PherogramComponentModel implements DataM
 	 * @param firstSeqPos the new index
 	 */
 	public void setFirstSeqPos(int firstSeqPos) {
-		if ((getOwner().getList() == null) ||  // Range check is only performed, if the position of the data area is already set. 
-				Math2.isBetween(firstSeqPos, 0,  //TODO Also check right cut position to match the sequence end?
-						getOwner().getLabeledAlignmentModel().getSequenceLength(getOwner().getList().getLocation().getSequenceID()) - 1)) {
-			
-			this.firstSeqPos = firstSeqPos;
-			getOwner().getLabeledAlignmentArea().getDataAreas().setLocalMaxLengthBeforeAfterRecalculate();
-		}
-		else {
-			throw new IndexOutOfBoundsException(firstSeqPos + " is not a valid index to attach this pherogram to.");
+		if (this.firstSeqPos != firstSeqPos) {
+			if (Math2.isBetween(firstSeqPos, 0, getAlignmentModel().getSequenceLength(getLabeledSequenceID()) - 1)) {
+				int oldPosition = this.firstSeqPos;
+				this.firstSeqPos = firstSeqPos;
+				fireFirstSequencePositionChange(oldPosition, firstSeqPos, false);
+			}
+			else {
+				throw new IndexOutOfBoundsException(firstSeqPos + " is not a valid index to attach this pherogram to.");
+			}
 		}
 	}
 	
@@ -194,10 +197,10 @@ public class PherogramAreaModel extends PherogramComponentModel implements DataM
 	}
 
 
-	@SuppressWarnings({"rawtypes", "unchecked"})
+	@SuppressWarnings({ "rawtypes", "unchecked"})
 	private boolean isGap(int editableIndex) {
-		AlignmentModel model = getOwner().getOwner().getOwner().getAlignmentModel();
-		return model.getTokenSet().isGapToken(model.getTokenAt(getOwner().getList().getLocation().getSequenceID(), editableIndex));
+		AlignmentModel model = getAlignmentModel();
+		return model.getTokenSet().isGapToken(model.getTokenAt(getLabeledSequenceID(), editableIndex));
 	}
 	
 
@@ -390,12 +393,12 @@ public class PherogramAreaModel extends PherogramComponentModel implements DataM
    * <p>
    * If a {@code shiftChange} of 0 is specified the entry in the underlying shift list will be deleted.
    * 
-   * @param baseCallIndex the first position in the base call sequence where the shift change shall be valid
-   * @param shiftChange a positive of negative for the the shift change (number of positions in the editable sequence)
+   * @param baseCallIndex the first position in the base call sequence affected by the shift change
+   * @param shiftChange a positive or negative integer describing the shift change as the number of positions in the editable sequence
    */
   public void setShiftChange(int baseCallIndex, int shiftChange) {
   	int listIndex = shiftChangeListIndexByBaseCallIndex(baseCallIndex);
-  	if (listIndex < shiftChangeList.size() && (shiftChangeList.get(listIndex).baseCallIndex == baseCallIndex)) {
+  	if ((listIndex < shiftChangeList.size()) && (shiftChangeList.get(listIndex).baseCallIndex == baseCallIndex)) {
     	if (shiftChange == 0) {
     		shiftChangeList.remove(listIndex);
     	}
@@ -407,8 +410,7 @@ public class PherogramAreaModel extends PherogramComponentModel implements DataM
   		shiftChangeList.add(listIndex, new ShiftChange(baseCallIndex, shiftChange));
   		combineThreeShiftChanges(listIndex);
   	}
-  	//printShiftChangeList();
-  	getOwner().repaint();
+  	fireShiftChangeEdited(baseCallIndex, shiftChange, false);
   }
   
   
@@ -494,7 +496,7 @@ public class PherogramAreaModel extends PherogramComponentModel implements DataM
 	}
   
   
-	private GapPattern getGapPattern(ShiftChange shiftChange) {
+	public GapPattern getGapPattern(ShiftChange shiftChange) {
 		GapPattern result = new GapPattern(shiftChange.getShiftChange() + 1);
 		int firstEditableIndex = editableIndexByBaseCallIndex(shiftChange.getBaseCallIndex()).getCorresponding();
 		for (int i = 0; i < result.size(); i++) {
@@ -572,77 +574,18 @@ public class PherogramAreaModel extends PherogramComponentModel implements DataM
 	}
 	
 	
-	public ScaledPherogramDistortion createPherogramDistortion() {
-		ScaledPherogramDistortion result = new ScaledPherogramDistortion(getPherogramProvider().getSequenceLength());
-  	
-		int startTraceIndex = 0;  //getTracePosition(startBaseCallIndex);
-		Iterator<ShiftChange> shiftChangeIterator = shiftChangeIterator();
-		ShiftChange shiftChange = null;
-		if (shiftChangeIterator.hasNext()) {
-			shiftChange = shiftChangeIterator.next();
+	protected void fireFirstSequencePositionChange(int oldPosition, int newPosition, boolean moreEventsUpcoming) {
+		PherogramFirstSeqPosChangeEvent event = new PherogramFirstSeqPosChangeEvent(this, moreEventsUpcoming, oldPosition, newPosition);
+		for (PherogramModelListener listener : listeners.toArray(new PherogramModelListener[listeners.size()])) {  // Copying the list is necessary to allow listeners to remove themselves from the list without a ConcurrentModificationException being thrown.
+			listener.firstSequencePositionChange(event);
 		}
-		
-		if (getOwner().getOwner().getOwner().getAlignmentModel() instanceof ConcatenatedAlignmentModel) {
-			throw new InternalError("Support for concatenated models not yet implemented.");
+	}
+	
+	
+	protected void fireShiftChangeEdited(int baseCallIndex, int shiftChange, boolean moreEventsUpcoming) {
+		PherogramShiftChangeUpdateEvent event = new PherogramShiftChangeUpdateEvent(this, moreEventsUpcoming, baseCallIndex, shiftChange);
+		for (PherogramModelListener listener : listeners.toArray(new PherogramModelListener[listeners.size()])) {  // Copying the list is necessary to allow listeners to remove themselves from the list without a ConcurrentModificationException being thrown.
+			listener.shiftChangeEdited(event);
 		}
-		final double compoundWidth = getOwner().getEditableTokenWidth();
-		int stepWidth = 1;
-		int editPosPerBaseCallPos = 1;
-		double baseCallPaintX = 0; //0.5 * compoundWidth;
-		for (int baseCallIndex = 0; baseCallIndex < getPherogramProvider().getSequenceLength(); baseCallIndex += stepWidth) {
-			// Treat possible gaps:
-			if ((shiftChange != null) && (baseCallIndex == shiftChange.getBaseCallIndex())) {
-				if (shiftChange.getShiftChange() < 0) {  // Deletion in editable sequence
-					stepWidth = -shiftChange.getShiftChange() + 1;
-					editPosPerBaseCallPos = 1;
-				}
-				else {  // Insertion in editable sequence
-					stepWidth = 1;
-					GapPattern gapPattern = getGapPattern(shiftChange);
-					editPosPerBaseCallPos = shiftChange.getShiftChange() + 1 - gapPattern.getGapCount();
-					result.setGapPattern(baseCallIndex, gapPattern);
-				}
-
-				if (shiftChangeIterator.hasNext()) {
-					shiftChange = shiftChangeIterator.next();
-				}
-				else {
-					shiftChange = null;
-				}
-			}
-			else {
-				stepWidth = 1;
-				editPosPerBaseCallPos = 1;
-			}
-			
-			// Calculate scale and initialize variables:
-			int endTraceIndex = PherogramUtils.getFirstTracePosition(getPherogramProvider(), baseCallIndex + stepWidth);
-			result.setHorizontalScale(baseCallIndex, editPosPerBaseCallPos * compoundWidth / (double)(endTraceIndex - startTraceIndex));
-
-			// Calculate paint positions:
-			double baseCallPaintDistance = compoundWidth * editPosPerBaseCallPos / stepWidth;
-			result.setPaintStartX(baseCallIndex, baseCallPaintX);
-			baseCallPaintX += 0.5 * baseCallPaintDistance;
-			if (result.getGapPattern(baseCallIndex) == null) {
-				result.setPaintCenterX(baseCallIndex, baseCallPaintX);
-				for (int i = 1; i < stepWidth; i++) {
-					result.setHorizontalScale(baseCallIndex + i, result.getHorizontalScale(baseCallIndex));  // Scale remains constant.
-					baseCallPaintX += 0.5 * baseCallPaintDistance;
-					result.setPaintStartX(baseCallIndex + i, baseCallPaintX);
-					baseCallPaintX += 0.5 * baseCallPaintDistance;
-					result.setPaintCenterX(baseCallIndex + i, baseCallPaintX);
-					// GapPattern does not need to be set, because it must be null in this case.
-				}
-			}
-			else {	// Treat gaps (in this case stepWidth should always be 1):
-				GapPattern gapPattern = result.getGapPattern(baseCallIndex);
-				result.setPaintCenterX(baseCallIndex, baseCallPaintX + compoundWidth * gapPattern.countGapsBeforeCurveCenter());
-				baseCallPaintX += compoundWidth * gapPattern.getGapCount();
-			}
-			baseCallPaintX += 0.5 * baseCallPaintDistance;
-			startTraceIndex = endTraceIndex;
-		}
-  	
-  	return result;
-  }	
+	}
 }

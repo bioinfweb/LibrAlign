@@ -162,7 +162,7 @@ public class CharSetArea extends DataArea {
 	 *        {@link MultipleAlignmentsContainer}.) 
 	 */
 	public CharSetArea(AlignmentContentArea owner, AlignmentArea labeledAlignmentArea) {
-		this(owner, labeledAlignmentArea, new CharSetDataModel());
+		this(owner, labeledAlignmentArea, new CharSetDataModel(labeledAlignmentArea.getAlignmentModel()));  // CharSetDataModel currently does not make use of the specified alignment model.
 	}
 	
 	

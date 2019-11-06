@@ -23,6 +23,7 @@ import info.bioinfweb.libralign.dataarea.implementations.charset.events.CharSetC
 import info.bioinfweb.libralign.dataarea.implementations.charset.events.CharSetColorChangeEvent;
 import info.bioinfweb.libralign.dataarea.implementations.charset.events.CharSetColumnChangeEvent;
 import info.bioinfweb.libralign.dataarea.implementations.charset.events.CharSetRenamedEvent;
+import info.bioinfweb.libralign.model.AlignmentModel;
 import info.bioinfweb.libralign.model.data.DataModel;
 
 import java.util.HashMap;
@@ -43,9 +44,26 @@ import org.apache.commons.collections4.map.ListOrderedMap;
  * @since 0.4.0
  */
 public class CharSetDataModel extends ListOrderedMap<String, CharSet> implements DataModel {
+	//TODO Should a link to the associated AlignmentModel be used to determine the length of the alignment and possibly cut character sets? 
+	//     - Can NeXML store character sets that are longer than an alignment?
+	//     - Otherwise this class would be an example for a DataModel that is fully independent of the AlignmentModel.
+	
+	private AlignmentModel<?> alignmentModel;
 	private Set<CharSetDataModelListener> listeners = new HashSet<CharSetDataModelListener>();
 	
 	
+	public CharSetDataModel(AlignmentModel<?> alignmentModel) {  //TODO Should an alternative constructor without alignmentModel be offered/may alignmentModel be null or will other classes in the future rely on a non-null value to be returned by getAlignmentModel()? (This class currently does not make use of this property.) 
+		super();
+		this.alignmentModel = alignmentModel;
+	}
+
+
+	@Override
+	public AlignmentModel<?> getAlignmentModel() {
+		return alignmentModel;
+	}
+
+
 	public CharSet getByName(String name) {
 		for (CharSet charSet : valueList()) {
 			if (charSet.getName().equals(name)) {

@@ -33,26 +33,26 @@ package info.bioinfweb.libralign.pherogram.model;
  * @author Ben St&ouml;ver
  * @since 0.4.0
  */
-public interface PherogramComponentModelListener {
+public interface PherogramModelListener {
 	/**
 	 * This method is called, if the pherogram provider of a pherogram component model was replaced
 	 * or its contents changed. (Pherogram providers provide the base call sequence and the trace curves.)
 	 * 
-	 * @param event object the event describing this event
+	 * @param event object the describing this event
 	 */
 	public void pherogramProviderChange(PherogramProviderChangeEvent event);
 	
 	/**
 	 * This method is called, if the left cut position of the pherogram was changed.
 	 * 
-	 * @param event object the event describing this event
+	 * @param event object the describing this event
 	 */
 	public void leftCutPositionChange(PherogramCutPositionChangeEvent event);
 	
 	/**
 	 * This method is called, if the right cut position of the pherogram was changed.
 	 * 
-	 * @param event object the event describing this event
+	 * @param event object the describing this event
 	 */
 	public void rightCutPositionChange(PherogramCutPositionChangeEvent event);
 	
@@ -62,7 +62,17 @@ public interface PherogramComponentModelListener {
 	 * Note that this event will only be fired by instances of {@link PherogramAreaModel} and never
 	 * by an instance of {@link PherogramComponentModel}.
 	 * 
-	 * @param event object the event describing this event
+	 * @param event object the describing this event
 	 */
 	public void firstSequencePositionChange(PherogramFirstSeqPosChangeEvent event);
+	
+	/**
+	 * This method is called, if the shift changes stored by {@link PherogramAreaModel} were updated.
+	 * <p>
+	 * Note that this event will only be fired by instances of {@link PherogramAreaModel} and never
+	 * by an instance of {@link PherogramComponentModel}.
+	 * 
+	 * @param event object the describing this event
+	 */
+	public void shiftChangeEdited(PherogramShiftChangeUpdateEvent event);
 }

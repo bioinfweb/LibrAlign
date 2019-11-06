@@ -54,8 +54,8 @@ public interface PherogramProvider {
 	/**
 	 * Returns the y value of the specified trace curve at the specified position.
 	 * 
-	 * @param nucleotide - the type of trace curve (A, T, C or G)
-	 * @param x - the x position of the curve (The first position is 0 and the last is 
+	 * @param nucleotide the type of trace curve (A, T, C or G)
+	 * @param x the x position of the curve (The first position is 0 and the last is 
 	 *        {@link #getTraceLength()}{@code - 1}.)
 	 * @return the stored trace value at this position normalized between 0 and 1
 	 */

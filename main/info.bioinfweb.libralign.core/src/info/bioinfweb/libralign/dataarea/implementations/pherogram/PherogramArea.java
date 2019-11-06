@@ -35,13 +35,17 @@ import info.bioinfweb.libralign.model.tokenset.TokenSet;
 import info.bioinfweb.libralign.pherogram.PherogramComponent;
 import info.bioinfweb.libralign.pherogram.PherogramFormats;
 import info.bioinfweb.libralign.pherogram.PherogramPainter;
+import info.bioinfweb.libralign.pherogram.PherogramUtils;
+import info.bioinfweb.libralign.pherogram.distortion.GapPattern;
 import info.bioinfweb.libralign.pherogram.distortion.ScaledPherogramDistortion;
 import info.bioinfweb.libralign.pherogram.model.PherogramAlignmentRelation;
 import info.bioinfweb.libralign.pherogram.model.PherogramAreaModel;
-import info.bioinfweb.libralign.pherogram.model.PherogramComponentModelListener;
+import info.bioinfweb.libralign.pherogram.model.PherogramModelListener;
 import info.bioinfweb.libralign.pherogram.model.PherogramCutPositionChangeEvent;
 import info.bioinfweb.libralign.pherogram.model.PherogramFirstSeqPosChangeEvent;
 import info.bioinfweb.libralign.pherogram.model.PherogramProviderChangeEvent;
+import info.bioinfweb.libralign.pherogram.model.PherogramShiftChangeUpdateEvent;
+import info.bioinfweb.libralign.pherogram.model.ShiftChange;
 import info.bioinfweb.libralign.pherogram.view.PherogramTraceCurveView;
 import info.bioinfweb.libralign.pherogram.view.PherogramView;
 
@@ -55,6 +59,7 @@ import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.EnumSet;
+import java.util.Iterator;
 import java.util.Set;
 
 
@@ -77,7 +82,7 @@ public class PherogramArea extends DataArea implements PherogramComponent {
 	private PherogramPainter painter = new PherogramPainter(this);
 
 	
-	private final PherogramComponentModelListener MODEL_LISTENER = new PherogramComponentModelListener() {
+	private final PherogramModelListener MODEL_LISTENER = new PherogramModelListener() {
 		@Override
 		public void pherogramProviderChange(PherogramProviderChangeEvent event) {
 			getLabeledAlignmentArea().getDataAreas().setLocalMaxLengthBeforeAfterRecalculate();  // Could happen if cut lengths at the beginning and end differ.
@@ -94,6 +99,7 @@ public class PherogramArea extends DataArea implements PherogramComponent {
 				updateChangedPosition();
 			}
 			
+			//TODO Changes to the alignment model should not be done here in the view. The two models should communicate directly.
 			if (isUpdateEditableSequence() && !getOwner().getOwner().getAlignmentModel().isTokensReadOnly()) {
 				if (event.getNewBaseCallIndex() < event.getOldBaseCallIndex()) {
 					copyBaseCallSequence(event.getNewBaseCallIndex(), event.getOldBaseCallIndex());  // Needs to be called after all changes are performed in order to calculate correct indices.
@@ -115,6 +121,7 @@ public class PherogramArea extends DataArea implements PherogramComponent {
 				updateChangedPosition();
 			}
 			
+			//TODO Changes to the alignment model should not be done here in the view. The two models should communicate directly.
 			if (isUpdateEditableSequence() && !getOwner().getOwner().getAlignmentModel().isTokensReadOnly()) {
 				if (event.getOldBaseCallIndex() < event.getNewBaseCallIndex()) {
 					copyBaseCallSequence(event.getOldBaseCallIndex(), event.getNewBaseCallIndex());  // Needs to be called after all changes are performed in order to calculate correct indices.
@@ -137,6 +144,14 @@ public class PherogramArea extends DataArea implements PherogramComponent {
 		public void firstSequencePositionChange(PherogramFirstSeqPosChangeEvent event) {
 			if (!event.isMoreEventsUpcoming()) {
 				updateChangedPosition();
+			}
+		}
+
+
+		@Override
+		public void shiftChangeEdited(PherogramShiftChangeUpdateEvent event) {
+			if (!event.isMoreEventsUpcoming()) {
+				repaint();
 			}
 		}
 	};
@@ -177,19 +192,11 @@ public class PherogramArea extends DataArea implements PherogramComponent {
 	 */
 	public PherogramArea(AlignmentContentArea owner, PherogramAreaModel model, PherogramFormats formats) {
 		super(owner, owner.getOwner());  // Pherogram areas are always directly attached to their sequences.
-		if (model.getOwner() == null) {
-			model.setOwner(this);
-		}
-		if (model.getOwner() != this) {
-			throw new IllegalArgumentException("The specified model is already associated with another pherogram area.");
-		}
-		else {
-			this.model = model;
-			model.addListener(MODEL_LISTENER);
-			this.formats = formats;
-			formats.addPropertyChangeListener(FORMATS_LISTENER);
-			verticalScale = getHeight();
-		}
+		this.model = model;
+		model.addListener(MODEL_LISTENER);
+		this.formats = formats;
+		formats.addPropertyChangeListener(FORMATS_LISTENER);
+		verticalScale = getHeight();
 	}
 	
 	
@@ -218,6 +225,81 @@ public class PherogramArea extends DataArea implements PherogramComponent {
 	}
 	
 
+	public ScaledPherogramDistortion createPherogramDistortion() {
+		ScaledPherogramDistortion result = new ScaledPherogramDistortion(getModel().getPherogramProvider().getSequenceLength());
+  	
+		int startTraceIndex = 0;  //getTracePosition(startBaseCallIndex);
+		Iterator<ShiftChange> shiftChangeIterator = getModel().shiftChangeIterator();
+		ShiftChange shiftChange = null;
+		if (shiftChangeIterator.hasNext()) {
+			shiftChange = shiftChangeIterator.next();
+		}
+		
+		if (getModel().getAlignmentModel() instanceof ConcatenatedAlignmentModel) {  //TODO This reference could also me made using getOwner().getOwner().getAlignmentModel(). Would this be better?
+			throw new InternalError("Support for concatenated models not yet implemented.");
+		}
+		final double compoundWidth = getEditableTokenWidth();
+		int stepWidth = 1;
+		int editPosPerBaseCallPos = 1;
+		double baseCallPaintX = 0; //0.5 * compoundWidth;
+		for (int baseCallIndex = 0; baseCallIndex < getModel().getPherogramProvider().getSequenceLength(); baseCallIndex += stepWidth) {
+			// Treat possible gaps:
+			if ((shiftChange != null) && (baseCallIndex == shiftChange.getBaseCallIndex())) {
+				if (shiftChange.getShiftChange() < 0) {  // Deletion in editable sequence
+					stepWidth = -shiftChange.getShiftChange() + 1;
+					editPosPerBaseCallPos = 1;
+				}
+				else {  // Insertion in editable sequence
+					stepWidth = 1;
+					GapPattern gapPattern = getModel().getGapPattern(shiftChange);
+					editPosPerBaseCallPos = shiftChange.getShiftChange() + 1 - gapPattern.getGapCount();
+					result.setGapPattern(baseCallIndex, gapPattern);
+				}
+
+				if (shiftChangeIterator.hasNext()) {
+					shiftChange = shiftChangeIterator.next();
+				}
+				else {
+					shiftChange = null;
+				}
+			}
+			else {
+				stepWidth = 1;
+				editPosPerBaseCallPos = 1;
+			}
+			
+			// Calculate scale and initialize variables:
+			int endTraceIndex = PherogramUtils.getFirstTracePosition(getModel().getPherogramProvider(), baseCallIndex + stepWidth);
+			result.setHorizontalScale(baseCallIndex, editPosPerBaseCallPos * compoundWidth / (double)(endTraceIndex - startTraceIndex));
+
+			// Calculate paint positions:
+			double baseCallPaintDistance = compoundWidth * editPosPerBaseCallPos / stepWidth;
+			result.setPaintStartX(baseCallIndex, baseCallPaintX);
+			baseCallPaintX += 0.5 * baseCallPaintDistance;
+			if (result.getGapPattern(baseCallIndex) == null) {
+				result.setPaintCenterX(baseCallIndex, baseCallPaintX);
+				for (int i = 1; i < stepWidth; i++) {
+					result.setHorizontalScale(baseCallIndex + i, result.getHorizontalScale(baseCallIndex));  // Scale remains constant.
+					baseCallPaintX += 0.5 * baseCallPaintDistance;
+					result.setPaintStartX(baseCallIndex + i, baseCallPaintX);
+					baseCallPaintX += 0.5 * baseCallPaintDistance;
+					result.setPaintCenterX(baseCallIndex + i, baseCallPaintX);
+					// GapPattern does not need to be set, because it must be null in this case.
+				}
+			}
+			else {	// Treat gaps (in this case stepWidth should always be 1):
+				GapPattern gapPattern = result.getGapPattern(baseCallIndex);
+				result.setPaintCenterX(baseCallIndex, baseCallPaintX + compoundWidth * gapPattern.countGapsBeforeCurveCenter());
+				baseCallPaintX += compoundWidth * gapPattern.getGapCount();
+			}
+			baseCallPaintX += 0.5 * baseCallPaintDistance;
+			startTraceIndex = endTraceIndex;
+		}
+  	
+  	return result;
+  }	
+
+	
 	@Override
 	public void paintPart(AlignmentPaintEvent e) {
 		Graphics2D g = e.getGraphics();
@@ -254,7 +336,7 @@ public class PherogramArea extends DataArea implements PherogramComponent {
 		double y = 0; 
 		double height = getHeight();
 		double fontZoom = getFormats().calculateFontZoomFactor(this);
-		ScaledPherogramDistortion distortion = getModel().createPherogramDistortion();
+		ScaledPherogramDistortion distortion = createPherogramDistortion();
 		
 		// Paint gaps:
 		if (getLabeledAlignmentArea().getAlignmentModel() instanceof ConcatenatedAlignmentModel) {
@@ -331,7 +413,7 @@ public class PherogramArea extends DataArea implements PherogramComponent {
 
 	private void updateChangedPosition() {
 		getLabeledAlignmentArea().getDataAreas().setLocalMaxLengthBeforeAfterRecalculate();
-		repaint();
+		repaint();  //TODO Is this necessary?
   }
   
   

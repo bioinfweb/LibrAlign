@@ -34,10 +34,11 @@ import info.bioinfweb.libralign.pherogram.PherogramComponent;
 import info.bioinfweb.libralign.pherogram.PherogramFormats;
 import info.bioinfweb.libralign.pherogram.PherogramPainter;
 import info.bioinfweb.libralign.pherogram.model.PherogramComponentModel;
-import info.bioinfweb.libralign.pherogram.model.PherogramComponentModelListener;
+import info.bioinfweb.libralign.pherogram.model.PherogramModelListener;
 import info.bioinfweb.libralign.pherogram.model.PherogramCutPositionChangeEvent;
 import info.bioinfweb.libralign.pherogram.model.PherogramFirstSeqPosChangeEvent;
 import info.bioinfweb.libralign.pherogram.model.PherogramProviderChangeEvent;
+import info.bioinfweb.libralign.pherogram.model.PherogramShiftChangeUpdateEvent;
 
 
 
@@ -60,7 +61,7 @@ public class PherogramTraceCurveView extends TICComponent implements PherogramCo
 	private PherogramPainter painter = new PherogramPainter(this);
 	private PherogramHeadingView headingView = null;
 	
-	private final PherogramComponentModelListener MODEL_LISTENER = new PherogramComponentModelListener() {
+	private final PherogramModelListener MODEL_LISTENER = new PherogramModelListener() {
 		@Override
 		public void pherogramProviderChange(PherogramProviderChangeEvent event) {
 			updateUI();
@@ -82,6 +83,9 @@ public class PherogramTraceCurveView extends TICComponent implements PherogramCo
 
 		@Override
 		public void firstSequencePositionChange(PherogramFirstSeqPosChangeEvent event) {}  // nothing to do
+
+		@Override
+		public void shiftChangeEdited(PherogramShiftChangeUpdateEvent event) {}  // nothing to do
 	}; 
 	
 	
