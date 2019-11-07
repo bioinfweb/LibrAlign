@@ -19,7 +19,10 @@
 package info.bioinfweb.libralign.model;
 
 
-import info.bioinfweb.libralign.alignmentarea.content.AlignmentContentArea;
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.Set;
+
 import info.bioinfweb.libralign.model.adapters.AbstractBasicAlignmentModelView;
 import info.bioinfweb.libralign.model.exception.AlignmentSourceNotWritableException;
 import info.bioinfweb.libralign.model.exception.SequenceNotFoundException;
@@ -28,10 +31,6 @@ import info.bioinfweb.libralign.model.implementations.AbstractUndecoratedAlignme
 import info.bioinfweb.libralign.model.implementations.decorate.DelegatedAlignmentModelView;
 import info.bioinfweb.libralign.model.tokenset.TokenSet;
 import info.bioinfweb.libralign.model.utils.AlignmentModelUtils;
-
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.Set;
 
 
 
@@ -45,9 +44,6 @@ import java.util.Set;
  * these IDs are unique and do not change during runtime. Additionally IDs of deleted sequences should not 
  * be reused, because other objects might have stored references to these using its ID and therefore would 
  * not be able to determine that the sequence became deleted, if a new sequence with the same ID is present.
- * <p>
- * The ordering of sequences in an {@link AlignmentContentArea} is not defined by the model implementation 
- * but by the instance returned by {@link AlignmentContentArea#getSequenceOrder()}.
  * <p>
  * Note that this interface leaves it up to the implementation if the alignment data is organized in objects
  * storing whole sequences (rows) or another storage pattern. If your implementation uses sequence objects
@@ -376,4 +372,6 @@ public interface AlignmentModel<T> {
 	 * @throws AlignmentSourceNotWritableException if the underlying data source is not writable for tokens
 	 */
 	public void removeTokensAt(String sequenceID, int beginIndex, int endIndex) throws AlignmentSourceNotWritableException;
+	
+	
 }

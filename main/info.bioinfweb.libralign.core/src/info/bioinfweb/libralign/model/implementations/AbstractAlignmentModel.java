@@ -37,7 +37,7 @@ import java.util.Set;
  * @author Ben St&ouml;ver
  * @since 0.4.0
  *
- * @param <T> - the type of sequence elements (tokens) the implementing provider object works with
+ * @param <T> the type of sequence elements (tokens) the implementing provider object works with
  */
 public abstract class AbstractAlignmentModel<T> implements AlignmentModel<T> {
 	private String id = null;

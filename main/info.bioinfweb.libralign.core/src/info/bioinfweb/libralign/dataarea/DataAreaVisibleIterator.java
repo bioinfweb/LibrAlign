@@ -37,7 +37,7 @@ public class DataAreaVisibleIterator implements Iterator<DataArea> {
 	/**
 	 * Creates a new instance of this class.
 	 * 
-	 * @param completeIterator - an iterator that returns all elements (not only visible data areas)
+	 * @param completeIterator an iterator that returns all elements (not only visible data areas)
 	 */
 	public DataAreaVisibleIterator(Iterator<DataArea> completeIterator) {
 		super();
