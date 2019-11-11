@@ -106,7 +106,7 @@ public class DataAreasModel {
 	/**
 	 * Removes the list of data areas attached to the specified sequence from this model.
 	 *
-	 * @param sequenceName - the name of the sequence the data areas to be removed are attached to
+	 * @param sequenceName the name of the sequence the data areas to be removed are attached to
 	 */
 	public void removeSequence(String sequenceName) {
 		sequenceAreaLists.remove(sequenceName);
@@ -116,7 +116,7 @@ public class DataAreasModel {
 	/**
 	 * Fades all data areas associated with any sequence in or out.
 	 *
-	 * @param visible - Specify {@code true} here, if you want the elements to be displayed, {@code false} otherwise.
+	 * @param visible Specify {@code true} here, if you want the elements to be displayed, {@code false} otherwise.
 	 * @see DataAreaList#setAllVisible(boolean)
 	 */
 	public void setSequenceDataAreasVisible(boolean visible) {

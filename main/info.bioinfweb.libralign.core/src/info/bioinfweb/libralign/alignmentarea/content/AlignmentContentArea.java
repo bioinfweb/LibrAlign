@@ -474,7 +474,7 @@ public class AlignmentContentArea extends TICComponent {
 		}
 		else {
 			SizeManager sizeManager = getOwner().getSizeManager();
-			return Math.max(0, Math.min(sizeManager.getGlobalMaxSequenceLength(),
+			return Math.max(0, Math.min(sizeManager.getGlobalMaxSequenceLength(),  //TODO Should the global maximum really by used here or does the local column count make more sense? 
 					(int)((x - sizeManager.getGlobalMaxLengthBeforeStart()) / getOwner().getPaintSettings().getTokenWidth(0))));  //TODO Catch IllegalStateException?
 		}
 	}
