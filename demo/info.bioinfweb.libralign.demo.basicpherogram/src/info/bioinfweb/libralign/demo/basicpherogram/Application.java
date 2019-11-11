@@ -69,6 +69,11 @@ public class Application {
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
 		
+		// Create alignment model with one empty sequence:
+		AlignmentModel<Character> alignmentModel = 
+				new PackedAlignmentModel<Character>(CharacterTokenSet.newDNAInstance(true));
+		String id = alignmentModel.addSequence("Some sequence");
+		
 		// Use BioJava 1 classes to load a pherogram from an SCF file:
 		Chromatogram chromatogram = ChromatogramFactory.create(new File ("data/Pherogram.scf")); 
 		
@@ -77,12 +82,7 @@ public class Application {
 		
 		// Create a pherogram model based on the provider. 
 		// (The model contains additional mutable data, e.g., the pherogram cut positions.)
-		PherogramAreaModel pherogramModel = new PherogramAreaModel(provider);
-		
-		// Create alignment model with one empty sequence:
-		AlignmentModel<Character> alignmentModel = 
-				new PackedAlignmentModel<Character>(CharacterTokenSet.newDNAInstance(true));
-		String id = alignmentModel.addSequence("Some sequence");
+		PherogramAreaModel pherogramModel = new PherogramAreaModel(provider, alignmentModel, id);
 		
 		// Add contents of the base class sequence from the pherogram to the sequence in the alignment:
 		for (int j = 0; j < pherogramModel.getPherogramProvider().getSequenceLength(); j++) {
