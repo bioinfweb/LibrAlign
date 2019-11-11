@@ -274,7 +274,7 @@ public class CharSetArea extends DataArea {
 		// Determine area to be painted:
 		int firstIndex = Math.max(0, contentArea.columnByPaintX((int)event.getRectangle().getMinX()));
 		int lastIndex = contentArea.columnByPaintX((int)event.getRectangle().getMaxX());
-		int lastColumn = getLabeledAlignmentArea().getGlobalMaxSequenceLength() - 1;  //getSequenceProvider().getMaxSequenceLength() - 1;
+		int lastColumn = getLabeledAlignmentArea().getSizeManager().getGlobalMaxSequenceLength() - 1;  //getSequenceProvider().getMaxSequenceLength() - 1;
 		if ((lastIndex == -1) || (lastIndex > lastColumn)) {
 			lastIndex = lastColumn;
 		}

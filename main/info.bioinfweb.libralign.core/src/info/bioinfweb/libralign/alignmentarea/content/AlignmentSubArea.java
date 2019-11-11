@@ -106,7 +106,7 @@ public abstract class AlignmentSubArea extends TICComponent {
 	 */
 	@Override
 	public Dimension getSize() {
-		return new Dimension((int)Math.round(getOwner().getOwner().getGlobalMaxNeededWidth()), 
+		return new Dimension((int)Math.round(getOwner().getOwner().getSizeManager().getGlobalMaxNeededWidth()), 
 				(int)Math.round(getHeight()));  
 	}
 

@@ -19,19 +19,16 @@
 package info.bioinfweb.libralign.dataarea;
 
 
-import info.bioinfweb.commons.Math2;
-import info.bioinfweb.commons.collections.ListChangeType;
-import info.bioinfweb.libralign.alignmentarea.AlignmentArea;
-import info.bioinfweb.libralign.alignmentarea.label.AlignmentLabelArea;
-import info.bioinfweb.libralign.model.AlignmentModel;
-import info.bioinfweb.libralign.multiplealignments.MultipleAlignmentsContainer;
-
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+
+import info.bioinfweb.commons.collections.ListChangeType;
+import info.bioinfweb.libralign.alignmentarea.AlignmentArea;
+import info.bioinfweb.libralign.model.AlignmentModel;
 
 
 
@@ -48,8 +45,6 @@ public class DataAreasModel {
   private final List<DataAreasModelListener> listeners = new ArrayList<DataAreasModelListener>(8);
   private boolean visibilityUpdateInProgress = false;
   private final DataAreaSequenceChangeListener sequenceChangeListener = new DataAreaSequenceChangeListener(this);
-  private double localMaxLengthBeforeStart = AlignmentLabelArea.RECALCULATE_VALUE;
-  private double localMaxLengthAfterEnd = AlignmentLabelArea.RECALCULATE_VALUE;
 
 
 	/**
@@ -94,7 +89,7 @@ public class DataAreasModel {
 	/**
 	 * Returns a list of data areas to be displayed underneath the specified sequence.
 	 *
-	 * @param sequenceName - the unique identifier of the sequence carrying the data areas
+	 * @param sequenceName the unique identifier of the sequence carrying the data areas
 	 *        in the returned list
 	 * @return a modifiable list
 	 */
@@ -167,80 +162,6 @@ public class DataAreasModel {
 	public int getVisibleAreaHeight() {
 		return getTopAreas().getVisibleHeight() + getVisibleSequenceAreaHeight() + getBottomAreas().getVisibleHeight();
 	}
-
-
-	/**
-	 * Returns maximum space left of the alignment start that is needed by any currently visible data area in
-	 * any list contained in this model. Note the space that is actually present will be determined using
-	 * {@link #getGlobalMaxLengthBeforeStart()}.
-	 *
-	 * @return an integer >= 0
-	 */
-	public double getLocalMaxLengthBeforeStart() {
-		if (localMaxLengthBeforeStart == AlignmentLabelArea.RECALCULATE_VALUE) {
-			localMaxLengthBeforeStart = Math.max((int)Math2.roundUp(getOwner().getPaintSettings().getCursorLineWidth() / 2),
-					Math.max(getTopAreas().getMaxLengthBeforeStart(), getBottomAreas().getMaxLengthBeforeStart()));
-			Iterator<String> iterator = sequenceAreaLists.keySet().iterator();
-			while (iterator.hasNext()) {
-				localMaxLengthBeforeStart = Math.max(localMaxLengthBeforeStart, getSequenceAreas(iterator.next()).getMaxLengthBeforeStart());
-			}
-		}
-		return localMaxLengthBeforeStart;
-	}
-
-
-	/**
-	 * Flags the properties {@link #getLocalMaxLengthBeforeStart()} and {@link #getLocalMaxLengthAfterEnd()} to
-	 * be recalculated when they are accessed the next time.
-	 * <p>
-	 * LibrAlign does not recalculate these values on every call for performance reasons. Usually application code
-	 * will not have to call this method directly.
-	 */
-	public void setLocalMaxLengthBeforeAfterRecalculate() {
-		localMaxLengthBeforeStart = AlignmentLabelArea.RECALCULATE_VALUE;
-    localMaxLengthAfterEnd = AlignmentLabelArea.RECALCULATE_VALUE;
-	}
-
-
-	/**
-	 * Returns maximum space left of the alignment calculated over all alignment areas in the parent
-	 * {@link MultipleAlignmentsContainer} of the alignment area using this model. If that alignment area
-	 * is not contained in such a container the return value is equivalent to {@link #getLocalMaxLengthBeforeStart()}.
-	 *
-	 * @return an integer >= 0
-	 */
-	public double getGlobalMaxLengthBeforeStart() {
-		AlignmentArea alignmentArea = getOwner();
-		double result = 0;
-		if (alignmentArea.hasContainer()) {
-			for (AlignmentArea containerAlignmentArea : alignmentArea.getContainer().getAlignmentAreas()) {
-				result = Math.max(result, containerAlignmentArea.getDataAreas().getLocalMaxLengthBeforeStart());
-			}
-		}
-		else {
-			result = getLocalMaxLengthBeforeStart();
-		}
-		return result;
-	}
-
-
-  /**
-   * Returns maximum space right of the alignment end that is needed by any currently visible data area in
-   * any list contained in this model.
-   *
-   * @return an integer >= 0
-   */
-  public double getLocalMaxLengthAfterEnd() {
-    if (localMaxLengthAfterEnd == AlignmentLabelArea.RECALCULATE_VALUE) {
-      localMaxLengthAfterEnd = Math.max((int)Math2.roundUp(getOwner().getPaintSettings().getCursorLineWidth() / 2),
-      		Math.max(getTopAreas().getMaxLengthAfterEnd(), getBottomAreas().getMaxLengthAfterEnd()));
-      Iterator<String> iterator = sequenceAreaLists.keySet().iterator();
-      while (iterator.hasNext()) {
-        localMaxLengthAfterEnd = Math.max(localMaxLengthAfterEnd, getSequenceAreas(iterator.next()).getMaxLengthAfterEnd());
-      }
-    }
-    return localMaxLengthAfterEnd;
-  }
 
 
   /**

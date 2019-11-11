@@ -167,36 +167,4 @@ public class DataAreaList extends DataAreaChangeEventList {
 		}
 		return result;
 	}
-
-
-  /**
-   * Returns maximum space left of the alignment start that is needed by any currently visible data area
-   * in this list.
-   *
-   * @return an integer >= 0
-   */
-  public double getMaxLengthBeforeStart() {
-    double result = 0;
-    Iterator<DataArea> iterator = visibleIterator();
-    while (iterator.hasNext()) {
-      result = Math.max(result, iterator.next().getLengthBeforeStart());
-    }
-    return result;
-  }
-
-
-  /**
-   * Returns maximum space right of the alignment end that is needed by any currently visible data area
-   * in this list.
-   *
-   * @return an integer >= 0
-   */
-  public double getMaxLengthAfterEnd() {
-    double result = 0;
-    Iterator<DataArea> iterator = visibleIterator();
-    while (iterator.hasNext()) {
-      result = Math.max(result, iterator.next().getLengthAfterEnd());
-    }
-    return result;
-  }
 }

@@ -126,7 +126,7 @@ public class SequenceIndexArea extends DataArea {
 	private int calculateLabelInterval(FontMetrics fontMetrics) {
 		double compoundWidth = getLabeledAlignmentArea().getPaintSettings().minTokenWidth();
 		return (int)Math2.roundUp((fontMetrics.stringWidth("0") *
-				Integer.toString(getLabeledAlignmentArea().getGlobalMaxSequenceLength()).length() + 
+				Integer.toString(getLabeledAlignmentArea().getSizeManager().getGlobalMaxSequenceLength()).length() + 
 				2 * LABEL_LEFT_DISTANCE_FACTOR * compoundWidth)	/ compoundWidth);
 	}
 
@@ -152,7 +152,7 @@ public class SequenceIndexArea extends DataArea {
     g.draw(new Line2D.Double(visibleRect.getMinX(), getHeight() - 1, visibleRect.getMinX() + visibleRect.getWidth(), getHeight() - 1));  // base line
 
     // Paint text data and dashes:
-    final double maxLengthBeforeStart = getLabeledAlignmentArea().getDataAreas().getGlobalMaxLengthBeforeStart();
+    final double maxLengthBeforeStart = getLabeledAlignmentArea().getSizeManager().getGlobalMaxLengthBeforeStart();
     double labelLeftDistance = LABEL_LEFT_DISTANCE_FACTOR * compoundWidth;
     g.setFont(getLabeledAlignmentArea().getPaintSettings().getTokenHeightFont());
     int labelInterval = calculateLabelInterval(g.getFontMetrics());

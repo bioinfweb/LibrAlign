@@ -148,6 +148,7 @@ public class AlignmentArea extends ScrollingTICComponent implements AlignmentMod
 	private AlignmentModel<?> alignmentModel = null;
 	private SequenceOrder sequenceOrder = new SequenceOrder(this);
 	private DataAreasModel dataAreas = new DataAreasModel(this);
+	private SizeManager sizeManager = new SizeManager(this);
 	private PaintSettings paintSettings;
 	private EditSettings editSettings;
 	private SelectionModel selection;
@@ -172,7 +173,7 @@ public class AlignmentArea extends ScrollingTICComponent implements AlignmentMod
 					event.getPropertyName().equals("selectionColor")) {
 				
 				if (event.getPropertyName().equals("cursorLineWidth")) {
-					getDataAreas().setLocalMaxLengthBeforeAfterRecalculate();
+					getSizeManager().setLocalMaxLengthBeforeAfterRecalculate();
 				}
 				repaint();
 			}
@@ -320,17 +321,6 @@ public class AlignmentArea extends ScrollingTICComponent implements AlignmentMod
 	
 	
 	/**
-	 * Returns the paint settings object associated with this instance. The returned object contains properties that
-	 * control the way the contents of this area are displayed.
-	 * 
-	 * @return the paint settings object used by this component
-	 */
-	public PaintSettings getPaintSettings() {
-		return paintSettings;
-	}
-
-
-	/**
 	 * Changes the alignment model providing the data for this instance.
 	 * 
 	 * @param alignmentModel the new alignment model to use from now on
@@ -401,6 +391,22 @@ public class AlignmentArea extends ScrollingTICComponent implements AlignmentMod
 	 */
 	public DataAreasModel getDataAreas() {
 		return dataAreas;
+	}
+
+
+	public SizeManager getSizeManager() {
+		return sizeManager;
+	}
+
+
+	/**
+	 * Returns the paint settings object associated with this instance. The returned object contains properties that
+	 * control the way the contents of this area are displayed.
+	 * 
+	 * @return the paint settings object used by this component
+	 */
+	public PaintSettings getPaintSettings() {
+		return paintSettings;
 	}
 
 
@@ -514,94 +520,6 @@ public class AlignmentArea extends ScrollingTICComponent implements AlignmentMod
 	}
 
 
-	/**
-	 * If this area is part of an alignment area that is contained in a {@link MultipleAlignmentsContainer}
-	 * than this methods calculates the maximum length of all sequences in all alignment areas contained in
-	 * this container. Otherwise the return value is identical with {@code getSequenceProvider.getMaxSequenceLength()}.
-	 * 
-	 * @return a value >= 0
-	 * @see AlignmentModel#getMaxSequenceLength()
-	 */
-	public int getGlobalMaxSequenceLength() {
-		if (hasContainer()) {
-			int result = 0;
-			for (AlignmentArea alignmentArea : getContainer().getAlignmentAreas()) {
-				AlignmentModel<?> provider = alignmentArea.getAlignmentModel();
-				if (provider != null) {
-					result = Math.max(result, provider.getMaxSequenceLength());
-				}
-			}
-			return result;
-		}
-		else {
-			return getAlignmentModel().getMaxSequenceLength();
-		}
-	}
-	
-	
-	/**
-	 * Calculates the needed with to label the associated alignment. Note that the actual width of this
-	 * component is calculated using {@link #getGlobalMaxNeededWidth()}.
-	 * 
-	 * @return a value >= 0
-	 */
-	public double getLocalMaximumNeededAlignmentWidth() {
-		if (hasAlignmentModel()) {
-			if (getAlignmentModel() instanceof ConcatenatedAlignmentModel) {
-				throw new InternalError("not implemented");
-			}
-			else {
-				int length = getAlignmentModel().getMaxSequenceLength(); 
-				if (length > 0) {
-					return length * getPaintSettings().getTokenWidth(0);
-				}
-			}
-		}
-		return 0;
-	}
-	
-	
-	public double getLocalMaxNeededWidth() {
-		return getDataAreas().getGlobalMaxLengthBeforeStart() + getLocalMaximumNeededAlignmentWidth() + 
-				getDataAreas().getLocalMaxLengthAfterEnd();
-	}
-	
-	
-	/**
-	 * Returns the maximum needed width to display all alignment columns with the according token painters and the
-	 * current zoom factor and the space before and after the alignment possibly occupied by data areas calculated 
-	 * over all alignments contained in the parent {@link MultipleAlignmentsContainer}.
-	 * 
-	 * @return a value >= 0
-	 */
-	public double getGlobalMaxNeededWidth() {
-		double result = 0;
-		if (hasContainer()) {
-			for (AlignmentArea alignmentArea : getContainer().getAlignmentAreas()) {
-				result = Math.max(result, alignmentArea.getLocalMaxNeededWidth());
-			}
-		}
-		else {
-			result = getLocalMaxNeededWidth();
-		}
-		return result;
-	}
-	
-	
-	/**
-	 * Calculates the height of all sequences and all visible data areas together. 
-	 * 
-	 * @return the height of the alignment displayed by this component in pixels
-	 */
-	public double getPaintHeight() {
-		double result = getDataAreas().getVisibleAreaHeight();
-		if (hasAlignmentModel()) {
-			result += getAlignmentModel().getSequenceCount() * getPaintSettings().getTokenHeight();
-		}
-		return result;
-	}
-	
-	
 	public void scrollCursorToVisible() {
 		Rectangle visibleRectangle = getVisibleRectangle();
 		Rectangle currentRectangle = getContentArea().getCursorRectangle().getBounds();  // Rounding takes place here.
@@ -790,7 +708,7 @@ public class AlignmentArea extends ScrollingTICComponent implements AlignmentMod
 	public void dataAreaInsertedRemoved(DataAreaChangeEvent e) {
 		if (hasToolkitComponent()) {
 			if (e.getSource().equals(getDataAreas())) {
-				getDataAreas().setLocalMaxLengthBeforeAfterRecalculate();
+				getSizeManager().setLocalMaxLengthBeforeAfterRecalculate();
 				updateSubelements();
 			}
 			assignSizeToAll();

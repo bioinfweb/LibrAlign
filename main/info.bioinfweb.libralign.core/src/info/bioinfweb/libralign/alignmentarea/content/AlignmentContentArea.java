@@ -22,6 +22,7 @@ package info.bioinfweb.libralign.alignmentarea.content;
 import info.bioinfweb.commons.Math2;
 import info.bioinfweb.commons.SystemUtils;
 import info.bioinfweb.libralign.alignmentarea.AlignmentArea;
+import info.bioinfweb.libralign.alignmentarea.SizeManager;
 import info.bioinfweb.libralign.alignmentarea.label.AlignmentLabelArea;
 import info.bioinfweb.libralign.alignmentarea.paintsettings.PaintSettings;
 import info.bioinfweb.libralign.alignmentarea.selection.SelectionModel;
@@ -398,7 +399,8 @@ public class AlignmentContentArea extends TICComponent {
 	@Override
 	public Dimension getSize() {
 		//TODO Height should later be buffered somewhere, just like the maximum width.
-		return new Dimension((int)Math2.roundUp(getOwner().getGlobalMaxNeededWidth()), (int)getOwner().getPaintHeight());
+		SizeManager sizeManager = getOwner().getSizeManager();
+		return new Dimension((int)Math2.roundUp(sizeManager.getGlobalMaxNeededWidth()), (int)sizeManager.getPaintHeight());
 	}
 
 
@@ -471,8 +473,9 @@ public class AlignmentContentArea extends TICComponent {
 			throw new InternalError("not implemented");  //TODO Implement and consider that different alignment parts may have different token widths here.
 		}
 		else {
-			return Math.max(0, Math.min(getOwner().getGlobalMaxSequenceLength(),
-					(int)((x - getOwner().getDataAreas().getGlobalMaxLengthBeforeStart()) / getOwner().getPaintSettings().getTokenWidth(0))));  //TODO Catch IllegalStateException?
+			SizeManager sizeManager = getOwner().getSizeManager();
+			return Math.max(0, Math.min(sizeManager.getGlobalMaxSequenceLength(),
+					(int)((x - sizeManager.getGlobalMaxLengthBeforeStart()) / getOwner().getPaintSettings().getTokenWidth(0))));  //TODO Catch IllegalStateException?
 		}
 	}
 
@@ -491,9 +494,9 @@ public class AlignmentContentArea extends TICComponent {
   			throw new InternalError("not implemented");  //TODO Implement and consider that different alignment parts may have different token widths here.
   		}
   		else {
-  			return column *
-  					getOwner().getPaintSettings().getTokenPainterList().painterByColumn(0).getPreferredWidth() *
-  					getOwner().getPaintSettings().getZoomX() + getOwner().getDataAreas().getGlobalMaxLengthBeforeStart();  //TODO Catch IllegalStateException?
+  			PaintSettings settings = getOwner().getPaintSettings();
+  			return column *	settings.getTokenPainterList().painterByColumn(0).getPreferredWidth() *	settings.getZoomX() + 
+  					getOwner().getSizeManager().getGlobalMaxLengthBeforeStart();  //TODO Catch IllegalStateException?
   		}
 	  }
 	  else {

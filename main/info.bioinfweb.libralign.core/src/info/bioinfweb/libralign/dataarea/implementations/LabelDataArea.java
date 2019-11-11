@@ -207,7 +207,7 @@ public class LabelDataArea extends DataArea {
 	private double calculateHorizontalShift() {
 		double result = 0;
 		if (isAlignToFirstColumn()) {
-			result = getOwner().getOwner().getDataAreas().getGlobalMaxLengthBeforeStart();  // Considers the current zoom factor.
+			result = getOwner().getOwner().getSizeManager().getGlobalMaxLengthBeforeStart();  // Considers the current zoom factor.
 		}
 		if (isAlignToScrollPosition()) {
 			result = Math.max(result, getOwner().getOwner().getVisibleRectangle().getMinX());

@@ -85,7 +85,7 @@ public class PherogramArea extends DataArea implements PherogramComponent {
 	private final PherogramModelListener MODEL_LISTENER = new PherogramModelListener() {
 		@Override
 		public void pherogramProviderChange(PherogramProviderChangeEvent event) {
-			getLabeledAlignmentArea().getDataAreas().setLocalMaxLengthBeforeAfterRecalculate();  // Could happen if cut lengths at the beginning and end differ.
+			getLabeledAlignmentArea().getSizeManager().setLocalMaxLengthBeforeAfterRecalculate();  // Could happen if cut lengths at the beginning and end differ.
 			getOwner().getOwner().assignSizeToAll();
 			if (!event.isMoreEventsUpcoming()) {
 				repaint();  // Necessary in SWT, if no resize happened. 
@@ -412,7 +412,7 @@ public class PherogramArea extends DataArea implements PherogramComponent {
 
 
 	private void updateChangedPosition() {
-		getLabeledAlignmentArea().getDataAreas().setLocalMaxLengthBeforeAfterRecalculate();
+		getLabeledAlignmentArea().getSizeManager().setLocalMaxLengthBeforeAfterRecalculate();
 		repaint();  //TODO Is this necessary?
   }
   
@@ -561,7 +561,7 @@ public class PherogramArea extends DataArea implements PherogramComponent {
 		double lengthOfOutputAfterAlignmentStart = getLabeledAlignmentArea().getContentArea().paintXByColumn(lastEditableIndex) + 
 				(1 + getModel().getPherogramProvider().getSequenceLength() - getModel().getRightCutPosition()) *  
 				getOwner().getOwner().getPaintSettings().getTokenWidth(Math.max(0, getModel().getFirstSeqPos())) - getLengthBeforeStart();  // Math.max(0, ...) is used because this method might be called during the execution of setter cut position method, when other properties are not yet adjusted.  
-		return Math.max(0, lengthOfOutputAfterAlignmentStart - getOwner().getOwner().getLocalMaximumNeededAlignmentWidth());
+		return Math.max(0, lengthOfOutputAfterAlignmentStart - getOwner().getOwner().getSizeManager().getLocalMaximumNeededAlignmentWidth());
 	}
 
 
