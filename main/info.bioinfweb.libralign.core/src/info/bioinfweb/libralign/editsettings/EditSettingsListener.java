@@ -33,21 +33,21 @@ public interface EditSettingsListener extends EventListener {
 	/**
 	 * Called if the <i>insert</i> flag of {@link EditSettings} was changed.
 	 * 
-	 * @param event - the event object describing the change
+	 * @param event the event object describing the change
 	 */
 	public void insertChanged(EditSettingsChangeEvent event);
 	
 	/**
 	 * Called if the working mode of {@link EditSettings} was changed.
 	 * 
-	 * @param event - the event object describing the change
+	 * @param event the event object describing the change
 	 */
 	public void workingModeChanged(EditSettingsChangeEvent event);
 
 	/**
 	 * Called if the <i>insertLeftInDataArea</i> flag of {@link EditSettings} was changed.
 	 * 
-	 * @param event - the event object describing the change
+	 * @param event the event object describing the change
 	 */
 	public void insertLeftInDataAreaChanged(EditSettingsChangeEvent event);
 }

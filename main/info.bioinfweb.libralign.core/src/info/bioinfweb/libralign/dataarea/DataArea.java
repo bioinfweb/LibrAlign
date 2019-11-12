@@ -20,6 +20,7 @@ package info.bioinfweb.libralign.dataarea;
 
 
 import info.bioinfweb.libralign.alignmentarea.AlignmentArea;
+import info.bioinfweb.libralign.alignmentarea.SizeManager;
 import info.bioinfweb.libralign.alignmentarea.content.AlignmentContentArea;
 import info.bioinfweb.libralign.alignmentarea.content.AlignmentSubArea;
 import info.bioinfweb.libralign.model.AlignmentModel;
@@ -32,6 +33,10 @@ import java.util.Set;
 
 /**
  * All classes representing a data area in an {@link AlignmentArea} must be inherited from this class.
+ * <p>
+ * For performance reasons the space possibly required by data areas left and right of the aligned sequences is stored and not recalculated in every access.
+ * Data area implementations must make sure to inform the {@link SizeManager} instance of their owning {@link AlignmentArea} (accessible via 
+ * {@link AlignmentArea#getSizeManager()}) when recalculation becomes necessary by calling {@link SizeManager#setLocalMaxLengthBeforeAfterRecalculate()}.
  * 
  * @author Ben St&ouml;ver
  * @since 0.0.0
@@ -128,7 +133,7 @@ public abstract class DataArea extends AlignmentSubArea implements AlignmentMode
 		boolean result = this.visible != visible; 
 		if (result) {
 			this.visible = visible;
-			getList().getOwner().fireVisibilityChanged(true, this);  // Will only have an effect is updateInProgress was not set before.
+			getList().getOwner().fireVisibilityChanged(true, this);  // Will only have an effect if updateInProgress was not set before.
 		}
 		return result;
 	}

@@ -22,6 +22,7 @@ package info.bioinfweb.libralign.alignmentarea;
 import java.util.Iterator;
 
 import info.bioinfweb.commons.Math2;
+import info.bioinfweb.libralign.alignmentarea.content.AlignmentSubArea;
 import info.bioinfweb.libralign.alignmentarea.label.AlignmentLabelArea;
 import info.bioinfweb.libralign.dataarea.DataArea;
 import info.bioinfweb.libralign.dataarea.DataAreaList;
@@ -32,7 +33,22 @@ import info.bioinfweb.libralign.multiplealignments.MultipleAlignmentsContainer;
 
 
 
-public class SizeManager {
+/**
+ * Instances of this class are used by {@link AlignmentArea} to manage and perform size and position operations related to {@link AlignmentSubArea}s and to
+ * manage the visibility of {@link DataArea}s. (Positioning depends of course on the visibility of data areas.)
+ * <p>
+ * This class also provides methods that take information from instances of other {@link AlignmentArea}s contained in the same 
+ * {@link MultipleAlignmentsContainer} into account, if such a container is present. 
+ * <p>
+ * For performance reasons the space possibly required by data areas left and right of the aligned sequences is stored and not recalculated in every access.
+ * Data areas and related classes must make sure to inform instances of this class when recalculation becomes necessary by calling 
+ * {@link #setLocalMaxLengthBeforeAfterRecalculate()}.
+ * 
+ * @author Ben St&ouml;ver
+ * @since 0.10.0
+ * @bioinfweb.module info.bioinfweb.libralign.core
+ */
+public class SizeManager {  //DataAreaLayoutManager?
 	private AlignmentArea owner;
   private double localMaxLengthBeforeStart = AlignmentLabelArea.RECALCULATE_VALUE;
   private double localMaxLengthAfterEnd = AlignmentLabelArea.RECALCULATE_VALUE;
@@ -40,10 +56,21 @@ public class SizeManager {
 	
 	public SizeManager(AlignmentArea owner) {
 		super();
-		this.owner = owner;
+		
+		if (owner == null) {
+			throw new IllegalArgumentException("owner must not be null.");
+		}
+		else {
+			this.owner = owner;
+		}
 	}
 	
 	
+	/**
+	 * The owning alignment area that uses the functionality of this instance.
+	 * 
+	 * @return an instance of {@link AlignmentArea} (never {@code null})
+	 */
 	public AlignmentArea getOwner() {
 		return owner;
 	}
@@ -163,15 +190,13 @@ public class SizeManager {
 	}
 
 
-  // From AlignmentArea:
-  
   /**
 	 * Calculates the needed with to label the associated alignment. Note that the actual width of this
 	 * component is calculated using {@link #getGlobalMaxNeededWidth()}.
 	 * 
 	 * @return a value >= 0
 	 */
-	public double getLocalMaximumNeededAlignmentWidth() {  //TODO Should this really be implemented here or should it remain in AlignmentArea?
+	public double getLocalMaximumNeededAlignmentWidth() {
 		if (getOwner().hasAlignmentModel()) {
 			if (getOwner().getAlignmentModel() instanceof ConcatenatedAlignmentModel) {
 				throw new InternalError("not implemented");
@@ -188,14 +213,20 @@ public class SizeManager {
 	
 	
 	/**
-	 * If this area is part of an alignment area that is contained in a {@link MultipleAlignmentsContainer}
-	 * than this methods calculates the maximum length of all sequences in all alignment areas contained in
-	 * this container. Otherwise the return value is identical with {@code getSequenceProvider.getMaxSequenceLength()}.
+	 * If the owning {@link AlignmentArea} is contained within a {@link MultipleAlignmentsContainer},
+	 * this method calculates the maximum length of all sequences in all alignment areas contained in
+	 * that container. Otherwise the return value is identical with {@link AlignmentModel#getMaxSequenceLength()}.
+	 * <p>
+	 * <i>Implementation note:</i> Although the sequence length is technically a model information, it is provided here, since the 
+	 * relation between multiple {@link AlignmentModel} instances is only defined on the view level by a 
+	 * {@link MultipleAlignmentsContainer}. <i>LibrAlign</i> does not model possible relations between multiple alignment models. 
+	 * Application classes may do so. Displaying multiple alignment models together in a {@link MultipleAlignmentsContainer} does 
+	 * not necessarily mean, though, that there needs to be a strong relation between them.
 	 * 
 	 * @return a value >= 0
 	 * @see AlignmentModel#getMaxSequenceLength()
 	 */
-	public int getGlobalMaxSequenceLength() {  //TODO Should this really be implemented here or should it remain in AlignmentArea?
+	public int getGlobalMaxSequenceLength() {
 		if (getOwner().hasContainer()) {
 			int result = 0;
 			for (AlignmentArea alignmentArea : getOwner().getContainer().getAlignmentAreas()) {
@@ -218,9 +249,10 @@ public class SizeManager {
 	
 	
 	/**
-	 * Returns the maximum needed width to display all alignment columns with the according token painters and the
-	 * current zoom factor and the space before and after the alignment possibly occupied by data areas calculated 
-	 * over all alignments contained in the parent {@link MultipleAlignmentsContainer}.
+	 * Returns the maximum needed width to display all alignment columns with the current token painters and the
+	 * current zoom factor including the space before and after the alignment possibly occupied by data areas. If the 
+	 * owning {@link AlignmentArea} is contained within a {@link MultipleAlignmentsContainer} the returned maximum is
+	 * calculated over all contained {@link AlignmentArea} instances.
 	 * 
 	 * @return a value >= 0
 	 */
@@ -243,7 +275,7 @@ public class SizeManager {
 	 * 
 	 * @return the height of the alignment displayed by this component in pixels
 	 */
-	public double getPaintHeight() {  //TODO Should this method be here or still in AlignmentArea?
+	public double getPaintHeight() {
 		double result = getOwner().getDataAreas().getVisibleAreaHeight();
 		if (getOwner().hasAlignmentModel()) {
 			result += getOwner().getAlignmentModel().getSequenceCount() * getOwner().getPaintSettings().getTokenHeight();

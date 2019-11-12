@@ -89,8 +89,7 @@ public class DataAreasModel {
 	/**
 	 * Returns a list of data areas to be displayed underneath the specified sequence.
 	 *
-	 * @param sequenceName the unique identifier of the sequence carrying the data areas
-	 *        in the returned list
+	 * @param sequenceID the unique identifier of the sequence carrying the data areas in the returned list
 	 * @return a modifiable list
 	 */
 	public DataAreaList getSequenceAreas(String sequenceID) {
@@ -106,10 +105,10 @@ public class DataAreasModel {
 	/**
 	 * Removes the list of data areas attached to the specified sequence from this model.
 	 *
-	 * @param sequenceName the name of the sequence the data areas to be removed are attached to
+	 * @param sequenceID the unique identifier of the sequence the data areas to be removed are attached to
 	 */
-	public void removeSequence(String sequenceName) {
-		sequenceAreaLists.remove(sequenceName);
+	public void removeSequence(String sequenceID) {
+		sequenceAreaLists.remove(sequenceID);
 	}
 
 
@@ -247,7 +246,7 @@ public class DataAreasModel {
 	 * Enables {@link #fireVisibilityChanged(DataAreaList, Collection)} again and makes a call of
 	 * this method to inform the listeners about previous changes.
 	 *
-	 * @param e - the event describing the changes since the previous call of
+	 * @param e the event describing the changes since the previous call of
 	 *            {@link #startVisibilityUpdate()} that will be send to all listeners
 	 */
 	protected void finishVisibilityUpdate(boolean eventsFromSingleList, Collection<? extends DataArea> affectedElements) {
@@ -261,13 +260,13 @@ public class DataAreasModel {
 	 * <p>
 	 * This method will have no effect if {@link #isVisibilityUpdateInProgress()} return {@code true}.
 	 *
-	 * @param eventsFromSingleList - Specify {@code true} here if all elements in {@code affectedElements}
+	 * @param eventsFromSingleList Specify {@code true} here if all elements in {@code affectedElements}
 	 *        are contained in the same {@link DataAreaList}.
-	 * @param affectedElements - a list of elements that have been changed
+	 * @param affectedElements a list of elements that have been changed
 	 */
 	protected void fireVisibilityChanged(boolean eventsFromSingleList, Collection<? extends DataArea> affectedElements) {
 		DataAreaChangeEvent e = new DataAreaChangeEvent(this, eventsFromSingleList, null, affectedElements);
-        for (DataAreasModelListener listener : listeners.toArray(new DataAreasModelListener[listeners.size()])) {  // Copying the list is necessary to allow listeners to remove themselves from the list without a ConcurrentModificationException being thrown.
+		for (DataAreasModelListener listener : listeners.toArray(new DataAreasModelListener[listeners.size()])) {  // Copying the list is necessary to allow listeners to remove themselves from the list without a ConcurrentModificationException being thrown.
 			listener.dataAreaVisibilityChanged(e);
 		}
 	}
@@ -279,9 +278,9 @@ public class DataAreasModel {
 	 * <p>
 	 * This method will have no effect if {@link #isVisibilityUpdateInProgress()} return {@code true}.
 	 *
-	 * @param eventsFromSingleList - Specify {@code true} here if all elements in {@code affectedElements}
+	 * @param eventsFromSingleList Specify {@code true} here if all elements in {@code affectedElements}
 	 *        are contained in the same {@link DataAreaList}.
-	 * @param affectedElements - a list of elements that have been changed
+	 * @param affectedElements a list of elements that have been changed
 	 */
 	protected void fireVisibilityChanged(boolean eventsFromSingleList, DataArea affectedElement) {
 		Collection<DataArea> affectedElements = new ArrayList<DataArea>(1);

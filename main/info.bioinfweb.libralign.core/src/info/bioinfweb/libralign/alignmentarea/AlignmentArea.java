@@ -19,6 +19,13 @@
 package info.bioinfweb.libralign.alignmentarea;
 
 
+import java.awt.Dimension;
+import java.awt.Rectangle;
+import java.beans.PropertyChangeEvent;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+
 import info.bioinfweb.commons.collections.observable.ListAddEvent;
 import info.bioinfweb.commons.collections.observable.ListChangeListener;
 import info.bioinfweb.commons.collections.observable.ListRemoveEvent;
@@ -47,7 +54,6 @@ import info.bioinfweb.libralign.dataarea.DataAreasModelListener;
 import info.bioinfweb.libralign.editsettings.EditSettings;
 import info.bioinfweb.libralign.model.AlignmentModel;
 import info.bioinfweb.libralign.model.AlignmentModelChangeListener;
-import info.bioinfweb.libralign.model.concatenated.ConcatenatedAlignmentModel;
 import info.bioinfweb.libralign.model.events.SequenceChangeEvent;
 import info.bioinfweb.libralign.model.events.SequenceRenamedEvent;
 import info.bioinfweb.libralign.model.events.TokenChangeEvent;
@@ -55,13 +61,6 @@ import info.bioinfweb.libralign.multiplealignments.MultipleAlignmentsContainer;
 import info.bioinfweb.tic.TICComponent;
 import info.bioinfweb.tic.TICPaintEvent;
 import info.bioinfweb.tic.scrolling.ScrollingTICComponent;
-
-import java.awt.Dimension;
-import java.awt.Rectangle;
-import java.beans.PropertyChangeEvent;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
 
 
 
@@ -161,7 +160,7 @@ public class AlignmentArea extends ScrollingTICComponent implements AlignmentMod
 	private boolean allowVerticalScrolling = true;
 	private Rectangle lastCursorRectangle = null;
 	
-	private PaintSettingsListener PAINT_SETTINGS_LISTERNER = new PaintSettingsListener() {
+	private final PaintSettingsListener PAINT_SETTINGS_LISTERNER = new PaintSettingsListener() {
 		private void updateSize() {
 			getLabelArea().setLocalMaxWidthRecalculateToAll();  // Needs to be called before assignSizeToAll().
 			assignSizeToAll();
