@@ -41,7 +41,7 @@ import info.bioinfweb.libralign.pherogram.view.PherogramTraceCurveView;
  * @author Ben St&ouml;ver
  * @since 0.4.0
  */
-public class PherogramAreaModel extends PherogramComponentModel implements DataModel {
+public class PherogramAreaModel extends PherogramComponentModel implements DataModel<PherogramModelListener> {
 	private AlignmentModel<?> alignmentModel;
 	private String labeledSequenceID;
 	private int firstSeqPos;
@@ -576,7 +576,7 @@ public class PherogramAreaModel extends PherogramComponentModel implements DataM
 	
 	protected void fireFirstSequencePositionChange(int oldPosition, int newPosition, boolean moreEventsUpcoming) {
 		PherogramFirstSeqPosChangeEvent event = new PherogramFirstSeqPosChangeEvent(this, moreEventsUpcoming, oldPosition, newPosition);
-		for (PherogramModelListener listener : listeners.toArray(new PherogramModelListener[listeners.size()])) {  // Copying the list is necessary to allow listeners to remove themselves from the list without a ConcurrentModificationException being thrown.
+		for (PherogramModelListener listener : modelListeners.toArray(new PherogramModelListener[modelListeners.size()])) {  // Copying the list is necessary to allow listeners to remove themselves from the list without a ConcurrentModificationException being thrown.
 			listener.firstSequencePositionChange(event);
 		}
 	}
@@ -584,7 +584,7 @@ public class PherogramAreaModel extends PherogramComponentModel implements DataM
 	
 	protected void fireShiftChangeEdited(int baseCallIndex, int shiftChange, boolean moreEventsUpcoming) {
 		PherogramShiftChangeUpdateEvent event = new PherogramShiftChangeUpdateEvent(this, moreEventsUpcoming, baseCallIndex, shiftChange);
-		for (PherogramModelListener listener : listeners.toArray(new PherogramModelListener[listeners.size()])) {  // Copying the list is necessary to allow listeners to remove themselves from the list without a ConcurrentModificationException being thrown.
+		for (PherogramModelListener listener : modelListeners.toArray(new PherogramModelListener[modelListeners.size()])) {  // Copying the list is necessary to allow listeners to remove themselves from the list without a ConcurrentModificationException being thrown.
 			listener.shiftChangeEdited(event);
 		}
 	}

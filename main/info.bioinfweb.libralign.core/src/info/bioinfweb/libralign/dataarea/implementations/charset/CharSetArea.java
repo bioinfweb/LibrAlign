@@ -119,7 +119,7 @@ public class CharSetArea extends ModelBasedDataArea<CharSetDataModel> {
 				repaint();
 			}
 		};
-		model.getChangeListeners().add(modelListener);
+		model.addModelListener(modelListener);
 		
 		addMouseListener(new TICMouseAdapter() {
 			@Override
@@ -164,6 +164,8 @@ public class CharSetArea extends ModelBasedDataArea<CharSetDataModel> {
 	 * @throws IllegalArgumentException if {@code model} is {@code null}
 	 */
 	public CharSetDataModel setModel(CharSetDataModel model, boolean moveListeners) {
+		//TODO Consider moving most of the functionality of this method into the model. (#358)
+		
 		if (model == null) {
 			throw new IllegalArgumentException("The model must not be null.");
 		}
@@ -172,12 +174,12 @@ public class CharSetArea extends ModelBasedDataArea<CharSetDataModel> {
 			if (model != getModel()) {  // equals() would, e.g., consider two different empty models as equal, which is not suitable here.
 				if (getModel() != null) {
 					if (moveListeners) {  // Move all listeners
-						model.getChangeListeners().addAll(getModel().getChangeListeners());
-						getModel().getChangeListeners().clear();
+						model.modelListeners.addAll(getModel().modelListeners);
+						getModel().modelListeners.clear();
 					}
 					else {  // Move this instance as the listener anyway:
-						getModel().getChangeListeners().remove(modelListener);
-						model.getChangeListeners().add(modelListener);
+						getModel().removeModelListener(modelListener);
+						model.addModelListener(modelListener);
 					}
 				}
 				
@@ -185,12 +187,10 @@ public class CharSetArea extends ModelBasedDataArea<CharSetDataModel> {
 				
 	      // Fire events for listener move after the process finished
 				if (getModel() != null) {
-					if (!getModel().getChangeListeners().contains(modelListener)) {  // Add this object as a listener if it was not already moved from the previous provider.
-						getModel().getChangeListeners().add(modelListener);
-					}
+					getModel().addModelListener(modelListener);  // Add this object as a listener if it was not already moved from the previous model.
 					
 					if (moveListeners) {
-						Iterator<CharSetDataModelListener> iterator = getModel().getChangeListeners().iterator();
+						Iterator<CharSetDataModelListener> iterator = getModel().modelListeners.iterator();
 						while (iterator.hasNext()) {
 							iterator.next().afterModelChanged(result, getModel());
 						}

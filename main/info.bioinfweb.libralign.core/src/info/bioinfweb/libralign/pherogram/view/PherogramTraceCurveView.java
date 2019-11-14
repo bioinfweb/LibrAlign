@@ -143,11 +143,11 @@ public class PherogramTraceCurveView extends TICComponent implements PherogramCo
 			}
 			else {
 				if (this.model != null) {
-					this.model.removeListener(MODEL_LISTENER);
+					this.model.removeModelListener(MODEL_LISTENER);
 				}
 				this.model = model;
 				updateUI();
-				this.model.addListener(MODEL_LISTENER);
+				this.model.addModelListener(MODEL_LISTENER);
 			}
 		}
 	}

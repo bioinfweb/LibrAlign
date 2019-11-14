@@ -43,13 +43,13 @@ import org.apache.commons.collections4.map.ListOrderedMap;
  * @author Ben St&ouml;ver
  * @since 0.4.0
  */
-public class CharSetDataModel extends ListOrderedMap<String, CharSet> implements DataModel {
+public class CharSetDataModel extends ListOrderedMap<String, CharSet> implements DataModel<CharSetDataModelListener> {
 	//TODO Should a link to the associated AlignmentModel be used to determine the length of the alignment and possibly cut character sets? 
 	//     - Can NeXML store character sets that are longer than an alignment?
 	//     - Otherwise this class would be an example for a DataModel that is fully independent of the AlignmentModel.
 	
 	private AlignmentModel<?> alignmentModel;
-	private Set<CharSetDataModelListener> listeners = new HashSet<CharSetDataModelListener>();
+	protected Set<CharSetDataModelListener> modelListeners = new HashSet<CharSetDataModelListener>();
 	
 	
 	public CharSetDataModel(AlignmentModel<?> alignmentModel) {  //TODO Should an alternative constructor without alignmentModel be offered/may alignmentModel be null or will other classes in the future rely on a non-null value to be returned by getAlignmentModel()? (This class currently does not make use of this property.) 
@@ -119,16 +119,23 @@ public class CharSetDataModel extends ListOrderedMap<String, CharSet> implements
 	}
 
 
-	public Set<CharSetDataModelListener> getChangeListeners() {
-		return listeners;
+	@Override
+	public boolean addModelListener(CharSetDataModelListener listener) {
+		return modelListeners.add(listener);
 	}
-	
-	
+
+
+	@Override
+	public boolean removeModelListener(CharSetDataModelListener listener) {
+		return modelListeners.remove(listener);
+	}
+
+
 	/**
 	 * Informs all listeners that a character set has been inserted, removed or replaced.
 	 */
 	protected void fireAfterCharSetChange(CharSetChangeEvent e) {
-		for (CharSetDataModelListener listener : getChangeListeners().toArray(new CharSetDataModelListener[getChangeListeners().size()])) {  // Copying the list is necessary to allow listeners to remove themselves from the list without a ConcurrentModificationException being thrown.
+		for (CharSetDataModelListener listener : modelListeners.toArray(new CharSetDataModelListener[modelListeners.size()])) {  // Copying the list is necessary to allow listeners to remove themselves from the list without a ConcurrentModificationException being thrown.
 			listener.afterCharSetChange(e);
 		}
 	}
@@ -138,7 +145,7 @@ public class CharSetDataModel extends ListOrderedMap<String, CharSet> implements
 	 * Informs all listeners that a character set has been renamed.
 	 */
 	protected void fireAfterCharSetRenamed(CharSetRenamedEvent e) {
-		for (CharSetDataModelListener listener : getChangeListeners().toArray(new CharSetDataModelListener[getChangeListeners().size()])) {  // Copying the list is necessary to allow listeners to remove themselves from the list without a ConcurrentModificationException being thrown.
+		for (CharSetDataModelListener listener : modelListeners.toArray(new CharSetDataModelListener[modelListeners.size()])) {  // Copying the list is necessary to allow listeners to remove themselves from the list without a ConcurrentModificationException being thrown.
 			listener.afterCharSetRenamed(e);
 		}
 	}
@@ -148,7 +155,7 @@ public class CharSetDataModel extends ListOrderedMap<String, CharSet> implements
 	 * Informs all listeners that one or more neighboring columns have been added to or removed from a character set.
 	 */
 	protected void fireAfterCharSetColumnChange(CharSetColumnChangeEvent e) {
-		for (CharSetDataModelListener listener : getChangeListeners().toArray(new CharSetDataModelListener[getChangeListeners().size()])) {  // Copying the list is necessary to allow listeners to remove themselves from the list without a ConcurrentModificationException being thrown.
+		for (CharSetDataModelListener listener : modelListeners.toArray(new CharSetDataModelListener[modelListeners.size()])) {  // Copying the list is necessary to allow listeners to remove themselves from the list without a ConcurrentModificationException being thrown.
 			listener.afterCharSetColumnChange(e);
 		}
 	}
@@ -158,7 +165,7 @@ public class CharSetDataModel extends ListOrderedMap<String, CharSet> implements
 	 * Informs all listeners that the color of a character set has been changed.
 	 */
 	protected void fireAfterCharSetColorChanged(CharSetColorChangeEvent e) {
-		for (CharSetDataModelListener listener : getChangeListeners().toArray(new CharSetDataModelListener[getChangeListeners().size()])) {  // Copying the list is necessary to allow listeners to remove themselves from the list without a ConcurrentModificationException being thrown.
+		for (CharSetDataModelListener listener : modelListeners.toArray(new CharSetDataModelListener[modelListeners.size()])) {  // Copying the list is necessary to allow listeners to remove themselves from the list without a ConcurrentModificationException being thrown.
 			listener.afterCharSetColorChange(e);
 		}
 	}

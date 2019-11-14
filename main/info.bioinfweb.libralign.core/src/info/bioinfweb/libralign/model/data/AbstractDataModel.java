@@ -19,12 +19,16 @@
 package info.bioinfweb.libralign.model.data;
 
 
+import java.util.HashSet;
+import java.util.Set;
+
 import info.bioinfweb.libralign.model.AlignmentModel;
 
 
 
-public class AbstractDataModel implements DataModel {
+public class AbstractDataModel<L> implements DataModel<L> {
 	private AlignmentModel<?> alignmentModel;
+	protected Set<L> modelListeners = new HashSet<>();
 
 	
 	public AbstractDataModel(AlignmentModel<?> alignmentModel) {
@@ -41,5 +45,17 @@ public class AbstractDataModel implements DataModel {
 
 	public AlignmentModel<?> getAlignmentModel() {
 		return alignmentModel;
+	}
+
+
+	@Override
+	public boolean addModelListener(L listener) {
+		return modelListeners.add(listener);
+	}
+
+
+	@Override
+	public boolean removeModelListener(L listener) {
+		return modelListeners.remove(listener);
 	}	
 }

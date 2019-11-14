@@ -259,7 +259,7 @@ public class PherogramArea extends DataArea implements PherogramComponent {
 	public PherogramArea(AlignmentContentArea owner, PherogramAreaModel model, PherogramFormats formats) {
 		super(owner, owner.getOwner());  // Pherogram areas are always directly attached to their sequences.
 		this.model = model;
-		model.addListener(DATA_MODEL_LISTENER);
+		model.addModelListener(DATA_MODEL_LISTENER);
 		this.formats = formats;
 		formats.addPropertyChangeListener(FORMATS_LISTENER);
 		verticalScale = getHeight();

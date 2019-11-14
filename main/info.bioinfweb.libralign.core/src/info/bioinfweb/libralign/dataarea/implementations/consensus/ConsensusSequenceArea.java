@@ -19,8 +19,15 @@
 package info.bioinfweb.libralign.dataarea.implementations.consensus;
 
 
-import info.bioinfweb.commons.bio.CharacterStateSetType;
-import info.bioinfweb.commons.bio.SequenceUtils;
+import java.awt.Color;
+import java.awt.Font;
+import java.awt.Graphics2D;
+import java.awt.RenderingHints;
+import java.awt.SystemColor;
+import java.awt.geom.Rectangle2D;
+import java.util.EnumSet;
+import java.util.Set;
+
 import info.bioinfweb.commons.events.GenericEventObject;
 import info.bioinfweb.commons.graphics.FontCalculator;
 import info.bioinfweb.commons.graphics.GraphicsUtils;
@@ -29,29 +36,10 @@ import info.bioinfweb.libralign.alignmentarea.content.AlignmentContentArea;
 import info.bioinfweb.libralign.alignmentarea.content.AlignmentPaintEvent;
 import info.bioinfweb.libralign.alignmentarea.tokenpainter.SingleColorTokenPainter;
 import info.bioinfweb.libralign.alignmentarea.tokenpainter.TokenPainter;
-import info.bioinfweb.libralign.dataarea.DataArea;
 import info.bioinfweb.libralign.dataarea.ModelBasedDataArea;
 import info.bioinfweb.libralign.dataelement.DataListType;
 import info.bioinfweb.libralign.model.AlignmentModel;
-import info.bioinfweb.libralign.model.events.SequenceChangeEvent;
-import info.bioinfweb.libralign.model.events.SequenceRenamedEvent;
-import info.bioinfweb.libralign.model.events.TokenChangeEvent;
-import info.bioinfweb.libralign.model.tokenset.TokenSet;
 import info.bioinfweb.libralign.multiplealignments.MultipleAlignmentsContainer;
-
-import java.awt.Color;
-import java.awt.Font;
-import java.awt.Graphics2D;
-import java.awt.RenderingHints;
-import java.awt.SystemColor;
-import java.awt.geom.Rectangle2D;
-import java.util.ArrayList;
-import java.util.EnumSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.TreeMap;
 
 
 
@@ -97,7 +85,7 @@ public class ConsensusSequenceArea extends ModelBasedDataArea<ConsensusSequenceM
 	public ConsensusSequenceArea(AlignmentContentArea owner, AlignmentArea labeledAlignmentArea, ConsensusSequenceModel model) {
 		super(owner, labeledAlignmentArea, model);
 		
-		model.addListener(new ConsensusSequenceModelListener() {
+		model.addModelListener(new ConsensusSequenceModelListener() {
 			@Override
 			public void afterConsensusUpdated(GenericEventObject<ConsensusSequenceModel> event) {
 				assignSize();

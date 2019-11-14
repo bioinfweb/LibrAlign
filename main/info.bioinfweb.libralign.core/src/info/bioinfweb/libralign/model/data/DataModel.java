@@ -30,6 +30,10 @@ import info.bioinfweb.libralign.model.AlignmentModel;
  * @author Ben St&ouml;ver
  * @since 0.1.0
  */
-public interface DataModel {
+public interface DataModel<L> {
 	public AlignmentModel<?> getAlignmentModel();
+	
+	public boolean addModelListener(L listener);
+	
+	public boolean removeModelListener(L listener);
 }

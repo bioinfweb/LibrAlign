@@ -39,9 +39,8 @@ import info.bioinfweb.libralign.model.tokenset.TokenSet;
 
 
 
-public class ConsensusSequenceModel extends AbstractDataModel {
+public class ConsensusSequenceModel extends AbstractDataModel<ConsensusSequenceModelListener> {
 	private final Map<Integer, List<FractionInfo>> fractionsMap = new TreeMap<Integer, List<FractionInfo>>();
-	private final Set<ConsensusSequenceModelListener> listeners = new HashSet<ConsensusSequenceModelListener>();
 
 
 	public ConsensusSequenceModel(AlignmentModel<?> alignmentModel) {
@@ -172,18 +171,8 @@ public class ConsensusSequenceModel extends AbstractDataModel {
 	}
 	
 	
-	public boolean addListener(ConsensusSequenceModelListener listener) {
-		return listeners.add(listener);
-	}
-	
-	
-	public boolean removeListener(ConsensusSequenceModelListener listener) {
-		return listeners.remove(listener);
-	}
-	
-	
 	protected void fireAfterConsensusUpdated() {
 		GenericEventObject<ConsensusSequenceModel> event = new GenericEventObject<ConsensusSequenceModel>(this);
-		listeners.forEach(listener -> listener.afterConsensusUpdated(event));
+		modelListeners.forEach(listener -> listener.afterConsensusUpdated(event));
 	}
 }

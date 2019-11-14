@@ -37,7 +37,7 @@ public class PherogramComponentModel {
 	private PherogramProvider pherogramProvider;
 	private int leftCutPosition = 0;
 	private int rightCutPosition = 0;
-	protected Set<PherogramModelListener> listeners = new HashSet<PherogramModelListener>();
+	protected Set<PherogramModelListener> modelListeners = new HashSet<PherogramModelListener>();
 
 
 	/**
@@ -260,13 +260,13 @@ public class PherogramComponentModel {
 	}
 
 
-	public void addListener(PherogramModelListener listener) {
-		listeners.add(listener);
+	public boolean addModelListener(PherogramModelListener listener) {
+		return modelListeners.add(listener);
 	}
 
 
-	public void removeListener(PherogramModelListener listener) {
-		listeners.remove(listener);
+	public boolean removeModelListener(PherogramModelListener listener) {
+		return modelListeners.remove(listener);
 	}
 
 
@@ -280,7 +280,7 @@ public class PherogramComponentModel {
 
 		PherogramCutPositionChangeEvent event = new PherogramCutPositionChangeEvent(this, moreEventsUpcoming,
 				oldValue, leftCutPosition, oldEditableIndex, getAlignmentRelation(leftCutPosition));
-		for (PherogramModelListener listener : listeners.toArray(new PherogramModelListener[listeners.size()])) {  // Copying the list is necessary to allow listeners to remove themselves from the list without a ConcurrentModificationException being thrown.
+		for (PherogramModelListener listener : modelListeners.toArray(new PherogramModelListener[modelListeners.size()])) {  // Copying the list is necessary to allow listeners to remove themselves from the list without a ConcurrentModificationException being thrown.
 			listener.leftCutPositionChange(event);
 		}
 	}
@@ -291,7 +291,7 @@ public class PherogramComponentModel {
 
 		PherogramCutPositionChangeEvent event = new PherogramCutPositionChangeEvent(this, moreEventsUpcoming,
 				oldValue, rightCutPosition,	oldEditableIndex, getAlignmentRelation(rightCutPosition));
-        for (PherogramModelListener listener : listeners.toArray(new PherogramModelListener[listeners.size()])) {  // Copying the list is necessary to allow listeners to remove themselves from the list without a ConcurrentModificationException being thrown.
+        for (PherogramModelListener listener : modelListeners.toArray(new PherogramModelListener[modelListeners.size()])) {  // Copying the list is necessary to allow listeners to remove themselves from the list without a ConcurrentModificationException being thrown.
 			listener.rightCutPositionChange(event);
 		}
 	}
@@ -302,7 +302,7 @@ public class PherogramComponentModel {
 
 		PherogramProviderChangeEvent event = new PherogramProviderChangeEvent(this, moreEventsUpcoming,
 				oldProvider, pherogramProvider, reverseComplemented);
-        for (PherogramModelListener listener : listeners.toArray(new PherogramModelListener[listeners.size()])) {  // Copying the list is necessary to allow listeners to remove themselves from the list without a ConcurrentModificationException being thrown.
+        for (PherogramModelListener listener : modelListeners.toArray(new PherogramModelListener[modelListeners.size()])) {  // Copying the list is necessary to allow listeners to remove themselves from the list without a ConcurrentModificationException being thrown.
 			listener.pherogramProviderChange(event);
 		}
 	}
