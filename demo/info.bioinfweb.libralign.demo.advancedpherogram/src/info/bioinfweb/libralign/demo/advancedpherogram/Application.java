@@ -113,7 +113,7 @@ public class Application {
 		alignmentArea.setAlignmentModel(alignmentModel, false);
 		
 		// Create pherogram data area to display the pherogram raw data:
-		pherogramDataArea = new PherogramArea(alignmentArea.getContentArea(), pherogramModel);
+		pherogramDataArea = new PherogramArea(alignmentArea, pherogramModel);
 		
 		// Attach pherogram data area to the (only) sequence in the alignment area:
 		alignmentArea.getDataAreas().getSequenceAreas(id).add(pherogramDataArea);
