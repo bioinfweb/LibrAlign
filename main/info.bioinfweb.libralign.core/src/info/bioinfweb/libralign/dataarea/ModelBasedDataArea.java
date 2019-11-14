@@ -32,7 +32,7 @@ import info.bioinfweb.libralign.model.data.DataModel;
  *
  * @param <M> the class of the associated data model
  */
-public abstract class ModelBasedDataArea<M extends DataModel> extends DataArea {
+public abstract class ModelBasedDataArea<M extends DataModel<?>> extends DataArea {
 	private M model;
 
 	
