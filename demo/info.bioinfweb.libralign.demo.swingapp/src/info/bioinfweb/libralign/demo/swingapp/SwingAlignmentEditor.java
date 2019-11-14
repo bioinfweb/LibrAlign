@@ -41,7 +41,8 @@ import info.bioinfweb.libralign.demo.swingapp.actions.RemoveGapsAction;
 import info.bioinfweb.libralign.demo.swingapp.actions.SaveAction;
 import info.bioinfweb.libralign.demo.swingapp.actions.SaveAsAction;
 import info.bioinfweb.libralign.model.AlignmentModel;
-import info.bioinfweb.libralign.model.AlignmentModelChangeListener;
+import info.bioinfweb.libralign.model.AlignmentModelAdapter;
+import info.bioinfweb.libralign.model.AlignmentModelListener;
 import info.bioinfweb.libralign.model.events.SequenceChangeEvent;
 import info.bioinfweb.libralign.model.events.SequenceRenamedEvent;
 import info.bioinfweb.libralign.model.events.TokenChangeEvent;
@@ -198,7 +199,7 @@ public class SwingAlignmentEditor {
 		alignmentArea.setAlignmentModel(new PackedAlignmentModel<Character>(CharacterTokenSet.newNucleotideInstance(false)), false);
 		
 		// Register changes listener to know when to ask for saving changes:
-		alignmentArea.getAlignmentModel().getChangeListeners().add(new AlignmentModelChangeListener() {
+		alignmentArea.getAlignmentModel().getChangeListeners().add(new AlignmentModelAdapter() {
 			@Override
 			public <T> void afterTokenChange(TokenChangeEvent<T> e) {
 				setChanged(true);
@@ -213,9 +214,6 @@ public class SwingAlignmentEditor {
 			public <T> void afterSequenceChange(SequenceChangeEvent<T> e) {
 				setChanged(true);
 			}
-			
-			@Override
-			public <T, U> void afterModelChanged(AlignmentModel<T> previous, AlignmentModel<U> current) {}
 		});
 		
 		// Create instance specific to Swing:
