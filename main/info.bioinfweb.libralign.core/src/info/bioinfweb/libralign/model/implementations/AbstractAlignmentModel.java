@@ -20,7 +20,7 @@ package info.bioinfweb.libralign.model.implementations;
 
 
 import info.bioinfweb.libralign.model.AlignmentModel;
-import info.bioinfweb.libralign.model.AlignmentModelChangeListener;
+import info.bioinfweb.libralign.model.AlignmentModelListener;
 import info.bioinfweb.libralign.model.events.SequenceChangeEvent;
 import info.bioinfweb.libralign.model.events.SequenceRenamedEvent;
 import info.bioinfweb.libralign.model.events.TokenChangeEvent;
@@ -42,7 +42,7 @@ import java.util.Set;
 public abstract class AbstractAlignmentModel<T> implements AlignmentModel<T> {
 	private String id = null;
 	private String label = null;
-	private Set<AlignmentModelChangeListener> changeListeners = new HashSet<AlignmentModelChangeListener>();
+	private Set<AlignmentModelListener> changeListeners = new HashSet<AlignmentModelListener>();
 
 
 	@Override
@@ -76,7 +76,7 @@ public abstract class AbstractAlignmentModel<T> implements AlignmentModel<T> {
 
 
 	@Override
-	public Set<AlignmentModelChangeListener> getChangeListeners() {
+	public Set<AlignmentModelListener> getChangeListeners() {
 		return changeListeners;
 	}
 
@@ -85,7 +85,7 @@ public abstract class AbstractAlignmentModel<T> implements AlignmentModel<T> {
 	 * Informs all listeners that a sequence has been inserted, removed or replaced.
 	 */
 	protected void fireAfterSequenceChange(SequenceChangeEvent<T> e) {
-		for (AlignmentModelChangeListener listener : getChangeListeners().toArray(new AlignmentModelChangeListener[getChangeListeners().size()])) {  // Copying the list is necessary to allow listeners to remove themselves from the list without a ConcurrentModificationException being thrown.
+		for (AlignmentModelListener listener : getChangeListeners().toArray(new AlignmentModelListener[getChangeListeners().size()])) {  // Copying the list is necessary to allow listeners to remove themselves from the list without a ConcurrentModificationException being thrown.
 			listener.afterSequenceChange(e);
 		}
 	}
@@ -95,7 +95,7 @@ public abstract class AbstractAlignmentModel<T> implements AlignmentModel<T> {
 	 * Informs all listeners that a sequence has been renamed.
 	 */
 	protected void fireAfterSequenceRenamed(SequenceRenamedEvent<T> e) {
-		for (AlignmentModelChangeListener listener : getChangeListeners().toArray(new AlignmentModelChangeListener[getChangeListeners().size()])) {  // Copying the list is necessary to allow listeners to remove themselves from the list without a ConcurrentModificationException being thrown.
+		for (AlignmentModelListener listener : getChangeListeners().toArray(new AlignmentModelListener[getChangeListeners().size()])) {  // Copying the list is necessary to allow listeners to remove themselves from the list without a ConcurrentModificationException being thrown.
 			listener.afterSequenceRenamed(e);
 		}
 	}
@@ -105,7 +105,7 @@ public abstract class AbstractAlignmentModel<T> implements AlignmentModel<T> {
 	 * Informs all listeners that a sequence has been inserted, removed or replaced.
 	 */
 	protected void fireAfterTokenChange(TokenChangeEvent<T> e) {
-		for (AlignmentModelChangeListener listener : getChangeListeners().toArray(new AlignmentModelChangeListener[getChangeListeners().size()])) {  // Copying the list is necessary to allow listeners to remove themselves from the list without a ConcurrentModificationException being thrown.
+		for (AlignmentModelListener listener : getChangeListeners().toArray(new AlignmentModelListener[getChangeListeners().size()])) {  // Copying the list is necessary to allow listeners to remove themselves from the list without a ConcurrentModificationException being thrown.
 			listener.afterTokenChange(e);
 		}
 	}

@@ -19,25 +19,20 @@
 package info.bioinfweb.libralign.dataarea.implementations;
 
 
-import info.bioinfweb.commons.graphics.FontCalculator;
-import info.bioinfweb.libralign.alignmentarea.AlignmentArea;
-import info.bioinfweb.libralign.alignmentarea.content.AlignmentContentArea;
-import info.bioinfweb.libralign.alignmentarea.content.AlignmentPaintEvent;
-import info.bioinfweb.libralign.dataarea.DataArea;
-import info.bioinfweb.libralign.dataarea.DataAreaListType;
-import info.bioinfweb.libralign.model.AlignmentModel;
-import info.bioinfweb.libralign.model.events.SequenceChangeEvent;
-import info.bioinfweb.libralign.model.events.SequenceRenamedEvent;
-import info.bioinfweb.libralign.model.events.TokenChangeEvent;
-
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
 import java.awt.SystemColor;
-import java.awt.geom.Rectangle2D;
 import java.util.EnumSet;
 import java.util.Set;
+
+import info.bioinfweb.commons.graphics.FontCalculator;
+import info.bioinfweb.libralign.alignmentarea.AlignmentArea;
+import info.bioinfweb.libralign.alignmentarea.content.AlignmentContentArea;
+import info.bioinfweb.libralign.alignmentarea.content.AlignmentPaintEvent;
+import info.bioinfweb.libralign.dataarea.DataArea;
+import info.bioinfweb.libralign.dataelement.DataListType;
 
 
 
@@ -199,8 +194,8 @@ public class LabelDataArea extends DataArea {
 
 
 	@Override
-	public Set<DataAreaListType> validLocations() {
-		return EnumSet.of(DataAreaListType.TOP, DataAreaListType.SEQUENCE, DataAreaListType.BOTTOM);
+	public Set<DataListType> validLocations() {
+		return EnumSet.of(DataListType.TOP, DataListType.SEQUENCE, DataListType.BOTTOM);
 	}
 
 	
@@ -248,22 +243,5 @@ public class LabelDataArea extends DataArea {
 	@Override
 	public double getHeight() {
 		return getLabeledAlignmentArea().getPaintSettings().getZoomY() * FontCalculator.getInstance().getTextHeightByFontSize(getFont());
-		//TODO Adjust factor and declare as constant.
 	}
-	
-	
-	@Override
-	public <T> void afterSequenceChange(SequenceChangeEvent<T> e) {}
-	
-
-	@Override
-	public <T> void afterSequenceRenamed(SequenceRenamedEvent<T> e) {}
-	
-
-	@Override
-	public <T> void afterTokenChange(TokenChangeEvent<T> e) {}
-
-	
-	@Override
-	public <T, U> void afterModelChanged(AlignmentModel<T> previous, AlignmentModel<U> current) {}
 }

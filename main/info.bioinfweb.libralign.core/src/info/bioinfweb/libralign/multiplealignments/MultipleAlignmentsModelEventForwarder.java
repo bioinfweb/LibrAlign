@@ -19,11 +19,13 @@
 package info.bioinfweb.libralign.multiplealignments;
 
 
+import info.bioinfweb.commons.collections.observable.ListAddEvent;
+import info.bioinfweb.commons.collections.observable.ListRemoveEvent;
+import info.bioinfweb.commons.collections.observable.ListReplaceEvent;
 import info.bioinfweb.libralign.alignmentarea.AlignmentArea;
-import info.bioinfweb.libralign.dataarea.DataAreaChangeEvent;
-import info.bioinfweb.libralign.dataarea.DataAreasModelListener;
-import info.bioinfweb.libralign.model.AlignmentModelChangeListener;
 import info.bioinfweb.libralign.model.AlignmentModel;
+import info.bioinfweb.libralign.model.AlignmentModelListener;
+import info.bioinfweb.libralign.model.data.DataModel;
 import info.bioinfweb.libralign.model.events.SequenceChangeEvent;
 import info.bioinfweb.libralign.model.events.SequenceRenamedEvent;
 import info.bioinfweb.libralign.model.events.TokenChangeEvent;
@@ -37,7 +39,8 @@ import info.bioinfweb.libralign.model.events.TokenChangeEvent;
  * @author Ben St&ouml;ver
  * @since 0.3.0
  */
-public class MultipleAlignmentsModelEventForwarder implements AlignmentModelChangeListener, DataAreasModelListener {
+public class MultipleAlignmentsModelEventForwarder implements AlignmentModelListener /*, DataAreasListener*/ {
+	//TODO This needs to be split into two classes, one for views, one for models. It should also be checked if it makes sense at all to forward both in the same place. (#356)
 	private MultipleAlignmentsContainer owner;
 
 	
@@ -56,7 +59,7 @@ public class MultipleAlignmentsModelEventForwarder implements AlignmentModelChan
 	public <T> void afterSequenceChange(SequenceChangeEvent<T> e) {
 		for (AlignmentArea alignmentArea : getOwner().getAlignmentAreas()) {
 			if (!e.getSource().equals(alignmentArea.getAlignmentModel())) {
-				alignmentArea.afterSequenceChange(e);
+				//alignmentArea.afterSequenceChange(e);
 			}
 		}
 	}
@@ -66,7 +69,7 @@ public class MultipleAlignmentsModelEventForwarder implements AlignmentModelChan
 	public <T> void afterSequenceRenamed(SequenceRenamedEvent<T> e) {
 		for (AlignmentArea alignmentArea : getOwner().getAlignmentAreas()) {
 			if (!e.getSource().equals(alignmentArea.getAlignmentModel())) {
-				alignmentArea.afterSequenceRenamed(e);
+				//alignmentArea.afterSequenceRenamed(e);
 			}
 		}
 	}
@@ -76,7 +79,7 @@ public class MultipleAlignmentsModelEventForwarder implements AlignmentModelChan
 	public <T> void afterTokenChange(TokenChangeEvent<T> e) {
 		for (AlignmentArea alignmentArea : getOwner().getAlignmentAreas()) {
 			if (!e.getSource().equals(alignmentArea.getAlignmentModel())) {
-				alignmentArea.afterTokenChange(e);
+				//alignmentArea.afterTokenChange(e);
 			}
 		}
 	}
@@ -91,28 +94,71 @@ public class MultipleAlignmentsModelEventForwarder implements AlignmentModelChan
 
 		for (AlignmentArea alignmentArea : getOwner().getAlignmentAreas()) {
 			if ((current != null) && !current.equals(alignmentArea.getAlignmentModel())) {
-				alignmentArea.afterModelChanged(previous, current);
-			}
-		}
-	}
-	
-	
-	@Override
-	public void dataAreaInsertedRemoved(DataAreaChangeEvent e) {
-		for (AlignmentArea alignmentArea : getOwner().getAlignmentAreas()) {
-			if (!e.getSource().equals(alignmentArea.getDataAreas())) {
-				alignmentArea.dataAreaInsertedRemoved(e);
+				//alignmentArea.afterModelChanged(previous, current);
 			}
 		}
 	}
 
 
 	@Override
-	public void dataAreaVisibilityChanged(DataAreaChangeEvent e) {
-		for (AlignmentArea alignmentArea : getOwner().getAlignmentAreas()) {
-			if (!e.getSource().equals(alignmentArea.getDataAreas())) {
-				alignmentArea.dataAreaVisibilityChanged(e);
-			}
-		}
+	public void beforeElementsAdded(ListAddEvent<DataModel> event) {
+		// TODO Auto-generated method stub
+		
 	}
+
+
+	@Override
+	public void afterElementsAdded(ListAddEvent<DataModel> event) {
+		// TODO Auto-generated method stub
+		
+	}
+
+
+	@Override
+	public void beforeElementReplaced(ListReplaceEvent<DataModel> event) {
+		// TODO Auto-generated method stub
+		
+	}
+
+
+	@Override
+	public void afterElementReplaced(ListReplaceEvent<DataModel> event) {
+		// TODO Auto-generated method stub
+		
+	}
+
+
+	@Override
+	public void beforeElementsRemoved(ListRemoveEvent<DataModel, Object> event) {
+		// TODO Auto-generated method stub
+		
+	}
+
+
+	@Override
+	public void afterElementsRemoved(
+			ListRemoveEvent<DataModel, DataModel> event) {
+		// TODO Auto-generated method stub
+		
+	}
+	
+	
+//	@Override
+//	public void dataAreaInsertedRemoved(DataAreaChangeEvent e) {
+//		for (AlignmentArea alignmentArea : getOwner().getAlignmentAreas()) {
+//			if (!e.getSource().equals(alignmentArea.getDataAreas())) {
+//				alignmentArea.dataAreaInsertedRemoved(e);
+//			}
+//		}
+//	}
+//
+//
+//	@Override
+//	public void visibilityChanged(DataAreaChangeEvent e) {
+//		for (AlignmentArea alignmentArea : getOwner().getAlignmentAreas()) {
+//			if (!e.getSource().equals(alignmentArea.getDataAreas())) {
+//				alignmentArea.visibilityChanged(e);
+//			}
+//		}
+//	}
 }

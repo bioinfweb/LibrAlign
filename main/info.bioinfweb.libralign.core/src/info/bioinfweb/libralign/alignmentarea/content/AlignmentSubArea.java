@@ -53,7 +53,12 @@ public abstract class AlignmentSubArea extends TICComponent {
 	 */
 	public AlignmentSubArea(AlignmentContentArea owner) {
 		super();
-		this.owner = owner;
+		if (owner == null) {
+			throw new IllegalArgumentException("owner must not be null.");
+		}
+		else {
+			this.owner = owner;
+		}
 	}
 
 

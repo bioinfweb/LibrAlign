@@ -91,7 +91,7 @@ public class AlignmentAreaList extends ObservableList<AlignmentArea> {
 		if (alignmentArea.hasAlignmentModel()) {
 			alignmentArea.getAlignmentModel().getChangeListeners().add(modelEventForwarder);
 		}
-		alignmentArea.getDataAreas().addListener(modelEventForwarder);
+		//alignmentArea.getDataAreas().addListener(modelEventForwarder);  //TODO Reconsider this line when #356 is solved.
 		alignmentArea.getPaintSettings().addListener(paintSettingsSynchronizer);
 		alignmentArea.getScrollListeners().add(scrollingSynchronizer);
 	}
@@ -101,7 +101,7 @@ public class AlignmentAreaList extends ObservableList<AlignmentArea> {
 		if (alignmentArea.hasAlignmentModel()) {
 			alignmentArea.getAlignmentModel().getChangeListeners().remove(modelEventForwarder);
 		}
-		alignmentArea.getDataAreas().removeListener(modelEventForwarder);
+		//alignmentArea.getDataAreas().removeListener(modelEventForwarder);  //TODO Reconsider this line when #356 is solved.
 		alignmentArea.getPaintSettings().removeListener(paintSettingsSynchronizer);
 		alignmentArea.getScrollListeners().remove(scrollingSynchronizer);
 	}

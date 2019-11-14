@@ -19,6 +19,8 @@
 package info.bioinfweb.libralign.model;
 
 
+import info.bioinfweb.commons.collections.observable.ListChangeAdapter;
+import info.bioinfweb.libralign.model.data.DataModel;
 import info.bioinfweb.libralign.model.events.SequenceChangeEvent;
 import info.bioinfweb.libralign.model.events.SequenceRenamedEvent;
 import info.bioinfweb.libralign.model.events.TokenChangeEvent;
@@ -26,7 +28,7 @@ import info.bioinfweb.libralign.model.events.TokenChangeEvent;
 
 
 /**
- * Provides empty implementations for all listener methods of {@link AlignmentModelChangeListener}.
+ * Provides empty implementations for all listener methods of {@link AlignmentModelListener}.
  * <p>
  * Anonymous listener implementations that only need to overwrite one or a few method can be inherited
  * from this class to reduce the necessary amount of code.
@@ -34,7 +36,7 @@ import info.bioinfweb.libralign.model.events.TokenChangeEvent;
  * @author Ben St&ouml;ver
  * @since 0.7.0
  */
-public class AlignmentModelChangeAdapter implements AlignmentModelChangeListener {
+public class AlignmentModelAdapter extends ListChangeAdapter<DataModel> implements AlignmentModelListener {
 	@Override
 	public <T> void afterSequenceChange(SequenceChangeEvent<T> e) {}
 

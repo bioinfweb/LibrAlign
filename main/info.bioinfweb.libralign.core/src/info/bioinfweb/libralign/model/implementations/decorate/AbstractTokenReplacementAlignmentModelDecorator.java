@@ -22,7 +22,7 @@ package info.bioinfweb.libralign.model.implementations.decorate;
 import info.bioinfweb.commons.bio.CharacterStateSetType;
 import info.bioinfweb.commons.collections.PackedObjectArrayList;
 import info.bioinfweb.libralign.model.AlignmentModel;
-import info.bioinfweb.libralign.model.AlignmentModelChangeListener;
+import info.bioinfweb.libralign.model.AlignmentModelListener;
 import info.bioinfweb.libralign.model.AlignmentModelView;
 import info.bioinfweb.libralign.model.AlignmentModelWriteType;
 import info.bioinfweb.libralign.model.events.TokenChangeEvent;
@@ -381,7 +381,7 @@ public abstract class AbstractTokenReplacementAlignmentModelDecorator<T, U> exte
 
 
 	@Override
-	public Set<AlignmentModelChangeListener> getChangeListeners() {
+	public Set<AlignmentModelListener> getChangeListeners() {
 		return getUnderlyingModel().getChangeListeners();  //TODO Does in make sense to forward these directly? Could indices have changed? Should new listeners really be registered in the underlying model?
 	}	
 }

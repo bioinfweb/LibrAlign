@@ -19,19 +19,6 @@
 package info.bioinfweb.libralign.dataarea.implementations.sequenceindex;
 
 
-import info.bioinfweb.commons.Math2;
-import info.bioinfweb.commons.collections.ListChangeType;
-import info.bioinfweb.libralign.alignmentarea.AlignmentArea;
-import info.bioinfweb.libralign.alignmentarea.content.AlignmentContentArea;
-import info.bioinfweb.libralign.alignmentarea.content.AlignmentPaintEvent;
-import info.bioinfweb.libralign.dataarea.DataArea;
-import info.bioinfweb.libralign.dataarea.DataAreaListType;
-import info.bioinfweb.libralign.model.AlignmentModel;
-import info.bioinfweb.libralign.model.concatenated.ConcatenatedAlignmentModel;
-import info.bioinfweb.libralign.model.events.SequenceChangeEvent;
-import info.bioinfweb.libralign.model.events.SequenceRenamedEvent;
-import info.bioinfweb.libralign.model.events.TokenChangeEvent;
-
 import java.awt.BasicStroke;
 import java.awt.FontMetrics;
 import java.awt.Graphics2D;
@@ -43,6 +30,18 @@ import java.awt.geom.Path2D;
 import java.awt.geom.Rectangle2D;
 import java.util.EnumSet;
 import java.util.Set;
+
+import info.bioinfweb.commons.Math2;
+import info.bioinfweb.commons.collections.ListChangeType;
+import info.bioinfweb.libralign.alignmentarea.AlignmentArea;
+import info.bioinfweb.libralign.alignmentarea.content.AlignmentContentArea;
+import info.bioinfweb.libralign.alignmentarea.content.AlignmentPaintEvent;
+import info.bioinfweb.libralign.dataarea.DataArea;
+import info.bioinfweb.libralign.dataelement.DataListType;
+import info.bioinfweb.libralign.model.AlignmentModel;
+import info.bioinfweb.libralign.model.AlignmentModelAdapter;
+import info.bioinfweb.libralign.model.concatenated.ConcatenatedAlignmentModel;
+import info.bioinfweb.libralign.model.events.TokenChangeEvent;
 
 
 
@@ -91,6 +90,23 @@ public class SequenceIndexArea extends DataArea {
 	 */
 	public SequenceIndexArea(AlignmentContentArea owner, AlignmentArea labeledArea) {
 		super(owner, labeledArea);
+		
+		labeledArea.getAlignmentModel().getChangeListeners().add(new AlignmentModelAdapter() {
+			@Override
+			public <T> void afterTokenChange(TokenChangeEvent<T> e) {
+				if (!e.getType().equals(ListChangeType.REPLACEMENT)) {
+					assignSize();  // Length of the longest sequence could have changed.
+					repaint();  // In case the size did not change, but the space before the alignment did.
+				}
+			}
+			
+			@Override
+			public <T, U> void afterModelChanged(AlignmentModel<T> previous, AlignmentModel<U> current) {
+				assignSize();
+				repaint();  // In case the size did not change, but the space before the alignment did.
+			}
+		});
+		//TODO Listener needs to be removed again, when this data area is removed.
 	}
 
 
@@ -191,8 +207,8 @@ public class SequenceIndexArea extends DataArea {
 
 
 	@Override
-	public Set<DataAreaListType> validLocations() {
-		return EnumSet.of(DataAreaListType.TOP, DataAreaListType.SEQUENCE, DataAreaListType.BOTTOM);
+	public Set<DataListType> validLocations() {
+		return EnumSet.of(DataListType.TOP, DataListType.SEQUENCE, DataListType.BOTTOM);
   }
 
 
@@ -226,32 +242,5 @@ public class SequenceIndexArea extends DataArea {
 	@Override
 	public double getHeight() {
 		return getLabeledAlignmentArea().getPaintSettings().getTokenHeight();
-	}
-
-
-	@Override
-	public <T> void afterSequenceChange(SequenceChangeEvent<T> e) {
-		assignSize();  // Longest sequence could have been deleted or a longer sequence could have been added.
-		repaint();  // In case the size did not change, but the space before the alignment did.
-	}
-
-
-	@Override
-	public <T> void afterSequenceRenamed(SequenceRenamedEvent<T> e) {}
-
-
-	@Override
-	public <T> void afterTokenChange(TokenChangeEvent<T> e) {
-		if (!e.getType().equals(ListChangeType.REPLACEMENT)) {
-			assignSize();  // Length of the longest sequence could have changed.
-			repaint();  // In case the size did not change, but the space before the alignment did.
-		}
-	}
-
-
-	@Override
-	public <T, U> void afterModelChanged(AlignmentModel<T> previous,	AlignmentModel<U> current) {
-		assignSize();
-		repaint();  // In case the size did not change, but the space before the alignment did.
 	}
 }

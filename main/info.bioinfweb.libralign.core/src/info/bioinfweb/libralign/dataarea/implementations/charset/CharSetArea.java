@@ -19,6 +19,15 @@
 package info.bioinfweb.libralign.dataarea.implementations.charset;
 
 
+import java.awt.Color;
+import java.awt.Graphics2D;
+import java.awt.SystemColor;
+import java.awt.geom.Rectangle2D;
+import java.util.EnumSet;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Set;
+
 import info.bioinfweb.commons.Math2;
 import info.bioinfweb.commons.events.GenericEventObject;
 import info.bioinfweb.commons.graphics.GraphicsUtils;
@@ -29,28 +38,15 @@ import info.bioinfweb.libralign.alignmentarea.label.AlignmentLabelArea;
 import info.bioinfweb.libralign.alignmentarea.label.AlignmentLabelSubArea;
 import info.bioinfweb.libralign.alignmentarea.paintsettings.PaintSettings;
 import info.bioinfweb.libralign.alignmentarea.selection.SelectionListener;
-import info.bioinfweb.libralign.dataarea.DataArea;
-import info.bioinfweb.libralign.dataarea.DataAreaListType;
+import info.bioinfweb.libralign.dataarea.ModelBasedDataArea;
 import info.bioinfweb.libralign.dataarea.implementations.charset.events.CharSetChangeEvent;
 import info.bioinfweb.libralign.dataarea.implementations.charset.events.CharSetColorChangeEvent;
 import info.bioinfweb.libralign.dataarea.implementations.charset.events.CharSetColumnChangeEvent;
 import info.bioinfweb.libralign.dataarea.implementations.charset.events.CharSetRenamedEvent;
-import info.bioinfweb.libralign.model.AlignmentModel;
-import info.bioinfweb.libralign.model.events.SequenceChangeEvent;
-import info.bioinfweb.libralign.model.events.SequenceRenamedEvent;
-import info.bioinfweb.libralign.model.events.TokenChangeEvent;
+import info.bioinfweb.libralign.dataelement.DataListType;
 import info.bioinfweb.libralign.multiplealignments.MultipleAlignmentsContainer;
 import info.bioinfweb.tic.input.TICMouseAdapter;
 import info.bioinfweb.tic.input.TICMouseEvent;
-
-import java.awt.Color;
-import java.awt.Graphics2D;
-import java.awt.SystemColor;
-import java.awt.geom.Rectangle2D;
-import java.util.EnumSet;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.Set;
 
 
 
@@ -61,11 +57,10 @@ import java.util.Set;
  * @author Ben St&ouml;ver
  * @since 0.2.0
  */
-public class CharSetArea extends DataArea {
+public class CharSetArea extends ModelBasedDataArea<CharSetDataModel> {
 	public static final double BORDER_FRACTION = 0.17;
 	
 	
-	private CharSetDataModel model;
 	private int selectedIndex = -1;
 	private Set<SelectionListener<GenericEventObject<CharSetArea>>> selectionListeners = 
 			new HashSet<SelectionListener<GenericEventObject<CharSetArea>>>();
@@ -84,71 +79,64 @@ public class CharSetArea extends DataArea {
 	 * @throws IllegalArgumentException if {@code model} is {@code null}
 	 */
 	public CharSetArea(AlignmentContentArea owner, AlignmentArea labeledAlignmentArea, CharSetDataModel model) {
-		super(owner, labeledAlignmentArea);
-		if (model == null) {
-			throw new IllegalArgumentException("The model must not be null.");
-		}
-		else {
-			this.model = model;
+		super(owner, labeledAlignmentArea, model);
+		modelListener = new CharSetDataModelListener() {
+			@Override
+			public void afterCharSetRenamed(CharSetRenamedEvent e) {
+				if (e.isLastEvent()) {
+					getOwner().getOwner().revalidate();
+					repaint();
+				}
+			}
 			
-			modelListener = new CharSetDataModelListener() {
-				@Override
-				public void afterCharSetRenamed(CharSetRenamedEvent e) {
-					if (e.isLastEvent()) {
-						getOwner().getOwner().revalidate();
-						repaint();
-					}
+			@Override
+			public void afterCharSetColumnChange(CharSetColumnChangeEvent e) {
+				if (e.isLastEvent()) {
+					repaint();
 				}
-				
-				@Override
-				public void afterCharSetColumnChange(CharSetColumnChangeEvent e) {
-					if (e.isLastEvent()) {
-						repaint();
-					}
+			}
+			
+			@Override
+			public void afterCharSetColorChange(CharSetColorChangeEvent e) {
+				if (e.isLastEvent()) {
+					repaint();
 				}
-				
-				@Override
-				public void afterCharSetColorChange(CharSetColorChangeEvent e) {
-					if (e.isLastEvent()) {
-						repaint();
-					}
-				}
-				
-				@Override
-				public void afterCharSetChange(CharSetChangeEvent e) {
-					if (e.isLastEvent()) {
-						checkSelectedIndex();
-						getOwner().getOwner().revalidate();
-						repaint();
-					}
-				}
-	
-				@Override
-				public void afterModelChanged(CharSetDataModel previous, CharSetDataModel current) {
+			}
+			
+			@Override
+			public void afterCharSetChange(CharSetChangeEvent e) {
+				if (e.isLastEvent()) {
 					checkSelectedIndex();
 					getOwner().getOwner().revalidate();
 					repaint();
 				}
-			};
-			model.getChangeListeners().add(modelListener);
-			
-			addMouseListener(new TICMouseAdapter() {
-				@Override
-				public boolean mousePressed(TICMouseEvent event) {
-					if (event.getClickCount() == 1) {
-						if (event.isMouseButton1Down()) {
-							setSelectedIndex((int)(event.getComponentY() / getLabeledAlignmentArea().getPaintSettings().getTokenHeight()));
-							return true;
-						}
-						else if (event.isMouseButton3Down()) {
-							setSelectedIndex(-1);
-							return true;
-						}
+			}
+
+			@Override
+			public void afterModelChanged(CharSetDataModel previous, CharSetDataModel current) {
+				checkSelectedIndex();
+				getOwner().getOwner().revalidate();
+				repaint();
+			}
+		};
+		model.getChangeListeners().add(modelListener);
+		
+		addMouseListener(new TICMouseAdapter() {
+			@Override
+			public boolean mousePressed(TICMouseEvent event) {
+				if (event.getClickCount() == 1) {
+					if (event.isMouseButton1Down()) {
+						setSelectedIndex((int)(event.getComponentY() / getLabeledAlignmentArea().getPaintSettings().getTokenHeight()));
+						return true;
 					}
-					return false;
+					else if (event.isMouseButton3Down()) {
+						setSelectedIndex(-1);
+						return true;
+					}
 				}
-			});
-		}
+				return false;
+			}
+		});
 	}
 
 
@@ -167,16 +155,6 @@ public class CharSetArea extends DataArea {
 	
 	
 	/**
-	 * Returns the underlying model providing character set data.
-	 * 
-	 * @return the instance of the underlying model
-	 */
-	public CharSetDataModel getModel() {
-		return model;
-	}
-
-	
-	/**
 	 * Changes the model instance that is displayed by this area.
 	 * 
 	 * @param model the new model
@@ -190,35 +168,35 @@ public class CharSetArea extends DataArea {
 			throw new IllegalArgumentException("The model must not be null.");
 		}
 		else {
-			CharSetDataModel result = this.model;
-			if (model != this.model) {  // equals() would, e.g., consider two different empty models as equal, which is not suitable here.
-				if (this.model != null) {
+			CharSetDataModel result = getModel();
+			if (model != getModel()) {  // equals() would, e.g., consider two different empty models as equal, which is not suitable here.
+				if (getModel() != null) {
 					if (moveListeners) {  // Move all listeners
-						model.getChangeListeners().addAll(this.model.getChangeListeners());
-						this.model.getChangeListeners().clear();
+						model.getChangeListeners().addAll(getModel().getChangeListeners());
+						getModel().getChangeListeners().clear();
 					}
 					else {  // Move this instance as the listener anyway:
-						this.model.getChangeListeners().remove(modelListener);
+						getModel().getChangeListeners().remove(modelListener);
 						model.getChangeListeners().add(modelListener);
 					}
 				}
 				
-				this.model = model;
+				setModel(model);
 				
 	      // Fire events for listener move after the process finished
-				if (this.model != null) {
-					if (!this.model.getChangeListeners().contains(modelListener)) {  // Add this object as a listener if it was not already moved from the previous provider.
-						this.model.getChangeListeners().add(modelListener);
+				if (getModel() != null) {
+					if (!getModel().getChangeListeners().contains(modelListener)) {  // Add this object as a listener if it was not already moved from the previous provider.
+						getModel().getChangeListeners().add(modelListener);
 					}
 					
 					if (moveListeners) {
-						Iterator<CharSetDataModelListener> iterator = this.model.getChangeListeners().iterator();
+						Iterator<CharSetDataModelListener> iterator = getModel().getChangeListeners().iterator();
 						while (iterator.hasNext()) {
-							iterator.next().afterModelChanged(result, this.model);
+							iterator.next().afterModelChanged(result, getModel());
 						}
 					}
 					else {
-						modelListener.afterModelChanged(result, this.model);
+						modelListener.afterModelChanged(result, getModel());
 					}
 				}
 			}
@@ -233,7 +211,7 @@ public class CharSetArea extends DataArea {
 
 
 	public void setSelectedIndex(int selectedIndex) {
-		if ((selectedIndex == -1) || Math2.isBetween(selectedIndex, 0, model.size() - 1)) {
+		if ((selectedIndex == -1) || Math2.isBetween(selectedIndex, 0, getModel().size() - 1)) {
 			if (this.selectedIndex != selectedIndex) {
 				this.selectedIndex = selectedIndex;
 				repaint();
@@ -247,8 +225,8 @@ public class CharSetArea extends DataArea {
 	
 	
 	private void checkSelectedIndex() {
-		if (model.size() > 0) {
-			selectedIndex = Math.min(selectedIndex, model.size() - 1);
+		if (getModel().size() > 0) {
+			selectedIndex = Math.min(selectedIndex, getModel().size() - 1);
 		}
 		else {
 			selectedIndex = -1;
@@ -322,37 +300,8 @@ public class CharSetArea extends DataArea {
 	 * @see info.bioinfweb.libralign.dataarea.DataArea#validLocations()
 	 */
 	@Override
-	public Set<DataAreaListType> validLocations() {
-		return EnumSet.of(DataAreaListType.TOP, DataAreaListType.BOTTOM, DataAreaListType.SEQUENCE);
-	}
-
-
-	@Override
-	public <T> void afterSequenceChange(SequenceChangeEvent<T> e) {
-		// TODO Auto-generated method stub
-		
-	}
-
-
-	@Override
-	public <T> void afterSequenceRenamed(SequenceRenamedEvent<T> e) {
-		// TODO Auto-generated method stub
-		
-	}
-
-
-	@Override
-	public <T> void afterTokenChange(TokenChangeEvent<T> e) {
-		// TODO Auto-generated method stub
-		
-	}
-
-
-	@Override
-	public <T, U> void afterModelChanged(AlignmentModel<T> previous,
-			AlignmentModel<U> current) {
-		
-		// TODO Auto-generated method stub		
+	public Set<DataListType> validLocations() {
+		return EnumSet.of(DataListType.TOP, DataListType.BOTTOM, DataListType.SEQUENCE);
 	}
 
 

@@ -19,7 +19,9 @@
 package info.bioinfweb.libralign.model;
 
 
+import info.bioinfweb.commons.collections.observable.ListChangeListener;
 import info.bioinfweb.libralign.alignmentarea.AlignmentArea;
+import info.bioinfweb.libralign.model.data.DataModel;
 import info.bioinfweb.libralign.model.events.SequenceChangeEvent;
 import info.bioinfweb.libralign.model.events.SequenceRenamedEvent;
 import info.bioinfweb.libralign.model.events.TokenChangeEvent;
@@ -37,7 +39,7 @@ import info.bioinfweb.libralign.model.events.TokenChangeEvent;
  * @author Ben St&ouml;ver
  * @since 0.0.0
  */
-public interface AlignmentModelChangeListener {
+public interface AlignmentModelListener extends ListChangeListener<DataModel> {
 	/**
 	 * Called after a sequence has been inserted, removed or replaced.
 	 * 

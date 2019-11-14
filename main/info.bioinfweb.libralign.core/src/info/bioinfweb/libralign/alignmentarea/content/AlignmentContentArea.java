@@ -27,8 +27,8 @@ import info.bioinfweb.libralign.alignmentarea.label.AlignmentLabelArea;
 import info.bioinfweb.libralign.alignmentarea.paintsettings.PaintSettings;
 import info.bioinfweb.libralign.alignmentarea.selection.SelectionModel;
 import info.bioinfweb.libralign.dataarea.DataArea;
-import info.bioinfweb.libralign.dataarea.DataAreaListType;
-import info.bioinfweb.libralign.dataarea.DataAreaLocation;
+import info.bioinfweb.libralign.dataelement.DataListType;
+import info.bioinfweb.libralign.dataelement.DataLocation;
 import info.bioinfweb.libralign.model.AlignmentModel;
 import info.bioinfweb.libralign.model.concatenated.ConcatenatedAlignmentModel;
 import info.bioinfweb.libralign.multiplealignments.MultipleAlignmentsContainer;
@@ -556,8 +556,8 @@ public class AlignmentContentArea extends TICComponent {
 	public int rowByPaintY(double y) {
 		AlignmentSubArea subArea = getAreaByPaintY(y);
 		if (subArea instanceof DataArea) {
-			DataAreaLocation location = ((DataArea)subArea).getList().getLocation();
-			if (location.getListType().equals(DataAreaListType.SEQUENCE)) {
+			DataLocation location = ((DataArea)subArea).getList().getLocation();
+			if (location.getListType().equals(DataListType.SEQUENCE)) {
 				subArea = getSequenceAreaByID(location.getSequenceID());
 			}
 		}

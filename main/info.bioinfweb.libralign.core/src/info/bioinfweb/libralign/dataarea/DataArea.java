@@ -19,15 +19,16 @@
 package info.bioinfweb.libralign.dataarea;
 
 
+import java.util.Set;
+
 import info.bioinfweb.libralign.alignmentarea.AlignmentArea;
 import info.bioinfweb.libralign.alignmentarea.SizeManager;
 import info.bioinfweb.libralign.alignmentarea.content.AlignmentContentArea;
 import info.bioinfweb.libralign.alignmentarea.content.AlignmentSubArea;
+import info.bioinfweb.libralign.dataelement.DataList;
+import info.bioinfweb.libralign.dataelement.DataListType;
 import info.bioinfweb.libralign.model.AlignmentModel;
-import info.bioinfweb.libralign.model.AlignmentModelChangeListener;
 import info.bioinfweb.libralign.multiplealignments.MultipleAlignmentsContainer;
-
-import java.util.Set;
 
 
 
@@ -40,10 +41,11 @@ import java.util.Set;
  * 
  * @author Ben St&ouml;ver
  * @since 0.0.0
+ * @bioinfweb.module info.bioinfweb.libralign.core
  */
-public abstract class DataArea extends AlignmentSubArea implements AlignmentModelChangeListener {
+public abstract class DataArea extends AlignmentSubArea {
 	private AlignmentArea labeledAlignmentArea;
-	private DataAreaList list = null;
+	private DataList<AlignmentArea, DataArea> list = null;
 	private boolean visible = true;
 	
 	
@@ -95,7 +97,7 @@ public abstract class DataArea extends AlignmentSubArea implements AlignmentMode
 	 * Returns the list this data area is contained in. This list defines whether this data area is located above 
 	 * or underneath the alignment or attached to a sequence.
 	 */
-	public DataAreaList getList() {
+	public DataList<AlignmentArea, DataArea> getList() {
 		return list;
 	}
 
@@ -105,7 +107,7 @@ public abstract class DataArea extends AlignmentSubArea implements AlignmentMode
 	 * 
 	 * @param list - the list that contains this element
 	 */
-	public void setList(DataAreaList list) { 
+	public void setList(DataList<AlignmentArea, DataArea> list) { 
 		this.list = list;
 	}
 
@@ -133,7 +135,7 @@ public abstract class DataArea extends AlignmentSubArea implements AlignmentMode
 		boolean result = this.visible != visible; 
 		if (result) {
 			this.visible = visible;
-			getList().getOwner().fireVisibilityChanged(true, this);  // Will only have an effect if updateInProgress was not set before.
+			getList().getOwner().getOwner().fireDataAreaVisibilitChanged(this, visible);
 		}
 		return result;
 	}
@@ -147,7 +149,7 @@ public abstract class DataArea extends AlignmentSubArea implements AlignmentMode
 	 * 
 	 * @return a non-empty set of locations
 	 */
-	public abstract Set<DataAreaListType> validLocations();
+	public abstract Set<DataListType> validLocations();
 	
 	
 	/**

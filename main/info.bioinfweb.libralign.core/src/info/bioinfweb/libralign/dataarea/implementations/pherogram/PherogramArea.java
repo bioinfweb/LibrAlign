@@ -20,14 +20,20 @@ package info.bioinfweb.libralign.dataarea.implementations.pherogram;
 
 
 import info.bioinfweb.commons.collections.SimpleSequenceInterval;
+import info.bioinfweb.commons.collections.observable.ListAddEvent;
+import info.bioinfweb.commons.collections.observable.ListRemoveEvent;
+import info.bioinfweb.commons.collections.observable.ListReplaceEvent;
 import info.bioinfweb.tic.TICPaintEvent;
 import info.bioinfweb.libralign.alignmentarea.content.AlignmentContentArea;
 import info.bioinfweb.libralign.alignmentarea.content.AlignmentPaintEvent;
 import info.bioinfweb.libralign.alignmentarea.tokenpainter.TokenPainter;
 import info.bioinfweb.libralign.dataarea.DataArea;
-import info.bioinfweb.libralign.dataarea.DataAreaListType;
+import info.bioinfweb.libralign.dataelement.DataListType;
 import info.bioinfweb.libralign.model.AlignmentModel;
+import info.bioinfweb.libralign.model.AlignmentModelAdapter;
+import info.bioinfweb.libralign.model.AlignmentModelListener;
 import info.bioinfweb.libralign.model.concatenated.ConcatenatedAlignmentModel;
+import info.bioinfweb.libralign.model.data.DataModel;
 import info.bioinfweb.libralign.model.events.SequenceChangeEvent;
 import info.bioinfweb.libralign.model.events.SequenceRenamedEvent;
 import info.bioinfweb.libralign.model.events.TokenChangeEvent;
@@ -82,7 +88,67 @@ public class PherogramArea extends DataArea implements PherogramComponent {
 	private PherogramPainter painter = new PherogramPainter(this);
 
 	
-	private final PherogramModelListener MODEL_LISTENER = new PherogramModelListener() {
+	private final AlignmentModelListener ALIGNMENT_MODEL_LISTENER = new AlignmentModelAdapter() {
+		@Override
+		public <T> void afterSequenceChange(SequenceChangeEvent<T> e) {
+			//TODO React if the associated sequence was removed? (AlignmentContentArea should probably better implement this behavior.)
+		}
+
+
+		@Override
+		public <T> void afterSequenceRenamed(SequenceRenamedEvent<T> e) {}  // Nothing to do.
+
+
+		@Override
+		public <T> void afterTokenChange(TokenChangeEvent<T> e) {
+			if (e.getSource().equals(getLabeledAlignmentArea().getAlignmentModel()) && 
+					(e.getSequenceID() == getList().getLocation().getSequenceID())) {
+				
+				int addend = getLabeledAlignmentArea().getEditSettings().isInsertLeftInDataArea() ? -1 : 0;
+				int lastSeqPos = getModel().editableIndexByBaseCallIndex(getModel().getRightCutPosition() - 1).getAfter() - addend;
+				if (e.getStartIndex() <= lastSeqPos) {  // Do not process edits behind the pherogram.
+					int tokensBefore = Math.min(e.getAffectedTokens().size(), Math.max(0, getModel().getFirstSeqPos() - e.getStartIndex() - addend));
+					int tokensAfter = Math.max(0, e.getAffectedTokens().size() - Math.max(0, lastSeqPos - e.getStartIndex()) + addend);
+					int tokensInside = e.getAffectedTokens().size() - tokensBefore - tokensAfter;
+					
+					switch (e.getType()) {
+						case INSERTION:
+							if (tokensBefore > 0) {
+								getModel().setFirstSeqPos(getModel().getFirstSeqPos() + tokensBefore);
+							}
+							if (tokensInside > 0) {
+								getModel().addShiftChange(getModel().baseCallIndexByEditableIndex(
+										Math.max(0, e.getStartIndex() + tokensBefore + addend)).getBeforeValidIndex(), tokensInside);
+							}
+							break;
+						case DELETION:
+							if (tokensBefore > 0) {
+								getModel().setFirstSeqPos(getModel().getFirstSeqPos() - tokensBefore);
+							}
+							if (tokensInside > 0) {
+								getModel().addShiftChange(getModel().baseCallIndexByEditableIndex(
+										e.getStartIndex() + tokensBefore).getAfterValidIndex(), -e.getAffectedTokens().size());
+							}
+							break;
+						case REPLACEMENT:  // Nothing to do (Replacements differing in length are not allowed.)
+							break;  //TODO If a token is replaced by a gap a shift change would have to be added. (Solve this problem when gap displaying is generally implemented for all data areas.)
+					}
+				}
+			}
+			else {
+				repaint();  // The space before the alignment could have changed. (Only necessary in SWT. Swing seems to repaint automatically.)
+			}
+		}
+
+
+		@Override
+		public <T, U> void afterModelChanged(AlignmentModel<T> previous,	AlignmentModel<U> current) {
+			//TODO Implement? (It usually does not make sense to move sequence-attached data areas to a new model, unless this has the same sequences with the same IDs.) 
+		}  
+	};
+	
+	
+	private final PherogramModelListener DATA_MODEL_LISTENER = new PherogramModelListener() {
 		@Override
 		public void pherogramProviderChange(PherogramProviderChangeEvent event) {
 			getLabeledAlignmentArea().getSizeManager().setLocalMaxLengthBeforeAfterRecalculate();  // Could happen if cut lengths at the beginning and end differ.
@@ -163,7 +229,7 @@ public class PherogramArea extends DataArea implements PherogramComponent {
 			getOwner().getOwner().assignSizeToAll();
 			repaint();  // Necessary for SWT if there was no size change.
 		}
-	}; 
+	};
 	
 	
 	/**
@@ -193,7 +259,7 @@ public class PherogramArea extends DataArea implements PherogramComponent {
 	public PherogramArea(AlignmentContentArea owner, PherogramAreaModel model, PherogramFormats formats) {
 		super(owner, owner.getOwner());  // Pherogram areas are always directly attached to their sequences.
 		this.model = model;
-		model.addListener(MODEL_LISTENER);
+		model.addListener(DATA_MODEL_LISTENER);
 		this.formats = formats;
 		formats.addPropertyChangeListener(FORMATS_LISTENER);
 		verticalScale = getHeight();
@@ -371,8 +437,8 @@ public class PherogramArea extends DataArea implements PherogramComponent {
 
 
 	@Override
-	public Set<DataAreaListType> validLocations() {
-		return EnumSet.of(DataAreaListType.SEQUENCE);
+	public Set<DataListType> validLocations() {
+		return EnumSet.of(DataListType.SEQUENCE);
 	}
 
 
@@ -569,61 +635,4 @@ public class PherogramArea extends DataArea implements PherogramComponent {
 	public double getHeight() {
 		return DEFAULT_HEIGHT_FACTOR * getLabeledAlignmentArea().getPaintSettings().getTokenHeight();
 	}
-
-
-	@Override
-	public <T> void afterSequenceChange(SequenceChangeEvent<T> e) {
-		//TODO React if the associated sequence was removed? (AlignmentContentArea should probably better implement this behavior.)
-	}
-
-
-	@Override
-	public <T> void afterSequenceRenamed(SequenceRenamedEvent<T> e) {}  // Nothing to do.
-
-
-	@Override
-	public <T> void afterTokenChange(TokenChangeEvent<T> e) {
-		if (e.getSource().equals(getLabeledAlignmentArea().getAlignmentModel()) && 
-				(e.getSequenceID() == getList().getLocation().getSequenceID())) {
-			
-			int addend = getLabeledAlignmentArea().getEditSettings().isInsertLeftInDataArea() ? -1 : 0;
-			int lastSeqPos = getModel().editableIndexByBaseCallIndex(getModel().getRightCutPosition() - 1).getAfter() - addend;
-			if (e.getStartIndex() <= lastSeqPos) {  // Do not process edits behind the pherogram.
-				int tokensBefore = Math.min(e.getAffectedTokens().size(), Math.max(0, getModel().getFirstSeqPos() - e.getStartIndex() - addend));
-				int tokensAfter = Math.max(0, e.getAffectedTokens().size() - Math.max(0, lastSeqPos - e.getStartIndex()) + addend);
-				int tokensInside = e.getAffectedTokens().size() - tokensBefore - tokensAfter;
-				
-				switch (e.getType()) {
-					case INSERTION:
-						if (tokensBefore > 0) {
-							getModel().setFirstSeqPos(getModel().getFirstSeqPos() + tokensBefore);
-						}
-						if (tokensInside > 0) {
-							getModel().addShiftChange(getModel().baseCallIndexByEditableIndex(
-									Math.max(0, e.getStartIndex() + tokensBefore + addend)).getBeforeValidIndex(), tokensInside);
-						}
-						break;
-					case DELETION:
-						if (tokensBefore > 0) {
-							getModel().setFirstSeqPos(getModel().getFirstSeqPos() - tokensBefore);
-						}
-						if (tokensInside > 0) {
-							getModel().addShiftChange(getModel().baseCallIndexByEditableIndex(
-									e.getStartIndex() + tokensBefore).getAfterValidIndex(), -e.getAffectedTokens().size());
-						}
-						break;
-					case REPLACEMENT:  // Nothing to do (Replacements differing in length are not allowed.)
-						break;  //TODO If a token is replaced by a gap a shift change would have to be added. (Solve this problem when gap displaying is generally implemented for all data areas.)
-				}
-			}
-		}
-		else {
-			repaint();  // The space before the alignment could have changed. (Only necessary in SWT. Swing seems to repaint automatically.)
-		}
-	}
-
-
-//	@Override
-	public <T, U> void afterModelChanged(AlignmentModel<T> previous,	AlignmentModel<U> current) {}  
-	// This event is currently not passed to sequence attached areas.
 }

@@ -19,14 +19,20 @@
 package info.bioinfweb.libralign.alignmentarea;
 
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.Iterator;
+import java.util.List;
+import java.util.function.ToDoubleFunction;
 
 import info.bioinfweb.commons.Math2;
 import info.bioinfweb.libralign.alignmentarea.content.AlignmentSubArea;
 import info.bioinfweb.libralign.alignmentarea.label.AlignmentLabelArea;
 import info.bioinfweb.libralign.dataarea.DataArea;
-import info.bioinfweb.libralign.dataarea.DataAreaList;
-import info.bioinfweb.libralign.dataarea.DataAreasModel;
+import info.bioinfweb.libralign.dataarea.DataAreaVisibleIterator;
+import info.bioinfweb.libralign.dataelement.DataList;
+import info.bioinfweb.libralign.dataelement.DataLists;
 import info.bioinfweb.libralign.model.AlignmentModel;
 import info.bioinfweb.libralign.model.concatenated.ConcatenatedAlignmentModel;
 import info.bioinfweb.libralign.multiplealignments.MultipleAlignmentsContainer;
@@ -49,6 +55,11 @@ import info.bioinfweb.libralign.multiplealignments.MultipleAlignmentsContainer;
  * @bioinfweb.module info.bioinfweb.libralign.core
  */
 public class SizeManager {  //DataAreaLayoutManager?
+	private static interface DataAreaCalculator {
+		public double calculate(double previousResult, DataArea dataArea);
+	}
+	
+	
 	private AlignmentArea owner;
   private double localMaxLengthBeforeStart = AlignmentLabelArea.RECALCULATE_VALUE;
   private double localMaxLengthAfterEnd = AlignmentLabelArea.RECALCULATE_VALUE;
@@ -76,19 +87,24 @@ public class SizeManager {  //DataAreaLayoutManager?
 	}
 
 	
+	private double calculateOverVisibleDataArea(DataList list, DataAreaCalculator calculator) {
+    double result = 0;
+    Iterator<DataArea> iterator = new DataAreaVisibleIterator(list.iterator());
+    while (iterator.hasNext()) {
+      result = calculator.calculate(result, iterator.next());
+    }
+    return result;
+	}
+	
+
   /**
    * Returns maximum space left of the alignment start that is needed by any currently visible data area
    * in this list.
    *
    * @return an integer >= 0
    */
-  private double getMaxLengthBeforeStartForList(DataAreaList list) {
-    double result = 0;
-    Iterator<DataArea> iterator = list.visibleIterator();
-    while (iterator.hasNext()) {
-      result = Math.max(result, iterator.next().getLengthBeforeStart());
-    }
-    return result;
+  private double getMaxLengthBeforeStartForList(DataList list) {
+  	return calculateOverVisibleDataArea(list, (previousResult, dataArea) -> Math.max(previousResult, dataArea.getLengthBeforeStart()));
   }
 
 
@@ -101,7 +117,7 @@ public class SizeManager {  //DataAreaLayoutManager?
 	 */
 	private double getLocalMaxLengthBeforeStart() {
 		if (localMaxLengthBeforeStart == AlignmentLabelArea.RECALCULATE_VALUE) {
-			DataAreasModel dataAreas = getOwner().getDataAreas();
+			DataLists dataAreas = getOwner().getDataAreas();
 			localMaxLengthBeforeStart = Math.max((int)Math2.roundUp(getOwner().getPaintSettings().getCursorLineWidth() / 2),
 					Math.max(getMaxLengthBeforeStartForList(dataAreas.getTopAreas()), getMaxLengthBeforeStartForList(dataAreas.getBottomAreas())));
 			
@@ -134,20 +150,15 @@ public class SizeManager {  //DataAreaLayoutManager?
 		return result;
 	}
 
-
+	
   /**
    * Returns maximum space right of the alignment end that is needed by any currently visible data area
    * in this list.
    *
    * @return an integer >= 0
    */
-  private double getMaxLengthAfterEndForList(DataAreaList list) {
-    double result = 0;
-    Iterator<DataArea> iterator = list.visibleIterator();
-    while (iterator.hasNext()) {
-      result = Math.max(result, iterator.next().getLengthAfterEnd());
-    }
-    return result;
+  private double getMaxLengthAfterEndForList(DataList list) {
+  	return calculateOverVisibleDataArea(list, (previousResult, dataArea) -> Math.max(previousResult, dataArea.getLengthAfterEnd()));
   }
 
   
@@ -160,7 +171,7 @@ public class SizeManager {  //DataAreaLayoutManager?
   private double getLocalMaxLengthAfterEnd() {
   	if (getOwner().hasAlignmentModel()) {
 	    if (localMaxLengthAfterEnd == AlignmentLabelArea.RECALCULATE_VALUE) {
-				DataAreasModel dataAreas = getOwner().getDataAreas();
+				DataLists dataAreas = getOwner().getDataAreas();
 	      localMaxLengthAfterEnd = Math.max((int)Math2.roundUp(getOwner().getPaintSettings().getCursorLineWidth() / 2),
 	      		Math.max(getMaxLengthAfterEndForList(dataAreas.getTopAreas()), getMaxLengthAfterEndForList(dataAreas.getBottomAreas())));
 	      
@@ -271,14 +282,37 @@ public class SizeManager {  //DataAreaLayoutManager?
 	
 	
 	/**
+	 * Calculates the sum of the heights of all visible data areas contained in this list.
+	 *
+	 * @return an integer value greater of equal to zero
+	 */
+	private double getVisibleHeightForList(DataList list) {
+  	return calculateOverVisibleDataArea(list, (previousResult, dataArea) -> previousResult + dataArea.getHeight());
+	}
+	
+	
+	/**
 	 * Calculates the height of all sequences and all visible data areas together. 
 	 * 
 	 * @return the height of the alignment displayed by this component in pixels
 	 */
 	public double getPaintHeight() {
-		double result = getOwner().getDataAreas().getVisibleAreaHeight();
+		DataLists dataAreas = getOwner().getDataAreas();
+		
+		// Height of top and bottom data areas:
+  	double result = getVisibleHeightForList(dataAreas.getTopAreas()) + getVisibleHeightForList(dataAreas.getBottomAreas());
+  	
 		if (getOwner().hasAlignmentModel()) {
-			result += getOwner().getAlignmentModel().getSequenceCount() * getOwner().getPaintSettings().getTokenHeight();
+			AlignmentModel<?> model = getOwner().getAlignmentModel();
+			
+			// Height of sequence data areas:
+			Iterator<String> iterator = model.sequenceIDIterator();
+			while (iterator.hasNext()) {
+				result += getVisibleHeightForList(dataAreas.getSequenceAreas(iterator.next()));
+			}
+
+			// Height of sequences:
+			result += model.getSequenceCount() * getOwner().getPaintSettings().getTokenHeight();
 		}
 		return result;
 	}	

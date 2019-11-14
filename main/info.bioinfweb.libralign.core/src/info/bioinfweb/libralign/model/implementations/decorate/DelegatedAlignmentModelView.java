@@ -20,7 +20,7 @@ package info.bioinfweb.libralign.model.implementations.decorate;
 
 
 import info.bioinfweb.libralign.model.AlignmentModel;
-import info.bioinfweb.libralign.model.AlignmentModelChangeListener;
+import info.bioinfweb.libralign.model.AlignmentModelListener;
 import info.bioinfweb.libralign.model.AlignmentModelView;
 import info.bioinfweb.libralign.model.AlignmentModelWriteType;
 import info.bioinfweb.libralign.model.adapters.AbstractBasicAlignmentModelView;
@@ -162,7 +162,7 @@ public abstract class DelegatedAlignmentModelView<T> extends AbstractBasicAlignm
 	}
 	
 	
-	public Set<AlignmentModelChangeListener> getChangeListeners() {
+	public Set<AlignmentModelListener> getChangeListeners() {
 		return getUnderlyingModel().getChangeListeners();
 	}
 	

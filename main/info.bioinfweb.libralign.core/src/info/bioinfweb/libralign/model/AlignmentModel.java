@@ -250,7 +250,7 @@ public interface AlignmentModel<T> {
    * 
    * @return a collection object containing the listeners
    */
-  public Set<AlignmentModelChangeListener> getChangeListeners();
+  public Set<AlignmentModelListener> getChangeListeners();
 
 	/**
 	 * Returns the token at the specified position.

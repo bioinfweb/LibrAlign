@@ -23,9 +23,13 @@ import java.util.Iterator;
 import java.util.Set;
 
 import info.bioinfweb.commons.collections.ListChangeType;
+import info.bioinfweb.commons.collections.observable.ListAddEvent;
+import info.bioinfweb.commons.collections.observable.ListRemoveEvent;
+import info.bioinfweb.commons.collections.observable.ListReplaceEvent;
 import info.bioinfweb.libralign.model.AlignmentModel;
-import info.bioinfweb.libralign.model.AlignmentModelChangeListener;
+import info.bioinfweb.libralign.model.AlignmentModelListener;
 import info.bioinfweb.libralign.model.AlignmentModelView;
+import info.bioinfweb.libralign.model.data.DataModel;
 import info.bioinfweb.libralign.model.events.SequenceChangeEvent;
 import info.bioinfweb.libralign.model.events.SequenceRenamedEvent;
 import info.bioinfweb.libralign.model.events.TokenChangeEvent;
@@ -59,7 +63,7 @@ public abstract class AbstractAlignmentModelDecorator<T, U> extends AbstractAlig
 		super();
 		this.tokenSet = tokenSet;
 		this.underlyingModel = underlyingModel;
-		underlyingModel.getChangeListeners().add(new AlignmentModelChangeListener() {
+		underlyingModel.getChangeListeners().add(new AlignmentModelListener() {
 			@Override
 			public <V> void afterTokenChange(TokenChangeEvent<V> e) {
 				for (TokenChangeEvent<T> event: convertTokenChangeEvent((TokenChangeEvent<U>)e)) {
@@ -82,10 +86,46 @@ public abstract class AbstractAlignmentModelDecorator<T, U> extends AbstractAlig
 					fireAfterSequenceChange(event);
 				}
 			}
+
+			@Override
+			public void beforeElementsAdded(ListAddEvent<DataModel> event) {
+				//TODO Implement forwarding. (#355)
+			}
+
 			
 			@Override
-			public <V, W> void afterModelChanged(AlignmentModel<V> previous,	AlignmentModel<W> current) {
-				// TODO Does this have to be forwarded in any way? (Will this method be moved away from this listener anyway?)
+			public void afterElementsAdded(ListAddEvent<DataModel> event) {
+				//TODO Implement forwarding. (#355)
+			}
+
+			
+			@Override
+			public void beforeElementReplaced(ListReplaceEvent<DataModel> event) {
+				//TODO Implement forwarding. (#355)
+			}
+
+			
+			@Override
+			public void afterElementReplaced(ListReplaceEvent<DataModel> event) {
+				//TODO Implement forwarding. (#355)
+			}
+
+			
+			@Override
+			public void beforeElementsRemoved(ListRemoveEvent<DataModel, Object> event) {
+				//TODO Implement forwarding. (#355)
+			}
+
+			
+			@Override
+			public void afterElementsRemoved(ListRemoveEvent<DataModel, DataModel> event) {
+				//TODO Implement forwarding. (#355)
+			}
+
+			
+			@Override
+			public <T, U> void afterModelChanged(AlignmentModel<T> previous, AlignmentModel<U> current) {
+				//TODO Implement forwarding, if necessary. (#355)
 			}
 		});
 	}

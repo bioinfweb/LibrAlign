@@ -19,28 +19,25 @@
 package info.bioinfweb.libralign.model.utils.indextranslation;
 
 
-import info.bioinfweb.commons.collections.ListChangeType;
-import info.bioinfweb.libralign.model.AlignmentModel;
-import info.bioinfweb.libralign.model.AlignmentModelChangeListener;
-import info.bioinfweb.libralign.model.events.SequenceChangeEvent;
-import info.bioinfweb.libralign.model.events.SequenceRenamedEvent;
-import info.bioinfweb.libralign.model.events.TokenChangeEvent;
-
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
+import info.bioinfweb.commons.collections.ListChangeType;
+import info.bioinfweb.libralign.model.AlignmentModel;
+import info.bioinfweb.libralign.model.AlignmentModelAdapter;
+import info.bioinfweb.libralign.model.AlignmentModelListener;
+import info.bioinfweb.libralign.model.events.SequenceChangeEvent;
+import info.bioinfweb.libralign.model.events.TokenChangeEvent;
+
 
 
 public abstract class AbstractIndexTranslator<T, D> implements IndexTranslator<T> {
-	private final AlignmentModelChangeListener MODEL_LISTENER = new AlignmentModelChangeListener() {
+	private final AlignmentModelListener MODEL_LISTENER = new AlignmentModelAdapter() {
 		@Override
 		public <T> void afterTokenChange(TokenChangeEvent<T> e) {
 			sequenceDataMap.remove(e.getSequenceID());
 		}
-		
-		@Override
-		public <T> void afterSequenceRenamed(SequenceRenamedEvent<T> e) {}
 		
 		@Override
 		public <T> void afterSequenceChange(SequenceChangeEvent<T> e) {
@@ -48,9 +45,6 @@ public abstract class AbstractIndexTranslator<T, D> implements IndexTranslator<T
 				sequenceDataMap.remove(e.getSequenceID());
 			}
 		}
-		
-		@Override
-		public <T, U> void afterModelChanged(AlignmentModel<T> previous,	AlignmentModel<U> current) {}
 	};
 	
 	

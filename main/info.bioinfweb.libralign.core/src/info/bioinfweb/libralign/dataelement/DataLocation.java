@@ -16,9 +16,9 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package info.bioinfweb.libralign.dataarea;
+package info.bioinfweb.libralign.dataelement;
 
-
+import info.bioinfweb.libralign.dataarea.DataArea;
 
 /**
  * Specified the location of a {@link DataArea}. That is either above or below the alignment
@@ -27,8 +27,8 @@ package info.bioinfweb.libralign.dataarea;
  * @author Ben St&ouml;ver
  * @since 0.0.0
  */
-public class DataAreaLocation {
-  private DataAreaListType listType;
+public class DataLocation {
+  private DataListType listType;
   private String sequenceID;
 
 
@@ -38,12 +38,12 @@ public class DataAreaLocation {
 	 * @param listType - specifies if list represents data areas displayed above
 	 *        or underneath the alignment
 	 *        
-	 * @throws IllegalArgumentException - if {@link DataAreaListType#SEQUENCE} is specified as {@code listType}
+	 * @throws IllegalArgumentException - if {@link DataListType#SEQUENCE} is specified as {@code listType}
 	 */
-	public DataAreaLocation(DataAreaListType listType) {
+	public DataLocation(DataListType listType) {
 		super();
-		if (listType.equals(DataAreaListType.SEQUENCE)) {
-			throw new IllegalArgumentException("The type " + DataAreaListType.SEQUENCE + 
+		if (listType.equals(DataListType.SEQUENCE)) {
+			throw new IllegalArgumentException("The type " + DataListType.SEQUENCE + 
 					" cannot be used if no sequence name is specified.");
 		}
 		else {
@@ -57,14 +57,14 @@ public class DataAreaLocation {
 	 * Creates a new instance of this class specifying a location attached to one
 	 * sequence of the alignment.
 	 * <p>
-	 * The list type is automatically set to {@link DataAreaListType#SEQUENCE}.
+	 * The list type is automatically set to {@link DataListType#SEQUENCE}.
 	 * </p>
 	 * 
 	 * @param sequenceID - the unique identifier of the sequence the contained data areas will be attached to
 	 */
-	public DataAreaLocation(String sequenceID) {
+	public DataLocation(String sequenceID) {
 		super();
-		this.listType = DataAreaListType.SEQUENCE;
+		this.listType = DataListType.SEQUENCE;
 		this.sequenceID = sequenceID;
 	}
 	
@@ -76,33 +76,33 @@ public class DataAreaLocation {
 
 	/**
 	 * Can be used to update the sequence name, if a sequence was renamed or data area is moved. 
-	 * The list type is automatically set to {@link DataAreaListType#SEQUENCE} if an non-{@code null}
+	 * The list type is automatically set to {@link DataListType#SEQUENCE} if an non-{@code null}
 	 * ID is specified.
 	 * 
 	 * @param sequenceID - the unique identifier of the associated sequence
 	 */
 	public void setSequenceID(String sequenceID) {
 		if (sequenceID != null) {
-			listType = DataAreaListType.SEQUENCE;
+			listType = DataListType.SEQUENCE;
 		}
 		this.sequenceID = sequenceID;
 	}
 
 
-	public DataAreaListType getListType() {
+	public DataListType getListType() {
 		return listType;
 	}
 
 
 	/**
-	 * Changes the list type. If a value different from {@link DataAreaListType#SEQUENCE} is
+	 * Changes the list type. If a value different from {@link DataListType#SEQUENCE} is
 	 * specified, the sequence name is automatically set to {@code null}.
 	 * 
 	 * @param listType -  the new list type
 	 */
-	public void setListType(DataAreaListType listType) {
+	public void setListType(DataListType listType) {
 		this.listType = listType;
-		if (listType != DataAreaListType.SEQUENCE) {
+		if (listType != DataListType.SEQUENCE) {
 			sequenceID = null;
 		}
 	}

@@ -23,11 +23,12 @@ import java.awt.Dimension;
 import java.awt.Rectangle;
 import java.beans.PropertyChangeEvent;
 import java.util.ArrayList;
+import java.util.EventObject;
 import java.util.Iterator;
 import java.util.List;
 
 import info.bioinfweb.commons.collections.observable.ListAddEvent;
-import info.bioinfweb.commons.collections.observable.ListChangeListener;
+import info.bioinfweb.commons.collections.observable.ListChangeAdapter;
 import info.bioinfweb.commons.collections.observable.ListRemoveEvent;
 import info.bioinfweb.commons.collections.observable.ListReplaceEvent;
 import info.bioinfweb.commons.collections.observable.ObservableList;
@@ -48,12 +49,17 @@ import info.bioinfweb.libralign.alignmentarea.selection.SelectionListener;
 import info.bioinfweb.libralign.alignmentarea.selection.SelectionModel;
 import info.bioinfweb.libralign.alignmentarea.tokenpainter.ColorOverlay;
 import info.bioinfweb.libralign.dataarea.DataArea;
-import info.bioinfweb.libralign.dataarea.DataAreaChangeEvent;
-import info.bioinfweb.libralign.dataarea.DataAreasModel;
-import info.bioinfweb.libralign.dataarea.DataAreasModelListener;
+import info.bioinfweb.libralign.dataarea.DataAreaListenerList;
+import info.bioinfweb.libralign.dataarea.DataAreaVisibilityChangeEvent;
+import info.bioinfweb.libralign.dataarea.DataAreasAdapter;
+import info.bioinfweb.libralign.dataarea.DataAreasListener;
+import info.bioinfweb.libralign.dataelement.DataList;
+import info.bioinfweb.libralign.dataelement.DataLists;
 import info.bioinfweb.libralign.editsettings.EditSettings;
 import info.bioinfweb.libralign.model.AlignmentModel;
-import info.bioinfweb.libralign.model.AlignmentModelChangeListener;
+import info.bioinfweb.libralign.model.AlignmentModelAdapter;
+import info.bioinfweb.libralign.model.AlignmentModelListener;
+import info.bioinfweb.libralign.model.data.DataModel;
 import info.bioinfweb.libralign.model.events.SequenceChangeEvent;
 import info.bioinfweb.libralign.model.events.SequenceRenamedEvent;
 import info.bioinfweb.libralign.model.events.TokenChangeEvent;
@@ -137,7 +143,7 @@ import info.bioinfweb.tic.scrolling.ScrollingTICComponent;
  * @see AlignmentModel
  * @see <a href="http://r.bioinfweb.info/LibrAlignToolkitDoc">LibrAlign documentation on working with toolkits</a> 
  */
-public class AlignmentArea extends ScrollingTICComponent implements AlignmentModelChangeListener, DataAreasModelListener {
+public class AlignmentArea extends ScrollingTICComponent {
 	public static final int MIN_PART_AREA_HEIGHT = 5;
 	
 	/** Defines the width of the divider of the GUI components for the head, content, and bottom area. */ 
@@ -146,7 +152,8 @@ public class AlignmentArea extends ScrollingTICComponent implements AlignmentMod
 
 	private AlignmentModel<?> alignmentModel = null;
 	private SequenceOrder sequenceOrder = new SequenceOrder(this);
-	private DataAreasModel dataAreas = new DataAreasModel(this);
+	private DataLists<AlignmentArea, DataArea> dataAreas;
+	private DataAreaListenerList dataAreaListenerList;
 	private SizeManager sizeManager = new SizeManager(this);
 	private PaintSettings paintSettings;
 	private EditSettings editSettings;
@@ -160,7 +167,70 @@ public class AlignmentArea extends ScrollingTICComponent implements AlignmentMod
 	private boolean allowVerticalScrolling = true;
 	private Rectangle lastCursorRectangle = null;
 	
-	private final PaintSettingsListener PAINT_SETTINGS_LISTERNER = new PaintSettingsListener() {
+	private final AlignmentModelListener alignmentModelListener = new AlignmentModelAdapter() {
+		@Override
+		public <T> void afterSequenceChange(SequenceChangeEvent<T> e) {
+			if (e.getSource().equals(getAlignmentModel())) {
+				getLabelArea().setLocalMaxWidthRecalculateToAll();  // Needs to be called before assignSizeToAll().
+				getSequenceOrder().refreshFromSource();
+				updateSubelements();
+			}
+			//TODO Remove some data areas? (Some might be data specific (e.g. pherograms), some not (e.g. consensus sequence).)
+			assignSizeToAll();
+		}
+
+
+		@Override
+		public <T> void afterSequenceRenamed(SequenceRenamedEvent<T> e) {
+			if (e.getSource().equals(getAlignmentModel())) {
+				getLabelArea().setLocalMaxWidthRecalculateToAll();  // Needs to be called before assignSizeToAll().
+			}
+			assignSizeToAll();  // Other label areas might also have to adopt their width.
+		}
+
+
+		@Override
+		public <T> void afterTokenChange(TokenChangeEvent<T> e) {
+			getContentArea().setUpdateOngoing(true);
+			try {
+				assignSizeToAll();
+				if (getContentArea().hasToolkitComponent()) {
+					getContentArea().getToolkitComponent().repaintSequences();  // Necessary when neither the selection changes nor the size of the sequence areas changed (e.g. when deleting right in a sequence with an attached pherogram with space before and after the alignment).
+				}
+			}
+			finally {
+				getContentArea().setUpdateOngoing(false);  // Perform one single paint operation, if it was requested. (Otherwise in case of a shared directly painted component, separate repaint operations for all data areas and the sequences may happen.)
+			}
+		}
+
+
+		@Override
+		public <T, U> void afterModelChanged(AlignmentModel<T> previous, AlignmentModel<U> current) {
+			getLabelArea().setLocalMaxWidthRecalculateToAll();  // Needs to be called before assignSizeToAll().
+			//TODO Remove some data areas? (Some might be data specific (e.g. pherograms), some not (e.g. consensus sequence).)
+			assignSizeToAll();  //TODO reinsertSubements()?
+		}
+		
+		
+		@Override
+		public void afterElementsRemoved(ListRemoveEvent<DataModel, DataModel> event) {
+			//TODO Reaction required?
+		}
+
+		
+		@Override
+		public void afterElementsAdded(ListAddEvent<DataModel> event) {
+			//TODO Reaction required?
+		}
+		
+		
+		@Override
+		public void afterElementReplaced(ListReplaceEvent<DataModel> event) {
+			//TODO Reaction required?
+		}
+	};
+	
+	private final PaintSettingsListener paintSettingsListener = new PaintSettingsListener() {
 		private void updateSize() {
 			getLabelArea().setLocalMaxWidthRecalculateToAll();  // Needs to be called before assignSizeToAll().
 			assignSizeToAll();
@@ -263,16 +333,7 @@ public class AlignmentArea extends ScrollingTICComponent implements AlignmentMod
 				});
 		
 		overlays = new ObservableList<ColorOverlay>(new ArrayList<ColorOverlay>());
-		overlays.addListChangeListener(new ListChangeListener<ColorOverlay>() {
-			@Override
-			public void beforeElementsRemoved(ListRemoveEvent<ColorOverlay, Object> event) {}
-			
-			@Override
-			public void beforeElementsAdded(ListAddEvent<ColorOverlay> event) {}
-			
-			@Override
-			public void beforeElementReplaced(ListReplaceEvent<ColorOverlay> event) {}
-			
+		overlays.addListChangeListener(new ListChangeAdapter<ColorOverlay>() {
 			@Override
 			public void afterElementsRemoved(ListRemoveEvent<ColorOverlay, ColorOverlay> event) {
 				repaint();
@@ -292,10 +353,43 @@ public class AlignmentArea extends ScrollingTICComponent implements AlignmentMod
 		alignmentContentArea = new AlignmentContentArea(this);  // The selection object must already have been created here.
 		alignmentLabelArea = new AlignmentLabelArea(this);  // Must be called after alignmentContentArea has been created.
 
-		dataAreas.addListener(this);
+		dataAreaListenerList = new DataAreaListenerList();
+		dataAreas = new DataLists<AlignmentArea, DataArea>(this, dataAreaListenerList);
+		dataAreaListenerList.add(new DataAreasAdapter() {
+			@SuppressWarnings("unchecked")
+			private void react(EventObject event) {
+				if (hasToolkitComponent()) {
+					if (((DataList<AlignmentArea, DataArea>)event.getSource()).getOwner() == getDataAreas()) {
+						getSizeManager().setLocalMaxLengthBeforeAfterRecalculate();
+						updateSubelements();
+					}
+					assignSizeToAll();
+				}
+			}
+			
+			@Override
+			public void afterVisibilityChanged(DataAreaVisibilityChangeEvent event) {
+				react(event);
+			}
+
+			@Override
+			public void afterElementsAdded(ListAddEvent<DataArea> event) {
+				react(event);
+			}
+
+			@Override
+			public void afterElementReplaced(ListReplaceEvent<DataArea> event) {
+				react(event);
+			}
+
+			@Override
+			public void afterElementsRemoved(ListRemoveEvent<DataArea, DataArea> event) {
+				react(event);
+			}
+		});
 		
 		paintSettings = new PaintSettings(this);
-		paintSettings.addListener(PAINT_SETTINGS_LISTERNER);
+		paintSettings.addListener(paintSettingsListener);
 	}
 
 
@@ -323,7 +417,7 @@ public class AlignmentArea extends ScrollingTICComponent implements AlignmentMod
 	 * Changes the alignment model providing the data for this instance.
 	 * 
 	 * @param alignmentModel the new alignment model to use from now on
-	 * @param moveListeners Specify {@code true} here, if you want the {@link AlignmentModelChangeListener}s
+	 * @param moveListeners Specify {@code true} here, if you want the {@link AlignmentModelListener}s
 	 *        attached to the current model to be moved to the specified {@code alignmentModel},
 	 *        {@code false} if the listeners shall remain attached to the old model. (This instance
 	 *        is also registered as a listener and is always moved to the new object, no matter which value is
@@ -339,8 +433,8 @@ public class AlignmentArea extends ScrollingTICComponent implements AlignmentMod
 					this.alignmentModel.getChangeListeners().clear();
 				}
 				else {  // Move this instance as the listener anyway:
-					this.alignmentModel.getChangeListeners().remove(this);
-					alignmentModel.getChangeListeners().add(this);
+					this.alignmentModel.getChangeListeners().remove(alignmentModelListener);
+					alignmentModel.getChangeListeners().add(alignmentModelListener);
 				}
 			}
 			
@@ -350,18 +444,18 @@ public class AlignmentArea extends ScrollingTICComponent implements AlignmentMod
 			
       // Fire events for listener move after the process finished
 			if (this.alignmentModel != null) {
-				if (!this.alignmentModel.getChangeListeners().contains(this)) {  // Add this object as a listener if it was not already moved from the previous provider.
-					this.alignmentModel.getChangeListeners().add(this);
+				if (!this.alignmentModel.getChangeListeners().contains(alignmentModelListener)) {  // Add this object as a listener if it was not already moved from the previous provider.
+					this.alignmentModel.getChangeListeners().add(alignmentModelListener);
 				}
 				
 				if (moveListeners) {
-					Iterator<AlignmentModelChangeListener> iterator = this.alignmentModel.getChangeListeners().iterator();
+					Iterator<AlignmentModelListener> iterator = this.alignmentModel.getChangeListeners().iterator();
 					while (iterator.hasNext()) {
 						iterator.next().afterModelChanged(result, this.alignmentModel);
 					}
 				}
 				else {
-					afterModelChanged(result, this.alignmentModel);
+					alignmentModelListener.afterModelChanged(result, this.alignmentModel);
 				}
 			}
 		}
@@ -388,7 +482,7 @@ public class AlignmentArea extends ScrollingTICComponent implements AlignmentMod
 	 * 
 	 * @return the model object managing all attached data areas 
 	 */
-	public DataAreasModel getDataAreas() {
+	public DataLists<AlignmentArea, DataArea> getDataAreas() {
 		return dataAreas;
 	}
 
@@ -653,70 +747,19 @@ public class AlignmentArea extends ScrollingTICComponent implements AlignmentMod
 			getLabelArea().getToolkitComponent().reinsertSubelements();
 		}
 	}
+
+	
+	public boolean addDataAreasListener(DataAreasListener listener) {
+		return dataAreaListenerList.add(listener);
+	}
 	
 	
-	@Override
-	public <T> void afterSequenceChange(SequenceChangeEvent<T> e) {
-		if (e.getSource().equals(getAlignmentModel())) {
-			getLabelArea().setLocalMaxWidthRecalculateToAll();  // Needs to be called before assignSizeToAll().
-			getSequenceOrder().refreshFromSource();
-			updateSubelements();
-		}
-		//TODO Send message to all and/or remove some data areas? (Some might be data specific (e.g. pherograms), some not (e.g. consensus sequence).)
-		getDataAreas().getSequenceDataChangeListener().afterSequenceChange(e);
-		assignSizeToAll();
+	public boolean removeDataAreasListener(DataAreasListener listener) {
+		return dataAreaListenerList.remove(listener);
 	}
-
-
-	@Override
-	public <T> void afterSequenceRenamed(SequenceRenamedEvent<T> e) {
-		if (e.getSource().equals(getAlignmentModel())) {
-			getLabelArea().setLocalMaxWidthRecalculateToAll();  // Needs to be called before assignSizeToAll().
-		}
-		getDataAreas().getSequenceDataChangeListener().afterSequenceRenamed(e);
-		assignSizeToAll();  // Other label areas might also have to adopt their width.
-	}
-
-
-	@Override
-	public <T> void afterTokenChange(TokenChangeEvent<T> e) {
-		getContentArea().setUpdateOngoing(true);
-		try {
-			getDataAreas().getSequenceDataChangeListener().afterTokenChange(e);
-			assignSizeToAll();
-			if (getContentArea().hasToolkitComponent()) {
-				getContentArea().getToolkitComponent().repaintSequences();  // Necessary when neither the selection changes nor the size of the sequence areas changed (e.g. when deleting right in a sequence with an attached pherogram with space before and after the alignment).
-			}
-		}
-		finally {
-			getContentArea().setUpdateOngoing(false);  // Perform one single paint operation, if it was requested. (Otherwise in case of a shared directly painted component, separate repaint operations for all data areas and the sequences may happen.)
-		}
-	}
-
-
-	@Override
-	public <T, U> void afterModelChanged(AlignmentModel<T> previous, AlignmentModel<U> current) {
-		getLabelArea().setLocalMaxWidthRecalculateToAll();  // Needs to be called before assignSizeToAll().
-		//TODO Remove some data areas? (Some might be data specific (e.g. pherograms), some not (e.g. consensus sequence).)
-		getDataAreas().getSequenceDataChangeListener().afterModelChanged(previous, current);
-		assignSizeToAll();  //TODO reinsertSubements()?
-	}
-
-
-	@Override
-	public void dataAreaInsertedRemoved(DataAreaChangeEvent e) {
-		if (hasToolkitComponent()) {
-			if (e.getSource().equals(getDataAreas())) {
-				getSizeManager().setLocalMaxLengthBeforeAfterRecalculate();
-				updateSubelements();
-			}
-			assignSizeToAll();
-		}
-	}
-
-
-	@Override
-	public void dataAreaVisibilityChanged(DataAreaChangeEvent e) {
-		//TODO implement (Possibly delegate to dataAreaInsertedRemoved()?)
+	
+	
+	public void fireDataAreaVisibilitChanged(DataArea source, boolean visible) {
+		dataAreaListenerList.fireAfterVisibilityChanged(source, visible);
 	}
 }

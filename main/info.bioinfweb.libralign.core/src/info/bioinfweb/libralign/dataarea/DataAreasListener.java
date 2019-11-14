@@ -19,23 +19,18 @@
 package info.bioinfweb.libralign.dataarea;
 
 
+import info.bioinfweb.commons.collections.observable.ListChangeListener;
 import info.bioinfweb.libralign.alignmentarea.AlignmentArea;
 
 
 
 /**
- * Enumerates the types locations a {@link DataArea} can have inside a {@link AlignmentArea}. 
+ * This interface should be implemented by classes that want to track changes of the data areas
+ * contained in a {@link AlignmentArea}.
  * 
  * @author Ben St&ouml;ver
  * @since 0.0.0
  */
-public enum DataAreaListType {
-	/** Indicates that the associated data area is located above the alignment. */
-  TOP,
-  
-	/** Indicates that the associated data area is located underneath the alignment. */
-  BOTTOM,
-
-  /** Indicates that the associated data area is associated with a sequence in the alignment. */
-  SEQUENCE;
+public interface DataAreasListener extends ListChangeListener<DataArea> {
+	public void afterVisibilityChanged(DataAreaVisibilityChangeEvent e);
 }
