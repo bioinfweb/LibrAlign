@@ -132,7 +132,7 @@ public class SequenceArea extends AlignmentSubArea {
 
 
 	@Override
-	protected AlignmentLabelSubArea createLabelSubArea(AlignmentLabelArea owner) {
+	protected AlignmentLabelSubArea createLabelSubArea(AlignmentArea owner) {
 		return new SequenceLabelArea(owner, this);
 	}
 }

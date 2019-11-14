@@ -24,6 +24,7 @@ import java.awt.RenderingHints;
 import java.awt.SystemColor;
 
 import info.bioinfweb.tic.TICPaintEvent;
+import info.bioinfweb.libralign.alignmentarea.AlignmentArea;
 import info.bioinfweb.libralign.alignmentarea.content.AlignmentSubArea;
 
 
@@ -35,7 +36,7 @@ import info.bioinfweb.libralign.alignmentarea.content.AlignmentSubArea;
  * @since 0.3.0
  */
 public class DefaultLabelSubArea extends AlignmentLabelSubArea {
-	public DefaultLabelSubArea(AlignmentLabelArea owner, AlignmentSubArea labeledSubArea) {
+	public DefaultLabelSubArea(AlignmentArea owner, AlignmentSubArea labeledSubArea) {
 		super(owner, labeledSubArea);
 	}
 

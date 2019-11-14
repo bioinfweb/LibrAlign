@@ -22,6 +22,7 @@ package info.bioinfweb.libralign.alignmentarea.label;
 import info.bioinfweb.commons.Math2;
 import info.bioinfweb.commons.graphics.FontCalculator;
 import info.bioinfweb.tic.TICPaintEvent;
+import info.bioinfweb.libralign.alignmentarea.AlignmentArea;
 import info.bioinfweb.libralign.alignmentarea.content.AlignmentSubArea;
 
 import java.awt.FontMetrics;
@@ -32,7 +33,7 @@ import java.awt.SystemColor;
 
 
 public abstract class TextLabelArea extends AlignmentLabelSubArea {
-	public TextLabelArea(AlignmentLabelArea owner, AlignmentSubArea labeledSubArea) {
+	public TextLabelArea(AlignmentArea owner, AlignmentSubArea labeledSubArea) {
 		super(owner, labeledSubArea);
 	}
 	
@@ -53,7 +54,7 @@ public abstract class TextLabelArea extends AlignmentLabelSubArea {
 		
 		g.setColor(SystemColor.menuText);
 		
-		g.setFont(getOwner().getOwner().getPaintSettings().getTokenHeightFont());
+		g.setFont(getOwner().getPaintSettings().getTokenHeightFont());
 		FontMetrics fm = g.getFontMetrics();
 		
 		// Paint name:
@@ -63,7 +64,7 @@ public abstract class TextLabelArea extends AlignmentLabelSubArea {
 
 	@Override
 	public int getNeededWidth() {
-		return Math2.roundUp(FontCalculator.getInstance().getWidth(getOwner().getOwner().getPaintSettings().getTokenHeightFont(),
+		return Math2.roundUp(FontCalculator.getInstance().getWidth(getOwner().getPaintSettings().getTokenHeightFont(),
 				getText())) +	2 * AlignmentLabelArea.BORDER_WIDTH;
 	}
 }

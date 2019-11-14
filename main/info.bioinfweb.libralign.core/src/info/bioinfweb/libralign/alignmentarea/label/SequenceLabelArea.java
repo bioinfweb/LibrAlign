@@ -24,6 +24,7 @@ import java.awt.RenderingHints;
 import java.awt.geom.Line2D;
 
 import info.bioinfweb.tic.TICPaintEvent;
+import info.bioinfweb.libralign.alignmentarea.AlignmentArea;
 import info.bioinfweb.libralign.alignmentarea.content.SequenceArea;
 
 
@@ -35,14 +36,14 @@ import info.bioinfweb.libralign.alignmentarea.content.SequenceArea;
  * @since 0.3.0
  */
 public class SequenceLabelArea extends TextLabelArea {
-	public SequenceLabelArea(AlignmentLabelArea owner, SequenceArea labeledSubArea) {
+	public SequenceLabelArea(AlignmentArea owner, SequenceArea labeledSubArea) {
 		super(owner, labeledSubArea);
 	}
 
 
 	@Override
 	protected String getText() {
-		return getOwner().getOwner().getAlignmentModel().sequenceNameByID(getLabeledArea().getSequenceID());
+		return getOwner().getAlignmentModel().sequenceNameByID(getLabeledArea().getSequenceID());
 	}
 
 
@@ -57,7 +58,7 @@ public class SequenceLabelArea extends TextLabelArea {
 		super.paint(e);
 
 		// Paint separator:
-		if (getOwner().getOwner().getSequenceOrder().indexByID(getLabeledArea().getSequenceID()) > 0) {
+		if (getOwner().getSequenceOrder().indexByID(getLabeledArea().getSequenceID()) > 0) {
 			Graphics2D g  = e.getGraphics();
 			g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 			g.draw(new Line2D.Float(0, 0, getSize().width, 0));  // Draw line only if there is another label above.

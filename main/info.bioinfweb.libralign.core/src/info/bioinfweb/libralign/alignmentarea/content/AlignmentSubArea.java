@@ -19,17 +19,16 @@
 package info.bioinfweb.libralign.alignmentarea.content;
 
 
-import info.bioinfweb.libralign.alignmentarea.AlignmentArea;
-import info.bioinfweb.libralign.alignmentarea.label.AlignmentLabelArea;
-import info.bioinfweb.libralign.alignmentarea.label.AlignmentLabelSubArea;
-import info.bioinfweb.libralign.alignmentarea.label.DefaultLabelSubArea;
-import info.bioinfweb.tic.TICComponent;
-import info.bioinfweb.tic.TICPaintEvent;
-
 import java.awt.Dimension;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
 import java.awt.geom.Rectangle2D;
+
+import info.bioinfweb.libralign.alignmentarea.AlignmentArea;
+import info.bioinfweb.libralign.alignmentarea.label.AlignmentLabelSubArea;
+import info.bioinfweb.libralign.alignmentarea.label.DefaultLabelSubArea;
+import info.bioinfweb.tic.TICComponent;
+import info.bioinfweb.tic.TICPaintEvent;
 
 
 
@@ -123,7 +122,7 @@ public abstract class AlignmentSubArea extends TICComponent {
 	 * @param owner the alignment label area that can be set as the owner of the returned component.
 	 * @return a new instance of {@link DefaultLabelSubArea} linked to this instance
 	 */
-	protected AlignmentLabelSubArea createLabelSubArea(AlignmentLabelArea owner) {
+	protected AlignmentLabelSubArea createLabelSubArea(AlignmentArea owner) {
 		return new DefaultLabelSubArea(owner, this);
 	}
 	
@@ -135,7 +134,7 @@ public abstract class AlignmentSubArea extends TICComponent {
 	 */
 	public AlignmentLabelSubArea getLabelSubArea() {
 		if (labelSubArea == null) {
-			labelSubArea = createLabelSubArea(getOwner().getLabelArea());
+			labelSubArea = createLabelSubArea(getOwner());
 		}
 		return labelSubArea;
 	}

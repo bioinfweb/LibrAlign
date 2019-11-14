@@ -29,6 +29,7 @@ import java.util.Iterator;
 import info.bioinfweb.commons.Math2;
 import info.bioinfweb.commons.graphics.FontCalculator;
 import info.bioinfweb.tic.TICPaintEvent;
+import info.bioinfweb.libralign.alignmentarea.AlignmentArea;
 import info.bioinfweb.libralign.alignmentarea.label.AlignmentLabelArea;
 import info.bioinfweb.libralign.alignmentarea.label.AlignmentLabelSubArea;
 
@@ -41,7 +42,7 @@ import info.bioinfweb.libralign.alignmentarea.label.AlignmentLabelSubArea;
  * @since 0.2.0
  */
 public class CharSetNameArea extends AlignmentLabelSubArea {
-	public CharSetNameArea(AlignmentLabelArea owner, CharSetArea labeledSubArea) {
+	public CharSetNameArea(AlignmentArea owner, CharSetArea labeledSubArea) {
 		super(owner, labeledSubArea);
 	}
 
@@ -62,13 +63,13 @@ public class CharSetNameArea extends AlignmentLabelSubArea {
 		g.fill(e.getRectangle());
 		
 		g.setColor(SystemColor.menuText);
-		g.setFont(getOwner().getOwner().getPaintSettings().getTokenHeightFont());
+		g.setFont(getOwner().getPaintSettings().getTokenHeightFont());
 		FontMetrics fm = g.getFontMetrics();
 		
 		// Paint names:
 		Iterator<CharSet> iterator = getLabeledArea().getModel().valueList().iterator();
 		double y = 0;
-		final double compoundHeight = getOwner().getOwner().getPaintSettings().getTokenHeight();
+		final double compoundHeight = getOwner().getPaintSettings().getTokenHeight();
 		while (iterator.hasNext()) {
 			g.drawString(iterator.next().getName(), AlignmentLabelArea.BORDER_WIDTH, Math.round(y + fm.getAscent()));			
 			y += compoundHeight;
@@ -78,7 +79,7 @@ public class CharSetNameArea extends AlignmentLabelSubArea {
 
 	@Override
 	public int getNeededWidth() {
-		Font compundFont = getOwner().getOwner().getPaintSettings().getTokenHeightFont();
+		Font compundFont = getOwner().getPaintSettings().getTokenHeightFont();
 		Iterator<CharSet> iterator = getLabeledArea().getModel().valueList().iterator();
 		float maxWidth = 0;
 		while (iterator.hasNext()) {

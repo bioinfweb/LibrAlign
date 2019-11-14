@@ -34,7 +34,7 @@ import info.bioinfweb.tic.TICComponent;
  * @since 0.3.0
  */
 public abstract class AlignmentLabelSubArea extends TICComponent {
-	private AlignmentLabelArea owner;
+	private AlignmentArea owner;
 	private AlignmentSubArea labeledSubArea;
 	
 	
@@ -44,7 +44,7 @@ public abstract class AlignmentLabelSubArea extends TICComponent {
 	 * @param owner the component that will contains the returned instance
 	 * @param labeledSubArea the alignment sub area that will be labeled by this instance
 	 */
-	public AlignmentLabelSubArea(AlignmentLabelArea owner, AlignmentSubArea labeledSubArea) {
+	public AlignmentLabelSubArea(AlignmentArea owner, AlignmentSubArea labeledSubArea) {
 		super();
 		this.owner = owner;
 		this.labeledSubArea = labeledSubArea;
@@ -56,7 +56,7 @@ public abstract class AlignmentLabelSubArea extends TICComponent {
 	 * 
 	 * @return always an instance of {@link AlignmentLabelArea}
 	 */
-	public AlignmentLabelArea getOwner() {
+	public AlignmentArea getOwner() {
 		return owner;
 	}
 
@@ -81,7 +81,7 @@ public abstract class AlignmentLabelSubArea extends TICComponent {
 	
 	@Override
 	public Dimension getSize() {
-		return new Dimension((int)Math.round(getOwner().getGlobalMaxNeededWidth()), (int)Math.round(getLabeledArea().getHeight()));
+		return new Dimension((int)Math.round(getOwner().getLabelArea().getGlobalMaxNeededWidth()), (int)Math.round(getLabeledArea().getHeight()));
 		//TODO If a directly drawn AlignmentContentArea is used, a vertical shift between the content and its labels may occur, due to the rounding done here.
 		//     A possible solution may be to keep track of the rounding differences and round the following label area heights in a way that there will never be a difference lager than one pixel.
 		//     (A directly drawn AlignmentLabelArea would also solve that problem.)

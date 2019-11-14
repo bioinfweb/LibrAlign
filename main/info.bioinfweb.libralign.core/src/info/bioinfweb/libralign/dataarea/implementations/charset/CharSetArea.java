@@ -306,7 +306,7 @@ public class CharSetArea extends ModelBasedDataArea<CharSetDataModel> {
 
 
 	@Override
-	protected AlignmentLabelSubArea createLabelSubArea(AlignmentLabelArea owner) {
+	protected AlignmentLabelSubArea createLabelSubArea(AlignmentArea owner) {
 		return new CharSetNameArea(owner, this);
 	}
 

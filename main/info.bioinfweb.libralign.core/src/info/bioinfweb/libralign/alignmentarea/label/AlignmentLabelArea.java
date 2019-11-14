@@ -81,7 +81,7 @@ public class AlignmentLabelArea extends TICComponent {
 	 * 
 	 * @return a value >= 0
 	 */
-	public double getLocalMaximumNeededWidth() {
+	public double getLocalMaximumNeededWidth() {  //TODO Consider moving this method and related elements and/or use shared functionality with SizeManager. (See #360.)
 		if (localMaxNeededWidth == RECALCULATE_VALUE) {
 			localMaxNeededWidth = 0;
 			Iterator<AlignmentLabelSubArea> iterator = subAreaIterator();
