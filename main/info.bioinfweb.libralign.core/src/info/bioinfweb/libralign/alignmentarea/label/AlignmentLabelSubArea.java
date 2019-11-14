@@ -41,8 +41,8 @@ public abstract class AlignmentLabelSubArea extends TICComponent {
 	/**
 	 * Creates a new instance of this class.
 	 * 
-	 * @param owner - the component that will contains the returned instance
-	 * @param labeledSubArea - the alignment sub area that will be labeled by this instance
+	 * @param owner the component that will contains the returned instance
+	 * @param labeledSubArea the alignment sub area that will be labeled by this instance
 	 */
 	public AlignmentLabelSubArea(AlignmentLabelArea owner, AlignmentSubArea labeledSubArea) {
 		super();

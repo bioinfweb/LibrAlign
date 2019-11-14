@@ -56,17 +56,17 @@ public class LabelDataArea extends DataArea {
 	private boolean isRepainting = false;
 	
 	
-	public LabelDataArea(AlignmentContentArea owner, AlignmentArea labeledArea) {
+	public LabelDataArea(AlignmentArea owner, AlignmentArea labeledArea) {
 		this(owner, labeledArea, "");
 	}
 	
 	
-	public LabelDataArea(AlignmentContentArea owner, AlignmentArea labeledArea, String text) {
+	public LabelDataArea(AlignmentArea owner, AlignmentArea labeledArea, String text) {
 		this(owner, labeledArea, text, false, false);
 	}
 	
 	
-	public LabelDataArea(AlignmentContentArea owner, AlignmentArea labeledArea, String text, boolean alignToFirstColumn, 
+	public LabelDataArea(AlignmentArea owner, AlignmentArea labeledArea, String text, boolean alignToFirstColumn, 
 			boolean alignToScrollPosition) {
 		
 		super(owner, labeledArea);
@@ -111,7 +111,7 @@ public class LabelDataArea extends DataArea {
 		}
 		else if (!this.font.equals(font)) {
 			this.font = font;
-			getOwner().getOwner().assignSizeToAll();  // A changed font height would mean a changes component height.
+			getOwner().assignSizeToAll();  // A changed font height would mean a changes component height.
 			repaint();
 		}
 	}
@@ -202,10 +202,10 @@ public class LabelDataArea extends DataArea {
 	private double calculateHorizontalShift() {
 		double result = 0;
 		if (isAlignToFirstColumn()) {
-			result = getOwner().getOwner().getSizeManager().getGlobalMaxLengthBeforeStart();  // Considers the current zoom factor.
+			result = getOwner().getSizeManager().getGlobalMaxLengthBeforeStart();  // Considers the current zoom factor.
 		}
 		if (isAlignToScrollPosition()) {
-			result = Math.max(result, getOwner().getOwner().getVisibleRectangle().getMinX());
+			result = Math.max(result, getOwner().getVisibleRectangle().getMinX());
 		}
 		return result;
 	}
@@ -228,7 +228,7 @@ public class LabelDataArea extends DataArea {
 				
 				// Paint text:
 				g.setColor(getTextColor());
-				Font font = getOwner().getOwner().getPaintSettings().zoomFont(getFont());
+				Font font = getOwner().getPaintSettings().zoomFont(getFont());
 				g.setFont(font);
 				g.drawString(getText(), (float)(calculateHorizontalShift() + LEFT_DISTANCE_FACTOR * getHeight()), 
 						FontCalculator.getInstance().getAscent(font));

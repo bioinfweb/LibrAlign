@@ -76,7 +76,7 @@ public class SequenceAreaMap extends TreeMap<String, SequenceArea> implements Se
 				String id = iterator.next();
 				SequenceArea sequenceArea = saveMap.get(id);
 				if (sequenceArea == null) {
-					sequenceArea = new SequenceArea(getOwner(), id);
+					sequenceArea = new SequenceArea(getOwner().getOwner(), id);
 					sequenceArea.addMouseListener(selectionInputListener);
 					sequenceArea.addKeyListener(selectionInputListener);
 				}

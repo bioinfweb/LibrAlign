@@ -56,10 +56,10 @@ public abstract class DataArea extends AlignmentSubArea {
 	 * @param labeledArea the alignment area displays the sequence which is labeled by the new instance
 	 *        (If {@code null} is specified here, the parent alignment area of {@code owner} will be assumed.)  
 	 */
-	public DataArea(AlignmentContentArea owner, AlignmentArea labeledArea) {
+	public DataArea(AlignmentArea owner, AlignmentArea labeledArea) {
 		super(owner);
 		if (labeledArea == null) {
-			this.labeledAlignmentArea = owner.getOwner();
+			this.labeledAlignmentArea = owner;
 		}
 		else {
 			this.labeledAlignmentArea = labeledArea;

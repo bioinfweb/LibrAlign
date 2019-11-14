@@ -20,7 +20,6 @@ package info.bioinfweb.libralign.dataarea;
 
 
 import info.bioinfweb.libralign.alignmentarea.AlignmentArea;
-import info.bioinfweb.libralign.alignmentarea.content.AlignmentContentArea;
 import info.bioinfweb.libralign.model.data.DataModel;
 
 
@@ -45,7 +44,7 @@ public abstract class ModelBasedDataArea<M extends DataModel> extends DataArea {
 	 * @param model
 	 * @throws IllegalArgumentException if {@code owner} or {@code model} is {@code null}
 	 */
-	public ModelBasedDataArea(AlignmentContentArea owner,	AlignmentArea labeledArea, M model) {
+	public ModelBasedDataArea(AlignmentArea owner,	AlignmentArea labeledArea, M model) {
 		super(owner, labeledArea);		
 		setModel(model);
 	}

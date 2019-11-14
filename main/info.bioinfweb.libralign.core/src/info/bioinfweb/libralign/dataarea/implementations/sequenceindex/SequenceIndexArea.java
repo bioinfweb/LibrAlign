@@ -84,11 +84,11 @@ public class SequenceIndexArea extends DataArea {
 	/**
 	 * Creates a new instance of this class.
 	 *
-	 * @param owner - the alignment area that is going to contain this data area
+	 * @param owner the alignment area that is going to contain this data area
 	 * @param labeledArea the alignment area displays the sequence which is labeled by the new instance
 	 *        (If {@code null} is specified here, the parent alignment area of {@code owner} will be assumed.)
 	 */
-	public SequenceIndexArea(AlignmentContentArea owner, AlignmentArea labeledArea) {
+	public SequenceIndexArea(AlignmentArea owner, AlignmentArea labeledArea) {
 		super(owner, labeledArea);
 		
 		labeledArea.getAlignmentModel().getChangeListeners().add(new AlignmentModelAdapter() {
@@ -113,10 +113,10 @@ public class SequenceIndexArea extends DataArea {
 	/**
 	 * Creates a new instance of this class using the parent alignment area of {@code owner} as the labeled area.
 	 *
-	 * @param owner - the alignment area that is going to contain this data area
+	 * @param owner the alignment area that is going to contain this data area
 	 */
-	public SequenceIndexArea(AlignmentContentArea owner) {
-		this(owner, owner.getOwner());
+	public SequenceIndexArea(AlignmentArea owner) {
+		this(owner, owner);
 	}
 
 

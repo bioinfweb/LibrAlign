@@ -61,8 +61,8 @@ public class ConsensusSequenceArea extends ModelBasedDataArea<ConsensusSequenceM
 	 * @param model the model providing the data to be displayed by this area
 	 * @throws IllegalArgumentException if {@code owner} or {@code model} is {@code null}
 	 */
-	public ConsensusSequenceArea(AlignmentContentArea owner, ConsensusSequenceModel model) {
-		this(owner, owner.getOwner(), model);
+	public ConsensusSequenceArea(AlignmentArea owner, ConsensusSequenceModel model) {
+		this(owner, owner, model);
 	}
 
 
@@ -82,7 +82,7 @@ public class ConsensusSequenceArea extends ModelBasedDataArea<ConsensusSequenceM
 	 * @param model the model providing the data to be displayed by this area
 	 * @throws IllegalArgumentException if {@code owner} or {@code model} is {@code null}
 	 */
-	public ConsensusSequenceArea(AlignmentContentArea owner, AlignmentArea labeledAlignmentArea, ConsensusSequenceModel model) {
+	public ConsensusSequenceArea(AlignmentArea owner, AlignmentArea labeledAlignmentArea, ConsensusSequenceModel model) {
 		super(owner, labeledAlignmentArea, model);
 		
 		model.addModelListener(new ConsensusSequenceModelListener() {

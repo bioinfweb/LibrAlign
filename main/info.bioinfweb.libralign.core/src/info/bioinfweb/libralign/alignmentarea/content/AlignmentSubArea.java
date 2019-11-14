@@ -43,16 +43,17 @@ import java.awt.geom.Rectangle2D;
  */
 public abstract class AlignmentSubArea extends TICComponent {
 	private AlignmentLabelSubArea labelSubArea = null;
-	private AlignmentContentArea owner = null;
+	private AlignmentArea owner = null;
 
 	
 	/**
 	 * Creates a new instance of this class.
 	 * 
-	 * @param owner the alignment content area that will contain this instance
+	 * @param owner the alignment area that will contain this instance
 	 */
-	public AlignmentSubArea(AlignmentContentArea owner) {
+	public AlignmentSubArea(AlignmentArea owner) {
 		super();
+		
 		if (owner == null) {
 			throw new IllegalArgumentException("owner must not be null.");
 		}
@@ -67,7 +68,7 @@ public abstract class AlignmentSubArea extends TICComponent {
 	 * 
 	 * @return the owning alignment content area
 	 */
-	public AlignmentContentArea getOwner() {
+	public AlignmentArea getOwner() {
 		return owner;
 	}
 	
@@ -84,17 +85,16 @@ public abstract class AlignmentSubArea extends TICComponent {
 	public void paint(TICPaintEvent event) {
 		//event.getGraphics().translate(-xOffset, 0);
 		//TODO Consider x-shift of graphics context due to data area width left of alignment if coordinate shift on y is implemented. (Here or/and somewhere else?)
-		paintPart(new AlignmentPaintEvent(event.getSource(), getOwner().getOwner(),
-				Math.max(0, getOwner().columnByPaintX(event.getRectangle().getMinX())),  // first column 
-				getOwner().columnByPaintX(event.getRectangle().getMaxX()),  // last column
-				event.getGraphics(), 
-				event.getRectangle()));  // Rectangle is used instead of Rectangle2D.Double. This is possible, because the component width is anyway limited.
+		paintPart(new AlignmentPaintEvent(event.getSource(), getOwner(),
+				Math.max(0, getOwner().getContentArea().columnByPaintX(event.getRectangle().getMinX())),  // first column 
+				getOwner().getContentArea().columnByPaintX(event.getRectangle().getMaxX()),  // last column
+				event.getGraphics(), event.getRectangle()));  // Rectangle is used instead of Rectangle2D.Double. This is possible, because the component width is anyway limited.
 	}
 	
 
 	public void repaint() {
-		if (getOwner().hasToolkitComponent() && !getOwner().getToolkitComponent().hasSubcomponents()) {
-			getOwner().repaint();  // The repaint() method of the toolkit component must not be used here directly, because AlignmentContentArea.repaint() may combine several subsequent paint operations.
+		if (getOwner().getContentArea().hasToolkitComponent() && !getOwner().getContentArea().getToolkitComponent().hasSubcomponents()) {  // Delegate to AlignmentContentArea if it paints all components directly.
+			getOwner().getContentArea().repaint();  // The repaint() method of the toolkit component must not be used here directly, because AlignmentContentArea.repaint() may combine several subsequent paint operations.
 		}
 		else {
 			super.repaint();
@@ -104,15 +104,14 @@ public abstract class AlignmentSubArea extends TICComponent {
 	
 	/**
 	 * Returns the size of the component depending on the return values of {@link #getLength()}, {@link #getHeight()}
-	 * and the maximum length before the first alignment position in the associated alignment area. (That means this
+	 * and the maximum length before the first alignment position in the associated alignment area. (Therefore, this
 	 * method might return a different dimension depending on the {@link AlignmentArea} is it contained in.)
 	 * 
 	 * @return the (minimal) width and height of this component
 	 */
 	@Override
 	public Dimension getSize() {
-		return new Dimension((int)Math.round(getOwner().getOwner().getSizeManager().getGlobalMaxNeededWidth()), 
-				(int)Math.round(getHeight()));  
+		return new Dimension((int)Math.round(getOwner().getSizeManager().getGlobalMaxNeededWidth()), (int)Math.round(getHeight()));  
 	}
 
 	
@@ -136,7 +135,7 @@ public abstract class AlignmentSubArea extends TICComponent {
 	 */
 	public AlignmentLabelSubArea getLabelSubArea() {
 		if (labelSubArea == null) {
-			labelSubArea = createLabelSubArea(getOwner().getOwner().getLabelArea());
+			labelSubArea = createLabelSubArea(getOwner().getLabelArea());
 		}
 		return labelSubArea;
 	}

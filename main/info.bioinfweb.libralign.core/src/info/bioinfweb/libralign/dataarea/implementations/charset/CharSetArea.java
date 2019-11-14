@@ -78,13 +78,13 @@ public class CharSetArea extends ModelBasedDataArea<CharSetDataModel> {
 	 * @param model the model providing the character set data
 	 * @throws IllegalArgumentException if {@code model} is {@code null}
 	 */
-	public CharSetArea(AlignmentContentArea owner, AlignmentArea labeledAlignmentArea, CharSetDataModel model) {
+	public CharSetArea(AlignmentArea owner, AlignmentArea labeledAlignmentArea, CharSetDataModel model) {
 		super(owner, labeledAlignmentArea, model);
 		modelListener = new CharSetDataModelListener() {
 			@Override
 			public void afterCharSetRenamed(CharSetRenamedEvent e) {
 				if (e.isLastEvent()) {
-					getOwner().getOwner().revalidate();
+					getOwner().revalidate();
 					repaint();
 				}
 			}
@@ -107,7 +107,7 @@ public class CharSetArea extends ModelBasedDataArea<CharSetDataModel> {
 			public void afterCharSetChange(CharSetChangeEvent e) {
 				if (e.isLastEvent()) {
 					checkSelectedIndex();
-					getOwner().getOwner().revalidate();
+					getOwner().revalidate();
 					repaint();
 				}
 			}
@@ -115,7 +115,7 @@ public class CharSetArea extends ModelBasedDataArea<CharSetDataModel> {
 			@Override
 			public void afterModelChanged(CharSetDataModel previous, CharSetDataModel current) {
 				checkSelectedIndex();
-				getOwner().getOwner().revalidate();
+				getOwner().revalidate();
 				repaint();
 			}
 		};
@@ -149,7 +149,7 @@ public class CharSetArea extends ModelBasedDataArea<CharSetDataModel> {
 	 *        placed in a different alignment area than the sequence data in a scenario with a
 	 *        {@link MultipleAlignmentsContainer}.) 
 	 */
-	public CharSetArea(AlignmentContentArea owner, AlignmentArea labeledAlignmentArea) {
+	public CharSetArea(AlignmentArea owner, AlignmentArea labeledAlignmentArea) {
 		this(owner, labeledAlignmentArea, new CharSetDataModel(labeledAlignmentArea.getAlignmentModel()));  // CharSetDataModel currently does not make use of the specified alignment model.
 	}
 	

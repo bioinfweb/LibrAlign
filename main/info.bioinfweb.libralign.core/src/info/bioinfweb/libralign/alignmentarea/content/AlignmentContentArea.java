@@ -119,6 +119,7 @@ public class AlignmentContentArea extends TICComponent {
   }
 
 
+	@SuppressWarnings("serial")
 	private void fillActionMap() {  // The actions added here can be modified by application code and will be used by CursorSelectionInputListener.
 		actionMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_LEFT, KeyEvent.SHIFT_MASK), new AbstractAction() {
 			@Override

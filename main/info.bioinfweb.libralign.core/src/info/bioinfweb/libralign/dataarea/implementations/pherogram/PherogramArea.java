@@ -24,6 +24,7 @@ import info.bioinfweb.commons.collections.observable.ListAddEvent;
 import info.bioinfweb.commons.collections.observable.ListRemoveEvent;
 import info.bioinfweb.commons.collections.observable.ListReplaceEvent;
 import info.bioinfweb.tic.TICPaintEvent;
+import info.bioinfweb.libralign.alignmentarea.AlignmentArea;
 import info.bioinfweb.libralign.alignmentarea.content.AlignmentContentArea;
 import info.bioinfweb.libralign.alignmentarea.content.AlignmentPaintEvent;
 import info.bioinfweb.libralign.alignmentarea.tokenpainter.TokenPainter;
@@ -152,7 +153,7 @@ public class PherogramArea extends DataArea implements PherogramComponent {
 		@Override
 		public void pherogramProviderChange(PherogramProviderChangeEvent event) {
 			getLabeledAlignmentArea().getSizeManager().setLocalMaxLengthBeforeAfterRecalculate();  // Could happen if cut lengths at the beginning and end differ.
-			getOwner().getOwner().assignSizeToAll();
+			getOwner().assignSizeToAll();
 			if (!event.isMoreEventsUpcoming()) {
 				repaint();  // Necessary in SWT, if no resize happened. 
 			}
@@ -166,7 +167,7 @@ public class PherogramArea extends DataArea implements PherogramComponent {
 			}
 			
 			//TODO Changes to the alignment model should not be done here in the view. The two models should communicate directly.
-			if (isUpdateEditableSequence() && !getOwner().getOwner().getAlignmentModel().isTokensReadOnly()) {
+			if (isUpdateEditableSequence() && !getOwner().getAlignmentModel().isTokensReadOnly()) {
 				if (event.getNewBaseCallIndex() < event.getOldBaseCallIndex()) {
 					copyBaseCallSequence(event.getNewBaseCallIndex(), event.getOldBaseCallIndex());  // Needs to be called after all changes are performed in order to calculate correct indices.
 				}
@@ -188,7 +189,7 @@ public class PherogramArea extends DataArea implements PherogramComponent {
 			}
 			
 			//TODO Changes to the alignment model should not be done here in the view. The two models should communicate directly.
-			if (isUpdateEditableSequence() && !getOwner().getOwner().getAlignmentModel().isTokensReadOnly()) {
+			if (isUpdateEditableSequence() && !getOwner().getAlignmentModel().isTokensReadOnly()) {
 				if (event.getOldBaseCallIndex() < event.getNewBaseCallIndex()) {
 					copyBaseCallSequence(event.getOldBaseCallIndex(), event.getNewBaseCallIndex());  // Needs to be called after all changes are performed in order to calculate correct indices.
 				}
@@ -226,7 +227,7 @@ public class PherogramArea extends DataArea implements PherogramComponent {
 	private final PropertyChangeListener FORMATS_LISTENER = new PropertyChangeListener() {
 		@Override
 		public void propertyChange(PropertyChangeEvent event) {
-			getOwner().getOwner().assignSizeToAll();
+			getOwner().assignSizeToAll();
 			repaint();  // Necessary for SWT if there was no size change.
 		}
 	};
@@ -241,7 +242,7 @@ public class PherogramArea extends DataArea implements PherogramComponent {
 	 *        of {@link PherogramTraceCurveView}.)
 	 * @throws IllegalArgumentException if {@code model} is already owned by another pherogram area 
 	 */
-	public PherogramArea(AlignmentContentArea owner, PherogramAreaModel model) {
+	public PherogramArea(AlignmentArea owner, PherogramAreaModel model) {
 		this(owner, model, new PherogramFormats());
 	}
 	
@@ -256,8 +257,8 @@ public class PherogramArea extends DataArea implements PherogramComponent {
 	 * @param formats the formats object to be used with this area
 	 * @throws IllegalArgumentException if {@code model} is already owned by another pherogram area 
 	 */
-	public PherogramArea(AlignmentContentArea owner, PherogramAreaModel model, PherogramFormats formats) {
-		super(owner, owner.getOwner());  // Pherogram areas are always directly attached to their sequences.
+	public PherogramArea(AlignmentArea owner, PherogramAreaModel model, PherogramFormats formats) {
+		super(owner, owner);  // Pherogram areas are always directly attached to their sequences.
 		this.model = model;
 		model.addModelListener(DATA_MODEL_LISTENER);
 		this.formats = formats;
@@ -546,7 +547,7 @@ public class PherogramArea extends DataArea implements PherogramComponent {
 	 */
 	public boolean setLeftCutPositionBySelection() {
 		int pos = getModel().baseCallIndexByEditableIndex(
-				getOwner().getOwner().getSelection().getFirstColumn()).getBefore();
+				getOwner().getSelection().getFirstColumn()).getBefore();
 		boolean result = pos != PherogramAlignmentRelation.OUT_OF_RANGE; 
 		if (result) {
 			getModel().setLeftCutPosition(pos);
@@ -568,7 +569,7 @@ public class PherogramArea extends DataArea implements PherogramComponent {
 	 */
 	public boolean setRightCutPositionBySelection() {
 		PherogramAlignmentRelation relation = getModel().baseCallIndexByEditableIndex(
-				getOwner().getOwner().getSelection().getLastColumn()); 
+				getOwner().getSelection().getLastColumn()); 
 		int pos = relation.getAfter();
 		if (pos == PherogramAlignmentRelation.OUT_OF_RANGE) {
 			pos = relation.getBefore() + 1;  // Set cut position behind the end of the pherogram.
@@ -606,12 +607,12 @@ public class PherogramArea extends DataArea implements PherogramComponent {
 	 * @return the width of a token in the associated part of the editable sequence
 	 */
 	public double getEditableTokenWidth() {
-		return getOwner().getOwner().getPaintSettings().getTokenWidth(getModel().getFirstSeqPos());
+		return getOwner().getPaintSettings().getTokenWidth(getModel().getFirstSeqPos());
 	}
 	
 	
 	public TokenPainter getRelatedTokenPainter() {
-		return getOwner().getOwner().getPaintSettings().getTokenPainterList().painterByColumn(getModel().getFirstSeqPos());
+		return getOwner().getPaintSettings().getTokenPainterList().painterByColumn(getModel().getFirstSeqPos());
 	}
 
 
@@ -626,8 +627,8 @@ public class PherogramArea extends DataArea implements PherogramComponent {
 		int lastEditableIndex = getModel().editableIndexByBaseCallIndex(getModel().getRightCutPosition() - 1).getAfter();
 		double lengthOfOutputAfterAlignmentStart = getLabeledAlignmentArea().getContentArea().paintXByColumn(lastEditableIndex) + 
 				(1 + getModel().getPherogramProvider().getSequenceLength() - getModel().getRightCutPosition()) *  
-				getOwner().getOwner().getPaintSettings().getTokenWidth(Math.max(0, getModel().getFirstSeqPos())) - getLengthBeforeStart();  // Math.max(0, ...) is used because this method might be called during the execution of setter cut position method, when other properties are not yet adjusted.  
-		return Math.max(0, lengthOfOutputAfterAlignmentStart - getOwner().getOwner().getSizeManager().getLocalMaximumNeededAlignmentWidth());
+				getOwner().getPaintSettings().getTokenWidth(Math.max(0, getModel().getFirstSeqPos())) - getLengthBeforeStart();  // Math.max(0, ...) is used because this method might be called during the execution of setter cut position method, when other properties are not yet adjusted.  
+		return Math.max(0, lengthOfOutputAfterAlignmentStart - getOwner().getSizeManager().getLocalMaximumNeededAlignmentWidth());
 	}
 
 

@@ -487,9 +487,9 @@ public class PherogramFormats {
 	public double calculateFontZoomFactor(PherogramComponent pherogramComponent) {
 		if (pherogramComponent instanceof PherogramArea) {
 			PherogramArea area = (PherogramArea)pherogramComponent;
-			PaintSettings paintSettings = area.getOwner().getOwner().getPaintSettings();
+			PaintSettings paintSettings = area.getOwner().getPaintSettings();
 			return Math.min(paintSettings.getZoomY(),
-					(area.getEditableTokenWidth() / area.getOwner().getOwner().getPaintSettings().getTokenHeight()) * 
+					(area.getEditableTokenWidth() / area.getOwner().getPaintSettings().getTokenHeight()) * 
 					paintSettings.getZoomY());
 		}
 		else if (pherogramComponent instanceof PherogramTraceCurveView) {
