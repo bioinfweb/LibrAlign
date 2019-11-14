@@ -21,7 +21,7 @@ package info.bioinfweb.libralign.alignmentarea.content;
 
 import info.bioinfweb.libralign.alignmentarea.rowsarea.SwingAlignmentRowsArea;
 import info.bioinfweb.libralign.dataarea.DataArea;
-import info.bioinfweb.libralign.dataarea.DataAreaList;
+import info.bioinfweb.libralign.dataelement.DataList;
 import info.bioinfweb.tic.SwingComponentFactory;
 
 import java.util.Iterator;
@@ -75,7 +75,7 @@ public class ScrollContainerSwingAlignmentContentArea extends SwingAlignmentRows
 	}
 	
 	
-	public void addDataAreaList(DataAreaList list) {
+	public void addDataAreaList(DataList list) {
 		SwingComponentFactory factory = SwingComponentFactory.getInstance();
 		Iterator<DataArea> iterator = list.iterator();
 		while (iterator.hasNext()) {
