@@ -21,8 +21,8 @@ package info.bioinfweb.libralign.alignmentarea.content;
 
 import info.bioinfweb.libralign.alignmentarea.rowsarea.SWTAlignmentRowsArea;
 import info.bioinfweb.libralign.dataarea.DataArea;
-import info.bioinfweb.libralign.dataarea.DataAreaList;
-import info.bioinfweb.libralign.dataarea.DataAreasModel;
+import info.bioinfweb.libralign.dataelement.DataList;
+import info.bioinfweb.libralign.dataelement.DataLists;
 import info.bioinfweb.tic.SWTComponentFactory;
 
 import java.util.Iterator;
@@ -64,7 +64,7 @@ public class ScrollContainerSWTAlignmentContentArea extends SWTAlignmentRowsArea
 	}
 
 
-	public void addDataAreaList(DataAreaList list) {
+	public void addDataAreaList(DataList list) {
 		Iterator<DataArea> iterator = list.iterator();
 		SWTComponentFactory factory = SWTComponentFactory.getInstance();
 		while (iterator.hasNext()) {
@@ -92,7 +92,7 @@ public class ScrollContainerSWTAlignmentContentArea extends SWTAlignmentRowsArea
 
 	@Override
 	public void reinsertSubelements() {
-		DataAreasModel dataAreaModel = getIndependentComponent().getOwner().getDataAreas();
+		DataLists dataAreaModel = getIndependentComponent().getOwner().getDataAreas();
 		removeAll();
 
 		addDataAreaList(dataAreaModel.getTopAreas());
