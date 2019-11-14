@@ -45,7 +45,7 @@ import info.bioinfweb.libralign.model.events.TokenChangeEvent;
 public class DataAreaListTest {
   private DataList createList(AlignmentArea alignmentArea, final List<DataAreaChangeEvent> eventList, DataListType type) {
   	DataLists owner = new DataLists(alignmentArea);
-  	owner.addListener(new DataAreasListener() {
+  	owner.addModelListener(new DataAreasListener() {
 					@Override
 					public void visibilityChanged(DataAreaChangeEvent e) {
 						eventList.add(e);
