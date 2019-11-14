@@ -23,7 +23,7 @@ import static org.junit.Assert.* ;
 
 
 import info.bioinfweb.libralign.alignmentarea.AlignmentArea;
-import info.bioinfweb.libralign.dataarea.implementations.ConsensusSequenceArea;
+import info.bioinfweb.libralign.dataarea.implementations.consensus.ConsensusSequenceArea;
 import info.bioinfweb.libralign.dataarea.implementations.sequenceindex.SequenceIndexArea;
 import info.bioinfweb.libralign.model.AlignmentModel;
 import info.bioinfweb.libralign.model.implementations.PackedAlignmentModel;
