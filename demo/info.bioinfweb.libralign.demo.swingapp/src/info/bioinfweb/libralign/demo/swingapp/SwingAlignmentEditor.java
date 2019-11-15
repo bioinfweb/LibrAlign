@@ -196,10 +196,10 @@ public class SwingAlignmentEditor {
 		
 		// Create LibrAlign component instance:
 		alignmentArea = new AlignmentArea();
-		alignmentArea.setAlignmentModel(new PackedAlignmentModel<Character>(CharacterTokenSet.newNucleotideInstance(false)), false);
+		alignmentArea.setAlignmentModel(new PackedAlignmentModel<Character>(CharacterTokenSet.newNucleotideInstance(false)));
 		
 		// Register changes listener to know when to ask for saving changes:
-		alignmentArea.getAlignmentModel().getChangeListeners().add(new AlignmentModelAdapter() {
+		alignmentArea.getAlignmentModel().addModelListener(new AlignmentModelAdapter() {
 			@Override
 			public <T> void afterTokenChange(TokenChangeEvent<T> e) {
 				setChanged(true);

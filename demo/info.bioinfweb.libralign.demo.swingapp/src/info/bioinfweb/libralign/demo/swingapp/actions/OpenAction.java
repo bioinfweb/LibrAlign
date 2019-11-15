@@ -96,7 +96,7 @@ public class OpenAction extends AbstractFileAction {
 					}
 					else {
 						// File contains one alignment
-						getEditor().getAlignmentArea().setAlignmentModel(mainReader.getAlignmentModelReader().getCompletedModels().get(0), true);
+						getEditor().getAlignmentArea().setAlignmentModel(mainReader.getAlignmentModelReader().getCompletedModels().get(0));
 						getEditor().setFile(getOpenFileChooser().getSelectedFile());
 						getEditor().setFormat(eventReader.getFormatID());
 						getEditor().setChanged(false);

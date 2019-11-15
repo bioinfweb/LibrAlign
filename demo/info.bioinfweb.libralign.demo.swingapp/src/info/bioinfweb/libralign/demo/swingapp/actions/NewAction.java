@@ -51,7 +51,7 @@ public class NewAction extends AbstractFileAction {
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		if (handleUnsavedChanges()) {
-			getEditor().getAlignmentArea().setAlignmentModel(createAlignmentModel(), true);
+			getEditor().getAlignmentArea().setAlignmentModel(createAlignmentModel());
 			getEditor().setFile(null);
 			getEditor().setFormat(SwingAlignmentEditor.DEFAULT_FORMAT);
 			getEditor().setChanged(false);
