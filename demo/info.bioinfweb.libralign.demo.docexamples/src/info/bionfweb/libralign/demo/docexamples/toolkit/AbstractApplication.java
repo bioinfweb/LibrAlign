@@ -47,7 +47,7 @@ public class AbstractApplication {
 		model.appendTokens(id, AlignmentModelUtils.charSequenceToTokenList("AT-CG", model.getTokenSet()));
 
 		// Prepare main area:
-		mainArea.setAlignmentModel(model, false);  // Define a model
+		mainArea.setAlignmentModel(model);  // Define a model
 		mainArea.getPaintSettings().getTokenPainterList().set(0, new NucleotideTokenPainter());  // Define how sequences shall be painted
 		result.getAlignmentAreas().add(mainArea);
 		

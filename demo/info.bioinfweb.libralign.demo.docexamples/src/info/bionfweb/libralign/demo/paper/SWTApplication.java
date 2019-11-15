@@ -88,7 +88,7 @@ public class SWTApplication {
 		
 		// Create an alignment area displaying the first alignment from the file:
 		AlignmentArea area = new AlignmentArea();
-		area.setAlignmentModel(models.get(0), false);
+		area.setAlignmentModel(models.get(0));
 		
 		// Add the SWT version of alignment area to the GUI:
 		SWTComponentFactory.getInstance().getSWTComponent(area, shell, SWT.NONE);

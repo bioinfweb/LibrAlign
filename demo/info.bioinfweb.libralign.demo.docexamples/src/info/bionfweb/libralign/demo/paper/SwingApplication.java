@@ -82,7 +82,7 @@ public class SwingApplication {
 		
 		// Create an alignment area displaying the first alignment from the file:
 		AlignmentArea area = new AlignmentArea();
-		area.setAlignmentModel(models.get(0), false);
+		area.setAlignmentModel(models.get(0));
 		
 		// Add the Swing version of alignment area to the GUI:
 		frame.getContentPane().add(SwingComponentFactory.getInstance().getSwingComponent(area), BorderLayout.CENTER);
