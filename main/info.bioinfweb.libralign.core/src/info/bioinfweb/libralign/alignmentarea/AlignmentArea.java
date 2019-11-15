@@ -22,6 +22,8 @@ package info.bioinfweb.libralign.alignmentarea;
 import java.awt.Dimension;
 import java.awt.Rectangle;
 import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
+import java.beans.PropertyChangeSupport;
 import java.util.ArrayList;
 import java.util.EventObject;
 import java.util.Iterator;
@@ -159,6 +161,7 @@ public class AlignmentArea extends ScrollingTICComponent {
 	private EditSettings editSettings;
 	private SelectionModel selection;
 	private ObservableList<ColorOverlay> overlays;
+	protected PropertyChangeSupport propertyChangeListeners = new PropertyChangeSupport(this);
 	private AlignmentActionProvider<Object> actionProvider = new AlignmentActionProvider<Object>(this);
 
 	private MultipleAlignmentsContainer container = null;
@@ -422,8 +425,14 @@ public class AlignmentArea extends ScrollingTICComponent {
 			if (this.alignmentModel != null) {
 				this.alignmentModel.removeModelListener(alignmentModelListener);
 			}
+			AlignmentModel<?> formerModel = this.alignmentModel;
+			
 			this.alignmentModel = alignmentModel;
-			alignmentModel.addModelListener(alignmentModelListener);
+			
+			if (alignmentModel != null) {
+				alignmentModel.addModelListener(alignmentModelListener);
+			}
+			propertyChangeListeners.firePropertyChange("alignmentModel", formerModel, alignmentModel);  //TODO Should this (and this method) just be called "model"?
 			
 			getLabelArea().setLocalMaxWidthRecalculateToAll();  // Needs to be called before assignSizeToAll().
 			//TODO Remove some data areas? (Some might be data specific (e.g. pherograms), some not (e.g. consensus sequence).)
@@ -576,11 +585,15 @@ public class AlignmentArea extends ScrollingTICComponent {
 	 * if there is enough space available.
 	 * 
 	 * @param allowVerticalScrolling - Specify {@code true} here, if this area does not need to be displayed with its 
-	 *         whole width or {@code false} if scrolling should be avoided if possible.
+	 *        whole width or {@code false} if scrolling should be avoided if possible.
 	 */
 	public void setAllowVerticalScrolling(boolean allowVerticalScrolling) {
-		this.allowVerticalScrolling = allowVerticalScrolling;
-		//TODO redistribute size
+		if (allowVerticalScrolling != this.allowVerticalScrolling) {
+			boolean formerValue = this.allowVerticalScrolling;
+			this.allowVerticalScrolling = allowVerticalScrolling;
+			propertyChangeListeners.firePropertyChange("allowVerticalScrolling", formerValue, allowVerticalScrolling);
+			//TODO redistribute size
+		}
 	}
 
 
@@ -732,5 +745,69 @@ public class AlignmentArea extends ScrollingTICComponent {
 	
 	public void fireDataAreaVisibilitChanged(DataArea source, boolean visible) {
 		dataAreaListenerList.fireAfterVisibilityChanged(source, visible);
+	}
+
+
+	/**
+	 * Registers a property change listener for all properties.
+	 * <p>
+	 * This class fires events for the following properties:
+	 * <ul>
+	 *   <li>{@code alignmentModel} if {@link #setAlignmentModel(AlignmentModel)} is called with a new model</li>
+	 *   <li>{@code allowVerticalScrolling} if {@link #setAllowVerticalScrolling(boolean)} is called with a new value</li>
+	 * </ul>
+	 * <p>
+	 * Note that no property change events are fired for inherited properties, e.g., {@link #setToolkitComponent(info.bioinfweb.tic.toolkit.ToolkitComponent)}.
+	 * 
+	 * @param listener the new listener
+	 */
+	public void addPropertyChangeListener(PropertyChangeListener listener) {
+		propertyChangeListeners.addPropertyChangeListener(listener);
+	}
+
+
+	/**
+	 * Registers a property change listener for the specified property.
+	 * <p>
+	 * This class fires events for the following properties:
+	 * <ul>
+	 *   <li>{@code alignmentModel} if {@link #setAlignmentModel(AlignmentModel)} is called with a new model</li>
+	 *   <li>{@code allowVerticalScrolling} if {@link #setAllowVerticalScrolling(boolean)} is called with a new value</li>
+	 * </ul>
+	 * <p>
+	 * Note that no property change events are fired for inherited properties, e.g., {@link #setToolkitComponent(info.bioinfweb.tic.toolkit.ToolkitComponent)}.
+	 * 
+	 * @param propertyName the name of the property to be informed on (See list above.)
+	 * @param listener the new listener
+	 */
+	public void addPropertyChangeListener(String propertyName, PropertyChangeListener listener) {
+		propertyChangeListeners.addPropertyChangeListener(propertyName, listener);
+	}
+
+
+	/**
+	 * Remove a {@link PropertyChangeListener} from the listener list.
+	 * <p>
+	 * This removes a {@link PropertyChangeListener} that was registered for all properties. If {@code listener} was added more than once to the same event source, 
+	 * it will be notified one less time after being removed. If {@code listener} is {@code null}, or was never added, no exception is thrown and no action is taken. 
+	 * 
+	 * @param listener the listener to be removed
+	 */
+	public void removePropertyChangeListener(PropertyChangeListener listener) {
+		propertyChangeListeners.removePropertyChangeListener(listener);
+	}
+
+
+	/**
+	 * Remove a {@link PropertyChangeListener} for a specific property.
+	 * <p>
+	 * This removes a {@link PropertyChangeListener} that was registered for all properties. If {@code listener} was added more than once to the same event source, 
+	 * it will be notified one less time after being removed. If {@code listener} is {@code null}, or was never added, no exception is thrown and no action is taken. 
+	 * 
+	 * @param propertyName the name of the property that was listened on
+	 * @param listener the listener to be removed
+	 */
+	public void removePropertyChangeListener(String propertyName, PropertyChangeListener listener) {
+		propertyChangeListeners.removePropertyChangeListener(propertyName, listener);
 	}
 }
