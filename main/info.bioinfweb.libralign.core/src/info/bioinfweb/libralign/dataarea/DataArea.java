@@ -23,12 +23,9 @@ import java.util.Set;
 
 import info.bioinfweb.libralign.alignmentarea.AlignmentArea;
 import info.bioinfweb.libralign.alignmentarea.SizeManager;
-import info.bioinfweb.libralign.alignmentarea.content.AlignmentContentArea;
 import info.bioinfweb.libralign.alignmentarea.content.AlignmentSubArea;
 import info.bioinfweb.libralign.dataelement.DataList;
 import info.bioinfweb.libralign.dataelement.DataListType;
-import info.bioinfweb.libralign.model.AlignmentModel;
-import info.bioinfweb.libralign.multiplealignments.MultipleAlignmentsContainer;
 
 
 
@@ -44,7 +41,6 @@ import info.bioinfweb.libralign.multiplealignments.MultipleAlignmentsContainer;
  * @bioinfweb.module info.bioinfweb.libralign.core
  */
 public abstract class DataArea extends AlignmentSubArea {
-	private AlignmentArea labeledAlignmentArea;
 	private DataList<AlignmentArea, DataArea> list = null;
 	private boolean visible = true;
 	
@@ -56,40 +52,8 @@ public abstract class DataArea extends AlignmentSubArea {
 	 * @param labeledArea the alignment area displays the sequence which is labeled by the new instance
 	 *        (If {@code null} is specified here, the parent alignment area of {@code owner} will be assumed.)  
 	 */
-	public DataArea(AlignmentArea owner, AlignmentArea labeledArea) {
+	public DataArea(AlignmentArea owner) {
 		super(owner);
-		if (labeledArea == null) {
-			this.labeledAlignmentArea = owner;
-		}
-		else {
-			this.labeledAlignmentArea = labeledArea;
-		}
-	}
-	
-
-	/**
-	 * Returns the alignment area that is labeled by this data area.
-	 * <p>
-	 * Note that inside a {@link MultipleAlignmentsContainer} a data area could be located in a different 
-	 * alignment area than the related alignment data. Therefore the returned instance is not necessarily 
-	 * identical with the instance returned by {@code getOwner().getOwner()}. 
-	 * 
-	 * @return the labeled alignment area
-	 * @see #getLabeledAlignmentModel()
-	 */
-	public AlignmentArea getLabeledAlignmentArea() {
-		return labeledAlignmentArea;
-	}
-
-	
-	/**
-	 * Convenience method that returns the alignment model of the labeled alignment area.
-	 * 
-	 * @return the alignment model providing the sequence data related to the contents of this data area
-	 * @see #getLabeledAlignmentArea()
-	 */
-	public AlignmentModel<?> getLabeledAlignmentModel() {
-		return getLabeledAlignmentArea().getAlignmentModel();
 	}
 	
 

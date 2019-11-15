@@ -43,7 +43,6 @@ import info.bioinfweb.libralign.dataarea.implementations.charset.events.CharSetC
 import info.bioinfweb.libralign.dataarea.implementations.charset.events.CharSetColumnChangeEvent;
 import info.bioinfweb.libralign.dataarea.implementations.charset.events.CharSetRenamedEvent;
 import info.bioinfweb.libralign.dataelement.DataListType;
-import info.bioinfweb.libralign.multiplealignments.MultipleAlignmentsContainer;
 import info.bioinfweb.tic.input.TICMouseAdapter;
 import info.bioinfweb.tic.input.TICMouseEvent;
 
@@ -102,15 +101,11 @@ public class CharSetArea extends ModelBasedDataArea<CharSetDataModel> {
 	 * Creates a new instance of this class.
 	 * 
 	 * @param owner the alignment area that will be containing the returned data area instance
-	 * @param labeledAlignmentArea the alignment area that shall determine the token widths considered when painting
-	 *        the character sets (Should only be different from {@code owner.getOwner()} if the new instance will be
-	 *        placed in a different alignment area than the sequence data in a scenario with a
-	 *        {@link MultipleAlignmentsContainer}.) 
 	 * @param model the model providing the character set data
 	 * @throws IllegalArgumentException if {@code model} is {@code null}
 	 */
-	public CharSetArea(AlignmentArea owner, AlignmentArea labeledAlignmentArea, CharSetDataModel model) {
-		super(owner, labeledAlignmentArea, model);
+	public CharSetArea(AlignmentArea owner, CharSetDataModel model) {
+		super(owner, model);
 		
 		model.addModelListener(modelListener);
 		
@@ -119,7 +114,7 @@ public class CharSetArea extends ModelBasedDataArea<CharSetDataModel> {
 			public boolean mousePressed(TICMouseEvent event) {
 				if (event.getClickCount() == 1) {
 					if (event.isMouseButton1Down()) {
-						setSelectedIndex((int)(event.getComponentY() / getLabeledAlignmentArea().getPaintSettings().getTokenHeight()));
+						setSelectedIndex((int)(event.getComponentY() / getOwner().getPaintSettings().getTokenHeight()));
 						return true;
 					}
 					else if (event.isMouseButton3Down()) {
@@ -133,20 +128,6 @@ public class CharSetArea extends ModelBasedDataArea<CharSetDataModel> {
 	}
 
 
-	/**
-	 * Creates a new instance of this class with an empty data model.
-	 * 
-	 * @param owner the alignment area that will be containing the returned data area instance
-	 * @param labeledAlignmentArea the alignment area that shall determine the token widths considered when painting
-	 *        the character sets (Should only be different from {@code owner.getOwner()} if the new instance will be
-	 *        placed in a different alignment area than the sequence data in a scenario with a
-	 *        {@link MultipleAlignmentsContainer}.) 
-	 */
-	public CharSetArea(AlignmentArea owner, AlignmentArea labeledAlignmentArea) {
-		this(owner, labeledAlignmentArea, new CharSetDataModel(labeledAlignmentArea.getAlignmentModel()));  // CharSetDataModel currently does not make use of the specified alignment model.
-	}
-	
-	
 	public int getSelectedIndex() {
 		return selectedIndex;
 	}
@@ -178,13 +159,13 @@ public class CharSetArea extends ModelBasedDataArea<CharSetDataModel> {
 
 	@Override
 	public double getHeight() {
-		return getModel().size() * getLabeledAlignmentArea().getPaintSettings().getTokenHeight();  //TODO Add possible border height, possibly round up?
+		return getModel().size() * getOwner().getPaintSettings().getTokenHeight();  //TODO Add possible border height, possibly round up?
 	}
 
 	
 	@Override
 	public void paintPart(AlignmentPaintEvent event) {
-		AlignmentContentArea contentArea = getLabeledAlignmentArea().getContentArea();
+		AlignmentContentArea contentArea = getOwner().getContentArea();
 		
 		// Paint background:
 		Graphics2D g = event.getGraphics();
@@ -194,7 +175,7 @@ public class CharSetArea extends ModelBasedDataArea<CharSetDataModel> {
 		// Determine area to be painted:
 		int firstIndex = Math.max(0, contentArea.columnByPaintX((int)event.getRectangle().getMinX()));
 		int lastIndex = contentArea.columnByPaintX((int)event.getRectangle().getMaxX());
-		int lastColumn = getLabeledAlignmentArea().getSizeManager().getGlobalMaxSequenceLength() - 1;  //getSequenceProvider().getMaxSequenceLength() - 1;
+		int lastColumn = getOwner().getSizeManager().getGlobalMaxSequenceLength() - 1;  //getSequenceProvider().getMaxSequenceLength() - 1;
 		if ((lastIndex == -1) || (lastIndex > lastColumn)) {
 			lastIndex = lastColumn;
 		}
@@ -202,7 +183,7 @@ public class CharSetArea extends ModelBasedDataArea<CharSetDataModel> {
 		// Paint output:
 		Iterator<CharSet> iterator = getModel().valueList().iterator();
 		double y = 0;
-		PaintSettings paintSettings = getLabeledAlignmentArea().getPaintSettings();
+		PaintSettings paintSettings = getOwner().getPaintSettings();
 		final double borderHeight = paintSettings.getTokenHeight() * BORDER_FRACTION;
 		final double height = paintSettings.getTokenHeight() - 2 * borderHeight;
 		int lineIndex = 0;

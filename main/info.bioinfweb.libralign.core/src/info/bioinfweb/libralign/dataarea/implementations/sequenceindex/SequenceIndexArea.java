@@ -32,16 +32,11 @@ import java.util.EnumSet;
 import java.util.Set;
 
 import info.bioinfweb.commons.Math2;
-import info.bioinfweb.commons.collections.ListChangeType;
 import info.bioinfweb.libralign.alignmentarea.AlignmentArea;
-import info.bioinfweb.libralign.alignmentarea.content.AlignmentContentArea;
 import info.bioinfweb.libralign.alignmentarea.content.AlignmentPaintEvent;
 import info.bioinfweb.libralign.dataarea.DataArea;
 import info.bioinfweb.libralign.dataelement.DataListType;
-import info.bioinfweb.libralign.model.AlignmentModel;
-import info.bioinfweb.libralign.model.AlignmentModelAdapter;
 import info.bioinfweb.libralign.model.concatenated.ConcatenatedAlignmentModel;
-import info.bioinfweb.libralign.model.events.TokenChangeEvent;
 
 
 
@@ -82,35 +77,23 @@ public class SequenceIndexArea extends DataArea {
 
 
 	/**
-	 * Creates a new instance of this class.
-	 *
-	 * @param owner the alignment area that is going to contain this data area
-	 * @param labeledArea the alignment area displays the sequence which is labeled by the new instance
-	 *        (If {@code null} is specified here, the parent alignment area of {@code owner} will be assumed.)
-	 */
-	public SequenceIndexArea(AlignmentArea owner, AlignmentArea labeledArea) {
-		super(owner, labeledArea);
-		
-		labeledArea.getAlignmentModel().addModelListener(new AlignmentModelAdapter() {
-			@Override
-			public <T> void afterTokenChange(TokenChangeEvent<T> e) {
-				if (!e.getType().equals(ListChangeType.REPLACEMENT)) {
-					assignSize();  // Length of the longest sequence could have changed.
-					repaint();  // In case the size did not change, but the space before the alignment did.
-				}
-			}
-		});
-		//TODO Listener needs to be removed again, when this data area is removed.
-	}
-
-
-	/**
 	 * Creates a new instance of this class using the parent alignment area of {@code owner} as the labeled area.
 	 *
 	 * @param owner the alignment area that is going to contain this data area
 	 */
 	public SequenceIndexArea(AlignmentArea owner) {
-		this(owner, owner);
+		super(owner);
+		//TODO One or more listeners need to be registered that inform in length changes in every AlignmentModel in the parent container (if there is one)
+//		labeledArea.getAlignmentModel().addModelListener(new AlignmentModelAdapter() {
+//			@Override
+//			public <T> void afterTokenChange(TokenChangeEvent<T> e) {
+//				if (!e.getType().equals(ListChangeType.REPLACEMENT)) {
+//					assignSize();  // Length of the longest sequence could have changed.
+//					repaint();  // In case the size did not change, but the space before the alignment did.
+//				}
+//			}
+//		});
+		//TODO Listener needs to be removed again, when this data area is removed.
 	}
 
 
@@ -134,9 +117,9 @@ public class SequenceIndexArea extends DataArea {
 	 * @return the number of columns that will at most be used to display a sequence index label
 	 */
 	private int calculateLabelInterval(FontMetrics fontMetrics) {
-		double compoundWidth = getLabeledAlignmentArea().getPaintSettings().minTokenWidth();
+		double compoundWidth = getOwner().getPaintSettings().minTokenWidth();
 		return (int)Math2.roundUp((fontMetrics.stringWidth("0") *
-				Integer.toString(getLabeledAlignmentArea().getSizeManager().getGlobalMaxSequenceLength()).length() + 
+				Integer.toString(getOwner().getSizeManager().getGlobalMaxSequenceLength()).length() + 
 				2 * LABEL_LEFT_DISTANCE_FACTOR * compoundWidth)	/ compoundWidth);
 	}
 
@@ -154,17 +137,18 @@ public class SequenceIndexArea extends DataArea {
 		paintSelection(g);
 
     // Paint base line
-		if (getLabeledAlignmentModel() instanceof ConcatenatedAlignmentModel) {
-			throw new InternalError("Support for concatenated models not yet implemented.");
-		}
-		double compoundWidth = getLabeledAlignmentArea().getPaintSettings().getTokenWidth(0);  //TODO Implement support for concatenated models.
+		//TODO The following check was removed, since there is no single labeled model anymore. If ConcatenatedAlignmentModels will exist one day, it would have to be discussed if they can be combines with models with other columns in the same container and how this data area would handle such a case.
+//		if (getLabeledAlignmentModel() instanceof ConcatenatedAlignmentModel) {
+//			throw new InternalError("Support for concatenated models not yet implemented.");
+//		}
+		double compoundWidth = getOwner().getPaintSettings().getTokenWidth(0);  //TODO Implement support for concatenated models.
 		g.setColor(SystemColor.menuText);
     g.draw(new Line2D.Double(visibleRect.getMinX(), getHeight() - 1, visibleRect.getMinX() + visibleRect.getWidth(), getHeight() - 1));  // base line
 
     // Paint text data and dashes:
-    final double maxLengthBeforeStart = getLabeledAlignmentArea().getSizeManager().getGlobalMaxLengthBeforeStart();
+    final double maxLengthBeforeStart = getOwner().getSizeManager().getGlobalMaxLengthBeforeStart();
     double labelLeftDistance = LABEL_LEFT_DISTANCE_FACTOR * compoundWidth;
-    g.setFont(getLabeledAlignmentArea().getPaintSettings().getTokenHeightFont());
+    g.setFont(getOwner().getPaintSettings().getTokenHeightFont());
     int labelInterval = calculateLabelInterval(g.getFontMetrics());
     double x = Math.max(compoundWidth / 2f,
     		visibleRect.getMinX() - visibleRect.getMinX() % compoundWidth - labelInterval * compoundWidth - compoundWidth / 2f);  // labelInterval is subtracted because partly visible text should also be painted
@@ -235,6 +219,6 @@ public class SequenceIndexArea extends DataArea {
 
 	@Override
 	public double getHeight() {
-		return getLabeledAlignmentArea().getPaintSettings().getTokenHeight();
+		return getOwner().getPaintSettings().getTokenHeight();
 	}
 }

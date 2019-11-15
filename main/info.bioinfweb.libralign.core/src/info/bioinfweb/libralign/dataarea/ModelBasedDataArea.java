@@ -19,11 +19,7 @@
 package info.bioinfweb.libralign.dataarea;
 
 
-import java.util.Iterator;
-
 import info.bioinfweb.libralign.alignmentarea.AlignmentArea;
-import info.bioinfweb.libralign.dataarea.implementations.charset.CharSetDataModel;
-import info.bioinfweb.libralign.dataarea.implementations.charset.CharSetDataModelListener;
 import info.bioinfweb.libralign.model.data.DataModel;
 
 
@@ -48,8 +44,8 @@ public abstract class ModelBasedDataArea<M extends DataModel<?>> extends DataAre
 	 * @param model
 	 * @throws IllegalArgumentException if {@code owner} or {@code model} is {@code null}
 	 */
-	public ModelBasedDataArea(AlignmentArea owner, AlignmentArea labeledArea, M model) {
-		super(owner, labeledArea);		
+	public ModelBasedDataArea(AlignmentArea owner, M model) {
+		super(owner);		
 		setModel(model);
 	}
 

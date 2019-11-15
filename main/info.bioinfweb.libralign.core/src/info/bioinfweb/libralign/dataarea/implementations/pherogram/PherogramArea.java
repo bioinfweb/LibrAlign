@@ -19,43 +19,6 @@
 package info.bioinfweb.libralign.dataarea.implementations.pherogram;
 
 
-import info.bioinfweb.commons.collections.SimpleSequenceInterval;
-import info.bioinfweb.commons.collections.observable.ListAddEvent;
-import info.bioinfweb.commons.collections.observable.ListRemoveEvent;
-import info.bioinfweb.commons.collections.observable.ListReplaceEvent;
-import info.bioinfweb.tic.TICPaintEvent;
-import info.bioinfweb.libralign.alignmentarea.AlignmentArea;
-import info.bioinfweb.libralign.alignmentarea.content.AlignmentContentArea;
-import info.bioinfweb.libralign.alignmentarea.content.AlignmentPaintEvent;
-import info.bioinfweb.libralign.alignmentarea.tokenpainter.TokenPainter;
-import info.bioinfweb.libralign.dataarea.DataArea;
-import info.bioinfweb.libralign.dataelement.DataListType;
-import info.bioinfweb.libralign.model.AlignmentModel;
-import info.bioinfweb.libralign.model.AlignmentModelAdapter;
-import info.bioinfweb.libralign.model.AlignmentModelListener;
-import info.bioinfweb.libralign.model.concatenated.ConcatenatedAlignmentModel;
-import info.bioinfweb.libralign.model.data.DataModel;
-import info.bioinfweb.libralign.model.events.SequenceChangeEvent;
-import info.bioinfweb.libralign.model.events.SequenceRenamedEvent;
-import info.bioinfweb.libralign.model.events.TokenChangeEvent;
-import info.bioinfweb.libralign.model.tokenset.TokenSet;
-import info.bioinfweb.libralign.pherogram.PherogramComponent;
-import info.bioinfweb.libralign.pherogram.PherogramFormats;
-import info.bioinfweb.libralign.pherogram.PherogramPainter;
-import info.bioinfweb.libralign.pherogram.PherogramUtils;
-import info.bioinfweb.libralign.pherogram.distortion.GapPattern;
-import info.bioinfweb.libralign.pherogram.distortion.ScaledPherogramDistortion;
-import info.bioinfweb.libralign.pherogram.model.PherogramAlignmentRelation;
-import info.bioinfweb.libralign.pherogram.model.PherogramAreaModel;
-import info.bioinfweb.libralign.pherogram.model.PherogramModelListener;
-import info.bioinfweb.libralign.pherogram.model.PherogramCutPositionChangeEvent;
-import info.bioinfweb.libralign.pherogram.model.PherogramFirstSeqPosChangeEvent;
-import info.bioinfweb.libralign.pherogram.model.PherogramProviderChangeEvent;
-import info.bioinfweb.libralign.pherogram.model.PherogramShiftChangeUpdateEvent;
-import info.bioinfweb.libralign.pherogram.model.ShiftChange;
-import info.bioinfweb.libralign.pherogram.view.PherogramTraceCurveView;
-import info.bioinfweb.libralign.pherogram.view.PherogramView;
-
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics2D;
@@ -68,6 +31,38 @@ import java.util.Collection;
 import java.util.EnumSet;
 import java.util.Iterator;
 import java.util.Set;
+
+import info.bioinfweb.commons.collections.SimpleSequenceInterval;
+import info.bioinfweb.libralign.alignmentarea.AlignmentArea;
+import info.bioinfweb.libralign.alignmentarea.content.AlignmentPaintEvent;
+import info.bioinfweb.libralign.alignmentarea.tokenpainter.TokenPainter;
+import info.bioinfweb.libralign.dataarea.DataArea;
+import info.bioinfweb.libralign.dataelement.DataListType;
+import info.bioinfweb.libralign.model.AlignmentModel;
+import info.bioinfweb.libralign.model.AlignmentModelAdapter;
+import info.bioinfweb.libralign.model.AlignmentModelListener;
+import info.bioinfweb.libralign.model.concatenated.ConcatenatedAlignmentModel;
+import info.bioinfweb.libralign.model.events.SequenceChangeEvent;
+import info.bioinfweb.libralign.model.events.SequenceRenamedEvent;
+import info.bioinfweb.libralign.model.events.TokenChangeEvent;
+import info.bioinfweb.libralign.model.tokenset.TokenSet;
+import info.bioinfweb.libralign.pherogram.PherogramComponent;
+import info.bioinfweb.libralign.pherogram.PherogramFormats;
+import info.bioinfweb.libralign.pherogram.PherogramPainter;
+import info.bioinfweb.libralign.pherogram.PherogramUtils;
+import info.bioinfweb.libralign.pherogram.distortion.GapPattern;
+import info.bioinfweb.libralign.pherogram.distortion.ScaledPherogramDistortion;
+import info.bioinfweb.libralign.pherogram.model.PherogramAlignmentRelation;
+import info.bioinfweb.libralign.pherogram.model.PherogramAreaModel;
+import info.bioinfweb.libralign.pherogram.model.PherogramCutPositionChangeEvent;
+import info.bioinfweb.libralign.pherogram.model.PherogramFirstSeqPosChangeEvent;
+import info.bioinfweb.libralign.pherogram.model.PherogramModelListener;
+import info.bioinfweb.libralign.pherogram.model.PherogramProviderChangeEvent;
+import info.bioinfweb.libralign.pherogram.model.PherogramShiftChangeUpdateEvent;
+import info.bioinfweb.libralign.pherogram.model.ShiftChange;
+import info.bioinfweb.libralign.pherogram.view.PherogramTraceCurveView;
+import info.bioinfweb.libralign.pherogram.view.PherogramView;
+import info.bioinfweb.tic.TICPaintEvent;
 
 
 
@@ -102,10 +97,10 @@ public class PherogramArea extends DataArea implements PherogramComponent {
 
 		@Override
 		public <T> void afterTokenChange(TokenChangeEvent<T> e) {
-			if (e.getSource().equals(getLabeledAlignmentArea().getAlignmentModel()) && 
+			if (e.getSource().equals(getModel().getAlignmentModel()) && 
 					(e.getSequenceID() == getList().getLocation().getSequenceID())) {
 				
-				int addend = getLabeledAlignmentArea().getEditSettings().isInsertLeftInDataArea() ? -1 : 0;
+				int addend = getOwner().getEditSettings().isInsertLeftInDataArea() ? -1 : 0;
 				int lastSeqPos = getModel().editableIndexByBaseCallIndex(getModel().getRightCutPosition() - 1).getAfter() - addend;
 				if (e.getStartIndex() <= lastSeqPos) {  // Do not process edits behind the pherogram.
 					int tokensBefore = Math.min(e.getAffectedTokens().size(), Math.max(0, getModel().getFirstSeqPos() - e.getStartIndex() - addend));
@@ -146,7 +141,7 @@ public class PherogramArea extends DataArea implements PherogramComponent {
 	private final PherogramModelListener DATA_MODEL_LISTENER = new PherogramModelListener() {
 		@Override
 		public void pherogramProviderChange(PherogramProviderChangeEvent event) {
-			getLabeledAlignmentArea().getSizeManager().setLocalMaxLengthBeforeAfterRecalculate();  // Could happen if cut lengths at the beginning and end differ.
+			getOwner().getSizeManager().setLocalMaxLengthBeforeAfterRecalculate();  // Could happen if cut lengths at the beginning and end differ.
 			getOwner().assignSizeToAll();
 			if (!event.isMoreEventsUpcoming()) {
 				repaint();  // Necessary in SWT, if no resize happened. 
@@ -252,7 +247,7 @@ public class PherogramArea extends DataArea implements PherogramComponent {
 	 * @throws IllegalArgumentException if {@code model} is already owned by another pherogram area 
 	 */
 	public PherogramArea(AlignmentArea owner, PherogramAreaModel model, PherogramFormats formats) {
-		super(owner, owner);  // Pherogram areas are always directly attached to their sequences.
+		super(owner);  // Pherogram areas are always directly attached to their sequences.
 		this.model = model;
 		model.addModelListener(DATA_MODEL_LISTENER);
 		this.formats = formats;
@@ -263,7 +258,7 @@ public class PherogramArea extends DataArea implements PherogramComponent {
 	
 	protected SimpleSequenceInterval calculatePaintRange(TICPaintEvent e) {
 		PherogramAlignmentRelation lowerBorderRelation = getModel().baseCallIndexByEditableIndex(
-				getLabeledAlignmentArea().getContentArea().columnByPaintX(e.getRectangle().getMinX()) - 2);  // - 2 because two (experimentally obtained) half visible column should be painted. (Why are this two?)
+				getOwner().getContentArea().columnByPaintX(e.getRectangle().getMinX()) - 2);  // - 2 because two (experimentally obtained) half visible column should be painted. (Why are this two?)
 		int lowerBorder;
 		if (lowerBorderRelation.getCorresponding() == PherogramAlignmentRelation.GAP) {
 			lowerBorder = lowerBorderRelation.getBefore();
@@ -273,7 +268,7 @@ public class PherogramArea extends DataArea implements PherogramComponent {
 		}
 
 		PherogramAlignmentRelation upperBorderRelation = getModel().baseCallIndexByEditableIndex(
-				getLabeledAlignmentArea().getContentArea().columnByPaintX(e.getRectangle().getMinX() + e.getRectangle().getWidth()) + 2);  // + 1 + 1 because BioJava indices start with 1 and one half visible column should be painted.
+				getOwner().getContentArea().columnByPaintX(e.getRectangle().getMinX() + e.getRectangle().getWidth()) + 2);  // + 1 + 1 because BioJava indices start with 1 and one half visible column should be painted.
 		int upperBorder;
 		if (upperBorderRelation.getCorresponding() == PherogramAlignmentRelation.GAP) {
 			upperBorder = upperBorderRelation.getAfter();
@@ -366,9 +361,9 @@ public class PherogramArea extends DataArea implements PherogramComponent {
 		Graphics2D g = e.getGraphics();
 		g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 		
-		double leftX = getLabeledAlignmentArea().getContentArea().paintXByColumn(
+		double leftX = getOwner().getContentArea().paintXByColumn(
 				getModel().editableIndexByBaseCallIndex(getModel().getLeftCutPosition()).getBefore()); // getAfter());
-		double rightX = getLabeledAlignmentArea().getContentArea().paintXByColumn(
+		double rightX = getOwner().getContentArea().paintXByColumn(
 				getModel().editableIndexByBaseCallIndex(getModel().getRightCutPosition() - 1).getAfter() + 1);
 		
 		// Draw cut off background:
@@ -393,17 +388,17 @@ public class PherogramArea extends DataArea implements PherogramComponent {
 		g.fill(new Rectangle2D.Double(leftX, e.getRectangle().getMinY(), rightX - leftX, e.getRectangle().getHeight()));
 
 		SimpleSequenceInterval paintRange = calculatePaintRange(e);
-		double x = getLabeledAlignmentArea().getContentArea().paintXByColumn(getModel().getFirstSeqPos() - getModel().getLeftCutPosition());
+		double x = getOwner().getContentArea().paintXByColumn(getModel().getFirstSeqPos() - getModel().getLeftCutPosition());
 		double y = 0; 
 		double height = getHeight();
 		double fontZoom = getFormats().calculateFontZoomFactor(this);
 		ScaledPherogramDistortion distortion = createPherogramDistortion();
 		
 		// Paint gaps:
-		if (getLabeledAlignmentArea().getAlignmentModel() instanceof ConcatenatedAlignmentModel) {
+		if (getModel().getAlignmentModel() instanceof ConcatenatedAlignmentModel) {
 			throw new InternalError("Support for concatenated models not yet implemented.");
 		}
-		double tokenWidth = getLabeledAlignmentArea().getPaintSettings().getTokenWidth(0);  //TODO Use index of an aligned column to determine correct width also for concatenated models.
+		double tokenWidth = getOwner().getPaintSettings().getTokenWidth(0);  //TODO Use index of an aligned column to determine correct width also for concatenated models.
 		
 		painter.paintGaps(g, paintRange.getFirstPos(), paintRange.getLastPos(), x, y, height,	distortion, tokenWidth);
 		
@@ -473,7 +468,7 @@ public class PherogramArea extends DataArea implements PherogramComponent {
 
 
 	private void updateChangedPosition() {
-		getLabeledAlignmentArea().getSizeManager().setLocalMaxLengthBeforeAfterRecalculate();
+		getOwner().getSizeManager().setLocalMaxLengthBeforeAfterRecalculate();
 		repaint();  //TODO Is this necessary?
   }
   
@@ -495,7 +490,7 @@ public class PherogramArea extends DataArea implements PherogramComponent {
   	if (getList() != null) {
 	  	String sequenceID = getList().getLocation().getSequenceID();
 	  	if (sequenceID != null) {
-		  	AlignmentModel model = getLabeledAlignmentModel();
+		  	AlignmentModel model = getModel().getAlignmentModel();
 		  	TokenSet tokenSet = model.getTokenSet();
 		  	for (int baseCallIndex = startBaseCallIndex; baseCallIndex < endBaseCallIndex; baseCallIndex++) {
 		  		String base = Character.toString(getModel().getPherogramProvider().getBaseCall(baseCallIndex)).toUpperCase();
@@ -514,13 +509,14 @@ public class PherogramArea extends DataArea implements PherogramComponent {
   @SuppressWarnings("unchecked")
 	private void setGaps(int startEditableIndex, int length) {
   	if (getList() != null) {
+  		AlignmentModel<Object> model = (AlignmentModel<Object>)getModel().getAlignmentModel();
 	  	Collection<Object> tokens = new ArrayList<Object>(length);
 	  	for (int i = 0; i < length; i++) {
-				tokens.add(getLabeledAlignmentModel().getTokenSet().getGapToken());
+				tokens.add(model.getTokenSet().getGapToken());
 			}
 	  	String sequenceID = getList().getLocation().getSequenceID();
 	  	if (sequenceID != null) {
-	  		((AlignmentModel<Object>)getLabeledAlignmentModel()).setTokensAt(sequenceID, startEditableIndex, tokens);
+	  		model.setTokensAt(sequenceID, startEditableIndex, tokens);
 	  	}
   	}
   }
@@ -612,14 +608,14 @@ public class PherogramArea extends DataArea implements PherogramComponent {
 
 	@Override
 	public double getLengthBeforeStart() {
-		return Math.max(0, getLabeledAlignmentArea().getContentArea().paintXByColumn(getModel().baseCallIndexByEditableIndex(0).getAfter()));
+		return Math.max(0, getOwner().getContentArea().paintXByColumn(getModel().baseCallIndexByEditableIndex(0).getAfter()));
 	}
 
 
 	@Override
 	public double getLengthAfterEnd() {
 		int lastEditableIndex = getModel().editableIndexByBaseCallIndex(getModel().getRightCutPosition() - 1).getAfter();
-		double lengthOfOutputAfterAlignmentStart = getLabeledAlignmentArea().getContentArea().paintXByColumn(lastEditableIndex) + 
+		double lengthOfOutputAfterAlignmentStart = getOwner().getContentArea().paintXByColumn(lastEditableIndex) + 
 				(1 + getModel().getPherogramProvider().getSequenceLength() - getModel().getRightCutPosition()) *  
 				getOwner().getPaintSettings().getTokenWidth(Math.max(0, getModel().getFirstSeqPos())) - getLengthBeforeStart();  // Math.max(0, ...) is used because this method might be called during the execution of setter cut position method, when other properties are not yet adjusted.  
 		return Math.max(0, lengthOfOutputAfterAlignmentStart - getOwner().getSizeManager().getLocalMaximumNeededAlignmentWidth());
@@ -628,6 +624,6 @@ public class PherogramArea extends DataArea implements PherogramComponent {
 
 	@Override
 	public double getHeight() {
-		return DEFAULT_HEIGHT_FACTOR * getLabeledAlignmentArea().getPaintSettings().getTokenHeight();
+		return DEFAULT_HEIGHT_FACTOR * getOwner().getPaintSettings().getTokenHeight();
 	}
 }

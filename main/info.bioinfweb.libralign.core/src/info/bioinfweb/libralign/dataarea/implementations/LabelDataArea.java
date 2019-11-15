@@ -29,7 +29,6 @@ import java.util.Set;
 
 import info.bioinfweb.commons.graphics.FontCalculator;
 import info.bioinfweb.libralign.alignmentarea.AlignmentArea;
-import info.bioinfweb.libralign.alignmentarea.content.AlignmentContentArea;
 import info.bioinfweb.libralign.alignmentarea.content.AlignmentPaintEvent;
 import info.bioinfweb.libralign.dataarea.DataArea;
 import info.bioinfweb.libralign.dataelement.DataListType;
@@ -56,24 +55,23 @@ public class LabelDataArea extends DataArea {
 	private boolean isRepainting = false;
 	
 	
-	public LabelDataArea(AlignmentArea owner, AlignmentArea labeledArea) {
-		this(owner, labeledArea, "");
+	public LabelDataArea(AlignmentArea owner) {
+		this(owner, "");
 	}
 	
 	
-	public LabelDataArea(AlignmentArea owner, AlignmentArea labeledArea, String text) {
-		this(owner, labeledArea, text, false, false);
+	public LabelDataArea(AlignmentArea owner, String text) {
+		this(owner, text, false, false);
 	}
 	
 	
-	public LabelDataArea(AlignmentArea owner, AlignmentArea labeledArea, String text, boolean alignToFirstColumn, 
-			boolean alignToScrollPosition) {
+	public LabelDataArea(AlignmentArea owner, String text, boolean alignToFirstColumn, boolean alignToScrollPosition) {
 		
-		super(owner, labeledArea);
+		super(owner);
 		this.text = text;
 		this.alignToFirstColumn = alignToFirstColumn;
 		this.alignToScrollPosition = alignToScrollPosition;
-		font = getLabeledAlignmentArea().getPaintSettings().getTokenHeightFont();
+		font = getOwner().getPaintSettings().getTokenHeightFont();
 	}
 
 
@@ -242,6 +240,6 @@ public class LabelDataArea extends DataArea {
 
 	@Override
 	public double getHeight() {
-		return getLabeledAlignmentArea().getPaintSettings().getZoomY() * FontCalculator.getInstance().getTextHeightByFontSize(getFont());
+		return getOwner().getPaintSettings().getZoomY() * FontCalculator.getInstance().getTextHeightByFontSize(getFont());
 	}
 }
