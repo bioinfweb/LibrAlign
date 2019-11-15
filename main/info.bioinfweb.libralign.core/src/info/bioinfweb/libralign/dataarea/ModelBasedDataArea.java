@@ -34,8 +34,9 @@ import info.bioinfweb.libralign.model.data.DataModel;
  *
  * @param <M> the class of the associated data model
  */
-public abstract class ModelBasedDataArea<M extends DataModel<?>> extends DataArea {
+public abstract class ModelBasedDataArea<M extends DataModel<L>, L> extends DataArea {
 	private M model;
+	private L modelListener;
 
 	
 	/**
@@ -49,7 +50,11 @@ public abstract class ModelBasedDataArea<M extends DataModel<?>> extends DataAre
 	public ModelBasedDataArea(AlignmentArea owner, M model) {
 		super(owner);		
 		setModel(model);
+		modelListener = createListener();
 	}
+	
+	
+	protected abstract L createListener();
 
 
 	/**
@@ -63,11 +68,9 @@ public abstract class ModelBasedDataArea<M extends DataModel<?>> extends DataAre
 
 
 	/**
-	 * Sets a new model.
+	 * Sets a new model and moves the model listener of this instance to the new model.
 	 * <p>
 	 * This methods fires a {@link PropertyChangeEvent} with the property name {@code model}.
-	 * <p>
-	 * Inherited classes need to take care about moving their possible listener(s).
 	 * 
 	 * @param model the new model to be used from now on
 	 */
@@ -77,7 +80,13 @@ public abstract class ModelBasedDataArea<M extends DataModel<?>> extends DataAre
 		}
 		else {
 			M result = this.model;
+			
+			if (this.model != null) {
+				this.model.removeModelListener(modelListener);
+			}
 			this.model = model;
+			model.addModelListener(modelListener);
+			
 			propertyChangeListeners.firePropertyChange("model", result, model);
 			return result;
 		}

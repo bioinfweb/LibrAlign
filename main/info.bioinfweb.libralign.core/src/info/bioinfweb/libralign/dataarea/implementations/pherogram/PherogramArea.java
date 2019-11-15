@@ -36,7 +36,7 @@ import info.bioinfweb.commons.collections.SimpleSequenceInterval;
 import info.bioinfweb.libralign.alignmentarea.AlignmentArea;
 import info.bioinfweb.libralign.alignmentarea.content.AlignmentPaintEvent;
 import info.bioinfweb.libralign.alignmentarea.tokenpainter.TokenPainter;
-import info.bioinfweb.libralign.dataarea.DataArea;
+import info.bioinfweb.libralign.dataarea.ModelBasedDataArea;
 import info.bioinfweb.libralign.dataelement.DataListType;
 import info.bioinfweb.libralign.model.AlignmentModel;
 import info.bioinfweb.libralign.model.AlignmentModelAdapter;
@@ -73,18 +73,17 @@ import info.bioinfweb.tic.TICPaintEvent;
  * @since 0.1.0
  * @see PherogramView
  */
-public class PherogramArea extends DataArea implements PherogramComponent {
+public class PherogramArea extends ModelBasedDataArea<PherogramAreaModel, PherogramModelListener> implements PherogramComponent {
 	public static final int DEFAULT_HEIGHT_FACTOR = 5;
 	
 	
-	private PherogramAreaModel model;
 	private boolean updateEditableSequence = true;
 	private double verticalScale;
 	private PherogramFormats formats;
 	private PherogramPainter painter = new PherogramPainter(this);
 
 	
-	private final AlignmentModelListener ALIGNMENT_MODEL_LISTENER = new AlignmentModelAdapter() {
+	private final AlignmentModelListener alignmentModelListener = new AlignmentModelAdapter() {  //TODO Attach this
 		@Override
 		public <T> void afterSequenceChange(SequenceChangeEvent<T> e) {
 			//TODO React if the associated sequence was removed? (AlignmentContentArea should probably better implement this behavior.)
@@ -138,81 +137,6 @@ public class PherogramArea extends DataArea implements PherogramComponent {
 	};
 	
 	
-	private final PherogramModelListener DATA_MODEL_LISTENER = new PherogramModelListener() {
-		@Override
-		public void pherogramProviderChange(PherogramProviderChangeEvent event) {
-			getOwner().getSizeManager().setLocalMaxLengthBeforeAfterRecalculate();  // Could happen if cut lengths at the beginning and end differ.
-			getOwner().assignSizeToAll();
-			if (!event.isMoreEventsUpcoming()) {
-				repaint();  // Necessary in SWT, if no resize happened. 
-			}
-		}
-
-		
-		@Override
-		public void leftCutPositionChange(PherogramCutPositionChangeEvent event) {
-			if (!event.isMoreEventsUpcoming()) {
-				updateChangedPosition();
-			}
-			
-			//TODO Changes to the alignment model should not be done here in the view. The two models should communicate directly.
-			if (isUpdateEditableSequence() && !getOwner().getAlignmentModel().isTokensReadOnly()) {
-				if (event.getNewBaseCallIndex() < event.getOldBaseCallIndex()) {
-					copyBaseCallSequence(event.getNewBaseCallIndex(), event.getOldBaseCallIndex());  // Needs to be called after all changes are performed in order to calculate correct indices.
-				}
-				else {
-					int oldEditableIndex = event.getOldEditableIndex().getBefore();
-					int newEditableIndex = event.getNewEditableIndex().getBefore();
-					if (oldEditableIndex < newEditableIndex) {
-						setGaps(oldEditableIndex, newEditableIndex - oldEditableIndex);
-					}
-				}
-			}
-		}
-
-		
-		@Override
-		public void rightCutPositionChange(PherogramCutPositionChangeEvent event) {
-			if (!event.isMoreEventsUpcoming()) {
-				updateChangedPosition();
-			}
-			
-			//TODO Changes to the alignment model should not be done here in the view. The two models should communicate directly.
-			if (isUpdateEditableSequence() && !getOwner().getAlignmentModel().isTokensReadOnly()) {
-				if (event.getOldBaseCallIndex() < event.getNewBaseCallIndex()) {
-					copyBaseCallSequence(event.getOldBaseCallIndex(), event.getNewBaseCallIndex());  // Needs to be called after all changes are performed in order to calculate correct indices.
-				}
-				else {
-					int oldEditableIndex = event.getOldEditableIndex().getBefore();
-					if (event.getOldBaseCallIndex() == getModel().getPherogramProvider().getSequenceLength()) {
-						oldEditableIndex++;  // corresponding is OUT_OF_RANGE and "before" is one left.  
-					}
-					int newEditableIndex = event.getNewEditableIndex().getCorresponding();
-					if (newEditableIndex < oldEditableIndex) {
-						setGaps(newEditableIndex, oldEditableIndex - newEditableIndex);
-					}
-				}
-			}
-		}
-
-
-		@Override
-		public void firstSequencePositionChange(PherogramFirstSeqPosChangeEvent event) {
-			if (!event.isMoreEventsUpcoming()) {
-				updateChangedPosition();
-			}
-		}
-
-
-		@Override
-		public void shiftChangeEdited(PherogramShiftChangeUpdateEvent event) {
-			if (!event.isMoreEventsUpcoming()) {
-				repaint();
-			}
-		}
-	};
-	
-
 	private final PropertyChangeListener FORMATS_LISTENER = new PropertyChangeListener() {
 		@Override
 		public void propertyChange(PropertyChangeEvent event) {
@@ -247,15 +171,100 @@ public class PherogramArea extends DataArea implements PherogramComponent {
 	 * @throws IllegalArgumentException if {@code model} is already owned by another pherogram area 
 	 */
 	public PherogramArea(AlignmentArea owner, PherogramAreaModel model, PherogramFormats formats) {
-		super(owner);  // Pherogram areas are always directly attached to their sequences.
-		this.model = model;
-		model.addModelListener(DATA_MODEL_LISTENER);
+		super(owner, model);
 		this.formats = formats;
 		formats.addPropertyChangeListener(FORMATS_LISTENER);
 		verticalScale = getHeight();
+		
+		addPropertyChangeListener("model", new PropertyChangeListener() {
+			@Override
+			public void propertyChange(PropertyChangeEvent event) {
+				// Move listener to owning alignment model if data model was changed.
+				((PherogramAreaModel)event.getOldValue()).getAlignmentModel().removeModelListener(alignmentModelListener);
+				((PherogramAreaModel)event.getNewValue()).getAlignmentModel().addModelListener(alignmentModelListener);
+			}
+		});
 	}
 	
 	
+	@Override
+	protected PherogramModelListener createListener() {
+		return new PherogramModelListener() {
+			@Override
+			public void pherogramProviderChange(PherogramProviderChangeEvent event) {
+				getOwner().getSizeManager().setLocalMaxLengthBeforeAfterRecalculate();  // Could happen if cut lengths at the beginning and end differ.
+				getOwner().assignSizeToAll();
+				if (!event.isMoreEventsUpcoming()) {
+					repaint();  // Necessary in SWT, if no resize happened. 
+				}
+			}
+
+			
+			@Override
+			public void leftCutPositionChange(PherogramCutPositionChangeEvent event) {
+				if (!event.isMoreEventsUpcoming()) {
+					updateChangedPosition();
+				}
+				
+				//TODO Changes to the alignment model should not be done here in the view. The two models should communicate directly.
+				if (isUpdateEditableSequence() && !getOwner().getAlignmentModel().isTokensReadOnly()) {
+					if (event.getNewBaseCallIndex() < event.getOldBaseCallIndex()) {
+						copyBaseCallSequence(event.getNewBaseCallIndex(), event.getOldBaseCallIndex());  // Needs to be called after all changes are performed in order to calculate correct indices.
+					}
+					else {
+						int oldEditableIndex = event.getOldEditableIndex().getBefore();
+						int newEditableIndex = event.getNewEditableIndex().getBefore();
+						if (oldEditableIndex < newEditableIndex) {
+							setGaps(oldEditableIndex, newEditableIndex - oldEditableIndex);
+						}
+					}
+				}
+			}
+
+			
+			@Override
+			public void rightCutPositionChange(PherogramCutPositionChangeEvent event) {
+				if (!event.isMoreEventsUpcoming()) {
+					updateChangedPosition();
+				}
+				
+				//TODO Changes to the alignment model should not be done here in the view. The two models should communicate directly.
+				if (isUpdateEditableSequence() && !getOwner().getAlignmentModel().isTokensReadOnly()) {
+					if (event.getOldBaseCallIndex() < event.getNewBaseCallIndex()) {
+						copyBaseCallSequence(event.getOldBaseCallIndex(), event.getNewBaseCallIndex());  // Needs to be called after all changes are performed in order to calculate correct indices.
+					}
+					else {
+						int oldEditableIndex = event.getOldEditableIndex().getBefore();
+						if (event.getOldBaseCallIndex() == getModel().getPherogramProvider().getSequenceLength()) {
+							oldEditableIndex++;  // corresponding is OUT_OF_RANGE and "before" is one left.  
+						}
+						int newEditableIndex = event.getNewEditableIndex().getCorresponding();
+						if (newEditableIndex < oldEditableIndex) {
+							setGaps(newEditableIndex, oldEditableIndex - newEditableIndex);
+						}
+					}
+				}
+			}
+
+
+			@Override
+			public void firstSequencePositionChange(PherogramFirstSeqPosChangeEvent event) {
+				if (!event.isMoreEventsUpcoming()) {
+					updateChangedPosition();
+				}
+			}
+
+
+			@Override
+			public void shiftChangeEdited(PherogramShiftChangeUpdateEvent event) {
+				if (!event.isMoreEventsUpcoming()) {
+					repaint();
+				}
+			}
+		};
+	}
+
+
 	protected SimpleSequenceInterval calculatePaintRange(TICPaintEvent e) {
 		PherogramAlignmentRelation lowerBorderRelation = getModel().baseCallIndexByEditableIndex(
 				getOwner().getContentArea().columnByPaintX(e.getRectangle().getMinX()) - 2);  // - 2 because two (experimentally obtained) half visible column should be painted. (Why are this two?)
@@ -432,13 +441,7 @@ public class PherogramArea extends DataArea implements PherogramComponent {
 	}
 
 
-	@Override
-	public PherogramAreaModel getModel() {
-		return model;
-	}
-  
-	
-  /**
+	/**
    * Indicates whether the editable sequence should be updated if the cut positions of the model
    * are modified. 
    * <p>

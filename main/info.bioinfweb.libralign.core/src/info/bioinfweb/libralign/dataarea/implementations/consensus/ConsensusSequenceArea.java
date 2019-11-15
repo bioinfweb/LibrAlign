@@ -46,7 +46,7 @@ import info.bioinfweb.libralign.dataelement.DataListType;
  * @author Ben St&ouml;ver
  * @since 0.0.0
  */
-public class ConsensusSequenceArea extends ModelBasedDataArea<ConsensusSequenceModel> {
+public class ConsensusSequenceArea extends ModelBasedDataArea<ConsensusSequenceModel, ConsensusSequenceModelListener> {
 	public static final float DEFAULT_HEIGHT_FACTOR = 3f;
 
 	
@@ -59,17 +59,21 @@ public class ConsensusSequenceArea extends ModelBasedDataArea<ConsensusSequenceM
 	 */
 	public ConsensusSequenceArea(AlignmentArea owner, ConsensusSequenceModel model) {
 		super(owner, model);
-		
-		model.addModelListener(new ConsensusSequenceModelListener() {
+	}
+
+	
+	@Override
+	protected ConsensusSequenceModelListener createListener() {
+		return new ConsensusSequenceModelListener() {
 			@Override
 			public void afterConsensusUpdated(GenericEventObject<ConsensusSequenceModel> event) {
 				assignSize();
 				repaint();
 			}
-		});
+		};
 	}
 
-	
+
 	@Override
 	public double getHeight() {
 		return DEFAULT_HEIGHT_FACTOR * getOwner().getPaintSettings().getTokenHeight();

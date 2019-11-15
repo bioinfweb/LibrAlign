@@ -55,7 +55,7 @@ import info.bioinfweb.tic.input.TICMouseEvent;
  * @author Ben St&ouml;ver
  * @since 0.2.0
  */
-public class CharSetArea extends ModelBasedDataArea<CharSetDataModel> {
+public class CharSetArea extends ModelBasedDataArea<CharSetDataModel, CharSetDataModelListener> {
 	public static final double BORDER_FRACTION = 0.17;
 	
 	
@@ -63,39 +63,6 @@ public class CharSetArea extends ModelBasedDataArea<CharSetDataModel> {
 	private Set<SelectionListener<GenericEventObject<CharSetArea>>> selectionListeners = 
 			new HashSet<SelectionListener<GenericEventObject<CharSetArea>>>();
 	
-	private CharSetDataModelListener modelListener = new CharSetDataModelListener() {
-		@Override
-		public void afterCharSetRenamed(CharSetRenamedEvent e) {
-			if (e.isLastEvent()) {
-				getOwner().revalidate();
-				repaint();
-			}
-		}
-		
-		@Override
-		public void afterCharSetColumnChange(CharSetColumnChangeEvent e) {
-			if (e.isLastEvent()) {
-				repaint();
-			}
-		}
-		
-		@Override
-		public void afterCharSetColorChange(CharSetColorChangeEvent e) {
-			if (e.isLastEvent()) {
-				repaint();
-			}
-		}
-		
-		@Override
-		public void afterCharSetChange(CharSetChangeEvent e) {
-			if (e.isLastEvent()) {
-				checkSelectedIndex();
-				getOwner().revalidate();
-				repaint();
-			}
-		}
-	};
-
 	
 	/**
 	 * Creates a new instance of this class.
@@ -106,8 +73,6 @@ public class CharSetArea extends ModelBasedDataArea<CharSetDataModel> {
 	 */
 	public CharSetArea(AlignmentArea owner, CharSetDataModel model) {
 		super(owner, model);
-		
-		model.addModelListener(modelListener);
 		
 		addMouseListener(new TICMouseAdapter() {
 			@Override
@@ -125,6 +90,43 @@ public class CharSetArea extends ModelBasedDataArea<CharSetDataModel> {
 				return false;
 			}
 		});
+	}
+
+
+	@Override
+	protected CharSetDataModelListener createListener() {
+		return new CharSetDataModelListener() {
+			@Override
+			public void afterCharSetRenamed(CharSetRenamedEvent e) {
+				if (e.isLastEvent()) {
+					getOwner().revalidate();
+					repaint();
+				}
+			}
+			
+			@Override
+			public void afterCharSetColumnChange(CharSetColumnChangeEvent e) {
+				if (e.isLastEvent()) {
+					repaint();
+				}
+			}
+			
+			@Override
+			public void afterCharSetColorChange(CharSetColorChangeEvent e) {
+				if (e.isLastEvent()) {
+					repaint();
+				}
+			}
+			
+			@Override
+			public void afterCharSetChange(CharSetChangeEvent e) {
+				if (e.isLastEvent()) {
+					checkSelectedIndex();
+					getOwner().revalidate();
+					repaint();
+				}
+			}
+		};
 	}
 
 
