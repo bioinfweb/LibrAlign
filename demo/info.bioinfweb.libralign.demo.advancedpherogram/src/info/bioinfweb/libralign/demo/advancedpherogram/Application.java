@@ -110,7 +110,7 @@ public class Application {
 		
 		// Create alignment area to display the alignment model contents:
 		alignmentArea = new AlignmentArea();
-		alignmentArea.setAlignmentModel(alignmentModel, false);
+		alignmentArea.setAlignmentModel(alignmentModel);
 		
 		// Create pherogram data area to display the pherogram raw data:
 		pherogramDataArea = new PherogramArea(alignmentArea, pherogramModel);
