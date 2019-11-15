@@ -60,14 +60,4 @@ public interface AlignmentModelListener extends ListChangeListener<DataModel> {
 	 * @param e the event object containing information on the change
 	 */
 	public <T> void afterTokenChange(TokenChangeEvent<T> e);
-
-	/**
-	 * Called if this listener was moved to another instance of {@link AlignmentModel}.
-	 * <p>
-	 * This happens if the alignment model of an {@link AlignmentArea} was changed.
-	 * 
-	 * @param previous the alignment model this listener was attached to before the event happened
-	 * @param current the new alignment model this listener is attached to now
-	 */
-	public <T, U> void afterModelChanged(AlignmentModel<T> previous, AlignmentModel<U> current);
 }

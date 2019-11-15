@@ -19,21 +19,19 @@
 package info.bioinfweb.libralign.model.implementations.decorate;
 
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+
 import info.bioinfweb.commons.bio.CharacterStateSetType;
 import info.bioinfweb.commons.collections.PackedObjectArrayList;
 import info.bioinfweb.libralign.model.AlignmentModel;
-import info.bioinfweb.libralign.model.AlignmentModelListener;
 import info.bioinfweb.libralign.model.AlignmentModelView;
 import info.bioinfweb.libralign.model.AlignmentModelWriteType;
 import info.bioinfweb.libralign.model.events.TokenChangeEvent;
 import info.bioinfweb.libralign.model.exception.AlignmentSourceNotWritableException;
 import info.bioinfweb.libralign.model.exception.SequenceNotFoundException;
 import info.bioinfweb.libralign.model.tokenset.TokenSet;
-
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Set;
 
 
 
@@ -378,10 +376,4 @@ public abstract class AbstractTokenReplacementAlignmentModelDecorator<T, U> exte
 			throw new SequenceNotFoundException(this, sequenceID);
 		}
 	}
-
-
-	@Override
-	public Set<AlignmentModelListener> getChangeListeners() {
-		return getUnderlyingModel().getChangeListeners();  //TODO Does in make sense to forward these directly? Could indices have changed? Should new listeners really be registered in the underlying model?
-	}	
 }

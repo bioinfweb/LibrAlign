@@ -205,14 +205,6 @@ public class AlignmentArea extends ScrollingTICComponent {
 
 
 		@Override
-		public <T, U> void afterModelChanged(AlignmentModel<T> previous, AlignmentModel<U> current) {
-			getLabelArea().setLocalMaxWidthRecalculateToAll();  // Needs to be called before assignSizeToAll().
-			//TODO Remove some data areas? (Some might be data specific (e.g. pherograms), some not (e.g. consensus sequence).)
-			assignSizeToAll();  //TODO reinsertSubements()?
-		}
-		
-		
-		@Override
 		public void afterElementsRemoved(ListRemoveEvent<DataModel, DataModel> event) {
 			//TODO Reaction required?
 		}
@@ -414,7 +406,7 @@ public class AlignmentArea extends ScrollingTICComponent {
 	
 	
 	/**
-	 * Changes the alignment model providing the data for this instance.
+	 * Changes the alignment model providing the data for this instance and moves the listener of this view to the new model.
 	 * 
 	 * @param alignmentModel the new alignment model to use from now on
 	 * @param moveListeners Specify {@code true} here, if you want the {@link AlignmentModelListener}s
@@ -424,43 +416,22 @@ public class AlignmentArea extends ScrollingTICComponent {
 	 *        specified here.)
 	 * @return the previous model that has been replaced or {@code null} if there was no model before
 	 */
-	public AlignmentModel<?> setAlignmentModel(AlignmentModel<?> alignmentModel, boolean moveListeners) {
+	public AlignmentModel<?> setAlignmentModel(AlignmentModel<?> alignmentModel) {
 		AlignmentModel<?> result = this.alignmentModel;
 		if (alignmentModel != this.alignmentModel) {
 			if (this.alignmentModel != null) {
-				if (moveListeners) {  // Move all listeners
-					alignmentModel.getChangeListeners().addAll(this.alignmentModel.getChangeListeners());
-					this.alignmentModel.getChangeListeners().clear();
-				}
-				else {  // Move this instance as the listener anyway:
-					this.alignmentModel.getChangeListeners().remove(alignmentModelListener);
-					alignmentModel.getChangeListeners().add(alignmentModelListener);
-				}
+				this.alignmentModel.removeModelListener(alignmentModelListener);
 			}
-			
 			this.alignmentModel = alignmentModel;
+			alignmentModel.addModelListener(alignmentModelListener);
+			
+			getLabelArea().setLocalMaxWidthRecalculateToAll();  // Needs to be called before assignSizeToAll().
+			//TODO Remove some data areas? (Some might be data specific (e.g. pherograms), some not (e.g. consensus sequence).)
 			getSequenceOrder().setSourceSequenceOrder();  // Update sequence names
 			updateSubelements();
-			
-      // Fire events for listener move after the process finished
-			if (this.alignmentModel != null) {
-				if (!this.alignmentModel.getChangeListeners().contains(alignmentModelListener)) {  // Add this object as a listener if it was not already moved from the previous provider.
-					this.alignmentModel.getChangeListeners().add(alignmentModelListener);
-				}
-				
-				if (moveListeners) {
-					Iterator<AlignmentModelListener> iterator = this.alignmentModel.getChangeListeners().iterator();
-					while (iterator.hasNext()) {
-						iterator.next().afterModelChanged(result, this.alignmentModel);
-					}
-				}
-				else {
-					alignmentModelListener.afterModelChanged(result, this.alignmentModel);
-				}
-			}
+			getPaintSettings().getTokenPainterList().afterAlignmentModelChanged();
+			assignSizeToAll();  //TODO reinsertSubements()?
 		}
-		getPaintSettings().getTokenPainterList().afterAlignmentModelChanged();
-		
 		return result;
 	}
 	

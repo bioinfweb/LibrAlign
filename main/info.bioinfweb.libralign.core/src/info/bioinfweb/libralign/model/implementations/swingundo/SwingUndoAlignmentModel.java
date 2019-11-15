@@ -119,7 +119,7 @@ public class SwingUndoAlignmentModel<T> extends AbstractAlignmentModel<T>
 			
 			@SuppressWarnings("rawtypes")
 			final SwingUndoAlignmentModel newModel = this;
-			underlyingModel.getChangeListeners().add(new AlignmentModelAdapter() {
+			underlyingModel.addModelListener(new AlignmentModelAdapter() {
 				@SuppressWarnings("unchecked")
 				@Override
 				public <V> void afterTokenChange(TokenChangeEvent<V> e) {
@@ -137,9 +137,6 @@ public class SwingUndoAlignmentModel<T> extends AbstractAlignmentModel<T>
 				public <V> void afterSequenceChange(SequenceChangeEvent<V> e) {
 					fireAfterSequenceChange((SequenceChangeEvent<T>)e.cloneWithNewSource(newModel));
 				}
-				
-				@Override
-				public <V, W> void afterModelChanged(AlignmentModel<V> previous, AlignmentModel<W> current) {}  // Forwarding this event does not make sence, since the underlying model should not be contained in any alignment area. If it anyway is, it would be independet of the alignment area this model is contained in.
 				
 				//TODO Possibly implement additional new events. (cf. #355)
 			});

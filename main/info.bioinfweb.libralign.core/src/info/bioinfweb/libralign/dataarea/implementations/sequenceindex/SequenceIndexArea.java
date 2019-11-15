@@ -91,19 +91,13 @@ public class SequenceIndexArea extends DataArea {
 	public SequenceIndexArea(AlignmentArea owner, AlignmentArea labeledArea) {
 		super(owner, labeledArea);
 		
-		labeledArea.getAlignmentModel().getChangeListeners().add(new AlignmentModelAdapter() {
+		labeledArea.getAlignmentModel().addModelListener(new AlignmentModelAdapter() {
 			@Override
 			public <T> void afterTokenChange(TokenChangeEvent<T> e) {
 				if (!e.getType().equals(ListChangeType.REPLACEMENT)) {
 					assignSize();  // Length of the longest sequence could have changed.
 					repaint();  // In case the size did not change, but the space before the alignment did.
 				}
-			}
-			
-			@Override
-			public <T, U> void afterModelChanged(AlignmentModel<T> previous, AlignmentModel<U> current) {
-				assignSize();
-				repaint();  // In case the size did not change, but the space before the alignment did.
 			}
 		});
 		//TODO Listener needs to be removed again, when this data area is removed.

@@ -140,12 +140,6 @@ public class PherogramArea extends DataArea implements PherogramComponent {
 				repaint();  // The space before the alignment could have changed. (Only necessary in SWT. Swing seems to repaint automatically.)
 			}
 		}
-
-
-		@Override
-		public <T, U> void afterModelChanged(AlignmentModel<T> previous,	AlignmentModel<U> current) {
-			//TODO Implement? (It usually does not make sense to move sequence-attached data areas to a new model, unless this has the same sequences with the same IDs.) 
-		}  
 	};
 	
 	

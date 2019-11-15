@@ -47,8 +47,4 @@ public class AlignmentModelAdapter extends ListChangeAdapter<DataModel> implemen
 	
 	@Override
 	public <T> void afterTokenChange(TokenChangeEvent<T> e) {}
-
-	
-	@Override
-	public <T, U> void afterModelChanged(AlignmentModel<T> previous, AlignmentModel<U> current) {}
 }

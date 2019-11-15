@@ -58,7 +58,7 @@ public abstract class AbstractIndexTranslator<T, D> implements IndexTranslator<T
 		this.model = model;
 		this.gapTokens = gapTokens;
 		
-		model.getChangeListeners().add(MODEL_LISTENER);
+		model.addModelListener(MODEL_LISTENER);
 	}
 	
 	
@@ -109,7 +109,7 @@ public abstract class AbstractIndexTranslator<T, D> implements IndexTranslator<T
 
 	@Override
 	protected void finalize() throws Throwable {
-		model.getChangeListeners().remove(MODEL_LISTENER);  //TODO Allow doing this manually with another method too?
+		model.removeModelListener(MODEL_LISTENER);  //TODO Allow doing this manually with another method too?
 		super.finalize();
 	}
 }

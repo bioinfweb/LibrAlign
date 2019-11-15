@@ -86,21 +86,6 @@ public class MultipleAlignmentsModelEventForwarder implements AlignmentModelList
 
 
 	@Override
-	public <T, U> void afterModelChanged(AlignmentModel<T> previous, AlignmentModel<U> current) {
-		previous.getChangeListeners().remove(this);
-		if (!current.getChangeListeners().contains(this)) {
-			current.getChangeListeners().add(this);
-		}
-
-		for (AlignmentArea alignmentArea : getOwner().getAlignmentAreas()) {
-			if ((current != null) && !current.equals(alignmentArea.getAlignmentModel())) {
-				//alignmentArea.afterModelChanged(previous, current);
-			}
-		}
-	}
-
-
-	@Override
 	public void beforeElementsAdded(ListAddEvent<DataModel> event) {
 		// TODO Auto-generated method stub
 		

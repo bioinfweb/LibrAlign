@@ -19,18 +19,17 @@
 package info.bioinfweb.libralign.model.implementations.decorate;
 
 
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.Set;
+
 import info.bioinfweb.libralign.model.AlignmentModel;
-import info.bioinfweb.libralign.model.AlignmentModelListener;
 import info.bioinfweb.libralign.model.AlignmentModelView;
 import info.bioinfweb.libralign.model.AlignmentModelWriteType;
 import info.bioinfweb.libralign.model.adapters.AbstractBasicAlignmentModelView;
 import info.bioinfweb.libralign.model.exception.AlignmentSourceNotWritableException;
 import info.bioinfweb.libralign.model.exception.SequenceNotFoundException;
 import info.bioinfweb.libralign.model.tokenset.TokenSet;
-
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.Set;
 
 
 
@@ -159,11 +158,6 @@ public abstract class DelegatedAlignmentModelView<T> extends AbstractBasicAlignm
 	
 	public int getSequenceCount() {
 		return getUnderlyingModel().getSequenceCount();
-	}
-	
-	
-	public Set<AlignmentModelListener> getChangeListeners() {
-		return getUnderlyingModel().getChangeListeners();
 	}
 	
 	

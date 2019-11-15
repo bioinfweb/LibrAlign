@@ -63,7 +63,7 @@ public abstract class AbstractAlignmentModelDecorator<T, U> extends AbstractAlig
 		super();
 		this.tokenSet = tokenSet;
 		this.underlyingModel = underlyingModel;
-		underlyingModel.getChangeListeners().add(new AlignmentModelListener() {
+		underlyingModel.addModelListener(new AlignmentModelListener() {
 			@Override
 			public <V> void afterTokenChange(TokenChangeEvent<V> e) {
 				for (TokenChangeEvent<T> event: convertTokenChangeEvent((TokenChangeEvent<U>)e)) {
@@ -120,12 +120,6 @@ public abstract class AbstractAlignmentModelDecorator<T, U> extends AbstractAlig
 			@Override
 			public void afterElementsRemoved(ListRemoveEvent<DataModel, DataModel> event) {
 				//TODO Implement forwarding. (#355)
-			}
-
-			
-			@Override
-			public <T, U> void afterModelChanged(AlignmentModel<T> previous, AlignmentModel<U> current) {
-				//TODO Implement forwarding, if necessary. (#355)
 			}
 		});
 	}

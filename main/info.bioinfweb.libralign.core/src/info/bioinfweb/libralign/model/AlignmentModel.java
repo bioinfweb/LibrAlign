@@ -241,17 +241,6 @@ public interface AlignmentModel<T> {
 	 */
 	public int getSequenceCount();
 
-  /**
-   * Returns all change listeners currently attached to this object. This collection is writable
-   * and should also be used to add or remove listeners.
-   * <p>
-   * This method returns the same object in every call. Therefore changes made to different references
-   * always affect all references.
-   * 
-   * @return a collection object containing the listeners
-   */
-  public Set<AlignmentModelListener> getChangeListeners();
-
 	/**
 	 * Returns the token at the specified position.
 	 * 
@@ -373,5 +362,21 @@ public interface AlignmentModel<T> {
 	 */
 	public void removeTokensAt(String sequenceID, int beginIndex, int endIndex) throws AlignmentSourceNotWritableException;
 	
+	/**
+	 * Registers an additional listener for this model.
+	 * 
+	 * @param listener the new listener
+	 * @return {@code true} if the listener sets contents changed as a result of this operation, 
+	 *         {@code false} otherwise (e.g., because the listener was already part of the listener set)
+	 */
+	public boolean addModelListener(AlignmentModelListener listener); 
 	
+	/**
+	 * Removes the specified listener for this model.
+	 * 
+	 * @param listener the listener to be removed
+	 * @return {@code true} if the listener sets contents changed as a result of this operation, 
+	 *         {@code false} otherwise (e.g., because the listener was not part of the listener set)
+	 */
+	public boolean removeModelListener(AlignmentModelListener listener); 
 }

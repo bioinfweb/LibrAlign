@@ -89,7 +89,7 @@ public class AlignmentAreaList extends ObservableList<AlignmentArea> {
 	
 	private void addListenersToAlignmentArea(AlignmentArea alignmentArea) {
 		if (alignmentArea.hasAlignmentModel()) {
-			alignmentArea.getAlignmentModel().getChangeListeners().add(modelEventForwarder);
+			alignmentArea.getAlignmentModel().addModelListener(modelEventForwarder);
 		}
 		//alignmentArea.getDataAreas().addListener(modelEventForwarder);  //TODO Reconsider this line when #356 is solved.
 		alignmentArea.getPaintSettings().addListener(paintSettingsSynchronizer);
@@ -99,7 +99,7 @@ public class AlignmentAreaList extends ObservableList<AlignmentArea> {
 	
 	private void removeListenersFromAlignmentArea(AlignmentArea alignmentArea) {
 		if (alignmentArea.hasAlignmentModel()) {
-			alignmentArea.getAlignmentModel().getChangeListeners().remove(modelEventForwarder);
+			alignmentArea.getAlignmentModel().removeModelListener(modelEventForwarder);
 		}
 		//alignmentArea.getDataAreas().removeListener(modelEventForwarder);  //TODO Reconsider this line when #356 is solved.
 		alignmentArea.getPaintSettings().removeListener(paintSettingsSynchronizer);

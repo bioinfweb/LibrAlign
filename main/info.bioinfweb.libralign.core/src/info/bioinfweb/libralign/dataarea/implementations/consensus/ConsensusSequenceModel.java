@@ -43,7 +43,7 @@ public class ConsensusSequenceModel extends AbstractDataModel<ConsensusSequenceM
 
 	public ConsensusSequenceModel(AlignmentModel<?> alignmentModel) {
 		super(alignmentModel);
-		alignmentModel.getChangeListeners().add(new AlignmentModelAdapter() {
+		alignmentModel.addModelListener(new AlignmentModelAdapter() {
 			private void react() {
 				fractionsMap.clear();
 				fireAfterConsensusUpdated();
@@ -61,11 +61,6 @@ public class ConsensusSequenceModel extends AbstractDataModel<ConsensusSequenceM
 				if (getAlignmentModel() == e.getSource()) {
 					react();
 				}
-			}
-			
-			@Override
-			public <T, U> void afterModelChanged(AlignmentModel<T> previous, AlignmentModel<U> current) {
-				react();
 			}
 		});
 	}
