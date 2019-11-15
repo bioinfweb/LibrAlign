@@ -19,12 +19,7 @@
 package info.bioinfweb.libralign.alignmentarea;
 
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
 import java.util.Iterator;
-import java.util.List;
-import java.util.function.ToDoubleFunction;
 
 import info.bioinfweb.commons.Math2;
 import info.bioinfweb.libralign.alignmentarea.content.AlignmentSubArea;
@@ -87,7 +82,7 @@ public class SizeManager {  //DataAreaLayoutManager?
 	}
 
 	
-	private double calculateOverVisibleDataArea(DataList list, DataAreaCalculator calculator) {
+	private double calculateOverVisibleDataArea(DataList<AlignmentArea, DataArea> list, DataAreaCalculator calculator) {
     double result = 0;
     Iterator<DataArea> iterator = new DataAreaVisibleIterator(list.iterator());
     while (iterator.hasNext()) {
@@ -103,7 +98,7 @@ public class SizeManager {  //DataAreaLayoutManager?
    *
    * @return an integer >= 0
    */
-  private double getMaxLengthBeforeStartForList(DataList list) {
+  private double getMaxLengthBeforeStartForList(DataList<AlignmentArea, DataArea> list) {
   	return calculateOverVisibleDataArea(list, (previousResult, dataArea) -> Math.max(previousResult, dataArea.getLengthBeforeStart()));
   }
 
@@ -117,7 +112,7 @@ public class SizeManager {  //DataAreaLayoutManager?
 	 */
 	private double getLocalMaxLengthBeforeStart() {
 		if (localMaxLengthBeforeStart == AlignmentLabelArea.RECALCULATE_VALUE) {
-			DataLists dataAreas = getOwner().getDataAreas();
+			DataLists<AlignmentArea, DataArea> dataAreas = getOwner().getDataAreas();
 			localMaxLengthBeforeStart = Math.max((int)Math2.roundUp(getOwner().getPaintSettings().getCursorLineWidth() / 2),
 					Math.max(getMaxLengthBeforeStartForList(dataAreas.getTopAreas()), getMaxLengthBeforeStartForList(dataAreas.getBottomAreas())));
 			
@@ -157,7 +152,7 @@ public class SizeManager {  //DataAreaLayoutManager?
    *
    * @return an integer >= 0
    */
-  private double getMaxLengthAfterEndForList(DataList list) {
+  private double getMaxLengthAfterEndForList(DataList<AlignmentArea, DataArea> list) {
   	return calculateOverVisibleDataArea(list, (previousResult, dataArea) -> Math.max(previousResult, dataArea.getLengthAfterEnd()));
   }
 
@@ -171,7 +166,7 @@ public class SizeManager {  //DataAreaLayoutManager?
   private double getLocalMaxLengthAfterEnd() {
   	if (getOwner().hasAlignmentModel()) {
 	    if (localMaxLengthAfterEnd == AlignmentLabelArea.RECALCULATE_VALUE) {
-				DataLists dataAreas = getOwner().getDataAreas();
+				DataLists<AlignmentArea, DataArea> dataAreas = getOwner().getDataAreas();
 	      localMaxLengthAfterEnd = Math.max((int)Math2.roundUp(getOwner().getPaintSettings().getCursorLineWidth() / 2),
 	      		Math.max(getMaxLengthAfterEndForList(dataAreas.getTopAreas()), getMaxLengthAfterEndForList(dataAreas.getBottomAreas())));
 	      
@@ -286,7 +281,7 @@ public class SizeManager {  //DataAreaLayoutManager?
 	 *
 	 * @return an integer value greater of equal to zero
 	 */
-	private double getVisibleHeightForList(DataList list) {
+	private double getVisibleHeightForList(DataList<AlignmentArea, DataArea> list) {
   	return calculateOverVisibleDataArea(list, (previousResult, dataArea) -> previousResult + dataArea.getHeight());
 	}
 	
@@ -297,7 +292,7 @@ public class SizeManager {  //DataAreaLayoutManager?
 	 * @return the height of the alignment displayed by this component in pixels
 	 */
 	public double getPaintHeight() {
-		DataLists dataAreas = getOwner().getDataAreas();
+		DataLists<AlignmentArea, DataArea> dataAreas = getOwner().getDataAreas();
 		
 		// Height of top and bottom data areas:
   	double result = getVisibleHeightForList(dataAreas.getTopAreas()) + getVisibleHeightForList(dataAreas.getBottomAreas());
