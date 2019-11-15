@@ -19,6 +19,8 @@
 package info.bioinfweb.libralign.dataarea;
 
 
+import java.beans.PropertyChangeListener;
+import java.beans.PropertyChangeSupport;
 import java.util.Set;
 
 import info.bioinfweb.libralign.alignmentarea.AlignmentArea;
@@ -43,6 +45,7 @@ import info.bioinfweb.libralign.dataelement.DataListType;
 public abstract class DataArea extends AlignmentSubArea {
 	private DataList<AlignmentArea, DataArea> list = null;
 	private boolean visible = true;
+	protected PropertyChangeSupport propertyChangeListeners = new PropertyChangeSupport(this);
 	
 	
 	/**
@@ -71,8 +74,12 @@ public abstract class DataArea extends AlignmentSubArea {
 	 * 
 	 * @param list - the list that contains this element
 	 */
-	public void setList(DataList<AlignmentArea, DataArea> list) { 
-		this.list = list;
+	public void setList(DataList<AlignmentArea, DataArea> list) {
+		if (this.list != list) {  // Comparing with equals() is not required here since a reference change is sufficient, even of the contents of both lists would be identical.
+			DataList<AlignmentArea, DataArea> formerList = this.list;
+			this.list = list;
+			propertyChangeListeners.firePropertyChange("list", formerList, list);
+		}
 	}
 
 
@@ -99,7 +106,8 @@ public abstract class DataArea extends AlignmentSubArea {
 		boolean result = this.visible != visible; 
 		if (result) {
 			this.visible = visible;
-			getList().getOwner().getOwner().fireDataAreaVisibilitChanged(this, visible);
+			propertyChangeListeners.firePropertyChange("visible", !visible, visible);
+			getList().getOwner().getOwner().fireDataAreaVisibilitChanged(this, visible);  //TODO This method should be removed from AlignmentArea and it should register a PropertyChangeListener instead.
 		}
 		return result;
 	}
@@ -139,5 +147,69 @@ public abstract class DataArea extends AlignmentSubArea {
 	 */
 	public double getLengthAfterEnd() {
 		return 0;
+	}
+
+
+	/**
+	 * Registers a property change listener for all properties.
+	 * <p>
+	 * This class fires events for the following properties:
+	 * <ul>
+	 *   <li>{@code list} if {@link #setList(DataList)} is called with a new list</li>
+	 *   <li>{@code visible} if {@link #setVisible(boolean)} is called with a new value</li>
+	 * </ul>
+	 * <p>
+	 * Note that inherited classes may add more properties.
+	 * 
+	 * @param listener the new listener
+	 */
+	public void addPropertyChangeListener(PropertyChangeListener listener) {
+		propertyChangeListeners.addPropertyChangeListener(listener);
+	}
+
+
+	/**
+	 * Registers a property change listener for the specified property.
+	 * <p>
+	 * This class fires events for the following properties:
+	 * <ul>
+	 *   <li>{@code list} if {@link #setList(DataList)} is called with a new list</li>
+	 *   <li>{@code visible} if {@link #setVisible(boolean)} is called with a new value</li>
+	 * </ul>
+	 * <p>
+	 * Note that inherited classes may add more properties.
+	 * 
+	 * @param propertyName the name of the property to be informed on (See list above.)
+	 * @param listener the new listener
+	 */
+	public void addPropertyChangeListener(String propertyName, PropertyChangeListener listener) {
+		propertyChangeListeners.addPropertyChangeListener(propertyName, listener);
+	}
+
+
+	/**
+	 * Remove a {@link PropertyChangeListener} from the listener list.
+	 * <p>
+	 * This removes a {@link PropertyChangeListener} that was registered for all properties. If {@code listener} was added more than once to the same event source, 
+	 * it will be notified one less time after being removed. If {@code listener} is {@code null}, or was never added, no exception is thrown and no action is taken. 
+	 * 
+	 * @param listener the listener to be removed
+	 */
+	public void removePropertyChangeListener(PropertyChangeListener listener) {
+		propertyChangeListeners.removePropertyChangeListener(listener);
+	}
+
+
+	/**
+	 * Remove a {@link PropertyChangeListener} for a specific property.
+	 * <p>
+	 * This removes a {@link PropertyChangeListener} that was registered for all properties. If {@code listener} was added more than once to the same event source, 
+	 * it will be notified one less time after being removed. If {@code listener} is {@code null}, or was never added, no exception is thrown and no action is taken. 
+	 * 
+	 * @param propertyName the name of the property that was listened on
+	 * @param listener the listener to be removed
+	 */
+	public void removePropertyChangeListener(String propertyName, PropertyChangeListener listener) {
+		propertyChangeListeners.removePropertyChangeListener(propertyName, listener);
 	}
 }

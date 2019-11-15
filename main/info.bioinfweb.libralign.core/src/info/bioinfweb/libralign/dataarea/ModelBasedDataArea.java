@@ -19,6 +19,8 @@
 package info.bioinfweb.libralign.dataarea;
 
 
+import java.beans.PropertyChangeEvent;
+
 import info.bioinfweb.libralign.alignmentarea.AlignmentArea;
 import info.bioinfweb.libralign.model.data.DataModel;
 
@@ -61,8 +63,11 @@ public abstract class ModelBasedDataArea<M extends DataModel<?>> extends DataAre
 
 
 	/**
-	 * Sets a new model. Inherited class could overwrite this method and make it public if necessary. They need to take care about
-	 * firing possibly necessary events or moving possible listeners.
+	 * Sets a new model.
+	 * <p>
+	 * This methods fires a {@link PropertyChangeEvent} with the property name {@code model}.
+	 * <p>
+	 * Inherited classes need to take care about moving their possible listener(s).
 	 * 
 	 * @param model the new model to be used from now on
 	 */
@@ -73,6 +78,7 @@ public abstract class ModelBasedDataArea<M extends DataModel<?>> extends DataAre
 		else {
 			M result = this.model;
 			this.model = model;
+			propertyChangeListeners.firePropertyChange("model", result, model);
 			return result;
 		}
 	}
