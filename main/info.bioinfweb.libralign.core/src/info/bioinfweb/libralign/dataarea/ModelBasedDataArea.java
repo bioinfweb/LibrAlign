@@ -19,7 +19,11 @@
 package info.bioinfweb.libralign.dataarea;
 
 
+import java.util.Iterator;
+
 import info.bioinfweb.libralign.alignmentarea.AlignmentArea;
+import info.bioinfweb.libralign.dataarea.implementations.charset.CharSetDataModel;
+import info.bioinfweb.libralign.dataarea.implementations.charset.CharSetDataModelListener;
 import info.bioinfweb.libralign.model.data.DataModel;
 
 
@@ -44,7 +48,7 @@ public abstract class ModelBasedDataArea<M extends DataModel<?>> extends DataAre
 	 * @param model
 	 * @throws IllegalArgumentException if {@code owner} or {@code model} is {@code null}
 	 */
-	public ModelBasedDataArea(AlignmentArea owner,	AlignmentArea labeledArea, M model) {
+	public ModelBasedDataArea(AlignmentArea owner, AlignmentArea labeledArea, M model) {
 		super(owner, labeledArea);		
 		setModel(model);
 	}
@@ -66,12 +70,14 @@ public abstract class ModelBasedDataArea<M extends DataModel<?>> extends DataAre
 	 * 
 	 * @param model the new model to be used from now on
 	 */
-	protected void setModel(M model) {
+	public M setModel(M model) {
 		if (model == null) {
 			throw new IllegalArgumentException("The model must not be null.");
 		}
 		else {
+			M result = this.model;
 			this.model = model;
+			return result;
 		}
 	}
 }

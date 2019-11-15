@@ -42,14 +42,4 @@ public interface CharSetDataModelListener {
 	public void afterCharSetColumnChange(CharSetColumnChangeEvent e);
 	
 	public void afterCharSetColorChange(CharSetColorChangeEvent e);
-
-	/**
-	 * Called if this listener was moved to another instance of {@link CharSetArea}.
-	 * <p>
-	 * This happens if the alignment model of an {@link CharSetArea} was changed.
-	 * 
-	 * @param previous the model this listener was attached to before the event happened
-	 * @param current the new model this listener is attached to now
-	 */
-	public void afterModelChanged(CharSetDataModel previous, CharSetDataModel current);
 }

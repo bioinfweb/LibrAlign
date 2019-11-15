@@ -34,7 +34,6 @@ import info.bioinfweb.commons.graphics.GraphicsUtils;
 import info.bioinfweb.libralign.alignmentarea.AlignmentArea;
 import info.bioinfweb.libralign.alignmentarea.content.AlignmentContentArea;
 import info.bioinfweb.libralign.alignmentarea.content.AlignmentPaintEvent;
-import info.bioinfweb.libralign.alignmentarea.label.AlignmentLabelArea;
 import info.bioinfweb.libralign.alignmentarea.label.AlignmentLabelSubArea;
 import info.bioinfweb.libralign.alignmentarea.paintsettings.PaintSettings;
 import info.bioinfweb.libralign.alignmentarea.selection.SelectionListener;
@@ -51,7 +50,7 @@ import info.bioinfweb.tic.input.TICMouseEvent;
 
 
 /**
- * A data area displaying different character sets associated with the current alignment, as they are e.g. defined
+ * A data area displaying different character sets associated with the current alignment, as they are defined, e.g.,
  * in <i>Nexus</i> files.
  * 
  * @author Ben St&ouml;ver
@@ -64,8 +63,40 @@ public class CharSetArea extends ModelBasedDataArea<CharSetDataModel> {
 	private int selectedIndex = -1;
 	private Set<SelectionListener<GenericEventObject<CharSetArea>>> selectionListeners = 
 			new HashSet<SelectionListener<GenericEventObject<CharSetArea>>>();
-	private CharSetDataModelListener modelListener;
 	
+	private CharSetDataModelListener modelListener = new CharSetDataModelListener() {
+		@Override
+		public void afterCharSetRenamed(CharSetRenamedEvent e) {
+			if (e.isLastEvent()) {
+				getOwner().revalidate();
+				repaint();
+			}
+		}
+		
+		@Override
+		public void afterCharSetColumnChange(CharSetColumnChangeEvent e) {
+			if (e.isLastEvent()) {
+				repaint();
+			}
+		}
+		
+		@Override
+		public void afterCharSetColorChange(CharSetColorChangeEvent e) {
+			if (e.isLastEvent()) {
+				repaint();
+			}
+		}
+		
+		@Override
+		public void afterCharSetChange(CharSetChangeEvent e) {
+			if (e.isLastEvent()) {
+				checkSelectedIndex();
+				getOwner().revalidate();
+				repaint();
+			}
+		}
+	};
+
 	
 	/**
 	 * Creates a new instance of this class.
@@ -80,45 +111,7 @@ public class CharSetArea extends ModelBasedDataArea<CharSetDataModel> {
 	 */
 	public CharSetArea(AlignmentArea owner, AlignmentArea labeledAlignmentArea, CharSetDataModel model) {
 		super(owner, labeledAlignmentArea, model);
-		modelListener = new CharSetDataModelListener() {
-			@Override
-			public void afterCharSetRenamed(CharSetRenamedEvent e) {
-				if (e.isLastEvent()) {
-					getOwner().revalidate();
-					repaint();
-				}
-			}
-			
-			@Override
-			public void afterCharSetColumnChange(CharSetColumnChangeEvent e) {
-				if (e.isLastEvent()) {
-					repaint();
-				}
-			}
-			
-			@Override
-			public void afterCharSetColorChange(CharSetColorChangeEvent e) {
-				if (e.isLastEvent()) {
-					repaint();
-				}
-			}
-			
-			@Override
-			public void afterCharSetChange(CharSetChangeEvent e) {
-				if (e.isLastEvent()) {
-					checkSelectedIndex();
-					getOwner().revalidate();
-					repaint();
-				}
-			}
-
-			@Override
-			public void afterModelChanged(CharSetDataModel previous, CharSetDataModel current) {
-				checkSelectedIndex();
-				getOwner().revalidate();
-				repaint();
-			}
-		};
+		
 		model.addModelListener(modelListener);
 		
 		addMouseListener(new TICMouseAdapter() {
@@ -154,57 +147,6 @@ public class CharSetArea extends ModelBasedDataArea<CharSetDataModel> {
 	}
 	
 	
-	/**
-	 * Changes the model instance that is displayed by this area.
-	 * 
-	 * @param model the new model
-	 * @param moveListeners Specify {@code true} here if all listers registered to the current model should be 
-	 *        moved to the new model or {@code false} otherwise
-	 * @return the previous model
-	 * @throws IllegalArgumentException if {@code model} is {@code null}
-	 */
-	public CharSetDataModel setModel(CharSetDataModel model, boolean moveListeners) {
-		//TODO Consider moving most of the functionality of this method into the model. (#358)
-		
-		if (model == null) {
-			throw new IllegalArgumentException("The model must not be null.");
-		}
-		else {
-			CharSetDataModel result = getModel();
-			if (model != getModel()) {  // equals() would, e.g., consider two different empty models as equal, which is not suitable here.
-				if (getModel() != null) {
-					if (moveListeners) {  // Move all listeners
-						model.modelListeners.addAll(getModel().modelListeners);
-						getModel().modelListeners.clear();
-					}
-					else {  // Move this instance as the listener anyway:
-						getModel().removeModelListener(modelListener);
-						model.addModelListener(modelListener);
-					}
-				}
-				
-				setModel(model);
-				
-	      // Fire events for listener move after the process finished
-				if (getModel() != null) {
-					getModel().addModelListener(modelListener);  // Add this object as a listener if it was not already moved from the previous model.
-					
-					if (moveListeners) {
-						Iterator<CharSetDataModelListener> iterator = getModel().modelListeners.iterator();
-						while (iterator.hasNext()) {
-							iterator.next().afterModelChanged(result, getModel());
-						}
-					}
-					else {
-						modelListener.afterModelChanged(result, getModel());
-					}
-				}
-			}
-			return result;
-		}
-	}
-
-
 	public int getSelectedIndex() {
 		return selectedIndex;
 	}
