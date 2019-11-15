@@ -116,9 +116,11 @@ public class SizeManager {  //DataAreaLayoutManager?
 			localMaxLengthBeforeStart = Math.max((int)Math2.roundUp(getOwner().getPaintSettings().getCursorLineWidth() / 2),
 					Math.max(getMaxLengthBeforeStartForList(dataAreas.getTopAreas()), getMaxLengthBeforeStartForList(dataAreas.getBottomAreas())));
 			
-			Iterator<String> iterator = getOwner().getAlignmentModel().sequenceIDIterator();
-			while (iterator.hasNext()) {
-				localMaxLengthBeforeStart = Math.max(localMaxLengthBeforeStart, getMaxLengthBeforeStartForList(getOwner().getDataAreas().getSequenceAreas(iterator.next())));
+			if (getOwner().hasAlignmentModel()) {
+				Iterator<String> iterator = getOwner().getAlignmentModel().sequenceIDIterator();
+				while (iterator.hasNext()) {
+					localMaxLengthBeforeStart = Math.max(localMaxLengthBeforeStart, getMaxLengthBeforeStartForList(getOwner().getDataAreas().getSequenceAreas(iterator.next())));
+				}
 			}
 		}
 		return localMaxLengthBeforeStart;
@@ -170,9 +172,11 @@ public class SizeManager {  //DataAreaLayoutManager?
 	      localMaxLengthAfterEnd = Math.max((int)Math2.roundUp(getOwner().getPaintSettings().getCursorLineWidth() / 2),
 	      		Math.max(getMaxLengthAfterEndForList(dataAreas.getTopAreas()), getMaxLengthAfterEndForList(dataAreas.getBottomAreas())));
 	      
-	      Iterator<String> iterator = getOwner().getAlignmentModel().sequenceIDIterator();
-	      while (iterator.hasNext()) {
-	        localMaxLengthAfterEnd = Math.max(localMaxLengthAfterEnd, getMaxLengthAfterEndForList(dataAreas.getSequenceAreas(iterator.next())));
+	      if (getOwner().hasAlignmentModel()) {
+		      Iterator<String> iterator = getOwner().getAlignmentModel().sequenceIDIterator();
+		      while (iterator.hasNext()) {
+		        localMaxLengthAfterEnd = Math.max(localMaxLengthAfterEnd, getMaxLengthAfterEndForList(dataAreas.getSequenceAreas(iterator.next())));
+		      }
 	      }
 	    }
 	    return localMaxLengthAfterEnd;
