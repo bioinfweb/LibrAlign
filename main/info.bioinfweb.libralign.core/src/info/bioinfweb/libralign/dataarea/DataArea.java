@@ -107,7 +107,6 @@ public abstract class DataArea extends AlignmentSubArea {
 		if (result) {
 			this.visible = visible;
 			propertyChangeListeners.firePropertyChange("visible", !visible, visible);
-			getList().getOwner().getOwner().fireDataAreaVisibilitChanged(this, visible);  //TODO This method should be removed from AlignmentArea and it should register a PropertyChangeListener instead.
 		}
 		return result;
 	}

@@ -19,17 +19,34 @@
 package info.bioinfweb.libralign.dataarea;
 
 
-import java.util.EventObject;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.util.HashSet;
 
 import info.bioinfweb.commons.collections.observable.ListAddEvent;
 import info.bioinfweb.commons.collections.observable.ListChangeListener;
 import info.bioinfweb.commons.collections.observable.ListRemoveEvent;
 import info.bioinfweb.commons.collections.observable.ListReplaceEvent;
+import info.bioinfweb.libralign.alignmentarea.AlignmentArea;
+import info.bioinfweb.libralign.dataelement.DataLists;
 
 
 
-public class DataAreaListenerList extends HashSet<DataAreasListener> implements ListChangeListener<DataArea> {
+/**
+ * Class used internally by {@link AlignmentArea}.
+ * <p>
+ * It is used to forward lists events from a {@link DataLists} instance containing {@link DataArea}s
+ * to a set of {@link DataAreasListener}s. Additionally, a property change listener is registered at every added data area to forwards events on 
+ * visibility changes. Property change listeners are automatically removed from data areas that are removed from the monitored list object. 
+ * 
+ * @author Ben Stöver
+ * @since 0.10.0
+ * @bioinfweb.module info.bioinfweb.libralign.core
+ */
+public class DataAreaListenerList extends HashSet<DataAreasListener> implements ListChangeListener<DataArea>, PropertyChangeListener {
+	public static final String VISIBILITY_PROPERTY_NAME = "visible";
+	
+	
 	@Override
 	public void beforeElementsAdded(ListAddEvent<DataArea> event) {
 		forEach(listener -> listener.beforeElementsAdded(event));
@@ -38,6 +55,7 @@ public class DataAreaListenerList extends HashSet<DataAreasListener> implements 
 	
 	@Override
 	public void afterElementsAdded(ListAddEvent<DataArea> event) {
+		event.getAffectedElement().addPropertyChangeListener(VISIBILITY_PROPERTY_NAME, this);
 		forEach(listener -> listener.afterElementsAdded(event));
 	}
 
@@ -62,11 +80,15 @@ public class DataAreaListenerList extends HashSet<DataAreasListener> implements 
 	
 	@Override
 	public void afterElementsRemoved(ListRemoveEvent<DataArea, DataArea> event) {
+		event.getAffectedElement().removePropertyChangeListener(VISIBILITY_PROPERTY_NAME, this);
 		forEach(listener -> listener.afterElementsRemoved(event));
 	}
 	
 	
-	public void fireAfterVisibilityChanged(DataArea source, boolean visible) {
-		forEach(listener -> listener.afterVisibilityChanged(new DataAreaVisibilityChangeEvent(source, visible)));
+	@Override
+	public void propertyChange(PropertyChangeEvent event) {
+		if (VISIBILITY_PROPERTY_NAME.equals(event.getPropertyName())) {
+			forEach(listener -> listener.afterVisibilityChanged(new DataAreaVisibilityChangeEvent((DataArea)event.getSource(), (Boolean)event.getNewValue())));
+		}
 	}
 }

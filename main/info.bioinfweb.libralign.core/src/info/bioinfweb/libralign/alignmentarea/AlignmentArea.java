@@ -743,11 +743,6 @@ public class AlignmentArea extends ScrollingTICComponent {
 	}
 	
 	
-	public void fireDataAreaVisibilitChanged(DataArea source, boolean visible) {
-		dataAreaListenerList.fireAfterVisibilityChanged(source, visible);
-	}
-
-
 	/**
 	 * Registers a property change listener for all properties.
 	 * <p>
