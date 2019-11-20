@@ -42,7 +42,6 @@ import info.bioinfweb.libralign.demo.swingapp.actions.SaveAction;
 import info.bioinfweb.libralign.demo.swingapp.actions.SaveAsAction;
 import info.bioinfweb.libralign.model.AlignmentModel;
 import info.bioinfweb.libralign.model.AlignmentModelAdapter;
-import info.bioinfweb.libralign.model.AlignmentModelListener;
 import info.bioinfweb.libralign.model.events.SequenceChangeEvent;
 import info.bioinfweb.libralign.model.events.SequenceRenamedEvent;
 import info.bioinfweb.libralign.model.events.TokenChangeEvent;
@@ -196,22 +195,23 @@ public class SwingAlignmentEditor {
 		
 		// Create LibrAlign component instance:
 		alignmentArea = new AlignmentArea();
-		alignmentArea.setAlignmentModel(new PackedAlignmentModel<Character>(CharacterTokenSet.newNucleotideInstance(false)));
+		AlignmentModel<Character> model = new PackedAlignmentModel<Character>(CharacterTokenSet.newNucleotideInstance(false));
+		alignmentArea.setAlignmentModel(model);
 		
 		// Register changes listener to know when to ask for saving changes:
-		alignmentArea.getAlignmentModel().addModelListener(new AlignmentModelAdapter() {
+		model.addModelListener(new AlignmentModelAdapter<Character>() {
 			@Override
-			public <T> void afterTokenChange(TokenChangeEvent<T> e) {
+			public void afterTokenChange(TokenChangeEvent<Character> e) {
 				setChanged(true);
 			}
 			
 			@Override
-			public <T> void afterSequenceRenamed(SequenceRenamedEvent<T> e) {
+			public void afterSequenceRenamed(SequenceRenamedEvent<Character> e) {
 				setChanged(true);
 			}
 			
 			@Override
-			public <T> void afterSequenceChange(SequenceChangeEvent<T> e) {
+			public void afterSequenceChange(SequenceChangeEvent<Character> e) {
 				setChanged(true);
 			}
 		});
