@@ -369,7 +369,7 @@ public interface AlignmentModel<T> {
 	 * @return {@code true} if the listener sets contents changed as a result of this operation, 
 	 *         {@code false} otherwise (e.g., because the listener was already part of the listener set)
 	 */
-	public boolean addModelListener(AlignmentModelListener listener); 
+	public boolean addModelListener(AlignmentModelListener<? super T> listener); 
 	
 	/**
 	 * Removes the specified listener for this model.
@@ -378,5 +378,5 @@ public interface AlignmentModel<T> {
 	 * @return {@code true} if the listener sets contents changed as a result of this operation, 
 	 *         {@code false} otherwise (e.g., because the listener was not part of the listener set)
 	 */
-	public boolean removeModelListener(AlignmentModelListener listener); 
+	public boolean removeModelListener(AlignmentModelListener<? super T> listener); 
 }

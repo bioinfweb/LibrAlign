@@ -42,7 +42,7 @@ import java.util.Set;
 public abstract class AbstractAlignmentModel<T> implements AlignmentModel<T> {
 	private String id = null;
 	private String label = null;
-	private Set<AlignmentModelListener> modelListeners = new HashSet<AlignmentModelListener>();
+	private Set<AlignmentModelListener<? super T>> modelListeners = new HashSet<AlignmentModelListener<? super T>>();
 
 
 	@Override
@@ -76,13 +76,13 @@ public abstract class AbstractAlignmentModel<T> implements AlignmentModel<T> {
 
 
 	@Override
-	public boolean addModelListener(AlignmentModelListener listener) {
+	public boolean addModelListener(AlignmentModelListener<? super T> listener) {
 		return modelListeners.add(listener);
 	}
 
 
 	@Override
-	public boolean removeModelListener(AlignmentModelListener listener) {
+	public boolean removeModelListener(AlignmentModelListener<? super T> listener) {
 		return modelListeners.remove(listener);
 	}
 
@@ -90,8 +90,9 @@ public abstract class AbstractAlignmentModel<T> implements AlignmentModel<T> {
 	/**
 	 * Informs all listeners that a sequence has been inserted, removed or replaced.
 	 */
+	@SuppressWarnings("unchecked")
 	protected void fireAfterSequenceChange(SequenceChangeEvent<T> e) {
-		for (AlignmentModelListener listener : modelListeners.toArray(new AlignmentModelListener[modelListeners.size()])) {  // Copying the list is necessary to allow listeners to remove themselves from the list without a ConcurrentModificationException being thrown.
+		for (AlignmentModelListener<T> listener : modelListeners.toArray(new AlignmentModelListener[modelListeners.size()])) {  // Copying the list is necessary to allow listeners to remove themselves from the list without a ConcurrentModificationException being thrown.
 			listener.afterSequenceChange(e);
 		}
 	}
@@ -100,8 +101,9 @@ public abstract class AbstractAlignmentModel<T> implements AlignmentModel<T> {
 	/**
 	 * Informs all listeners that a sequence has been renamed.
 	 */
+	@SuppressWarnings("unchecked")
 	protected void fireAfterSequenceRenamed(SequenceRenamedEvent<T> e) {
-		for (AlignmentModelListener listener : modelListeners.toArray(new AlignmentModelListener[modelListeners.size()])) {  // Copying the list is necessary to allow listeners to remove themselves from the list without a ConcurrentModificationException being thrown.
+		for (AlignmentModelListener<T> listener : modelListeners.toArray(new AlignmentModelListener[modelListeners.size()])) {  // Copying the list is necessary to allow listeners to remove themselves from the list without a ConcurrentModificationException being thrown.
 			listener.afterSequenceRenamed(e);
 		}
 	}
@@ -110,8 +112,9 @@ public abstract class AbstractAlignmentModel<T> implements AlignmentModel<T> {
 	/**
 	 * Informs all listeners that a sequence has been inserted, removed or replaced.
 	 */
+	@SuppressWarnings("unchecked")
 	protected void fireAfterTokenChange(TokenChangeEvent<T> e) {
-		for (AlignmentModelListener listener : modelListeners.toArray(new AlignmentModelListener[modelListeners.size()])) {  // Copying the list is necessary to allow listeners to remove themselves from the list without a ConcurrentModificationException being thrown.
+		for (AlignmentModelListener<T> listener : modelListeners.toArray(new AlignmentModelListener[modelListeners.size()])) {  // Copying the list is necessary to allow listeners to remove themselves from the list without a ConcurrentModificationException being thrown.
 			listener.afterTokenChange(e);
 		}
 	}

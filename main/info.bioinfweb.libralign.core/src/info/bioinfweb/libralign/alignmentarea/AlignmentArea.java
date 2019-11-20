@@ -170,7 +170,7 @@ public class AlignmentArea extends ScrollingTICComponent {
 	private boolean allowVerticalScrolling = true;
 	private Rectangle lastCursorRectangle = null;
 	
-	private final AlignmentModelListener<?> alignmentModelListener = new AlignmentModelAdapter<Object>() {
+	private final AlignmentModelListener<Object> alignmentModelListener = new AlignmentModelAdapter<Object>() {
 		@Override
 		public void afterSequenceChange(SequenceChangeEvent<Object> e) {
 			if (e.getSource().equals(getAlignmentModel())) {
