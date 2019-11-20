@@ -36,8 +36,8 @@ import info.bioinfweb.libralign.model.data.DataModel;
  *
  * @param <T> the token type used in the associated alignment model
  */
-public class DataModelLists<T> extends DataLists<AlignmentModel<T>, DataModel<?>>{
-  private final DataList<AlignmentModel<T>, DataModel<?>> alignmentList;
+public class DataModelLists extends DataLists<AlignmentModel<?>, DataModel<?>>{
+  private final DataList<AlignmentModel<?>, DataModel<?>> alignmentList;
   
   
 	/**
@@ -47,10 +47,10 @@ public class DataModelLists<T> extends DataLists<AlignmentModel<T>, DataModel<?>
 	 * @param listChangeListener This listener will be informed on changes in all lists contained in the new instance. Owning classes should provide an 
 	 *        implementation that processes the events, e.g., by forwarding them to their own respective listeners. 
 	 */
-	public DataModelLists(AlignmentModel<T> owner, ListChangeListener<DataModel<?>> listChangeListener) {
+	public DataModelLists(AlignmentModel<?> owner, ListChangeListener<DataModel<?>> listChangeListener) {
 		super(owner, listChangeListener);
 		
-		alignmentList = new DataList<AlignmentModel<T>, DataModel<?>>(this, DataListType.ALIGNMENT);
+		alignmentList = new DataList<AlignmentModel<?>, DataModel<?>>(this, DataListType.ALIGNMENT);
 		alignmentList.addListChangeListener(listChangeListener);
 	}
 
@@ -60,7 +60,7 @@ public class DataModelLists<T> extends DataLists<AlignmentModel<T>, DataModel<?>
 	 * 
 	 * @return a list instance (never {@code null})
 	 */
-	public DataList<AlignmentModel<T>, DataModel<?>> getAlignmentList() {
+	public DataList<AlignmentModel<?>, DataModel<?>> getAlignmentList() {
 		return alignmentList;
 	}
 }

@@ -29,6 +29,7 @@ import info.bioinfweb.commons.collections.observable.ListReplaceEvent;
 import info.bioinfweb.libralign.model.AlignmentModel;
 import info.bioinfweb.libralign.model.AlignmentModelListener;
 import info.bioinfweb.libralign.model.AlignmentModelView;
+import info.bioinfweb.libralign.model.DataModelLists;
 import info.bioinfweb.libralign.model.data.DataModel;
 import info.bioinfweb.libralign.model.events.SequenceChangeEvent;
 import info.bioinfweb.libralign.model.events.SequenceRenamedEvent;
@@ -40,9 +41,9 @@ import info.bioinfweb.libralign.model.tokenset.TokenSet;
 
 
 /**
- * Basic implementation of {@link AlignmentModelView} which delegates sequence specific methods 
+ * Basic implementation of {@link AlignmentModelView} which delegates sequence-specific methods 
  * (which are independent of the token type) to the underlying model. Inherited classes may 
- * provide modified views of the underlying sequences possibly using a different token set.
+ * provide modified views of the underlying sequences, possibly using a different token set.
  * 
  * @author Ben St&ouml;ver
  *
@@ -50,6 +51,8 @@ import info.bioinfweb.libralign.model.tokenset.TokenSet;
  * @param <U> the type of sequence elements (tokens) the underlying model works with
  */
 public abstract class AbstractAlignmentModelDecorator<T, U> extends AbstractAlignmentModel<T> implements AlignmentModelView<T, U> {
+	//TODO Since only the listeners from AbstractAlignmentModel are used and all other fields are hidden, inherting from this class should be reconsidered.
+	
   private AlignmentModel<U> underlyingModel;
   private TokenSet<T> tokenSet;
 
@@ -263,6 +266,43 @@ public abstract class AbstractAlignmentModelDecorator<T, U> extends AbstractAlig
 	 */
 	protected void setUnderlyingModel(AlignmentModel<U> underlyingModel) {
 		this.underlyingModel = underlyingModel;
+	}
+
+
+	@Override
+	public String getID() {
+		return underlyingModel.getID();
+	}
+
+
+	@Override
+	public void setID(String id) {
+		underlyingModel.setID(id);
+	}
+
+
+	@Override
+	public String getLabel() {
+		return underlyingModel.getLabel();
+	}
+
+
+	@Override
+	public void setLabel(String label) throws UnsupportedOperationException {
+		underlyingModel.setLabel(label);
+	}
+
+
+	/**
+	 * Returns the {@link DataModelLists} instance of the decorated alignment model.
+	 * <p>
+	 * Note that the returned instance will reference the decorated alignment model as its owner and not this instance. 
+	 * 
+	 * @return the {@link DataModelLists} object
+	 */
+	@Override
+	public DataModelLists getDataModels() {
+		return underlyingModel.getDataModels();
 	}
 
 

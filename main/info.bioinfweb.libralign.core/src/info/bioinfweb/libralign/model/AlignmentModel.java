@@ -363,6 +363,16 @@ public interface AlignmentModel<T> {
 	public void removeTokensAt(String sequenceID, int beginIndex, int endIndex) throws AlignmentSourceNotWritableException;
 	
 	/**
+	 * Returns an object organizing data models that are part of this alignment model.
+	 * <p>
+	 * Implementations of {@link DataModel} are usually used to represent metadata associated with the alignment data represented by this model.
+	 * Such metadata can be visualized or edited using {@link DataArea}s attached to {@link AlignmentArea}s.
+	 * 
+	 * @return an instances that organizes data model instances associated with this alignment model
+	 */
+	public DataModelLists getDataModels();
+	
+	/**
 	 * Registers an additional listener for this model.
 	 * 
 	 * @param listener the new listener

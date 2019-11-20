@@ -19,14 +19,20 @@
 package info.bioinfweb.libralign.model.implementations;
 
 
+import java.util.HashSet;
+import java.util.Set;
+
+import info.bioinfweb.commons.collections.observable.ListAddEvent;
+import info.bioinfweb.commons.collections.observable.ListChangeListener;
+import info.bioinfweb.commons.collections.observable.ListRemoveEvent;
+import info.bioinfweb.commons.collections.observable.ListReplaceEvent;
 import info.bioinfweb.libralign.model.AlignmentModel;
 import info.bioinfweb.libralign.model.AlignmentModelListener;
+import info.bioinfweb.libralign.model.DataModelLists;
+import info.bioinfweb.libralign.model.data.DataModel;
 import info.bioinfweb.libralign.model.events.SequenceChangeEvent;
 import info.bioinfweb.libralign.model.events.SequenceRenamedEvent;
 import info.bioinfweb.libralign.model.events.TokenChangeEvent;
-
-import java.util.HashSet;
-import java.util.Set;
 
 
 
@@ -42,7 +48,45 @@ import java.util.Set;
 public abstract class AbstractAlignmentModel<T> implements AlignmentModel<T> {
 	private String id = null;
 	private String label = null;
+	private DataModelLists dataModels;
 	private Set<AlignmentModelListener<? super T>> modelListeners = new HashSet<AlignmentModelListener<? super T>>();
+
+
+	public AbstractAlignmentModel() {
+		super();
+		
+		dataModels = new DataModelLists(this, new ListChangeListener<DataModel<?>>() {
+			@Override
+			public void beforeElementsAdded(ListAddEvent<DataModel<?>> event) {
+				modelListeners.forEach(listener -> listener.beforeElementsAdded(event));
+			}
+
+			@Override
+			public void beforeElementReplaced(ListReplaceEvent<DataModel<?>> event) {
+				modelListeners.forEach(listener -> listener.beforeElementReplaced(event));
+			}
+
+			@Override
+			public void beforeElementsRemoved(ListRemoveEvent<DataModel<?>, Object> event) {
+				modelListeners.forEach(listener -> listener.beforeElementsRemoved(event));
+			}
+
+			@Override
+			public void afterElementsAdded(ListAddEvent<DataModel<?>> event) {
+				modelListeners.forEach(listener -> listener.afterElementsAdded(event));
+			}
+
+			@Override
+			public void afterElementReplaced(ListReplaceEvent<DataModel<?>> event) {
+				modelListeners.forEach(listener -> listener.afterElementReplaced(event));
+			}
+
+			@Override
+			public void afterElementsRemoved(ListRemoveEvent<DataModel<?>, DataModel<?>> event) {
+				modelListeners.forEach(listener -> listener.afterElementsRemoved(event));
+			}
+		});
+	}
 
 
 	@Override
@@ -72,6 +116,11 @@ public abstract class AbstractAlignmentModel<T> implements AlignmentModel<T> {
 	@Override
 	public void setLabel(String label) {
 		this.label = label;
+	}
+
+
+	public DataModelLists getDataModels() {
+		return dataModels;
 	}
 
 
