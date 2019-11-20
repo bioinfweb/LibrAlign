@@ -19,6 +19,7 @@
 package info.bioinfweb.libralign.alignmentarea.content;
 
 
+import info.bioinfweb.libralign.alignmentarea.AlignmentArea;
 import info.bioinfweb.libralign.alignmentarea.rowsarea.SwingAlignmentRowsArea;
 import info.bioinfweb.libralign.dataarea.DataArea;
 import info.bioinfweb.libralign.dataelement.DataList;
@@ -61,21 +62,21 @@ public class ScrollContainerSwingAlignmentContentArea extends SwingAlignmentRows
 	public void reinsertSubelements() {
 		removeAll();
 
-		addDataAreaList(getIndependentComponent().getOwner().getDataAreas().getTopAreas());
+		addDataAreaList(getIndependentComponent().getOwner().getDataAreas().getTopList());
 		
 		SwingComponentFactory factory = SwingComponentFactory.getInstance();
 		Iterator<String> idIterator = getIndependentComponent().getOwner().getSequenceOrder().idIterator();
 		while (idIterator.hasNext()) {
 			String id = idIterator.next();
 			add(factory.getSwingComponent(getIndependentComponent().getSequenceAreaMap().get(id)));
-			addDataAreaList(getIndependentComponent().getOwner().getDataAreas().getSequenceAreas(id));
+			addDataAreaList(getIndependentComponent().getOwner().getDataAreas().getSequenceList(id));
 		}
 		
-		addDataAreaList(getIndependentComponent().getOwner().getDataAreas().getBottomAreas());
+		addDataAreaList(getIndependentComponent().getOwner().getDataAreas().getBottomList());
 	}
 	
 	
-	public void addDataAreaList(DataList list) {
+	public void addDataAreaList(DataList<AlignmentArea, DataArea> list) {
 		SwingComponentFactory factory = SwingComponentFactory.getInstance();
 		Iterator<DataArea> iterator = list.iterator();
 		while (iterator.hasNext()) {
