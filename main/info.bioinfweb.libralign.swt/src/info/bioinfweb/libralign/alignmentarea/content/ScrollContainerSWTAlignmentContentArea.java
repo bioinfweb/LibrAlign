@@ -19,12 +19,6 @@
 package info.bioinfweb.libralign.alignmentarea.content;
 
 
-import info.bioinfweb.libralign.alignmentarea.rowsarea.SWTAlignmentRowsArea;
-import info.bioinfweb.libralign.dataarea.DataArea;
-import info.bioinfweb.libralign.dataelement.DataList;
-import info.bioinfweb.libralign.dataelement.DataLists;
-import info.bioinfweb.tic.SWTComponentFactory;
-
 import java.util.Iterator;
 
 import org.eclipse.swt.SWT;
@@ -32,6 +26,13 @@ import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.RowData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+
+import info.bioinfweb.libralign.alignmentarea.AlignmentArea;
+import info.bioinfweb.libralign.alignmentarea.DataAreaLists;
+import info.bioinfweb.libralign.alignmentarea.rowsarea.SWTAlignmentRowsArea;
+import info.bioinfweb.libralign.dataarea.DataArea;
+import info.bioinfweb.libralign.dataelement.DataList;
+import info.bioinfweb.tic.SWTComponentFactory;
 
 
 
@@ -64,7 +65,7 @@ public class ScrollContainerSWTAlignmentContentArea extends SWTAlignmentRowsArea
 	}
 
 
-	public void addDataAreaList(DataList list) {
+	public void addDataAreaList(DataList<AlignmentArea, DataArea> list) {
 		Iterator<DataArea> iterator = list.iterator();
 		SWTComponentFactory factory = SWTComponentFactory.getInstance();
 		while (iterator.hasNext()) {
@@ -92,10 +93,10 @@ public class ScrollContainerSWTAlignmentContentArea extends SWTAlignmentRowsArea
 
 	@Override
 	public void reinsertSubelements() {
-		DataLists dataAreaModel = getIndependentComponent().getOwner().getDataAreas();
+		DataAreaLists dataAreas = getIndependentComponent().getOwner().getDataAreas();
 		removeAll();
 
-		addDataAreaList(dataAreaModel.getTopAreas());
+		addDataAreaList(dataAreas.getTopList());
 
 		SWTComponentFactory factory = SWTComponentFactory.getInstance();
 		Iterator<String> idIterator = getIndependentComponent().getOwner().getSequenceOrder().idIterator();
@@ -103,10 +104,10 @@ public class ScrollContainerSWTAlignmentContentArea extends SWTAlignmentRowsArea
 			String id = idIterator.next();
 			factory.getSWTComponent(getIndependentComponent().getSequenceAreaMap().get(id), this, SWT.NO_BACKGROUND);
 			getIndependentComponent().getSequenceAreaMap().get(id).assignSize();
-			addDataAreaList(dataAreaModel.getSequenceAreas(id));
+			addDataAreaList(dataAreas.getSequenceList(id));
 		}
 
-		addDataAreaList(dataAreaModel.getBottomAreas());
+		addDataAreaList(dataAreas.getBottomList());
 
 		assignSize();
 		//layout(true, true);  //TODO Necessary?
