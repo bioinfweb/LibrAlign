@@ -31,12 +31,31 @@ import info.bioinfweb.libralign.dataarea.DataArea;
  * @since 0.0.0
  */
 public enum DataListType {
-	/** Indicates that the associated data area is located above the alignment. */
+	/** 
+	 * Indicates that the associated data model is associated with an alignment as a whole and not a specific sequence.
+	 * <p>
+	 * This state is only valid for data model lists, not for data area lists which need to distinguish between {@link #TOP} and {@link #BOTTOM}. 
+	 */
+  ALIGNMENT,
+  
+	/** 
+	 * Indicates that the associated data area is located above the alignment.
+	 * <p>
+	 * This state is only valid for data area lists, not for data model lists. 
+	 */
   TOP,
   
-	/** Indicates that the associated data area is located underneath the alignment. */
+	/** 
+	 * Indicates that the associated data area is located underneath the alignment. 
+	 * <p>
+	 * This state is only valid for data area lists, not for data model lists. 
+	 */
   BOTTOM,
 
-  /** Indicates that the associated data area is associated with a sequence in the alignment. */
+  /** 
+   * Indicates that the associated data element is associated with a sequence in the alignment. 
+	 * <p>
+	 * This state is valid for both data area lists and data model lists. 
+   */
   SEQUENCE;
 }

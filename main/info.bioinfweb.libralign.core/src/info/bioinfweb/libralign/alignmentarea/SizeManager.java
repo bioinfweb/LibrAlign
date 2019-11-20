@@ -27,7 +27,6 @@ import info.bioinfweb.libralign.alignmentarea.label.AlignmentLabelArea;
 import info.bioinfweb.libralign.dataarea.DataArea;
 import info.bioinfweb.libralign.dataarea.DataAreaVisibleIterator;
 import info.bioinfweb.libralign.dataelement.DataList;
-import info.bioinfweb.libralign.dataelement.DataLists;
 import info.bioinfweb.libralign.model.AlignmentModel;
 import info.bioinfweb.libralign.model.concatenated.ConcatenatedAlignmentModel;
 import info.bioinfweb.libralign.multiplealignments.MultipleAlignmentsContainer;
@@ -112,7 +111,7 @@ public class SizeManager {  //DataAreaLayoutManager?
 	 */
 	private double getLocalMaxLengthBeforeStart() {
 		if (localMaxLengthBeforeStart == AlignmentLabelArea.RECALCULATE_VALUE) {
-			DataLists<AlignmentArea, DataArea> dataAreas = getOwner().getDataAreas();
+			DataAreaLists dataAreas = getOwner().getDataAreas();
 			localMaxLengthBeforeStart = Math.max((int)Math2.roundUp(getOwner().getPaintSettings().getCursorLineWidth() / 2),
 					Math.max(getMaxLengthBeforeStartForList(dataAreas.getTopList()), getMaxLengthBeforeStartForList(dataAreas.getBottomList())));
 			
@@ -168,7 +167,7 @@ public class SizeManager {  //DataAreaLayoutManager?
   private double getLocalMaxLengthAfterEnd() {
   	if (getOwner().hasAlignmentModel()) {
 	    if (localMaxLengthAfterEnd == AlignmentLabelArea.RECALCULATE_VALUE) {
-				DataLists<AlignmentArea, DataArea> dataAreas = getOwner().getDataAreas();
+				DataAreaLists dataAreas = getOwner().getDataAreas();
 	      localMaxLengthAfterEnd = Math.max((int)Math2.roundUp(getOwner().getPaintSettings().getCursorLineWidth() / 2),
 	      		Math.max(getMaxLengthAfterEndForList(dataAreas.getTopList()), getMaxLengthAfterEndForList(dataAreas.getBottomList())));
 	      
@@ -296,7 +295,7 @@ public class SizeManager {  //DataAreaLayoutManager?
 	 * @return the height of the alignment displayed by this component in pixels
 	 */
 	public double getPaintHeight() {
-		DataLists<AlignmentArea, DataArea> dataAreas = getOwner().getDataAreas();
+		DataAreaLists dataAreas = getOwner().getDataAreas();
 		
 		// Height of top and bottom data areas:
   	double result = getVisibleHeightForList(dataAreas.getTopList()) + getVisibleHeightForList(dataAreas.getBottomList());

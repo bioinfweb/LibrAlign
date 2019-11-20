@@ -23,21 +23,21 @@ import java.util.HashMap;
 import java.util.Map;
 
 import info.bioinfweb.commons.collections.observable.ListChangeListener;
-import info.bioinfweb.libralign.alignmentarea.AlignmentArea;
-import info.bioinfweb.libralign.model.AlignmentModel;
+import info.bioinfweb.libralign.alignmentarea.DataAreaLists;
+import info.bioinfweb.libralign.model.DataModelLists;
 
 
 
 /**
- * Manages the data areas attached to an {@link AlignmentArea} or data models that are parts of an {@link AlignmentModel}.
+ * Manages the data elements attached to sequences of an alignment.
+ * <p>
+ * This is the super-class of {@link DataAreaLists} and {@link DataModelLists} and implements their shared functionality.
  *
  * @author Ben St&ouml;ver
  * @bioinfweb.module info.bioinfweb.libralign.core
  */
 public class DataLists<O, E> {
 	private final O owner;
-  private final DataList<O, E> topList = new DataList<O, E>(this, DataListType.TOP);
-  private final DataList<O, E> bottomList = new DataList<O, E>(this, DataListType.BOTTOM);
   private final Map<String, DataList<O, E>> sequenceLists = new HashMap<String, DataList<O, E>>();
   private final ListChangeListener<E> listChangeListener;
 
@@ -53,9 +53,6 @@ public class DataLists<O, E> {
 		super();
 		this.owner = owner;
 		this.listChangeListener = listChangeListener;
-		
-		topList.addListChangeListener(listChangeListener);
-		bottomList.addListChangeListener(listChangeListener);
 	}
 
 
@@ -64,26 +61,6 @@ public class DataLists<O, E> {
 	 */
 	public O getOwner() {
 		return owner;
-	}
-
-
-	/**
-	 * Returns a list of data areas to be displayed on the top of the alignment.
-	 *
-	 * @return a modifiable list
-	 */
-	public DataList<O, E> getTopList() {
-		return topList;
-	}
-
-
-	/**
-	 * Returns a list of data areas to be displayed underneath the alignment.
-	 *
-	 * @return a modifiable list
-	 */
-	public DataList<O, E> getBottomList() {
-		return bottomList;
 	}
 
 

@@ -154,7 +154,7 @@ public class AlignmentArea extends ScrollingTICComponent {
 
 	private AlignmentModel<?> alignmentModel = null;
 	private SequenceOrder sequenceOrder = new SequenceOrder(this);
-	private DataLists<AlignmentArea, DataArea> dataAreas;
+	private DataAreaLists dataAreas;
 	private DataAreaListenerList dataAreaListenerList;
 	private SizeManager sizeManager = new SizeManager(this);
 	private PaintSettings paintSettings;
@@ -352,7 +352,7 @@ public class AlignmentArea extends ScrollingTICComponent {
 		alignmentLabelArea = new AlignmentLabelArea(this);  // Must be called after alignmentContentArea has been created.
 
 		dataAreaListenerList = new DataAreaListenerList();
-		dataAreas = new DataLists<AlignmentArea, DataArea>(this, dataAreaListenerList);
+		dataAreas = new DataAreaLists(this, dataAreaListenerList);
 		dataAreaListenerList.add(new DataAreasAdapter() {
 			@SuppressWarnings("unchecked")
 			private void react(EventObject event) {
@@ -465,7 +465,7 @@ public class AlignmentArea extends ScrollingTICComponent {
 	 * 
 	 * @return the model object managing all attached data areas 
 	 */
-	public DataLists<AlignmentArea, DataArea> getDataAreas() {
+	public DataAreaLists getDataAreas() {
 		return dataAreas;
 	}
 

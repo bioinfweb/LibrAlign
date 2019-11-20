@@ -1,0 +1,63 @@
+/*
+ * LibrAlign - A GUI library for displaying and editing multiple sequence alignments and attached data
+ * Copyright (C) 2014-2018  Ben Stöver
+ * <http://bioinfweb.info/LibrAlign>
+ * 
+ * This file is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * 
+ * This file is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU Lesser General Public License for more details.
+ * 
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ */
+package info.bioinfweb.libralign.alignmentarea;
+
+
+import info.bioinfweb.commons.collections.observable.ListChangeListener;
+import info.bioinfweb.libralign.dataarea.DataArea;
+import info.bioinfweb.libralign.dataelement.DataList;
+import info.bioinfweb.libralign.dataelement.DataListType;
+import info.bioinfweb.libralign.dataelement.DataLists;
+
+
+
+public class DataAreaLists extends DataLists<AlignmentArea, DataArea>{
+  private final DataList<AlignmentArea, DataArea> topList;
+  private final DataList<AlignmentArea, DataArea> bottomList;
+  
+  
+	public DataAreaLists(AlignmentArea owner, ListChangeListener<DataArea> listChangeListener) {
+		super(owner, listChangeListener);
+
+		topList = new DataList<AlignmentArea, DataArea>(this, DataListType.TOP);
+		topList.addListChangeListener(listChangeListener);
+		bottomList = new DataList<AlignmentArea, DataArea>(this, DataListType.BOTTOM);
+		bottomList.addListChangeListener(listChangeListener);
+	}
+
+	
+	/**
+	 * Returns a list of data areas to be displayed on the top of the alignment.
+	 *
+	 * @return a modifiable list
+	 */
+	public DataList<AlignmentArea, DataArea> getTopList() {
+		return topList;
+	}
+
+
+	/**
+	 * Returns a list of data areas to be displayed underneath the alignment.
+	 *
+	 * @return a modifiable list
+	 */
+	public DataList<AlignmentArea, DataArea> getBottomList() {
+		return bottomList;
+	}
+}
