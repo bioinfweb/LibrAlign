@@ -83,19 +83,20 @@ public class PherogramArea extends ModelBasedDataArea<PherogramAreaModel, Pherog
 	private PherogramPainter painter = new PherogramPainter(this);
 
 	
-	private final AlignmentModelListener alignmentModelListener = new AlignmentModelAdapter() {  //TODO Attach this
+	@SuppressWarnings("rawtypes")
+	private final AlignmentModelListener alignmentModelListener = new AlignmentModelAdapter() {
 		@Override
-		public <T> void afterSequenceChange(SequenceChangeEvent<T> e) {
+		public void afterSequenceChange(SequenceChangeEvent e) {
 			//TODO React if the associated sequence was removed? (AlignmentContentArea should probably better implement this behavior.)
 		}
 
 
 		@Override
-		public <T> void afterSequenceRenamed(SequenceRenamedEvent<T> e) {}  // Nothing to do.
+		public void afterSequenceRenamed(SequenceRenamedEvent e) {}  // Nothing to do.
 
 
 		@Override
-		public <T> void afterTokenChange(TokenChangeEvent<T> e) {
+		public void afterTokenChange(TokenChangeEvent e) {
 			if (e.getSource().equals(getModel().getAlignmentModel()) && 
 					(e.getSequenceID() == getList().getLocation().getSequenceID())) {
 				

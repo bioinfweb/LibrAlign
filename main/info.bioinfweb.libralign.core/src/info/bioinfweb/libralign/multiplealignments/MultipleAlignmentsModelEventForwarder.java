@@ -23,7 +23,6 @@ import info.bioinfweb.commons.collections.observable.ListAddEvent;
 import info.bioinfweb.commons.collections.observable.ListRemoveEvent;
 import info.bioinfweb.commons.collections.observable.ListReplaceEvent;
 import info.bioinfweb.libralign.alignmentarea.AlignmentArea;
-import info.bioinfweb.libralign.model.AlignmentModel;
 import info.bioinfweb.libralign.model.AlignmentModelListener;
 import info.bioinfweb.libralign.model.data.DataModel;
 import info.bioinfweb.libralign.model.events.SequenceChangeEvent;
@@ -39,7 +38,7 @@ import info.bioinfweb.libralign.model.events.TokenChangeEvent;
  * @author Ben St&ouml;ver
  * @since 0.3.0
  */
-public class MultipleAlignmentsModelEventForwarder implements AlignmentModelListener /*, DataAreasListener*/ {
+public class MultipleAlignmentsModelEventForwarder<T> implements AlignmentModelListener<T> /*, DataAreasListener*/ {
 	//TODO This needs to be split into two classes, one for views, one for models. It should also be checked if it makes sense at all to forward both in the same place. (#356)
 	private MultipleAlignmentsContainer owner;
 
@@ -56,7 +55,7 @@ public class MultipleAlignmentsModelEventForwarder implements AlignmentModelList
 
 
 	@Override
-	public <T> void afterSequenceChange(SequenceChangeEvent<T> e) {
+	public void afterSequenceChange(SequenceChangeEvent<T> e) {
 		for (AlignmentArea alignmentArea : getOwner().getAlignmentAreas()) {
 			if (!e.getSource().equals(alignmentArea.getAlignmentModel())) {
 				//alignmentArea.afterSequenceChange(e);
@@ -66,7 +65,7 @@ public class MultipleAlignmentsModelEventForwarder implements AlignmentModelList
 
 
 	@Override
-	public <T> void afterSequenceRenamed(SequenceRenamedEvent<T> e) {
+	public void afterSequenceRenamed(SequenceRenamedEvent<T> e) {
 		for (AlignmentArea alignmentArea : getOwner().getAlignmentAreas()) {
 			if (!e.getSource().equals(alignmentArea.getAlignmentModel())) {
 				//alignmentArea.afterSequenceRenamed(e);
@@ -76,7 +75,7 @@ public class MultipleAlignmentsModelEventForwarder implements AlignmentModelList
 
 
 	@Override
-	public <T> void afterTokenChange(TokenChangeEvent<T> e) {
+	public void afterTokenChange(TokenChangeEvent<T> e) {
 		for (AlignmentArea alignmentArea : getOwner().getAlignmentAreas()) {
 			if (!e.getSource().equals(alignmentArea.getAlignmentModel())) {
 				//alignmentArea.afterTokenChange(e);
@@ -86,43 +85,42 @@ public class MultipleAlignmentsModelEventForwarder implements AlignmentModelList
 
 
 	@Override
-	public void beforeElementsAdded(ListAddEvent<DataModel> event) {
+	public void beforeElementsAdded(ListAddEvent<DataModel<?>> event) {
 		// TODO Auto-generated method stub
 		
 	}
 
 
 	@Override
-	public void afterElementsAdded(ListAddEvent<DataModel> event) {
+	public void afterElementsAdded(ListAddEvent<DataModel<?>> event) {
 		// TODO Auto-generated method stub
 		
 	}
 
 
 	@Override
-	public void beforeElementReplaced(ListReplaceEvent<DataModel> event) {
+	public void beforeElementReplaced(ListReplaceEvent<DataModel<?>> event) {
 		// TODO Auto-generated method stub
 		
 	}
 
 
 	@Override
-	public void afterElementReplaced(ListReplaceEvent<DataModel> event) {
+	public void afterElementReplaced(ListReplaceEvent<DataModel<?>> event) {
 		// TODO Auto-generated method stub
 		
 	}
 
 
 	@Override
-	public void beforeElementsRemoved(ListRemoveEvent<DataModel, Object> event) {
+	public void beforeElementsRemoved(ListRemoveEvent<DataModel<?>, Object> event) {
 		// TODO Auto-generated method stub
 		
 	}
 
 
 	@Override
-	public void afterElementsRemoved(
-			ListRemoveEvent<DataModel, DataModel> event) {
+	public void afterElementsRemoved(ListRemoveEvent<DataModel<?>, DataModel<?>> event) {
 		// TODO Auto-generated method stub
 		
 	}

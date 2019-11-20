@@ -320,8 +320,8 @@ public class SelectionModel {
 	public void selectAll() {
 		columnSelection.selectAll();
 		rowSelection.selectAll();
-		AlignmentModel provider = getOwner().getAlignmentModel();
-		cursor.setColumnRowHeight(provider.getMaxSequenceLength(), 0, provider.getSequenceCount());
+		AlignmentModel<?> model = getOwner().getAlignmentModel();
+		cursor.setColumnRowHeight(model.getMaxSequenceLength(), 0, model.getSequenceCount());
 		fireSelectionChanged();
 	}
 

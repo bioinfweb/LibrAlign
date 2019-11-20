@@ -38,7 +38,7 @@ import java.util.Collection;
  */
 public class AlignmentAreaList extends ObservableList<AlignmentArea> {
 	private MultipleAlignmentsContainer owner;
-	private MultipleAlignmentsModelEventForwarder modelEventForwarder;
+	private MultipleAlignmentsModelEventForwarder<?> modelEventForwarder;
 	private PaintSettingsSynchronizer paintSettingsSynchronizer = new PaintSettingsSynchronizer(this);
 	private HorizontalScrollingSynchronizer scrollingSynchronizer = new HorizontalScrollingSynchronizer(this);
 

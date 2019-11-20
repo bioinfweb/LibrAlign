@@ -63,16 +63,16 @@ public abstract class AbstractAlignmentModelDecorator<T, U> extends AbstractAlig
 		super();
 		this.tokenSet = tokenSet;
 		this.underlyingModel = underlyingModel;
-		underlyingModel.addModelListener(new AlignmentModelListener() {
+		underlyingModel.addModelListener(new AlignmentModelListener<U>() {
 			@Override
-			public <V> void afterTokenChange(TokenChangeEvent<V> e) {
+			public void afterTokenChange(TokenChangeEvent<U> e) {
 				for (TokenChangeEvent<T> event: convertTokenChangeEvent((TokenChangeEvent<U>)e)) {
 					fireAfterTokenChange(event);
 				}
 			}
 			
 			@Override
-			public <V> void afterSequenceRenamed(SequenceRenamedEvent<V> e) {
+			public void afterSequenceRenamed(SequenceRenamedEvent<U> e) {
 				SequenceRenamedEvent<T> event = convertSequenceRenamedEvent((SequenceRenamedEvent<U>)e); 
 				if (event != null) {
 					fireAfterSequenceRenamed(event);
@@ -80,7 +80,7 @@ public abstract class AbstractAlignmentModelDecorator<T, U> extends AbstractAlig
 			}
 			
 			@Override
-			public <V> void afterSequenceChange(SequenceChangeEvent<V> e) {
+			public void afterSequenceChange(SequenceChangeEvent<U> e) {
 				SequenceChangeEvent<T> event = convertSequenceChangeEvent((SequenceChangeEvent<U>)e); 
 				if (event != null) {
 					fireAfterSequenceChange(event);
@@ -88,38 +88,33 @@ public abstract class AbstractAlignmentModelDecorator<T, U> extends AbstractAlig
 			}
 
 			@Override
-			public void beforeElementsAdded(ListAddEvent<DataModel> event) {
-				//TODO Implement forwarding. (#355)
+			public void beforeElementsAdded(ListAddEvent<DataModel<?>> event) {
+				// TODO Auto-generated method stub
 			}
 
-			
 			@Override
-			public void afterElementsAdded(ListAddEvent<DataModel> event) {
-				//TODO Implement forwarding. (#355)
+			public void afterElementsAdded(ListAddEvent<DataModel<?>> event) {
+				// TODO Auto-generated method stub
 			}
 
-			
 			@Override
-			public void beforeElementReplaced(ListReplaceEvent<DataModel> event) {
-				//TODO Implement forwarding. (#355)
+			public void beforeElementReplaced(ListReplaceEvent<DataModel<?>> event) {
+				// TODO Auto-generated method stub
 			}
 
-			
 			@Override
-			public void afterElementReplaced(ListReplaceEvent<DataModel> event) {
-				//TODO Implement forwarding. (#355)
+			public void afterElementReplaced(ListReplaceEvent<DataModel<?>> event) {
+				// TODO Auto-generated method stub
 			}
 
-			
 			@Override
-			public void beforeElementsRemoved(ListRemoveEvent<DataModel, Object> event) {
-				//TODO Implement forwarding. (#355)
+			public void beforeElementsRemoved(ListRemoveEvent<DataModel<?>, Object> event) {
+				// TODO Auto-generated method stub
 			}
 
-			
 			@Override
-			public void afterElementsRemoved(ListRemoveEvent<DataModel, DataModel> event) {
-				//TODO Implement forwarding. (#355)
+			public void afterElementsRemoved(ListRemoveEvent<DataModel<?>, DataModel<?>> event) {
+				// TODO Auto-generated method stub
 			}
 		});
 	}

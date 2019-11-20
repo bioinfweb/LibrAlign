@@ -50,14 +50,14 @@ public class ConsensusSequenceModel extends AbstractDataModel<ConsensusSequenceM
 			}
 			
 			@Override
-			public <T> void afterTokenChange(TokenChangeEvent<T> e) {
+			public void afterTokenChange(TokenChangeEvent e) {
 				if (getAlignmentModel() == e.getSource()) {
 					react();
 				}
 			}
 			
 			@Override
-			public <T> void afterSequenceChange(SequenceChangeEvent<T> e) {
+			public void afterSequenceChange(SequenceChangeEvent e) {
 				if (getAlignmentModel() == e.getSource()) {
 					react();
 				}

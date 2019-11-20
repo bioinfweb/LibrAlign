@@ -170,9 +170,9 @@ public class AlignmentArea extends ScrollingTICComponent {
 	private boolean allowVerticalScrolling = true;
 	private Rectangle lastCursorRectangle = null;
 	
-	private final AlignmentModelListener alignmentModelListener = new AlignmentModelAdapter() {
+	private final AlignmentModelListener<?> alignmentModelListener = new AlignmentModelAdapter<Object>() {
 		@Override
-		public <T> void afterSequenceChange(SequenceChangeEvent<T> e) {
+		public void afterSequenceChange(SequenceChangeEvent<Object> e) {
 			if (e.getSource().equals(getAlignmentModel())) {
 				getLabelArea().setLocalMaxWidthRecalculateToAll();  // Needs to be called before assignSizeToAll().
 				getSequenceOrder().refreshFromSource();
@@ -184,7 +184,7 @@ public class AlignmentArea extends ScrollingTICComponent {
 
 
 		@Override
-		public <T> void afterSequenceRenamed(SequenceRenamedEvent<T> e) {
+		public void afterSequenceRenamed(SequenceRenamedEvent<Object> e) {
 			if (e.getSource().equals(getAlignmentModel())) {
 				getLabelArea().setLocalMaxWidthRecalculateToAll();  // Needs to be called before assignSizeToAll().
 			}
@@ -193,7 +193,7 @@ public class AlignmentArea extends ScrollingTICComponent {
 
 
 		@Override
-		public <T> void afterTokenChange(TokenChangeEvent<T> e) {
+		public void afterTokenChange(TokenChangeEvent<Object> e) {
 			getContentArea().setUpdateOngoing(true);
 			try {
 				assignSizeToAll();
@@ -208,20 +208,23 @@ public class AlignmentArea extends ScrollingTICComponent {
 
 
 		@Override
-		public void afterElementsRemoved(ListRemoveEvent<DataModel, DataModel> event) {
-			//TODO Reaction required?
+		public void afterElementsAdded(ListAddEvent<DataModel<?>> event) {
+			// TODO Auto-generated method stub
+			super.afterElementsAdded(event);
 		}
 
-		
+
 		@Override
-		public void afterElementsAdded(ListAddEvent<DataModel> event) {
-			//TODO Reaction required?
+		public void afterElementReplaced(ListReplaceEvent<DataModel<?>> event) {
+			// TODO Auto-generated method stub
+			super.afterElementReplaced(event);
 		}
-		
-		
+
+
 		@Override
-		public void afterElementReplaced(ListReplaceEvent<DataModel> event) {
-			//TODO Reaction required?
+		public void afterElementsRemoved(ListRemoveEvent<DataModel<?>, DataModel<?>> event) {
+			// TODO Auto-generated method stub
+			super.afterElementsRemoved(event);
 		}
 	};
 	

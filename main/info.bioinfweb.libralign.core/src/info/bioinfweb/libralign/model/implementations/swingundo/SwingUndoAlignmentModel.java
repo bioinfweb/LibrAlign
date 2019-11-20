@@ -119,23 +119,23 @@ public class SwingUndoAlignmentModel<T> extends AbstractAlignmentModel<T>
 			
 			@SuppressWarnings("rawtypes")
 			final SwingUndoAlignmentModel newModel = this;
-			underlyingModel.addModelListener(new AlignmentModelAdapter() {
+			underlyingModel.addModelListener(new AlignmentModelAdapter<T>() {
 				@SuppressWarnings("unchecked")
 				@Override
-				public <V> void afterTokenChange(TokenChangeEvent<V> e) {
-					fireAfterTokenChange((TokenChangeEvent<T>)e.cloneWithNewSource(newModel));
+				public void afterTokenChange(TokenChangeEvent<T> e) {
+					fireAfterTokenChange(e.cloneWithNewSource(newModel));
 				}
 				
 				@SuppressWarnings("unchecked")
 				@Override
-				public <V> void afterSequenceRenamed(SequenceRenamedEvent<V> e) {
-					fireAfterSequenceRenamed((SequenceRenamedEvent<T>)e.cloneWithNewSource(newModel));
+				public void afterSequenceRenamed(SequenceRenamedEvent<T> e) {
+					fireAfterSequenceRenamed(e.cloneWithNewSource(newModel));
 				}
 				
 				@SuppressWarnings("unchecked")
 				@Override
-				public <V> void afterSequenceChange(SequenceChangeEvent<V> e) {
-					fireAfterSequenceChange((SequenceChangeEvent<T>)e.cloneWithNewSource(newModel));
+				public void afterSequenceChange(SequenceChangeEvent<T> e) {
+					fireAfterSequenceChange(e.cloneWithNewSource(newModel));
 				}
 				
 				//TODO Possibly implement additional new events. (cf. #355)

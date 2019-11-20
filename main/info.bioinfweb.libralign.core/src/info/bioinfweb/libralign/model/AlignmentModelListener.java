@@ -20,7 +20,6 @@ package info.bioinfweb.libralign.model;
 
 
 import info.bioinfweb.commons.collections.observable.ListChangeListener;
-import info.bioinfweb.libralign.alignmentarea.AlignmentArea;
 import info.bioinfweb.libralign.model.data.DataModel;
 import info.bioinfweb.libralign.model.events.SequenceChangeEvent;
 import info.bioinfweb.libralign.model.events.SequenceRenamedEvent;
@@ -32,32 +31,31 @@ import info.bioinfweb.libralign.model.events.TokenChangeEvent;
  * This interface should be implemented by classes that want to track changes in the stored data 
  * of an implementation of {@link AlignmentModel}.
  * <p>
- * This class does not specify a global generic token type parameter since the {@link AlignmentModel}
- * is listens to may change during runtime if the provider that is attached to the {@link AlignmentArea}
- * is substituted.
+ * Calls of the inherited list change event methods indicate that data models nested within the alignment model were added,
+ * removed or replaced. 
  * 
  * @author Ben St&ouml;ver
  * @since 0.0.0
  */
-public interface AlignmentModelListener extends ListChangeListener<DataModel> {
+public interface AlignmentModelListener<T> extends ListChangeListener<DataModel<?>> {
 	/**
 	 * Called after a sequence has been inserted, removed or replaced.
 	 * 
 	 * @param e the event object containing information on the change
 	 */
-	public <T> void afterSequenceChange(SequenceChangeEvent<T> e);
+	public void afterSequenceChange(SequenceChangeEvent<T> e);
 
 	/**
 	 * Called after a sequence was renamed.
 	 * 
 	 * @param e the event object containing information on the change
 	 */
-	public <T> void afterSequenceRenamed(SequenceRenamedEvent<T> e);
+	public void afterSequenceRenamed(SequenceRenamedEvent<T> e);
 
 	/**
 	 * Called after a single token or a set of tokens has been inserted, removed or replaced.
 	 * 
 	 * @param e the event object containing information on the change
 	 */
-	public <T> void afterTokenChange(TokenChangeEvent<T> e);
+	public void afterTokenChange(TokenChangeEvent<T> e);
 }

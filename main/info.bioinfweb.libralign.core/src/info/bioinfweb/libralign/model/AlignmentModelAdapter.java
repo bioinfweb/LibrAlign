@@ -36,15 +36,15 @@ import info.bioinfweb.libralign.model.events.TokenChangeEvent;
  * @author Ben St&ouml;ver
  * @since 0.7.0
  */
-public class AlignmentModelAdapter extends ListChangeAdapter<DataModel> implements AlignmentModelListener {
+public class AlignmentModelAdapter<T> extends ListChangeAdapter<DataModel<?>> implements AlignmentModelListener<T> {
 	@Override
-	public <T> void afterSequenceChange(SequenceChangeEvent<T> e) {}
+	public void afterSequenceChange(SequenceChangeEvent<T> e) {}
 
 	
 	@Override
-	public <T> void afterSequenceRenamed(SequenceRenamedEvent<T> e) {}
+	public void afterSequenceRenamed(SequenceRenamedEvent<T> e) {}
 
 	
 	@Override
-	public <T> void afterTokenChange(TokenChangeEvent<T> e) {}
+	public void afterTokenChange(TokenChangeEvent<T> e) {}
 }

@@ -33,14 +33,14 @@ import info.bioinfweb.libralign.model.events.TokenChangeEvent;
 
 
 public abstract class AbstractIndexTranslator<T, D> implements IndexTranslator<T> {
-	private final AlignmentModelListener MODEL_LISTENER = new AlignmentModelAdapter() {
+	private final AlignmentModelListener<T> MODEL_LISTENER = new AlignmentModelAdapter<T>() {
 		@Override
-		public <T> void afterTokenChange(TokenChangeEvent<T> e) {
+		public void afterTokenChange(TokenChangeEvent<T> e) {
 			sequenceDataMap.remove(e.getSequenceID());
 		}
 		
 		@Override
-		public <T> void afterSequenceChange(SequenceChangeEvent<T> e) {
+		public void afterSequenceChange(SequenceChangeEvent<T> e) {
 			if (e.getType().equals(ListChangeType.DELETION) || e.getType().equals(ListChangeType.REPLACEMENT)) {
 				sequenceDataMap.remove(e.getSequenceID());
 			}
