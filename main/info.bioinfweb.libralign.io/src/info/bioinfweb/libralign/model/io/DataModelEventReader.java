@@ -31,9 +31,9 @@ import info.bioinfweb.libralign.model.data.DataModelFactory;
  * Interface to be implemented by all readers that process <i>JPhyloIO</i> events to read data to be stored in
  * implementations of {@link DataModel}.
  * <p>
- * All implementations should accept an instance of {@link DataModel} as a constructor parameter that
- * will than be returned by {@link #getModels()}. Implementing classes should not allow to change the model
- * during runtime, since changing the model between two calls of 
+ * All implementations should accept an instance of an implementation of {@link DataModel} as a constructor parameter that
+ * will than be returned by {@link #getModels()}. Implementing classes should not allow to change the model during runtime, 
+ * since changing the model between two calls of 
  * {@link #processEvent(info.bioinfweb.jphyloio.JPhyloIOEventReader, info.bioinfweb.jphyloio.events.JPhyloIOEvent)}
  * should be avoided.
  * 
@@ -43,7 +43,7 @@ import info.bioinfweb.libralign.model.data.DataModelFactory;
  *
  * @param <M> the type of data model to read by this reader
  */
-public interface DataModelEventReader<M extends DataModel> extends JPhyloIOEventListener {
+public interface DataModelEventReader<M extends DataModel<L>, L> extends JPhyloIOEventListener {
 	/**
 	 * Returns the instance of the main reader (for reading alignment and data models) which
 	 * uses this data model reader.
@@ -66,5 +66,5 @@ public interface DataModelEventReader<M extends DataModel> extends JPhyloIOEvent
 	 * 
 	 * @return the factory (never {@code null})
 	 */
-	public DataModelFactory<M> getFactory();
+	public DataModelFactory<M, L> getFactory();
 }

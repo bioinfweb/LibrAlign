@@ -50,7 +50,7 @@ public class AlignmentDataReader {
 	
 	private JPhyloIOEventReader eventReader;
 	private AlignmentModelEventReader alignmentModelReader;
-	private List<DataModelEventReader<?>> dataModelReaders = new ArrayList<DataModelEventReader<?>>();
+	private List<DataModelEventReader<?, ?>> dataModelReaders = new ArrayList<DataModelEventReader<?, ?>>();
 	
 	
 	/**
@@ -170,7 +170,7 @@ public class AlignmentDataReader {
 	 * @throws IllegalArgumentException if the specified reader does not reference this instance by 
 	 *         {@link DataModelEventReader#getMainReader()}
 	 */
-	public boolean addDataModelReader(DataModelEventReader<?> reader) {
+	public boolean addDataModelReader(DataModelEventReader<?, ?> reader) {
 		if (!dataModelReaders.contains(reader)) {
 			if (this.equals(reader.getMainReader())) {
 				return dataModelReaders.add(reader);
@@ -192,7 +192,7 @@ public class AlignmentDataReader {
 	 * @return {@code true} if the specified reader was removed, {@code false} if that reader was not contained in 
 	 *         this instance
 	 */
-	public boolean removeDataModelReader(DataModelEventReader<?> reader) {
+	public boolean removeDataModelReader(DataModelEventReader<?, ?> reader) {
 		return dataModelReaders.remove(reader);
 	}
 	
@@ -202,7 +202,7 @@ public class AlignmentDataReader {
 			JPhyloIOEvent event = eventReader.next();
 
 			alignmentModelReader.processEvent(eventReader, event);
-			for (DataModelEventReader<?> dataModelReader : dataModelReaders) {
+			for (DataModelEventReader<?, ?> dataModelReader : dataModelReaders) {
 				dataModelReader.processEvent(eventReader, event);
 			}
 			return event;

@@ -39,11 +39,11 @@ import info.bioinfweb.libralign.model.data.DataModelFactory;
  * @since 0.4.0
  * @bioinfweb.module info.bioinfweb.libralign.io
  */
-public abstract class AbstractDataModelEventReader<M extends DataModel> implements DataModelEventReader<M> {
+public abstract class AbstractDataModelEventReader<M extends DataModel<L>, L> implements DataModelEventReader<M, L> {
 	//TODO AbstractDataModelEventReader sollte eine Liste von aktuell ladenden Modellen und nicht nur eins haben. Zusätzlich bleibt die Liste der vollständigen Modelle bestehen.
 	
 	private AlignmentDataReader mainReader;
-	private DataModelFactory<M> factory;
+	private DataModelFactory<M, L> factory;
 	private Map<DataModelKey, M> loadingModels = new HashMap<DataModelKey, M>();
 	private MultiValuedMap<DataModelKey, M> completedModels = new ArrayListValuedHashMap<DataModelKey, M>();
 
@@ -54,7 +54,7 @@ public abstract class AbstractDataModelEventReader<M extends DataModel> implemen
 	 * @param mainReader the associates main reader instance forwarding to this reader
 	 * @param factory the factory to be used to create new data model instance during reading
 	 */
-	public AbstractDataModelEventReader(AlignmentDataReader mainReader, DataModelFactory<M> factory) {
+	public AbstractDataModelEventReader(AlignmentDataReader mainReader, DataModelFactory<M, L> factory) {
 		super();
 		this.mainReader = mainReader;
 		this.factory = factory;
@@ -67,7 +67,7 @@ public abstract class AbstractDataModelEventReader<M extends DataModel> implemen
 
 
 	@Override
-	public DataModelFactory<M> getFactory() {
+	public DataModelFactory<M, L> getFactory() {
 		return factory;
 	}
 

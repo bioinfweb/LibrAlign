@@ -64,7 +64,7 @@ import info.bioinfweb.libralign.model.io.DataModelKey;
  * @author Ben St&ouml;ver
  * @since 0.4.0
  */
-public class CharSetEventReader extends AbstractDataModelEventReader<CharSetDataModel> {
+public class CharSetEventReader extends AbstractDataModelEventReader<CharSetDataModel, CharSetDataModelListener> {
 	private boolean publishOnAlignmentEnd = false;
 	private LinkedLabeledIDEvent currentStartEvent = null;
 	private String currentAlignmentID = null;
@@ -77,7 +77,7 @@ public class CharSetEventReader extends AbstractDataModelEventReader<CharSetData
 	
 	
 	public CharSetEventReader(AlignmentDataReader mainReader, URIOrStringIdentifier colorPredicate) {
-		super(mainReader, new NoArgDataModelFactory<CharSetDataModel>(CharSetDataModel.class));
+		super(mainReader, new NoArgDataModelFactory<CharSetDataModel, CharSetDataModelListener>(CharSetDataModel.class));
 		this.colorPredicate = colorPredicate;
 	}
 
