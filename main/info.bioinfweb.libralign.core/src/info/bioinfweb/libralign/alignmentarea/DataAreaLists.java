@@ -27,11 +27,25 @@ import info.bioinfweb.libralign.dataelement.DataLists;
 
 
 
+/**
+ * Instances of this class are used to organize the data areas that are contained within an {@link AlignmentArea} instance.
+ * 
+ * @author Ben St&ouml;ver
+ * @see 0.10.0
+ * @bioinfweb.module info.bioinfweb.libralign.core
+ */
 public class DataAreaLists extends DataLists<AlignmentArea, DataArea>{
   private final DataList<AlignmentArea, DataArea> topList;
   private final DataList<AlignmentArea, DataArea> bottomList;
   
   
+	/**
+	 * Creates a new instance of this class.
+	 *
+	 * @param owner the {@link AlignmentArea} that will be using the new instance
+	 * @param listChangeListener This listener will be informed on changes in all lists contained in the new instance. Owning classes should provide an 
+	 *        implementation that processes the events, e.g., by forwarding them to their own respective listeners. 
+	 */
 	public DataAreaLists(AlignmentArea owner, ListChangeListener<DataArea> listChangeListener) {
 		super(owner, listChangeListener);
 

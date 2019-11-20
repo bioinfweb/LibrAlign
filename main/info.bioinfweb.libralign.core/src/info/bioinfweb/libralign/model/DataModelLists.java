@@ -20,13 +20,47 @@ package info.bioinfweb.libralign.model;
 
 
 import info.bioinfweb.commons.collections.observable.ListChangeListener;
+import info.bioinfweb.libralign.dataelement.DataList;
+import info.bioinfweb.libralign.dataelement.DataListType;
 import info.bioinfweb.libralign.dataelement.DataLists;
 import info.bioinfweb.libralign.model.data.DataModel;
 
 
 
-public class DataModelLists extends DataLists<AlignmentModel<?>, DataModel<?>>{
-	public DataModelLists(AlignmentModel<?> owner, ListChangeListener<DataModel<?>> listChangeListener) {
+/**
+ * Instances of this class are used to organize the data models that are associated with an {@link AlignmentModel} instance.
+ * 
+ * @author Ben St&ouml;ver
+ * @see 0.10.0
+ * @bioinfweb.module info.bioinfweb.libralign.core
+ *
+ * @param <T> the token type used in the associated alignment model
+ */
+public class DataModelLists<T> extends DataLists<AlignmentModel<T>, DataModel<?>>{
+  private final DataList<AlignmentModel<T>, DataModel<?>> alignmentList;
+  
+  
+	/**
+	 * Creates a new instance of this class.
+	 *
+	 * @param owner the {@link AlignmentModel} that uses the new instance
+	 * @param listChangeListener This listener will be informed on changes in all lists contained in the new instance. Owning classes should provide an 
+	 *        implementation that processes the events, e.g., by forwarding them to their own respective listeners. 
+	 */
+	public DataModelLists(AlignmentModel<T> owner, ListChangeListener<DataModel<?>> listChangeListener) {
 		super(owner, listChangeListener);
+		
+		alignmentList = new DataList<AlignmentModel<T>, DataModel<?>>(this, DataListType.ALIGNMENT);
+		alignmentList.addListChangeListener(listChangeListener);
+	}
+
+
+	/**
+	 * Returns the list of data models that are directly associated with the alignment and not a specific sequence.
+	 * 
+	 * @return a list instance (never {@code null})
+	 */
+	public DataList<AlignmentModel<T>, DataModel<?>> getAlignmentList() {
+		return alignmentList;
 	}
 }

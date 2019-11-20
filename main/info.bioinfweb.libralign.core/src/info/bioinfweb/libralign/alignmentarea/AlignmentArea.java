@@ -56,7 +56,6 @@ import info.bioinfweb.libralign.dataarea.DataAreaVisibilityChangeEvent;
 import info.bioinfweb.libralign.dataarea.DataAreasAdapter;
 import info.bioinfweb.libralign.dataarea.DataAreasListener;
 import info.bioinfweb.libralign.dataelement.DataList;
-import info.bioinfweb.libralign.dataelement.DataLists;
 import info.bioinfweb.libralign.editsettings.EditSettings;
 import info.bioinfweb.libralign.model.AlignmentModel;
 import info.bioinfweb.libralign.model.AlignmentModelAdapter;

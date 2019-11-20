@@ -45,7 +45,7 @@ public class DataLists<O, E> {
 	/**
 	 * Creates a new instance of this class.
 	 *
-	 * @param owner the alignment content area that will be using this instance
+	 * @param owner the object that will be using the new instance to organize its subelements
 	 * @param listChangeListener This listener will be informed on changes in all lists contained in the new instance. Owning classes should provide an 
 	 *        implementation that processes the events, e.g., by forwarding them to their own respective listeners. 
 	 */
