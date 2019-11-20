@@ -58,7 +58,7 @@ public class EditableAlignmentTest {
 			//AlignmentModel<NucleotideCompound> provider = new PackedAlignmentModel<NucleotideCompound>(tokenSet);
 			
 			// Add index area:
-			alignmentArea.getDataAreas().getTopAreas().add(new SequenceIndexArea(contentArea));
+			alignmentArea.getDataAreas().getTopList().add(new SequenceIndexArea(contentArea));
 			
 			// Test sequence:
 			String id = model.addSequence("A");
@@ -91,7 +91,7 @@ public class EditableAlignmentTest {
 				PherogramArea pherogramArea = new PherogramArea(alignmentArea.getContentArea(), new PherogramAreaModel(pherogramProvider));
 				//pherogramArea.setFirstSeqPos(1);
 				//pherogramArea.setLeftCutPosition(1);
-				alignmentArea.getDataAreas().getSequenceAreas(id).add(pherogramArea);
+				alignmentArea.getDataAreas().getSequenceList(id).add(pherogramArea);
 			}
 			catch (UnsupportedChromatogramFormatException | IOException e) {
 				e.printStackTrace();
@@ -130,7 +130,7 @@ public class EditableAlignmentTest {
 			
 			// Add data area:
 			PherogramArea pherogramArea = new PherogramArea(alignmentArea.getContentArea(), new PherogramAreaModel(pherogramProvider));
-			alignmentArea.getDataAreas().getSequenceAreas(id).add(pherogramArea);
+			alignmentArea.getDataAreas().getSequenceList(id).add(pherogramArea);
 		}
 		catch (UnsupportedChromatogramFormatException | IOException e) {
 			e.printStackTrace();

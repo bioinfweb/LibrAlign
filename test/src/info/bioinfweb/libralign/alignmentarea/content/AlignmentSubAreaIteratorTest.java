@@ -50,11 +50,11 @@ public class AlignmentSubAreaIteratorTest {
 		area.setAlignmentModel(model, true);
 		
 		SequenceIndexArea topDataArea = new SequenceIndexArea(area.getContentArea());
-		area.getDataAreas().getTopAreas().add(topDataArea);
+		area.getDataAreas().getTopList().add(topDataArea);
 		ConsensusSequenceArea sequenceDataArea = new ConsensusSequenceArea(area.getContentArea());
-		area.getDataAreas().getSequenceAreas(id2).add(sequenceDataArea);
+		area.getDataAreas().getSequenceList(id2).add(sequenceDataArea);
 		ConsensusSequenceArea bottomDataArea = new ConsensusSequenceArea(area.getContentArea());
-		area.getDataAreas().getBottomAreas().add(bottomDataArea);
+		area.getDataAreas().getBottomList().add(bottomDataArea);
 		
 		AlignmentSubAreaIterator iterator = new AlignmentSubAreaIterator(area);
 		assertTrue(iterator.hasNext());

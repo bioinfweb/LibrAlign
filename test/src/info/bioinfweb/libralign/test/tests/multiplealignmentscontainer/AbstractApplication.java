@@ -111,13 +111,13 @@ public class AbstractApplication {
 			// Index:
 			AlignmentArea area = new AlignmentArea(result);
 			area.setAllowVerticalScrolling(false);
-			area.getDataAreas().getTopAreas().add(new SequenceIndexArea(area.getContentArea(), mainArea));
+			area.getDataAreas().getTopList().add(new SequenceIndexArea(area.getContentArea(), mainArea));
 			result.getAlignmentAreas().add(area);
 			
 			// Char sets:
 			area = new AlignmentArea(result);
 			area.setAllowVerticalScrolling(true);
-			area.getDataAreas().getTopAreas().add(createCharSetArea(area.getContentArea(), mainArea));
+			area.getDataAreas().getTopList().add(createCharSetArea(area.getContentArea(), mainArea));
 			result.getAlignmentAreas().add(area);
       
 			// Alignment with pherograms:
@@ -127,7 +127,7 @@ public class AbstractApplication {
 			mainArea.getPaintSettings().getTokenPainterList().set(0, new NucleotideTokenPainter());
 			
 			PherogramArea pherogramArea = new PherogramArea(mainArea.getContentArea(), new PherogramAreaModel(pherogramProvider));
-			mainArea.getDataAreas().getSequenceAreas(model.sequenceIDsByName("Sequence 4").iterator().next()).add(pherogramArea);
+			mainArea.getDataAreas().getSequenceList(model.sequenceIDsByName("Sequence 4").iterator().next()).add(pherogramArea);
 			pherogramArea.getModel().setFirstSeqPos(5);
 			pherogramArea.getModel().setLeftCutPosition(34);
 			pherogramArea.getModel().setRightCutPosition(820);
@@ -151,7 +151,7 @@ public class AbstractApplication {
 			// Consensus sequence:
       area = new AlignmentArea(result);
 			area.setAllowVerticalScrolling(false);
-			area.getDataAreas().getBottomAreas().add(new ConsensusSequenceArea(area.getContentArea(), mainArea));
+			area.getDataAreas().getBottomList().add(new ConsensusSequenceArea(area.getContentArea(), mainArea));
       result.getAlignmentAreas().add(area);
 			
 //      result.addKeyListener(new TICKeyListener() {
