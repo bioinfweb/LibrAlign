@@ -20,6 +20,6 @@ package info.bioinfweb.libralign.model.data;
 
 
 
-public interface DataModelFactory<M extends DataModel> {
+public interface DataModelFactory<M extends DataModel<L>, L> {
 	public M createNewModel();
 }

@@ -29,7 +29,7 @@ package info.bioinfweb.libralign.model.data;
  *
  * @param <M> the model class that shall be created by this factory 
  */
-public class NoArgDataModelFactory<M extends DataModel> implements DataModelFactory<M> {
+public class NoArgDataModelFactory<M extends DataModel<L>, L> implements DataModelFactory<M, L> {
 	private Class<M> modelClass;
 	
 	
