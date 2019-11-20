@@ -82,6 +82,7 @@ import info.bioinfweb.libralign.model.tokenset.TokenSet;
  */
 public class SwingUndoAlignmentModel<T> extends AbstractAlignmentModel<T> 
 		implements AlignmentModel<T>, AlignmentModelView<T, T> {
+	//TODO This model must delegate getDataModels() and forward additional events if it will remain in further use.
 	
 	protected AlignmentModel<T> underlyingModel;
 	private UndoManager undoManager;
