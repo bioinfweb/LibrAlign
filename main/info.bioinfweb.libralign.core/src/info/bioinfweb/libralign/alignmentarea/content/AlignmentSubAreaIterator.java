@@ -45,13 +45,13 @@ public class AlignmentSubAreaIterator implements Iterator<AlignmentSubArea> {
 		super();
 		this.area = area;
 		idIterator = area.getSequenceOrder().idIterator();
-		dataAreaIterator = area.getDataAreas().getTopAreas().iterator();
+		dataAreaIterator = area.getDataAreas().getTopList().iterator();
 	}
 	
 	
 	@Override
 	public boolean hasNext() {
-		return dataAreaIterator.hasNext() || idIterator.hasNext() || (!bottomAreaIteratorCreated && !area.getDataAreas().getBottomAreas().isEmpty());
+		return dataAreaIterator.hasNext() || idIterator.hasNext() || (!bottomAreaIteratorCreated && !area.getDataAreas().getBottomList().isEmpty());
 	}
 
 	
@@ -62,11 +62,11 @@ public class AlignmentSubAreaIterator implements Iterator<AlignmentSubArea> {
 		}
 		else if (idIterator.hasNext()) {
 			String sequenceID = idIterator.next();
-			dataAreaIterator = area.getDataAreas().getSequenceAreas(sequenceID).iterator();
+			dataAreaIterator = area.getDataAreas().getSequenceList(sequenceID).iterator();
 			return area.getContentArea().getSequenceAreaByID(sequenceID);
 		}
 		else if (!bottomAreaIteratorCreated) {
-			dataAreaIterator = area.getDataAreas().getBottomAreas().iterator();
+			dataAreaIterator = area.getDataAreas().getBottomList().iterator();
 			bottomAreaIteratorCreated = true;
 			return dataAreaIterator.next();  // May throw a NoSuchElementException as well.
 		}

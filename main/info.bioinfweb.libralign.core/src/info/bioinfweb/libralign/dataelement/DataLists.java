@@ -24,19 +24,21 @@ import java.util.Map;
 
 import info.bioinfweb.commons.collections.observable.ListChangeListener;
 import info.bioinfweb.libralign.alignmentarea.AlignmentArea;
+import info.bioinfweb.libralign.model.AlignmentModel;
 
 
 
 /**
- * Manages the data areas attached to an {@link AlignmentArea}.
+ * Manages the data areas attached to an {@link AlignmentArea} or data models that are parts of an {@link AlignmentModel}.
  *
  * @author Ben St&ouml;ver
+ * @bioinfweb.module info.bioinfweb.libralign.core
  */
 public class DataLists<O, E> {
 	private final O owner;
-  private final DataList<O, E> topAreas = new DataList<O, E>(this, DataListType.TOP);
-  private final DataList<O, E> bottomAreas = new DataList<O, E>(this, DataListType.BOTTOM);
-  private final Map<String, DataList<O, E>> sequenceAreaLists = new HashMap<String, DataList<O, E>>();
+  private final DataList<O, E> topList = new DataList<O, E>(this, DataListType.TOP);
+  private final DataList<O, E> bottomList = new DataList<O, E>(this, DataListType.BOTTOM);
+  private final Map<String, DataList<O, E>> sequenceLists = new HashMap<String, DataList<O, E>>();
   private final ListChangeListener<E> listChangeListener;
 
 
@@ -52,8 +54,8 @@ public class DataLists<O, E> {
 		this.owner = owner;
 		this.listChangeListener = listChangeListener;
 		
-		topAreas.addListChangeListener(listChangeListener);
-		bottomAreas.addListChangeListener(listChangeListener);
+		topList.addListChangeListener(listChangeListener);
+		bottomList.addListChangeListener(listChangeListener);
 	}
 
 
@@ -70,8 +72,8 @@ public class DataLists<O, E> {
 	 *
 	 * @return a modifiable list
 	 */
-	public DataList<O, E> getTopAreas() {
-		return topAreas;
+	public DataList<O, E> getTopList() {
+		return topList;
 	}
 
 
@@ -80,8 +82,8 @@ public class DataLists<O, E> {
 	 *
 	 * @return a modifiable list
 	 */
-	public DataList<O, E> getBottomAreas() {
-		return bottomAreas;
+	public DataList<O, E> getBottomList() {
+		return bottomList;
 	}
 
 
@@ -91,12 +93,12 @@ public class DataLists<O, E> {
 	 * @param sequenceID the unique identifier of the sequence carrying the data areas in the returned list
 	 * @return a modifiable list
 	 */
-	public DataList<O, E> getSequenceAreas(String sequenceID) {
-		DataList<O, E> result = sequenceAreaLists.get(sequenceID);
+	public DataList<O, E> getSequenceList(String sequenceID) {
+		DataList<O, E> result = sequenceLists.get(sequenceID);
 		if (result == null) {
 			result = new DataList<O, E>(this, sequenceID);
 			result.addListChangeListener(listChangeListener);
-			sequenceAreaLists.put(sequenceID, result);
+			sequenceLists.put(sequenceID, result);
 		}
 		return result;
 	}
@@ -107,8 +109,8 @@ public class DataLists<O, E> {
 	 *
 	 * @param sequenceID the unique identifier of the sequence the data areas to be removed are attached to
 	 */
-	public void removeSequence(String sequenceID) {
-		DataList<O, E> list = sequenceAreaLists.remove(sequenceID);
+	public void removeSequenceList(String sequenceID) {
+		DataList<O, E> list = sequenceLists.remove(sequenceID);
 		if (list != null) {
 			list.removeListChangeListener(listChangeListener);
 		}

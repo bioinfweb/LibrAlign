@@ -114,12 +114,12 @@ public class SizeManager {  //DataAreaLayoutManager?
 		if (localMaxLengthBeforeStart == AlignmentLabelArea.RECALCULATE_VALUE) {
 			DataLists<AlignmentArea, DataArea> dataAreas = getOwner().getDataAreas();
 			localMaxLengthBeforeStart = Math.max((int)Math2.roundUp(getOwner().getPaintSettings().getCursorLineWidth() / 2),
-					Math.max(getMaxLengthBeforeStartForList(dataAreas.getTopAreas()), getMaxLengthBeforeStartForList(dataAreas.getBottomAreas())));
+					Math.max(getMaxLengthBeforeStartForList(dataAreas.getTopList()), getMaxLengthBeforeStartForList(dataAreas.getBottomList())));
 			
 			if (getOwner().hasAlignmentModel()) {
 				Iterator<String> iterator = getOwner().getAlignmentModel().sequenceIDIterator();
 				while (iterator.hasNext()) {
-					localMaxLengthBeforeStart = Math.max(localMaxLengthBeforeStart, getMaxLengthBeforeStartForList(getOwner().getDataAreas().getSequenceAreas(iterator.next())));
+					localMaxLengthBeforeStart = Math.max(localMaxLengthBeforeStart, getMaxLengthBeforeStartForList(getOwner().getDataAreas().getSequenceList(iterator.next())));
 				}
 			}
 		}
@@ -170,12 +170,12 @@ public class SizeManager {  //DataAreaLayoutManager?
 	    if (localMaxLengthAfterEnd == AlignmentLabelArea.RECALCULATE_VALUE) {
 				DataLists<AlignmentArea, DataArea> dataAreas = getOwner().getDataAreas();
 	      localMaxLengthAfterEnd = Math.max((int)Math2.roundUp(getOwner().getPaintSettings().getCursorLineWidth() / 2),
-	      		Math.max(getMaxLengthAfterEndForList(dataAreas.getTopAreas()), getMaxLengthAfterEndForList(dataAreas.getBottomAreas())));
+	      		Math.max(getMaxLengthAfterEndForList(dataAreas.getTopList()), getMaxLengthAfterEndForList(dataAreas.getBottomList())));
 	      
 	      if (getOwner().hasAlignmentModel()) {
 		      Iterator<String> iterator = getOwner().getAlignmentModel().sequenceIDIterator();
 		      while (iterator.hasNext()) {
-		        localMaxLengthAfterEnd = Math.max(localMaxLengthAfterEnd, getMaxLengthAfterEndForList(dataAreas.getSequenceAreas(iterator.next())));
+		        localMaxLengthAfterEnd = Math.max(localMaxLengthAfterEnd, getMaxLengthAfterEndForList(dataAreas.getSequenceList(iterator.next())));
 		      }
 	      }
 	    }
@@ -299,7 +299,7 @@ public class SizeManager {  //DataAreaLayoutManager?
 		DataLists<AlignmentArea, DataArea> dataAreas = getOwner().getDataAreas();
 		
 		// Height of top and bottom data areas:
-  	double result = getVisibleHeightForList(dataAreas.getTopAreas()) + getVisibleHeightForList(dataAreas.getBottomAreas());
+  	double result = getVisibleHeightForList(dataAreas.getTopList()) + getVisibleHeightForList(dataAreas.getBottomList());
   	
 		if (getOwner().hasAlignmentModel()) {
 			AlignmentModel<?> model = getOwner().getAlignmentModel();
@@ -307,7 +307,7 @@ public class SizeManager {  //DataAreaLayoutManager?
 			// Height of sequence data areas:
 			Iterator<String> iterator = model.sequenceIDIterator();
 			while (iterator.hasNext()) {
-				result += getVisibleHeightForList(dataAreas.getSequenceAreas(iterator.next()));
+				result += getVisibleHeightForList(dataAreas.getSequenceList(iterator.next()));
 			}
 
 			// Height of sequences:
