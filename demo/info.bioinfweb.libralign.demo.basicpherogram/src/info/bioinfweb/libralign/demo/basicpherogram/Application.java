@@ -98,7 +98,7 @@ public class Application {
 		DataArea pherogramDataArea = new PherogramArea(alignmentArea, pherogramModel);
 		
 		// Attach pherogram data area to the (only) sequence in the alignment area:
-		alignmentArea.getDataAreas().getSequenceAreas(id).add(pherogramDataArea);
+		alignmentArea.getDataAreas().getSequenceList(id).add(pherogramDataArea);
 		
 		
 		// Create Swing component from the alignment area:
