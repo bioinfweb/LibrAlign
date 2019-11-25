@@ -78,10 +78,9 @@ import info.bioinfweb.libralign.model.tokenset.TokenSet;
  * @author Ben St&ouml;ver
  * @since 0.1.0
  * 
- * @param <T> - the type of sequence elements (tokens) the implementing provider object works with
+ * @param <T> the type of sequence elements (tokens) the implementing provider object works with
  */
-public class SwingUndoAlignmentModel<T> extends AbstractAlignmentModel<T> 
-		implements AlignmentModel<T>, AlignmentModelView<T, T> {
+public class SwingUndoAlignmentModel<T> extends AbstractAlignmentModel<T> implements AlignmentModel<T>, AlignmentModelView<T, T> {
 	//TODO This model must delegate getDataModels() and forward additional events if it will remain in further use.
 	
 	protected AlignmentModel<T> underlyingModel;
@@ -93,10 +92,10 @@ public class SwingUndoAlignmentModel<T> extends AbstractAlignmentModel<T>
 	 * Creates a new instance of this class which creates new edit objects using the provided 
 	 * {@link SwingEditFactory}.
 	 * 
-	 * @param underlyingModel - the alignment model used to perform the actual manipulation of the data
+	 * @param underlyingModel the alignment model used to perform the actual manipulation of the data
 	 *        (It must be able to write at least one of sequences or tokens.)
-	 * @param undoManager - the undo manager that will store the generated edit objects
-	 * @param editFactory - the custom edit factory that shall be used to create new edit objects  
+	 * @param undoManager the undo manager that will store the generated edit objects
+	 * @param editFactory the custom edit factory that shall be used to create new edit objects  
 	 * 
 	 * @throws IllegalArgumentException if {@code provider} does not allow to write sequences and tokens
 	 *         (If only one of both is forbidden no exception will be thrown.)
@@ -148,9 +147,9 @@ public class SwingUndoAlignmentModel<T> extends AbstractAlignmentModel<T>
 	/**
 	 * Creates a new instance of this class which creates default LibrAlign edit objects.
 	 * 
-	 * @param underlyingModel - the alignment model used to perform the actual manipulation of the data
+	 * @param underlyingModel the alignment model used to perform the actual manipulation of the data
 	 *        (It must be able to write at least one of sequences or tokens.)
-	 * @param undoManager - the undo manager that will store the generated edit objects
+	 * @param undoManager the undo manager that will store the generated edit objects
 	 * 
 	 * @throws IllegalArgumentException if {@code provider} does not allow to write sequences and tokens
 	 *         (If only one of both is forbidden no exception will be thrown.)
