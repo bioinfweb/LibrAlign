@@ -311,11 +311,11 @@ public class PaintSettings {
 
 
 	/**
-	 * Returns the minimal token width in the alignment according to the current zoom factor.
+	 * Returns the minimal token width in the alignment considering the current zoom factor.
 	 * <p>
-	 * The preferred with of a respective default painter is considered if a painter for at least one 
-	 * alignment model (if model models are present using {@link ConcatenatedAlignmentModel}) is missing 
-	 * in the list.
+	 * The preferred width of a default painter is considered if a painter for at least one alignment model is missing in the list. 
+	 * (Multiple models would only be present using {@link ConcatenatedAlignmentModel}, which is not implemented in current version 
+	 * of <i>LibrAlign</i>.)
 	 *
 	 * @return the minimal token width in pixels
 	 */

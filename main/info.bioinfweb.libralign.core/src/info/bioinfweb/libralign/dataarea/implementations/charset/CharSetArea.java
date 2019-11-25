@@ -99,7 +99,7 @@ public class CharSetArea extends ModelBasedDataArea<CharSetDataModel, CharSetDat
 			@Override
 			public void afterCharSetRenamed(CharSetRenamedEvent e) {
 				if (e.isLastEvent()) {
-					getOwner().revalidate();
+					getOwner().revalidate();  //TODO Should child components really perform such a concrete method call on its parent?
 					repaint();
 				}
 			}
@@ -122,7 +122,7 @@ public class CharSetArea extends ModelBasedDataArea<CharSetDataModel, CharSetDat
 			public void afterCharSetChange(CharSetChangeEvent e) {
 				if (e.isLastEvent()) {
 					checkSelectedIndex();
-					getOwner().revalidate();
+					getOwner().revalidate();  //TODO Should child components really perform such a concrete method call on its parent?
 					repaint();
 				}
 			}
