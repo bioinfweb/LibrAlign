@@ -83,7 +83,7 @@ public class SequenceIndexArea extends DataArea {
 	 */
 	public SequenceIndexArea(AlignmentArea owner) {
 		super(owner);
-		//TODO One or more listeners need to be registered that inform in length changes in every AlignmentModel in the parent container (if there is one)
+		//TODO One or more listeners need to be registered that inform on length changes in every AlignmentModel in the parent container (if there is one)
 //		labeledArea.getAlignmentModel().addModelListener(new AlignmentModelAdapter() {
 //			@Override
 //			public <T> void afterTokenChange(TokenChangeEvent<T> e) {

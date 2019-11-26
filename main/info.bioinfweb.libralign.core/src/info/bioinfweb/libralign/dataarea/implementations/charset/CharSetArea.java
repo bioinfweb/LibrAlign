@@ -99,7 +99,7 @@ public class CharSetArea extends ModelBasedDataArea<CharSetDataModel, CharSetDat
 			@Override
 			public void afterCharSetRenamed(CharSetRenamedEvent e) {
 				if (e.isLastEvent()) {
-					getOwner().revalidate();  //TODO Should child components really perform such a concrete method call on its parent?
+					getOwner().revalidate();
 					repaint();
 				}
 			}
@@ -122,7 +122,7 @@ public class CharSetArea extends ModelBasedDataArea<CharSetDataModel, CharSetDat
 			public void afterCharSetChange(CharSetChangeEvent e) {
 				if (e.isLastEvent()) {
 					checkSelectedIndex();
-					getOwner().revalidate();  //TODO Should child components really perform such a concrete method call on its parent?
+					getOwner().revalidate();
 					repaint();
 				}
 			}
@@ -177,7 +177,7 @@ public class CharSetArea extends ModelBasedDataArea<CharSetDataModel, CharSetDat
 		// Determine area to be painted:
 		int firstIndex = Math.max(0, contentArea.columnByPaintX((int)event.getRectangle().getMinX()));
 		int lastIndex = contentArea.columnByPaintX((int)event.getRectangle().getMaxX());
-		int lastColumn = getOwner().getSizeManager().getGlobalMaxSequenceLength() - 1;  //getSequenceProvider().getMaxSequenceLength() - 1;
+		int lastColumn = getOwner().getSizeManager().getGlobalMaxSequenceLength() - 1;
 		if ((lastIndex == -1) || (lastIndex > lastColumn)) {
 			lastIndex = lastColumn;
 		}

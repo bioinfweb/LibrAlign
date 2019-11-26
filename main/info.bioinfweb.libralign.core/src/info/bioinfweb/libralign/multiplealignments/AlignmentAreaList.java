@@ -30,8 +30,8 @@ import java.util.Collection;
 /**
  * A list implementation {@link MultipleAlignmentsContainer} uses to manage its contained alignment areas.
  * <p>
- * Note that this list is not thread safe and should only be modified from the GUI thread (e.g. the Swing thread)
- * since made modifications might trigger GUI updates.
+ * Note that this list is not thread safe and should only be modified from the GUI thread (e.g., the <i>Swing</i> 
+ * thread in <i>Swing</i> applications).
  * 
  * @author Ben St&ouml;ver
  * @since 0.3.0
@@ -113,6 +113,8 @@ public class AlignmentAreaList extends ObservableList<AlignmentArea> {
 		for (AlignmentArea alignmentArea : addedElements) {
 			addListenersToAlignmentArea(alignmentArea);
 		}
+		
+		super.afterAdd(index, addedElements);
 	}
 
 
@@ -122,6 +124,8 @@ public class AlignmentAreaList extends ObservableList<AlignmentArea> {
 		for (AlignmentArea alignmentArea : removedElements) {
 			removeListenersFromAlignmentArea(alignmentArea);
 		}
+		
+		super.afterRemove(index, removedElements);
 	}
 
 
@@ -130,5 +134,7 @@ public class AlignmentAreaList extends ObservableList<AlignmentArea> {
 		removeListenersFromAlignmentArea(previousElement);
 		adoptToListChanges();
 		addListenersToAlignmentArea(currentElement);
+		
+		super.afterReplace(index, previousElement, currentElement);
 	}
 }
