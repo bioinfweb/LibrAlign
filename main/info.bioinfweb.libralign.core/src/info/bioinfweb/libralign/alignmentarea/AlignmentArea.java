@@ -146,6 +146,8 @@ import info.bioinfweb.tic.scrolling.ScrollingTICComponent;
  */
 public class AlignmentArea extends ScrollingTICComponent {
 	public static final int MIN_PART_AREA_HEIGHT = 5;
+	public static final String ALIGNMENT_MODEL_PROPERTY_NAME = "model";
+	public static final String VERTICAL_SCROLLING_PROPERTY_NAME = "allowVerticalScrolling";
 	
 	/** Defines the width of the divider of the GUI components for the head, content, and bottom area. */ 
 	public static final int DIVIDER_WIDTH = 2;
@@ -434,7 +436,7 @@ public class AlignmentArea extends ScrollingTICComponent {
 			if (alignmentModel != null) {
 				alignmentModel.addModelListener(alignmentModelListener);
 			}
-			propertyChangeListeners.firePropertyChange("alignmentModel", formerModel, alignmentModel);  //TODO Should this (and this method) just be called "model"?
+			propertyChangeListeners.firePropertyChange(ALIGNMENT_MODEL_PROPERTY_NAME, formerModel, alignmentModel);
 			
 			getLabelArea().setLocalMaxWidthRecalculateToAll();  // Needs to be called before assignSizeToAll().
 			//TODO Remove some data areas? (Some might be data specific (e.g. pherograms), some not (e.g. consensus sequence).)
@@ -593,7 +595,7 @@ public class AlignmentArea extends ScrollingTICComponent {
 		if (allowVerticalScrolling != this.allowVerticalScrolling) {
 			boolean formerValue = this.allowVerticalScrolling;
 			this.allowVerticalScrolling = allowVerticalScrolling;
-			propertyChangeListeners.firePropertyChange("allowVerticalScrolling", formerValue, allowVerticalScrolling);
+			propertyChangeListeners.firePropertyChange(VERTICAL_SCROLLING_PROPERTY_NAME, formerValue, allowVerticalScrolling);
 			//TODO redistribute size
 		}
 	}
@@ -750,8 +752,8 @@ public class AlignmentArea extends ScrollingTICComponent {
 	 * <p>
 	 * This class fires events for the following properties:
 	 * <ul>
-	 *   <li>{@code alignmentModel} if {@link #setAlignmentModel(AlignmentModel)} is called with a new model</li>
-	 *   <li>{@code allowVerticalScrolling} if {@link #setAllowVerticalScrolling(boolean)} is called with a new value</li>
+	 *   <li>{@value #ALIGNMENT_MODEL_PROPERTY_NAME} if {@link #setAlignmentModel(AlignmentModel)} is called with a new model</li>
+	 *   <li>{@value #VERTICAL_SCROLLING_PROPERTY_NAME} if {@link #setAllowVerticalScrolling(boolean)} is called with a new value</li>
 	 * </ul>
 	 * <p>
 	 * Note that no property change events are fired for inherited properties, e.g., {@link #setToolkitComponent(info.bioinfweb.tic.toolkit.ToolkitComponent)}.
@@ -768,8 +770,8 @@ public class AlignmentArea extends ScrollingTICComponent {
 	 * <p>
 	 * This class fires events for the following properties:
 	 * <ul>
-	 *   <li>{@code alignmentModel} if {@link #setAlignmentModel(AlignmentModel)} is called with a new model</li>
-	 *   <li>{@code allowVerticalScrolling} if {@link #setAllowVerticalScrolling(boolean)} is called with a new value</li>
+	 *   <li>{@value #ALIGNMENT_MODEL_PROPERTY_NAME} if {@link #setAlignmentModel(AlignmentModel)} is called with a new model</li>
+	 *   <li>{@value #VERTICAL_SCROLLING_PROPERTY_NAME} if {@link #setAllowVerticalScrolling(boolean)} is called with a new value</li>
 	 * </ul>
 	 * <p>
 	 * Note that no property change events are fired for inherited properties, e.g., {@link #setToolkitComponent(info.bioinfweb.tic.toolkit.ToolkitComponent)}.
