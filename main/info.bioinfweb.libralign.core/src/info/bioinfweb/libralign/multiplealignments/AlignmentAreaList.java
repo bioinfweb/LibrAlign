@@ -38,7 +38,6 @@ import java.util.Collection;
  */
 public class AlignmentAreaList extends ObservableList<AlignmentArea> {
 	private MultipleAlignmentsContainer owner;
-	private MultipleAlignmentsModelEventForwarder<Object> modelEventForwarder;
 	private PaintSettingsSynchronizer paintSettingsSynchronizer = new PaintSettingsSynchronizer(this);
 	private HorizontalScrollingSynchronizer scrollingSynchronizer = new HorizontalScrollingSynchronizer(this);
 
@@ -46,7 +45,6 @@ public class AlignmentAreaList extends ObservableList<AlignmentArea> {
 	public AlignmentAreaList(MultipleAlignmentsContainer owner) {
 		super(new ArrayList<AlignmentArea>());
 		this.owner = owner;
-		modelEventForwarder = new MultipleAlignmentsModelEventForwarder<Object>(owner);
 	}
 
 
@@ -88,20 +86,12 @@ public class AlignmentAreaList extends ObservableList<AlignmentArea> {
 	
 	
 	private void addListenersToAlignmentArea(AlignmentArea alignmentArea) {
-		if (alignmentArea.hasAlignmentModel()) {
-			alignmentArea.getAlignmentModel().addModelListener(modelEventForwarder);
-		}
-		//alignmentArea.getDataAreas().addListener(modelEventForwarder);  //TODO Reconsider this line when #356 is solved.
 		alignmentArea.getPaintSettings().addListener(paintSettingsSynchronizer);
 		alignmentArea.getScrollListeners().add(scrollingSynchronizer);
 	}
 
 	
 	private void removeListenersFromAlignmentArea(AlignmentArea alignmentArea) {
-		if (alignmentArea.hasAlignmentModel()) {
-			alignmentArea.getAlignmentModel().removeModelListener(modelEventForwarder);
-		}
-		//alignmentArea.getDataAreas().removeListener(modelEventForwarder);  //TODO Reconsider this line when #356 is solved.
 		alignmentArea.getPaintSettings().removeListener(paintSettingsSynchronizer);
 		alignmentArea.getScrollListeners().remove(scrollingSynchronizer);
 	}
