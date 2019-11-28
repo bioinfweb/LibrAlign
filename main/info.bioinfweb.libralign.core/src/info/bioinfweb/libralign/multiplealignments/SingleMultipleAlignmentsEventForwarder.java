@@ -43,22 +43,15 @@ import info.bioinfweb.libralign.model.events.TokenChangeEvent;
 
 
 /**
- * Allows to conveniently listen to events from all {@link AlignmentArea} instances or their associated {@link AlignmentModel} implementations 
- * contained in one instance of {@link MultipleAlignmentsContainer}.
- * <p> 
- * More precisely, alignment model events from alignment models associated with all {@link AlignmentArea} instances contained within the same 
- * {@link MultipleAlignmentsContainer} and data area list events from all such {@link AlignmentArea} instances will be forwarded to respective
- * listeners registered here using {@link #addAlignmentModelListener(AlignmentModelListener)} or {@link #addDataAreasListener(DataAreasListener)}. 
+ * Helper class for forward events from elements within a {@link MultipleAlignmentsContainer} used by {@link MultipleAlignmentsContainer} internally.
  * <p>
- * An instance of this class make sure that events from all alignment areas in the container and their associated models are received
- * at any time. It will adjust its listener structure when alignment areas in the container are added, removed or replaced and when
- * alignment models associated with the alignment areas change.
+ * There should be no need to use this class directly in application code.
  * 
  * @author Ben St&ouml;ver
  * @since 0.10.0
  * @bioinfweb.module info.bioinfweb.libralign.core
  */
-public class MultipleAlignmentsEventListener {
+class SingleMultipleAlignmentsEventForwarder {
 	private MultipleAlignmentsContainer container;
 	private Set<AlignmentModelListener<Object>> alignmentModellisteners = new HashSet<>();
 	private Set<DataAreasListener> dataAreasListeners = new HashSet<>();
@@ -192,7 +185,7 @@ public class MultipleAlignmentsEventListener {
 	};
 	
 	
-	public MultipleAlignmentsEventListener(MultipleAlignmentsContainer container) {
+	public SingleMultipleAlignmentsEventForwarder(MultipleAlignmentsContainer container) {
 		super();
 		this.container = container;
 		registerInitialListeners();
@@ -242,5 +235,21 @@ public class MultipleAlignmentsEventListener {
 	
 	public boolean removeDataAreasListener(DataAreasListener listener) {
 		return dataAreasListeners.remove(listener);
+	}
+	
+	
+	public boolean isEmpty() {
+		return alignmentModellisteners.isEmpty() && dataAreasListeners.isEmpty();
+	}
+
+
+	/**
+	 * Unregisters all listeners from the associated {@link MultipleAlignmentsContainer} and its {@link AlignmentArea}s.
+	 * <p>
+	 * Note that this object is not functional anymore after calling this method. It should only be called before discarding the object.
+	 */
+	public void unregisterListeners() {
+		container.getAlignmentAreas().removeListChangeListener(containerListener);
+		container.getAlignmentAreas().forEach(area -> removeAlignmentAreaListeners(area));
 	}
 }

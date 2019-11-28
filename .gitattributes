@@ -345,8 +345,9 @@ main/info.bioinfweb.libralign.core/src/info/bioinfweb/libralign/model/utils/pack
 main/info.bioinfweb.libralign.core/src/info/bioinfweb/libralign/multiplealignments/AlignmentAreaList.java -text svneol=unset#text/plain
 main/info.bioinfweb.libralign.core/src/info/bioinfweb/libralign/multiplealignments/HorizontalScrollingSynchronizer.java -text svneol=unset#text/plain
 main/info.bioinfweb.libralign.core/src/info/bioinfweb/libralign/multiplealignments/MultipleAlignmentsContainer.java -text svneol=unset#text/plain
-main/info.bioinfweb.libralign.core/src/info/bioinfweb/libralign/multiplealignments/MultipleAlignmentsEventListener.java -text svneol=unset#text/plain
+main/info.bioinfweb.libralign.core/src/info/bioinfweb/libralign/multiplealignments/MultipleAlignmentsEventForwarder.java -text svneol=unset#text/plain
 main/info.bioinfweb.libralign.core/src/info/bioinfweb/libralign/multiplealignments/PaintSettingsSynchronizer.java -text svneol=unset#text/plain
+main/info.bioinfweb.libralign.core/src/info/bioinfweb/libralign/multiplealignments/SingleMultipleAlignmentsEventForwarder.java -text svneol=unset#text/plain
 main/info.bioinfweb.libralign.core/src/info/bioinfweb/libralign/multiplealignments/ToolkitSpecificMultipleAlignmentsContainer.java -text svneol=unset#text/plain
 main/info.bioinfweb.libralign.core/src/info/bioinfweb/libralign/multiplealignments/package-info.java -text svneol=unset#text/plain
 main/info.bioinfweb.libralign.core/src/info/bioinfweb/libralign/package-info.java -text svneol=unset#text/plain
