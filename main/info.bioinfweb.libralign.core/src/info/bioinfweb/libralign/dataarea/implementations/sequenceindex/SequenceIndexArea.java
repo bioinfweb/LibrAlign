@@ -32,11 +32,15 @@ import java.util.EnumSet;
 import java.util.Set;
 
 import info.bioinfweb.commons.Math2;
+import info.bioinfweb.commons.collections.observable.ListRemoveEvent;
 import info.bioinfweb.libralign.alignmentarea.AlignmentArea;
 import info.bioinfweb.libralign.alignmentarea.content.AlignmentPaintEvent;
 import info.bioinfweb.libralign.dataarea.DataArea;
+import info.bioinfweb.libralign.dataarea.DataAreasAdapter;
+import info.bioinfweb.libralign.dataarea.DataAreasListener;
 import info.bioinfweb.libralign.dataelement.DataListType;
 import info.bioinfweb.libralign.model.concatenated.ConcatenatedAlignmentModel;
+import info.bioinfweb.libralign.multiplealignments.MultipleAlignmentsEventForwarder;
 
 
 
@@ -75,6 +79,9 @@ public class SequenceIndexArea extends DataArea {
 
 	private int firstIndex = DEFAULT_FIRST_INDEX;
 
+	private final SequenceIndexArea thisSequenceIndexArea;
+	private final DataAreasListener dataAreasListener;
+	
 
 	/**
 	 * Creates a new instance of this class using the parent alignment area of {@code owner} as the labeled area.
@@ -83,7 +90,34 @@ public class SequenceIndexArea extends DataArea {
 	 */
 	public SequenceIndexArea(AlignmentArea owner) {
 		super(owner);
-		//TODO One or more listeners need to be registered that inform on length changes in every AlignmentModel in the parent container (if there is one)
+		
+		thisSequenceIndexArea = this;
+		dataAreasListener = new DataAreasAdapter() {
+			@Override
+			public void afterElementsRemoved(ListRemoveEvent<DataArea, DataArea> event) {
+				if (event.getAffectedElements().contains(thisSequenceIndexArea)) {
+					if (getOwner().hasContainer()) {
+						//TODO Also remove alignment model listener (and possibly PropertyChangeListener)
+						MultipleAlignmentsEventForwarder.getInstance().removeDataAreasListener(getOwner().getContainer(), this);  //TODO This could lead to an ConcurrentModificationException. Adjust implementation of MultipleAlignmentsEventForwarder if necessary.
+					}
+					else {
+						//TODO Also remove alignment model listener (and possibly PropertyChangeListener)
+						getOwner().removeDataAreasListener(this);  //TODO This could lead to an ConcurrentModificationException. Adjust implementation of AlignmentArea if necessary.
+					}
+				}
+			}
+		};
+		
+		if (owner.hasContainer()) {
+			MultipleAlignmentsEventForwarder.getInstance().addDataAreasListener(owner.getContainer(), dataAreasListener);
+		}
+		else {
+			owner.addDataAreasListener(dataAreasListener);
+		}
+		
+		//TODO Add listeners for AlignmentModel and possible ProperChangeListener for model.
+		//     - MultipleAlignmentsEventForwarder should possibly refactored to also work with a single AlignmentArea and track model changes or respective functionality should be extracted and exposed.
+		
 //		labeledArea.getAlignmentModel().addModelListener(new AlignmentModelAdapter() {
 //			@Override
 //			public <T> void afterTokenChange(TokenChangeEvent<T> e) {
