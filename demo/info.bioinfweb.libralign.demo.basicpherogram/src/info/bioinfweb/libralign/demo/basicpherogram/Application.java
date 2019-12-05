@@ -49,6 +49,7 @@ public class Application {
 	
 	/**
 	 * Create the application.
+	 * 
 	 * @throws IOException 
 	 * @throws UnsupportedChromatogramFormatException 
 	 */
@@ -59,6 +60,7 @@ public class Application {
 	
 	/**
 	 * Initialize the contents of the frame.
+	 * 
 	 * @throws IOException 
 	 * @throws UnsupportedChromatogramFormatException 
 	 */
