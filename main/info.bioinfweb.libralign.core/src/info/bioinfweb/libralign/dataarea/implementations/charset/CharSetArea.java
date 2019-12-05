@@ -99,9 +99,7 @@ public class CharSetArea extends ModelBasedDataArea<CharSetDataModel, CharSetDat
 			@Override
 			public void afterCharSetRenamed(CharSetRenamedEvent e) {
 				if (e.isLastEvent()) {
-					if (hasOwner()) {
-						getOwner().revalidate();  //TODO Possibly refactor when implementing #368.
-					}
+					getOwner().revalidate();  //TODO Possibly refactor when implementing #368.
 					repaint();
 				}
 			}
@@ -124,9 +122,7 @@ public class CharSetArea extends ModelBasedDataArea<CharSetDataModel, CharSetDat
 			public void afterCharSetChange(CharSetChangeEvent e) {
 				if (e.isLastEvent()) {
 					checkSelectedIndex();
-					if (hasOwner()) {
-						getOwner().revalidate();  //TODO Possibly refactor when implementing #368.
-					}
+					getOwner().revalidate();  //TODO Possibly refactor when implementing #368.
 					repaint();
 				}
 			}
