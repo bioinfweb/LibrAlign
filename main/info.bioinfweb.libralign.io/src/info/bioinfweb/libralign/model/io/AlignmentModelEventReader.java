@@ -144,7 +144,7 @@ public class AlignmentModelEventReader implements JPhyloIOEventListener {
 	/**
 	 * Returns the alignment model that is currently read. Note that this model might not yet contain all data,
 	 * because this data is currently read from the underlying <i>JPhyloIO</i> event stream. As soon as a model
-	 * is read completely (an alignment end event if reached) it is added to {@link #getCompletedModels()} and
+	 * is read completely (an alignment end event is reached), it is added to {@link #getCompletedModels()} and
 	 * this method will return {@code null} until the next alignment is reached in the stream.
 	 *
 	 * @return the current alignment model or {@code null} if the current stream position is not between an
