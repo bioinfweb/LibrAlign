@@ -179,7 +179,7 @@ public class AlignmentArea extends ScrollingTICComponent {
 				getSequenceOrder().refreshFromSource();
 				updateSubelements();
 			}
-			//TODO Remove some data areas? (Some might be data specific (e.g. pherograms), some not (e.g. consensus sequence).)
+			//TODO Remove some data areas? (Some might be data specific (e.g., pherograms), some not (e.g., consensus sequence).)
 			assignSizeToAll();
 		}
 

@@ -19,16 +19,6 @@
 package info.bioinfweb.libralign.alignmentarea.content;
 
 
-import info.bioinfweb.commons.Math2;
-import info.bioinfweb.libralign.alignmentarea.AlignmentArea;
-import info.bioinfweb.libralign.alignmentarea.label.AlignmentLabelArea;
-import info.bioinfweb.libralign.alignmentarea.label.AlignmentLabelSubArea;
-import info.bioinfweb.libralign.alignmentarea.label.SequenceLabelArea;
-import info.bioinfweb.libralign.alignmentarea.paintsettings.PaintSettings;
-import info.bioinfweb.libralign.alignmentarea.selection.SelectionModel;
-import info.bioinfweb.libralign.alignmentarea.selection.SelectionType;
-import info.bioinfweb.libralign.model.AlignmentModel;
-
 import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Graphics2D;
@@ -36,6 +26,15 @@ import java.awt.RenderingHints;
 import java.awt.Stroke;
 import java.awt.geom.Line2D;
 import java.awt.geom.Rectangle2D;
+
+import info.bioinfweb.commons.Math2;
+import info.bioinfweb.libralign.alignmentarea.AlignmentArea;
+import info.bioinfweb.libralign.alignmentarea.label.AlignmentLabelSubArea;
+import info.bioinfweb.libralign.alignmentarea.label.SequenceLabelArea;
+import info.bioinfweb.libralign.alignmentarea.paintsettings.PaintSettings;
+import info.bioinfweb.libralign.alignmentarea.selection.SelectionModel;
+import info.bioinfweb.libralign.alignmentarea.selection.SelectionType;
+import info.bioinfweb.libralign.model.AlignmentModel;
 
 
 
