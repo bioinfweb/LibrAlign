@@ -51,7 +51,7 @@ import info.bioinfweb.libralign.model.tokenset.TokenSet;
  * @param <U> the type of sequence elements (tokens) the underlying model works with
  */
 public abstract class AbstractAlignmentModelDecorator<T, U> extends AbstractAlignmentModel<T> implements AlignmentModelView<T, U> {
-	//TODO Since only the listeners from AbstractAlignmentModel are used and all other fields are hidden, inherting from this class should be reconsidered.
+	//TODO Since only the listeners from AbstractAlignmentModel are used and all other fields are hidden, inheriting from this class should be reconsidered.
 	
   private AlignmentModel<U> underlyingModel;
   private TokenSet<T> tokenSet;
