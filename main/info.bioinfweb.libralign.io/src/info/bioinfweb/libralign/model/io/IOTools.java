@@ -55,16 +55,13 @@ public class IOTools {
 	/**
 	 * Reads a set of alignments from a file into a list of alignment model instances.
 	 * <p>
-	 * This is a convenience method that uses {@link AlignmentDataReader} and 
-	 * {@link BioPolymerCharAlignmentModelFactory} internally.
+	 * This is a convenience method that uses {@link AlignmentDataReader} and {@link BioPolymerCharAlignmentModelFactory} internally.
 	 * 
 	 * @param file the file to read the alignment(s) from
 	 * @param parameters the writer parameters for the <i>JPhyloIO</i> writer that is used internally
-	 * @return a list if read alignments (May have the length 0, if no alignment was present in the 
-	 *         specified file.)
-	 * @throws Exception if an exception occurs while reading the file (See 
-	 *         {@link AlignmentDataReader#readAll()} and the documentation of its constructor for 
-	 *         details on exceptions that could occur.)
+	 * @return a list if read alignments (May have the length 0, if no alignment was present in the specified file.)
+	 * @throws Exception if an exception occurs while reading the file (See  {@link AlignmentDataReader#readAll()} 
+	 *         and the documentation of its constructor for details on exceptions that could occur.)
 	 */
 	public static List<AlignmentModel<?>> readAlignments(File file, ReadWriteParameterMap parameters) throws Exception {
 		AlignmentDataReader mainReader = new AlignmentDataReader(FACTORY.guessReader(file, parameters), 
@@ -112,9 +109,7 @@ public class IOTools {
 	 * @return the document data adapter providing access to the contents of {@code model}
 	 * @see AlignmentModelDataAdapter
 	 */
-	public static <T> ListBasedDocumentDataAdapter createDocumentAdapter(AlignmentModel<T> model, String alignmentLabel, 
-			boolean linkOTUs) {
-		
+	public static <T> ListBasedDocumentDataAdapter createDocumentAdapter(AlignmentModel<T> model, String alignmentLabel, boolean linkOTUs) {
 		ListBasedDocumentDataAdapter result = new ListBasedDocumentDataAdapter();
 		result.getMatrices().add(new AlignmentModelDataAdapter<T>(
 				"", new LinkedLabeledIDEvent(EventContentType.ALIGNMENT, "Alignment0", alignmentLabel, null), model, linkOTUs));

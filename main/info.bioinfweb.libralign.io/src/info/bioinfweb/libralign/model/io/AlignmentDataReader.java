@@ -22,6 +22,7 @@ package info.bioinfweb.libralign.model.io;
 import java.io.File;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import info.bioinfweb.jphyloio.JPhyloIOEventReader;
@@ -50,7 +51,7 @@ public class AlignmentDataReader {
 	
 	private JPhyloIOEventReader eventReader;
 	private AlignmentModelEventReader alignmentModelReader;
-	private List<DataModelEventReader<?, ?>> dataModelReaders = new ArrayList<DataModelEventReader<?, ?>>();
+	private List<DataModelEventReader<? extends DataModel<?>, ?>> dataModelReaders = new ArrayList<>();
 	
 	
 	/**
@@ -231,4 +232,27 @@ public class AlignmentDataReader {
 //			event = processNextEvent();
 //		}	while ((event != null) && ());
 //	}
+	
+	
+	/**
+	 * This method can be called by application code after {@link #readAll()} to automatically associate all data models with their respective
+	 * alignment models. After calling this method the {@link DataModelEventReader#getCompletedModels()} map of {@link DataModelEventReader}
+	 * will only contain data models that have no reference to a specific alignment model and all others will have been attached to the
+	 * respective data models.
+	 */
+	public void associateDataModels() {
+		for (AlignmentModel<?> alignmentModel : getAlignmentModelReader().getCompletedModels()) {
+			for (DataModelEventReader<? extends DataModel<?>, ?> dataModelReader : dataModelReaders) {
+				// Add data models for alignment:
+				alignmentModel.getDataModels().getAlignmentList().addAll(dataModelReader.getCompletedModels().remove(new DataModelKey(alignmentModel.getID())));
+				
+				// Add data models for sequences:
+				Iterator<String> sequenceIDIterator = alignmentModel.sequenceIDIterator();
+				while (sequenceIDIterator.hasNext()) {
+					String sequenceID = sequenceIDIterator.next();
+					alignmentModel.getDataModels().getSequenceList(sequenceID).addAll(dataModelReader.getCompletedModels().remove(new DataModelKey(alignmentModel.getID(), sequenceID)));
+				}
+			}
+		}
+	}
 }

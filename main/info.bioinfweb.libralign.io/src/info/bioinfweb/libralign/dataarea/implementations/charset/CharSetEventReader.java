@@ -93,7 +93,7 @@ public class CharSetEventReader extends AbstractDataModelEventReader<CharSetData
 	 * sets is needed directly after having loaded each alignment model, this property should be set to {@code true} 
 	 * instead.
 	 * <p>
-	 * Note that this will work e.g. for <i>NeXML</i> but will not have a benefit for formats that define character sets 
+	 * Note that this will work, e.g., for <i>NeXML</i> but will not have a benefit for formats that define character sets 
 	 * after alignments, such as <i>Nexus</i>. If character sets are encountered after their associated alignment, these
 	 * will be published at the end of the file, no matter if this property is set or not.
 	 * 
