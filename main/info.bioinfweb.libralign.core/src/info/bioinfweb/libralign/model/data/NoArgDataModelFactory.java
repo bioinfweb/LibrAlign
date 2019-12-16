@@ -61,10 +61,10 @@ public class NoArgDataModelFactory<M extends DataModel<L>, L> implements DataMod
 			return modelClass.newInstance();
 		} 
 		catch (InstantiationException e) {
-			throw new InternalError(e.getMessage());  //TODO Replace by new InternalError(e) if source compatibility is ever increased to 1.8.
+			throw new InternalError(e);
 		} 
 		catch (IllegalAccessException e) {
-			throw new InternalError(e.getMessage());  //TODO Replace by new InternalError(e) if source compatibility is ever increased to 1.8.
+			throw new InternalError(e);
 		}
 	}
 }
