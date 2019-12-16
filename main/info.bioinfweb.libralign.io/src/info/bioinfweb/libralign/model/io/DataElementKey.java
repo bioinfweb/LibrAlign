@@ -21,14 +21,14 @@ package info.bioinfweb.libralign.model.io;
 
 
 /**
- * Stores information to access a data model that has been read from a data source (e.g. a file). 
+ * Stores information to access a data element that has been read from a data source (e.g. a file). 
  * This information includes the alignment model and the sequence its data is possibly associated with.
  * 
  * @author Ben St&ouml;ver
  * @since 0.6.0
  * @bioinfweb.module info.bioinfweb.libralign.io
  */
-public class DataModelKey {
+public class DataElementKey {
 	private String alignmentID;
 	private String sequenceID;
 	
@@ -43,7 +43,7 @@ public class DataModelKey {
 	 * @throws IllegalArgumentException if {@code null} was specified as the alignment model ID, but 
 	 *         still a sequence ID (which is not {@code null}) was specified.
 	 */
-	public DataModelKey(String alignmentID,	String sequenceID) {
+	public DataElementKey(String alignmentID,	String sequenceID) {
 		super();
 		if ((alignmentID == null) && (sequenceID != null)) {
 			throw new IllegalArgumentException("A sequence ID can only be specified, if an alignment model ID was specified as well.");
@@ -62,7 +62,7 @@ public class DataModelKey {
 	 * @throws IllegalArgumentException if {@code null} was specified as the alignment model ID, but still 
 	 *         a sequence ID (which is not {@code null}) was specified.
 	 */
-	public DataModelKey(String alignmentID) {
+	public DataElementKey(String alignmentID) {
 		this(alignmentID, null);
 	}
 	
@@ -97,7 +97,7 @@ public class DataModelKey {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		DataModelKey other = (DataModelKey) obj;
+		DataElementKey other = (DataElementKey) obj;
 		if (alignmentID == null) {
 			if (other.alignmentID != null)
 				return false;

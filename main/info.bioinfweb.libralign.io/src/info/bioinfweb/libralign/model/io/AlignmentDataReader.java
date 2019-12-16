@@ -51,7 +51,7 @@ public class AlignmentDataReader {
 	
 	private JPhyloIOEventReader eventReader;
 	private AlignmentModelEventReader alignmentModelReader;
-	private List<DataModelEventReader<? extends DataModel<?>, ?>> dataModelReaders = new ArrayList<>();
+	private List<DataElementEventReader<?>> dataElementReaders = new ArrayList<>();
 	
 	
 	/**
@@ -158,23 +158,22 @@ public class AlignmentDataReader {
 
 
 	/**
-	 * Adds the specified data model reader to this instance, if it is not already present. All <i>JPhyloIO</i> 
+	 * Adds the specified data element reader to this instance, if it is not already present. All <i>JPhyloIO</i> 
 	 * events processed from now on will be forwarded to that reader.
 	 * <p>
 	 * It is recommended to add all readers before the first method that processed events (e.g. 
-	 * {@link #readUnitlNextAlignmentModel()}) is called. If new readers are added in between, its up to the 
-	 * application developer to make sure that these reader still work properly without knowledge of the events
-	 * that were already consumed.
+	 * {@link #readAll()}) is called. If new readers are added in between, its up to the application developer to 
+	 * make sure that these readers still work properly without knowledge of the events that were already consumed.
 	 * 
 	 * @param reader the reader to be added
 	 * @return {@code true} if the new reader was added, {@code false} if the specified reader was already present
 	 * @throws IllegalArgumentException if the specified reader does not reference this instance by 
-	 *         {@link DataModelEventReader#getMainReader()}
+	 *         {@link DataElementEventReader#getMainReader()}
 	 */
-	public boolean addDataModelReader(DataModelEventReader<?, ?> reader) {
-		if (!dataModelReaders.contains(reader)) {
+	public boolean addDataElementReader(DataElementEventReader<?> reader) {
+		if (!dataElementReaders.contains(reader)) {
 			if (this.equals(reader.getMainReader())) {
-				return dataModelReaders.add(reader);
+				return dataElementReaders.add(reader);
 			}
 			else {
 				throw new IllegalArgumentException("The specified reader does not reference this instance as its main reader.");
@@ -187,14 +186,14 @@ public class AlignmentDataReader {
 	
 	
 	/**
-	 * Removes the specified data model reader from this instance.
+	 * Removes the specified data element reader from this instance.
 	 * 
 	 * @param reader the reader to be removed
 	 * @return {@code true} if the specified reader was removed, {@code false} if that reader was not contained in 
 	 *         this instance
 	 */
-	public boolean removeDataModelReader(DataModelEventReader<?, ?> reader) {
-		return dataModelReaders.remove(reader);
+	public boolean removeDataElementReader(DataElementEventReader<?> reader) {
+		return dataElementReaders.remove(reader);
 	}
 	
 	
@@ -203,7 +202,7 @@ public class AlignmentDataReader {
 			JPhyloIOEvent event = eventReader.next();
 
 			alignmentModelReader.processEvent(eventReader, event);
-			for (DataModelEventReader<?, ?> dataModelReader : dataModelReaders) {
+			for (DataElementEventReader<?> dataModelReader : dataElementReaders) {
 				dataModelReader.processEvent(eventReader, event);
 			}
 			return event;
@@ -235,22 +234,31 @@ public class AlignmentDataReader {
 	
 	
 	/**
-	 * This method can be called by application code after {@link #readAll()} to automatically associate all data models with their respective
-	 * alignment models. After calling this method the {@link DataModelEventReader#getCompletedModels()} map of {@link DataModelEventReader}
+	 * This method can be called by application code after {@link #readAll()} to automatically associate all read data models with their respective
+	 * alignment models. After calling this method the {@link DataElementEventReader#getCompletedElements()} map of {@link DataElementEventReader}
 	 * will only contain data models that have no reference to a specific alignment model and all others will have been attached to the
 	 * respective data models.
+	 * <p>
+	 * Calling this method will not affect any read data elements that do not implement {@link DataModel}.
 	 */
 	public void associateDataModels() {
 		for (AlignmentModel<?> alignmentModel : getAlignmentModelReader().getCompletedModels()) {
-			for (DataModelEventReader<? extends DataModel<?>, ?> dataModelReader : dataModelReaders) {
-				// Add data models for alignment:
-				alignmentModel.getDataModels().getAlignmentList().addAll(dataModelReader.getCompletedModels().remove(new DataModelKey(alignmentModel.getID())));
-				
-				// Add data models for sequences:
-				Iterator<String> sequenceIDIterator = alignmentModel.sequenceIDIterator();
-				while (sequenceIDIterator.hasNext()) {
-					String sequenceID = sequenceIDIterator.next();
-					alignmentModel.getDataModels().getSequenceList(sequenceID).addAll(dataModelReader.getCompletedModels().remove(new DataModelKey(alignmentModel.getID(), sequenceID)));
+			for (DataElementEventReader<?> dataElementReader : dataElementReaders) {
+				if (DataModel.class.isAssignableFrom(dataElementReader.getElementClass())) {  // Ignore data elements that are not data models.
+					@SuppressWarnings("unchecked")
+					DataElementEventReader<DataModel<?>> dataModelReader = (DataElementEventReader<DataModel<?>>)dataElementReader;
+					
+					// Add data models for alignment:
+					alignmentModel.getDataModels().getAlignmentList().addAll(
+							dataModelReader.getCompletedElements().remove(new DataElementKey(alignmentModel.getID())));
+					
+					// Add data models for sequences:
+					Iterator<String> sequenceIDIterator = alignmentModel.sequenceIDIterator();
+					while (sequenceIDIterator.hasNext()) {
+						String sequenceID = sequenceIDIterator.next();
+						alignmentModel.getDataModels().getSequenceList(sequenceID).addAll(
+								dataModelReader.getCompletedElements().remove(new DataElementKey(alignmentModel.getID(), sequenceID)));
+					}
 				}
 			}
 		}

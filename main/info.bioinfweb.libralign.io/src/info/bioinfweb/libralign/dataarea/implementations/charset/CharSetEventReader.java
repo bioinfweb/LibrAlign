@@ -20,6 +20,7 @@ package info.bioinfweb.libralign.dataarea.implementations.charset;
 
 
 import java.awt.Color;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -33,10 +34,9 @@ import info.bioinfweb.jphyloio.events.meta.URIOrStringIdentifier;
 import info.bioinfweb.jphyloio.events.type.EventContentType;
 import info.bioinfweb.jphyloio.events.type.EventTopologyType;
 import info.bioinfweb.jphyloio.objecttranslation.ObjectTranslator;
-import info.bioinfweb.libralign.model.data.NoArgDataModelFactory;
-import info.bioinfweb.libralign.model.io.AbstractDataModelEventReader;
+import info.bioinfweb.libralign.model.io.AbstractDataElementEventReader;
 import info.bioinfweb.libralign.model.io.AlignmentDataReader;
-import info.bioinfweb.libralign.model.io.DataModelKey;
+import info.bioinfweb.libralign.model.io.DataElementKey;
 
 
 
@@ -64,7 +64,7 @@ import info.bioinfweb.libralign.model.io.DataModelKey;
  * @author Ben St&ouml;ver
  * @since 0.4.0
  */
-public class CharSetEventReader extends AbstractDataModelEventReader<CharSetDataModel, CharSetDataModelListener> {
+public class CharSetEventReader extends AbstractDataElementEventReader<CharSetDataModel> {
 	private boolean publishOnAlignmentEnd = false;
 	private LinkedLabeledIDEvent currentStartEvent = null;
 	private String currentAlignmentID = null;
@@ -77,7 +77,7 @@ public class CharSetEventReader extends AbstractDataModelEventReader<CharSetData
 	
 	
 	public CharSetEventReader(AlignmentDataReader mainReader, URIOrStringIdentifier colorPredicate) {
-		super(mainReader, new NoArgDataModelFactory<CharSetDataModel, CharSetDataModelListener>(CharSetDataModel.class));
+		super(mainReader, CharSetDataModel.class);
 		this.colorPredicate = colorPredicate;
 	}
 
@@ -103,27 +103,28 @@ public class CharSetEventReader extends AbstractDataModelEventReader<CharSetData
 	public boolean isPublishOnAlignmentEnd() {
 		return publishOnAlignmentEnd;
 	}
-
+	//TODO Should this property be removed, since it is not necessary anymore after the recent refactorings?
+	
 
 	public void setPublishOnAlignmentEnd(boolean publishOnAlignmentEnd) {
 		this.publishOnAlignmentEnd = publishOnAlignmentEnd;
 	}
 
 	
-	private CharSet getCurrentCharSet() {
+	private CharSet getCurrentCharSet() throws IOException {
 		if (currentStartEvent != null) {
 			// Determine model to write to:
 			CharSetDataModel model;
-			DataModelKey key;
+			DataElementKey key;
 			if (currentStartEvent.hasLink()) {
-				key = new DataModelKey(currentStartEvent.getLinkedID());  // If the linked alignment model ID references a not (yet) existing alignment model, the returned model would also be null.
+				key = new DataElementKey(currentStartEvent.getLinkedID());  // If the linked alignment model ID references a not (yet) existing alignment model, the returned model would also be null.
 			}
 			else {
-				key = new DataModelKey(null);
+				key = new DataElementKey(null);
 			}
 			model = getLoadingModels().get(key);
 			if (model == null) {
-				model = getFactory().createNewModel();
+				model = new CharSetDataModel(getMainReader().getAlignmentModelReader().getModelByJPhyloIOID(key.getAlignmentID()));  // If the ID is null, null be passed as the alignment model, which is valid.
 				getLoadingModels().put(key, model);
 			}
 			
@@ -146,7 +147,8 @@ public class CharSetEventReader extends AbstractDataModelEventReader<CharSetData
 	
 
 	@Override
-	public void processEvent(JPhyloIOEventReader source, JPhyloIOEvent event) {
+	public void processEvent(JPhyloIOEventReader source, JPhyloIOEvent event) throws IOException {
+		CharSet charSet = getCurrentCharSet();
 		switch (event.getType().getContentType()) {
 			case ALIGNMENT:
 				if (event.getType().getTopologyType().equals(EventTopologyType.START)) {
@@ -154,10 +156,10 @@ public class CharSetEventReader extends AbstractDataModelEventReader<CharSetData
 				}
 				else if (publishOnAlignmentEnd) {
 					if (currentAlignmentID != null) {
-						DataModelKey key = new DataModelKey(currentAlignmentID);
+						DataElementKey key = new DataElementKey(currentAlignmentID);
 						CharSetDataModel model = getLoadingModels().remove(key);
 						if (model != null) {
-							getCompletedModels().put(key, model);
+							getCompletedElements().put(key, model);
 						}
 					}
 				}
@@ -185,7 +187,6 @@ public class CharSetEventReader extends AbstractDataModelEventReader<CharSetData
 				if (isReadingColor) {
 					Object value = event.asLiteralMetadataContentEvent().getObjectValue();
 					if (value instanceof Color) {
-						CharSet charSet = getCurrentCharSet();
 						currentColor = (Color)value;
 						if (charSet != null) {
 							charSet.setColor(currentColor);
@@ -198,7 +199,6 @@ public class CharSetEventReader extends AbstractDataModelEventReader<CharSetData
 				break;
 			case CHARACTER_SET_INTERVAL:
 				CharacterSetIntervalEvent intervalEvent = event.asCharacterSetIntervalEvent();
-				CharSet charSet = getCurrentCharSet();
 				if (charSet != null) {  // Interval events may also occur within a token set definition.
 					charSet.add((int)intervalEvent.getStart(), (int)intervalEvent.getEnd() - 1);  //TODO Refactor NonOverlappingIntervalList so that end index is also behind the interval.
 				}
@@ -207,8 +207,8 @@ public class CharSetEventReader extends AbstractDataModelEventReader<CharSetData
 				SetElementEvent setEvent = event.asSetElementEvent();
 				if (setEvent.getLinkedObjectType().equals(EventContentType.CHARACTER_SET)) {  //TODO Can anything else happen?
 					CharSet linkedCharSet = loadedCharacterSets.get(setEvent.getLinkedID());
-					if (linkedCharSet != null) {
-						getCurrentCharSet().addAll(linkedCharSet);
+					if ((linkedCharSet != null) && (charSet != null)) {
+						charSet.addAll(linkedCharSet);
 					}
 					else {
 						//TODO Log warning?
@@ -217,7 +217,7 @@ public class CharSetEventReader extends AbstractDataModelEventReader<CharSetData
 				break;
 			case DOCUMENT:
 				if (event.getType().getTopologyType().equals(EventTopologyType.END)) {
-					getCompletedModels().putAll(getLoadingModels());
+					getCompletedElements().putAll(getLoadingModels());
 					getLoadingModels().clear();
 					loadedCharacterSets.clear();
 				}

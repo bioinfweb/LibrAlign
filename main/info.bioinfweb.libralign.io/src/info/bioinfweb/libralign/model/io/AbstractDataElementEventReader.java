@@ -27,7 +27,6 @@ import org.apache.commons.collections4.MultiValuedMap;
 import org.apache.commons.collections4.multimap.ArrayListValuedHashMap;
 
 import info.bioinfweb.libralign.model.data.DataModel;
-import info.bioinfweb.libralign.model.data.DataModelFactory;
 
 
 
@@ -39,25 +38,22 @@ import info.bioinfweb.libralign.model.data.DataModelFactory;
  * @since 0.4.0
  * @bioinfweb.module info.bioinfweb.libralign.io
  */
-public abstract class AbstractDataModelEventReader<M extends DataModel<L>, L> implements DataModelEventReader<M, L> {
-	//TODO AbstractDataModelEventReader sollte eine Liste von aktuell ladenden Modellen und nicht nur eins haben. Zusätzlich bleibt die Liste der vollständigen Modelle bestehen.
-	
+public abstract class AbstractDataElementEventReader<E> implements DataElementEventReader<E> {
 	private AlignmentDataReader mainReader;
-	private DataModelFactory<M, L> factory;
-	private Map<DataModelKey, M> loadingModels = new HashMap<DataModelKey, M>();
-	private MultiValuedMap<DataModelKey, M> completedModels = new ArrayListValuedHashMap<DataModelKey, M>();
+	private Class<E> elementClass;
+	private Map<DataElementKey, E> loadingModels = new HashMap<>();
+	private MultiValuedMap<DataElementKey, E> completedModels = new ArrayListValuedHashMap<>();
 
 
 	/**
 	 * Creates a new instance of this class.
 	 * 
 	 * @param mainReader the associates main reader instance forwarding to this reader
-	 * @param factory the factory to be used to create new data model instance during reading
 	 */
-	public AbstractDataModelEventReader(AlignmentDataReader mainReader, DataModelFactory<M, L> factory) {
+	public AbstractDataElementEventReader(AlignmentDataReader mainReader, Class<E> elementClass) {
 		super();
 		this.mainReader = mainReader;
-		this.factory = factory;
+		this.elementClass = elementClass;
 	}
 	
 	
@@ -66,19 +62,13 @@ public abstract class AbstractDataModelEventReader<M extends DataModel<L>, L> im
 	}
 
 
-	@Override
-	public DataModelFactory<M, L> getFactory() {
-		return factory;
-	}
-
-
-	protected Map<DataModelKey, M> getLoadingModels() {
+	protected Map<DataElementKey, E> getLoadingModels() {
 		return loadingModels;
 	}
 
 	
-	public M getFirstCompletedModel(DataModelKey key) {
-		Collection<M> collection = completedModels.get(key);
+	public E getFirstCompletedModel(DataElementKey key) {
+		Collection<E> collection = completedModels.get(key);
 		if (!collection.isEmpty()) {
 			return collection.iterator().next();
 		}
@@ -89,7 +79,13 @@ public abstract class AbstractDataModelEventReader<M extends DataModel<L>, L> im
 	
 
 	@Override
-	public MultiValuedMap<DataModelKey, M> getCompletedModels() {
+	public MultiValuedMap<DataElementKey, E> getCompletedElements() {
 		return completedModels;
+	}
+
+
+	@Override
+	public Class<E> getElementClass() {
+		return elementClass;
 	}
 }

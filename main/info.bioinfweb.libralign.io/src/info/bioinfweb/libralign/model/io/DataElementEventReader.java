@@ -23,27 +23,24 @@ import org.apache.commons.collections4.MultiValuedMap;
 
 import info.bioinfweb.jphyloio.push.JPhyloIOEventListener;
 import info.bioinfweb.libralign.model.data.DataModel;
-import info.bioinfweb.libralign.model.data.DataModelFactory;
 
 
 
 /**
- * Interface to be implemented by all readers that process <i>JPhyloIO</i> events to read data to be stored in
- * implementations of {@link DataModel}.
+ * Interface to be implemented by all readers that process <i>JPhyloIO</i> events to read data or metadata stored together 
+ * with alignments.
  * <p>
- * All implementations should accept an instance of an implementation of {@link DataModel} as a constructor parameter that
- * will than be returned by {@link #getModels()}. Implementing classes should not allow to change the model during runtime, 
- * since changing the model between two calls of 
- * {@link #processEvent(info.bioinfweb.jphyloio.JPhyloIOEventReader, info.bioinfweb.jphyloio.events.JPhyloIOEvent)}
- * should be avoided.
+ * Implementations of this interface should be used to read implementations of {@link DataModel} but can also be used to 
+ * read metadata into any other type of object that will be used by application code.
  * 
  * @author Ben St&ouml;ver
  * @since 0.4.0
  * @bioinfweb.module info.bioinfweb.libralign.io
  *
- * @param <M> the type of data model to read by this reader
+ * @param <E> the type of data element to be read by this reader (This will often be an implementation of {@link DataModel} 
+ *        but does not have to be.)
  */
-public interface DataModelEventReader<M extends DataModel<L>, L> extends JPhyloIOEventListener {
+public interface DataElementEventReader<E> extends JPhyloIOEventListener {
 	/**
 	 * Returns the instance of the main reader (for reading alignment and data models) which
 	 * uses this data model reader.
@@ -53,18 +50,21 @@ public interface DataModelEventReader<M extends DataModel<L>, L> extends JPhyloI
 	public AlignmentDataReader getMainReader();
 	
 	/**
-	 * Returns the model objects that have been read from the underlying <i>JPhyloIO</i> event stream until now.
+	 * Returns the data element objects that have been read from the underlying <i>JPhyloIO</i> event stream until now.
+	 * <p>
 	 * The list may be modified by application classes (e.g. to remove consumed objects), but this may change 
 	 * the future behavior of some implementations.
 	 * 
-	 * @return the associated model
+	 * @return a list with the currently completed data elements (maybe empty)
 	 */
-	public MultiValuedMap<DataModelKey, M> getCompletedModels();
+	public MultiValuedMap<DataElementKey, E> getCompletedElements();
 	
 	/**
-	 * Returns the factory used to create new data models in this instance.
+	 * Returns the class of data elements that are created by this reader.
+	 * <p>
+	 * If a reader can create instances of multiple classes, this method should return a shared base class or interface.
 	 * 
-	 * @return the factory (never {@code null})
+	 * @return the element class, never {@code null}
 	 */
-	public DataModelFactory<M, L> getFactory();
+	public Class<E> getElementClass();
 }

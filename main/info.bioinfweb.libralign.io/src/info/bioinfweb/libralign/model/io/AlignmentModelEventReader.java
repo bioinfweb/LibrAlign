@@ -228,7 +228,10 @@ public class AlignmentModelEventReader implements JPhyloIOEventListener {
 	 *         started to be loaded
 	 */
 	public AlignmentModel<?> getModelByJPhyloIOID(String id) {
-		if (id.equals(getCurrentAlignmentID())) {
+		if (id == null) {
+			return null;
+		}
+		else if (id.equals(getCurrentAlignmentID())) {
 			return getCurrentModel();
 		}
 		else {
