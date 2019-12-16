@@ -36,7 +36,7 @@ import info.bioinfweb.libralign.model.data.DataModel;
  *
  * @param <T> the token type used in the associated alignment model
  */
-public class DataModelLists extends DataLists<AlignmentModel<?>, DataModel<?>>{
+public class DataModelLists extends DataLists<AlignmentModel<?>, DataModel<?>> {
   private final DataList<AlignmentModel<?>, DataModel<?>> alignmentList;
   
   
