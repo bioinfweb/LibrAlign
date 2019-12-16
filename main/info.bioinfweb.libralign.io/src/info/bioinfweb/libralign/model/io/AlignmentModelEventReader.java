@@ -359,6 +359,7 @@ public class AlignmentModelEventReader implements JPhyloIOEventListener {
 					currentParameterMap.put(NewAlignmentModelParameterMap.KEY_ALIGNMENT_LABEL, alignmentEvent.getLabel());
 					currentAlignmentID = alignmentEvent.getID();
 					currentParameterMap.put(NewAlignmentModelParameterMap.KEY_ALIGNMENT_ID, currentAlignmentID);
+					ensureCurrentModelInstance();  // Necessary to have current model available for all future events, e.g., when data element readers call getModelByJPhyloIOID().
 				}
 				else {
 					if (currentModel != null) {
