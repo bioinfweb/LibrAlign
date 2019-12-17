@@ -482,27 +482,21 @@ public class AlignmentContentArea extends TICComponent {
 
 
 	/**
-	 * Returns the left most x-coordinate of the area the specified column is painted in relative to the
-	 * component on which the sequences are painted. Use this method to convert between cell indices and
+	 * Returns the left most x-coordinate of the specified columns in this area. Use this method to convert between cell indices and
 	 * paint coordinates. This method takes the current horizontal zoom factor into account.
 	 *
 	 * @param column the column painted at the returned x-position
 	 * @return a value >= 0
 	 */
 	public double paintXByColumn(int column) {
-	  if (getOwner().hasAlignmentModel()) {
-  		if (getOwner().getAlignmentModel() instanceof ConcatenatedAlignmentModel) {
-  			throw new InternalError("not implemented");  //TODO Implement and consider that different alignment parts may have different token widths here.
-  		}
-  		else {
-  			PaintSettings settings = getOwner().getPaintSettings();
-  			return column *	settings.getTokenPainterList().painterByColumn(0).getPreferredWidth() *	settings.getZoomX() + 
-  					getOwner().getSizeManager().getGlobalMaxLengthBeforeStart();  //TODO Catch IllegalStateException?
-  		}
+	  if (getOwner().hasAlignmentModel() && (getOwner().getAlignmentModel() instanceof ConcatenatedAlignmentModel)) {
+ 			throw new InternalError("not implemented");  //TODO Implement and consider that different alignment parts may have different token widths here.
 	  }
-	  else {
-	    throw new IllegalStateException("Column dependent paint positions can only be calculated if an alignment model is defined.");
-	  }
+		else {
+			PaintSettings settings = getOwner().getPaintSettings();
+			return column *	settings.getTokenPainterList().painterByColumn(0).getPreferredWidth() *	settings.getZoomX() + 
+					getOwner().getSizeManager().getGlobalMaxLengthBeforeStart();  //TODO Catch IllegalStateException?
+		}
 	}
 
 
