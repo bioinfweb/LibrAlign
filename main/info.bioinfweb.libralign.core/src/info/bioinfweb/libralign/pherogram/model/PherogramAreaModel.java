@@ -208,7 +208,7 @@ public class PherogramAreaModel extends PherogramComponentModel implements DataM
 	 * Returns the index in the editable alignment sequence that corresponds to the specified index in the base
 	 * call sequence.
 	 * 
-	 * @param baseCallIndex - the absolute index in the base call sequence
+	 * @param baseCallIndex the absolute index in the base call sequence
 	 * @return the absolute index in the editable sequence or {@link #GAP} if the according position in the 
 	 *         editable sequence has been deleted or {@link #OUT_OF_RANGE} if the specified base call index
 	 *         lies outside the range of the pherogram
