@@ -24,6 +24,7 @@ import info.bioinfweb.libralign.dataarea.DataArea;
 import info.bioinfweb.libralign.dataelement.DataList;
 import info.bioinfweb.libralign.dataelement.DataListType;
 import info.bioinfweb.libralign.dataelement.DataLists;
+import info.bioinfweb.libralign.dataelement.DataLocation;
 
 
 
@@ -73,5 +74,29 @@ public class DataAreaLists extends DataLists<AlignmentArea, DataArea>{
 	 */
 	public DataList<AlignmentArea, DataArea> getBottomList() {
 		return bottomList;
+	}
+	
+	
+	public boolean addDataArea(DataArea area, DataLocation location) {
+		return addDataArea(area, location.getListType(), location.getSequenceID());
+	}
+	
+	
+	public boolean addDataArea(DataArea area, DataListType listType, String sequenceID) {
+		switch (listType) {
+			case TOP:
+				return getTopList().add(area);
+			case BOTTOM:
+				return getBottomList().add(area);
+			case SEQUENCE:
+				if (sequenceID == null) {
+					throw new IllegalArgumentException("sequenceID must not be null if listType is SEQUENCE.");
+				}
+				else {
+					return getSequenceList(sequenceID).add(area);
+				}
+			default:
+				return false;
+		}
 	}
 }

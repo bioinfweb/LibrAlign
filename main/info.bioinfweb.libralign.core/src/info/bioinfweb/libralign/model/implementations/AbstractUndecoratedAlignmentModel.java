@@ -253,6 +253,7 @@ public abstract class AbstractUndecoratedAlignmentModel<T> extends AbstractAlign
 			if (result) {
 				doRemoveSequence(sequenceID);
 				fireAfterSequenceChange(SequenceChangeEvent.newRemoveInstance(this, sequenceID));
+				getDataModels().removeSequenceList(sequenceID);
 			}
 			return result;
 		}

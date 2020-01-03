@@ -89,6 +89,7 @@ public class DataLists<O, E> {
 	public void removeSequenceList(String sequenceID) {
 		DataList<O, E> list = sequenceLists.remove(sequenceID);
 		if (list != null) {
+			list.clear();  // Fire remove events for all entries.
 			list.removeListChangeListener(listChangeListener);
 		}
 	}
