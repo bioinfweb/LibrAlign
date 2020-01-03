@@ -56,6 +56,11 @@ public abstract class ModelBasedDataArea<M extends DataModel<L>, L> extends Data
 	
 	protected abstract L createListener();
 
+	
+	public boolean hasModel() {
+		return getModel() != null;
+	}
+	
 
 	/**
 	 * Returns a reference to the data model that provides the data displayed by this data area.

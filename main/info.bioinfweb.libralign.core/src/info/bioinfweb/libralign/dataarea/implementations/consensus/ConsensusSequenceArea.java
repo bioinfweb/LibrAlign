@@ -87,48 +87,50 @@ public class ConsensusSequenceArea extends ModelBasedDataArea<ConsensusSequenceM
 		g.setColor(SystemColor.menu);
 		g.fill(event.getRectangle());
 
-		// Determine area to be painted:
-		int firstIndex = Math.max(0, getOwner().getContentArea().columnByPaintX((int)event.getRectangle().getMinX()));
-		int lastIndex = getOwner().getContentArea().columnByPaintX((int)event.getRectangle().getMaxX());
-		int lastColumn = getModel().getAlignmentModel().getMaxSequenceLength() - 1;
-		if ((lastIndex == -1) || (lastIndex > lastColumn)) {  //TODO Elongate to the length of the longest sequence and paint empty/special tokens on the right end?
-			lastIndex = lastColumn;
-		}
-
-		// Paint output:
-		g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-  	double x = getOwner().getContentArea().paintXByColumn(firstIndex);
-		for (int column = firstIndex; column <= lastIndex; column++) {
-			// Paint bars:
-			TokenPainter painter = getOwner().getPaintSettings().getTokenPainterList().painterByColumn(column);
-			double y = 0;
-			double width = getOwner().getPaintSettings().getTokenWidth(column);
-			for (FractionInfo fraction : getModel().getFractions(column)) {
-				// Paint background:
-				g.setColor(painter.getColor(fraction.getRepresentation()));
-				double height = getHeight() * fraction.getFraction();
-				Rectangle2D area = new Rectangle2D.Double(x, y, width, height); 
-				g.fill(area);
-				
-				// Paint token representation:
-				Font font = FontCalculator.getInstance().fontToFitRectangle(area, SingleColorTokenPainter.FONT_SIZE_FACTOR, 
-						fraction.getRepresentation(), Font.SANS_SERIF, Font.PLAIN, SingleColorTokenPainter.MIN_FONT_SIZE);
-				if (font != null) {
-					g.setColor(Color.BLACK);  //TODO parameterize?
-					g.setFont(font);
-					GraphicsUtils.drawStringInRectangle(g, area, fraction.getRepresentation());
-				}
-				
-				y += height;
+		if (hasModel()) {
+			// Determine area to be painted:
+			int firstIndex = Math.max(0, getOwner().getContentArea().columnByPaintX((int)event.getRectangle().getMinX()));
+			int lastIndex = getOwner().getContentArea().columnByPaintX((int)event.getRectangle().getMaxX());
+			int lastColumn = getModel().getAlignmentModel().getMaxSequenceLength() - 1;
+			if ((lastIndex == -1) || (lastIndex > lastColumn)) {  //TODO Elongate to the length of the longest sequence and paint empty/special tokens on the right end?
+				lastIndex = lastColumn;
 			}
-
-			// Paint token:
-
-//			SequenceArea.paintCompound(getOwner().getOwner(), event.getGraphics(),
-//					compoundSet.getCompoundForString("" + score.getConsensusBase()), x, sequenceY, false);
-
-	    x += width;
-    }
+	
+			// Paint output:
+			g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+	  	double x = getOwner().getContentArea().paintXByColumn(firstIndex);
+			for (int column = firstIndex; column <= lastIndex; column++) {
+				// Paint bars:
+				TokenPainter painter = getOwner().getPaintSettings().getTokenPainterList().painterByColumn(column);
+				double y = 0;
+				double width = getOwner().getPaintSettings().getTokenWidth(column);
+				for (FractionInfo fraction : getModel().getFractions(column)) {
+					// Paint background:
+					g.setColor(painter.getColor(fraction.getRepresentation()));
+					double height = getHeight() * fraction.getFraction();
+					Rectangle2D area = new Rectangle2D.Double(x, y, width, height); 
+					g.fill(area);
+					
+					// Paint token representation:
+					Font font = FontCalculator.getInstance().fontToFitRectangle(area, SingleColorTokenPainter.FONT_SIZE_FACTOR, 
+							fraction.getRepresentation(), Font.SANS_SERIF, Font.PLAIN, SingleColorTokenPainter.MIN_FONT_SIZE);
+					if (font != null) {
+						g.setColor(Color.BLACK);  //TODO parameterize?
+						g.setFont(font);
+						GraphicsUtils.drawStringInRectangle(g, area, fraction.getRepresentation());
+					}
+					
+					y += height;
+				}
+	
+				// Paint token:
+	
+	//			SequenceArea.paintCompound(getOwner().getOwner(), event.getGraphics(),
+	//					compoundSet.getCompoundForString("" + score.getConsensusBase()), x, sequenceY, false);
+	
+		    x += width;
+	    }
+		}
 	}
 
 

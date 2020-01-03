@@ -107,7 +107,7 @@ public class TokenPainterList implements Iterable<TokenPainter> {
 	
 	
 	/**
-	 * Returns the according painter to the specified column index. If no painter is found, the default painter will
+	 * Returns the respective painter to the specified column index. If no painter is found, the default painter will
 	 * be returned, even if the specified column does not exist in the associated model.
 	 * 
 	 * @param columnIndex the index of the column that contains the token to be painted

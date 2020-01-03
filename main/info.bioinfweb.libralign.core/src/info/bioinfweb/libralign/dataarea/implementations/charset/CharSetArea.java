@@ -136,7 +136,7 @@ public class CharSetArea extends ModelBasedDataArea<CharSetDataModel, CharSetDat
 
 
 	public void setSelectedIndex(int selectedIndex) {
-		if ((selectedIndex == -1) || Math2.isBetween(selectedIndex, 0, getModel().size() - 1)) {
+		if (hasModel() && ((selectedIndex == -1) || Math2.isBetween(selectedIndex, 0, getModel().size() - 1))) {
 			if (this.selectedIndex != selectedIndex) {
 				this.selectedIndex = selectedIndex;
 				repaint();
@@ -150,7 +150,7 @@ public class CharSetArea extends ModelBasedDataArea<CharSetDataModel, CharSetDat
 	
 	
 	private void checkSelectedIndex() {
-		if (getModel().size() > 0) {
+		if (hasModel() || (getModel().size() > 0)) {
 			selectedIndex = Math.min(selectedIndex, getModel().size() - 1);
 		}
 		else {
@@ -161,7 +161,12 @@ public class CharSetArea extends ModelBasedDataArea<CharSetDataModel, CharSetDat
 
 	@Override
 	public double getHeight() {
-		return getModel().size() * getOwner().getPaintSettings().getTokenHeight();  //TODO Add possible border height, possibly round up?
+		if (hasModel()) {
+			return getModel().size() * getOwner().getPaintSettings().getTokenHeight();  //TODO Add possible border height, possibly round up?
+		}
+		else {
+			return 0;
+		}
 	}
 
 	
@@ -182,37 +187,39 @@ public class CharSetArea extends ModelBasedDataArea<CharSetDataModel, CharSetDat
 			lastIndex = lastColumn;
 		}
 		
-		// Paint output:
-		Iterator<CharSet> iterator = getModel().valueList().iterator();
-		double y = 0;
-		PaintSettings paintSettings = getOwner().getPaintSettings();
-		final double borderHeight = paintSettings.getTokenHeight() * BORDER_FRACTION;
-		final double height = paintSettings.getTokenHeight() - 2 * borderHeight;
-		int lineIndex = 0;
-		while (iterator.hasNext()) {
-			CharSet charSet = iterator.next();
-			Color charSetColor = charSet.getColor();
-			
-			// Paint selection:
-			if (lineIndex == getSelectedIndex()) {
-				g.setColor(paintSettings.getSelectionColor());
-				g.fill(new Rectangle2D.Double(event.getRectangle().getMinX(), y, event.getRectangle().getMaxX(), paintSettings.getTokenHeight()));
-				charSetColor = GraphicsUtils.blend(charSetColor, paintSettings.getSelectionColor());
-			}
-			
-			// Paint contained columns:
-			g.setColor(charSetColor);
-			double x = contentArea.paintXByColumn(firstIndex);
-			for (int columnIndex = firstIndex; columnIndex <= lastIndex; columnIndex++) {
-				double width = paintSettings.getTokenWidth(columnIndex);
-				if (charSet.contains(columnIndex)) {
-					g.fill(new Rectangle2D.Double(x, y + borderHeight, width, height));
+		if (hasModel()) {
+			// Paint output:
+			Iterator<CharSet> iterator = getModel().valueList().iterator();
+			double y = 0;
+			PaintSettings paintSettings = getOwner().getPaintSettings();
+			final double borderHeight = paintSettings.getTokenHeight() * BORDER_FRACTION;
+			final double height = paintSettings.getTokenHeight() - 2 * borderHeight;
+			int lineIndex = 0;
+			while (iterator.hasNext()) {
+				CharSet charSet = iterator.next();
+				Color charSetColor = charSet.getColor();
+				
+				// Paint selection:
+				if (lineIndex == getSelectedIndex()) {
+					g.setColor(paintSettings.getSelectionColor());
+					g.fill(new Rectangle2D.Double(event.getRectangle().getMinX(), y, event.getRectangle().getMaxX(), paintSettings.getTokenHeight()));
+					charSetColor = GraphicsUtils.blend(charSetColor, paintSettings.getSelectionColor());
 				}
-				x += width;
+				
+				// Paint contained columns:
+				g.setColor(charSetColor);
+				double x = contentArea.paintXByColumn(firstIndex);
+				for (int columnIndex = firstIndex; columnIndex <= lastIndex; columnIndex++) {
+					double width = paintSettings.getTokenWidth(columnIndex);
+					if (charSet.contains(columnIndex)) {
+						g.fill(new Rectangle2D.Double(x, y + borderHeight, width, height));
+					}
+					x += width;
+				}
+				
+				y += paintSettings.getTokenHeight();
+				lineIndex++;
 			}
-			
-			y += paintSettings.getTokenHeight();
-			lineIndex++;
 		}
 	}
 

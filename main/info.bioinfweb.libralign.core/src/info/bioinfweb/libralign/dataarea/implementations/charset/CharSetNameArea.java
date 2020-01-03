@@ -66,25 +66,32 @@ public class CharSetNameArea extends AlignmentLabelSubArea {
 		g.setFont(getOwner().getPaintSettings().getTokenHeightFont());
 		FontMetrics fm = g.getFontMetrics();
 		
-		// Paint names:
-		Iterator<CharSet> iterator = getLabeledArea().getModel().valueList().iterator();
-		double y = 0;
-		final double compoundHeight = getOwner().getPaintSettings().getTokenHeight();
-		while (iterator.hasNext()) {
-			g.drawString(iterator.next().getName(), AlignmentLabelArea.BORDER_WIDTH, Math.round(y + fm.getAscent()));			
-			y += compoundHeight;
+		if (getLabeledArea().hasModel()) {
+			// Paint names:
+			Iterator<CharSet> iterator = getLabeledArea().getModel().valueList().iterator();
+			double y = 0;
+			final double compoundHeight = getOwner().getPaintSettings().getTokenHeight();
+			while (iterator.hasNext()) {
+				g.drawString(iterator.next().getName(), AlignmentLabelArea.BORDER_WIDTH, Math.round(y + fm.getAscent()));			
+				y += compoundHeight;
+			}
 		}
 	}
 
 
 	@Override
 	public int getNeededWidth() {
-		Font compundFont = getOwner().getPaintSettings().getTokenHeightFont();
-		Iterator<CharSet> iterator = getLabeledArea().getModel().valueList().iterator();
-		float maxWidth = 0;
-		while (iterator.hasNext()) {
-			maxWidth = Math.max(maxWidth, FontCalculator.getInstance().getWidth(compundFont, iterator.next().getName()));
+		if (getLabeledArea().hasModel()) {
+			Font compundFont = getOwner().getPaintSettings().getTokenHeightFont();
+			Iterator<CharSet> iterator = getLabeledArea().getModel().valueList().iterator();
+			float maxWidth = 0;
+			while (iterator.hasNext()) {
+				maxWidth = Math.max(maxWidth, FontCalculator.getInstance().getWidth(compundFont, iterator.next().getName()));
+			}
+			return Math2.roundUp(maxWidth) + 2 * AlignmentLabelArea.BORDER_WIDTH;
 		}
-		return Math2.roundUp(maxWidth) + 2 * AlignmentLabelArea.BORDER_WIDTH;
+		else {
+			return 0;
+		}
 	}
 }

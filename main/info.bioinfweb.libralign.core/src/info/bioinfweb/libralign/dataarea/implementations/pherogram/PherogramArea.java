@@ -97,7 +97,7 @@ public class PherogramArea extends ModelBasedDataArea<PherogramAreaModel, Pherog
 
 		@Override
 		public void afterTokenChange(TokenChangeEvent e) {
-			if (e.getSource().equals(getModel().getAlignmentModel()) && 
+			if (hasModel() && e.getSource().equals(getModel().getAlignmentModel()) && 
 					(e.getSequenceID() == getList().getLocation().getSequenceID())) {
 				
 				int addend = getOwner().getEditSettings().isInsertLeftInDataArea() ? -1 : 0;
@@ -267,102 +267,112 @@ public class PherogramArea extends ModelBasedDataArea<PherogramAreaModel, Pherog
 
 
 	protected SimpleSequenceInterval calculatePaintRange(TICPaintEvent e) {
-		PherogramAlignmentRelation lowerBorderRelation = getModel().baseCallIndexByEditableIndex(
-				getOwner().getContentArea().columnByPaintX(e.getRectangle().getMinX()) - 2);  // - 2 because two (experimentally obtained) half visible column should be painted. (Why are this two?)
-		int lowerBorder;
-		if (lowerBorderRelation.getCorresponding() == PherogramAlignmentRelation.GAP) {
-			lowerBorder = lowerBorderRelation.getBefore();
+		if (hasModel()) {
+			PherogramAlignmentRelation lowerBorderRelation = getModel().baseCallIndexByEditableIndex(
+					getOwner().getContentArea().columnByPaintX(e.getRectangle().getMinX()) - 2);  // - 2 because two (empirically obtained) half visible column should be painted. (Why are this two?)
+			int lowerBorder;
+			if (lowerBorderRelation.getCorresponding() == PherogramAlignmentRelation.GAP) {
+				lowerBorder = lowerBorderRelation.getBefore();
+			}
+			else {  // OUT_OF_RANGE or valid index
+				lowerBorder = 0;
+			}
+	
+			PherogramAlignmentRelation upperBorderRelation = getModel().baseCallIndexByEditableIndex(
+					getOwner().getContentArea().columnByPaintX(e.getRectangle().getMinX() + e.getRectangle().getWidth()) + 2);  // + 1 + 1 because BioJava indices start with 1 and one half visible column should be painted.
+			int upperBorder;
+			if (upperBorderRelation.getCorresponding() == PherogramAlignmentRelation.GAP) {
+				upperBorder = upperBorderRelation.getAfter();
+			}
+			else {  // OUT_OF_RANGE or valid index
+				upperBorder = getModel().getPherogramProvider().getSequenceLength() - 1; 
+			}
+	
+			return new SimpleSequenceInterval(lowerBorder, upperBorder);
 		}
-		else {  // OUT_OF_RANGE or valid index
-			lowerBorder = 0;
+		else {
+			return new SimpleSequenceInterval(0, 0);
 		}
-
-		PherogramAlignmentRelation upperBorderRelation = getModel().baseCallIndexByEditableIndex(
-				getOwner().getContentArea().columnByPaintX(e.getRectangle().getMinX() + e.getRectangle().getWidth()) + 2);  // + 1 + 1 because BioJava indices start with 1 and one half visible column should be painted.
-		int upperBorder;
-		if (upperBorderRelation.getCorresponding() == PherogramAlignmentRelation.GAP) {
-			upperBorder = upperBorderRelation.getAfter();
-		}
-		else {  // OUT_OF_RANGE or valid index
-			upperBorder = getModel().getPherogramProvider().getSequenceLength() - 1; 
-		}
-
-		return new SimpleSequenceInterval(lowerBorder, upperBorder);
 	}
 	
 
 	public ScaledPherogramDistortion createPherogramDistortion() {
-		ScaledPherogramDistortion result = new ScaledPherogramDistortion(getModel().getPherogramProvider().getSequenceLength());
-  	
-		int startTraceIndex = 0;  //getTracePosition(startBaseCallIndex);
-		Iterator<ShiftChange> shiftChangeIterator = getModel().shiftChangeIterator();
-		ShiftChange shiftChange = null;
-		if (shiftChangeIterator.hasNext()) {
-			shiftChange = shiftChangeIterator.next();
-		}
-		
-		if (getModel().getAlignmentModel() instanceof ConcatenatedAlignmentModel) {  //TODO This reference could also me made using getOwner().getOwner().getAlignmentModel(). Would this be better?
-			throw new InternalError("Support for concatenated models not yet implemented.");
-		}
-		final double compoundWidth = getEditableTokenWidth();
-		int stepWidth = 1;
-		int editPosPerBaseCallPos = 1;
-		double baseCallPaintX = 0; //0.5 * compoundWidth;
-		for (int baseCallIndex = 0; baseCallIndex < getModel().getPherogramProvider().getSequenceLength(); baseCallIndex += stepWidth) {
-			// Treat possible gaps:
-			if ((shiftChange != null) && (baseCallIndex == shiftChange.getBaseCallIndex())) {
-				if (shiftChange.getShiftChange() < 0) {  // Deletion in editable sequence
-					stepWidth = -shiftChange.getShiftChange() + 1;
-					editPosPerBaseCallPos = 1;
-				}
-				else {  // Insertion in editable sequence
-					stepWidth = 1;
-					GapPattern gapPattern = getModel().getGapPattern(shiftChange);
-					editPosPerBaseCallPos = shiftChange.getShiftChange() + 1 - gapPattern.getGapCount();
-					result.setGapPattern(baseCallIndex, gapPattern);
-				}
-
-				if (shiftChangeIterator.hasNext()) {
-					shiftChange = shiftChangeIterator.next();
-				}
-				else {
-					shiftChange = null;
-				}
-			}
-			else {
-				stepWidth = 1;
-				editPosPerBaseCallPos = 1;
+		if (hasModel()) {
+			ScaledPherogramDistortion result = new ScaledPherogramDistortion(getModel().getPherogramProvider().getSequenceLength());
+	  	
+			int startTraceIndex = 0;  //getTracePosition(startBaseCallIndex);
+			Iterator<ShiftChange> shiftChangeIterator = getModel().shiftChangeIterator();
+			ShiftChange shiftChange = null;
+			if (shiftChangeIterator.hasNext()) {
+				shiftChange = shiftChangeIterator.next();
 			}
 			
-			// Calculate scale and initialize variables:
-			int endTraceIndex = PherogramUtils.getFirstTracePosition(getModel().getPherogramProvider(), baseCallIndex + stepWidth);
-			result.setHorizontalScale(baseCallIndex, editPosPerBaseCallPos * compoundWidth / (double)(endTraceIndex - startTraceIndex));
-
-			// Calculate paint positions:
-			double baseCallPaintDistance = compoundWidth * editPosPerBaseCallPos / stepWidth;
-			result.setPaintStartX(baseCallIndex, baseCallPaintX);
-			baseCallPaintX += 0.5 * baseCallPaintDistance;
-			if (result.getGapPattern(baseCallIndex) == null) {
-				result.setPaintCenterX(baseCallIndex, baseCallPaintX);
-				for (int i = 1; i < stepWidth; i++) {
-					result.setHorizontalScale(baseCallIndex + i, result.getHorizontalScale(baseCallIndex));  // Scale remains constant.
-					baseCallPaintX += 0.5 * baseCallPaintDistance;
-					result.setPaintStartX(baseCallIndex + i, baseCallPaintX);
-					baseCallPaintX += 0.5 * baseCallPaintDistance;
-					result.setPaintCenterX(baseCallIndex + i, baseCallPaintX);
-					// GapPattern does not need to be set, because it must be null in this case.
+			if (getModel().getAlignmentModel() instanceof ConcatenatedAlignmentModel) {  //TODO This reference could also me made using getOwner().getOwner().getAlignmentModel(). Would this be better?
+				throw new InternalError("Support for concatenated models not yet implemented.");
+			}
+			final double compoundWidth = getEditableTokenWidth();
+			int stepWidth = 1;
+			int editPosPerBaseCallPos = 1;
+			double baseCallPaintX = 0; //0.5 * compoundWidth;
+			for (int baseCallIndex = 0; baseCallIndex < getModel().getPherogramProvider().getSequenceLength(); baseCallIndex += stepWidth) {
+				// Treat possible gaps:
+				if ((shiftChange != null) && (baseCallIndex == shiftChange.getBaseCallIndex())) {
+					if (shiftChange.getShiftChange() < 0) {  // Deletion in editable sequence
+						stepWidth = -shiftChange.getShiftChange() + 1;
+						editPosPerBaseCallPos = 1;
+					}
+					else {  // Insertion in editable sequence
+						stepWidth = 1;
+						GapPattern gapPattern = getModel().getGapPattern(shiftChange);
+						editPosPerBaseCallPos = shiftChange.getShiftChange() + 1 - gapPattern.getGapCount();
+						result.setGapPattern(baseCallIndex, gapPattern);
+					}
+	
+					if (shiftChangeIterator.hasNext()) {
+						shiftChange = shiftChangeIterator.next();
+					}
+					else {
+						shiftChange = null;
+					}
 				}
+				else {
+					stepWidth = 1;
+					editPosPerBaseCallPos = 1;
+				}
+				
+				// Calculate scale and initialize variables:
+				int endTraceIndex = PherogramUtils.getFirstTracePosition(getModel().getPherogramProvider(), baseCallIndex + stepWidth);
+				result.setHorizontalScale(baseCallIndex, editPosPerBaseCallPos * compoundWidth / (double)(endTraceIndex - startTraceIndex));
+	
+				// Calculate paint positions:
+				double baseCallPaintDistance = compoundWidth * editPosPerBaseCallPos / stepWidth;
+				result.setPaintStartX(baseCallIndex, baseCallPaintX);
+				baseCallPaintX += 0.5 * baseCallPaintDistance;
+				if (result.getGapPattern(baseCallIndex) == null) {
+					result.setPaintCenterX(baseCallIndex, baseCallPaintX);
+					for (int i = 1; i < stepWidth; i++) {
+						result.setHorizontalScale(baseCallIndex + i, result.getHorizontalScale(baseCallIndex));  // Scale remains constant.
+						baseCallPaintX += 0.5 * baseCallPaintDistance;
+						result.setPaintStartX(baseCallIndex + i, baseCallPaintX);
+						baseCallPaintX += 0.5 * baseCallPaintDistance;
+						result.setPaintCenterX(baseCallIndex + i, baseCallPaintX);
+						// GapPattern does not need to be set, because it must be null in this case.
+					}
+				}
+				else {	// Treat gaps (in this case stepWidth should always be 1):
+					GapPattern gapPattern = result.getGapPattern(baseCallIndex);
+					result.setPaintCenterX(baseCallIndex, baseCallPaintX + compoundWidth * gapPattern.countGapsBeforeCurveCenter());
+					baseCallPaintX += compoundWidth * gapPattern.getGapCount();
+				}
+				baseCallPaintX += 0.5 * baseCallPaintDistance;
+				startTraceIndex = endTraceIndex;
 			}
-			else {	// Treat gaps (in this case stepWidth should always be 1):
-				GapPattern gapPattern = result.getGapPattern(baseCallIndex);
-				result.setPaintCenterX(baseCallIndex, baseCallPaintX + compoundWidth * gapPattern.countGapsBeforeCurveCenter());
-				baseCallPaintX += compoundWidth * gapPattern.getGapCount();
-			}
-			baseCallPaintX += 0.5 * baseCallPaintDistance;
-			startTraceIndex = endTraceIndex;
+	  	
+	  	return result;
 		}
-  	
-  	return result;
+		else {
+			return new ScaledPherogramDistortion(0);
+		}
   }	
 
 	
@@ -371,68 +381,77 @@ public class PherogramArea extends ModelBasedDataArea<PherogramAreaModel, Pherog
 		Graphics2D g = e.getGraphics();
 		g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 		
-		double leftX = getOwner().getContentArea().paintXByColumn(
-				getModel().editableIndexByBaseCallIndex(getModel().getLeftCutPosition()).getBefore()); // getAfter());
-		double rightX = getOwner().getContentArea().paintXByColumn(
-				getModel().editableIndexByBaseCallIndex(getModel().getRightCutPosition() - 1).getAfter() + 1);
+		if (hasModel()) {
+			double leftX = getOwner().getContentArea().paintXByColumn(
+					getModel().editableIndexByBaseCallIndex(getModel().getLeftCutPosition()).getBefore()); // getAfter());
+			double rightX = getOwner().getContentArea().paintXByColumn(
+					getModel().editableIndexByBaseCallIndex(getModel().getRightCutPosition() - 1).getAfter() + 1);
+			
+			// Draw cut off background:
+			g.setColor(getFormats().getCutBackgroundColor());
+			if (leftX >= e.getRectangle().getMinX()) {
+				g.fill(new Rectangle2D.Double(e.getRectangle().getMinX(), e.getRectangle().getMinY(), 
+						leftX - e.getRectangle().getMinX(), e.getRectangle().getHeight()));
+			}
+			else {
+				leftX = e.getRectangle().getMinX();
+			}
+			if (rightX <= e.getRectangle().getMinX() + e.getRectangle().getWidth()) {
+				g.fill(new Rectangle2D.Double(rightX, e.getRectangle().getMinY(), 
+						e.getRectangle().getMinX() + e.getRectangle().getWidth() - rightX, e.getRectangle().getHeight()));
+			}
+			else {
+				rightX = e.getRectangle().getMinX() + e.getRectangle().getWidth();
+			}
+			
+			// Draw center background:
+			g.setColor(getFormats().getBackgroundColor());
+			g.fill(new Rectangle2D.Double(leftX, e.getRectangle().getMinY(), rightX - leftX, e.getRectangle().getHeight()));
+	
+			if (hasModel()) {
+				SimpleSequenceInterval paintRange = calculatePaintRange(e);
+				double x = getOwner().getContentArea().paintXByColumn(getModel().getFirstSeqPos() - getModel().getLeftCutPosition());
+				double y = 0; 
+				double height = getHeight();
+				double fontZoom = getFormats().calculateFontZoomFactor(this);
+				ScaledPherogramDistortion distortion = createPherogramDistortion();
+				
+				// Paint gaps:
+				if (getModel().getAlignmentModel() instanceof ConcatenatedAlignmentModel) {
+					throw new InternalError("Support for concatenated models not yet implemented.");
+				}
+				double tokenWidth = getOwner().getPaintSettings().getTokenWidth(0);  //TODO Use index of an aligned column to determine correct width also for concatenated models.
+				
+				painter.paintGaps(g, paintRange.getFirstPos(), paintRange.getLastPos(), x, y, height,	distortion, tokenWidth);
+				
+				// Paint base call lines
+				if (getFormats().isShowBaseCallLines()) {
+					g.setColor(getFormats().getBaseCallLineColor());
+					painter.paintBaseCallLines(g, paintRange.getFirstPos(), paintRange.getLastPos(), x, y, 
+							height, distortion);
+				}
 		
-		// Draw cut off background:
-		g.setColor(getFormats().getCutBackgroundColor());
-		if (leftX >= e.getRectangle().getMinX()) {
-			g.fill(new Rectangle2D.Double(e.getRectangle().getMinX(), e.getRectangle().getMinY(), 
-					leftX - e.getRectangle().getMinX(), e.getRectangle().getHeight()));
+		    // Paint indices:
+				Font indexFont = getFormats().getIndexFont().createFont(fontZoom); 
+				g.setFont(indexFont);
+				g.setColor(Color.BLACK);
+				painter.paintBaseCallIndices(g, paintRange.getFirstPos(), paintRange.getLastPos(), x, y, distortion, tokenWidth);
+				y += indexFont.getSize2D() * PherogramFormats.FONT_HEIGHT_FACTOR;
+				
+				// Paint base calls and probabilities:
+				painter.paintBaseCalls(g, paintRange.getFirstPos(), paintRange.getLastPos(), x, y, distortion);
+				//y += getFormats().getBaseCallFont().getSize() * PherogramFormats.FONT_HEIGHT_FACTOR + getFormats().qualityOutputHeight();
+				
+				// Draw curves:
+				height = painter.paintTraceCurves(g, paintRange.getFirstPos(), paintRange.getLastPos(), 
+						x, getHeight() - painter.calculateTraceCurvesHeight(),	distortion, tokenWidth);
+			}
+			else {  // Draw cut off background everywhere if no model is currently present:
+				g.setColor(getFormats().getCutBackgroundColor());
+				g.fill(new Rectangle2D.Double(e.getRectangle().getMinX(), e.getRectangle().getMinY(), 
+						e.getRectangle().getWidth(), e.getRectangle().getHeight()));
+			}
 		}
-		else {
-			leftX = e.getRectangle().getMinX();
-		}
-		if (rightX <= e.getRectangle().getMinX() + e.getRectangle().getWidth()) {
-			g.fill(new Rectangle2D.Double(rightX, e.getRectangle().getMinY(), 
-					e.getRectangle().getMinX() + e.getRectangle().getWidth() - rightX, e.getRectangle().getHeight()));
-		}
-		else {
-			rightX = e.getRectangle().getMinX() + e.getRectangle().getWidth();
-		}
-		
-		// Draw center background:
-		g.setColor(getFormats().getBackgroundColor());
-		g.fill(new Rectangle2D.Double(leftX, e.getRectangle().getMinY(), rightX - leftX, e.getRectangle().getHeight()));
-
-		SimpleSequenceInterval paintRange = calculatePaintRange(e);
-		double x = getOwner().getContentArea().paintXByColumn(getModel().getFirstSeqPos() - getModel().getLeftCutPosition());
-		double y = 0; 
-		double height = getHeight();
-		double fontZoom = getFormats().calculateFontZoomFactor(this);
-		ScaledPherogramDistortion distortion = createPherogramDistortion();
-		
-		// Paint gaps:
-		if (getModel().getAlignmentModel() instanceof ConcatenatedAlignmentModel) {
-			throw new InternalError("Support for concatenated models not yet implemented.");
-		}
-		double tokenWidth = getOwner().getPaintSettings().getTokenWidth(0);  //TODO Use index of an aligned column to determine correct width also for concatenated models.
-		
-		painter.paintGaps(g, paintRange.getFirstPos(), paintRange.getLastPos(), x, y, height,	distortion, tokenWidth);
-		
-		// Paint base call lines
-		if (getFormats().isShowBaseCallLines()) {
-			g.setColor(getFormats().getBaseCallLineColor());
-			painter.paintBaseCallLines(g, paintRange.getFirstPos(), paintRange.getLastPos(), x, y, 
-					height, distortion);
-		}
-
-    // Paint indices:
-		Font indexFont = getFormats().getIndexFont().createFont(fontZoom); 
-		g.setFont(indexFont);
-		g.setColor(Color.BLACK);
-		painter.paintBaseCallIndices(g, paintRange.getFirstPos(), paintRange.getLastPos(), x, y, distortion, tokenWidth);
-		y += indexFont.getSize2D() * PherogramFormats.FONT_HEIGHT_FACTOR;
-		
-		// Paint base calls and probabilities:
-		painter.paintBaseCalls(g, paintRange.getFirstPos(), paintRange.getLastPos(), x, y, distortion);
-		//y += getFormats().getBaseCallFont().getSize() * PherogramFormats.FONT_HEIGHT_FACTOR + getFormats().qualityOutputHeight();
-		
-		// Draw curves:
-		height = painter.paintTraceCurves(g, paintRange.getFirstPos(), paintRange.getLastPos(), 
-				x, getHeight() - painter.calculateTraceCurvesHeight(),	distortion, tokenWidth);
 	}
 
 
@@ -491,7 +510,7 @@ public class PherogramArea extends ModelBasedDataArea<PherogramAreaModel, Pherog
    */
   @SuppressWarnings({"rawtypes", "unchecked"})
 	public boolean copyBaseCallSequence(int startBaseCallIndex, int endBaseCallIndex) {
-  	if (getList() != null) {
+  	if (hasModel() && (getList() != null)) {
 	  	String sequenceID = getList().getLocation().getSequenceID();
 	  	if (sequenceID != null) {
 		  	AlignmentModel model = getModel().getAlignmentModel();
@@ -512,7 +531,7 @@ public class PherogramArea extends ModelBasedDataArea<PherogramAreaModel, Pherog
   
   @SuppressWarnings("unchecked")
 	private void setGaps(int startEditableIndex, int length) {
-  	if (getList() != null) {
+  	if (hasModel() && (getList() != null)) {
   		AlignmentModel<Object> model = (AlignmentModel<Object>)getModel().getAlignmentModel();
 	  	Collection<Object> tokens = new ArrayList<Object>(length);
 	  	for (int i = 0; i < length; i++) {
@@ -537,16 +556,21 @@ public class PherogramArea extends ModelBasedDataArea<PherogramAreaModel, Pherog
 	 * 
 	 * @return {@code true} if the right cut position was changed according to the selection (or the right cut position), 
 	 *         {@code false} if that was not possible because the current right end of the selection lies outside of the 
-	 *         pherogram
+	 *         pherogram or no data model is currently associated with this instance
 	 */
 	public boolean setLeftCutPositionBySelection() {
-		int pos = getModel().baseCallIndexByEditableIndex(
-				getOwner().getSelection().getFirstColumn()).getBefore();
-		boolean result = pos != PherogramAlignmentRelation.OUT_OF_RANGE; 
-		if (result) {
-			getModel().setLeftCutPosition(pos);
+		if (hasModel()) {
+			int pos = getModel().baseCallIndexByEditableIndex(
+					getOwner().getSelection().getFirstColumn()).getBefore();
+			boolean result = pos != PherogramAlignmentRelation.OUT_OF_RANGE; 
+			if (result) {
+				getModel().setLeftCutPosition(pos);
+			}
+			return result;
 		}
-		return result;
+		else {
+			return false;
+		}
 	}
 
 
@@ -562,17 +586,22 @@ public class PherogramArea extends ModelBasedDataArea<PherogramAreaModel, Pherog
 	 *         {@code false} if that was not possible
 	 */
 	public boolean setRightCutPositionBySelection() {
-		PherogramAlignmentRelation relation = getModel().baseCallIndexByEditableIndex(
-				getOwner().getSelection().getLastColumn()); 
-		int pos = relation.getAfter();
-		if (pos == PherogramAlignmentRelation.OUT_OF_RANGE) {
-			pos = relation.getBefore() + 1;  // Set cut position behind the end of the pherogram.
+		if (hasModel()) {
+			PherogramAlignmentRelation relation = getModel().baseCallIndexByEditableIndex(
+					getOwner().getSelection().getLastColumn()); 
+			int pos = relation.getAfter();
+			if (pos == PherogramAlignmentRelation.OUT_OF_RANGE) {
+				pos = relation.getBefore() + 1;  // Set cut position behind the end of the pherogram.
+			}
+			boolean result = pos != PherogramAlignmentRelation.OUT_OF_RANGE;  //TODO This would only be possible, if the pherogram would not be attached to the sequence and can be removed? 
+			if (result) {
+				getModel().setRightCutPosition(pos);
+			}
+			return result;
 		}
-		boolean result = pos != PherogramAlignmentRelation.OUT_OF_RANGE;  //TODO This would only be possible, if the pherogram would not be attached to the sequence and can be removed? 
-		if (result) {
-			getModel().setRightCutPosition(pos);
+		else {
+			return false;
 		}
-		return result;
 	}
 
 
@@ -601,28 +630,52 @@ public class PherogramArea extends ModelBasedDataArea<PherogramAreaModel, Pherog
 	 * @return the width of a token in the associated part of the editable sequence
 	 */
 	public double getEditableTokenWidth() {
-		return getOwner().getPaintSettings().getTokenWidth(getModel().getFirstSeqPos());
+		int columnIndex = 0;
+		if (hasModel()) {
+			columnIndex = getModel().getFirstSeqPos();
+		}
+		return getOwner().getPaintSettings().getTokenWidth(columnIndex);
 	}
 	
 	
+	/**
+	 * Returns the token painter for the respective column of the parent {@link AlignmentArea} of the first column if this area has currently 
+	 * no associated data model.
+	 * 
+	 * @return the token painter
+	 */
 	public TokenPainter getRelatedTokenPainter() {
-		return getOwner().getPaintSettings().getTokenPainterList().painterByColumn(getModel().getFirstSeqPos());
+		int columnIndex = 0;
+		if (hasModel()) {
+			columnIndex = getModel().getFirstSeqPos();
+		}
+		return getOwner().getPaintSettings().getTokenPainterList().painterByColumn(columnIndex);
 	}
 
 
 	@Override
 	public double getLengthBeforeStart() {
-		return Math.max(0, getOwner().getContentArea().paintXByColumn(getModel().baseCallIndexByEditableIndex(0).getAfter()));
+		if (hasModel()) {
+			return Math.max(0, getOwner().getContentArea().paintXByColumn(getModel().baseCallIndexByEditableIndex(0).getAfter()));
+		}
+		else {
+			return 0;
+		}
 	}
 
 
 	@Override
 	public double getLengthAfterEnd() {
-		int lastEditableIndex = getModel().editableIndexByBaseCallIndex(getModel().getRightCutPosition() - 1).getAfter();
-		double lengthOfOutputAfterAlignmentStart = getOwner().getContentArea().paintXByColumn(lastEditableIndex) + 
-				(1 + getModel().getPherogramProvider().getSequenceLength() - getModel().getRightCutPosition()) *  
-				getOwner().getPaintSettings().getTokenWidth(Math.max(0, getModel().getFirstSeqPos())) - getLengthBeforeStart();  // Math.max(0, ...) is used because this method might be called during the execution of setter cut position method, when other properties are not yet adjusted.  
-		return Math.max(0, lengthOfOutputAfterAlignmentStart - getOwner().getSizeManager().getLocalMaximumNeededAlignmentWidth());
+		if (hasModel()) {
+			int lastEditableIndex = getModel().editableIndexByBaseCallIndex(getModel().getRightCutPosition() - 1).getAfter();
+			double lengthOfOutputAfterAlignmentStart = getOwner().getContentArea().paintXByColumn(lastEditableIndex) + 
+					(1 + getModel().getPherogramProvider().getSequenceLength() - getModel().getRightCutPosition()) *  
+					getOwner().getPaintSettings().getTokenWidth(Math.max(0, getModel().getFirstSeqPos())) - getLengthBeforeStart();  // Math.max(0, ...) is used because this method might be called during the execution of setter cut position method, when other properties are not yet adjusted.  
+			return Math.max(0, lengthOfOutputAfterAlignmentStart - getOwner().getSizeManager().getLocalMaximumNeededAlignmentWidth());
+		}
+		else {
+			return 0;
+		}
 	}
 
 
