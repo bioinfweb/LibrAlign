@@ -45,7 +45,7 @@ public abstract class ModelBasedDataArea<M extends DataModel<L>, L> extends Data
 	 * @param owner
 	 * @param labeledArea
 	 * @param model
-	 * @throws IllegalArgumentException if {@code owner} or {@code model} is {@code null}
+	 * @throws IllegalArgumentException if {@code owner} is {@code null}
 	 */
 	public ModelBasedDataArea(AlignmentArea owner, M model) {
 		super(owner);		
@@ -75,20 +75,17 @@ public abstract class ModelBasedDataArea<M extends DataModel<L>, L> extends Data
 	 * @param model the new model to be used from now on
 	 */
 	public M setModel(M model) {
-		if (model == null) {
-			throw new IllegalArgumentException("The model must not be null.");
+		M result = this.model;
+		
+		if (this.model != null) {
+			this.model.removeModelListener(modelListener);
 		}
-		else {
-			M result = this.model;
-			
-			if (this.model != null) {
-				this.model.removeModelListener(modelListener);
-			}
-			this.model = model;
+		this.model = model;
+		if (model != null) {
 			model.addModelListener(modelListener);
-			
-			propertyChangeListeners.firePropertyChange("model", result, model);
-			return result;
 		}
+		
+		propertyChangeListeners.firePropertyChange("model", result, model);
+		return result;
 	}
 }
