@@ -29,6 +29,7 @@ import java.util.EventObject;
 import java.util.Iterator;
 import java.util.List;
 
+import info.bioinfweb.commons.collections.ListChangeType;
 import info.bioinfweb.commons.collections.observable.ListAddEvent;
 import info.bioinfweb.commons.collections.observable.ListChangeAdapter;
 import info.bioinfweb.commons.collections.observable.ListRemoveEvent;
@@ -51,6 +52,7 @@ import info.bioinfweb.libralign.alignmentarea.selection.SelectionListener;
 import info.bioinfweb.libralign.alignmentarea.selection.SelectionModel;
 import info.bioinfweb.libralign.alignmentarea.tokenpainter.ColorOverlay;
 import info.bioinfweb.libralign.dataarea.DataArea;
+import info.bioinfweb.libralign.dataarea.DataAreaFactory;
 import info.bioinfweb.libralign.dataarea.DataAreaListenerList;
 import info.bioinfweb.libralign.dataarea.DataAreaVisibilityChangeEvent;
 import info.bioinfweb.libralign.dataarea.DataAreasAdapter;
@@ -61,6 +63,7 @@ import info.bioinfweb.libralign.model.AlignmentModel;
 import info.bioinfweb.libralign.model.AlignmentModelAdapter;
 import info.bioinfweb.libralign.model.AlignmentModelListener;
 import info.bioinfweb.libralign.model.data.DataModel;
+import info.bioinfweb.libralign.model.events.DataModelChangeEvent;
 import info.bioinfweb.libralign.model.events.SequenceChangeEvent;
 import info.bioinfweb.libralign.model.events.SequenceRenamedEvent;
 import info.bioinfweb.libralign.model.events.TokenChangeEvent;
@@ -162,6 +165,7 @@ public class AlignmentArea extends ScrollingTICComponent {
 	private EditSettings editSettings;
 	private SelectionModel selection;
 	private ObservableList<ColorOverlay> overlays;
+	private DataAreaFactory dataAreaFactory = null;
 	protected PropertyChangeSupport propertyChangeListeners = new PropertyChangeSupport(this);
 	private AlignmentActionProvider<Object> actionProvider = new AlignmentActionProvider<Object>(this);
 
@@ -171,15 +175,18 @@ public class AlignmentArea extends ScrollingTICComponent {
 	private boolean allowVerticalScrolling = true;
 	private Rectangle lastCursorRectangle = null;
 	
-	private final AlignmentModelListener<Object> alignmentModelListener = new AlignmentModelAdapter<Object>() {
+	private final AlignmentModelListener<Object> alignmentModelListener = new AlignmentModelListener<Object>() {
 		@Override
 		public void afterSequenceChange(SequenceChangeEvent<Object> e) {
 			if (e.getSource().equals(getAlignmentModel())) {
+				if (e.getType().equals(ListChangeType.DELETION)) {
+					getDataAreas().removeSequenceList(e.getSequenceID());  //TODO The model should remove the respective data models on its own and will fire event for them. There should be no need to remove data areas here.
+				}
+
 				getLabelArea().setLocalMaxWidthRecalculateToAll();  // Needs to be called before assignSizeToAll().
 				getSequenceOrder().refreshFromSource();
 				updateSubelements();
 			}
-			//TODO Remove some data areas? (Some might be data specific (e.g., pherograms), some not (e.g., consensus sequence).)
 			assignSizeToAll();
 		}
 
@@ -209,23 +216,23 @@ public class AlignmentArea extends ScrollingTICComponent {
 
 
 		@Override
-		public void afterElementsAdded(ListAddEvent<DataModel<?>> event) {
-			// TODO Auto-generated method stub
-			super.afterElementsAdded(event);
+		public void afterDataModelChange(DataModelChangeEvent<Object> event) {
+			if (event.getType().equals(ListChangeType.DELETION) || event.getType().equals(ListChangeType.REPLACEMENT)) {
+				//TODO Determine respective data areas and remove or unlink them.
+				//     - Call getDataAreaFactory().removeDataArea(dataArea) only of this event is not the result of a sequence removal, since unlinking is not an option then.
+			}
+			if (hasDataAreaFactory() && (event.getType().equals(ListChangeType.INSERTION) || event.getType().equals(ListChangeType.REPLACEMENT))) {
+				addDataAreas(event.getDataModel(), event.getSequenceID());
+			}
 		}
 
 
-		@Override
-		public void afterElementReplaced(ListReplaceEvent<DataModel<?>> event) {
-			// TODO Auto-generated method stub
-			super.afterElementReplaced(event);
-		}
-
-
-		@Override
-		public void afterElementsRemoved(ListRemoveEvent<DataModel<?>, DataModel<?>> event) {
-			// TODO Auto-generated method stub
-			super.afterElementsRemoved(event);
+		private void addDataAreas(DataModel<?> model, String sequenceID) {
+			List<DataAreaFactory.DataAreaResult> dataAreas = new ArrayList<DataAreaFactory.DataAreaResult>();
+			getDataAreaFactory().createDataAreas(model, sequenceID, dataAreas);
+			for (DataAreaFactory.DataAreaResult result : dataAreas) {
+				getDataAreas().addDataArea(result.getDataArea(), result.getPosition(), sequenceID);
+			}
 		}
 	};
 	
@@ -515,6 +522,44 @@ public class AlignmentArea extends ScrollingTICComponent {
 	 */
 	public List<ColorOverlay> getOverlays() {
 		return overlays;
+	}
+
+	
+	/**
+	 * Determines whether this instance currently uses a data area factory.
+	 * <p>
+	 * If none is used, {@link #getDataAreaFactory()} will return {@code null}.
+	 * 
+	 * @return {@code true} if a factory is used, {@code false} otherwise
+	 */
+	public boolean hasDataAreaFactory() {
+		return getDataAreaFactory() != null;
+	}
+	
+
+	/**
+	 * Returns the data area factory used by this instance.
+	 * <p>
+	 * See {@link #setDataAreaFactory(DataAreaFactory)} for details on how such a factory is used by this instance.
+	 * 
+	 * @return the data area factory instance or {@code null} if no data area factory is used
+	 */
+	public DataAreaFactory getDataAreaFactory() {
+		return dataAreaFactory;
+	}
+
+
+	/**
+	 * Sets a new data area factory that will be used by this instance from now on.
+	 * <p>
+	 * A data area factory specified here will be used to automatically create and add data area instances every time a new data model is associated
+	 * with the alignment model that is displayed by this instance. It will also be used to create data areas for all data models associated with a
+	 * new alignment model (after calling {@link #setAlignmentModel(AlignmentModel)}).
+	 * 
+	 * @param dataAreaFactory the new factory (May be {@code null}.)
+	 */
+	public void setDataAreaFactory(DataAreaFactory dataAreaFactory) {
+		this.dataAreaFactory = dataAreaFactory;
 	}
 
 

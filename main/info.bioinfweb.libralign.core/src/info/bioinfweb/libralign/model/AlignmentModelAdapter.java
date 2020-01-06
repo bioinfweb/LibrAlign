@@ -19,8 +19,7 @@
 package info.bioinfweb.libralign.model;
 
 
-import info.bioinfweb.commons.collections.observable.ListChangeAdapter;
-import info.bioinfweb.libralign.model.data.DataModel;
+import info.bioinfweb.libralign.model.events.DataModelChangeEvent;
 import info.bioinfweb.libralign.model.events.SequenceChangeEvent;
 import info.bioinfweb.libralign.model.events.SequenceRenamedEvent;
 import info.bioinfweb.libralign.model.events.TokenChangeEvent;
@@ -36,7 +35,7 @@ import info.bioinfweb.libralign.model.events.TokenChangeEvent;
  * @author Ben St&ouml;ver
  * @since 0.7.0
  */
-public class AlignmentModelAdapter<T> extends ListChangeAdapter<DataModel<?>> implements AlignmentModelListener<T> {
+public class AlignmentModelAdapter<T> implements AlignmentModelListener<T> {
 	@Override
 	public void afterSequenceChange(SequenceChangeEvent<T> e) {}
 
@@ -47,4 +46,8 @@ public class AlignmentModelAdapter<T> extends ListChangeAdapter<DataModel<?>> im
 	
 	@Override
 	public void afterTokenChange(TokenChangeEvent<T> e) {}
+
+
+	@Override
+	public void afterDataModelChange(DataModelChangeEvent<T> event) {}
 }

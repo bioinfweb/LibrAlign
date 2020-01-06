@@ -19,8 +19,7 @@
 package info.bioinfweb.libralign.model;
 
 
-import info.bioinfweb.commons.collections.observable.ListChangeListener;
-import info.bioinfweb.libralign.model.data.DataModel;
+import info.bioinfweb.libralign.model.events.DataModelChangeEvent;
 import info.bioinfweb.libralign.model.events.SequenceChangeEvent;
 import info.bioinfweb.libralign.model.events.SequenceRenamedEvent;
 import info.bioinfweb.libralign.model.events.TokenChangeEvent;
@@ -37,25 +36,33 @@ import info.bioinfweb.libralign.model.events.TokenChangeEvent;
  * @author Ben St&ouml;ver
  * @since 0.0.0
  */
-public interface AlignmentModelListener<T> extends ListChangeListener<DataModel<?>> {
+public interface AlignmentModelListener<T> {
 	/**
 	 * Called after a sequence has been inserted, removed or replaced.
 	 * 
-	 * @param e the event object containing information on the change
+	 * @param event the event object containing information on the change
 	 */
-	public void afterSequenceChange(SequenceChangeEvent<T> e);
+	public void afterSequenceChange(SequenceChangeEvent<T> event);
 
 	/**
 	 * Called after a sequence was renamed.
 	 * 
-	 * @param e the event object containing information on the change
+	 * @param event the event object containing information on the change
 	 */
-	public void afterSequenceRenamed(SequenceRenamedEvent<T> e);
+	public void afterSequenceRenamed(SequenceRenamedEvent<T> event);
 
 	/**
 	 * Called after a single token or a set of tokens has been inserted, removed or replaced.
 	 * 
-	 * @param e the event object containing information on the change
+	 * @param event the event object containing information on the change
 	 */
-	public void afterTokenChange(TokenChangeEvent<T> e);
+	public void afterTokenChange(TokenChangeEvent<T> event);
+	
+	/**
+	 * Called after a data model has been added or removed from the alignment model.
+	 * 
+	 * @param event the event object containing information on the change
+	 * @since 0.10.0
+	 */
+	public void afterDataModelChange(DataModelChangeEvent<T> event);
 }

@@ -35,7 +35,7 @@ import info.bioinfweb.libralign.dataarea.DataAreaVisibilityChangeEvent;
 import info.bioinfweb.libralign.dataarea.DataAreasListener;
 import info.bioinfweb.libralign.model.AlignmentModel;
 import info.bioinfweb.libralign.model.AlignmentModelListener;
-import info.bioinfweb.libralign.model.data.DataModel;
+import info.bioinfweb.libralign.model.events.DataModelChangeEvent;
 import info.bioinfweb.libralign.model.events.SequenceChangeEvent;
 import info.bioinfweb.libralign.model.events.SequenceRenamedEvent;
 import info.bioinfweb.libralign.model.events.TokenChangeEvent;
@@ -43,7 +43,7 @@ import info.bioinfweb.libralign.model.events.TokenChangeEvent;
 
 
 /**
- * Helper class for forward events from elements within a {@link MultipleAlignmentsContainer} used by {@link MultipleAlignmentsContainer} internally.
+ * Helper class to forward events from elements within a {@link MultipleAlignmentsContainer} used by {@link MultipleAlignmentsContainer} internally.
  * <p>
  * There should be no need to use this class directly in application code.
  * 
@@ -101,36 +101,6 @@ class SingleMultipleAlignmentsEventForwarder {
 	
 	private final AlignmentModelListener<Object> alignmentModelListener = new AlignmentModelListener<Object>() {
 		@Override
-		public void beforeElementsAdded(ListAddEvent<DataModel<?>> event) {
-			alignmentModellisteners.forEach(listener -> listener.beforeElementsAdded(event));
-		}
-
-		@Override
-		public void afterElementsAdded(ListAddEvent<DataModel<?>> event) {
-			alignmentModellisteners.forEach(listener -> listener.afterElementsAdded(event));
-		}
-
-		@Override
-		public void beforeElementReplaced(ListReplaceEvent<DataModel<?>> event) {
-			alignmentModellisteners.forEach(listener -> listener.beforeElementReplaced(event));
-		}
-
-		@Override
-		public void afterElementReplaced(ListReplaceEvent<DataModel<?>> event) {
-			alignmentModellisteners.forEach(listener -> listener.afterElementReplaced(event));
-		}
-
-		@Override
-		public void beforeElementsRemoved(ListRemoveEvent<DataModel<?>, Object> event) {
-			alignmentModellisteners.forEach(listener -> listener.beforeElementsRemoved(event));
-		}
-
-		@Override
-		public void afterElementsRemoved(ListRemoveEvent<DataModel<?>, DataModel<?>> event) {
-			alignmentModellisteners.forEach(listener -> listener.afterElementsRemoved(event));
-		}
-
-		@Override
 		public void afterSequenceChange(SequenceChangeEvent<Object> event) {
 			alignmentModellisteners.forEach(listener -> listener.afterSequenceChange(event));
 		}
@@ -143,6 +113,11 @@ class SingleMultipleAlignmentsEventForwarder {
 		@Override
 		public void afterTokenChange(TokenChangeEvent<Object> event) {
 			alignmentModellisteners.forEach(listener -> listener.afterTokenChange(event));
+		}
+
+		@Override
+		public void afterDataModelChange(DataModelChangeEvent<Object> event) {
+			alignmentModellisteners.forEach(listener -> listener.afterDataModelChange(event));
 		}
 	};
 	

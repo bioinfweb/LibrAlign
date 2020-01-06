@@ -23,14 +23,11 @@ import java.util.Iterator;
 import java.util.Set;
 
 import info.bioinfweb.commons.collections.ListChangeType;
-import info.bioinfweb.commons.collections.observable.ListAddEvent;
-import info.bioinfweb.commons.collections.observable.ListRemoveEvent;
-import info.bioinfweb.commons.collections.observable.ListReplaceEvent;
 import info.bioinfweb.libralign.model.AlignmentModel;
 import info.bioinfweb.libralign.model.AlignmentModelListener;
 import info.bioinfweb.libralign.model.AlignmentModelView;
 import info.bioinfweb.libralign.model.DataModelLists;
-import info.bioinfweb.libralign.model.data.DataModel;
+import info.bioinfweb.libralign.model.events.DataModelChangeEvent;
 import info.bioinfweb.libralign.model.events.SequenceChangeEvent;
 import info.bioinfweb.libralign.model.events.SequenceRenamedEvent;
 import info.bioinfweb.libralign.model.events.TokenChangeEvent;
@@ -91,33 +88,11 @@ public abstract class AbstractAlignmentModelDecorator<T, U> extends AbstractAlig
 			}
 
 			@Override
-			public void beforeElementsAdded(ListAddEvent<DataModel<?>> event) {
-				// TODO Auto-generated method stub
-			}
-
-			@Override
-			public void afterElementsAdded(ListAddEvent<DataModel<?>> event) {
-				// TODO Auto-generated method stub
-			}
-
-			@Override
-			public void beforeElementReplaced(ListReplaceEvent<DataModel<?>> event) {
-				// TODO Auto-generated method stub
-			}
-
-			@Override
-			public void afterElementReplaced(ListReplaceEvent<DataModel<?>> event) {
-				// TODO Auto-generated method stub
-			}
-
-			@Override
-			public void beforeElementsRemoved(ListRemoveEvent<DataModel<?>, Object> event) {
-				// TODO Auto-generated method stub
-			}
-
-			@Override
-			public void afterElementsRemoved(ListRemoveEvent<DataModel<?>, DataModel<?>> event) {
-				// TODO Auto-generated method stub
+			public void afterDataModelChange(DataModelChangeEvent<U> e) {
+				DataModelChangeEvent<T> event = convertDataModelChangeEvent(e);
+				if (event != null) {
+					fireAfterDataModelChange(event);
+				}
 			}
 		});
 	}
@@ -169,7 +144,7 @@ public abstract class AbstractAlignmentModelDecorator<T, U> extends AbstractAlig
 	
 	
 	/**
-	 * Converts a token change event from the underlying (decorated) model to a collection of according change 
+	 * Converts a token change event from the underlying (decorated) model to a collection of respective change 
 	 * events to be used with this decorator.
 	 * <p>
 	 * Depending on which columns are added or hidden by the decorator implementation, an empty collection or
@@ -234,6 +209,17 @@ public abstract class AbstractAlignmentModelDecorator<T, U> extends AbstractAlig
 		String decoratedID = convertUnderlyingSequenceID(event.getSequenceID());
 		if (decoratedID != null) {
 			return new SequenceRenamedEvent<T>(this, decoratedID, event.getPreviousName(), event.getNewName());
+		}
+		else {
+			return null;
+		}
+	}
+	
+	
+	protected DataModelChangeEvent<T> convertDataModelChangeEvent(DataModelChangeEvent<U> event) {
+		String decoratedID = convertUnderlyingSequenceID(event.getSequenceID());
+		if (decoratedID != null) {
+			return new DataModelChangeEvent<T>(this, decoratedID, event.getType(), event.getDataModel(), event.getDataList());
 		}
 		else {
 			return null;

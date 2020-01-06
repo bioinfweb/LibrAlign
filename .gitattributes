@@ -192,6 +192,7 @@ main/info.bioinfweb.libralign.core/src/info/bioinfweb/libralign/alignmentarea/to
 main/info.bioinfweb.libralign.core/src/info/bioinfweb/libralign/alignmentarea/tokenpainter/TokenPainter.java -text svneol=unset#text/plain
 main/info.bioinfweb.libralign.core/src/info/bioinfweb/libralign/alignmentarea/tokenpainter/package-info.java -text svneol=unset#text/plain
 main/info.bioinfweb.libralign.core/src/info/bioinfweb/libralign/dataarea/DataArea.java -text svneol=unset#text/plain
+main/info.bioinfweb.libralign.core/src/info/bioinfweb/libralign/dataarea/DataAreaFactory.java -text svneol=unset#text/plain
 main/info.bioinfweb.libralign.core/src/info/bioinfweb/libralign/dataarea/DataAreaListenerList.java -text svneol=unset#text/plain
 main/info.bioinfweb.libralign.core/src/info/bioinfweb/libralign/dataarea/DataAreaVisibilityChangeEvent.java -text svneol=unset#text/plain
 main/info.bioinfweb.libralign.core/src/info/bioinfweb/libralign/dataarea/DataAreaVisibleIterator.java -text svneol=unset#text/plain
@@ -268,6 +269,7 @@ main/info.bioinfweb.libralign.core/src/info/bioinfweb/libralign/model/data/DataM
 main/info.bioinfweb.libralign.core/src/info/bioinfweb/libralign/model/data/NoArgDataModelFactory.java -text svneol=unset#text/plain
 main/info.bioinfweb.libralign.core/src/info/bioinfweb/libralign/model/events/AlignmentModelChangeEvent.class -text
 main/info.bioinfweb.libralign.core/src/info/bioinfweb/libralign/model/events/AlignmentModelChangeEvent.java -text svneol=unset#text/plain
+main/info.bioinfweb.libralign.core/src/info/bioinfweb/libralign/model/events/DataModelChangeEvent.java -text svneol=unset#text/plain
 main/info.bioinfweb.libralign.core/src/info/bioinfweb/libralign/model/events/SequenceChangeEvent.class -text
 main/info.bioinfweb.libralign.core/src/info/bioinfweb/libralign/model/events/SequenceChangeEvent.java -text svneol=unset#text/plain
 main/info.bioinfweb.libralign.core/src/info/bioinfweb/libralign/model/events/SequenceRenamedEvent.java -text svneol=unset#text/plain

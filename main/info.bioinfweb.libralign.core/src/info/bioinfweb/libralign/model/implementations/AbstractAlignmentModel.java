@@ -22,14 +22,18 @@ package info.bioinfweb.libralign.model.implementations;
 import java.util.HashSet;
 import java.util.Set;
 
+import info.bioinfweb.commons.collections.ListChangeType;
 import info.bioinfweb.commons.collections.observable.ListAddEvent;
-import info.bioinfweb.commons.collections.observable.ListChangeListener;
+import info.bioinfweb.commons.collections.observable.ListChangeAdapter;
+import info.bioinfweb.commons.collections.observable.ListChangeEvent;
 import info.bioinfweb.commons.collections.observable.ListRemoveEvent;
 import info.bioinfweb.commons.collections.observable.ListReplaceEvent;
+import info.bioinfweb.libralign.dataelement.DataList;
 import info.bioinfweb.libralign.model.AlignmentModel;
 import info.bioinfweb.libralign.model.AlignmentModelListener;
 import info.bioinfweb.libralign.model.DataModelLists;
 import info.bioinfweb.libralign.model.data.DataModel;
+import info.bioinfweb.libralign.model.events.DataModelChangeEvent;
 import info.bioinfweb.libralign.model.events.SequenceChangeEvent;
 import info.bioinfweb.libralign.model.events.SequenceRenamedEvent;
 import info.bioinfweb.libralign.model.events.TokenChangeEvent;
@@ -46,6 +50,7 @@ import info.bioinfweb.libralign.model.events.TokenChangeEvent;
  * @param <T> the type of sequence elements (tokens) the implementing provider object works with
  */
 public abstract class AbstractAlignmentModel<T> implements AlignmentModel<T> {
+	private AbstractAlignmentModel<T> thisAlignmentModel = this;
 	private String id = null;
 	private String label = null;
 	private DataModelLists dataModels;
@@ -55,35 +60,31 @@ public abstract class AbstractAlignmentModel<T> implements AlignmentModel<T> {
 	public AbstractAlignmentModel() {
 		super();
 		
-		dataModels = new DataModelLists(this, new ListChangeListener<DataModel<?>>() {
-			@Override
-			public void beforeElementsAdded(ListAddEvent<DataModel<?>> event) {
-				modelListeners.forEach(listener -> listener.beforeElementsAdded(event));
-			}
-
-			@Override
-			public void beforeElementReplaced(ListReplaceEvent<DataModel<?>> event) {
-				modelListeners.forEach(listener -> listener.beforeElementReplaced(event));
-			}
-
-			@Override
-			public void beforeElementsRemoved(ListRemoveEvent<DataModel<?>, Object> event) {
-				modelListeners.forEach(listener -> listener.beforeElementsRemoved(event));
-			}
-
+		dataModels = new DataModelLists(this, new ListChangeAdapter<DataModel<?>>() {
 			@Override
 			public void afterElementsAdded(ListAddEvent<DataModel<?>> event) {
-				modelListeners.forEach(listener -> listener.afterElementsAdded(event));
+				for (DataModel<?> model: event.getAffectedElements()) {
+					forwardEvent(event, model, ListChangeType.INSERTION);
+				}
 			}
 
 			@Override
 			public void afterElementReplaced(ListReplaceEvent<DataModel<?>> event) {
-				modelListeners.forEach(listener -> listener.afterElementReplaced(event));
+				forwardEvent(event, event.getOldElement(), ListChangeType.DELETION);
+				forwardEvent(event, event.getNewElement(), ListChangeType.INSERTION);
 			}
 
 			@Override
 			public void afterElementsRemoved(ListRemoveEvent<DataModel<?>, DataModel<?>> event) {
-				modelListeners.forEach(listener -> listener.afterElementsRemoved(event));
+				for (DataModel<?> model: event.getAffectedElements()) {
+					forwardEvent(event, model, ListChangeType.DELETION);
+				}
+			}
+			
+			@SuppressWarnings("unchecked")
+			private void forwardEvent(ListChangeEvent<DataModel<?>> event, DataModel<?> model, ListChangeType type) {
+				DataList<AlignmentModel<?>, DataModel<?>> list = (DataList<AlignmentModel<?>, DataModel<?>>)event.getSource();
+				fireAfterDataModelChange(new DataModelChangeEvent<T>(thisAlignmentModel, list.getLocation().getSequenceID(), type, model, list));
 			}
 		});
 	}
@@ -165,6 +166,16 @@ public abstract class AbstractAlignmentModel<T> implements AlignmentModel<T> {
 	protected void fireAfterTokenChange(TokenChangeEvent<T> e) {
 		for (AlignmentModelListener<T> listener : modelListeners.toArray(new AlignmentModelListener[modelListeners.size()])) {  // Copying the list is necessary to allow listeners to remove themselves from the list without a ConcurrentModificationException being thrown.
 			listener.afterTokenChange(e);
+		}
+	}
+	
+	/**
+	 * Informs all listeners that a data model has been inserted or removed.
+	 */
+	@SuppressWarnings("unchecked")
+	protected void fireAfterDataModelChange(DataModelChangeEvent<T> e) {
+		for (AlignmentModelListener<T> listener : modelListeners.toArray(new AlignmentModelListener[modelListeners.size()])) {  // Copying the list is necessary to allow listeners to remove themselves from the list without a ConcurrentModificationException being thrown.
+			listener.afterDataModelChange(e);
 		}
 	}
 }
