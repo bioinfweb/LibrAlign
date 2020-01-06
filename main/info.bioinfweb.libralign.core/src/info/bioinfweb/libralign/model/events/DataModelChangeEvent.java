@@ -28,6 +28,8 @@ import info.bioinfweb.libralign.model.data.DataModel;
 
 /**
  * This event indicates that a data models have been added to or removed from an alignment model.
+ * <p>
+ * Note that this event does not allow the type {@link ListChangeType#REPLACEMENT}.
  * 
  * @author Ben St&ouml;ver
  * @since 0.10.0
@@ -43,8 +45,13 @@ public class DataModelChangeEvent<T> extends SequenceChangeEvent<T> {
 			DataModel<?> dataModel, DataList<AlignmentModel<?>, DataModel<?>> dataList) {
 		
 		super(source, sequenceID, type);
-		this.dataModel = dataModel;
-		this.dataList = dataList;
+		if (ListChangeType.INSERTION.equals(getType()) || ListChangeType.DELETION.equals(getType())) {
+			this.dataModel = dataModel;
+			this.dataList = dataList;
+		}
+		else {
+			throw new IllegalArgumentException("Only the types " + ListChangeType.INSERTION + " and " + ListChangeType.DELETION + " are allowed for this event.");
+		}
 	}
 
 

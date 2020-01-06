@@ -25,6 +25,7 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.EventObject;
 import java.util.Iterator;
 import java.util.List;
@@ -57,6 +58,7 @@ import info.bioinfweb.libralign.dataarea.DataAreaListenerList;
 import info.bioinfweb.libralign.dataarea.DataAreaVisibilityChangeEvent;
 import info.bioinfweb.libralign.dataarea.DataAreasAdapter;
 import info.bioinfweb.libralign.dataarea.DataAreasListener;
+import info.bioinfweb.libralign.dataarea.ModelBasedDataArea;
 import info.bioinfweb.libralign.dataelement.DataList;
 import info.bioinfweb.libralign.editsettings.EditSettings;
 import info.bioinfweb.libralign.model.AlignmentModel;
@@ -180,7 +182,7 @@ public class AlignmentArea extends ScrollingTICComponent {
 		public void afterSequenceChange(SequenceChangeEvent<Object> e) {
 			if (e.getSource().equals(getAlignmentModel())) {
 				if (e.getType().equals(ListChangeType.DELETION)) {
-					getDataAreas().removeSequenceList(e.getSequenceID());  //TODO The model should remove the respective data models on its own and will fire event for them. There should be no need to remove data areas here.
+					getDataAreas().removeSequenceList(e.getSequenceID());
 				}
 
 				getLabelArea().setLocalMaxWidthRecalculateToAll();  // Needs to be called before assignSizeToAll().
@@ -217,12 +219,23 @@ public class AlignmentArea extends ScrollingTICComponent {
 
 		@Override
 		public void afterDataModelChange(DataModelChangeEvent<Object> event) {
-			if (event.getType().equals(ListChangeType.DELETION) || event.getType().equals(ListChangeType.REPLACEMENT)) {
-				//TODO Determine respective data areas and remove or unlink them.
-				//     - Call getDataAreaFactory().removeDataArea(dataArea) only of this event is not the result of a sequence removal, since unlinking is not an option then.
-			}
-			if (hasDataAreaFactory() && (event.getType().equals(ListChangeType.INSERTION) || event.getType().equals(ListChangeType.REPLACEMENT))) {
-				addDataAreas(event.getDataModel(), event.getSequenceID());
+			if (hasDataAreaFactory()) {
+				switch (event.getType()) {
+					case INSERTION:
+						addDataAreas(event.getDataModel(), event.getSequenceID());
+						break;
+					case DELETION:
+						if (event.getSequenceID() == null) {
+							handleDataAreas(getDataAreas().getTopList(), event.getDataModel());
+							handleDataAreas(getDataAreas().getBottomList(), event.getDataModel());
+						}
+						else {
+							handleDataAreas(getDataAreas().getSequenceList(event.getSequenceID()), event.getDataModel());
+						}
+						break;
+					default:
+						break;
+				}
 			}
 		}
 
@@ -232,6 +245,24 @@ public class AlignmentArea extends ScrollingTICComponent {
 			getDataAreaFactory().createDataAreas(model, sequenceID, dataAreas);
 			for (DataAreaFactory.DataAreaResult result : dataAreas) {
 				getDataAreas().addDataArea(result.getDataArea(), result.getPosition(), sequenceID);
+			}
+		}
+		
+		
+		@SuppressWarnings({"rawtypes", "unchecked"})
+		private void handleDataAreas(DataList<AlignmentArea, DataArea> sourceList, DataModel<?> model) {
+			for (DataArea area : sourceList) {
+				if (area instanceof ModelBasedDataArea) {
+					ModelBasedDataArea modelBasedArea = (ModelBasedDataArea)area;
+					if (modelBasedArea.getModel() == model) {
+						if (getDataAreaFactory().removeDataArea(modelBasedArea)) {  // This call will also happen if data models were removed due to sequence deletions, although they will anyway be removed later.
+							sourceList.remove(modelBasedArea);
+						}
+						else {
+							modelBasedArea.setModel(null);
+						}
+					}
+				}
 			}
 		}
 	};

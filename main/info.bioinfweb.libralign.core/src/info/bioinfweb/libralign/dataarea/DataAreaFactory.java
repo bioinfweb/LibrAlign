@@ -128,8 +128,8 @@ public interface DataAreaFactory {
 	 * exists. Implementing classes can decide here, whether the respective data area should be removed as well or if it should remain and its model 
 	 * should be set to {@code null}.
 	 * <p>
-	 * Note that this method will not be called if a sequence is removed from an alignment model (which may include the removal of associated data 
-	 * models). Data areas associated with such sequences will be removed in any case.
+	 * Note that this method may also be called if a sequence is removed from an alignment model including its associated data 
+	 * models). In that case, respective data areas will be removed in any case.
 	 * 
 	 * @param dataArea the data area to be removed or edited
 	 * @return {@code true} if the data area should be removed, {@code false} if it should remain and its model should be set to {@code null}
