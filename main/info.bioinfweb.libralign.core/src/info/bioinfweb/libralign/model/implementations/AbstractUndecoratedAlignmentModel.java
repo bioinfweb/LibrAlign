@@ -251,9 +251,9 @@ public abstract class AbstractUndecoratedAlignmentModel<T> extends AbstractAlign
 		else {
 			boolean result = containsSequence(sequenceID);
 			if (result) {
+				getDataModels().removeSequenceList(sequenceID);  // This will fire removal events for all contained data models and should be done before the removal of the sequence itself.
 				doRemoveSequence(sequenceID);
 				fireAfterSequenceChange(SequenceChangeEvent.newRemoveInstance(this, sequenceID));
-				getDataModels().removeSequenceList(sequenceID);
 			}
 			return result;
 		}

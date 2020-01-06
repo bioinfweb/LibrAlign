@@ -193,7 +193,7 @@ public interface AlignmentModel<T> {
    * Adds a new empty sequence to the underlying data source assigning the specified ID to it.
    * 
    * @param sequenceName the name of the new sequence
-   * @param sequenceID the ID the new sequence shall have
+   * @param sequenceID the ID the new sequence should have
    * @return the unique ID of the new sequence (identical with {@code sequenceID})
 	 * 
 	 * @throws AlignmentSourceNotWritableException if the underlying data source is not writable for sequences

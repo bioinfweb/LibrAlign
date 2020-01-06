@@ -39,11 +39,14 @@ import info.bioinfweb.libralign.model.tokenset.TokenSet;
  * @author Ben St&ouml;ver
  * @since 0.1.0
  *
- * @param <S> - the type of the sequence objects (e.g. a BioJava sequence type or {@link String})
- * @param <T> - the type of sequence elements (tokens) the implementing provider object works with
+ * @param <S> the type of the sequence objects (e.g. a BioJava sequence type or {@link String})
+ * @param <T> the type of sequence elements (tokens) the implementing provider object works with
  */
 public abstract class AbstractUnmodifyableAlignmentModel<S, T> extends AbstractMapBasedAlignmentModel<S, T>
     implements SequenceAccessAlignmentModel<S, T> {
+	
+	private S nextContent = null; 
+	
 	
 	/**
 	 * Creates a new instance of this class with a custom map and list implementation.
@@ -94,62 +97,68 @@ public abstract class AbstractUnmodifyableAlignmentModel<S, T> extends AbstractM
 	}
 
 
-  /**
+  @Override
+	protected S createNewSequence(String sequenceID, String sequenceName) {
+  	if (nextContent != null) {
+  		return nextContent;
+  	}
+  	else {
+  		return createNewEmptySequence(sequenceID, sequenceName);
+  	}
+	}
+  
+  
+  protected abstract S createNewEmptySequence(String sequenceID, String sequenceName);
+
+
+	/**
    * Adds a the specified sequence to the underlying data source and generates an ID for it.
    * <p>
-   * This method calls first {@link #addSequence(String)} and than {@link #setSequenceContent(int, Object)}
-   * internally. Therefore two different events will be fired.
-   * <p>
-   * Note that since the sequences in this implementation are considered as unmutable it does not make
+   * Note that since the sequences in this implementation are considered as immutable it does not make
    * sense to call {@link #addSequence(String)} on an instance of this class unless you want to have
    * an empty sequence in the alignment.
    * 
-   * @param sequenceName - the name of the new sequence
-	 * @param content - the sequence object to be added.
+   * @param sequenceName the name of the new sequence
+	 * @param content the sequence object to be added.
    * @return the unique ID of the new sequence
 	 * 
-	 * @throws AlignmentSourceNotWritableException This exception is not thrown by this implementation.
+	 * @throws AlignmentSourceNotWritableException This exception is never thrown by this implementation.
    */
 	@Override
 	public String addSequence(String sequenceName, S content) {
-		String result = addSequence(sequenceName);
-		replaceSequence(result, content);
-		return result;
+		try {
+			nextContent = content;
+			return addSequence(sequenceName);
+		}
+		finally {
+			nextContent = null;
+		}
 	}
 	
 	
 	/**
-	 * Replaces the sequence object with the specified ID by the specified contents. Internally the current 
-	 * sequence is first removed from the underlying map and after that the new sequence is added using
-	 * the same ID. Therefore two {@link SequenceChangeEvent}s are fired, one for the removal and one for the
-	 * insertion. 
-	 * <p>
-	 * Between these two events the underlying map does not contain any sequence with the specified ID. For the
-	 * case that event handlers of the first event add any new sequences to the map they have to make sure not
-	 * to use the ID passed to this method (which might accidentally be created by a call of 
-	 * {@link #addSequence(String)}), because the new contents would than be overwritten in the second step
-	 * of this method.
-	 * <p>
-	 * It also has to be noted that there 
+   * Adds a the specified sequence to the underlying data source and assigns the specified ID to it.
+   * <p>
+   * Note that since the sequences in this implementation are considered as immutable it does not make
+   * sense to call {@link #addSequence(String)} on an instance of this class unless you want to have
+   * an empty sequence in the alignment.
+   * 
+   * @param sequenceName the name of the new sequence
+   * @param sequenceID the ID for the new sequence
+	 * @param content the sequence object to be added.
+   * @return the unique ID of the new sequence
 	 * 
-	 * @param sequenceID - the ID of the sequence to be replaced
-	 * @param content - the new sequence object
-	 * @return the previous sequence identified by the specified ID, or {@code null} if there was no sequence 
-	 *         with the ID
-	 */
+	 * @throws IllegalArgumentException if a sequence with the specified ID is already present in this model
+   */
 	@Override
-	public S replaceSequence(String sequenceID, S content) {
-		// Remove old sequence:
-		S previous = null;
-		if (removeSequence(sequenceID)) {
-			previous = getSequenceMap().get(sequenceID);
-			fireAfterSequenceChange(SequenceChangeEvent.newRemoveInstance(this, sequenceID));
+	public String addSequence(String sequenceName, String sequenceID, S content) throws IllegalArgumentException {
+		try {
+			nextContent = content;
+			return addSequence(sequenceName, sequenceID);
 		}
-		
-		// Add new sequence:
-		getSequenceMap().put(sequenceID, content);
-		fireAfterSequenceChange(SequenceChangeEvent.newInsertInstance(this, sequenceID));
-		return previous;
+		finally {
+			nextContent = null;
+		}
 	}
 
 

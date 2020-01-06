@@ -36,7 +36,7 @@ import info.bioinfweb.libralign.model.exception.AlignmentSourceNotWritableExcept
  */
 public interface SequenceAccessAlignmentModel<S, T> extends AlignmentModel<T>, SequenceAccess<S> {
   /**
-   * Adds a the specified sequence to the underlying data source and generates an ID for it.
+   * Adds a new sequence with the specified content to the underlying data source and generates an ID for it.
    * 
    * @param sequenceName the name of the new sequence
 	 * @param content the sequence object to be added.
@@ -46,15 +46,16 @@ public interface SequenceAccessAlignmentModel<S, T> extends AlignmentModel<T>, S
    */
 	public String addSequence(String sequenceName, S content) throws AlignmentSourceNotWritableException;
 	
-	/**
-	 * Replaces the sequence object with the specified ID.
+  /**
+   * Adds a new sequence with the specified content to the underlying data source assigning the specified ID to it.
+   * 
+   * @param sequenceName the name of the new sequence
+   * @param sequenceID the ID the new sequence should have
+	 * @param content the sequence object to be added.
+   * @return the unique ID of the new sequence (identical with {@code sequenceID})
 	 * 
-	 * @param sequenceID the ID of the sequence to be replaced
-	 * @param content the new sequence object
-	 * @return the previous sequence identified by the specified ID, or {@code null} if there was no sequence 
-	 *         with the ID
-	 * 
-	 * @throws AlignmentSourceNotWritableException if the underlying data source is not writable for tokens
- 	 */
-	public S replaceSequence(String sequenceID, S content) throws AlignmentSourceNotWritableException;
+	 * @throws AlignmentSourceNotWritableException if the underlying data source is not writable for sequences
+	 * @throws IllegalArgumentException if a sequence with the specified ID is already present in this model
+   */
+  public String addSequence(String sequenceName, String sequenceID, S content) throws AlignmentSourceNotWritableException, IllegalArgumentException;
 }

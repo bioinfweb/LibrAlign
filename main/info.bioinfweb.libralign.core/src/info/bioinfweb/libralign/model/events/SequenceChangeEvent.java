@@ -31,7 +31,7 @@ import info.bioinfweb.libralign.model.AlignmentModel;
  * @author Ben St&ouml;ver
  * @since 0.0.0
  * 
- * @param <T> - the type of sequence elements (tokens) the implementing provider object works with
+ * @param <T> the type of sequence elements (tokens) the implementing provider object works with
  */
 public class SequenceChangeEvent<T> extends AlignmentModelChangeEvent<T> {
 	private ListChangeType type;
@@ -53,6 +53,14 @@ public class SequenceChangeEvent<T> extends AlignmentModelChangeEvent<T> {
 	}
 
 
+	/**
+	 * Defines the type of change represented by this event.
+	 * <p>
+	 * For {@code SequenceChangeEvent}s only the types {@link ListChangeType#INSERTION} and {@link ListChangeType#DELETION}
+	 * may occur. Additional types may be valid in inherited classes.
+	 * 
+	 * @return the change type represented by this event
+	 */
 	public ListChangeType getType() {
 		return type;
 	}

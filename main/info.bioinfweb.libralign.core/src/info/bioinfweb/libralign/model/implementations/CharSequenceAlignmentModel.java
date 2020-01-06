@@ -70,7 +70,7 @@ public class CharSequenceAlignmentModel extends AbstractUnmodifyableAlignmentMod
 	 * @return ""
 	 */
 	@Override
-	protected CharSequence createNewSequence(String sequenceID, String sequenceName) {
+	protected CharSequence createNewEmptySequence(String sequenceID, String sequenceName) {
 		return "";
 	}
 
