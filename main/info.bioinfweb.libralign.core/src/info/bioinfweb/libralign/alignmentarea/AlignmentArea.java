@@ -25,7 +25,6 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.EventObject;
 import java.util.Iterator;
 import java.util.List;
@@ -60,10 +59,11 @@ import info.bioinfweb.libralign.dataarea.DataAreasAdapter;
 import info.bioinfweb.libralign.dataarea.DataAreasListener;
 import info.bioinfweb.libralign.dataarea.ModelBasedDataArea;
 import info.bioinfweb.libralign.dataelement.DataList;
+import info.bioinfweb.libralign.dataelement.DataListType;
 import info.bioinfweb.libralign.editsettings.EditSettings;
 import info.bioinfweb.libralign.model.AlignmentModel;
-import info.bioinfweb.libralign.model.AlignmentModelAdapter;
 import info.bioinfweb.libralign.model.AlignmentModelListener;
+import info.bioinfweb.libralign.model.DataModelLists;
 import info.bioinfweb.libralign.model.data.DataModel;
 import info.bioinfweb.libralign.model.events.DataModelChangeEvent;
 import info.bioinfweb.libralign.model.events.SequenceChangeEvent;
@@ -465,6 +465,7 @@ public class AlignmentArea extends ScrollingTICComponent {
 		AlignmentModel<?> result = this.alignmentModel;
 		if (alignmentModel != this.alignmentModel) {
 			if (this.alignmentModel != null) {
+				removeDataAreas();
 				this.alignmentModel.removeModelListener(alignmentModelListener);
 			}
 			AlignmentModel<?> formerModel = this.alignmentModel;
@@ -473,17 +474,71 @@ public class AlignmentArea extends ScrollingTICComponent {
 			
 			if (alignmentModel != null) {
 				alignmentModel.addModelListener(alignmentModelListener);
+				addDataAreas();
 			}
 			propertyChangeListeners.firePropertyChange(ALIGNMENT_MODEL_PROPERTY_NAME, formerModel, alignmentModel);
 			
 			getLabelArea().setLocalMaxWidthRecalculateToAll();  // Needs to be called before assignSizeToAll().
-			//TODO Remove some data areas? (Some might be data specific (e.g. pherograms), some not (e.g. consensus sequence).)
 			getSequenceOrder().setSourceSequenceOrder();  // Update sequence names
 			updateSubelements();
 			getPaintSettings().getTokenPainterList().afterAlignmentModelChanged();
 			assignSizeToAll();  //TODO reinsertSubements()?
 		}
 		return result;
+	}
+	
+	
+	private void removeDataAreas() {
+		if (hasDataAreaFactory()) {
+			removeDataAreas(getDataAreas().getTopList());
+			getDataAreas().sequenceListIterator().forEachRemaining(list -> removeDataAreas(list));
+			removeDataAreas(getDataAreas().getBottomList());
+		}
+		else {
+			getDataAreas().clearSequenceLists();
+		}
+	}
+	
+	
+	@SuppressWarnings("unchecked")
+	private void removeDataAreas(DataList<AlignmentArea, DataArea> list) {
+		for (DataArea area : list) {
+			if (area instanceof ModelBasedDataArea) {
+				@SuppressWarnings("rawtypes")
+				ModelBasedDataArea modelBasedArea = (ModelBasedDataArea)area;
+				if (getDataAreaFactory().removeDataArea(modelBasedArea)) {
+					list.remove(modelBasedArea);
+				}
+				else {
+					modelBasedArea.setModel(null);
+				}
+			}
+		}
+	}
+	
+	
+	private void addDataAreas() {
+		List<DataAreaFactory.DataAreaResult> newAreas = new ArrayList<DataAreaFactory.DataAreaResult>();
+		DataModelLists lists = getAlignmentModel().getDataModels();
+		
+		// Add alignment data areas:
+		lists.getAlignmentList().forEach(model -> getDataAreaFactory().createDataAreas(model, null, newAreas));
+		for (DataAreaFactory.DataAreaResult result : newAreas) {
+			getDataAreas().addDataArea(result.getDataArea(), result.getPosition(), null);
+		}
+		
+		// Add sequence data areas:
+		Iterator<DataList<AlignmentModel<?>, DataModel<?>>> iterator = lists.sequenceListIterator();
+		while (iterator.hasNext()) {
+			newAreas.clear();
+			DataList<AlignmentModel<?>, DataModel<?>> list = iterator.next();
+			String sequenceID = list.getLocation().getSequenceID();
+			list.forEach(model -> getDataAreaFactory().createDataAreas(model, sequenceID, newAreas));
+			
+			for (DataAreaFactory.DataAreaResult result : newAreas) {
+				getDataAreas().addDataArea(result.getDataArea(), DataListType.SEQUENCE, sequenceID);
+			}
+		}
 	}
 	
 	

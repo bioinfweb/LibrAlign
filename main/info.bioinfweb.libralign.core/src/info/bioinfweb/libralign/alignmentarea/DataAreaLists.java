@@ -19,6 +19,9 @@
 package info.bioinfweb.libralign.alignmentarea;
 
 
+import java.util.Iterator;
+import java.util.function.Consumer;import org.apache.commons.lang3.math.IEEE754rUtils;
+
 import info.bioinfweb.commons.collections.observable.ListChangeListener;
 import info.bioinfweb.libralign.dataarea.DataArea;
 import info.bioinfweb.libralign.dataelement.DataList;
@@ -35,7 +38,7 @@ import info.bioinfweb.libralign.dataelement.DataLocation;
  * @see 0.10.0
  * @bioinfweb.module info.bioinfweb.libralign.core
  */
-public class DataAreaLists extends DataLists<AlignmentArea, DataArea>{
+public class DataAreaLists extends DataLists<AlignmentArea, DataArea> {
   private final DataList<AlignmentArea, DataArea> topList;
   private final DataList<AlignmentArea, DataArea> bottomList;
   
@@ -98,5 +101,13 @@ public class DataAreaLists extends DataLists<AlignmentArea, DataArea>{
 			default:
 				return false;
 		}
+	}
+	
+
+	@Override
+	public void forEach(Consumer<? super DataArea> action) {
+		getTopList().forEach(action);
+		super.forEach(action);
+		getBottomList().forEach(action);
 	}
 }

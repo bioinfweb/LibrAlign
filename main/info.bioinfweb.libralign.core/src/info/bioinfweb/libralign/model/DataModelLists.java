@@ -19,7 +19,10 @@
 package info.bioinfweb.libralign.model;
 
 
+import java.util.function.Consumer;
+
 import info.bioinfweb.commons.collections.observable.ListChangeListener;
+import info.bioinfweb.libralign.dataarea.DataArea;
 import info.bioinfweb.libralign.dataelement.DataList;
 import info.bioinfweb.libralign.dataelement.DataListType;
 import info.bioinfweb.libralign.dataelement.DataLists;
@@ -62,5 +65,12 @@ public class DataModelLists extends DataLists<AlignmentModel<?>, DataModel<?>> {
 	 */
 	public DataList<AlignmentModel<?>, DataModel<?>> getAlignmentList() {
 		return alignmentList;
+	}
+	
+
+	@Override
+	public void forEach(Consumer<? super DataModel<?>> action) {
+		getAlignmentList().forEach(action);
+		super.forEach(action);
 	}
 }

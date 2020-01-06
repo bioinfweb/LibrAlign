@@ -20,10 +20,13 @@ package info.bioinfweb.libralign.dataelement;
 
 
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
+import java.util.function.Consumer;
 
 import info.bioinfweb.commons.collections.observable.ListChangeListener;
 import info.bioinfweb.libralign.alignmentarea.DataAreaLists;
+import info.bioinfweb.libralign.dataarea.DataArea;
 import info.bioinfweb.libralign.model.DataModelLists;
 
 
@@ -92,5 +95,22 @@ public class DataLists<O, E> {
 			list.clear();  // Fire remove events for all entries.
 			list.removeListChangeListener(listChangeListener);
 		}
+	}
+	
+	
+	public void clearSequenceLists() {
+		for (String sequenceID : sequenceLists.keySet().toArray(new String[sequenceLists.size()])) {  // Copy key set to be able to remove elements during iteration.
+			removeSequenceList(sequenceID);
+		}
+	}
+	
+	
+	public Iterator<DataList<O, E>> sequenceListIterator() {
+		return sequenceLists.values().iterator();
+	}
+	
+	
+	public void forEach(Consumer<? super E> action) {
+		sequenceListIterator().forEachRemaining(list -> list.forEach(action));
 	}
 }
