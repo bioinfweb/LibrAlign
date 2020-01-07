@@ -518,25 +518,27 @@ public class AlignmentArea extends ScrollingTICComponent {
 	
 	
 	private void addDataAreas() {
-		List<DataAreaFactory.DataAreaResult> newAreas = new ArrayList<DataAreaFactory.DataAreaResult>();
-		DataModelLists lists = getAlignmentModel().getDataModels();
-		
-		// Add alignment data areas:
-		lists.getAlignmentList().forEach(model -> getDataAreaFactory().createDataAreas(model, null, newAreas));
-		for (DataAreaFactory.DataAreaResult result : newAreas) {
-			getDataAreas().addDataArea(result.getDataArea(), result.getPosition(), null);
-		}
-		
-		// Add sequence data areas:
-		Iterator<DataList<AlignmentModel<?>, DataModel<?>>> iterator = lists.sequenceListIterator();
-		while (iterator.hasNext()) {
-			newAreas.clear();
-			DataList<AlignmentModel<?>, DataModel<?>> list = iterator.next();
-			String sequenceID = list.getLocation().getSequenceID();
-			list.forEach(model -> getDataAreaFactory().createDataAreas(model, sequenceID, newAreas));
+		if (hasDataAreaFactory()) {
+			List<DataAreaFactory.DataAreaResult> newAreas = new ArrayList<DataAreaFactory.DataAreaResult>();
+			DataModelLists lists = getAlignmentModel().getDataModels();
 			
+			// Add alignment data areas:
+			lists.getAlignmentList().forEach(model -> getDataAreaFactory().createDataAreas(model, null, newAreas));
 			for (DataAreaFactory.DataAreaResult result : newAreas) {
-				getDataAreas().addDataArea(result.getDataArea(), DataListType.SEQUENCE, sequenceID);
+				getDataAreas().addDataArea(result.getDataArea(), result.getPosition(), null);
+			}
+			
+			// Add sequence data areas:
+			Iterator<DataList<AlignmentModel<?>, DataModel<?>>> iterator = lists.sequenceListIterator();
+			while (iterator.hasNext()) {
+				newAreas.clear();
+				DataList<AlignmentModel<?>, DataModel<?>> list = iterator.next();
+				String sequenceID = list.getLocation().getSequenceID();
+				list.forEach(model -> getDataAreaFactory().createDataAreas(model, sequenceID, newAreas));
+				
+				for (DataAreaFactory.DataAreaResult result : newAreas) {
+					getDataAreas().addDataArea(result.getDataArea(), DataListType.SEQUENCE, sequenceID);
+				}
 			}
 		}
 	}

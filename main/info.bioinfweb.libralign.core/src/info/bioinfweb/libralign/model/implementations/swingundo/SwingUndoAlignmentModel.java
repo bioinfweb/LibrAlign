@@ -32,7 +32,9 @@ import info.bioinfweb.libralign.model.AlignmentModelListener;
 import info.bioinfweb.libralign.model.AlignmentModel;
 import info.bioinfweb.libralign.model.AlignmentModelAdapter;
 import info.bioinfweb.libralign.model.AlignmentModelWriteType;
+import info.bioinfweb.libralign.model.DataModelLists;
 import info.bioinfweb.libralign.model.AlignmentModelView;
+import info.bioinfweb.libralign.model.events.DataModelChangeEvent;
 import info.bioinfweb.libralign.model.events.SequenceChangeEvent;
 import info.bioinfweb.libralign.model.events.SequenceRenamedEvent;
 import info.bioinfweb.libralign.model.events.TokenChangeEvent;
@@ -119,7 +121,7 @@ public class SwingUndoAlignmentModel<T> extends AbstractAlignmentModel<T> implem
 			
 			@SuppressWarnings("rawtypes")
 			final SwingUndoAlignmentModel newModel = this;
-			underlyingModel.addModelListener(new AlignmentModelAdapter<T>() {
+			underlyingModel.addModelListener(new AlignmentModelListener<T>() {
 				@SuppressWarnings("unchecked")
 				@Override
 				public void afterTokenChange(TokenChangeEvent<T> e) {
@@ -137,8 +139,12 @@ public class SwingUndoAlignmentModel<T> extends AbstractAlignmentModel<T> implem
 				public void afterSequenceChange(SequenceChangeEvent<T> e) {
 					fireAfterSequenceChange(e.cloneWithNewSource(newModel));
 				}
-				
-				//TODO Possibly implement additional new events. (cf. #355)
+
+				@SuppressWarnings("unchecked")
+				@Override
+				public void afterDataModelChange(DataModelChangeEvent<T> event) {
+					fireAfterDataModelChange(event.cloneWithNewSource(newModel));
+				}
 			});
 		}
 	}
@@ -442,5 +448,11 @@ public class SwingUndoAlignmentModel<T> extends AbstractAlignmentModel<T> implem
 	@Override
 	public int getSequenceCount() {
 		return underlyingModel.getSequenceCount();
+	}
+
+
+	@Override
+	public DataModelLists getDataModels() {
+		return underlyingModel.getDataModels();
 	}
 }

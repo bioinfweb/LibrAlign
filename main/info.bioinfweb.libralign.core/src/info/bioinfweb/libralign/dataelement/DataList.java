@@ -20,6 +20,7 @@ package info.bioinfweb.libralign.dataelement;
 
 
 import java.util.ArrayList;
+import java.util.Iterator;
 
 import info.bioinfweb.commons.collections.observable.ObservableList;
 import info.bioinfweb.libralign.alignmentarea.AlignmentArea;
@@ -93,6 +94,31 @@ public class DataList<O, E> extends ObservableList<E> {
 		super(new ArrayList<E>(INITIAL_LIST_SIZE));
 		this.owner = owner;
 		this.location = location;
+	}
+	
+	
+	@SuppressWarnings("unchecked")
+	public <F extends E> F getFirstOfType(Class<F> elementClass) {
+		for (E element : this) {
+			if (element.getClass().isAssignableFrom(elementClass)) {
+				return (F)element;
+			}
+		}
+		return null;
+	}
+
+
+	@SuppressWarnings("unchecked")
+	public <F extends E> F removeFirstOfType(Class<F> elementClass) {
+		Iterator<E> iterator = iterator();
+		while (iterator.hasNext()) {
+			E element = iterator.next();
+			if (element.getClass().isAssignableFrom(elementClass)) {
+				iterator.remove();
+				return (F)element;
+			}
+		}
+		return null;
 	}
 
 

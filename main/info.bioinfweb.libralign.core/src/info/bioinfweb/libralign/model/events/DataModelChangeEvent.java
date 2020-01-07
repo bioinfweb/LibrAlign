@@ -68,11 +68,17 @@ public class DataModelChangeEvent<T> extends SequenceChangeEvent<T> {
 	/**
 	 * Returns the data list that contains/contained the affected data model.
 	 * <p>
-	 * {@link DataList#getLocation()} can be used to detemine the location of the data model.
+	 * {@link DataList#getLocation()} can be used to determine the location of the data model.
 	 * 
 	 * @return the data list (either for the whole alignment or for a sequence)
 	 */
 	public DataList<AlignmentModel<?>, DataModel<?>> getDataList() {
 		return dataList;
+	}
+
+
+	@Override
+	public DataModelChangeEvent<T> cloneWithNewSource(AlignmentModel<T> source) {
+		return (DataModelChangeEvent<T>)super.cloneWithNewSource(source);
 	}
 }
