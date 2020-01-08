@@ -176,9 +176,9 @@ public class PherogramAreaModel extends PherogramComponentModel implements DataM
 
 
 	/**
-	 * Allows to specify a new first sequence and left cut position at the same time. This method shall be used
+	 * Allows to specify a new first sequence and left cut position at the same time. This method should be used
 	 * if both valid values for both properties are defined (e.g. in an external data source like a file) and
-	 * {@code firstSeqPos} shall not be moved accordingly when {@code leftCutPos} is set, like it is done in
+	 * {@code firstSeqPos} should not be moved accordingly when {@code leftCutPos} is set, like it is done in
 	 * {@link #setLeftCutPosition(int)}.
 	 * 
 	 * @param firstSeqPos the new index in the editable sequence to which the first nucleotide of the base call
@@ -197,7 +197,7 @@ public class PherogramAreaModel extends PherogramComponentModel implements DataM
 	}
 
 
-	@SuppressWarnings({ "rawtypes", "unchecked"})
+	@SuppressWarnings({"rawtypes", "unchecked"})
 	private boolean isGap(int editableIndex) {
 		AlignmentModel model = getAlignmentModel();
 		return model.getTokenSet().isGapToken(model.getTokenAt(getLabeledSequenceID(), editableIndex));
