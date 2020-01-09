@@ -338,6 +338,22 @@ main/info.bioinfweb.libralign.core/src/info/bioinfweb/libralign/model/tokenset/c
 main/info.bioinfweb.libralign.core/src/info/bioinfweb/libralign/model/tokenset/continuous/DoubleTokenSet.java -text svneol=unset#text/plain
 main/info.bioinfweb.libralign.core/src/info/bioinfweb/libralign/model/tokenset/continuous/FloatTokenSet.java -text svneol=unset#text/plain
 main/info.bioinfweb.libralign.core/src/info/bioinfweb/libralign/model/tokenset/continuous/package-info.java -text svneol=unset#text/plain
+main/info.bioinfweb.libralign.core/src/info/bioinfweb/libralign/model/undo/AlignmentModelEdit.java -text svneol=unset#text/plain
+main/info.bioinfweb.libralign.core/src/info/bioinfweb/libralign/model/undo/CombinedEdit.java -text svneol=unset#text/plain
+main/info.bioinfweb.libralign.core/src/info/bioinfweb/libralign/model/undo/DataModelEdit.java -text svneol=unset#text/plain
+main/info.bioinfweb.libralign.core/src/info/bioinfweb/libralign/model/undo/EditRecorder.java -text svneol=unset#text/plain
+main/info.bioinfweb.libralign.core/src/info/bioinfweb/libralign/model/undo/alignment/AlignmentModelUndoListener.java -text svneol=unset#text/plain
+main/info.bioinfweb.libralign.core/src/info/bioinfweb/libralign/model/undo/alignment/sequence/AlignmentModelAddSequenceEdit.java -text svneol=unset#text/plain
+main/info.bioinfweb.libralign.core/src/info/bioinfweb/libralign/model/undo/alignment/sequence/AlignmentModelRemoveSequenceEdit.java -text svneol=unset#text/plain
+main/info.bioinfweb.libralign.core/src/info/bioinfweb/libralign/model/undo/alignment/sequence/AlignmentModelRenameSequenceEdit.java -text svneol=unset#text/plain
+main/info.bioinfweb.libralign.core/src/info/bioinfweb/libralign/model/undo/alignment/sequence/AlignmentModelSequenceEdit.java -text svneol=unset#text/plain
+main/info.bioinfweb.libralign.core/src/info/bioinfweb/libralign/model/undo/alignment/sequence/package-info.java -text svneol=unset#text/plain
+main/info.bioinfweb.libralign.core/src/info/bioinfweb/libralign/model/undo/alignment/token/AlignmentModelInsertRemoveTokensEdit.java -text svneol=unset#text/plain
+main/info.bioinfweb.libralign.core/src/info/bioinfweb/libralign/model/undo/alignment/token/AlignmentModelInsertTokensEdit.java -text svneol=unset#text/plain
+main/info.bioinfweb.libralign.core/src/info/bioinfweb/libralign/model/undo/alignment/token/AlignmentModelRemoveTokensEdit.java -text svneol=unset#text/plain
+main/info.bioinfweb.libralign.core/src/info/bioinfweb/libralign/model/undo/alignment/token/AlignmentModelSetTokensEdit.java -text svneol=unset#text/plain
+main/info.bioinfweb.libralign.core/src/info/bioinfweb/libralign/model/undo/alignment/token/AlignmentModelTokenEdit.java -text svneol=unset#text/plain
+main/info.bioinfweb.libralign.core/src/info/bioinfweb/libralign/model/undo/alignment/token/package-info.java -text svneol=unset#text/plain
 main/info.bioinfweb.libralign.core/src/info/bioinfweb/libralign/model/utils/AlignmentModelUtils.java -text
 main/info.bioinfweb.libralign.core/src/info/bioinfweb/libralign/model/utils/CharSequenceTokenScanner.java -text svneol=unset#text/plain
 main/info.bioinfweb.libralign.core/src/info/bioinfweb/libralign/model/utils/indextranslation/AbstractIndexTranslator.java -text svneol=unset#text/plain
