@@ -274,7 +274,8 @@ public class AlignmentModelEventReader implements JPhyloIOEventListener {
 		for (String stringRepresentation : event.getTokens()) {
 			tokens.add(factory.createToken(currentModel, stringRepresentation));
 		}
-		((AlignmentModel<Object>)currentModel).appendTokens(currentSequenceID, tokens);  //TODO Should currentModel have Object as its generic type?
+		((AlignmentModel<Object>)currentModel).appendTokens(currentSequenceID, tokens, true);  // The binding is specified arbitrarily here. Data models should load their contents from metadata directly instead of relying on the event fired as a result of this call.
+				//TODO Should currentModel have Object as its generic type?
 	}
 
 
@@ -349,7 +350,8 @@ public class AlignmentModelEventReader implements JPhyloIOEventListener {
 					checkCurrentSequenceID();
 					((AlignmentModel<Object>)currentModel).appendToken(currentSequenceID, 
 							((AlignmentModelFactory<Object>)getAlignmentModelFactory()).createToken((AlignmentModel<Object>)currentModel, 
-									event.asSingleSequenceTokenEvent().getToken()));  //TODO Should currentModel have Object as its generic type?
+									event.asSingleSequenceTokenEvent().getToken()), true);  // The binding is specified arbitrarily here. Data models should load their contents from metadata directly instead of relying on the event fired as a result of this call.  
+							//TODO Should currentModel have Object as its generic type?
 				}
 				break;
 			case ALIGNMENT:
