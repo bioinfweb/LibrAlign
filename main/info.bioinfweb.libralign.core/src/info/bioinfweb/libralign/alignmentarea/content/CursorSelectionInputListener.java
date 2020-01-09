@@ -19,22 +19,20 @@
 package info.bioinfweb.libralign.alignmentarea.content;
 
 
-import info.bioinfweb.libralign.alignmentarea.AlignmentArea;
-import info.bioinfweb.libralign.model.AlignmentModel;
-import info.bioinfweb.tic.TargetToolkit;
-import info.bioinfweb.tic.input.TICKeyEvent;
-import info.bioinfweb.tic.input.TICKeyListener;
-import info.bioinfweb.tic.input.TICMouseAdapter;
-import info.bioinfweb.tic.input.TICMouseEvent;
-import info.bioinfweb.tic.input.TICMouseListener;
-
 import java.awt.Point;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 
 import javax.swing.Action;
-import javax.swing.JComponent;
 import javax.swing.KeyStroke;
+
+import info.bioinfweb.libralign.alignmentarea.AlignmentArea;
+import info.bioinfweb.libralign.model.AlignmentModel;
+import info.bioinfweb.tic.input.TICKeyEvent;
+import info.bioinfweb.tic.input.TICKeyListener;
+import info.bioinfweb.tic.input.TICMouseAdapter;
+import info.bioinfweb.tic.input.TICMouseEvent;
+import info.bioinfweb.tic.input.TICMouseListener;
 
 
 

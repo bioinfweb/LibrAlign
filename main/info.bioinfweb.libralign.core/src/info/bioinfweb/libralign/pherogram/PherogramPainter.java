@@ -20,7 +20,6 @@ package info.bioinfweb.libralign.pherogram;
 
 
 import java.awt.Graphics2D;
-import java.awt.Rectangle;
 import java.awt.geom.Path2D;
 import java.awt.geom.Rectangle2D;
 

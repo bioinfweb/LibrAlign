@@ -19,8 +19,7 @@
 package info.bioinfweb.libralign.alignmentarea;
 
 
-import java.util.Iterator;
-import java.util.function.Consumer;import org.apache.commons.lang3.math.IEEE754rUtils;
+import java.util.function.Consumer;
 
 import info.bioinfweb.commons.collections.observable.ListChangeListener;
 import info.bioinfweb.libralign.dataarea.DataArea;

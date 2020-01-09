@@ -21,8 +21,6 @@ package info.bioinfweb.libralign.pherogram;
 
 import info.bioinfweb.libralign.pherogram.model.PherogramComponentModel;
 
-import java.awt.Color;
-
 
 
 /**

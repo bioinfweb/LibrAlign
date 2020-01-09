@@ -22,7 +22,6 @@ package info.bioinfweb.libralign.model;
 import java.util.function.Consumer;
 
 import info.bioinfweb.commons.collections.observable.ListChangeListener;
-import info.bioinfweb.libralign.dataarea.DataArea;
 import info.bioinfweb.libralign.dataelement.DataList;
 import info.bioinfweb.libralign.dataelement.DataListType;
 import info.bioinfweb.libralign.dataelement.DataLists;
