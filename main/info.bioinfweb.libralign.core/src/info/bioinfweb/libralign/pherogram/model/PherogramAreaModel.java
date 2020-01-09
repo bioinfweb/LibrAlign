@@ -27,7 +27,10 @@ import java.util.ListIterator;
 import info.bioinfweb.commons.Math2;
 import info.bioinfweb.libralign.dataarea.implementations.pherogram.PherogramArea;
 import info.bioinfweb.libralign.model.AlignmentModel;
+import info.bioinfweb.libralign.model.AlignmentModelAdapter;
+import info.bioinfweb.libralign.model.AlignmentModelListener;
 import info.bioinfweb.libralign.model.data.DataModel;
+import info.bioinfweb.libralign.model.events.TokenChangeEvent;
 import info.bioinfweb.libralign.pherogram.distortion.GapPattern;
 import info.bioinfweb.libralign.pherogram.provider.PherogramProvider;
 import info.bioinfweb.libralign.pherogram.view.PherogramTraceCurveView;
@@ -96,10 +99,47 @@ public class PherogramAreaModel extends PherogramComponentModel implements DataM
 
 	private void setAlignmentModel(AlignmentModel<?> alignmentModel) {
 		if (alignmentModel == null) {
-			throw new IllegalArgumentException("The associated AlignmentModel must not be null.");
+			throw new IllegalArgumentException("alignmentModel must not be null.");
 		}
-		else {
+		else {  // If this method should ever be used later than in the constructor, it must also unregister the listener from the previous model.
 			this.alignmentModel = alignmentModel;
+			this.alignmentModel.addModelListener(new AlignmentModelAdapter<Object>() {
+				@Override
+				public void afterTokenChange(TokenChangeEvent<Object> e) {
+					if (e.getSource().equals(getAlignmentModel()) && (e.getSequenceID() == getLabeledSequenceID())) {
+						int addend = e.isLeftBound() ? -1 : 0;
+						int lastSeqPos = editableIndexByBaseCallIndex(getRightCutPosition() - 1).getAfter() - addend;
+						if (e.getStartIndex() <= lastSeqPos) {  // Do not process edits behind the pherogram.
+							int tokensBefore = Math.min(e.getAffectedTokens().size(), Math.max(0, getFirstSeqPos() - e.getStartIndex() - addend));
+							int tokensAfter = Math.max(0, e.getAffectedTokens().size() - Math.max(0, lastSeqPos - e.getStartIndex()) + addend);
+							int tokensInside = e.getAffectedTokens().size() - tokensBefore - tokensAfter;
+							
+							switch (e.getType()) {
+								case INSERTION:
+									if (tokensBefore > 0) {
+										setFirstSeqPos(getFirstSeqPos() + tokensBefore);
+									}
+									if (tokensInside > 0) {
+										addShiftChange(baseCallIndexByEditableIndex(
+												Math.max(0, e.getStartIndex() + tokensBefore + addend)).getBeforeValidIndex(), tokensInside);
+									}
+									break;
+								case DELETION:
+									if (tokensBefore > 0) {
+										setFirstSeqPos(getFirstSeqPos() - tokensBefore);
+									}
+									if (tokensInside > 0) {
+										addShiftChange(baseCallIndexByEditableIndex(
+												e.getStartIndex() + tokensBefore).getAfterValidIndex(), -e.getAffectedTokens().size());
+									}
+									break;
+								case REPLACEMENT:  // Nothing to do (Replacements differing in length are not allowed.)
+									break;  //TODO If a token is replaced by a gap a shift change would have to be added. (Solve this problem when gap displaying is generally implemented for all data areas.)
+							}
+						}
+					}
+				}
+			});
 		}
 	}
 	
@@ -111,7 +151,7 @@ public class PherogramAreaModel extends PherogramComponentModel implements DataM
 
 	private void setLabeledSequenceID(String labeledSequenceID) {
 		if (labeledSequenceID == null) {
-			throw new IllegalArgumentException("The associated sequence ID must not be null.");
+			throw new IllegalArgumentException("labeledSequenceID must not be null.");
 		}
 		else {
 			this.labeledSequenceID = labeledSequenceID;

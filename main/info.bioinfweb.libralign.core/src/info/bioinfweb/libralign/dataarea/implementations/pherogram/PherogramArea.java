@@ -83,61 +83,6 @@ public class PherogramArea extends ModelBasedDataArea<PherogramAreaModel, Pherog
 	private PherogramPainter painter = new PherogramPainter(this);
 
 	
-	@SuppressWarnings("rawtypes")
-	private final AlignmentModelListener alignmentModelListener = new AlignmentModelAdapter() {
-		@Override
-		public void afterSequenceChange(SequenceChangeEvent e) {
-			//TODO React if the associated sequence was removed? (AlignmentContentArea should probably better implement this behavior.)
-		}
-
-
-		@Override
-		public void afterSequenceRenamed(SequenceRenamedEvent e) {}  // Nothing to do.
-
-
-		@Override
-		public void afterTokenChange(TokenChangeEvent e) {
-			if (hasModel() && e.getSource().equals(getModel().getAlignmentModel()) && 
-					(e.getSequenceID() == getList().getLocation().getSequenceID())) {
-				
-				int addend = getOwner().getEditSettings().isInsertLeftInDataArea() ? -1 : 0;
-				int lastSeqPos = getModel().editableIndexByBaseCallIndex(getModel().getRightCutPosition() - 1).getAfter() - addend;
-				if (e.getStartIndex() <= lastSeqPos) {  // Do not process edits behind the pherogram.
-					int tokensBefore = Math.min(e.getAffectedTokens().size(), Math.max(0, getModel().getFirstSeqPos() - e.getStartIndex() - addend));
-					int tokensAfter = Math.max(0, e.getAffectedTokens().size() - Math.max(0, lastSeqPos - e.getStartIndex()) + addend);
-					int tokensInside = e.getAffectedTokens().size() - tokensBefore - tokensAfter;
-					
-					switch (e.getType()) {
-						case INSERTION:
-							if (tokensBefore > 0) {
-								getModel().setFirstSeqPos(getModel().getFirstSeqPos() + tokensBefore);
-							}
-							if (tokensInside > 0) {
-								getModel().addShiftChange(getModel().baseCallIndexByEditableIndex(
-										Math.max(0, e.getStartIndex() + tokensBefore + addend)).getBeforeValidIndex(), tokensInside);
-							}
-							break;
-						case DELETION:
-							if (tokensBefore > 0) {
-								getModel().setFirstSeqPos(getModel().getFirstSeqPos() - tokensBefore);
-							}
-							if (tokensInside > 0) {
-								getModel().addShiftChange(getModel().baseCallIndexByEditableIndex(
-										e.getStartIndex() + tokensBefore).getAfterValidIndex(), -e.getAffectedTokens().size());
-							}
-							break;
-						case REPLACEMENT:  // Nothing to do (Replacements differing in length are not allowed.)
-							break;  //TODO If a token is replaced by a gap a shift change would have to be added. (Solve this problem when gap displaying is generally implemented for all data areas.)
-					}
-				}
-			}
-			else {
-				repaint();  // The space before the alignment could have changed. (Only necessary in SWT. Swing seems to repaint automatically.)
-			}
-		}
-	};
-	
-	
 	private final PropertyChangeListener FORMATS_LISTENER = new PropertyChangeListener() {
 		@Override
 		public void propertyChange(PropertyChangeEvent event) {
@@ -176,15 +121,6 @@ public class PherogramArea extends ModelBasedDataArea<PherogramAreaModel, Pherog
 		this.formats = formats;
 		formats.addPropertyChangeListener(FORMATS_LISTENER);
 		verticalScale = getHeight();
-		
-		addPropertyChangeListener("model", new PropertyChangeListener() {
-			@Override
-			public void propertyChange(PropertyChangeEvent event) {
-				// Move listener to owning alignment model if data model was changed.
-				((PherogramAreaModel)event.getOldValue()).getAlignmentModel().removeModelListener(alignmentModelListener);
-				((PherogramAreaModel)event.getNewValue()).getAlignmentModel().addModelListener(alignmentModelListener);
-			}
-		});
 	}
 	
 	
