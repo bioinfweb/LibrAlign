@@ -36,7 +36,7 @@ import java.util.Collections;
  * 
  * @param <T> - the type of sequence elements (tokens) the implementing provider object works with
  */
-public class TokenChangeEvent<T> extends SequenceChangeEvent<T> {
+public class TokenChangeEvent<T> extends TypedAlignmentModelChangeEvent<T> {
 	private int startIndex;
 	private Collection<? extends T> affectedTokens;
 	

@@ -19,6 +19,9 @@
 package info.bioinfweb.libralign.model.events;
 
 
+import java.util.Collection;
+import java.util.Collections;
+
 import info.bioinfweb.commons.collections.ListChangeType;
 import info.bioinfweb.libralign.model.AlignmentModel;
 
@@ -33,45 +36,66 @@ import info.bioinfweb.libralign.model.AlignmentModel;
  * 
  * @param <T> the type of sequence elements (tokens) the implementing provider object works with
  */
-public class SequenceChangeEvent<T> extends AlignmentModelChangeEvent<T> {
-	private ListChangeType type;
+public class SequenceChangeEvent<T> extends TypedAlignmentModelChangeEvent<T> {
+	private Collection<T> deletedContent;
 
 	
-	protected SequenceChangeEvent(AlignmentModel<T> source, String sequenceID, ListChangeType type) {
-		super(source, sequenceID);
-		this.type = type;
+	/**
+	 * Creates a new instance of this class.
+	 * 
+	 * @param source the alignment model from which the sequence was removed
+	 * @param sequenceID the ID of the sequence that was removed
+	 * @param type the type of
+	 * @param deletedContent a collection containing the tokens that were contained in the sequence 
+	 *        (The collection implementation used here should ideally be as memory-efficient as the ones used by {@code source} internally.
+	 *        If {@code null} is passed here, an empty collection will be used.)
+	 * @throws IllegalArgumentException if {@code source}, {@code sequenceID} or {@code type} are {@code null} 
+	 */
+	protected SequenceChangeEvent(AlignmentModel<T> source, String sequenceID, ListChangeType type, Collection<T> deletedContent) {
+		super(source, sequenceID, type);
+		if (deletedContent == null) {
+			deletedContent = Collections.emptyList();
+		}
+		this.deletedContent = Collections.unmodifiableCollection(deletedContent);
 	}
 	
 	
 	public static <T> SequenceChangeEvent<T> newInsertInstance(AlignmentModel<T> source, String sequenceID) {
-		return new SequenceChangeEvent<T>(source, sequenceID, ListChangeType.INSERTION);
+		return new SequenceChangeEvent<T>(source, sequenceID, ListChangeType.INSERTION, null);
 	}
 	
 	
-	public static <T> SequenceChangeEvent<T> newRemoveInstance(AlignmentModel<T> source, String sequenceID) {
-		return new SequenceChangeEvent<T>(source, sequenceID, ListChangeType.DELETION);
+	/**
+	 * Creates a new instance of this event indicating the removal of a sequence.
+	 * 
+	 * @param source the alignment model from which the sequence was removed
+	 * @param sequenceID the ID of the sequence that was removed
+	 * @param deletedContent a collection containing the tokens that were contained in the sequence 
+	 *        (The collection implementation used here should ideally be as memory-efficient as the ones used by {@code source} internally.
+	 *        If {@code null} is passed here, an empty collection will be used.)
+	 * @return the new event instance
+	 */
+	public static <T> SequenceChangeEvent<T> newRemoveInstance(AlignmentModel<T> source, String sequenceID, Collection<T> deletedContent) {
+		return new SequenceChangeEvent<T>(source, sequenceID, ListChangeType.DELETION, deletedContent);
 	}
 
 
 	/**
-	 * Defines the type of change represented by this event.
-	 * <p>
-	 * For {@code SequenceChangeEvent}s only the types {@link ListChangeType#INSERTION} and {@link ListChangeType#DELETION}
-	 * may occur. Additional types may be valid in inherited classes.
+	 * Returns a collection of the tokens that were contained in the deleted sequence.
 	 * 
-	 * @return the change type represented by this event
+	 * @return the deleted tokens or an empty collection if this event indicates the introduction of a new sequence.
 	 */
-	public ListChangeType getType() {
-		return type;
+	public Collection<T> getDeletedContent() {
+		return deletedContent;
 	}
 
-
+	
 	@Override
 	public SequenceChangeEvent<T> cloneWithNewSource(AlignmentModel<T> source) {
 		return (SequenceChangeEvent<T>)super.cloneWithNewSource(source);
 	}
 
-
+	
 	@Override
 	public SequenceChangeEvent<T> clone() {
 		return (SequenceChangeEvent<T>)super.clone();

@@ -274,6 +274,7 @@ main/info.bioinfweb.libralign.core/src/info/bioinfweb/libralign/model/events/Seq
 main/info.bioinfweb.libralign.core/src/info/bioinfweb/libralign/model/events/SequenceChangeEvent.java -text svneol=unset#text/plain
 main/info.bioinfweb.libralign.core/src/info/bioinfweb/libralign/model/events/SequenceRenamedEvent.java -text svneol=unset#text/plain
 main/info.bioinfweb.libralign.core/src/info/bioinfweb/libralign/model/events/TokenChangeEvent.java -text svneol=unset#text/plain
+main/info.bioinfweb.libralign.core/src/info/bioinfweb/libralign/model/events/TypedAlignmentModelChangeEvent.java -text svneol=unset#text/plain
 main/info.bioinfweb.libralign.core/src/info/bioinfweb/libralign/model/events/package-info.class -text
 main/info.bioinfweb.libralign.core/src/info/bioinfweb/libralign/model/events/package-info.java -text svneol=unset#text/plain
 main/info.bioinfweb.libralign.core/src/info/bioinfweb/libralign/model/exception/AlignmentModelException.java -text svneol=unset#text/plain

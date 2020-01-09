@@ -26,6 +26,7 @@ import info.bioinfweb.libralign.model.events.SequenceChangeEvent;
 import info.bioinfweb.libralign.model.tokenset.TokenSet;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -48,8 +49,8 @@ import java.util.Map;
  * @see SequenceOrder
  * @see AlignmentArea
  *
- * @param <S> - the type of the sequence objects (e.g. a {@link List} implementation or a BioJava sequence type)
- * @param <T> - the type of sequence elements (tokens) the implementing provider object works with
+ * @param <S> the type of the sequence objects (e.g., a {@link List} implementation or a <i>BioJava</i> sequence type)
+ * @param <T> the type of sequence elements (tokens) the implementing provider object works with
  */
 public abstract class AbstractMapBasedAlignmentModel<S, T> extends AbstractUndecoratedAlignmentModel<T> {
   private Map<String, S> sequenceMap;
@@ -148,13 +149,12 @@ public abstract class AbstractMapBasedAlignmentModel<S, T> extends AbstractUndec
 	 */
 	@Override
 	public Iterator<String> sequenceIDIterator() {
-		return new AbstractSequenceIDIterator<AbstractMapBasedAlignmentModel<S, T>>(
-				this,	getSequenceOrder().iterator()) {
-			
+		return new AbstractSequenceIDIterator<AbstractMapBasedAlignmentModel<S, T>>(this, getSequenceOrder().iterator()) {
 					@Override
 					protected void doRemove() {
+						Collection<T> deletedContent = copySequenceContent(getCurrentID());
 						getSequenceMap().remove(getCurrentID());
-						fireAfterSequenceChange(SequenceChangeEvent.newRemoveInstance(getModel(), getCurrentID()));
+						fireAfterSequenceChange(SequenceChangeEvent.newRemoveInstance(getModel(), getCurrentID(), deletedContent));
 					}
 				};
 	}

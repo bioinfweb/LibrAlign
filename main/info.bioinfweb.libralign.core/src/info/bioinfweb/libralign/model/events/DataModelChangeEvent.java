@@ -36,7 +36,7 @@ import info.bioinfweb.libralign.model.data.DataModel;
  *
  * @param <T> the token type of the alignment model that is the source of this event.
  */
-public class DataModelChangeEvent<T> extends SequenceChangeEvent<T> {
+public class DataModelChangeEvent<T> extends TypedAlignmentModelChangeEvent<T> {
 	private DataModel<?> dataModel;
 	private DataList<AlignmentModel<?>, DataModel<?>> dataList;
 
@@ -80,5 +80,11 @@ public class DataModelChangeEvent<T> extends SequenceChangeEvent<T> {
 	@Override
 	public DataModelChangeEvent<T> cloneWithNewSource(AlignmentModel<T> source) {
 		return (DataModelChangeEvent<T>)super.cloneWithNewSource(source);
+	}
+
+	
+	@Override
+	public DataModelChangeEvent<T> clone() {
+		return (DataModelChangeEvent<T>)super.clone();
 	}
 }

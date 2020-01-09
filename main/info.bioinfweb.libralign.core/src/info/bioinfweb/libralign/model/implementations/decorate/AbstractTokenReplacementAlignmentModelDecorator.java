@@ -24,10 +24,12 @@ import java.util.Collection;
 import java.util.List;
 
 import info.bioinfweb.commons.bio.CharacterStateSetType;
+import info.bioinfweb.commons.collections.ListChangeType;
 import info.bioinfweb.commons.collections.PackedObjectArrayList;
 import info.bioinfweb.libralign.model.AlignmentModel;
 import info.bioinfweb.libralign.model.AlignmentModelView;
 import info.bioinfweb.libralign.model.AlignmentModelWriteType;
+import info.bioinfweb.libralign.model.events.SequenceChangeEvent;
 import info.bioinfweb.libralign.model.events.TokenChangeEvent;
 import info.bioinfweb.libralign.model.exception.AlignmentSourceNotWritableException;
 import info.bioinfweb.libralign.model.exception.SequenceNotFoundException;
@@ -97,6 +99,41 @@ public abstract class AbstractTokenReplacementAlignmentModelDecorator<T, U> exte
 	protected abstract U convertDecoratedToken(String viewedSequenceID, int viewedIndex, T decoratedToken);
 	
 	
+	/**
+	 * Converts a {@link SequenceChangeEvent} event from the decorated instance to an event object compatible
+	 * with this instance.
+	 * <p>
+	 * This default implementation returns a new event object with this instance as its owner and a sequence ID 
+	 * converted using {@link #convertUnderlyingSequenceID(int)}. If the ID conversion returns -1, {@code null} is returned
+	 * by this method.
+	 * <p>
+	 * Inherited classes may overwrite this method to implement a different behavior, but in most cases it should
+	 * be sufficient to overwrite {@link #convertUnderlyingSequenceID(int)} to change the behavior of this method.
+	 * 
+	 * @param event the event from the underlying (decorated) model
+	 * @return a new converted event object or {@code null} if the specified underlying sequence is hidden by this decorator
+	 * @throws IllegalArgumentException if {@link SequenceChangeEvent#getType()} return anything else than
+	 *         {@link ListChangeType#INSERTION} or {@link ListChangeType#DELETION}. (Events fired by models
+	 *         of LibrAlign never have any other type.)
+	 */
+	protected SequenceChangeEvent<T> convertSequenceChangeEvent(SequenceChangeEvent<U> event) {
+		String decoratedID = convertUnderlyingSequenceID(event.getSequenceID());
+		if (decoratedID != null) {
+			switch (event.getType()) {
+				case INSERTION:
+					return SequenceChangeEvent.newInsertInstance(this, decoratedID);
+				case DELETION:
+					return SequenceChangeEvent.newRemoveInstance(this, decoratedID, convertUnderlyingTokens(event.getSequenceID(), 0, event.getDeletedContent()));
+				default:  // Just in case more valid types are added in the future.
+					throw new IllegalArgumentException("The change type \"" + event.getType() + " is not supported.");
+			}
+		}
+		else {
+			return null;
+		}
+	}
+
+	
 	protected Iterable<TokenChangeEvent<T>> convertTokenChangeEvent(TokenChangeEvent<U> event) {
 		List<TokenChangeEvent<T>> result = new ArrayList<TokenChangeEvent<T>>(1);
 		String decoratedID = convertUnderlyingSequenceID(event.getSequenceID());
@@ -127,7 +164,7 @@ public abstract class AbstractTokenReplacementAlignmentModelDecorator<T, U> exte
 	}
 
 
-	protected Collection<? extends T> convertUnderlyingTokens(String underlyingSequenceID, int underlyingIndex, 
+	protected Collection<T> convertUnderlyingTokens(String underlyingSequenceID, int underlyingIndex, 
 			Collection<? extends U> underlyingTokens) {
 		
 		Collection<T> result;
@@ -147,7 +184,7 @@ public abstract class AbstractTokenReplacementAlignmentModelDecorator<T, U> exte
 	}
 	
 	
-	protected Collection<? extends U> convertDecoratedTokens(String viewedSequenceID, int viewedIndex, 
+	protected Collection<U> convertDecoratedTokens(String viewedSequenceID, int viewedIndex, 
 			Collection<? extends T> viewedTokens) {
 		
 		Collection<U> result;

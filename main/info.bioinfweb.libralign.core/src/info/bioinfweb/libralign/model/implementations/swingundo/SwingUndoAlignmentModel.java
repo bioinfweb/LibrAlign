@@ -28,12 +28,11 @@ import javax.swing.undo.UndoManager;
 import javax.swing.undo.UndoableEdit;
 
 import info.bioinfweb.commons.swing.AbstractDocumentEdit;
-import info.bioinfweb.libralign.model.AlignmentModelListener;
 import info.bioinfweb.libralign.model.AlignmentModel;
-import info.bioinfweb.libralign.model.AlignmentModelAdapter;
+import info.bioinfweb.libralign.model.AlignmentModelListener;
+import info.bioinfweb.libralign.model.AlignmentModelView;
 import info.bioinfweb.libralign.model.AlignmentModelWriteType;
 import info.bioinfweb.libralign.model.DataModelLists;
-import info.bioinfweb.libralign.model.AlignmentModelView;
 import info.bioinfweb.libralign.model.events.DataModelChangeEvent;
 import info.bioinfweb.libralign.model.events.SequenceChangeEvent;
 import info.bioinfweb.libralign.model.events.SequenceRenamedEvent;

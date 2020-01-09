@@ -19,13 +19,17 @@
 package info.bioinfweb.libralign.model.implementations;
 
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.Set;
 import java.util.TreeSet;
 
+import info.bioinfweb.commons.bio.CharacterStateSetType;
+import info.bioinfweb.commons.collections.PackedObjectArrayList;
 import info.bioinfweb.libralign.model.AlignmentModelWriteType;
 import info.bioinfweb.libralign.model.events.SequenceChangeEvent;
+import info.bioinfweb.libralign.model.events.SequenceRenamedEvent;
 import info.bioinfweb.libralign.model.events.TokenChangeEvent;
 import info.bioinfweb.libralign.model.exception.AlignmentSourceNotWritableException;
 import info.bioinfweb.libralign.model.tokenset.TokenSet;
@@ -240,6 +244,22 @@ public abstract class AbstractUndecoratedAlignmentModel<T> extends AbstractAlign
 	protected abstract void doRemoveSequence(String sequenceID);
 	
 	
+	protected Collection<T> copySequenceContent(String sequenceID) {
+		Collection<T> result;
+		if (getTokenSet().getType().equals(CharacterStateSetType.CONTINUOUS) || getTokenSet().getType().equals(CharacterStateSetType.UNKNOWN)) {
+			result = new ArrayList<T>(getSequenceLength(sequenceID));
+		}
+		else {
+			result = new PackedObjectArrayList<T>(getTokenSet().size(), getSequenceLength(sequenceID));
+		}
+
+		for (int i = 0; i < getSequenceLength(sequenceID); i++) {
+			result.add(getTokenAt(sequenceID, i));
+		}
+		return result;
+	}
+	
+	
 	/* (non-Javadoc)
 	 * @see info.bioinfweb.libralign.alignmentprovider.SequenceDataProvider#removeSequence(int)
 	 */
@@ -252,8 +272,9 @@ public abstract class AbstractUndecoratedAlignmentModel<T> extends AbstractAlign
 			boolean result = containsSequence(sequenceID);
 			if (result) {
 				getDataModels().removeSequenceList(sequenceID);  // This will fire removal events for all contained data models and should be done before the removal of the sequence itself.
+				Collection<T> deletedContent = copySequenceContent(sequenceID);
 				doRemoveSequence(sequenceID);
-				fireAfterSequenceChange(SequenceChangeEvent.newRemoveInstance(this, sequenceID));
+				fireAfterSequenceChange(SequenceChangeEvent.newRemoveInstance(this, sequenceID, deletedContent));
 			}
 			return result;
 		}
@@ -311,7 +332,7 @@ public abstract class AbstractUndecoratedAlignmentModel<T> extends AbstractAlign
 	}
 	
 	
-	public void setMaxSequeceLengthRecalculte() {
+	public void setMaxSequenceLengthRecalculte() {
 		recalculateMaxSequenceLength = true;
 	}
 	
@@ -327,7 +348,7 @@ public abstract class AbstractUndecoratedAlignmentModel<T> extends AbstractAlign
 		else {
 	  	String oldSequenceName = getIDManager().renameSequence(sequenceID, newSequenceName, this);
 	  	doRenameSequence(sequenceID, newSequenceName);
-			fireAfterSequenceChange(SequenceChangeEvent.newRemoveInstance(this, sequenceID));
+			fireAfterSequenceRenamed(new SequenceRenamedEvent<T>(this, sequenceID, oldSequenceName, newSequenceName));
 			return oldSequenceName;
 		}
 	}
@@ -347,14 +368,14 @@ public abstract class AbstractUndecoratedAlignmentModel<T> extends AbstractAlign
 
 	@Override
 	protected void fireAfterSequenceChange(SequenceChangeEvent<T> e) {
-		setMaxSequeceLengthRecalculte();
+		setMaxSequenceLengthRecalculte();
 		super.fireAfterSequenceChange(e);
 	}
 
 
 	@Override
 	protected void fireAfterTokenChange(TokenChangeEvent<T> e) {
-		setMaxSequeceLengthRecalculte();
+		setMaxSequenceLengthRecalculte();
 		super.fireAfterTokenChange(e);
 	}
 }

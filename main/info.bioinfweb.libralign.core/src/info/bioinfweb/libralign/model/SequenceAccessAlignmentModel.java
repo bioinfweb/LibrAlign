@@ -25,7 +25,7 @@ import info.bioinfweb.libralign.model.exception.AlignmentSourceNotWritableExcept
 
 /**
  * Interface for classes implementing {@link AlignmentModel} by using sequence objects. Methods to 
- * replace a whole sequence are specified for the case that the sequence objects (e.g. strings or 
+ * replace a whole sequence are specified for the case that the sequence objects (e.g., strings or 
  * <i>BioJava</i> sequences) do not allow to be modified after creation. 
  * 
  * @author Ben St&ouml;ver

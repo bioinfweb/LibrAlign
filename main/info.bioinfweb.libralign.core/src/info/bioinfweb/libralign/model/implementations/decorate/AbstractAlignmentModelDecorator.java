@@ -41,6 +41,9 @@ import info.bioinfweb.libralign.model.tokenset.TokenSet;
  * Basic implementation of {@link AlignmentModelView} which delegates sequence-specific methods 
  * (which are independent of the token type) to the underlying model. Inherited classes may 
  * provide modified views of the underlying sequences, possibly using a different token set.
+ * <p>
+ * In contrast to {@link AbstractTokenReplacementAlignmentModelDecorator} inheriting from this class does allow to change the sequence lengths
+ * (e.g., replacing a nucleotide triplet with a single amino acid). 
  * 
  * @author Ben St&ouml;ver
  *
@@ -66,14 +69,14 @@ public abstract class AbstractAlignmentModelDecorator<T, U> extends AbstractAlig
 		underlyingModel.addModelListener(new AlignmentModelListener<U>() {
 			@Override
 			public void afterTokenChange(TokenChangeEvent<U> e) {
-				for (TokenChangeEvent<T> event: convertTokenChangeEvent((TokenChangeEvent<U>)e)) {
+				for (TokenChangeEvent<T> event: convertTokenChangeEvent(e)) {
 					fireAfterTokenChange(event);
 				}
 			}
 			
 			@Override
 			public void afterSequenceRenamed(SequenceRenamedEvent<U> e) {
-				SequenceRenamedEvent<T> event = convertSequenceRenamedEvent((SequenceRenamedEvent<U>)e); 
+				SequenceRenamedEvent<T> event = convertSequenceRenamedEvent(e); 
 				if (event != null) {
 					fireAfterSequenceRenamed(event);
 				}
@@ -81,7 +84,7 @@ public abstract class AbstractAlignmentModelDecorator<T, U> extends AbstractAlig
 			
 			@Override
 			public void afterSequenceChange(SequenceChangeEvent<U> e) {
-				SequenceChangeEvent<T> event = convertSequenceChangeEvent((SequenceChangeEvent<U>)e); 
+				SequenceChangeEvent<T> event = convertSequenceChangeEvent(e); 
 				if (event != null) {
 					fireAfterSequenceChange(event);
 				}
@@ -173,22 +176,7 @@ public abstract class AbstractAlignmentModelDecorator<T, U> extends AbstractAlig
 	 *         {@link ListChangeType#INSERTION} or {@link ListChangeType#DELETION}. (Events fired by models
 	 *         of LibrAlign never have any other type.)
 	 */
-	protected SequenceChangeEvent<T> convertSequenceChangeEvent(SequenceChangeEvent<U> event) {
-		String decoratedID = convertUnderlyingSequenceID(event.getSequenceID());
-		if (decoratedID != null) {
-			switch (event.getType()) {
-				case INSERTION:
-					return SequenceChangeEvent.newInsertInstance(this, decoratedID);
-				case DELETION:
-					return SequenceChangeEvent.newRemoveInstance(this, decoratedID);
-				default:  // Just in case more valid types are added in the future.
-					throw new IllegalArgumentException("The change type \"" + event.getType() + " is not supported.");
-			}
-		}
-		else {
-			return null;
-		}
-	}
+	protected abstract SequenceChangeEvent<T> convertSequenceChangeEvent(SequenceChangeEvent<U> event);
 	
 
 	/**
