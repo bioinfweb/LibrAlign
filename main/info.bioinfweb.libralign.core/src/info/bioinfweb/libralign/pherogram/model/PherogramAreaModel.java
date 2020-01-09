@@ -106,6 +106,7 @@ public class PherogramAreaModel extends PherogramComponentModel implements DataM
 			this.alignmentModel.addModelListener(new AlignmentModelAdapter<Object>() {
 				@Override
 				public void afterTokenChange(TokenChangeEvent<Object> e) {
+					//TODO This operations should not be performed when the edit is resulting from a redo operation or during the loading of a file. (The latter would not be a problem, if this object would be created or linked to the alignment model later. Late linking is currently not possible.)
 					if (e.getSource().equals(getAlignmentModel()) && (e.getSequenceID() == getLabeledSequenceID())) {
 						int addend = e.isLeftBound() ? -1 : 0;
 						int lastSeqPos = editableIndexByBaseCallIndex(getRightCutPosition() - 1).getAfter() - addend;
