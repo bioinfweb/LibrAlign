@@ -390,6 +390,12 @@ main/info.bioinfweb.libralign.core/src/info/bioinfweb/libralign/pherogram/model/
 main/info.bioinfweb.libralign.core/src/info/bioinfweb/libralign/pherogram/model/PherogramShiftChangeUpdateEvent.java -text svneol=unset#text/plain
 main/info.bioinfweb.libralign.core/src/info/bioinfweb/libralign/pherogram/model/ShiftChange.java -text svneol=unset#text/plain
 main/info.bioinfweb.libralign.core/src/info/bioinfweb/libralign/pherogram/model/package-info.java -text svneol=unset#text/plain
+main/info.bioinfweb.libralign.core/src/info/bioinfweb/libralign/pherogram/model/undo/FirstSequencePositionEdit.java -text svneol=unset#text/plain
+main/info.bioinfweb.libralign.core/src/info/bioinfweb/libralign/pherogram/model/undo/LeftCutPositionEdit.java -text svneol=unset#text/plain
+main/info.bioinfweb.libralign.core/src/info/bioinfweb/libralign/pherogram/model/undo/PherogramModelEdit.java -text svneol=unset#text/plain
+main/info.bioinfweb.libralign.core/src/info/bioinfweb/libralign/pherogram/model/undo/PherogramModelUndoListener.java -text svneol=unset#text/plain
+main/info.bioinfweb.libralign.core/src/info/bioinfweb/libralign/pherogram/model/undo/PherogramPositionEdit.java -text svneol=unset#text/plain
+main/info.bioinfweb.libralign.core/src/info/bioinfweb/libralign/pherogram/model/undo/RightCutPositionEdit.java -text svneol=unset#text/plain
 main/info.bioinfweb.libralign.core/src/info/bioinfweb/libralign/pherogram/package-info.java -text svneol=unset#text/plain
 main/info.bioinfweb.libralign.core/src/info/bioinfweb/libralign/pherogram/provider/PherogramProvider.java -text svneol=unset#text/plain
 main/info.bioinfweb.libralign.core/src/info/bioinfweb/libralign/pherogram/provider/ReverseComplementPherogramProvider.java -text svneol=unset#text/plain

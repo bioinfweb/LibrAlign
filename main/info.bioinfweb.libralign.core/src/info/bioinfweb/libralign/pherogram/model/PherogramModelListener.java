@@ -24,7 +24,7 @@ package info.bioinfweb.libralign.pherogram.model;
  * Interface to be implemented by all classes that need to be informed on changes in instances of
  * {@link PherogramComponentModel}.
  * <p>
- * Note that setting a new pherogram provider in the according model often also leads to changing the cut
+ * Note that setting a new pherogram provider in the respective model often also leads to changing the cut
  * positions at the same time. In such cases the order of events is always 
  * {@link #pherogramProviderChange(PherogramProviderChangeEvent)}, than 
  * {@link #leftCutPositionChange(PherogramCutPositionChangeEvent)} and finally 
