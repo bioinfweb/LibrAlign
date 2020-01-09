@@ -34,7 +34,7 @@ import java.util.List;
  * defines how additional space shall be positioned in data areas, if a new token is inserted into the sequence they
  * are attached to.
  *
- * @author BenStoever
+ * @author Ben St&ouml;ver
  * @since 0.3.0
  */
 public class EditSettings {

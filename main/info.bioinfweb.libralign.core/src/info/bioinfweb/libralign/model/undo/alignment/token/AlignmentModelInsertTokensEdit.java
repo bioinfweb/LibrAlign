@@ -38,8 +38,8 @@ import info.bioinfweb.libralign.model.undo.EditRecorder;
  * @see EditRecorder
  */
 public class AlignmentModelInsertTokensEdit<M extends AlignmentModel<T>, T> extends AlignmentModelInsertRemoveTokensEdit<M, T> {
-	public AlignmentModelInsertTokensEdit(M alignmentModel, String sequenceID, int beginIndex, Collection<? extends T> tokens) {
-		super(alignmentModel, sequenceID, beginIndex, tokens);
+	public AlignmentModelInsertTokensEdit(M alignmentModel, String sequenceID, int beginIndex, Collection<? extends T> tokens, boolean leftBound) {
+		super(alignmentModel, sequenceID, beginIndex, tokens, leftBound);
 	}
 
 	

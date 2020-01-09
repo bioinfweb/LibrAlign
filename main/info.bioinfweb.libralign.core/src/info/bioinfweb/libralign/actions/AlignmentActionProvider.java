@@ -186,7 +186,7 @@ public class AlignmentActionProvider<T> {
 				tokens.add(gapToken);
 			}
 			
-			getModel().appendTokens(sequenceID, tokens);
+			getModel().appendTokens(sequenceID, tokens, getAlignmentArea().getEditSettings().isInsertLeftInDataArea());
 			return additionalLength;
 		}
 		else {
@@ -224,7 +224,7 @@ public class AlignmentActionProvider<T> {
 			for (int row = selection.getCursorRow(); row < selection.getCursorRow() + selection.getCursorHeight(); row++) {
 				String sequenceID = getAlignmentArea().getSequenceOrder().idByIndex(row);
 				elongateSequence(sequenceID, selection.getFirstColumn());
-				getModel().insertTokensAt(sequenceID,	selection.getFirstColumn(), tokens);
+				getModel().insertTokensAt(sequenceID,	selection.getFirstColumn(), tokens, getAlignmentArea().getEditSettings().isInsertLeftInDataArea());
 			}
 			selection.setNewCursorColumn(selection.getFirstColumn() + tokenCount);  // Move cursor forward
 		}

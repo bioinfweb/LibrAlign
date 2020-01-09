@@ -57,7 +57,7 @@ public class AlignmentModelRemoveSequenceEdit<M extends AlignmentModel<T>, T> ex
 	@Override
 	public void undo() throws CannotUndoException {
 		getAlignmentModel().addSequence(getName(), getSequenceID());
-		getAlignmentModel().insertTokensAt(getSequenceID(), 0, deletedContent);		
+		getAlignmentModel().insertTokensAt(getSequenceID(), 0, deletedContent, true);  // The left bound property is set arbitrarily here, since it is undefined. In redo operations, data models should be restored from their own edit objects instead of reacting to events triggered by this call.
 		super.undo();
 	}
 

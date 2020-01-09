@@ -179,29 +179,25 @@ public abstract class DelegatedAlignmentModelView<T> extends AbstractBasicAlignm
 	}
 	
 	
-	public void appendToken(String sequenceID, T token)
+	public void appendToken(String sequenceID, T token, boolean leftBound) throws AlignmentSourceNotWritableException {
+		getUnderlyingModel().appendToken(sequenceID, token, leftBound);
+	}
+	
+	
+	public void appendTokens(String sequenceID, Collection<? extends T> tokens, boolean leftBound) throws AlignmentSourceNotWritableException {
+		getUnderlyingModel().appendTokens(sequenceID, tokens, leftBound);
+	}
+	
+	
+	public void insertTokenAt(String sequenceID, int index, T token, boolean leftBound) throws AlignmentSourceNotWritableException {
+		getUnderlyingModel().insertTokenAt(sequenceID, index, token, leftBound);
+	}
+	
+	
+	public void insertTokensAt(String sequenceID, int beginIndex,	Collection<? extends T> tokens, boolean leftBound) 
 			throws AlignmentSourceNotWritableException {
-		getUnderlyingModel().appendToken(sequenceID, token);
-	}
-	
-	
-	public void appendTokens(String sequenceID,
-			Collection<? extends T> tokens)
-					throws AlignmentSourceNotWritableException {
-		getUnderlyingModel().appendTokens(sequenceID, tokens);
-	}
-	
-	
-	public void insertTokenAt(String sequenceID, int index, T token)
-			throws AlignmentSourceNotWritableException {
-		getUnderlyingModel().insertTokenAt(sequenceID, index, token);
-	}
-	
-	
-	public void insertTokensAt(String sequenceID, int beginIndex,
-			Collection<? extends T> tokens)
-					throws AlignmentSourceNotWritableException {
-		getUnderlyingModel().insertTokensAt(sequenceID, beginIndex, tokens);
+		
+		getUnderlyingModel().insertTokensAt(sequenceID, beginIndex, tokens, leftBound);
 	}
 	
 	

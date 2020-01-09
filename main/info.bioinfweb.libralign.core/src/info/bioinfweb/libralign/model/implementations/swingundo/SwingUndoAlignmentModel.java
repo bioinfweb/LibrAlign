@@ -289,34 +289,34 @@ public class SwingUndoAlignmentModel<T> extends AbstractAlignmentModel<T> implem
 
 
 	@Override
-	public void appendToken(String sequenceID, T token) throws AlignmentSourceNotWritableException {
-		insertTokenAt(sequenceID, getSequenceLength(sequenceID), token);
+	public void appendToken(String sequenceID, T token, boolean leftBound) throws AlignmentSourceNotWritableException {
+		insertTokenAt(sequenceID, getSequenceLength(sequenceID), token, leftBound);
 	}
 
 
 	@Override
-	public void appendTokens(String sequenceID, Collection<? extends T> tokens) throws AlignmentSourceNotWritableException {
-		insertTokensAt(sequenceID, getSequenceLength(sequenceID), tokens);
+	public void appendTokens(String sequenceID, Collection<? extends T> tokens, boolean leftBound) throws AlignmentSourceNotWritableException {
+		insertTokensAt(sequenceID, getSequenceLength(sequenceID), tokens, leftBound);
 	}
 
 
 	@Override
-	public void insertTokenAt(String sequenceID, int index, T token)
+	public void insertTokenAt(String sequenceID, int index, T token, boolean leftBound)
 			throws AlignmentSourceNotWritableException {
 		
-    insertTokensAt(sequenceID, index, Collections.nCopies(1, token));
+    insertTokensAt(sequenceID, index, Collections.nCopies(1, token), leftBound);
 	}
 
 
 	@Override
-	public void insertTokensAt(String sequenceID, int beginIndex, Collection<? extends T> tokens)
+	public void insertTokensAt(String sequenceID, int beginIndex, Collection<? extends T> tokens, boolean leftBound)
 			throws AlignmentSourceNotWritableException {
 		
 		if (underlyingModel.isTokensReadOnly()) {
 			throw new AlignmentSourceNotWritableException(this);
 		}
 		else {
-			addEdit(new SwingInsertTokensEdit<T>(this, sequenceID, beginIndex, tokens));
+			addEdit(new SwingInsertTokensEdit<T>(this, sequenceID, beginIndex, tokens, leftBound));
 		}
 	}
 

@@ -355,14 +355,14 @@ public abstract class AbstractUndecoratedAlignmentModel<T> extends AbstractAlign
 
 	
 	@Override
-	public void appendToken(String sequenceID, T token) throws AlignmentSourceNotWritableException {
-		insertTokenAt(sequenceID, getSequenceLength(sequenceID), token);
+	public void appendToken(String sequenceID, T token, boolean leftBound) throws AlignmentSourceNotWritableException {
+		insertTokenAt(sequenceID, getSequenceLength(sequenceID), token, leftBound);
 	}
 
 
 	@Override
-	public void appendTokens(String sequenceID, Collection<? extends T> tokens) throws AlignmentSourceNotWritableException {
-		insertTokensAt(sequenceID, getSequenceLength(sequenceID), tokens);
+	public void appendTokens(String sequenceID, Collection<? extends T> tokens, boolean leftBound) throws AlignmentSourceNotWritableException {
+		insertTokensAt(sequenceID, getSequenceLength(sequenceID), tokens, leftBound);
 	}
 
 

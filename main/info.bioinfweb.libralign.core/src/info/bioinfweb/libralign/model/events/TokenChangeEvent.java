@@ -34,86 +34,97 @@ import java.util.Collections;
  * @author Ben St&ouml;ver
  * @since 0.0.0
  * 
- * @param <T> - the type of sequence elements (tokens) the implementing provider object works with
+ * @param <T> the type of sequence elements (tokens) the implementing provider object works with
  */
 public class TokenChangeEvent<T> extends TypedAlignmentModelChangeEvent<T> {
 	private int startIndex;
+	private boolean leftBound;
 	private Collection<? extends T> affectedTokens;
 	
 	
 	/**
 	 * Creates a new instance of this class.
 	 * 
-	 * @param source - the sequence data provider that fires this event
-	 * @param sequenceID - the ID of the affected sequence
-	 * @param type - the type of change that happened
-	 * @param startIndex - the index of the first affected token in the sequence
-	 * @param affectedTokens - a list of the affected tokens
+	 * @param source the sequence data provider that fires this event
+	 * @param sequenceID the ID of the affected sequence
+	 * @param type the type of change that happened
+	 * @param startIndex the index of the first affected token in the sequence
+	 * @param leftBound determines whether newly inserted tokens were added left bound or right bound 
+	 *        (The value of this property only has a meaning if the event instance models the insertion of new tokens.)  
+	 * @param affectedTokens a list of the affected tokens
 	 */
 	protected TokenChangeEvent(AlignmentModel<T> source, String sequenceID, ListChangeType type,
-			int startIndex, Collection<? extends T> affectedTokens) {
+			int startIndex, boolean leftBound, Collection<? extends T> affectedTokens) {
 		
 		super(source, sequenceID, type);
-		this.startIndex = startIndex;
-		this.affectedTokens = affectedTokens;
+		if (affectedTokens == null) {
+			throw new IllegalArgumentException("affectedTokens must not be null.");
+		}
+		else {
+			this.startIndex = startIndex;
+			this.leftBound = leftBound;
+			this.affectedTokens = affectedTokens;
+		}
 	}
 	
 	
 	/**
 	 * Creates a new instance of this class that represents an insertion of a list of tokens.
 	 * 
-	 * @param source - the sequence data provider that fires this event
-	 * @param sequenceID - the ID of the affected sequence
-	 * @param startIndex - the index where the first token was inserted into the sequence
-	 * @param newTokens - the list of the tokens to be inserted 
+	 * @param source the sequence data provider that fires this event
+	 * @param sequenceID the ID of the affected sequence
+	 * @param startIndex the index where the first token was inserted into the sequence
+	 * @param leftBound determines whether newly inserted tokens were added left bound or right bound 
+	 * @param newTokens the list of the tokens to be inserted 
 	 * @return a new instance with the same token type as {@code source}
 	 */
 	public static <T> TokenChangeEvent<T> newInsertInstance(AlignmentModel<T> source, String sequenceID,
-			int startIndex, Collection<? extends T> newTokens) {
+			int startIndex, boolean leftBound, Collection<? extends T> newTokens) {
 		
-		return new TokenChangeEvent<T>(source, sequenceID, ListChangeType.INSERTION, startIndex, newTokens);
+		return new TokenChangeEvent<T>(source, sequenceID, ListChangeType.INSERTION, startIndex, leftBound, newTokens);
 	}
 
 
 	/**
 	 * Creates a new instance of this class that represents an insertion of a single token.
 	 * 
-	 * @param source - the sequence data provider that fires this event
-	 * @param sequenceID - the ID of the affected sequence
-	 * @param index - the index where the new token was inserted
-	 * @param newToken - the token to be inserted 
+	 * @param source the sequence data provider that fires this event
+	 * @param sequenceID the ID of the affected sequence
+	 * @param index the index where the new token was inserted
+	 * @param leftBound determines whether newly inserted tokens were added left bound or right bound 
+	 * @param newToken the token to be inserted 
 	 * @return a new instance with the same token type as {@code source}
 	 */
 	public static <T> TokenChangeEvent<T> newInsertInstance(AlignmentModel<T> source, String sequenceID,
-			int index, T newToken) {
+			int index, boolean leftBound, T newToken) {
 		
-		return newInsertInstance(source, sequenceID, index, Collections.nCopies(1, newToken));
+		return newInsertInstance(source, sequenceID, index, leftBound, Collections.nCopies(1, newToken));
 	}
 
 
 	/**
 	 * Creates a new instance of this class that represents a deletion of a list of tokens.
 	 * 
-	 * @param source - the sequence data provider that fires this event
-	 * @param sequenceID - the ID of the affected sequence
-	 * @param startIndex - the index where the first token has been deleted from the sequence
-	 * @param removedTokens - the tokens that have been deleted
+	 * @param source the sequence data provider that fires this event
+	 * @param sequenceID the ID of the affected sequence
+	 * @param startIndex the index where the first token has been deleted from the sequence
+	 * @param removedTokens the tokens that have been deleted
 	 * @return a new instance with the same token type as {@code source}
 	 */
 	public static <T> TokenChangeEvent<T> newRemoveInstance(AlignmentModel<T> source, String sequenceID,
 			int startIndex, Collection<? extends T> removedTokens) {
 		
-		return new TokenChangeEvent<T>(source, sequenceID, ListChangeType.DELETION, startIndex, removedTokens);
+		return new TokenChangeEvent<T>(source, sequenceID, ListChangeType.DELETION, startIndex, true, removedTokens);
 	}
 
 	
 	/**
 	 * Creates a new instance of this class that represents a deletion of a single token.
 	 * 
-	 * @param source - the sequence data provider that fires this event
-	 * @param sequenceID - the ID of the affected sequence
-	 * @param index - the index where the token has been deleted from the sequence
-	 * @param removedToken - the token that has been deleted
+	 * @param source the sequence data provider that fires this event
+	 * @param sequenceID the ID of the affected sequence
+	 * @param index the index where the token has been deleted from the sequence
+	 * @param removedToken the token that has been deleted
 	 * @return a new instance with the same token type as {@code source}
 	 */
 	public static <T> TokenChangeEvent<T> newRemoveInstance(AlignmentModel<T> source, String sequenceID,
@@ -126,26 +137,26 @@ public class TokenChangeEvent<T> extends TypedAlignmentModelChangeEvent<T> {
 	/**
 	 * Creates a new instance of this class that represents a replacement of a list of tokens.
 	 * 
-	 * @param source - the sequence data provider that fires this event
-	 * @param sequenceID - the ID of the affected sequence
-	 * @param startIndex - the index where the first token was replaced in the sequence
-	 * @param replacedTokens - the list of tokens that have been replaced 
+	 * @param source the sequence data provider that fires this event
+	 * @param sequenceID the ID of the affected sequence
+	 * @param startIndex the index where the first token was replaced in the sequence
+	 * @param replacedTokens the list of tokens that have been replaced 
 	 * @return a new instance with the same token type as {@code source}
 	 */
 	public static <T> TokenChangeEvent<T> newReplaceInstance(AlignmentModel<T> source, String sequenceID,
 			int startIndex, Collection<? extends T> replacedTokens) {
 		
-		return new TokenChangeEvent<T>(source, sequenceID, ListChangeType.REPLACEMENT, startIndex, replacedTokens);
+		return new TokenChangeEvent<T>(source, sequenceID, ListChangeType.REPLACEMENT, startIndex, true, replacedTokens);
 	}
 
 
 	/**
 	 * Creates a new instance of this class that represents a replacement of a single token.
 	 * 
-	 * @param source - the sequence data provider that fires this event
-	 * @param sequenceID - the ID of the affected sequence
-	 * @param index - the index where the token shall be inserted into the sequence
-	 * @param replacedToken - the list of tokens that have been replaced 
+	 * @param source the sequence data provider that fires this event
+	 * @param sequenceID the ID of the affected sequence
+	 * @param index the index where the token shall be inserted into the sequence
+	 * @param replacedToken the list of tokens that have been replaced 
 	 * @return a new instance with the same token type as {@code source}
 	 */
 	public static <T> TokenChangeEvent<T> newReplaceInstance(AlignmentModel<T> source, String sequenceID,
@@ -162,6 +173,19 @@ public class TokenChangeEvent<T> extends TypedAlignmentModelChangeEvent<T> {
 	 */
 	public int getStartIndex() {
 		return startIndex;
+	}
+
+
+	/**
+	 * Determines whether inserted tokens were added left bound or right bound.
+	 * <p>
+	 * This property only has a defined meaning if this event models the insertion of tokens. It is relevant for data areas that
+	 * need to adjust to sequence changes. 
+	 * 
+	 * @return {@code true} if the insertion was left bound, {@code false} otherwise
+	 */
+	public boolean isLeftBound() {
+		return leftBound;
 	}
 
 

@@ -142,7 +142,7 @@ public abstract class AbstractTokenReplacementAlignmentModelDecorator<T, U> exte
 			switch (event.getType()) {
 				case INSERTION:
 					newEvent = TokenChangeEvent.newInsertInstance(this, convertUnderlyingSequenceID(event.getSequenceID()), 
-							convertUnderlyingTokenIndex(event.getSequenceID(), event.getStartIndex()), 
+							convertUnderlyingTokenIndex(event.getSequenceID(), event.getStartIndex()), event.isLeftBound(), 
 							convertUnderlyingTokens(event.getSequenceID(), event.getStartIndex(), event.getAffectedTokens()));
 					break;
 				case DELETION:
@@ -267,11 +267,11 @@ public abstract class AbstractTokenReplacementAlignmentModelDecorator<T, U> exte
 
 
 	@Override
-	public void appendToken(String sequenceID, T token) throws AlignmentSourceNotWritableException {
+	public void appendToken(String sequenceID, T token, boolean leftBound) throws AlignmentSourceNotWritableException {
 		String underlyingID = convertDecoratedSequenceID(sequenceID);
 		if (underlyingID != null) {
 			getUnderlyingModel().appendToken(underlyingID, convertDecoratedToken(sequenceID, 
-					getUnderlyingModel().getSequenceLength(underlyingID), token));
+					getUnderlyingModel().getSequenceLength(underlyingID), token), leftBound);
 		}
 		else {
 			throw new SequenceNotFoundException(this, sequenceID);
@@ -280,11 +280,11 @@ public abstract class AbstractTokenReplacementAlignmentModelDecorator<T, U> exte
 
 
 	@Override
-	public void appendTokens(String sequenceID, Collection<? extends T> tokens) throws AlignmentSourceNotWritableException {
+	public void appendTokens(String sequenceID, Collection<? extends T> tokens, boolean leftBound) throws AlignmentSourceNotWritableException {
 		String underlyingID = convertDecoratedSequenceID(sequenceID);
 		if (underlyingID != null) {
 			getUnderlyingModel().appendTokens(underlyingID, convertDecoratedTokens(sequenceID, 
-					getUnderlyingModel().getSequenceLength(underlyingID), tokens));
+					getUnderlyingModel().getSequenceLength(underlyingID), tokens), leftBound);
 		}
 		else {
 			throw new SequenceNotFoundException(this, sequenceID);
@@ -293,13 +293,13 @@ public abstract class AbstractTokenReplacementAlignmentModelDecorator<T, U> exte
 
 
 	@Override
-	public void insertTokenAt(String sequenceID, int index, T token)	throws AlignmentSourceNotWritableException {
+	public void insertTokenAt(String sequenceID, int index, T token, boolean leftBound)	throws AlignmentSourceNotWritableException {
 		String underlyingID = convertDecoratedSequenceID(sequenceID);
 		if (underlyingID != null) {
 			int underlyingIndex = convertUnderlyingTokenIndex(sequenceID, index);  // Should in this case always be equal to the decorated index.
 			if (underlyingIndex > -1) {
 				getUnderlyingModel().insertTokenAt(underlyingID, underlyingIndex, 
-						convertDecoratedToken(sequenceID, index, token));
+						convertDecoratedToken(sequenceID, index, token), leftBound);
 			}
 			else {
 				throw new InternalError("An index shift between the decorated (" + index + ") and the underlying index (" + 
@@ -313,7 +313,7 @@ public abstract class AbstractTokenReplacementAlignmentModelDecorator<T, U> exte
 
 
 	@Override
-	public void insertTokensAt(String sequenceID, int beginIndex, Collection<? extends T> tokens)
+	public void insertTokensAt(String sequenceID, int beginIndex, Collection<? extends T> tokens, boolean leftBound)
 			throws AlignmentSourceNotWritableException {
 		
 		String underlyingID = convertDecoratedSequenceID(sequenceID);
@@ -321,7 +321,7 @@ public abstract class AbstractTokenReplacementAlignmentModelDecorator<T, U> exte
 			int underlyingIndex = convertUnderlyingTokenIndex(sequenceID, beginIndex);  // Should in this case always be equal to the decorated index.
 			if (underlyingIndex > -1) {
 				getUnderlyingModel().insertTokensAt(underlyingID, underlyingIndex, 
-						convertDecoratedTokens(sequenceID, beginIndex, tokens));
+						convertDecoratedTokens(sequenceID, beginIndex, tokens), leftBound);
 			}
 			else {
 				throw new InternalError("An index shift between the decorated (" + beginIndex + ") and the underlying index (" + 

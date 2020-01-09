@@ -141,11 +141,11 @@ public abstract class AbstractListAlignmentModel<T> extends AbstractMapBasedAlig
 
 	
 	@Override
-	public void insertTokenAt(String sequenceID, int index, T token)	throws AlignmentSourceNotWritableException {
+	public void insertTokenAt(String sequenceID, int index, T token, boolean leftBound)	throws AlignmentSourceNotWritableException {
 		List<T> sequence = getSequence(sequenceID);
 		if (sequence != null) {
 			sequence.add(index, token);
-			fireAfterTokenChange(TokenChangeEvent.newInsertInstance(this, sequenceID, index, token));
+			fireAfterTokenChange(TokenChangeEvent.newInsertInstance(this, sequenceID, index, leftBound, token));
 		}
 		else {
 			throw new SequenceNotFoundException(this, sequenceID);
@@ -154,13 +154,13 @@ public abstract class AbstractListAlignmentModel<T> extends AbstractMapBasedAlig
 
 	
 	@Override
-	public void insertTokensAt(String sequenceID, int beginIndex, Collection<? extends T> tokens)
+	public void insertTokensAt(String sequenceID, int beginIndex, Collection<? extends T> tokens, boolean leftBound)
 			throws AlignmentSourceNotWritableException {
 
 		List<T> sequence = getSequence(sequenceID);
 		if (sequence != null) {
 			getSequence(sequenceID).addAll(beginIndex, tokens);
-			fireAfterTokenChange(TokenChangeEvent.newInsertInstance(this, sequenceID, beginIndex, tokens));
+			fireAfterTokenChange(TokenChangeEvent.newInsertInstance(this, sequenceID, beginIndex, leftBound, tokens));
 		}
 		else {
 			throw new SequenceNotFoundException(this, sequenceID);

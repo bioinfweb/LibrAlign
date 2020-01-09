@@ -290,23 +290,29 @@ public interface AlignmentModel<T> {
 	 * 
 	 * @param sequenceID the identifier the sequence in the alignment
 	 * @param token the token to be inserted
+	 * @param leftBound determines whether the new token should be inserted left bound or right bound 
+	 *        (This property is relevant, e.g., for some data models that will react to this edit. It is a property of the operation, 
+	 *        not of the new tokens and will therefore not be stored in this model instance but be provided with the respective change event.)
 	 * 
 	 * @throws SequenceNotFoundException if no according sequence to the specified ID was found in this model
 	 * @throws AlignmentSourceNotWritableException if the underlying data source is not writable for tokens
 	 */
-	public void appendToken(String sequenceID, T token) throws AlignmentSourceNotWritableException;
+	public void appendToken(String sequenceID, T token, boolean leftBound) throws AlignmentSourceNotWritableException;
 	
 	/**
 	 * Appends a sequence of tokens starting at the end of the current sequence.
 	 * 
 	 * @param sequenceID the identifier the sequence where the token is contained
 	 * @param tokens the new tokens for the specified position
+	 * @param leftBound determines whether the new token should be inserted left bound or right bound 
+	 *        (This property is relevant, e.g., for some data models that will react to this edit. It is a property of the operation, 
+	 *        not of the new tokens and will therefore not be stored in this model instance but be provided with the respective change event.)
 	 * 
 	 * @throws SequenceNotFoundException if no according sequence to the specified ID was found in this model
 	 * @throws AlignmentSourceNotWritableException if the underlying data source is not writable for tokens
 	 * @see AlignmentModelUtils#charSequenceToTokenList(CharSequence, TokenSet)
 	 */
-	public void appendTokens(String sequenceID, Collection<? extends T> tokens) throws AlignmentSourceNotWritableException;
+	public void appendTokens(String sequenceID, Collection<? extends T> tokens, boolean leftBound) throws AlignmentSourceNotWritableException;
 
 	/**
 	 * Inserts a token at the specified position. All tokens located behind the specified index are moved 
@@ -316,26 +322,32 @@ public interface AlignmentModel<T> {
 	 * @param index the new index the inserted element will have 
 	 *        ({@code 0 <= elementIndex < sequenceLength}) 
 	 * @param token the token to be inserted
+	 * @param leftBound determines whether the new token should be inserted left bound or right bound 
+	 *        (This property is relevant, e.g., for some data models that will react to this edit. It is a property of the operation, 
+	 *        not of the new tokens and will therefore not be stored in this model instance but be provided with the respective change event.)
 	 * 
 	 * @throws SequenceNotFoundException if no according sequence to the specified ID was found in this model
 	 * @throws AlignmentSourceNotWritableException if the underlying data source is not writable for tokens
 	 */
-	public void insertTokenAt(String sequenceID, int index, T token) throws AlignmentSourceNotWritableException;
+	public void insertTokenAt(String sequenceID, int index, T token, boolean leftBound) throws AlignmentSourceNotWritableException;
 
 	/**
 	 * Inserts a sequence of tokens starting at the specified position. All tokens located behind the 
 	 * specified index are moved by the number of tokens that are contained in {@code tokens}.
 	 * 
 	 * @param sequenceID the identifier the sequence where the token is contained
-	 * @param beginIndex the index of the first element to be replaced 
-	 *        (The first element in the sequence has the index 0.)
+	 * @param beginIndex the index of the first element to be replaced (The first element in the sequence has the index 0.)
 	 * @param tokens the new tokens for the specified position
+	 * @param leftBound determines whether the new token should be inserted left bound or right bound 
+	 *        (This property is relevant, e.g., for some data models that will react to this edit. It is a property of the operation, 
+	 *        not of the new tokens and will therefore not be stored in this model instance but be provided with the respective change event.)
 	 * 
 	 * @throws SequenceNotFoundException if no according sequence to the specified ID was found in this model
 	 * @throws AlignmentSourceNotWritableException if the underlying data source is not writable for tokens
 	 * @see AlignmentModelUtils#charSequenceToTokenList(CharSequence, TokenSet)
 	 */
-	public void insertTokensAt(String sequenceID, int beginIndex, Collection<? extends T> tokens) throws AlignmentSourceNotWritableException;
+	public void insertTokensAt(String sequenceID, int beginIndex, Collection<? extends T> tokens, boolean leftBound) 
+			throws AlignmentSourceNotWritableException;
 	
 	/**
 	 * Removes the token at the specified position from the underlying data source.

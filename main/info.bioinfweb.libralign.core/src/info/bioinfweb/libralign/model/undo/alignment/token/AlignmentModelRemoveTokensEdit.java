@@ -38,12 +38,12 @@ import info.bioinfweb.libralign.model.undo.EditRecorder;
  */
 public class AlignmentModelRemoveTokensEdit<M extends AlignmentModel<T>, T> extends AlignmentModelInsertRemoveTokensEdit<M, T> {
 	public AlignmentModelRemoveTokensEdit(M alignmentModel, String sequenceID,	int beginIndex, Collection<? extends T> tokens) {
-		super(alignmentModel, sequenceID, beginIndex, tokens);
+		super(alignmentModel, sequenceID, beginIndex, tokens, true);  // The left bound property is set arbitrarily here, since it is undefined. In redo operations, data models should be restored from their own edit objects instead of reacting to events triggered by this call.
 	}
 
 
 	public AlignmentModelRemoveTokensEdit(M alignmentModel, String sequenceID, int index, T token) {
-		super(alignmentModel, sequenceID, index, token);
+		super(alignmentModel, sequenceID, index, token, true);  // The left bound property is set arbitrarily here, since it is undefined. In redo operations, data models should be restored from their own edit objects instead of reacting to events triggered by this call.
 	}
 
 

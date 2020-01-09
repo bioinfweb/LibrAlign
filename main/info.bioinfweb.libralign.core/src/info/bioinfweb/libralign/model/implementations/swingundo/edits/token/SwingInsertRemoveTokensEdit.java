@@ -36,35 +36,37 @@ import java.util.Collections;
  * @see SwingUndoAlignmentModel
  */
 public abstract class SwingInsertRemoveTokensEdit<T> extends SwingTokenEdit<T> {
+	private boolean leftBound;
+	
+	
 	/**
 	 * Creates a new instance of this class used to insert a new set of tokens into a sequence.
 	 * 
-	 * @param provider - the data provider creating this instance 
-	 * @param sequenceID - the identifier the sequence where the token is contained
-	 * @param beginIndex - the index where the new tokens shall be inserted 
+	 * @param provider the data provider creating this instance 
+	 * @param sequenceID the identifier the sequence where the token is contained
+	 * @param beginIndex the index where the new tokens shall be inserted 
 	 *        (The first element in the sequence has the index 0.)
-	 * @param tokens - the new tokens for the specified position
+	 * @param tokens the new tokens for the specified position
 	 */
 	public SwingInsertRemoveTokensEdit(SwingUndoAlignmentModel<T> provider, String sequenceID, int beginIndex, 
-			Collection<? extends T> tokens) {
+			Collection<? extends T> tokens, boolean leftBound) {
 
 		super(provider, sequenceID, beginIndex, tokens);
+		this.leftBound = leftBound;
 	}
 	
 	
 	/**
 	 * Creates a new instance of this class used to insert a new single token into a sequence.
 	 * 
-	 * @param provider - the data provider creating this instance 
-	 * @param sequenceID - the identifier the sequence where the token is contained
-	 * @param index - the index where the new token shall be inserted 
+	 * @param provider the data provider creating this instance 
+	 * @param sequenceID the identifier the sequence where the token is contained
+	 * @param index the index where the new token shall be inserted 
 	 *        (The first element in the sequence has the index 0.)
-	 * @param token - the new token for the specified position
+	 * @param token the new token for the specified position
 	 */
-	public SwingInsertRemoveTokensEdit(SwingUndoAlignmentModel<T> provider, String sequenceID, int index, 
-			 T token) {
-
-		this(provider, sequenceID, index, Collections.nCopies(1, token));
+	public SwingInsertRemoveTokensEdit(SwingUndoAlignmentModel<T> provider, String sequenceID, int index, T token, boolean leftBound) {
+		this(provider, sequenceID, index, Collections.nCopies(1, token), leftBound);
 	}
 	
 	
@@ -72,12 +74,13 @@ public abstract class SwingInsertRemoveTokensEdit<T> extends SwingTokenEdit<T> {
 	 * Creates a new instance of this class used to remove a set of tokens from a sequence. These tokens
 	 * will be stored in the inherited field {@link #tokens} during the execution of this constructor.
 	 * 
-	 * @param provider - the data provider creating this instance 
-	 * @param sequenceID - the identifier the sequence where the token is contained
-	 * @param beginIndex - the index of the first element to be removed 
+	 * @param provider the data provider creating this instance 
+	 * @param sequenceID the identifier the sequence where the token is contained
+	 * @param beginIndex the index of the first element to be removed 
 	 *        (The first element in the sequence has the index 0.)
-	 * @param endIndex - the index after the last element to be removed
+	 * @param endIndex the index after the last element to be removed
 	 */
+	@SuppressWarnings("unchecked")
 	public SwingInsertRemoveTokensEdit(SwingUndoAlignmentModel<T> provider, String sequenceID, int beginIndex, 
 			int endIndex) {
 
@@ -95,9 +98,9 @@ public abstract class SwingInsertRemoveTokensEdit<T> extends SwingTokenEdit<T> {
 	 * will be stored as the only element in the inherited field {@link #tokens} during the execution 
 	 * of this constructor.
 	 * 
-	 * @param provider - the data provider creating this instance 
-	 * @param sequenceID - the identifier the sequence where the token is contained
-	 * @param index - the index of the element to be removed 
+	 * @param provider the data provider creating this instance 
+	 * @param sequenceID the identifier the sequence where the token is contained
+	 * @param index the index of the element to be removed 
 	 *        (The first element in the sequence has the index 0.)
 	 */
 	public SwingInsertRemoveTokensEdit(SwingUndoAlignmentModel<T> provider, String sequenceID, int index) {
@@ -110,7 +113,7 @@ public abstract class SwingInsertRemoveTokensEdit<T> extends SwingTokenEdit<T> {
 	 * token(s) for deletions).
 	 */
 	protected void insert() {
-		getModel().getUnderlyingModel().insertTokensAt(sequenceID, beginIndex, tokens);
+		getModel().getUnderlyingModel().insertTokensAt(sequenceID, beginIndex, tokens, leftBound);
 	}
 	
 	

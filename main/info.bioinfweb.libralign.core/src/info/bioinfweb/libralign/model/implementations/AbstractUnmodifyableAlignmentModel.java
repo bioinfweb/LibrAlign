@@ -183,13 +183,13 @@ public abstract class AbstractUnmodifyableAlignmentModel<S, T> extends AbstractM
 
 
 	@Override
-	public void insertTokenAt(String sequenceID, int index, T token) throws AlignmentSourceNotWritableException {
+	public void insertTokenAt(String sequenceID, int index, T token, boolean leftBound) throws AlignmentSourceNotWritableException {
 		throw new AlignmentSourceNotWritableException(this);
 	}
 
 
 	@Override
-	public void insertTokensAt(String sequenceID, int beginIndex, Collection<? extends T> tokens)
+	public void insertTokensAt(String sequenceID, int beginIndex, Collection<? extends T> tokens, boolean leftBound)
 			throws AlignmentSourceNotWritableException {
 		
 		throw new AlignmentSourceNotWritableException(this);

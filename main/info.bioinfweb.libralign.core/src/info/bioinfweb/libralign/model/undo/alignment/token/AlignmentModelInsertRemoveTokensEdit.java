@@ -35,6 +35,9 @@ import info.bioinfweb.libralign.model.undo.EditRecorder;
  * @see EditRecorder
  */
 public abstract class AlignmentModelInsertRemoveTokensEdit<M extends AlignmentModel<T>, T> extends AlignmentModelTokenEdit<M, T> {
+	private boolean leftBound;
+	
+	
 	/**
 	 * Creates a new instance of this class used to insert or remove a set of tokens.
 	 * 
@@ -43,8 +46,9 @@ public abstract class AlignmentModelInsertRemoveTokensEdit<M extends AlignmentMo
 	 * @param beginIndex the index where the tokens should be inserted or removed (The first element in the sequence has the index 0.)
 	 * @param tokens the new tokens for the specified position
 	 */
-	public AlignmentModelInsertRemoveTokensEdit(M alignmentModel, String sequenceID, int beginIndex, Collection<? extends T> tokens) {
+	public AlignmentModelInsertRemoveTokensEdit(M alignmentModel, String sequenceID, int beginIndex, Collection<? extends T> tokens, boolean leftBound) {
 		super(alignmentModel, sequenceID, beginIndex, tokens);
+		this.leftBound = leftBound;
 	}
 	
 	
@@ -56,17 +60,22 @@ public abstract class AlignmentModelInsertRemoveTokensEdit<M extends AlignmentMo
 	 * @param index the index where the token should be inserted or removed (The first element in the sequence has the index 0.)
 	 * @param token the new token for the specified position
 	 */
-	public AlignmentModelInsertRemoveTokensEdit(M alignmentModel, String sequenceID, int index, T token) {
-		this(alignmentModel, sequenceID, index, Collections.nCopies(1, token));
+	public AlignmentModelInsertRemoveTokensEdit(M alignmentModel, String sequenceID, int index, T token, boolean leftBound) {
+		this(alignmentModel, sequenceID, index, Collections.nCopies(1, token), leftBound);
 	}
 	
 	
+	public boolean isLeftBound() {
+		return leftBound;
+	}
+
+
 	/**
 	 * Performs the insert operation (either of the new token(s) for insertions or the previously removed
 	 * token(s) for deletions).
 	 */
 	protected void insert() {
-		getAlignmentModel().insertTokensAt(getSequenceID(), getBeginIndex(), getTokens());
+		getAlignmentModel().insertTokensAt(getSequenceID(), getBeginIndex(), getTokens(), isLeftBound());
 	}
 	
 	

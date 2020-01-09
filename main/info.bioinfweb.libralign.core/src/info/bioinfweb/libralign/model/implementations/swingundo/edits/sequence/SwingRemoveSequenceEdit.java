@@ -64,7 +64,7 @@ public class SwingRemoveSequenceEdit<T> extends SwingSequenceEdit<T> {
 	@Override
 	public void undo() throws CannotUndoException {
 		getModel().getUnderlyingModel().addSequence(name);
-		getModel().getUnderlyingModel().insertTokensAt(sequenceID, 0, tokens);		
+		getModel().getUnderlyingModel().insertTokensAt(sequenceID, 0, tokens, true);  // The left bound property is set arbitrarily here, since it is undefined. In redo operations, data models should be restored from their own edit objects instead of reacting to events triggered by this call.		
 		super.undo();
 	}
 
