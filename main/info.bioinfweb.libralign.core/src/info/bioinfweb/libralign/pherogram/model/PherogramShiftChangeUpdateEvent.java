@@ -23,29 +23,32 @@ package info.bioinfweb.libralign.pherogram.model;
 /**
  * Event object describing a change in the alignment between the editable sequence in a matrix and the associated base call sequence of a pherogram.
  * <p>
- * The shift change list of {@link PherogramAreaModel} may change in different ways depending on the values of {@link #getBaseCallIndex()} and
- * {@link #getShiftChange()}. See {@link PherogramAreaModel#setShiftChange(int, int)} for details.
+ * Note that this event indicates that the a shift stored in {@link PherogramAreaModel was increased or decreased at the specified position by a call 
+ * of {@link PherogramAreaModel#addShiftChange(int, int)}. It does not contain any information on absolute shift values, but only on relative changes.
+ * <p>
+ * The shift change list used internally by {@link PherogramAreaModel} may change in different ways depending on the values of {@link #getBaseCallIndex()} 
+ * and {@link #getShiftChange()}, also at multiple positions at a time. These are internal implementation-related operations and such changes of absolute 
+ * values are not necessarily indicated by this event. (See {@link PherogramAreaModel#setShiftChange(int, int)} for details.) This event only indicates
+ * relative changes triggered by calls of {@link PherogramAreaModel#addShiftChange(int, int)}, which are relevant for the application.
  * 
  * @author Ben St&ouml;ver
  */
 public class PherogramShiftChangeUpdateEvent extends PherogramModelChangeEvent {
 	private int baseCallIndex;
-	private int shiftChange;
+	private int relativeShiftChange;
 	
 	
-	public PherogramShiftChangeUpdateEvent(PherogramComponentModel source, boolean moreEventsUpcoming, int baseCallIndex, int shiftChange) {
+	public PherogramShiftChangeUpdateEvent(PherogramComponentModel source, boolean moreEventsUpcoming, int baseCallIndex, int relativeShiftChange) {
 		super(source, moreEventsUpcoming);
 		this.baseCallIndex = baseCallIndex;
-		this.shiftChange = shiftChange;
+		this.relativeShiftChange = relativeShiftChange;
 	}
 
 
 	/**
 	 * Returns the first position in the base call sequence affected by the shift change
-   * @param shiftChange a positive or negative integer describing the shift change as the number of positions in the editable sequence
 	 * 
-	 * @return the base call index as passed to {@link PherogramAreaModel#setShiftChange(int, int)} (Note that this method is also called indirectly 
-	 *         by other methods like {@link PherogramAreaModel#addShiftChange(int, int)})
+	 * @return the base call index of the shift change
 	 */
 	public int getBaseCallIndex() {
 		return baseCallIndex;
@@ -54,11 +57,13 @@ public class PherogramShiftChangeUpdateEvent extends PherogramModelChangeEvent {
 
 	/**
 	 * Returns a positive or negative integer describing the shift change as the number of positions in the editable sequence.
+	 * <p>
+	 * This value only describes the shift change at the current base call index position in this operation and does not reflect
+	 * the absolute shift change value that may be stored internally. 
 	 * 
-	 * @return the shift change as passed to {@link PherogramAreaModel#setShiftChange(int, int)} (Note that this method is also called indirectly 
-	 *         by other methods like {@link PherogramAreaModel#addShiftChange(int, int)})
+	 * @return the shift change after the edit
 	 */
-	public int getShiftChange() {
-		return shiftChange;
+	public int getRelativeShiftChange() {
+		return relativeShiftChange;
 	}
 }

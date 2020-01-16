@@ -436,7 +436,7 @@ public class PherogramAreaModel extends PherogramComponentModel implements DataM
    * @param baseCallIndex the first position in the base call sequence affected by the shift change
    * @param shiftChange a positive or negative integer describing the shift change as the number of positions in the editable sequence
    */
-  public void setShiftChange(int baseCallIndex, int shiftChange) {
+  private void setShiftChange(int baseCallIndex, int shiftChange) {
   	int listIndex = shiftChangeListIndexByBaseCallIndex(baseCallIndex);
   	if ((listIndex < shiftChangeList.size()) && (shiftChangeList.get(listIndex).baseCallIndex == baseCallIndex)) {
     	if (shiftChange == 0) {
@@ -450,17 +450,19 @@ public class PherogramAreaModel extends PherogramComponentModel implements DataM
   		shiftChangeList.add(listIndex, new ShiftChange(baseCallIndex, shiftChange));
   		combineThreeShiftChanges(listIndex);
   	}
-  	fireShiftChangeEdited(baseCallIndex, shiftChange, false);
   }
   
   
   public void addShiftChange(int baseCallIndex, int shiftChangeAddend) {
-  	int listIndex = shiftChangeListIndexByBaseCallIndex(baseCallIndex);
-  	int shiftChange = shiftChangeAddend;
-  	if (listIndex < shiftChangeList.size() && (shiftChangeList.get(listIndex).baseCallIndex == baseCallIndex)) {
-  		shiftChange += shiftChangeList.get(listIndex).shiftChange;
+  	if (shiftChangeAddend != 0) {
+	  	int listIndex = shiftChangeListIndexByBaseCallIndex(baseCallIndex);
+	  	int shiftChange = shiftChangeAddend;
+	  	if (listIndex < shiftChangeList.size() && (shiftChangeList.get(listIndex).baseCallIndex == baseCallIndex)) {
+	  		shiftChange += shiftChangeList.get(listIndex).shiftChange;
+	  	}
+	  	setShiftChange(baseCallIndex, shiftChange);
+	  	fireShiftChangeEdited(baseCallIndex, shiftChange, false);
   	}
-  	setShiftChange(baseCallIndex, shiftChange);
   }
   
   
@@ -622,8 +624,8 @@ public class PherogramAreaModel extends PherogramComponentModel implements DataM
 	}
 	
 	
-	protected void fireShiftChangeEdited(int baseCallIndex, int shiftChange, boolean moreEventsUpcoming) {
-		PherogramShiftChangeUpdateEvent event = new PherogramShiftChangeUpdateEvent(this, moreEventsUpcoming, baseCallIndex, shiftChange);
+	protected void fireShiftChangeEdited(int baseCallIndex, int relativeShiftChange, boolean moreEventsUpcoming) {
+		PherogramShiftChangeUpdateEvent event = new PherogramShiftChangeUpdateEvent(this, moreEventsUpcoming, baseCallIndex, relativeShiftChange);
 		for (PherogramModelListener listener : modelListeners.toArray(new PherogramModelListener[modelListeners.size()])) {  // Copying the list is necessary to allow listeners to remove themselves from the list without a ConcurrentModificationException being thrown.
 			listener.shiftChangeEdited(event);
 		}
