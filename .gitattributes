@@ -286,6 +286,8 @@ main/info.bioinfweb.libralign.core/src/info/bioinfweb/libralign/model/exception/
 main/info.bioinfweb.libralign.core/src/info/bioinfweb/libralign/model/factory/AbstractAlignmentModelFactory.java -text svneol=unset#text/plain
 main/info.bioinfweb.libralign.core/src/info/bioinfweb/libralign/model/factory/AlignmentModelFactory.java -text svneol=unset#text/plain
 main/info.bioinfweb.libralign.core/src/info/bioinfweb/libralign/model/factory/BioPolymerCharAlignmentModelFactory.java -text svneol=unset#text/plain
+main/info.bioinfweb.libralign.core/src/info/bioinfweb/libralign/model/factory/CharacterStateSetChooser.java -text
+main/info.bioinfweb.libralign.core/src/info/bioinfweb/libralign/model/factory/DefaultCharacterStateSetChooser.java -text
 main/info.bioinfweb.libralign.core/src/info/bioinfweb/libralign/model/factory/NewAlignmentModelParameterMap.java -text svneol=unset#text/plain
 main/info.bioinfweb.libralign.core/src/info/bioinfweb/libralign/model/factory/StringAlignmentModelFactory.java -text svneol=unset#text/plain
 main/info.bioinfweb.libralign.core/src/info/bioinfweb/libralign/model/factory/TokenDefinition.java -text svneol=unset#text/plain

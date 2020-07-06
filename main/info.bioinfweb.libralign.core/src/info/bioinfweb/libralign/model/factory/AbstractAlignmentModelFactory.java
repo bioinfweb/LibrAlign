@@ -19,6 +19,7 @@
 package info.bioinfweb.libralign.model.factory;
 
 
+import info.bioinfweb.commons.bio.CharacterStateSetType;
 import info.bioinfweb.libralign.model.AlignmentModel;
 import info.bioinfweb.libralign.model.exception.InvalidTokenRepresentationException;
 import info.bioinfweb.libralign.model.implementations.AbstractUndecoratedAlignmentModel;
@@ -39,6 +40,7 @@ public abstract class AbstractAlignmentModelFactory<T> implements AlignmentModel
 	private SequenceIDManager sharedIDManager = null;
 	private boolean reuseSequenceIDs = false;
 	private T defaultToken;
+	private CharacterStateSetChooser characterStateSetChooser = new DefaultCharacterStateSetChooser();
 	
 	
 	/**
@@ -66,6 +68,11 @@ public abstract class AbstractAlignmentModelFactory<T> implements AlignmentModel
 	}
 
 
+	public AbstractAlignmentModelFactory(T defaultToken, CharacterStateSetChooser characterStateSetChooser) {
+		this(null, false, defaultToken, characterStateSetChooser);
+	}
+	
+	
 	/**
 	 * Creates a new instance of this class using a shared sequence ID manager.
 	 * 
@@ -78,12 +85,21 @@ public abstract class AbstractAlignmentModelFactory<T> implements AlignmentModel
 	 *        {@link #createToken(AlignmentModel, String)} (If {@code null}
 	 *        is specified here, {@link #createToken(AlignmentModel, String)} will throw an exception 
 	 *        instead in such cases.)
+	 * @param characterStateSetChooser Makes it possible to manually change the CharacterStateSetType if it was set
+	 * 		  to UNKNOWN. The interface of CharacterStateSetChooser has the method chooseCharacterStateSet() which
+	 * 		  by implementation returns the wanted CharacterStateSetType.)
 	 */
-	public AbstractAlignmentModelFactory(SequenceIDManager sharedIDManager, boolean reuseSequenceIDs, T defaultToken) {
+	public AbstractAlignmentModelFactory(SequenceIDManager sharedIDManager, boolean reuseSequenceIDs, T defaultToken, CharacterStateSetChooser characterStateSetChooser) {
 		super();
-		this.sharedIDManager = sharedIDManager;
-		this.reuseSequenceIDs = reuseSequenceIDs;
-		this.defaultToken = defaultToken;
+		if (characterStateSetChooser == null) {
+			throw new IllegalArgumentException("characterStateSetChooser must not be null.");
+		}
+		else {
+			this.sharedIDManager = sharedIDManager;
+			this.reuseSequenceIDs = reuseSequenceIDs;
+			this.defaultToken = defaultToken;
+			this.characterStateSetChooser = characterStateSetChooser;
+		}
 	}
 
 
@@ -131,6 +147,17 @@ public abstract class AbstractAlignmentModelFactory<T> implements AlignmentModel
 		return defaultToken;
 	}
 
+	
+	/**
+	 * Returns the characterStateSetChooser which can be used to change the CharacterStateSetType 
+	 * if it was set to UNKNOWN. If none was specified then it can only return UNKNOWN as a default.
+	 *  
+	 * @return the characterStateSetChooser or DefaultCharacterStateSetChooser() if none was defined.
+	 */
+	public CharacterStateSetChooser getCharacterStateSetChooser() {
+		return characterStateSetChooser;
+	}
+
 
 	/**
 	 * Creates a token using {@link TokenSet#tokenByRepresentation(String)}.
@@ -160,6 +187,10 @@ public abstract class AbstractAlignmentModelFactory<T> implements AlignmentModel
 	
 	@Override
 	public AlignmentModel<T> createNewModel(NewAlignmentModelParameterMap parameterMap) {
+		if (parameterMap.getCharacterStateSetType().equals(CharacterStateSetType.UNKNOWN)) {
+			parameterMap.setCharacterStateSetType(getCharacterStateSetChooser().chooseCharacterStateSet());
+		}
+		
 		AlignmentModel<T> result = doCreateNewModel(parameterMap);
 		if (result != null) {
 			try {

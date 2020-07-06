@@ -19,6 +19,7 @@
 package info.bioinfweb.libralign.model.factory;
 
 
+import info.bioinfweb.commons.bio.CharacterStateSetType;
 import info.bioinfweb.libralign.model.AlignmentModel;
 import info.bioinfweb.libralign.model.implementations.AbstractUndecoratedAlignmentModel;
 import info.bioinfweb.libralign.model.implementations.ArrayListAlignmentModel;
@@ -88,6 +89,26 @@ public class BioPolymerCharAlignmentModelFactory extends AbstractAlignmentModelF
 	/**
 	 * Creates a new instance of this class using a shared sequence ID manager.
 	 * 
+	 * @param defaultToken a default token to be used if invalid token representations are passed to 
+	 *        {@link #createToken(AlignmentModel, String)} (If {@code null}
+	 *        is specified here, {@link #createToken(AlignmentModel, String)} will throw an exception 
+	 *        instead in such cases.)
+	 * @param characterStateSetChooser Makes it possible to manually change the CharacterStateSetType if it was set
+	 * 		  to UNKNOWN. The interface of CharacterStateSetChooser has the method chooseCharacterStateSet() which
+	 * 		  by implementation returns the wanted CharacterStateSetType.)
+	 * @param distinguishCase Specify {@code true} here, if upper and lower case letters (representing nucleotides
+	 *        or amino acids) should be supported as different tokens by created alignment models or {@code false} 
+	 *        if all token shall be converted to upper case letters in {@link #createToken(AlignmentModel, String)}.
+	 */
+	public BioPolymerCharAlignmentModelFactory(Character defaultToken, CharacterStateSetChooser characterStateSetChooser, boolean distinguishCase) {
+		super(defaultToken, characterStateSetChooser);
+		this.distinguishCase = distinguishCase;
+	}
+	
+	
+	/**
+	 * Creates a new instance of this class using a shared sequence ID manager.
+	 * 
 	 * @param sharedIDManager the sequence ID manager that will be shared by all model instances 
 	 *        created by this factory 
 	 * @param reuseSequenceIDs Specifies whether unused IDs present in their underlying ID managers should be reused 
@@ -101,11 +122,14 @@ public class BioPolymerCharAlignmentModelFactory extends AbstractAlignmentModelF
 	 * @param distinguishCase Specify {@code true} here, if upper and lower case letters (representing nucleotides
 	 *        or amino acids) should be supported as different tokens by created alignment models or {@code false} 
 	 *        if all token shall be converted to upper case letters in {@link #createToken(AlignmentModel, String)}.
+	 * @param characterStateSetChooser Makes it possible to manually change the CharacterStateSetType if it was set
+	 * 		  to UNKNOWN. The interface of CharacterStateSetChooser has the method chooseCharacterStateSet() which
+	 * 		  by implementation returns the wanted CharacterStateSetType.)
 	 */
 	public BioPolymerCharAlignmentModelFactory(SequenceIDManager sharedIDManager, boolean reuseSequenceIDs, 
-			Character defaultToken, boolean distinguishCase) {
+			Character defaultToken, CharacterStateSetChooser characterStateSetChooser, boolean distinguishCase) {
 		
-		super(sharedIDManager, reuseSequenceIDs, defaultToken);
+		super(sharedIDManager, reuseSequenceIDs, defaultToken, characterStateSetChooser);
 		this.distinguishCase = distinguishCase;
 	}
 
@@ -125,6 +149,7 @@ public class BioPolymerCharAlignmentModelFactory extends AbstractAlignmentModelF
 
 	@Override
 	public AlignmentModel<Character> doCreateNewModel(NewAlignmentModelParameterMap parameterMap) {
+	
 		// Create initial set:
 		CharacterTokenSet tokenSet;
 		switch (parameterMap.getCharacterStateSetType()) {
