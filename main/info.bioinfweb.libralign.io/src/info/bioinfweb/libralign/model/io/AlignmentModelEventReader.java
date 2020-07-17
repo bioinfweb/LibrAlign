@@ -254,12 +254,9 @@ public class AlignmentModelEventReader implements JPhyloIOEventListener {
 		if (currentModel == null) {
 			if (currentParameterMap.getCharacterStateSetType() == null) {
 				currentParameterMap.setCharacterStateSetType(CharacterStateSetType.UNKNOWN);
-				System.out.println("Inside the ensureCurrentModelInstance [ifif] method " + currentParameterMap.getCharacterStateSetType());
 			}
-			System.out.println("Inside the ensureCurrentModelInstance [if] method " + currentParameterMap.getCharacterStateSetType());
 			currentModel = getAlignmentModelFactory().createNewModel(currentParameterMap); //TODO: trigger skipping current alignment if null was returned, indicate by log entry or something similar
 		}
-		System.out.println("Inside the end of ensureCurrentModelInstance method " + currentParameterMap.getCharacterStateSetType());
 	}
 	
 	
@@ -318,7 +315,6 @@ public class AlignmentModelEventReader implements JPhyloIOEventListener {
 				if (event.getType().getTopologyType().equals(EventTopologyType.START)) {
 					//TODO Handle concatenated case (Currently only the last token set is used.)
 					currentParameterMap.setCharacterStateSetType(event.asTokenSetDefinitionEvent().getSetType());
-					System.out.println("By TOKEN_SET_DEFINITION " + currentParameterMap.getCharacterStateSetType()); //returns DNA when file contains DNA
 				}
 				break;
 			case SINGLE_TOKEN_DEFINITION:
@@ -327,7 +323,6 @@ public class AlignmentModelEventReader implements JPhyloIOEventListener {
 						SingleTokenDefinitionEvent definitionEvent = event.asSingleTokenDefinitionEvent(); 
 						currentParameterMap.getDefinedTokens().add(
 								new TokenDefinition(definitionEvent.getTokenName(), definitionEvent.getMeaning()));
-						System.out.println("By SINGLE_TOKEN_DEFINITION " + currentParameterMap.getCharacterStateSetType());
 						//TODO Will the character set name be needed for ConcantenatedAlignmentModels?
 					}
 					else {  // Token set definition encountered, after a model with token set was already created.
@@ -338,9 +333,7 @@ public class AlignmentModelEventReader implements JPhyloIOEventListener {
 			case SEQUENCE:
 				if (event.getType().getTopologyType().equals(EventTopologyType.START)) {
 					LinkedLabeledIDEvent sequenceEvent = event.asLinkedLabeledIDEvent();
-					System.out.println("By SEQUENCE before ensureCurrentModelInstance " + currentParameterMap.getCharacterStateSetType());
 					ensureCurrentModelInstance();
-					System.out.println("By SEQUENCE after ensureCurrentModelInstance " + currentParameterMap.getCharacterStateSetType());
 					currentSequenceID = currentModel.addSequence(sequenceEvent.getLabel()/*, sequenceEvent.getID()*/);  //TODO Handle case that no label is present or labels are not unique.
 					//TODO Can't sequences be continued by an additional start event? It that case addSequence() should not be called again. => Create test case e.g. with MEGA or interleaved Nexus.
 				}
@@ -368,8 +361,7 @@ public class AlignmentModelEventReader implements JPhyloIOEventListener {
 					currentParameterMap.put(NewAlignmentModelParameterMap.KEY_ALIGNMENT_LABEL, alignmentEvent.getLabel());
 					currentAlignmentID = alignmentEvent.getID();
 					currentParameterMap.put(NewAlignmentModelParameterMap.KEY_ALIGNMENT_ID, currentAlignmentID);
-					System.out.println("By ALIGNMENT before ensureCurrentModelInstance " + currentParameterMap.getCharacterStateSetType());
-					ensureCurrentModelInstance();  // Necessary to have current model available for all future events, e.g., when data element readers call getModelByJPhyloIOID(). -> all character state set events are ignored if model is created here already
+					//ensureCurrentModelInstance();  // Necessary to have current model available for all future events, e.g., when data element readers call getModelByJPhyloIOID(). -> all character state set events are ignored if model is created here already
 				}
 				else {
 					if (currentModel != null) {
