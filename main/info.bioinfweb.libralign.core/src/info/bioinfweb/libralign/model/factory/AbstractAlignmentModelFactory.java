@@ -188,7 +188,15 @@ public abstract class AbstractAlignmentModelFactory<T> implements AlignmentModel
 	@Override
 	public AlignmentModel<T> createNewModel(NewAlignmentModelParameterMap parameterMap) {
 		if (parameterMap.getCharacterStateSetType().equals(CharacterStateSetType.UNKNOWN)) {
-			parameterMap.setCharacterStateSetType(getCharacterStateSetChooser().chooseCharacterStateSet());
+			CharacterStateSetType newType = getCharacterStateSetChooser().chooseCharacterStateSet();
+			if (newType != null) {
+				parameterMap.setCharacterStateSetType(newType);
+			} 
+			else {
+				return null;
+				// TODO: put something so that AlignmentModelReader knows that something went wrong
+			}
+			
 		}
 		
 		AlignmentModel<T> result = doCreateNewModel(parameterMap);
