@@ -39,7 +39,7 @@ import javax.swing.KeyStroke;
  * {@link AlignmentModel}.
  * <p>
  * Implementing classes define a set of valid tokens that may be contained in an alignment and define
- * an optional keyboard shortcut a user of LibrAlign can use to insert the according token into an alignment.
+ * an optional keyboard shortcut a user of <i>LibrAlign</i> can use to insert the according token into an alignment.
  * <p>
  * Note that implementations may also represent a set of continuous values. In this case the implementation
  * should return {@code true} for {@link #isContinuous()}, {@code null} for {@link #iterator()},
