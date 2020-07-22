@@ -19,35 +19,61 @@
 package info.bioinfweb.libralign.model.undo.alignment;
 
 
+import info.bioinfweb.commons.collections.ListChangeType;
 import info.bioinfweb.libralign.model.AlignmentModelListener;
 import info.bioinfweb.libralign.model.events.DataModelChangeEvent;
 import info.bioinfweb.libralign.model.events.SequenceChangeEvent;
 import info.bioinfweb.libralign.model.events.SequenceRenamedEvent;
 import info.bioinfweb.libralign.model.events.TokenChangeEvent;
+import info.bioinfweb.libralign.model.undo.EditRecorder;
+import info.bioinfweb.libralign.model.undo.alignment.sequence.AlignmentModelAddSequenceEdit;
+import info.bioinfweb.libralign.model.undo.alignment.sequence.AlignmentModelRemoveSequenceEdit;
+import info.bioinfweb.libralign.model.undo.alignment.sequence.AlignmentModelRenameSequenceEdit;
+import info.bioinfweb.libralign.model.undo.alignment.token.AlignmentModelInsertTokensEdit;
+import info.bioinfweb.libralign.model.undo.alignment.token.AlignmentModelRemoveTokensEdit;
+import info.bioinfweb.libralign.model.undo.alignment.token.AlignmentModelSetTokensEdit;
 
 
 
 public class AlignmentModelUndoListener<T> implements AlignmentModelListener<T> {
-	//TODO This listener may only record edits when no undo or redo operation is ongoing.
+	private EditRecorder<?,?> recorder;
 	
 	@Override
 	public void afterSequenceChange(SequenceChangeEvent<T> event) {
-		// TODO Auto-generated method stub
+		if (event.getType().equals(ListChangeType.INSERTION)) {
+			AlignmentModelAddSequenceEdit<?,?> edit = new AlignmentModelAddSequenceEdit<>(event.getSource(), event.getSequenceID(), event.getSequenceName());
+			recorder.addSubedit(edit);
+		}
+		else if (event.getType().equals(ListChangeType.DELETION)) {
+			AlignmentModelRemoveSequenceEdit<?,?> edit = new AlignmentModelRemoveSequenceEdit<>(event.getSource(), event.getSequenceID(), event.getDeletedContent());
+			recorder.addSubedit(edit);
+		}
 		
 	}
 
 	
 	@Override
 	public void afterSequenceRenamed(SequenceRenamedEvent<T> event) {
-		// TODO Auto-generated method stub
+		AlignmentModelRenameSequenceEdit<?,?> edit = new AlignmentModelRenameSequenceEdit<>(event.getSource(), event.getSequenceID(), event.getNewName(), event.getPreviousName());
+		recorder.addSubedit(edit);
 		
 	}
 
 	
 	@Override
 	public void afterTokenChange(TokenChangeEvent<T> event) {
-		// TODO Auto-generated method stub
-		
+		if (event.getType().equals(ListChangeType.INSERTION)) {
+			AlignmentModelInsertTokensEdit<?,?> edit = new AlignmentModelInsertTokensEdit<>(event.getSource(), event.getSequenceID(), event.getStartIndex(), event.getAffectedTokens(), event.isLeftBound());
+			recorder.addSubedit(edit);
+		}
+		else if (event.getType().equals(ListChangeType.DELETION)) {
+			AlignmentModelRemoveTokensEdit<?,?> edit = new AlignmentModelRemoveTokensEdit<>(event.getSource(), event.getSequenceID(), event.getStartIndex(), event.getAffectedTokens());
+			recorder.addSubedit(edit);
+		}
+		else if (event.getType().equals(ListChangeType.DELETION)) {
+			AlignmentModelSetTokensEdit<?,?> edit = new AlignmentModelSetTokensEdit<>(event.getSource(), event.getSequenceID(), event.getStartIndex(), event.getNewTokens(), event.getAffectedTokens());
+			recorder.addSubedit(edit);
+		}
 	}
 
 	

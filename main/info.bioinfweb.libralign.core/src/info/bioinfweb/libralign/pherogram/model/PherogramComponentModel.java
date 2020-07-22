@@ -20,6 +20,7 @@ package info.bioinfweb.libralign.pherogram.model;
 
 
 import info.bioinfweb.commons.Math2;
+import info.bioinfweb.libralign.model.AlignmentModel;
 import info.bioinfweb.libralign.pherogram.provider.PherogramProvider;
 
 import java.util.HashSet;
@@ -38,6 +39,7 @@ public class PherogramComponentModel {
 	private int leftCutPosition = 0;
 	private int rightCutPosition = 0;
 	protected Set<PherogramModelListener> modelListeners = new HashSet<PherogramModelListener>();
+	private AlignmentModel<?> alignmentModel;
 
 
 	/**
@@ -62,6 +64,17 @@ public class PherogramComponentModel {
 		this(model.getPherogramProvider(), model.getLeftCutPosition(), model.getRightCutPosition());
 	}
 
+	
+	public PherogramComponentModel(PherogramProvider pherogramProvider, AlignmentModel<?> alignmentModel) {
+		this(pherogramProvider, 0, pherogramProvider.getSequenceLength());
+		this.alignmentModel = alignmentModel;
+	}
+	
+	
+	public PherogramComponentModel(PherogramComponentModel model, AlignmentModel<?> alignmentModel) {
+		this(model.getPherogramProvider(), model.getLeftCutPosition(), model.getRightCutPosition());
+		this.alignmentModel = alignmentModel;
+	}
 
 	/**
 	 * Creates a new instance of this class.
@@ -257,6 +270,11 @@ public class PherogramComponentModel {
 						") and the length of the base call sequence (" + pherogramProvider.getSequenceLength() + ").");
 			}
 		}
+	}
+
+
+	public AlignmentModel<?> getAlignmentModel() {
+		return alignmentModel;
 	}
 
 

@@ -58,7 +58,7 @@ public class CharSet extends NonOverlappingIntervalList {
 			this.name = name;
 			
 			for (CharSetDataModel model : models) {
-				model.fireAfterCharSetRenamed(new CharSetRenamedEvent(model, true, null, this, previousName));  // The ID is unknown here and could only be found out by searching the whole model.
+				model.fireAfterCharSetRenamed(new CharSetRenamedEvent(model, true, null, this, previousName, name));  // The ID is unknown here and could only be found out by searching the whole model.
 			}
 		}
 	}
@@ -75,7 +75,7 @@ public class CharSet extends NonOverlappingIntervalList {
 			this.color = color;
 			
 			for (CharSetDataModel model : models) {
-				model.fireAfterCharSetColorChanged(new CharSetColorChangeEvent(model, true, null, this, previousColor));  // The ID is unknown here and could only be found out by searching the whole model.
+				model.fireAfterCharSetColorChanged(new CharSetColorChangeEvent(model, true, null, this, previousColor, color));  // The ID is unknown here and could only be found out by searching the whole model.
 			}
 		}
 	}

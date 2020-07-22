@@ -23,6 +23,7 @@ import info.bioinfweb.libralign.dataarea.implementations.charset.events.CharSetC
 import info.bioinfweb.libralign.dataarea.implementations.charset.events.CharSetColorChangeEvent;
 import info.bioinfweb.libralign.dataarea.implementations.charset.events.CharSetColumnChangeEvent;
 import info.bioinfweb.libralign.dataarea.implementations.charset.events.CharSetRenamedEvent;
+import info.bioinfweb.libralign.dataarea.implementations.charset.undo.CharSetDataModelUndoListener;
 import info.bioinfweb.libralign.model.AlignmentModel;
 import info.bioinfweb.libralign.model.data.DataModel;
 
@@ -169,4 +170,19 @@ public class CharSetDataModel extends ListOrderedMap<String, CharSet> implements
 			listener.afterCharSetColorChange(e);
 		}
 	}
+
+
+	@Override
+	public String nextKey(String arg0) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+
+	@Override
+	public String previousKey(String arg0) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }

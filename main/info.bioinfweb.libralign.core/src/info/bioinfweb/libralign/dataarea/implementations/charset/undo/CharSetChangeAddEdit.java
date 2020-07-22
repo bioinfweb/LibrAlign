@@ -1,6 +1,6 @@
 /*
  * LibrAlign - A GUI library for displaying and editing multiple sequence alignments and attached data
- * Copyright (C) 2014-2018  Ben StÃ¶ver
+ * Copyright (C) 2014-2018  Ben Stöver
  * <http://bioinfweb.info/LibrAlign>
  * 
  * This file is free software: you can redistribute it and/or modify
@@ -16,42 +16,45 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package info.bioinfweb.libralign.dataarea.implementations.charset.events;
+package info.bioinfweb.libralign.dataarea.implementations.charset.undo;
 
+
+import javax.swing.undo.CannotRedoException;
+import javax.swing.undo.CannotUndoException;
 
 import info.bioinfweb.libralign.dataarea.implementations.charset.CharSet;
 import info.bioinfweb.libralign.dataarea.implementations.charset.CharSetDataModel;
-
-import java.awt.Color;
-
+import info.bioinfweb.libralign.model.AlignmentModel;
 
 
-/**
- * This event indicates that the color of an instance of {@link CharSet} has been changed. It contains 
- * a property for the previous color. The current (new) color can be obtained from {@link #getCharSet()}. 
- * 
- * @author Ben St&ouml;ver
- * @since 0.6.0
- * @bioinfweb.module info.bioinfweb.libralign.core
- */
-public class CharSetColorChangeEvent extends CharSetDataModelChangeEvent {
-	private Color previousColor;
-	private Color newColor;
+
+public class CharSetChangeAddEdit <M extends AlignmentModel<T>, T> extends CharSetChangeEdit<M, T>{
+	
 
 	
-	public CharSetColorChangeEvent(CharSetDataModel source, boolean lastEvent, String charSetID, CharSet charSet, Color previousColor, Color newColor) {
-		super(source, lastEvent, charSetID, charSet);
-		this.previousColor = previousColor;
-		this.newColor = newColor;
+	public CharSetChangeAddEdit(CharSetDataModel source, M alignmentModel, CharSet newCharSet, String key) {
+		super(source, alignmentModel, newCharSet, null, key);
+	}
+
+	
+	@Override
+	public void redo() throws CannotRedoException {
+		addCharSet();
+		super.redo();
+	}
+
+	
+	@Override
+	public void undo() throws CannotUndoException {
+		removeCharSet();
+		super.undo();
+	}
+	
+	
+	@Override
+	public String getPresentationName() {
+		return "A CharSet was added";
 	}
 
 
-	public Color getNewColor() {
-		return newColor;
-	}
-
-
-	public Color getPreviousColor() {
-		return previousColor;
-	}
 }

@@ -28,6 +28,8 @@ import info.bioinfweb.libralign.pherogram.model.PherogramShiftChangeUpdateEvent;
 
 
 public class PherogramModelUndoListener implements PherogramModelListener {
+	
+	
 	@Override
 	public void pherogramProviderChange(PherogramProviderChangeEvent event) {
 		// TODO Auto-generated method stub
@@ -37,7 +39,7 @@ public class PherogramModelUndoListener implements PherogramModelListener {
 	
 	@Override
 	public void leftCutPositionChange(PherogramCutPositionChangeEvent event) {
-		// TODO Auto-generated method stub
+		//LeftCutPositionEdit<?,?,?> edit = new LeftCutPositionEdit<>(event.getSource().getAlignmentModel(), event.getSource(), event.getOldBaseCallIndex(), event.getNewBaseCallIndex());
 		
 	}
 

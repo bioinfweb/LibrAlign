@@ -227,7 +227,7 @@ public abstract class AbstractUndecoratedAlignmentModel<T> extends AbstractAlign
 		}
 		else {
 			doAddSequence(sequenceID, sequenceName);
-			fireAfterSequenceChange(SequenceChangeEvent.newInsertInstance(this, sequenceID));
+			fireAfterSequenceChange(SequenceChangeEvent.newInsertInstance(this, sequenceID, sequenceName));
 			return sequenceID;
 		}
 	}

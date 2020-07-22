@@ -37,11 +37,18 @@ import info.bioinfweb.libralign.dataarea.implementations.charset.CharSetDataMode
  */
 public class CharSetRenamedEvent extends CharSetDataModelChangeEvent {
 	private String previousName;
+	private String newName;
 	
 	
-	public CharSetRenamedEvent(CharSetDataModel source, boolean lastEvent, String charSetID, CharSet charSet, String previousName) {
+	public CharSetRenamedEvent(CharSetDataModel source, boolean lastEvent, String charSetID, CharSet charSet, String previousName, String newName) {
 		super(source, lastEvent, charSetID, charSet);
 		this.previousName = previousName;
+		this.newName = newName;
+	}
+
+
+	public String getNewName() {
+		return newName;
 	}
 
 

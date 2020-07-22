@@ -56,13 +56,18 @@ public class EditRecorder<M extends AlignmentModel<T>, T> {
 		currentSubedits = new ArrayList<AlignmentModelEdit<M, T>>();
 	}
 	
+	//TODO: figure out how to do it without the raw type
+	public void addSubedit(AlignmentModelEdit edit) {
+		currentSubedits.add(edit);
+	}
+	
 
 	public M getAlignmentModel() {
 		return alignmentModel;
 	}
 
 
-	public boolean isDefinedEditRecordning() {
+	public boolean isDefinedEditRecording() {
 		return definedEditRecording;
 	}
 

@@ -40,6 +40,7 @@ public class TokenChangeEvent<T> extends TypedAlignmentModelChangeEvent<T> {
 	private int startIndex;
 	private boolean leftBound;
 	private Collection<? extends T> affectedTokens;
+	private Collection<? extends T> newTokens;
 	
 	
 	/**
@@ -54,7 +55,7 @@ public class TokenChangeEvent<T> extends TypedAlignmentModelChangeEvent<T> {
 	 * @param affectedTokens a list of the affected tokens
 	 */
 	protected TokenChangeEvent(AlignmentModel<T> source, String sequenceID, ListChangeType type,
-			int startIndex, boolean leftBound, Collection<? extends T> affectedTokens) {
+			int startIndex, boolean leftBound, Collection<? extends T> affectedTokens, Collection<? extends T> newTokens) {
 		
 		super(source, sequenceID, type);
 		if (affectedTokens == null) {
@@ -64,6 +65,7 @@ public class TokenChangeEvent<T> extends TypedAlignmentModelChangeEvent<T> {
 			this.startIndex = startIndex;
 			this.leftBound = leftBound;
 			this.affectedTokens = affectedTokens;
+			this.newTokens = newTokens;
 		}
 	}
 	
@@ -81,7 +83,7 @@ public class TokenChangeEvent<T> extends TypedAlignmentModelChangeEvent<T> {
 	public static <T> TokenChangeEvent<T> newInsertInstance(AlignmentModel<T> source, String sequenceID,
 			int startIndex, boolean leftBound, Collection<? extends T> newTokens) {
 		
-		return new TokenChangeEvent<T>(source, sequenceID, ListChangeType.INSERTION, startIndex, leftBound, newTokens);
+		return new TokenChangeEvent<T>(source, sequenceID, ListChangeType.INSERTION, startIndex, leftBound, newTokens, null);
 	}
 
 
@@ -114,7 +116,7 @@ public class TokenChangeEvent<T> extends TypedAlignmentModelChangeEvent<T> {
 	public static <T> TokenChangeEvent<T> newRemoveInstance(AlignmentModel<T> source, String sequenceID,
 			int startIndex, Collection<? extends T> removedTokens) {
 		
-		return new TokenChangeEvent<T>(source, sequenceID, ListChangeType.DELETION, startIndex, true, removedTokens);
+		return new TokenChangeEvent<T>(source, sequenceID, ListChangeType.DELETION, startIndex, true, removedTokens, null);
 	}
 
 	
@@ -146,7 +148,14 @@ public class TokenChangeEvent<T> extends TypedAlignmentModelChangeEvent<T> {
 	public static <T> TokenChangeEvent<T> newReplaceInstance(AlignmentModel<T> source, String sequenceID,
 			int startIndex, Collection<? extends T> replacedTokens) {
 		
-		return new TokenChangeEvent<T>(source, sequenceID, ListChangeType.REPLACEMENT, startIndex, true, replacedTokens);
+		return new TokenChangeEvent<T>(source, sequenceID, ListChangeType.REPLACEMENT, startIndex, true, replacedTokens, null);
+	}
+	
+	
+	public static <T> TokenChangeEvent<T> newReplaceInstance(AlignmentModel<T> source, String sequenceID,
+			int startIndex, Collection<? extends T> replacedTokens, Collection<? extends T> newToken) {
+	
+		return new TokenChangeEvent<T>(source, sequenceID, ListChangeType.REPLACEMENT, startIndex, true, replacedTokens, newToken);
 	}
 
 
@@ -215,6 +224,11 @@ public class TokenChangeEvent<T> extends TypedAlignmentModelChangeEvent<T> {
 	}
 	
 	
+	public Collection<? extends T> getNewTokens() {
+		return newTokens;
+	}
+
+
 	@Override
 	public TokenChangeEvent<T> cloneWithNewSource(AlignmentModel<T> source) {
 		return (TokenChangeEvent<T>)super.cloneWithNewSource(source);

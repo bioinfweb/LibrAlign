@@ -132,7 +132,7 @@ public abstract class AbstractListAlignmentModel<T> extends AbstractMapBasedAlig
 				index++;
 			}
 			
-			fireAfterTokenChange(TokenChangeEvent.newReplaceInstance(this, sequenceID, beginIndex, replacedTokens));
+			fireAfterTokenChange(TokenChangeEvent.newReplaceInstance(this, sequenceID, beginIndex, replacedTokens, tokens));
 		}
 		else {
 			throw new SequenceNotFoundException(this, sequenceID);

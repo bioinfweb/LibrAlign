@@ -64,7 +64,7 @@ public class PherogramAreaModel extends PherogramComponentModel implements DataM
 	 * @throws NullPointerException if {@code null} is specified for {@code pherogramProvider}
 	 */
 	public PherogramAreaModel(PherogramProvider provider, AlignmentModel<?> alignmentModel, String labeledSequenceID) {
-		super(provider);
+		super(provider, alignmentModel);
 		setAlignmentModel(alignmentModel);
 		setLabeledSequenceID(labeledSequenceID);
 	}
@@ -84,7 +84,7 @@ public class PherogramAreaModel extends PherogramComponentModel implements DataM
 	 * @throws NullPointerException if {@code null} is specified for {@code model}
 	 */
 	public PherogramAreaModel(PherogramComponentModel model, AlignmentModel<?> alignmentModel, String labeledSequenceID) {
-		super(model);
+		super(model, alignmentModel);
 		setAlignmentModel(alignmentModel);
 		setLabeledSequenceID(labeledSequenceID);
 	}

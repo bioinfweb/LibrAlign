@@ -38,6 +38,7 @@ import info.bioinfweb.libralign.model.AlignmentModel;
  */
 public class SequenceChangeEvent<T> extends TypedAlignmentModelChangeEvent<T> {
 	private Collection<T> deletedContent;
+	private String sequenceName;
 
 	
 	/**
@@ -51,17 +52,18 @@ public class SequenceChangeEvent<T> extends TypedAlignmentModelChangeEvent<T> {
 	 *        If {@code null} is passed here, an empty collection will be used.)
 	 * @throws IllegalArgumentException if {@code source}, {@code sequenceID} or {@code type} are {@code null} 
 	 */
-	protected SequenceChangeEvent(AlignmentModel<T> source, String sequenceID, ListChangeType type, Collection<T> deletedContent) {
+	protected SequenceChangeEvent(AlignmentModel<T> source, String sequenceID, ListChangeType type, Collection<T> deletedContent, String sequenceName) {
 		super(source, sequenceID, type);
 		if (deletedContent == null) {
 			deletedContent = Collections.emptyList();
 		}
 		this.deletedContent = Collections.unmodifiableCollection(deletedContent);
+		this.sequenceName = sequenceName;
 	}
 	
 	
-	public static <T> SequenceChangeEvent<T> newInsertInstance(AlignmentModel<T> source, String sequenceID) {
-		return new SequenceChangeEvent<T>(source, sequenceID, ListChangeType.INSERTION, null);
+	public static <T> SequenceChangeEvent<T> newInsertInstance(AlignmentModel<T> source, String sequenceID,String sequenceName) {
+		return new SequenceChangeEvent<T>(source, sequenceID, ListChangeType.INSERTION, null, sequenceName);
 	}
 	
 	
@@ -76,7 +78,7 @@ public class SequenceChangeEvent<T> extends TypedAlignmentModelChangeEvent<T> {
 	 * @return the new event instance
 	 */
 	public static <T> SequenceChangeEvent<T> newRemoveInstance(AlignmentModel<T> source, String sequenceID, Collection<T> deletedContent) {
-		return new SequenceChangeEvent<T>(source, sequenceID, ListChangeType.DELETION, deletedContent);
+		return new SequenceChangeEvent<T>(source, sequenceID, ListChangeType.DELETION, deletedContent, null);
 	}
 
 
@@ -90,6 +92,11 @@ public class SequenceChangeEvent<T> extends TypedAlignmentModelChangeEvent<T> {
 	}
 
 	
+	public String getSequenceName() {
+		return sequenceName;
+	}
+
+
 	@Override
 	public SequenceChangeEvent<T> cloneWithNewSource(AlignmentModel<T> source) {
 		return (SequenceChangeEvent<T>)super.cloneWithNewSource(source);

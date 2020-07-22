@@ -35,11 +35,16 @@ import info.bioinfweb.libralign.dataarea.implementations.charset.events.CharSetR
  * @bioinfweb.module info.bioinfweb.libralign.core
  */
 public interface CharSetDataModelListener {
+	
+	
 	public void afterCharSetChange(CharSetChangeEvent e);
+	
 	
 	public void afterCharSetRenamed(CharSetRenamedEvent e);
 	
+	
 	public void afterCharSetColumnChange(CharSetColumnChangeEvent e);
+	
 	
 	public void afterCharSetColorChange(CharSetColorChangeEvent e);
 }

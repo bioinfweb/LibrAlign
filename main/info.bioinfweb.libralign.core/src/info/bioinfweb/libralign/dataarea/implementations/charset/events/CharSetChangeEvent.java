@@ -36,7 +36,8 @@ import info.bioinfweb.libralign.dataarea.implementations.charset.CharSetDataMode
 public class CharSetChangeEvent extends CharSetDataModelChangeEvent {
 	private ListChangeType type;
 	private CharSet replacedCharSet;
-
+	private CharSet newCharSet;
+	private String charSetID;
 	
 	protected CharSetChangeEvent(CharSetDataModel source, boolean lastEvent, String charSetID, CharSet newCharSet, 
 			CharSet replacedCharSet, ListChangeType type) {
@@ -44,6 +45,8 @@ public class CharSetChangeEvent extends CharSetDataModelChangeEvent {
 		super(source, lastEvent, charSetID, newCharSet);
 		this.replacedCharSet = replacedCharSet;
 		this.type = type;
+		this.newCharSet = newCharSet;
+		this.charSetID = charSetID;
 	}
 	
 	
@@ -61,6 +64,11 @@ public class CharSetChangeEvent extends CharSetDataModelChangeEvent {
 	
 	public ListChangeType getType() {
 		return type;
+	}
+
+
+	public CharSet getNewCharSet() {
+		return newCharSet;
 	}
 
 

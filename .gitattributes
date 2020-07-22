@@ -212,6 +212,18 @@ main/info.bioinfweb.libralign.core/src/info/bioinfweb/libralign/dataarea/impleme
 main/info.bioinfweb.libralign.core/src/info/bioinfweb/libralign/dataarea/implementations/charset/events/CharSetRenamedEvent.java -text svneol=unset#text/plain
 main/info.bioinfweb.libralign.core/src/info/bioinfweb/libralign/dataarea/implementations/charset/events/package-info.java -text svneol=unset#text/plain
 main/info.bioinfweb.libralign.core/src/info/bioinfweb/libralign/dataarea/implementations/charset/package-info.java -text svneol=unset#text/plain
+main/info.bioinfweb.libralign.core/src/info/bioinfweb/libralign/dataarea/implementations/charset/undo/CharSetChangeAddEdit.java -text
+main/info.bioinfweb.libralign.core/src/info/bioinfweb/libralign/dataarea/implementations/charset/undo/CharSetChangeEdit.java -text
+main/info.bioinfweb.libralign.core/src/info/bioinfweb/libralign/dataarea/implementations/charset/undo/CharSetChangeRemoveEdit.java -text
+main/info.bioinfweb.libralign.core/src/info/bioinfweb/libralign/dataarea/implementations/charset/undo/CharSetChangeReplaceEdit.java -text
+main/info.bioinfweb.libralign.core/src/info/bioinfweb/libralign/dataarea/implementations/charset/undo/CharSetColorChangeEdit.java -text
+main/info.bioinfweb.libralign.core/src/info/bioinfweb/libralign/dataarea/implementations/charset/undo/CharSetColumnAddEdit.java -text
+main/info.bioinfweb.libralign.core/src/info/bioinfweb/libralign/dataarea/implementations/charset/undo/CharSetColumnAddRemoveEdit.java -text
+main/info.bioinfweb.libralign.core/src/info/bioinfweb/libralign/dataarea/implementations/charset/undo/CharSetColumnRemoveEdit.java -text
+main/info.bioinfweb.libralign.core/src/info/bioinfweb/libralign/dataarea/implementations/charset/undo/CharSetDataModelUndoListener.java -text
+main/info.bioinfweb.libralign.core/src/info/bioinfweb/libralign/dataarea/implementations/charset/undo/CharSetModelEdit.java -text
+main/info.bioinfweb.libralign.core/src/info/bioinfweb/libralign/dataarea/implementations/charset/undo/CharSetRenamedEdit.java -text
+main/info.bioinfweb.libralign.core/src/info/bioinfweb/libralign/dataarea/implementations/charset/undo/package-info.java -text
 main/info.bioinfweb.libralign.core/src/info/bioinfweb/libralign/dataarea/implementations/consensus/ConsensusSequenceArea.java -text svneol=unset#text/plain
 main/info.bioinfweb.libralign.core/src/info/bioinfweb/libralign/dataarea/implementations/consensus/ConsensusSequenceModel.java -text svneol=unset#text/plain
 main/info.bioinfweb.libralign.core/src/info/bioinfweb/libralign/dataarea/implementations/consensus/ConsensusSequenceModelListener.java -text svneol=unset#text/plain
