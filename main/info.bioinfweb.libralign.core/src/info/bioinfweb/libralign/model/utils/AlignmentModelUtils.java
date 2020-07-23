@@ -182,4 +182,24 @@ public class AlignmentModelUtils {
   	}
   	return "";
 	}
+	
+	
+	/**
+	 * Compares two sequences with each other.
+	 * 
+	 * @return false if sequences are not equal, true if sequences are equal.
+	 */	
+	public static <T> boolean sequencesEqual(AlignmentModel<T> alignmentModel1, String sequenceID1, AlignmentModel<T> alignmentModel2, String sequenceID2) {
+		if(alignmentModel1.getSequenceLength(sequenceID1) != alignmentModel2.getSequenceLength(sequenceID2)) {
+			return false;
+		}
+		else {
+			for(int i = 0; i < alignmentModel1.getSequenceLength(sequenceID1); i++) {
+				if(alignmentModel1.getTokenAt(sequenceID1, i) != alignmentModel2.getTokenAt(sequenceID2, i)) {
+					return false;
+				}
+			}
+			return true;
+		}
+	}
 }
