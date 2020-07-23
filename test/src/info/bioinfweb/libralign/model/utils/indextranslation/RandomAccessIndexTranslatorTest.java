@@ -40,7 +40,7 @@ public class RandomAccessIndexTranslatorTest {
 		TokenSet<Character> tokenSet = CharacterTokenSet.newDNAInstance(false);
 		AlignmentModel<Character> model = new PackedAlignmentModel<Character>(tokenSet);
 		String id = model.addSequence("A");
-		model.appendTokens(id, AlignmentModelUtils.charSequenceToTokenList("--A-A-AA--AAA-", tokenSet));
+		model.appendTokens(id, AlignmentModelUtils.charSequenceToTokenList("--A-A-AA--AAA-", tokenSet), true);
 		
 		RandomAccessIndexTranslator<Character> calculator = new RandomAccessIndexTranslator<Character>(model);
 		assertIndexRelation(IndexRelation.OUT_OF_RANGE, IndexRelation.OUT_OF_RANGE, 0, calculator.getUnalignedIndex(id, -1));
@@ -84,7 +84,7 @@ public class RandomAccessIndexTranslatorTest {
 		TokenSet<Character> tokenSet = CharacterTokenSet.newDNAInstance(false);
 		AlignmentModel<Character> model = new PackedAlignmentModel<Character>(tokenSet);
 		String id = model.addSequence("A");
-		model.appendTokens(id, AlignmentModelUtils.charSequenceToTokenList("---", tokenSet));
+		model.appendTokens(id, AlignmentModelUtils.charSequenceToTokenList("---", tokenSet), true);
 		
 		RandomAccessIndexTranslator<Character> calculator = new RandomAccessIndexTranslator<Character>(model);
 		assertIndexRelation(IndexRelation.OUT_OF_RANGE, IndexRelation.OUT_OF_RANGE, IndexRelation.OUT_OF_RANGE, 
@@ -110,34 +110,34 @@ public class RandomAccessIndexTranslatorTest {
 		RandomAccessIndexTranslator<Character> calculator = new RandomAccessIndexTranslator<Character>(model);
 		
 		String id = model.addSequence("A");
-		model.appendTokens(id, AlignmentModelUtils.charSequenceToTokenList("---", tokenSet));
+		model.appendTokens(id, AlignmentModelUtils.charSequenceToTokenList("---", tokenSet), true);
 		assertEquals(0, calculator.getUnalignedLength(id));
 
 		id = model.addSequence("B");
 		assertEquals(0, calculator.getUnalignedLength(id));
 
 		id = model.addSequence("C");
-		model.appendTokens(id, AlignmentModelUtils.charSequenceToTokenList("ACGT", tokenSet));
+		model.appendTokens(id, AlignmentModelUtils.charSequenceToTokenList("ACGT", tokenSet), true);
 		assertEquals(4, calculator.getUnalignedLength(id));
 
 		id = model.addSequence("D");
-		model.appendTokens(id, AlignmentModelUtils.charSequenceToTokenList("-ACGT", tokenSet));
+		model.appendTokens(id, AlignmentModelUtils.charSequenceToTokenList("-ACGT", tokenSet), true);
 		assertEquals(4, calculator.getUnalignedLength(id));
 
 		id = model.addSequence("E");
-		model.appendTokens(id, AlignmentModelUtils.charSequenceToTokenList("ACGT-", tokenSet));
+		model.appendTokens(id, AlignmentModelUtils.charSequenceToTokenList("ACGT-", tokenSet), true);
 		assertEquals(4, calculator.getUnalignedLength(id));
 
 		id = model.addSequence("F");
-		model.appendTokens(id, AlignmentModelUtils.charSequenceToTokenList("AC--G-T-", tokenSet));
+		model.appendTokens(id, AlignmentModelUtils.charSequenceToTokenList("AC--G-T-", tokenSet), true);
 		assertEquals(4, calculator.getUnalignedLength(id));
 
 		id = model.addSequence("G");
-		model.appendTokens(id, AlignmentModelUtils.charSequenceToTokenList("---ACGT-", tokenSet));
+		model.appendTokens(id, AlignmentModelUtils.charSequenceToTokenList("---ACGT-", tokenSet), true);
 		assertEquals(4, calculator.getUnalignedLength(id));
 		
 		id = model.addSequence("H");
-		model.appendTokens(id, AlignmentModelUtils.charSequenceToTokenList("G", tokenSet));
+		model.appendTokens(id, AlignmentModelUtils.charSequenceToTokenList("G", tokenSet), true);
 		assertEquals(1, calculator.getUnalignedLength(id));
 	}	
 }
