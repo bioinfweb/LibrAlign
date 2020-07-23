@@ -1,6 +1,6 @@
 /*
  * LibrAlign - A GUI library for displaying and editing multiple sequence alignments and attached data
- * Copyright (C) 2014-2018  Ben StÃ¶ver
+ * Copyright (C) 2014-2018  Ben Stöver
  * <http://bioinfweb.info/LibrAlign>
  * 
  * This file is free software: you can redistribute it and/or modify
@@ -64,7 +64,7 @@ public class PherogramAreaModel extends PherogramComponentModel implements DataM
 	 * @throws NullPointerException if {@code null} is specified for {@code pherogramProvider}
 	 */
 	public PherogramAreaModel(PherogramProvider provider, AlignmentModel<?> alignmentModel, String labeledSequenceID) {
-		super(provider, alignmentModel);
+		super(provider);
 		setAlignmentModel(alignmentModel);
 		setLabeledSequenceID(labeledSequenceID);
 	}
@@ -84,7 +84,7 @@ public class PherogramAreaModel extends PherogramComponentModel implements DataM
 	 * @throws NullPointerException if {@code null} is specified for {@code model}
 	 */
 	public PherogramAreaModel(PherogramComponentModel model, AlignmentModel<?> alignmentModel, String labeledSequenceID) {
-		super(model, alignmentModel);
+		super(model);
 		setAlignmentModel(alignmentModel);
 		setLabeledSequenceID(labeledSequenceID);
 	}
