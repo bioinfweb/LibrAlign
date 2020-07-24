@@ -23,12 +23,15 @@ import java.util.HashSet;
 import java.util.Set;
 
 import info.bioinfweb.libralign.model.AlignmentModel;
+import info.bioinfweb.libralign.model.undo.EditRecorder;
+import info.bioinfweb.libralign.model.undo.alignment.AlignmentModelUndoListener;
 
 
 
 public class AbstractDataModel<L> implements DataModel<L> {
 	private AlignmentModel<?> alignmentModel;
 	protected Set<L> modelListeners = new HashSet<>();
+	private boolean undoListenerExists;
 
 	
 	public AbstractDataModel(AlignmentModel<?> alignmentModel) {
@@ -57,5 +60,32 @@ public class AbstractDataModel<L> implements DataModel<L> {
 	@Override
 	public boolean removeModelListener(L listener) {
 		return modelListeners.remove(listener);
+	}
+
+
+	@Override
+	public L createUndoListener(EditRecorder<?, ?> recorder) {
+		AlignmentModelUndoListener<?> listener = new AlignmentModelUndoListener<>(recorder);
+		return (L) listener;
+	}
+
+
+	@Override
+	public L ensureUndoListener() throws UnsupportedOperationException {
+		if (!undoListenerExists) {
+			undoListenerExists = true;
+			L listener = createUndoListener(new EditRecorder<>(alignmentModel));
+			addModelListener(listener);
+			return listener;
+		}
+		return null;
+	}
+
+
+	@Override
+	public void RemoveUndoListener(L listener) {
+		removeModelListener(listener);
+		undoListenerExists = false;
+		
 	}	
 }

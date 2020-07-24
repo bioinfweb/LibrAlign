@@ -38,6 +38,13 @@ import info.bioinfweb.libralign.model.undo.alignment.token.AlignmentModelSetToke
 public class AlignmentModelUndoListener<T> implements AlignmentModelListener<T> {
 	private EditRecorder<?,?> recorder;
 	
+	
+	public AlignmentModelUndoListener(EditRecorder<?, ?> recorder) {
+		super();
+		this.recorder = recorder;
+	}
+
+
 	@Override
 	public void afterSequenceChange(SequenceChangeEvent<T> event) {
 		if (event.getType().equals(ListChangeType.INSERTION)) {
@@ -70,7 +77,7 @@ public class AlignmentModelUndoListener<T> implements AlignmentModelListener<T> 
 			AlignmentModelRemoveTokensEdit<?,?> edit = new AlignmentModelRemoveTokensEdit<>(event.getSource(), event.getSequenceID(), event.getStartIndex(), event.getAffectedTokens());
 			recorder.addSubedit(edit);
 		}
-		else if (event.getType().equals(ListChangeType.DELETION)) {
+		else if (event.getType().equals(ListChangeType.REPLACEMENT)) {
 			AlignmentModelSetTokensEdit<?,?> edit = new AlignmentModelSetTokensEdit<>(event.getSource(), event.getSequenceID(), event.getStartIndex(), event.getNewTokens(), event.getAffectedTokens());
 			recorder.addSubedit(edit);
 		}
@@ -79,7 +86,15 @@ public class AlignmentModelUndoListener<T> implements AlignmentModelListener<T> 
 	
 	@Override
 	public void afterDataModelChange(DataModelChangeEvent<T> event) {
-		// TODO Auto-generated method stub
+		if (event.getType().equals(ListChangeType.INSERTION)) {
+			DataModelAddEdit<?, ?, ?> edit = new DataModelAddEdit<>(event.getSource(), event.getDataModel());
+			recorder.addSubedit(edit);
+			event.getDataModel().ensureUndoListener();
+		}
+		else if (event.getType().equals(ListChangeType.DELETION)) {
+			DataModelRemoveEdit<?, ?, ?> edit = new DataModelRemoveEdit<>(event.getSource(), event.getDataModel());
+			recorder.addSubedit(edit);
+		}
 		
 	}
 }

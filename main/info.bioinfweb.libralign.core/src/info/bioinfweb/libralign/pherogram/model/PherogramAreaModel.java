@@ -30,7 +30,9 @@ import info.bioinfweb.libralign.model.AlignmentModel;
 import info.bioinfweb.libralign.model.AlignmentModelAdapter;
 import info.bioinfweb.libralign.model.data.DataModel;
 import info.bioinfweb.libralign.model.events.TokenChangeEvent;
+import info.bioinfweb.libralign.model.undo.EditRecorder;
 import info.bioinfweb.libralign.pherogram.distortion.GapPattern;
+import info.bioinfweb.libralign.pherogram.model.undo.PherogramModelUndoListener;
 import info.bioinfweb.libralign.pherogram.provider.PherogramProvider;
 import info.bioinfweb.libralign.pherogram.view.PherogramTraceCurveView;
 
@@ -49,6 +51,7 @@ public class PherogramAreaModel extends PherogramComponentModel implements DataM
 	private int firstSeqPos;
 	private List<ShiftChange> shiftChangeList = new ArrayList<ShiftChange>();
 	private boolean firstSeqPosUpdateOngoing = false;
+	private boolean undoListenerExists;
   
 	
 	/**
@@ -629,5 +632,32 @@ public class PherogramAreaModel extends PherogramComponentModel implements DataM
 		for (PherogramModelListener listener : modelListeners.toArray(new PherogramModelListener[modelListeners.size()])) {  // Copying the list is necessary to allow listeners to remove themselves from the list without a ConcurrentModificationException being thrown.
 			listener.shiftChangeEdited(event);
 		}
+	}
+
+
+	@Override
+	public PherogramModelListener createUndoListener(EditRecorder<?, ?> recorder) {
+		PherogramModelListener listener = new PherogramModelUndoListener(recorder);
+		return listener;
+	}
+
+
+	@Override
+	public PherogramModelListener ensureUndoListener() throws UnsupportedOperationException {
+		if (!undoListenerExists) {
+			PherogramModelListener listener = createUndoListener(new EditRecorder<>(alignmentModel));
+			addModelListener(listener);
+			undoListenerExists = true;
+			return listener;
+		}
+		return null;
+	}
+
+
+	@Override
+	public void RemoveUndoListener(PherogramModelListener listener) {
+		removeModelListener(listener);
+		undoListenerExists = false;
+		
 	}
 }

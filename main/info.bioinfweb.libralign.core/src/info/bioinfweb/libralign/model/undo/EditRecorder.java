@@ -57,7 +57,7 @@ public class EditRecorder<M extends AlignmentModel<T>, T> {
 	}
 	
 	//TODO: figure out how to do it without the raw type
-	public void addSubedit(AlignmentModelEdit edit) {
+	public void addSubedit(AlignmentModelEdit/* <M, T> */ edit) {
 		currentSubedits.add(edit);
 	}
 	

@@ -21,6 +21,7 @@ package info.bioinfweb.libralign.model.data;
 
 import info.bioinfweb.libralign.dataarea.DataArea;
 import info.bioinfweb.libralign.model.AlignmentModel;
+import info.bioinfweb.libralign.model.undo.EditRecorder;
 
 
 
@@ -30,10 +31,40 @@ import info.bioinfweb.libralign.model.AlignmentModel;
  * @author Ben St&ouml;ver
  * @since 0.1.0
  */
-public interface DataModel<L> {
+/**
+ * @author User
+ *
+ * @param <L>
+ */
+public interface DataModel<L> {  //TODO: Add generic parameters M and T to force same model type for getAlignmentModel() and createUndoListener()?
 	public AlignmentModel<?> getAlignmentModel();
 	
 	public boolean addModelListener(L listener);
 	
 	public boolean removeModelListener(L listener);
+	
+	/**
+	 * Returns a respective undo listener that can monitor instances of this model to be used with {@link EditRecorder}.
+	 * 
+	 * @param recorder the {@link EditRecorder} to be used with the returned listener
+	 * @return a new undo listener instance or {@code null} if this model does not support creating undo listeners
+	 */
+	public L createUndoListener(EditRecorder<?, ?> recorder); 
+	
+	/**
+	 * Ensures whether an UndoListener already exists. If none exist then it creates one with createUndoListener.
+	 * Returns a respective undo listener that can monitor instances of this model to be used with {@link EditRecorder}.
+	 * 
+	 * @param recorder the {@link EditRecorder} to be used with the returned listener
+	 * @return a new undo listener instance or {@code null} if this model does not support creating undo listeners
+	 */
+	public L ensureUndoListener() throws UnsupportedOperationException;
+	
+	/**
+	 * Removed the respective undo listener.
+	 * 
+	 *@param listener the respective undo listener
+	 */
+	public void RemoveUndoListener(L listener);
+	
 }
