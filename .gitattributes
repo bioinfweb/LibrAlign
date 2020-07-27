@@ -357,8 +357,10 @@ main/info.bioinfweb.libralign.core/src/info/bioinfweb/libralign/model/undo/Combi
 main/info.bioinfweb.libralign.core/src/info/bioinfweb/libralign/model/undo/DataModelEdit.java -text svneol=unset#text/plain
 main/info.bioinfweb.libralign.core/src/info/bioinfweb/libralign/model/undo/EditRecorder.java -text svneol=unset#text/plain
 main/info.bioinfweb.libralign.core/src/info/bioinfweb/libralign/model/undo/alignment/AlignmentModelUndoListener.java -text svneol=unset#text/plain
-main/info.bioinfweb.libralign.core/src/info/bioinfweb/libralign/model/undo/alignment/DataModelAddEdit.java -text
-main/info.bioinfweb.libralign.core/src/info/bioinfweb/libralign/model/undo/alignment/DataModelRemoveEdit.java -text
+main/info.bioinfweb.libralign.core/src/info/bioinfweb/libralign/model/undo/alignment/data/DataModelAddEdit.java -text
+main/info.bioinfweb.libralign.core/src/info/bioinfweb/libralign/model/undo/alignment/data/DataModelAddRemoveEdit.java -text
+main/info.bioinfweb.libralign.core/src/info/bioinfweb/libralign/model/undo/alignment/data/DataModelRemoveEdit.java -text
+main/info.bioinfweb.libralign.core/src/info/bioinfweb/libralign/model/undo/alignment/data/package-info.java -text
 main/info.bioinfweb.libralign.core/src/info/bioinfweb/libralign/model/undo/alignment/sequence/AlignmentModelAddSequenceEdit.java -text svneol=unset#text/plain
 main/info.bioinfweb.libralign.core/src/info/bioinfweb/libralign/model/undo/alignment/sequence/AlignmentModelRemoveSequenceEdit.java -text svneol=unset#text/plain
 main/info.bioinfweb.libralign.core/src/info/bioinfweb/libralign/model/undo/alignment/sequence/AlignmentModelRenameSequenceEdit.java -text svneol=unset#text/plain

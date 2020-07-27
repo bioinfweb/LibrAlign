@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package info.bioinfweb.libralign.model.undo.alignment;
+package info.bioinfweb.libralign.model.undo.alignment.data;
 
 
 import javax.swing.undo.CannotRedoException;
@@ -28,31 +28,31 @@ import info.bioinfweb.libralign.model.undo.DataModelEdit;
 
 
 
-public class DataModelRemoveEdit<M extends AlignmentModel<T>, T, D extends DataModel<?>> extends DataModelEdit<M, T, D>{
-
+public class DataModelAddEdit <M extends AlignmentModel<T>, T, D extends DataModel<?>> extends DataModelAddRemoveEdit<M, T, D>{
 	
-	public DataModelRemoveEdit(M alignmentModel, D dataModel) {
+	
+	public DataModelAddEdit(M alignmentModel, D dataModel) {
 		super(alignmentModel, dataModel);
 	}
 
 	
 	@Override
 	public void redo() throws CannotRedoException {
-		removeDataModel();
+		addDataModel();
 		super.redo();
 	}
 
 
 	@Override
 	public void undo() throws CannotUndoException {
-		addDataModel();
+		removeDataModel();
 		super.undo();
 	} 
 	
 	
 	@Override
 	public String getPresentationName() {
-		return getDataModel() + " was removed from the DataModelList.";
-	} 
+		return getDataModel() + " was added to the DataModelList.";
+	}
 
 }

@@ -1,6 +1,6 @@
 /*
  * LibrAlign - A GUI library for displaying and editing multiple sequence alignments and attached data
- * Copyright (C) 2014-2018  Ben StÃ¶ver
+ * Copyright (C) 2014-2018  Ben Stöver
  * <http://bioinfweb.info/LibrAlign>
  * 
  * This file is free software: you can redistribute it and/or modify
@@ -16,25 +16,43 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package info.bioinfweb.libralign.model.undo;
+package info.bioinfweb.libralign.model.undo.alignment.data;
 
+
+import javax.swing.undo.CannotRedoException;
+import javax.swing.undo.CannotUndoException;
 
 import info.bioinfweb.libralign.model.AlignmentModel;
 import info.bioinfweb.libralign.model.data.DataModel;
+import info.bioinfweb.libralign.model.undo.DataModelEdit;
 
 
 
-public abstract class DataModelEdit<M extends AlignmentModel<T>, T, D extends DataModel<?>> extends AlignmentModelEdit<M, T> {
-	private D dataModel;
+public class DataModelRemoveEdit<M extends AlignmentModel<T>, T, D extends DataModel<?>> extends DataModelAddRemoveEdit<M, T, D>{
 
 	
-	public DataModelEdit(M alignmentModel, D dataModel) {
-		super(alignmentModel);
-		this.dataModel = dataModel;
+	public DataModelRemoveEdit(M alignmentModel, D dataModel) {
+		super(alignmentModel, dataModel);
 	}
+
 	
-	
-	public D getDataModel() {
-		return dataModel;
+	@Override
+	public void redo() throws CannotRedoException {
+		removeDataModel();
+		super.redo();
 	}
+
+
+	@Override
+	public void undo() throws CannotUndoException {
+		addDataModel();
+		super.undo();
+	} 
+	
+	
+	@Override
+	public String getPresentationName() {
+		return getDataModel() + " was removed from the DataModelList.";
+	} 
+
 }
