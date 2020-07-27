@@ -40,49 +40,45 @@ public class CharSetDataModelUndoListener implements CharSetDataModelListener{
 	}
 	
 	
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	@Override
 	public void afterCharSetChange(CharSetChangeEvent e) {
 		if (e.getReplacedCharSet() != null) {
-			CharSetChangeReplaceEdit<?,?> edit = new CharSetChangeReplaceEdit<>(e.getSource(), e.getSource().getAlignmentModel(), e.getNewCharSet(), e.getReplacedCharSet(), e.getCharSetID());
-			recorder.addSubedit(edit);
+			recorder.addSubedit(new CharSetChangeReplaceEdit(e.getSource(), e.getSource().getAlignmentModel(), e.getNewCharSet(), e.getReplacedCharSet(), e.getCharSetID()));
 		}
 		else if (e.getType().equals(ListChangeType.INSERTION)) {
-			CharSetChangeAddEdit<?,?> edit = new CharSetChangeAddEdit<>(e.getSource(), e.getSource().getAlignmentModel(), e.getNewCharSet(), e.getCharSetID());
-			recorder.addSubedit(edit);
+			recorder.addSubedit(new CharSetChangeAddEdit(e.getSource(), e.getSource().getAlignmentModel(), e.getNewCharSet(), e.getCharSetID()));
 		}
 		else if (e.getType().equals(ListChangeType.DELETION)) {
-			CharSetChangeRemoveEdit<?,?> edit = new CharSetChangeRemoveEdit<>(e.getSource(), e.getSource().getAlignmentModel(), e.getNewCharSet(), e.getCharSetID());
-			recorder.addSubedit(edit);
+			recorder.addSubedit(new CharSetChangeRemoveEdit(e.getSource(), e.getSource().getAlignmentModel(), e.getNewCharSet(), e.getCharSetID()));
 		}
 	}
 
 	
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@Override
 	public void afterCharSetRenamed(CharSetRenamedEvent e) {
-		CharSetRenamedEdit<?,?> edit = new CharSetRenamedEdit<>(e.getSource().getAlignmentModel(), e.getCharSet(), e.getPreviousName(), e.getNewName());
-		recorder.addSubedit(edit);
+		recorder.addSubedit(new CharSetRenamedEdit(e.getSource().getAlignmentModel(), e.getCharSet(), e.getPreviousName(), e.getNewName()));
 	}
 
 	
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	@Override
 	public void afterCharSetColumnChange(CharSetColumnChangeEvent e) {
 		if (e.getType().equals(ListChangeType.INSERTION)) {
-			CharSetColumnAddEdit<?,?> edit = new CharSetColumnAddEdit<>(e.getSource().getAlignmentModel(), e.getCharSet(), e.getFirstPos(), e.getLastPos());
-			recorder.addSubedit(edit);
+			recorder.addSubedit(new CharSetColumnAddEdit(e.getSource().getAlignmentModel(), e.getCharSet(), e.getFirstPos(), e.getLastPos()));
 		}
 		else if (e.getType().equals(ListChangeType.DELETION)) {
-			CharSetColumnRemoveEdit<?,?> edit = new CharSetColumnRemoveEdit<>(e.getSource().getAlignmentModel(), e.getCharSet(), e.getFirstPos(), e.getLastPos());
-			recorder.addSubedit(edit);
+			recorder.addSubedit(new CharSetColumnRemoveEdit(e.getSource().getAlignmentModel(), e.getCharSet(), e.getFirstPos(), e.getLastPos()));
 		}
 		
 	}
 
 	
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	@Override
 	public void afterCharSetColorChange(CharSetColorChangeEvent e) {
-		CharSetColorChangeEdit<?,?> edit = new CharSetColorChangeEdit<>(e.getSource().getAlignmentModel(), e.getCharSet(), e.getPreviousColor(), e.getNewColor());
-		recorder.addSubedit(edit);
-		
+		recorder.addSubedit(new CharSetColorChangeEdit(e.getSource().getAlignmentModel(), e.getCharSet(), e.getPreviousColor(), e.getNewColor()));
 	}
 
 }

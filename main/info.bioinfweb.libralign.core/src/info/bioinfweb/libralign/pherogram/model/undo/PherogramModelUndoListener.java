@@ -30,7 +30,7 @@ import info.bioinfweb.libralign.pherogram.model.PherogramShiftChangeUpdateEvent;
 
 
 public class PherogramModelUndoListener implements PherogramModelListener {
-	private EditRecorder<?,?> recorder;
+	private EditRecorder<?, ?> recorder; //TODO: maybe add generic parameters to PherogramModelUndoListener
 	
 	
 	public PherogramModelUndoListener(EditRecorder<?, ?> recorder) {
@@ -39,52 +39,52 @@ public class PherogramModelUndoListener implements PherogramModelListener {
 	}
 
 
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	@Override
 	public void pherogramProviderChange(PherogramProviderChangeEvent event) {
 		PherogramAreaModel model = (PherogramAreaModel) event.getSource();
-		PherogramModelProviderChangeEdit<?,?,?> edit = new PherogramModelProviderChangeEdit<>(model.getAlignmentModel(), event.getSource(), event.getOldProvider(), event.getNewProvider());
-		recorder.addSubedit(edit);
+		recorder.addSubedit(new PherogramModelProviderChangeEdit(model.getAlignmentModel(), event.getSource(), event.getOldProvider(), event.getNewProvider()));
 	}
 
 	
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@Override
 	public void leftCutPositionChange(PherogramCutPositionChangeEvent event) {
 		if (event.getSource() instanceof PherogramAreaModel) {
 			PherogramAreaModel model = (PherogramAreaModel) event.getSource();
-			LeftCutPositionEdit<?, ?, PherogramAreaModel> edit = new LeftCutPositionEdit<>(model.getAlignmentModel(), model, event.getOldBaseCallIndex(), event.getNewBaseCallIndex());
-			recorder.addSubedit(edit);
+			recorder.addSubedit(new LeftCutPositionEdit(model.getAlignmentModel(), model, event.getOldBaseCallIndex(), event.getNewBaseCallIndex()));
 		}
 		
 	}
 
 	
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@Override
 	public void rightCutPositionChange(PherogramCutPositionChangeEvent event) {
 		if (event.getSource() instanceof PherogramAreaModel) {
 			PherogramAreaModel model = (PherogramAreaModel) event.getSource();
-			RightCutPositionEdit<?,?,?> edit = new RightCutPositionEdit<>(model.getAlignmentModel(), event.getSource(), event.getOldBaseCallIndex(), event.getNewBaseCallIndex());
-			recorder.addSubedit(edit);
+			recorder.addSubedit(new RightCutPositionEdit(model.getAlignmentModel(), event.getSource(), event.getOldBaseCallIndex(), event.getNewBaseCallIndex()));
 		}
 		
 	}
 
 	
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@Override
 	public void firstSequencePositionChange(PherogramFirstSeqPosChangeEvent event) {
 		if (event.getSource() instanceof PherogramAreaModel) {
 			PherogramAreaModel model = (PherogramAreaModel) event.getSource();
-			FirstSequencePositionEdit<?,?> edit = new FirstSequencePositionEdit<>(model.getAlignmentModel(), model, event.getOldPosition(), event.getNewPosition());
-			recorder.addSubedit(edit);
+			recorder.addSubedit(new FirstSequencePositionEdit(model.getAlignmentModel(), model, event.getOldPosition(), event.getNewPosition()));
 		}
 	}
 
 	
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@Override
 	public void shiftChangeEdited(PherogramShiftChangeUpdateEvent event) {
 		if (event.getSource() instanceof PherogramAreaModel) {
 			PherogramAreaModel model = (PherogramAreaModel) event.getSource();
-			PherogramShiftChangeEdit<?,?> edit = new PherogramShiftChangeEdit<>(model.getAlignmentModel(), model, event.getBaseCallIndex(), event.getRelativeShiftChange());
-			recorder.addSubedit(edit);
+			recorder.addSubedit(new PherogramShiftChangeEdit(model.getAlignmentModel(), model, event.getBaseCallIndex(), event.getRelativeShiftChange()));
 		}
 		
 	}

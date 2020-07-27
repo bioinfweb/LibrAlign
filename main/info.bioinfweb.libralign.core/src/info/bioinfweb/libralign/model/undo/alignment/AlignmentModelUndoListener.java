@@ -26,6 +26,8 @@ import info.bioinfweb.libralign.model.events.SequenceChangeEvent;
 import info.bioinfweb.libralign.model.events.SequenceRenamedEvent;
 import info.bioinfweb.libralign.model.events.TokenChangeEvent;
 import info.bioinfweb.libralign.model.undo.EditRecorder;
+import info.bioinfweb.libralign.model.undo.alignment.data.DataModelAddEdit;
+import info.bioinfweb.libralign.model.undo.alignment.data.DataModelRemoveEdit;
 import info.bioinfweb.libralign.model.undo.alignment.sequence.AlignmentModelAddSequenceEdit;
 import info.bioinfweb.libralign.model.undo.alignment.sequence.AlignmentModelRemoveSequenceEdit;
 import info.bioinfweb.libralign.model.undo.alignment.sequence.AlignmentModelRenameSequenceEdit;
@@ -45,55 +47,50 @@ public class AlignmentModelUndoListener<T> implements AlignmentModelListener<T> 
 	}
 
 
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	@Override
 	public void afterSequenceChange(SequenceChangeEvent<T> event) {
 		if (event.getType().equals(ListChangeType.INSERTION)) {
-			AlignmentModelAddSequenceEdit<?,?> edit = new AlignmentModelAddSequenceEdit<>(event.getSource(), event.getSequenceID(), event.getSequenceName());
-			recorder.addSubedit(edit);
+			recorder.addSubedit(new AlignmentModelAddSequenceEdit(event.getSource(), event.getSequenceID(), event.getSequenceName()));
 		}
 		else if (event.getType().equals(ListChangeType.DELETION)) {
-			AlignmentModelRemoveSequenceEdit<?,?> edit = new AlignmentModelRemoveSequenceEdit<>(event.getSource(), event.getSequenceID(), event.getDeletedContent());
-			recorder.addSubedit(edit);
+			recorder.addSubedit(new AlignmentModelRemoveSequenceEdit(event.getSource(), event.getSequenceID(), event.getDeletedContent()));
 		}
 		
 	}
 
 	
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	@Override
 	public void afterSequenceRenamed(SequenceRenamedEvent<T> event) {
-		AlignmentModelRenameSequenceEdit<?,?> edit = new AlignmentModelRenameSequenceEdit<>(event.getSource(), event.getSequenceID(), event.getNewName(), event.getPreviousName());
-		recorder.addSubedit(edit);
-		
+		recorder.addSubedit(new AlignmentModelRenameSequenceEdit(event.getSource(), event.getSequenceID(), event.getNewName(), event.getPreviousName()));
 	}
 
 	
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	@Override
 	public void afterTokenChange(TokenChangeEvent<T> event) {
 		if (event.getType().equals(ListChangeType.INSERTION)) {
-			AlignmentModelInsertTokensEdit<?,?> edit = new AlignmentModelInsertTokensEdit<>(event.getSource(), event.getSequenceID(), event.getStartIndex(), event.getAffectedTokens(), event.isLeftBound());
-			recorder.addSubedit(edit);
+			recorder.addSubedit(new AlignmentModelInsertTokensEdit(event.getSource(), event.getSequenceID(), event.getStartIndex(), event.getAffectedTokens(), event.isLeftBound()));
 		}
 		else if (event.getType().equals(ListChangeType.DELETION)) {
-			AlignmentModelRemoveTokensEdit<?,?> edit = new AlignmentModelRemoveTokensEdit<>(event.getSource(), event.getSequenceID(), event.getStartIndex(), event.getAffectedTokens());
-			recorder.addSubedit(edit);
+			recorder.addSubedit(new AlignmentModelRemoveTokensEdit(event.getSource(), event.getSequenceID(), event.getStartIndex(), event.getAffectedTokens()));
 		}
 		else if (event.getType().equals(ListChangeType.REPLACEMENT)) {
-			AlignmentModelSetTokensEdit<?,?> edit = new AlignmentModelSetTokensEdit<>(event.getSource(), event.getSequenceID(), event.getStartIndex(), event.getNewTokens(), event.getAffectedTokens());
-			recorder.addSubedit(edit);
+			recorder.addSubedit(new AlignmentModelSetTokensEdit(event.getSource(), event.getSequenceID(), event.getStartIndex(), event.getNewTokens(), event.getAffectedTokens()));
 		}
 	}
 
 	
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	@Override
 	public void afterDataModelChange(DataModelChangeEvent<T> event) {
 		if (event.getType().equals(ListChangeType.INSERTION)) {
-			DataModelAddEdit<?, ?, ?> edit = new DataModelAddEdit<>(event.getSource(), event.getDataModel());
-			recorder.addSubedit(edit);
+			recorder.addSubedit(new DataModelAddEdit(event.getSource(), event.getDataModel()));
 			event.getDataModel().ensureUndoListener();
 		}
 		else if (event.getType().equals(ListChangeType.DELETION)) {
-			DataModelRemoveEdit<?, ?, ?> edit = new DataModelRemoveEdit<>(event.getSource(), event.getDataModel());
-			recorder.addSubedit(edit);
+			recorder.addSubedit(new DataModelRemoveEdit(event.getSource(), event.getDataModel()));
 		}
 		
 	}
