@@ -25,9 +25,11 @@ import java.util.List;
 import java.util.ListIterator;
 
 import info.bioinfweb.commons.Math2;
+import info.bioinfweb.libralign.dataarea.implementations.charset.CharSetDataModelListener;
 import info.bioinfweb.libralign.dataarea.implementations.pherogram.PherogramArea;
 import info.bioinfweb.libralign.model.AlignmentModel;
 import info.bioinfweb.libralign.model.AlignmentModelAdapter;
+import info.bioinfweb.libralign.model.data.DataModelListener;
 import info.bioinfweb.libralign.model.data.DataModel;
 import info.bioinfweb.libralign.model.events.TokenChangeEvent;
 import info.bioinfweb.libralign.model.undo.EditRecorder;
@@ -51,7 +53,7 @@ public class PherogramAreaModel extends PherogramComponentModel implements DataM
 	private int firstSeqPos;
 	private List<ShiftChange> shiftChangeList = new ArrayList<ShiftChange>();
 	private boolean firstSeqPosUpdateOngoing = false;
-	private boolean undoListenerExists;
+	private PherogramModelListener undoListener = null;
   
 	
 	/**
@@ -637,27 +639,30 @@ public class PherogramAreaModel extends PherogramComponentModel implements DataM
 
 	@Override
 	public PherogramModelListener createUndoListener(EditRecorder<?, ?> recorder) {
-		PherogramModelListener listener = new PherogramModelUndoListener(recorder);
-		return listener;
+		undoListener = new PherogramModelUndoListener(recorder);
+		return undoListener;
 	}
 
 
 	@Override
-	public PherogramModelListener ensureUndoListener() throws UnsupportedOperationException {
-		if (!undoListenerExists) {
-			PherogramModelListener listener = createUndoListener(new EditRecorder<>(alignmentModel));
-			addModelListener(listener);
-			undoListenerExists = true;
-			return listener;
+	public void removeUndoListener() {
+		if (undoListener != null) {
+			removeModelListener(undoListener);
 		}
-		return null;
 	}
 
 
 	@Override
-	public void RemoveUndoListener(PherogramModelListener listener) {
-		removeModelListener(listener);
-		undoListenerExists = false;
-		
+	public void ensureUndoListener(EditRecorder<?, ?> recorder) throws UnsupportedOperationException {
+		if (undoListener == null) {
+			new DataModelListener<PherogramModelListener>().ensureUndoListener(recorder);
+		}
 	}
+
+
+	public PherogramModelListener getUndoListener() {
+		return undoListener;
+	}
+	
+	
 }

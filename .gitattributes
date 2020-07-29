@@ -278,6 +278,7 @@ main/info.bioinfweb.libralign.core/src/info/bioinfweb/libralign/model/concatenat
 main/info.bioinfweb.libralign.core/src/info/bioinfweb/libralign/model/data/AbstractDataModel.java -text svneol=unset#text/plain
 main/info.bioinfweb.libralign.core/src/info/bioinfweb/libralign/model/data/DataModel.java -text svneol=unset#text/plain
 main/info.bioinfweb.libralign.core/src/info/bioinfweb/libralign/model/data/DataModelFactory.java -text svneol=unset#text/plain
+main/info.bioinfweb.libralign.core/src/info/bioinfweb/libralign/model/data/DataModelListener.java -text
 main/info.bioinfweb.libralign.core/src/info/bioinfweb/libralign/model/data/NoArgDataModelFactory.java -text svneol=unset#text/plain
 main/info.bioinfweb.libralign.core/src/info/bioinfweb/libralign/model/events/AlignmentModelChangeEvent.class -text
 main/info.bioinfweb.libralign.core/src/info/bioinfweb/libralign/model/events/AlignmentModelChangeEvent.java -text svneol=unset#text/plain

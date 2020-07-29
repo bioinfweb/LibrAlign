@@ -44,13 +44,13 @@ public class CharSetDataModelUndoListener implements CharSetDataModelListener{
 	@Override
 	public void afterCharSetChange(CharSetChangeEvent e) {
 		if (e.getReplacedCharSet() != null) {
-			recorder.addSubedit(new CharSetChangeReplaceEdit(e.getSource(), e.getSource().getAlignmentModel(), e.getNewCharSet(), e.getReplacedCharSet(), e.getCharSetID()));
+			recorder.addSubedit(new CharSetChangeReplaceEdit(e.getSource(), e.getSource().getAlignmentModel(), e.getNewCharSet(), e.getReplacedCharSet(), e.getCharSetID(), e.getSource()));
 		}
 		else if (e.getType().equals(ListChangeType.INSERTION)) {
-			recorder.addSubedit(new CharSetChangeAddEdit(e.getSource(), e.getSource().getAlignmentModel(), e.getNewCharSet(), e.getCharSetID()));
+			recorder.addSubedit(new CharSetChangeAddEdit(e.getSource(), e.getSource().getAlignmentModel(), e.getNewCharSet(), e.getCharSetID(), e.getSource()));
 		}
 		else if (e.getType().equals(ListChangeType.DELETION)) {
-			recorder.addSubedit(new CharSetChangeRemoveEdit(e.getSource(), e.getSource().getAlignmentModel(), e.getNewCharSet(), e.getCharSetID()));
+			recorder.addSubedit(new CharSetChangeRemoveEdit(e.getSource(), e.getSource().getAlignmentModel(), e.getNewCharSet(), e.getCharSetID(), e.getSource()));
 		}
 	}
 
@@ -58,7 +58,7 @@ public class CharSetDataModelUndoListener implements CharSetDataModelListener{
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@Override
 	public void afterCharSetRenamed(CharSetRenamedEvent e) {
-		recorder.addSubedit(new CharSetRenamedEdit(e.getSource().getAlignmentModel(), e.getCharSet(), e.getPreviousName(), e.getNewName()));
+		recorder.addSubedit(new CharSetRenamedEdit(e.getSource().getAlignmentModel(), e.getCharSet(), e.getPreviousName(), e.getNewName(), e.getSource()));
 	}
 
 	
@@ -66,10 +66,10 @@ public class CharSetDataModelUndoListener implements CharSetDataModelListener{
 	@Override
 	public void afterCharSetColumnChange(CharSetColumnChangeEvent e) {
 		if (e.getType().equals(ListChangeType.INSERTION)) {
-			recorder.addSubedit(new CharSetColumnAddEdit(e.getSource().getAlignmentModel(), e.getCharSet(), e.getFirstPos(), e.getLastPos()));
+			recorder.addSubedit(new CharSetColumnAddEdit(e.getSource().getAlignmentModel(), e.getCharSet(), e.getFirstPos(), e.getLastPos(), e.getSource()));
 		}
 		else if (e.getType().equals(ListChangeType.DELETION)) {
-			recorder.addSubedit(new CharSetColumnRemoveEdit(e.getSource().getAlignmentModel(), e.getCharSet(), e.getFirstPos(), e.getLastPos()));
+			recorder.addSubedit(new CharSetColumnRemoveEdit(e.getSource().getAlignmentModel(), e.getCharSet(), e.getFirstPos(), e.getLastPos(), e.getSource()));
 		}
 		
 	}
@@ -78,7 +78,7 @@ public class CharSetDataModelUndoListener implements CharSetDataModelListener{
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	@Override
 	public void afterCharSetColorChange(CharSetColorChangeEvent e) {
-		recorder.addSubedit(new CharSetColorChangeEdit(e.getSource().getAlignmentModel(), e.getCharSet(), e.getPreviousColor(), e.getNewColor()));
+		recorder.addSubedit(new CharSetColorChangeEdit(e.getSource().getAlignmentModel(), e.getCharSet(), e.getPreviousColor(), e.getNewColor(), e.getSource()));
 	}
 
 }

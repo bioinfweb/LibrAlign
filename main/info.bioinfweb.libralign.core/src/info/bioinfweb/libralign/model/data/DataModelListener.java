@@ -1,6 +1,6 @@
 /*
  * LibrAlign - A GUI library for displaying and editing multiple sequence alignments and attached data
- * Copyright (C) 2014-2018  Ben StÃ¶ver
+ * Copyright (C) 2014-2018  Ben Stöver
  * <http://bioinfweb.info/LibrAlign>
  * 
  * This file is free software: you can redistribute it and/or modify
@@ -18,55 +18,48 @@
  */
 package info.bioinfweb.libralign.model.data;
 
-
-import java.util.HashSet;
-import java.util.Set;
-
 import info.bioinfweb.libralign.model.AlignmentModel;
 import info.bioinfweb.libralign.model.undo.EditRecorder;
-import info.bioinfweb.libralign.model.undo.alignment.AlignmentModelUndoListener;
 
-
-
-public class AbstractDataModel<L> implements DataModel<L> {
-	private AlignmentModel<?> alignmentModel;
-	protected Set<L> modelListeners = new HashSet<>();
-	private boolean undoListenerExists;
-
+public class DataModelListener<L> implements DataModel<L> {
+	L undoListener = null;
 	
-	public AbstractDataModel(AlignmentModel<?> alignmentModel) {
-		super();
-		
-		if (alignmentModel == null) {
-			throw new IllegalArgumentException("The associated AlignmentModel must not be null.");
+	
+	@Override
+	public void ensureUndoListener(EditRecorder<?, ?> recorder) throws UnsupportedOperationException { //TODO: save UndoListener
+		undoListener = createUndoListener(recorder); //TODO: check if null
+		if (undoListener != null) {
+			addModelListener(undoListener);
 		}
-		else {
-			this.alignmentModel = alignmentModel;
-		}
+
 	}
 
 
+	@Override
 	public AlignmentModel<?> getAlignmentModel() {
-		return alignmentModel;
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 
 	@Override
 	public boolean addModelListener(L listener) {
-		return modelListeners.add(listener);
+		// TODO Auto-generated method stub
+		return false;
 	}
 
 
 	@Override
 	public boolean removeModelListener(L listener) {
-		return modelListeners.remove(listener);
+		// TODO Auto-generated method stub
+		return false;
 	}
 
 
 	@Override
 	public L createUndoListener(EditRecorder<?, ?> recorder) {
-		return null; //TODO: implement not here
 		// TODO Auto-generated method stub
+		return null;
 	}
 
 
@@ -75,11 +68,4 @@ public class AbstractDataModel<L> implements DataModel<L> {
 		// TODO Auto-generated method stub
 		
 	}
-
-
-	@Override
-	public void ensureUndoListener(EditRecorder<?, ?> recorder) throws UnsupportedOperationException {
-		// TODO Auto-generated method stub
-		
-	}	
 }

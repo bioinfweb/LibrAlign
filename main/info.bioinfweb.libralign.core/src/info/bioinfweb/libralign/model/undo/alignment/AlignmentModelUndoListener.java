@@ -87,7 +87,7 @@ public class AlignmentModelUndoListener<T> implements AlignmentModelListener<T> 
 	public void afterDataModelChange(DataModelChangeEvent<T> event) {
 		if (event.getType().equals(ListChangeType.INSERTION)) {
 			recorder.addSubedit(new DataModelAddEdit(event.getSource(), event.getDataModel()));
-			event.getDataModel().ensureUndoListener();
+			event.getDataModel().ensureUndoListener(recorder);
 		}
 		else if (event.getType().equals(ListChangeType.DELETION)) {
 			recorder.addSubedit(new DataModelRemoveEdit(event.getSource(), event.getDataModel()));

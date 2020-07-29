@@ -20,16 +20,18 @@ package info.bioinfweb.libralign.dataarea.implementations.charset.undo;
 
 import info.bioinfweb.libralign.dataarea.implementations.charset.CharSet;
 import info.bioinfweb.libralign.model.AlignmentModel;
+import info.bioinfweb.libralign.model.data.DataModel;
 import info.bioinfweb.libralign.model.undo.AlignmentModelEdit;
+import info.bioinfweb.libralign.model.undo.DataModelEdit;
 
 
 
-public abstract class CharSetModelEdit <M extends AlignmentModel<T>, T> extends AlignmentModelEdit<M, T>{
+public abstract class CharSetModelEdit <M extends AlignmentModel<T>, T, D extends DataModel<?>> extends DataModelEdit<M, T, D>{
 	private CharSet charSet;
 
 	
-	public CharSetModelEdit(M alignmentModel, CharSet charSet) {
-		super(alignmentModel);
+	public CharSetModelEdit(M alignmentModel, CharSet charSet, D dataModel) {
+		super(alignmentModel, dataModel);
 		if (charSet == null) {
 			throw new IllegalArgumentException("CharSet must not be null.");
 		}

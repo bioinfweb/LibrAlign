@@ -21,16 +21,17 @@ package info.bioinfweb.libralign.dataarea.implementations.charset.undo;
 
 import info.bioinfweb.libralign.dataarea.implementations.charset.CharSet;
 import info.bioinfweb.libralign.model.AlignmentModel;
+import info.bioinfweb.libralign.model.data.DataModel;
 
 
 
-public abstract class CharSetColumnAddRemoveEdit <M extends AlignmentModel<T>, T> extends CharSetModelEdit<M, T>{
+public abstract class CharSetColumnAddRemoveEdit <M extends AlignmentModel<T>, T, D extends DataModel<?>> extends CharSetModelEdit<M, T, D>{
 	private int firstPos;
 	private int lastPos;
 	
 	
-	public CharSetColumnAddRemoveEdit(M alignmentModel, CharSet charSet, int firstPos, int lastPos) {
-		super(alignmentModel, charSet);
+	public CharSetColumnAddRemoveEdit(M alignmentModel, CharSet charSet, int firstPos, int lastPos, D dataModel) {
+		super(alignmentModel, charSet, dataModel);
 		this.firstPos = firstPos;
 		this.lastPos = lastPos;
 	}

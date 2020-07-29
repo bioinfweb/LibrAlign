@@ -24,14 +24,15 @@ import javax.swing.undo.CannotUndoException;
 
 import info.bioinfweb.libralign.dataarea.implementations.charset.CharSet;
 import info.bioinfweb.libralign.model.AlignmentModel;
+import info.bioinfweb.libralign.model.data.DataModel;
 
 
 
-public class CharSetColumnRemoveEdit<M extends AlignmentModel<T>, T> extends CharSetColumnAddRemoveEdit<M, T>{
+public class CharSetColumnRemoveEdit<M extends AlignmentModel<T>, T, D extends DataModel<?>> extends CharSetColumnAddRemoveEdit<M, T, D>{
 	
 	
-	public CharSetColumnRemoveEdit(M alignmentModel, CharSet charSet, int firstPos, int lastPos) {
-		super(alignmentModel, charSet, firstPos, lastPos);
+	public CharSetColumnRemoveEdit(M alignmentModel, CharSet charSet, int firstPos, int lastPos, D dataModel) {
+		super(alignmentModel, charSet, firstPos, lastPos, dataModel);
 		
 	}
 	

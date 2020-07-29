@@ -56,15 +56,14 @@ public interface DataModel<L> {  //TODO: Add generic parameters M and T to force
 	 * Returns a respective undo listener that can monitor instances of this model to be used with {@link EditRecorder}.
 	 * 
 	 * @param recorder the {@link EditRecorder} to be used with the returned listener
-	 * @return a new undo listener instance or {@code null} if this model does not support creating undo listeners
+	 * 
 	 */
-	public L ensureUndoListener() throws UnsupportedOperationException;
+	public void ensureUndoListener(EditRecorder<?, ?> recorder) throws UnsupportedOperationException; // TODO: implement in abstract class
 	
 	/**
 	 * Removed the respective undo listener.
 	 * 
-	 *@param listener the respective undo listener
 	 */
-	public void RemoveUndoListener(L listener);
+	public void removeUndoListener(); // TODO: no parameter
 	
 }

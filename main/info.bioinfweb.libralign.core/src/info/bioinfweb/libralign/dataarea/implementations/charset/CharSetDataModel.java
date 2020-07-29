@@ -25,6 +25,7 @@ import info.bioinfweb.libralign.dataarea.implementations.charset.events.CharSetC
 import info.bioinfweb.libralign.dataarea.implementations.charset.events.CharSetRenamedEvent;
 import info.bioinfweb.libralign.dataarea.implementations.charset.undo.CharSetDataModelUndoListener;
 import info.bioinfweb.libralign.model.AlignmentModel;
+import info.bioinfweb.libralign.model.data.DataModelListener;
 import info.bioinfweb.libralign.model.data.DataModel;
 import info.bioinfweb.libralign.model.undo.EditRecorder;
 
@@ -52,7 +53,7 @@ public class CharSetDataModel extends ListOrderedMap<String, CharSet> implements
 	
 	private AlignmentModel<?> alignmentModel;
 	protected Set<CharSetDataModelListener> modelListeners = new HashSet<CharSetDataModelListener>();
-	private boolean undoListenerExists;
+	private CharSetDataModelListener undoListener = null;
 	
 	
 	public CharSetDataModel(AlignmentModel<?> alignmentModel) {  //TODO Should an alternative constructor without alignmentModel be offered/may alignmentModel be null or will other classes in the future rely on a non-null value to be returned by getAlignmentModel()? (This class currently does not make use of this property.) 
@@ -134,6 +135,11 @@ public class CharSetDataModel extends ListOrderedMap<String, CharSet> implements
 	}
 
 
+	public CharSetDataModelListener getUndoListener() {
+		return undoListener;
+	}
+
+
 	/**
 	 * Informs all listeners that a character set has been inserted, removed or replaced.
 	 */
@@ -190,28 +196,25 @@ public class CharSetDataModel extends ListOrderedMap<String, CharSet> implements
 
 	@Override
 	public CharSetDataModelListener createUndoListener(EditRecorder<?, ?> recorder) {
-		CharSetDataModelListener listener = new CharSetDataModelUndoListener(recorder);
-		return listener;
+		undoListener = new CharSetDataModelUndoListener(recorder);
+		return undoListener;
 	}
 
 
 	@Override
-	public CharSetDataModelListener ensureUndoListener()
-			throws UnsupportedOperationException {
-		if (!undoListenerExists) {
-			CharSetDataModelListener listener = createUndoListener(new EditRecorder<>(alignmentModel));
-			addModelListener(listener);
-			undoListenerExists = true;
-			return listener;
+	public void removeUndoListener() {
+		if (undoListener != null) {
+			removeModelListener(undoListener);
 		}
-		return null;
 	}
 
 
 	@Override
-	public void RemoveUndoListener(CharSetDataModelListener listener) {
-		removeModelListener(listener);
-		undoListenerExists = false;
+	public void ensureUndoListener(EditRecorder<?, ?> recorder) throws UnsupportedOperationException {
+		if (undoListener == null) {
+			new DataModelListener<CharSetDataModelListener>().ensureUndoListener(recorder);
+		}
+		
 	}
 
 }
