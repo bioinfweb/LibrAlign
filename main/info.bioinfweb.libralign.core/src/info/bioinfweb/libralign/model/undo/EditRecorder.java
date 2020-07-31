@@ -49,6 +49,7 @@ public class EditRecorder<M extends AlignmentModel<T>, T> {
 		this.alignmentModel = alignmentModel;
 		createNewSubeditList();
 		definedEditRecording = false;
+		undoManager = new UndoManager();
 	}
 
 	
@@ -56,7 +57,7 @@ public class EditRecorder<M extends AlignmentModel<T>, T> {
 		currentSubedits = new ArrayList<AlignmentModelEdit<M, T>>();
 	}
 	
-	//TODO: figure out how to do it without the raw type
+	
 	public void addSubedit(AlignmentModelEdit<M, T> edit) {
 		currentSubedits.add(edit);
 	}
@@ -64,6 +65,11 @@ public class EditRecorder<M extends AlignmentModel<T>, T> {
 
 	public M getAlignmentModel() {
 		return alignmentModel;
+	}
+	
+
+	public UndoManager getUndoManager() {
+		return undoManager;
 	}
 
 
@@ -83,7 +89,7 @@ public class EditRecorder<M extends AlignmentModel<T>, T> {
 			if (presentationName == null) {
 				//TODO Determine presentation name by subedits.
 			}
-			undoManager.addEdit(new CombinedEdit<M, T>(alignmentModel, presentationName, currentSubedits));
+			undoManager.addEdit(new CombinedEdit<M, T>(alignmentModel, presentationName, currentSubedits)); //TODO: here are just errors
 			createNewSubeditList();
 		}
 		definedEditRecording = false;

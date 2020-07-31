@@ -42,7 +42,7 @@ public class AlignmentModelAddSequenceEdit<M extends AlignmentModel<T>, T> exten
 	 * Creates a new instance of this class.
 	 * 
 	 * @param model the alignment model to be edited
-	 * @param sequenceID the ID of the new sequence (Maybe {@code null}, if the underlying model should create an ID for it.)
+	 * @param sequenceID the ID of the new sequence
 	 * @param sequenceName the name of the new sequence
 	 */
 	public AlignmentModelAddSequenceEdit(M alignmentModel, String sequenceID, String sequenceName) {

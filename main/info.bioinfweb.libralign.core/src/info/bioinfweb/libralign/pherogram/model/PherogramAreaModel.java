@@ -72,6 +72,8 @@ public class PherogramAreaModel extends PherogramComponentModel implements DataM
 		super(provider);
 		setAlignmentModel(alignmentModel);
 		setLabeledSequenceID(labeledSequenceID);
+		EditRecorder<?, ?> editRecorder = new EditRecorder<>(alignmentModel);
+		this.ensureUndoListener(editRecorder);
 	}
 
 
@@ -652,10 +654,10 @@ public class PherogramAreaModel extends PherogramComponentModel implements DataM
 	}
 
 
-	@Override
-	public void ensureUndoListener(EditRecorder<?, ?> recorder) throws UnsupportedOperationException {
+	
+	public void ensurePherogramUndoListener(EditRecorder<?, ?> recorder) throws UnsupportedOperationException {
 		if (undoListener == null) {
-			new DataModelListener<PherogramModelListener>().ensureUndoListener(recorder);
+			ensureUndoListener(recorder);
 		}
 	}
 

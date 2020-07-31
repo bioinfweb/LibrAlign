@@ -54,11 +54,14 @@ public class CharSetDataModel extends ListOrderedMap<String, CharSet> implements
 	private AlignmentModel<?> alignmentModel;
 	protected Set<CharSetDataModelListener> modelListeners = new HashSet<CharSetDataModelListener>();
 	private CharSetDataModelListener undoListener = null;
+	private EditRecorder<?, ?> editRecorder;
 	
 	
 	public CharSetDataModel(AlignmentModel<?> alignmentModel) {  //TODO Should an alternative constructor without alignmentModel be offered/may alignmentModel be null or will other classes in the future rely on a non-null value to be returned by getAlignmentModel()? (This class currently does not make use of this property.) 
 		super();
 		this.alignmentModel = alignmentModel;
+		editRecorder = new EditRecorder(alignmentModel);
+		this.ensureUndoListener(editRecorder);
 	}
 
 
@@ -209,12 +212,16 @@ public class CharSetDataModel extends ListOrderedMap<String, CharSet> implements
 	}
 
 
-	@Override
-	public void ensureUndoListener(EditRecorder<?, ?> recorder) throws UnsupportedOperationException {
+	public void ensureCharUndoListener(EditRecorder<?, ?> recorder) throws UnsupportedOperationException {
 		if (undoListener == null) {
-			new DataModelListener<CharSetDataModelListener>().ensureUndoListener(recorder);
+			ensureUndoListener(recorder);
 		}
 		
 	}
 
+
+	public EditRecorder<?, ?> getEditRecorder() {
+		return editRecorder;
+	}
+	
 }

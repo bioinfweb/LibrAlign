@@ -19,6 +19,7 @@
 package info.bioinfweb.libralign.model.undo.alignment.sequence;
 
 
+import java.util.ArrayList;
 import java.util.Collection;
 
 import javax.swing.undo.CannotRedoException;
@@ -44,6 +45,17 @@ public class AlignmentModelRemoveSequenceEdit<M extends AlignmentModel<T>, T> ex
 	public AlignmentModelRemoveSequenceEdit(M alignmentModel, String sequenceID, Collection<T> deletedContent) {
 		super(alignmentModel, sequenceID);
 		this.deletedContent = deletedContent;
+		if (deletedContent == null) {
+			name = getAlignmentModel().sequenceNameByID(sequenceID);
+			int length = getAlignmentModel().getSequenceLength(sequenceID);
+			deletedContent = new ArrayList<T>(length);
+			for (int i = 0; i < length; i++) {
+				deletedContent.add(getAlignmentModel().getTokenAt(sequenceID, i));
+			}
+		}
+		else {
+			this.deletedContent = deletedContent;
+		}
 	}
 
 
