@@ -50,42 +50,42 @@ public class AlignmentModelUtilsTest {
 		CharSequenceAdapter<Character> adapter = new CharSequenceAdapter<Character>(model, true);
 		assertEquals("ACGT-ACCT", adapter.getSequence(sequenceID).toString());
 	}
-	
 
-/**
-* Compares two sequences with each other.
-* 
-* @return false if sequences are not equal, true if sequences are equal.
-*/	
+	
+	@Test
 	public void test_sequencesEqual() {
-		
 		AlignmentModel<Character> alignmentModel1 = new ArrayListAlignmentModel<Character>(CharacterTokenSet.newNucleotideInstance(false));
 		AlignmentModel<Character> alignmentModel2 = new ArrayListAlignmentModel<Character>(CharacterTokenSet.newNucleotideInstance(false));
 		
-
 		String sequenceID1 = alignmentModel1.addSequence("seq1");
-		alignmentModel1.appendToken(sequenceID1, 'A', true);
-		alignmentModel1.appendToken(sequenceID1, 'T', true);
-		alignmentModel1.appendToken(sequenceID1, 'G', true);
-		alignmentModel1.appendToken(sequenceID1, 'C', true);
-		
+		alignmentModel1.appendTokens(sequenceID1, AlignmentModelUtils.charSequenceToTokenList("ATGC", alignmentModel1.getTokenSet()), true);		
 		String sequenceID2 = alignmentModel1.addSequence("seq2");
-		alignmentModel1.appendToken(sequenceID2, 'A', true);
-		alignmentModel1.appendToken(sequenceID2, 'T', true);
-		alignmentModel1.appendToken(sequenceID2, 'G', true);
-		alignmentModel1.appendToken(sequenceID2, 'C', true);
+		alignmentModel1.appendTokens(sequenceID2, AlignmentModelUtils.charSequenceToTokenList("ATGC", alignmentModel1.getTokenSet()), true);
+		String sequenceID3 = alignmentModel1.addSequence("seq3");
+		alignmentModel1.appendTokens(sequenceID3, AlignmentModelUtils.charSequenceToTokenList("ATGCT-C", alignmentModel1.getTokenSet()), true);
+		String sequenceID4 = alignmentModel1.addSequence("seq4");
+		alignmentModel1.appendTokens(sequenceID4, AlignmentModelUtils.charSequenceToTokenList("TTGC", alignmentModel1.getTokenSet()), true);
+			
+		String sequenceID5 = alignmentModel2.addSequence("seq5");
+		alignmentModel2.appendTokens(sequenceID5, AlignmentModelUtils.charSequenceToTokenList("ATGC", alignmentModel2.getTokenSet()), true);		
+		String sequenceID6 = alignmentModel2.addSequence("seq6");
+		alignmentModel2.appendTokens(sequenceID6, AlignmentModelUtils.charSequenceToTokenList("AAGC", alignmentModel2.getTokenSet()), true);		
+		String sequenceID7 = alignmentModel2.addSequence("seq7");
+		alignmentModel2.appendTokens(sequenceID7, AlignmentModelUtils.charSequenceToTokenList("AACC", alignmentModel2.getTokenSet()), true);
+		String sequenceID8 = alignmentModel2.addSequence("seq8");
+		alignmentModel2.appendTokens(sequenceID8, AlignmentModelUtils.charSequenceToTokenList("AACG", alignmentModel2.getTokenSet()), true);
+		String sequenceID9 = alignmentModel2.addSequence("seq9");
+		alignmentModel2.appendTokens(sequenceID9, AlignmentModelUtils.charSequenceToTokenList("TAAGTGTACG", alignmentModel2.getTokenSet()), true);
+			
+		assertTrue(AlignmentModelUtils.sequencesEqual(alignmentModel1, sequenceID1, alignmentModel1, sequenceID2));	//same AM, tokens equal
+		assertFalse(AlignmentModelUtils.sequencesEqual(alignmentModel1, sequenceID1, alignmentModel1, sequenceID3));//same AM, different length
+		assertFalse(AlignmentModelUtils.sequencesEqual(alignmentModel1, sequenceID1, alignmentModel1, sequenceID4));//same AM, first position changed
+		assertFalse(AlignmentModelUtils.sequencesEqual(alignmentModel1, sequenceID3, alignmentModel1, sequenceID4));//same AM, different length + first Token changed
 		
-		String sequenceID3 = alignmentModel2.addSequence("seq3");
-		alignmentModel2.appendToken(sequenceID3, 'A', true);
-		alignmentModel2.appendToken(sequenceID3, 'T', true);
-		alignmentModel2.appendToken(sequenceID3, 'G', true);
-		alignmentModel2.appendToken(sequenceID3, 'G', true);
-		
-		
-	
-		assertTrue(AlignmentModelUtils.sequencesEqual(alignmentModel1, sequenceID1, alignmentModel1, sequenceID2));
-		assertFalse(AlignmentModelUtils.sequencesEqual(alignmentModel1, sequenceID1, alignmentModel2, sequenceID3));
-		assertFalse(AlignmentModelUtils.sequencesEqual(alignmentModel1, sequenceID2, alignmentModel2, sequenceID3));
-
+		assertTrue(AlignmentModelUtils.sequencesEqual(alignmentModel1, sequenceID1, alignmentModel2, sequenceID5));	//different AM, tokens equal
+		assertFalse(AlignmentModelUtils.sequencesEqual(alignmentModel1, sequenceID1, alignmentModel2, sequenceID9));//completely different (AM, length, tokens)
+		assertFalse(AlignmentModelUtils.sequencesEqual(alignmentModel2, sequenceID1, alignmentModel2, sequenceID6));//same AM, second position changed
+		assertFalse(AlignmentModelUtils.sequencesEqual(alignmentModel2, sequenceID1, alignmentModel2, sequenceID7));//same AM, third position changed
+		assertFalse(AlignmentModelUtils.sequencesEqual(alignmentModel2, sequenceID1, alignmentModel2, sequenceID8));//same AM, last position changed
 	}
 }
