@@ -195,7 +195,7 @@ public class AlignmentModelUtils {
 		}
 		else {
 			for(int i = 0; i < alignmentModel1.getSequenceLength(sequenceID1); i++) {
-				if(alignmentModel1.getTokenAt(sequenceID1, i) != alignmentModel2.getTokenAt(sequenceID2, i)) {
+				if(!alignmentModel1.getTokenAt(sequenceID1, i).equals(alignmentModel2.getTokenAt(sequenceID2, i))) {
 					return false;
 				}
 			}
