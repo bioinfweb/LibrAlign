@@ -24,14 +24,14 @@ import javax.swing.undo.CannotUndoException;
 
 import info.bioinfweb.libralign.model.AlignmentModel;
 import info.bioinfweb.libralign.model.data.DataModel;
-import info.bioinfweb.libralign.model.undo.DataModelEdit;
+import info.bioinfweb.libralign.model.undo.AbstractDataModelEdit;
 
 
 
-public class DataModelRemoveEdit<M extends AlignmentModel<T>, T, D extends DataModel<?>> extends DataModelAddRemoveEdit<M, T, D>{
+public class DataModelRemoveEdit<M extends AlignmentModel<T>, T, L> extends DataModelAddRemoveEdit<M, T, L>{
 
 	
-	public DataModelRemoveEdit(M alignmentModel, D dataModel) {
+	public DataModelRemoveEdit(M alignmentModel, DataModel<L> dataModel) {
 		super(alignmentModel, dataModel);
 	}
 

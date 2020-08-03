@@ -1,6 +1,6 @@
 /*
  * LibrAlign - A GUI library for displaying and editing multiple sequence alignments and attached data
- * Copyright (C) 2014-2018  Ben StÃ¶ver
+ * Copyright (C) 2014-2018  Ben Stöver
  * <http://bioinfweb.info/LibrAlign>
  * 
  * This file is free software: you can redistribute it and/or modify
@@ -19,22 +19,12 @@
 package info.bioinfweb.libralign.model.undo;
 
 
-import info.bioinfweb.libralign.model.AlignmentModel;
 import info.bioinfweb.libralign.model.data.DataModel;
 
 
 
-public abstract class DataModelEdit<M extends AlignmentModel<T>, T, D extends DataModel<?>> extends AlignmentModelEdit<M, T> {
-	private D dataModel;
-
-	
-	public DataModelEdit(M alignmentModel, D dataModel) {
-		super(alignmentModel);
-		this.dataModel = dataModel;
-	}
+public interface DataModelEdit<L> {
 	
 	
-	public D getDataModel() {
-		return dataModel;
-	}
+	public DataModel<L> getDataModel();
 }

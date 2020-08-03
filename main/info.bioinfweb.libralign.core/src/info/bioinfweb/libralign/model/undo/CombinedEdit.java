@@ -29,7 +29,7 @@ import info.bioinfweb.libralign.model.AlignmentModel;
 
 
 /**
- * An edit object that combines a set of simple {@link AlignmentModelEdit}s and {@link DataModelEdit}s to one logical edit step that can be undone
+ * An edit object that combines a set of simple {@link AlignmentModelEdit}s and {@link AbstractDataModelEdit}s to one logical edit step that can be undone
  * or redone by a user of a <i>LibrAlign</i>-based application.
  * 
  * @author Ben St&ouml;ver

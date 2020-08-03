@@ -353,6 +353,7 @@ main/info.bioinfweb.libralign.core/src/info/bioinfweb/libralign/model/tokenset/c
 main/info.bioinfweb.libralign.core/src/info/bioinfweb/libralign/model/tokenset/continuous/DoubleTokenSet.java -text svneol=unset#text/plain
 main/info.bioinfweb.libralign.core/src/info/bioinfweb/libralign/model/tokenset/continuous/FloatTokenSet.java -text svneol=unset#text/plain
 main/info.bioinfweb.libralign.core/src/info/bioinfweb/libralign/model/tokenset/continuous/package-info.java -text svneol=unset#text/plain
+main/info.bioinfweb.libralign.core/src/info/bioinfweb/libralign/model/undo/AbstractDataModelEdit.java -text svneol=unset#text/plain
 main/info.bioinfweb.libralign.core/src/info/bioinfweb/libralign/model/undo/AlignmentModelEdit.java -text svneol=unset#text/plain
 main/info.bioinfweb.libralign.core/src/info/bioinfweb/libralign/model/undo/CombinedEdit.java -text svneol=unset#text/plain
 main/info.bioinfweb.libralign.core/src/info/bioinfweb/libralign/model/undo/DataModelEdit.java -text svneol=unset#text/plain

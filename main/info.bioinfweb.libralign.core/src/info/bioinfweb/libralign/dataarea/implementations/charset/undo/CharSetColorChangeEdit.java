@@ -25,17 +25,18 @@ import javax.swing.undo.CannotRedoException;
 import javax.swing.undo.CannotUndoException;
 
 import info.bioinfweb.libralign.dataarea.implementations.charset.CharSet;
+import info.bioinfweb.libralign.dataarea.implementations.charset.CharSetDataModelListener;
 import info.bioinfweb.libralign.model.AlignmentModel;
 import info.bioinfweb.libralign.model.data.DataModel;
 
 
 
-public class CharSetColorChangeEdit <M extends AlignmentModel<T>, T, D extends DataModel<?>> extends CharSetModelEdit<M, T, D>{
+public class CharSetColorChangeEdit <M extends AlignmentModel<T>, T> extends CharSetModelEdit<M, T, CharSetDataModelListener>{
 	private Color oldColor;
 	private Color newColor;
 	
 	
-	public CharSetColorChangeEdit(M alignmentModel, CharSet charSet, Color oldColor, Color newColor, D dataModel) {
+	public CharSetColorChangeEdit(M alignmentModel, CharSet charSet, Color oldColor, Color newColor, DataModel<CharSetDataModelListener> dataModel) {
 		super(alignmentModel, charSet, dataModel);
 		this.oldColor = oldColor;
 		this.newColor = newColor;

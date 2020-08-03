@@ -21,19 +21,20 @@ package info.bioinfweb.libralign.dataarea.implementations.charset.undo;
 
 import info.bioinfweb.libralign.dataarea.implementations.charset.CharSet;
 import info.bioinfweb.libralign.dataarea.implementations.charset.CharSetDataModel;
+import info.bioinfweb.libralign.dataarea.implementations.charset.CharSetDataModelListener;
 import info.bioinfweb.libralign.model.AlignmentModel;
 import info.bioinfweb.libralign.model.data.DataModel;
 
 
 
-public abstract class CharSetChangeEdit <M extends AlignmentModel<T>, T, D extends DataModel<?>> extends CharSetModelEdit<M, T, D>{
+public abstract class CharSetChangeEdit <M extends AlignmentModel<T>, T> extends CharSetModelEdit<M, T, CharSetDataModelListener>{
 	private CharSet newCharSet;
 	private CharSet oldCharSet;
 	private CharSetDataModel source;
 	private String key;
 	
 	
-	public CharSetChangeEdit(CharSetDataModel source, M alignmentModel, CharSet newCharSet, CharSet oldCharSet, String key, D dataModel) {
+	public CharSetChangeEdit(CharSetDataModel source, M alignmentModel, CharSet newCharSet, CharSet oldCharSet, String key, DataModel<CharSetDataModelListener> dataModel) {
 		super(alignmentModel, newCharSet, dataModel);
 		this.newCharSet = newCharSet;
 		this.oldCharSet = oldCharSet;

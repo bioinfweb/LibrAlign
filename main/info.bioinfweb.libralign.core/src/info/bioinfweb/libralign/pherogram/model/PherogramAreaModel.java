@@ -54,6 +54,7 @@ public class PherogramAreaModel extends PherogramComponentModel implements DataM
 	private List<ShiftChange> shiftChangeList = new ArrayList<ShiftChange>();
 	private boolean firstSeqPosUpdateOngoing = false;
 	private PherogramModelListener undoListener = null;
+	private EditRecorder<?, ?> editRecorder = null;
   
 	
 	/**
@@ -72,7 +73,7 @@ public class PherogramAreaModel extends PherogramComponentModel implements DataM
 		super(provider);
 		setAlignmentModel(alignmentModel);
 		setLabeledSequenceID(labeledSequenceID);
-		EditRecorder<?, ?> editRecorder = new EditRecorder<>(alignmentModel);
+		editRecorder = new EditRecorder<>(alignmentModel);
 		this.ensureUndoListener(editRecorder);
 	}
 
@@ -664,6 +665,11 @@ public class PherogramAreaModel extends PherogramComponentModel implements DataM
 
 	public PherogramModelListener getUndoListener() {
 		return undoListener;
+	}
+
+
+	public EditRecorder<?, ?> getEditRecorder() {
+		return editRecorder;
 	}
 	
 	

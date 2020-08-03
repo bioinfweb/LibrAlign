@@ -23,17 +23,18 @@ import javax.swing.undo.CannotRedoException;
 import javax.swing.undo.CannotUndoException;
 
 import info.bioinfweb.libralign.dataarea.implementations.charset.CharSet;
+import info.bioinfweb.libralign.dataarea.implementations.charset.CharSetDataModelListener;
 import info.bioinfweb.libralign.model.AlignmentModel;
 import info.bioinfweb.libralign.model.data.DataModel;
 
 
 
-public class CharSetRenamedEdit <M extends AlignmentModel<T>, T, D extends DataModel<?>> extends CharSetModelEdit<M, T, D> {
+public class CharSetRenamedEdit <M extends AlignmentModel<T>, T, L> extends CharSetModelEdit<M, T, CharSetDataModelListener> {
 	private String oldName;
 	private String newName;
 	
 	
-	public CharSetRenamedEdit(M alignmentModel, CharSet charSet, String oldName, String newName, D dataModel) {
+	public CharSetRenamedEdit(M alignmentModel, CharSet charSet, String oldName, String newName, DataModel<CharSetDataModelListener> dataModel) {
 		super(alignmentModel, charSet, dataModel);
 		this.oldName = oldName;
 		this.newName = newName;

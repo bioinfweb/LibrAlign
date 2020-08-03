@@ -24,15 +24,16 @@ import javax.swing.undo.CannotUndoException;
 
 import info.bioinfweb.libralign.dataarea.implementations.charset.CharSet;
 import info.bioinfweb.libralign.dataarea.implementations.charset.CharSetDataModel;
+import info.bioinfweb.libralign.dataarea.implementations.charset.CharSetDataModelListener;
 import info.bioinfweb.libralign.model.AlignmentModel;
 import info.bioinfweb.libralign.model.data.DataModel;
 
 
 
-public class CharSetChangeReplaceEdit <M extends AlignmentModel<T>, T, D extends DataModel<?>> extends CharSetChangeEdit<M, T, D>{
+public class CharSetChangeReplaceEdit <M extends AlignmentModel<T>, T> extends CharSetChangeEdit<M, T>{
 	
 	
-	public CharSetChangeReplaceEdit(CharSetDataModel source, M alignmentModel, CharSet newCharSet, CharSet oldCharSet, String key, D dataModel) {
+	public CharSetChangeReplaceEdit(CharSetDataModel source, M alignmentModel, CharSet newCharSet, CharSet oldCharSet, String key, DataModel<CharSetDataModelListener> dataModel) {
 		super(source, alignmentModel, newCharSet, oldCharSet, key, dataModel);
 	}
 

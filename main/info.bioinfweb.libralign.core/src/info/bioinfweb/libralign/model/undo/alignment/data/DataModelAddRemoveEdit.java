@@ -20,11 +20,11 @@ package info.bioinfweb.libralign.model.undo.alignment.data;
 
 import info.bioinfweb.libralign.model.AlignmentModel;
 import info.bioinfweb.libralign.model.data.DataModel;
-import info.bioinfweb.libralign.model.undo.DataModelEdit;
+import info.bioinfweb.libralign.model.undo.AbstractDataModelEdit;
 
-public abstract class DataModelAddRemoveEdit<M extends AlignmentModel<T>, T, D extends DataModel<?>> extends DataModelEdit<M, T, D> {
+public abstract class DataModelAddRemoveEdit<M extends AlignmentModel<T>, T, L> extends AbstractDataModelEdit<M, T, L> {
 
-	public DataModelAddRemoveEdit(M alignmentModel, D dataModel) {
+	public DataModelAddRemoveEdit(M alignmentModel, DataModel<L> dataModel) {
 		super(alignmentModel, dataModel);
 		// TODO Auto-generated constructor stub
 	}
