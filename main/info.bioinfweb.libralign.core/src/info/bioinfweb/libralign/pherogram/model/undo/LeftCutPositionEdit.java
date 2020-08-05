@@ -23,7 +23,9 @@ import javax.swing.undo.CannotRedoException;
 import javax.swing.undo.CannotUndoException;
 
 import info.bioinfweb.libralign.model.AlignmentModel;
+import info.bioinfweb.libralign.model.data.DataModel;
 import info.bioinfweb.libralign.pherogram.model.PherogramComponentModel;
+import info.bioinfweb.libralign.pherogram.model.PherogramModelListener;
 
 
 

@@ -24,6 +24,7 @@ import java.util.List;
 
 import javax.swing.undo.UndoManager;
 
+import info.bioinfweb.commons.swing.AccessibleUndoManager;
 import info.bioinfweb.libralign.model.AlignmentModel;
 import info.bioinfweb.libralign.model.data.DataModel;
 
@@ -39,8 +40,8 @@ import info.bioinfweb.libralign.model.data.DataModel;
  */
 public class EditRecorder<M extends AlignmentModel<T>, T> {
 	private M alignmentModel;
-	private UndoManager undoManager;
-	private List<AlignmentModelEdit<M, T>> currentSubedits;
+	private AccessibleUndoManager undoManager;
+	private List<AbstractAlignmentModelEdit<M, T>> currentSubedits;
 	private boolean definedEditRecording;
 	
 	
@@ -49,16 +50,16 @@ public class EditRecorder<M extends AlignmentModel<T>, T> {
 		this.alignmentModel = alignmentModel;
 		createNewSubeditList();
 		definedEditRecording = false;
-		undoManager = new UndoManager();
+		undoManager = new AccessibleUndoManager();
 	}
 
 	
 	private void createNewSubeditList() {
-		currentSubedits = new ArrayList<AlignmentModelEdit<M, T>>();
+		currentSubedits = new ArrayList<AbstractAlignmentModelEdit<M, T>>();
 	}
 	
 	
-	public void addSubedit(AlignmentModelEdit<M, T> edit) {
+	public void addSubedit(AbstractAlignmentModelEdit<M, T> edit) {
 		currentSubedits.add(edit);
 	}
 	
@@ -68,7 +69,7 @@ public class EditRecorder<M extends AlignmentModel<T>, T> {
 	}
 	
 
-	public UndoManager getUndoManager() {
+	public AccessibleUndoManager getUndoManager() {
 		return undoManager;
 	}
 

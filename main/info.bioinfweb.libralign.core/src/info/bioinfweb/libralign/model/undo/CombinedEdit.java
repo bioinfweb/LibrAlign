@@ -29,7 +29,7 @@ import info.bioinfweb.libralign.model.AlignmentModel;
 
 
 /**
- * An edit object that combines a set of simple {@link AlignmentModelEdit}s and {@link AbstractDataModelEdit}s to one logical edit step that can be undone
+ * An edit object that combines a set of simple {@link AbstractAlignmentModelEdit}s and {@link AbstractDataModelEdit}s to one logical edit step that can be undone
  * or redone by a user of a <i>LibrAlign</i>-based application.
  * 
  * @author Ben St&ouml;ver
@@ -37,12 +37,12 @@ import info.bioinfweb.libralign.model.AlignmentModel;
  *
  * @param <M> the alignment model that is edited by this instance
  */
-public class CombinedEdit<M extends AlignmentModel<T>, T> extends AlignmentModelEdit<M, T> {
+public class CombinedEdit<M extends AlignmentModel<T>, T> extends AbstractAlignmentModelEdit<M, T> {
 	private String presentationName;
-	private Collection<AlignmentModelEdit<M, T>> subedits;
+	private Collection<AbstractAlignmentModelEdit<M, T>> subedits;
 	
 	
-	public CombinedEdit(M alignmentModel, String presentationName, Collection<AlignmentModelEdit<M, T>> subedits) {
+	public CombinedEdit(M alignmentModel, String presentationName, Collection<AbstractAlignmentModelEdit<M, T>> subedits) {
 		super(alignmentModel);
 		this.presentationName = presentationName;
 		this.subedits = subedits;

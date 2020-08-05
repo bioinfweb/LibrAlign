@@ -25,7 +25,6 @@ import info.bioinfweb.libralign.dataarea.implementations.charset.events.CharSetC
 import info.bioinfweb.libralign.dataarea.implementations.charset.events.CharSetRenamedEvent;
 import info.bioinfweb.libralign.dataarea.implementations.charset.undo.CharSetDataModelUndoListener;
 import info.bioinfweb.libralign.model.AlignmentModel;
-import info.bioinfweb.libralign.model.data.DataModelListener;
 import info.bioinfweb.libralign.model.data.DataModel;
 import info.bioinfweb.libralign.model.undo.EditRecorder;
 
@@ -54,7 +53,7 @@ public class CharSetDataModel extends ListOrderedMap<String, CharSet> implements
 	private AlignmentModel<?> alignmentModel;
 	protected Set<CharSetDataModelListener> modelListeners = new HashSet<CharSetDataModelListener>();
 	private CharSetDataModelListener undoListener = null;
-	private EditRecorder<?, ?> editRecorder;
+	private EditRecorder<?, ?> editRecorder = null;
 	
 	
 	public CharSetDataModel(AlignmentModel<?> alignmentModel) {  //TODO Should an alternative constructor without alignmentModel be offered/may alignmentModel be null or will other classes in the future rely on a non-null value to be returned by getAlignmentModel()? (This class currently does not make use of this property.) 
@@ -212,16 +211,17 @@ public class CharSetDataModel extends ListOrderedMap<String, CharSet> implements
 	}
 
 
-	public void ensureCharUndoListener(EditRecorder<?, ?> recorder) throws UnsupportedOperationException {
-		if (undoListener == null) {
-			ensureUndoListener(recorder);
+	@Override
+	public boolean hasUndoListener() {
+		if (undoListener != null) {
+			return true;
+		}
+		else {
+			return false;
 		}
 		
 	}
 
 
-	public EditRecorder<?, ?> getEditRecorder() {
-		return editRecorder;
-	}
 	
 }

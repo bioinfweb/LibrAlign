@@ -19,6 +19,8 @@
 package info.bioinfweb.libralign.pherogram.model;
 
 
+import java.util.Collection;
+
 import info.bioinfweb.libralign.pherogram.provider.PherogramProvider;
 import info.bioinfweb.libralign.pherogram.provider.ReverseComplementPherogramProvider;
 
@@ -36,6 +38,7 @@ public class PherogramProviderChangeEvent extends PherogramModelChangeEvent {
 	private PherogramProvider oldProvider;
 	private PherogramProvider newProvider;
 	private boolean reverseComplemented;
+	private Collection<String> sequenceIDs;
 	
 	
 	/**
@@ -51,12 +54,13 @@ public class PherogramProviderChangeEvent extends PherogramModelChangeEvent {
 	 *        (In that case one of the providers will usually be an instance of {@link ReverseComplementPherogramProvider}.)
 	 */
 	public PherogramProviderChangeEvent(PherogramComponentModel source,	boolean moreEventsUpcoming, 
-			PherogramProvider oldProvider, PherogramProvider newProvider, boolean reverseComplemented) {
+			PherogramProvider oldProvider, PherogramProvider newProvider, boolean reverseComplemented, Collection<String> sequenceIDs) {
 		
 		super(source, moreEventsUpcoming);
 		this.oldProvider = oldProvider;
 		this.newProvider = newProvider;
 		this.reverseComplemented = reverseComplemented;
+		this.sequenceIDs = sequenceIDs;
 	}
 
 
@@ -99,4 +103,12 @@ public class PherogramProviderChangeEvent extends PherogramModelChangeEvent {
 	public boolean isProviderInstanceChange() {
 		return oldProvider != newProvider;
 	}
+
+
+	public Collection<String> getSequenceIDs() {
+		return sequenceIDs;
+	}
+	
+	
+	
 }

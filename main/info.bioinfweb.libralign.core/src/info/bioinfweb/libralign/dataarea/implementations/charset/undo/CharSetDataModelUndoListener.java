@@ -1,6 +1,6 @@
 /*
  * LibrAlign - A GUI library for displaying and editing multiple sequence alignments and attached data
- * Copyright (C) 2014-2018  Ben Stöver
+ * Copyright (C) 2014-2018  Ben Stï¿½ver
  * <http://bioinfweb.info/LibrAlign>
  * 
  * This file is free software: you can redistribute it and/or modify
@@ -25,7 +25,7 @@ import info.bioinfweb.libralign.dataarea.implementations.charset.events.CharSetC
 import info.bioinfweb.libralign.dataarea.implementations.charset.events.CharSetColorChangeEvent;
 import info.bioinfweb.libralign.dataarea.implementations.charset.events.CharSetColumnChangeEvent;
 import info.bioinfweb.libralign.dataarea.implementations.charset.events.CharSetRenamedEvent;
-import info.bioinfweb.libralign.model.undo.AlignmentModelEdit;
+import info.bioinfweb.libralign.model.undo.AbstractAlignmentModelEdit;
 import info.bioinfweb.libralign.model.undo.EditRecorder;
 
 

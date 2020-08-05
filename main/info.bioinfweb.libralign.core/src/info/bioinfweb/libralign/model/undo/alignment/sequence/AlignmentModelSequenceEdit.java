@@ -20,7 +20,7 @@ package info.bioinfweb.libralign.model.undo.alignment.sequence;
 
 
 import info.bioinfweb.libralign.model.AlignmentModel;
-import info.bioinfweb.libralign.model.undo.AlignmentModelEdit;
+import info.bioinfweb.libralign.model.undo.AbstractAlignmentModelEdit;
 import info.bioinfweb.libralign.model.undo.EditRecorder;
 
 
@@ -32,7 +32,7 @@ import info.bioinfweb.libralign.model.undo.EditRecorder;
  * @since 0.10.0
  * @see EditRecorder
  */
-public abstract class AlignmentModelSequenceEdit<M extends AlignmentModel<T>, T> extends AlignmentModelEdit<M, T> {
+public abstract class AlignmentModelSequenceEdit<M extends AlignmentModel<T>, T> extends AbstractAlignmentModelEdit<M, T> {
 	private String sequenceID;
 
 	

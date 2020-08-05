@@ -18,33 +18,8 @@
  */
 package info.bioinfweb.libralign.model.undo;
 
-
-import info.bioinfweb.commons.swing.AbstractDocumentEdit;
 import info.bioinfweb.libralign.model.AlignmentModel;
 
+public interface AlignmentModelEdit<M extends AlignmentModel<T>, T> {
 
-
-public abstract class AlignmentModelEdit<M extends AlignmentModel<T>, T> extends AbstractDocumentEdit {
-	private M alignmentModel;
-
-
-	public AlignmentModelEdit(M alignmentModel) {
-		super();
-		if (alignmentModel == null) {
-			throw new IllegalArgumentException("alignmentModel must not be null.");
-		}
-		else {
-			this.alignmentModel = alignmentModel;
-			setIsSubedit(true);
-		}
-	}
-
-
-	public M getAlignmentModel() {
-		return alignmentModel;
-	}
-
-
-	@Override
-	protected void registerDocumentChange() {}  //TODO Call method of EventRecorder or alert listener?
 }

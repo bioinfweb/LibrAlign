@@ -1,6 +1,6 @@
 /*
  * LibrAlign - A GUI library for displaying and editing multiple sequence alignments and attached data
- * Copyright (C) 2014-2018  Ben Stöver
+ * Copyright (C) 2014-2018  Ben Stï¿½ver
  * <http://bioinfweb.info/LibrAlign>
  * 
  * This file is free software: you can redistribute it and/or modify
@@ -20,6 +20,7 @@ package info.bioinfweb.libralign.pherogram.model;
 
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
@@ -29,7 +30,6 @@ import info.bioinfweb.libralign.dataarea.implementations.charset.CharSetDataMode
 import info.bioinfweb.libralign.dataarea.implementations.pherogram.PherogramArea;
 import info.bioinfweb.libralign.model.AlignmentModel;
 import info.bioinfweb.libralign.model.AlignmentModelAdapter;
-import info.bioinfweb.libralign.model.data.DataModelListener;
 import info.bioinfweb.libralign.model.data.DataModel;
 import info.bioinfweb.libralign.model.events.TokenChangeEvent;
 import info.bioinfweb.libralign.model.undo.EditRecorder;
@@ -73,7 +73,7 @@ public class PherogramAreaModel extends PherogramComponentModel implements DataM
 		super(provider);
 		setAlignmentModel(alignmentModel);
 		setLabeledSequenceID(labeledSequenceID);
-		editRecorder = new EditRecorder<>(alignmentModel);
+		editRecorder = new EditRecorder(alignmentModel); // this is for testing purposes
 		this.ensureUndoListener(editRecorder);
 	}
 
@@ -603,8 +603,8 @@ public class PherogramAreaModel extends PherogramComponentModel implements DataM
 	
 	
 	@Override
-	public void reverseComplement() {
-		super.reverseComplement();
+	public void reverseComplement(Collection<String> sequenceIDs) {
+		super.reverseComplement(sequenceIDs);
 		
 		List<ShiftChange> newList = new ArrayList<ShiftChange>(shiftChangeList.size());
 		
@@ -655,22 +655,21 @@ public class PherogramAreaModel extends PherogramComponentModel implements DataM
 	}
 
 
-	
-	public void ensurePherogramUndoListener(EditRecorder<?, ?> recorder) throws UnsupportedOperationException {
-		if (undoListener == null) {
-			ensureUndoListener(recorder);
-		}
-	}
-
-
 	public PherogramModelListener getUndoListener() {
 		return undoListener;
 	}
 
 
-	public EditRecorder<?, ?> getEditRecorder() {
-		return editRecorder;
+	@Override
+	public boolean hasUndoListener() {
+		if (undoListener != null) {
+			return true;
+		}
+		else {
+			return false;
+		}
 	}
-	
+
+
 	
 }

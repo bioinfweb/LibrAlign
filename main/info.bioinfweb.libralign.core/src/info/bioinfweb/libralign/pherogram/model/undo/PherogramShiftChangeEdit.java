@@ -24,6 +24,7 @@ import javax.swing.undo.CannotUndoException;
 
 import info.bioinfweb.libralign.model.AlignmentModel;
 import info.bioinfweb.libralign.pherogram.model.PherogramAreaModel;
+import info.bioinfweb.libralign.pherogram.model.PherogramModelListener;
 
 
 

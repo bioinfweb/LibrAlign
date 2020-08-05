@@ -16,34 +16,35 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package info.bioinfweb.libralign.pherogram.model.undo;
+package info.bioinfweb.libralign.model.undo;
 
 
+import info.bioinfweb.commons.swing.AbstractDocumentEdit;
 import info.bioinfweb.libralign.model.AlignmentModel;
-import info.bioinfweb.libralign.model.data.DataModel;
-import info.bioinfweb.libralign.pherogram.model.PherogramComponentModel;
-import info.bioinfweb.libralign.pherogram.model.PherogramModelListener;
 
 
 
-public abstract class PherogramPositionEdit<M extends AlignmentModel<T>, T, D extends PherogramComponentModel> extends PherogramModelEdit<M, T, D> {
-	private int oldPosition;
-	private int newPosition;
-	
-	
-	public PherogramPositionEdit(M alignmentModel, D pherogramModel, int oldPosition, int newPosition) {
-		super(alignmentModel, pherogramModel);
-		this.oldPosition = oldPosition;
-		this.newPosition = newPosition;
+public abstract class AbstractAlignmentModelEdit<M extends AlignmentModel<T>, T> extends AbstractDocumentEdit {
+	private M alignmentModel;
+
+
+	public AbstractAlignmentModelEdit(M alignmentModel) {
+		super();
+		if (alignmentModel == null) {
+			throw new IllegalArgumentException("alignmentModel must not be null.");
+		}
+		else {
+			this.alignmentModel = alignmentModel;
+			setIsSubedit(true);
+		}
 	}
 
 
-	public int getOldPosition() {
-		return oldPosition;
+	public M getAlignmentModel() {
+		return alignmentModel;
 	}
 
 
-	public int getNewPosition() {
-		return newPosition;
-	}
+	@Override
+	protected void registerDocumentChange() {}  //TODO Call method of EventRecorder or alert listener?
 }

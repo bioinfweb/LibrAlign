@@ -43,7 +43,7 @@ public class PherogramModelUndoListener implements PherogramModelListener {
 	@Override
 	public void pherogramProviderChange(PherogramProviderChangeEvent event) {
 		PherogramAreaModel model = (PherogramAreaModel) event.getSource();
-		recorder.addSubedit(new PherogramModelProviderChangeEdit(model.getAlignmentModel(), event.getSource(), event.getOldProvider(), event.getNewProvider()));
+		recorder.addSubedit(new PherogramModelProviderChangeEdit(model.getAlignmentModel(), event.getSource(), event.getOldProvider(), event.getNewProvider(), event.isReverseComplemented(), event.getSequenceIDs()));
 	}
 
 	

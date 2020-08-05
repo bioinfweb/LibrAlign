@@ -78,8 +78,8 @@ public class AbstractDataModel<L> implements DataModel<L> {
 
 
 	@Override
-	public void ensureUndoListener(EditRecorder<?, ?> recorder) throws UnsupportedOperationException {
+	public boolean hasUndoListener() {
 		// TODO Auto-generated method stub
-		
+		return false;
 	}	
 }

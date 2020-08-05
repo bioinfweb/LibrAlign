@@ -1,6 +1,6 @@
 /*
  * LibrAlign - A GUI library for displaying and editing multiple sequence alignments and attached data
- * Copyright (C) 2014-2018  Ben Stöver
+ * Copyright (C) 2014-2018  Ben StÃ¶ver
  * <http://bioinfweb.info/LibrAlign>
  * 
  * This file is free software: you can redistribute it and/or modify
@@ -20,17 +20,22 @@ package info.bioinfweb.libralign.pherogram.model.undo;
 
 
 import info.bioinfweb.libralign.model.AlignmentModel;
-import info.bioinfweb.libralign.model.undo.AlignmentModelEdit;
+import info.bioinfweb.libralign.model.data.DataModel;
+import info.bioinfweb.libralign.model.undo.AbstractDataModelEdit;
+import info.bioinfweb.libralign.model.undo.AbstractAlignmentModelEdit;
+import info.bioinfweb.libralign.model.undo.DataModelEdit;
+import info.bioinfweb.libralign.pherogram.model.PherogramAreaModel;
 import info.bioinfweb.libralign.pherogram.model.PherogramComponentModel;
+import info.bioinfweb.libralign.pherogram.model.PherogramModelListener;
 
 
 
-public abstract class PherogramModelEdit<M extends AlignmentModel<T>, T, D extends PherogramComponentModel> extends AlignmentModelEdit<M, T>{
+public abstract class PherogramModelEdit<M extends AlignmentModel<T>, T, D extends PherogramComponentModel> extends AbstractDataModelEdit<M,T,PherogramModelListener>{
 	private D pherogramModel;
 
 	
 	public PherogramModelEdit(M alignmentModel, D pherogramModel) {
-		super(alignmentModel);
+		super(alignmentModel, (PherogramAreaModel) pherogramModel);
 		if (pherogramModel == null) {
 			throw new IllegalArgumentException("pherogramModel must not be null.");
 		}
@@ -38,7 +43,8 @@ public abstract class PherogramModelEdit<M extends AlignmentModel<T>, T, D exten
 	}
 
 
-	public D getPherogramModel() {
-		return pherogramModel;
-	} 
+	public PherogramAreaModel getPherogramModel() {
+		return (PherogramAreaModel) pherogramModel;
+	}
+	
 }

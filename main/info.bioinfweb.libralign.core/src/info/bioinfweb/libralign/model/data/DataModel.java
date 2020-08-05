@@ -59,9 +59,11 @@ public interface DataModel<L> {  //TODO: Add generic parameters M and T to force
 	 * 
 	 */
 	default void ensureUndoListener(EditRecorder<?, ?> recorder) throws UnsupportedOperationException {
-		L undoListener = createUndoListener(recorder); 
-		if (undoListener != null) {
-			addModelListener(undoListener);
+		if (!hasUndoListener()) {
+			L undoListener = createUndoListener(recorder); 
+			if (undoListener != null) {
+				addModelListener(undoListener);
+			}
 		}
 	}
 	
@@ -69,6 +71,13 @@ public interface DataModel<L> {  //TODO: Add generic parameters M and T to force
 	 * Removed the respective undo listener.
 	 * 
 	 */
-	public void removeUndoListener(); // TODO: no parameter
+	public void removeUndoListener(); 
+	
+	/**
+	 * Looks whether a respective UndoListener already exists. 
+	 * 
+	 * @return true when an UndoListener already exists. False when no UndoListener was created yet.
+	 */
+	public boolean hasUndoListener();
 	
 }

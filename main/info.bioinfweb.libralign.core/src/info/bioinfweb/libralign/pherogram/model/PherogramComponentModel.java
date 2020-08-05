@@ -1,6 +1,6 @@
 /*
  * LibrAlign - A GUI library for displaying and editing multiple sequence alignments and attached data
- * Copyright (C) 2014-2018  Ben Stöver
+ * Copyright (C) 2014-2018  Ben Stï¿½ver
  * <http://bioinfweb.info/LibrAlign>
  *
  * This file is free software: you can redistribute it and/or modify
@@ -22,6 +22,7 @@ package info.bioinfweb.libralign.pherogram.model;
 import info.bioinfweb.commons.Math2;
 import info.bioinfweb.libralign.pherogram.provider.PherogramProvider;
 
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -111,7 +112,7 @@ public class PherogramComponentModel {
 	/**
 	 * Reverse complements the pherogram and swaps the left and right cut positions accordingly.
 	 */
-	public void reverseComplement() {
+	public void reverseComplement(Collection<String> sequenceIDs) {
 		PherogramProvider oldProvider = pherogramProvider;
 		pherogramProvider = pherogramProvider.reverseComplement();
 
@@ -124,7 +125,7 @@ public class PherogramComponentModel {
 		rightCutPosition = pherogramProvider.getSequenceLength() - oldLeftCutPosition;
 
 		firePherogramProviderChanged(oldProvider, true,
-				(leftCutPosition != oldLeftCutPosition) || (rightCutPosition != oldRightCutPosition));
+				(leftCutPosition != oldLeftCutPosition) || (rightCutPosition != oldRightCutPosition), sequenceIDs);
 		if (leftCutPosition != oldLeftCutPosition) {
 			fireLeftCutPositionChanged(oldLeftCutPosition, oldLeftEditableIndex, rightCutPosition != oldRightCutPosition);
 		}
@@ -147,7 +148,7 @@ public class PherogramComponentModel {
 			this.pherogramProvider = pherogramProvider;
 
 			firePherogramProviderChanged(oldProvider, false,
-					(getLeftCutPosition() != 0) || (getRightCutPosition() != pherogramProvider.getSequenceLength()));
+					(getLeftCutPosition() != 0) || (getRightCutPosition() != pherogramProvider.getSequenceLength()), null);
 			setLeftCutPosition(0);
 			setRightCutPosition(pherogramProvider.getSequenceLength());
 		}
@@ -298,10 +299,10 @@ public class PherogramComponentModel {
 
 
 	protected void firePherogramProviderChanged(PherogramProvider oldProvider, boolean reverseComplemented,
-			boolean moreEventsUpcoming) {
+			boolean moreEventsUpcoming, Collection<String> sequenceIDs) {
 
 		PherogramProviderChangeEvent event = new PherogramProviderChangeEvent(this, moreEventsUpcoming,
-				oldProvider, pherogramProvider, reverseComplemented);
+				oldProvider, pherogramProvider, reverseComplemented, sequenceIDs);
         for (PherogramModelListener listener : modelListeners.toArray(new PherogramModelListener[modelListeners.size()])) {  // Copying the list is necessary to allow listeners to remove themselves from the list without a ConcurrentModificationException being thrown.
 			listener.pherogramProviderChange(event);
 		}
