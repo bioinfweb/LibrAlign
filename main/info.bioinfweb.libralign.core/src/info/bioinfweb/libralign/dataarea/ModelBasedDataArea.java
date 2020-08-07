@@ -48,9 +48,9 @@ public abstract class ModelBasedDataArea<M extends DataModel<L>, L> extends Data
 	 * @throws IllegalArgumentException if {@code owner} is {@code null}
 	 */
 	public ModelBasedDataArea(AlignmentArea owner, M model) {
-		super(owner);		
+		super(owner);
+		modelListener = createListener();  // Must be done before setModel(). 
 		setModel(model);
-		modelListener = createListener();
 	}
 	
 	

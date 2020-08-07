@@ -262,7 +262,12 @@ public class PherogramComponentModel {
 
 
 	public boolean addModelListener(PherogramModelListener listener) {
-		return modelListeners.add(listener);
+		if (listener == null) {
+			throw new NullPointerException("listener must not be null.");
+		}
+		else {
+			return modelListeners.add(listener);
+		}
 	}
 
 
