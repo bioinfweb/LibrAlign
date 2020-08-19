@@ -169,9 +169,9 @@ public class TokenChangeEvent<T> extends TypedAlignmentModelChangeEvent<T> {
 	 * @return a new instance with the same token type as {@code source}
 	 */
 	public static <T> TokenChangeEvent<T> newReplaceInstance(AlignmentModel<T> source, String sequenceID,
-			int index, T replacedToken) {
+			int index, T replacedToken, T newTokens) {
 		
-		return newReplaceInstance(source, sequenceID, index, Collections.nCopies(1, replacedToken));
+		return newReplaceInstance(source, sequenceID, index, Collections.nCopies(1, replacedToken),Collections.nCopies(1, newTokens));
 	}
 
 

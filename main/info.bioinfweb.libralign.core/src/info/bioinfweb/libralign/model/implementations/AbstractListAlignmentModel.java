@@ -108,8 +108,9 @@ public abstract class AbstractListAlignmentModel<T> extends AbstractMapBasedAlig
 		List<T> sequence = getSequence(sequenceID);
 		if (sequence != null) {
 			T replacedToken = sequence.get(index);
+			T newToken = null;
 			sequence.set(index, token);
-			fireAfterTokenChange(TokenChangeEvent.newReplaceInstance(this, sequenceID, index, replacedToken));
+			fireAfterTokenChange(TokenChangeEvent.newReplaceInstance(this, sequenceID, index, replacedToken, newToken));
 		}
 		else {
 			throw new SequenceNotFoundException(this, sequenceID);
