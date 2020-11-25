@@ -202,4 +202,11 @@ public class BioJava3SequenceAlignmentModel<S extends Sequence<C>, C extends Com
 			throw new SequenceNotFoundException(this, sequenceID);
 		}
 	}
+
+
+	@Override
+	protected S createNewEmptySequence(String sequenceID, String sequenceName) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }
