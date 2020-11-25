@@ -162,6 +162,59 @@ public abstract class AbstractUnmodifyableAlignmentModel<S, T> extends AbstractM
 	}
 
 
+	/**
+	   * Adds a the specified sequence to the underlying data source and generates an ID for it.
+	   * <p>
+	   * Note that since the sequences in this implementation are considered as immutable it does not make
+	   * sense to call {@link #addSequence(String)} on an instance of this class unless you want to have
+	   * an empty sequence in the alignment.
+	   * 
+	   * @param sequenceName the name of the new sequence
+		 * @param content the sequence object to be added.
+		 * @param index the index where the sequence is added
+	   * @return the unique ID of the new sequence
+		 * 
+		 * @throws AlignmentSourceNotWritableException This exception is never thrown by this implementation.
+	   */
+		@Override
+		public String addSequence(int index, String sequenceName, S content) {
+			try {
+				nextContent = content;
+				return addSequence(index, sequenceName);
+			}
+			finally {
+				nextContent = null;
+			}
+		}
+		
+		
+		/**
+	   * Adds a the specified sequence to the underlying data source and assigns the specified ID to it.
+	   * <p>
+	   * Note that since the sequences in this implementation are considered as immutable it does not make
+	   * sense to call {@link #addSequence(String)} on an instance of this class unless you want to have
+	   * an empty sequence in the alignment.
+	   * 
+	   * @param sequenceName the name of the new sequence
+	   * @param sequenceID the ID for the new sequence
+		 * @param content the sequence object to be added.
+		 * @param index the index where the sequence is added
+	   * @return the unique ID of the new sequence
+		 * 
+		 * @throws IllegalArgumentException if a sequence with the specified ID is already present in this model
+	   */
+		@Override
+		public String addSequence(int index, String sequenceName, String sequenceID, S content) throws IllegalArgumentException {
+			try {
+				nextContent = content;
+				return addSequence(index, sequenceName, sequenceID);
+			}
+			finally {
+				nextContent = null;
+			}
+		}
+	
+	
 	@Override
 	public AlignmentModelWriteType getWriteType() {
 		return AlignmentModelWriteType.SEQUENCES_ONLY;

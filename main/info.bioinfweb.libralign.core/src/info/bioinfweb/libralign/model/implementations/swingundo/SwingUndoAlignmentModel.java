@@ -412,6 +412,30 @@ public class SwingUndoAlignmentModel<T> extends AbstractAlignmentModel<T> implem
 		}
 	}
 
+	
+	@Override
+	public String addSequence(int index, String sequenceName) {
+		return addSequence(index, sequenceName, null);
+	}
+	
+	
+	@Override
+	public String addSequence(int index, String sequenceName, String sequenceID) {
+		if (isSequencesReadOnly()) {
+			throw new AlignmentSourceNotWritableException(this);
+		}
+		else {
+			SwingAddSequenceEdit edit = new SwingConcreteAddSequenceEdit<T>(this, sequenceName, sequenceID);
+			if (hasEditFactory()) {
+				edit = editFactory.createAddSequenceEdit((SwingConcreteAddSequenceEdit<T>)edit);
+			}
+			undoManager.addEdit(edit);
+			edit.redo();
+			return edit.getNewSequenceID();
+		}
+	}
+	
+	
 
 	@Override
 	public boolean removeSequence(String sequenceID) {

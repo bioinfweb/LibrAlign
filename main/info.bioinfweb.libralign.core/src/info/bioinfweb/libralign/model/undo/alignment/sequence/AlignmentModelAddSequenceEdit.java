@@ -36,6 +36,7 @@ import info.bioinfweb.libralign.model.undo.EditRecorder;
  */
 public class AlignmentModelAddSequenceEdit<M extends AlignmentModel<T>, T> extends AlignmentModelSequenceEdit<M, T> {
 	private String sequenceName;
+	private int index;
 
 	
 	/**
@@ -45,20 +46,21 @@ public class AlignmentModelAddSequenceEdit<M extends AlignmentModel<T>, T> exten
 	 * @param sequenceID the ID of the new sequence
 	 * @param sequenceName the name of the new sequence
 	 */
-	public AlignmentModelAddSequenceEdit(M alignmentModel, String sequenceID, String sequenceName) {
+	public AlignmentModelAddSequenceEdit(M alignmentModel, String sequenceID, String sequenceName, int index) {
 		super(alignmentModel, sequenceID);
 		if (alignmentModel == null) {
 			throw new IllegalArgumentException("sequenceName must not be null.");
 		}
 		else {
 			this.sequenceName = sequenceName;
+			this.index = index;
 		}
 	}
 
 
 	@Override
 	public void redo() throws CannotRedoException {
-		getAlignmentModel().addSequence(sequenceName, getSequenceID());  // Creating an ID is never necessary since this method will never be used for the first redo.
+		getAlignmentModel().addSequence(index, sequenceName, getSequenceID());
 		super.redo();
 	}
 

@@ -39,6 +39,7 @@ import info.bioinfweb.libralign.model.AlignmentModel;
 public class SequenceChangeEvent<T> extends TypedAlignmentModelChangeEvent<T> {
 	private Collection<T> deletedContent;
 	private String sequenceName;
+	private int index;
 
 	
 	/**
@@ -52,18 +53,33 @@ public class SequenceChangeEvent<T> extends TypedAlignmentModelChangeEvent<T> {
 	 *        If {@code null} is passed here, an empty collection will be used.)
 	 * @throws IllegalArgumentException if {@code source}, {@code sequenceID} or {@code type} are {@code null} 
 	 */
-	protected SequenceChangeEvent(AlignmentModel<T> source, String sequenceID, ListChangeType type, Collection<T> deletedContent, String sequenceName) {
+	protected SequenceChangeEvent(AlignmentModel<T> source, String sequenceID, ListChangeType type, Collection<T> deletedContent, String sequenceName, int index) {
 		super(source, sequenceID, type);
 		if (deletedContent == null) {
 			deletedContent = Collections.emptyList();
 		}
+		this.index = index;
 		this.deletedContent = Collections.unmodifiableCollection(deletedContent);
 		this.sequenceName = sequenceName;
 	}
 	
+
+	public static <T> SequenceChangeEvent<T> newInsertInstance(int index, AlignmentModel<T> source, String sequenceID,String sequenceName) {
+		return new SequenceChangeEvent<T>(source, sequenceID, ListChangeType.INSERTION, null, sequenceName, index);
+	}
 	
-	public static <T> SequenceChangeEvent<T> newInsertInstance(AlignmentModel<T> source, String sequenceID,String sequenceName) {
-		return new SequenceChangeEvent<T>(source, sequenceID, ListChangeType.INSERTION, null, sequenceName);
+	
+	/**
+	 * Creates a new instance of this event indicating the insertion of a sequence at a specific index.
+	 * 
+	 * @param source the alignment model from which the sequence was removed
+	 * @param sequenceID the ID of the sequence that was inserted
+	 * @param sequenceName the name of the sequence that was inserted
+	 * @param index the index where the sequence was inserted
+	 * @return the new event instance
+	 */
+	public static <T> SequenceChangeEvent<T> newInsertInstanceAtIndex(AlignmentModel<T> source, String sequenceID,String sequenceName, Integer index) {
+		return new SequenceChangeEvent<T>(source, sequenceID, ListChangeType.INSERTION, null, sequenceName, index);
 	}
 	
 	
@@ -77,11 +93,28 @@ public class SequenceChangeEvent<T> extends TypedAlignmentModelChangeEvent<T> {
 	 *        If {@code null} is passed here, an empty collection will be used.)
 	 * @return the new event instance
 	 */
-	public static <T> SequenceChangeEvent<T> newRemoveInstance(AlignmentModel<T> source, String sequenceID, Collection<T> deletedContent) {
-		return new SequenceChangeEvent<T>(source, sequenceID, ListChangeType.DELETION, deletedContent, null);
+	public static <T> SequenceChangeEvent<T> newRemoveInstance(int index, AlignmentModel<T> source, String sequenceID, Collection<T> deletedContent) {
+		return new SequenceChangeEvent<T>(source, sequenceID, ListChangeType.DELETION, deletedContent, null, index);
 	}
 
-
+	
+	/**
+	 * Creates a new instance of this event indicating the removal of a sequence and records the index of the deleted sequence.
+	 * The index is necessary if the deleted sequence should be added again in the same position.
+	 * 
+	 * @param source the alignment model from which the sequence was removed
+	 * @param sequenceID the ID of the sequence that was removed
+	 * @param deletedContent a collection containing the tokens that were contained in the sequence 
+	 *        (The collection implementation used here should ideally be as memory-efficient as the ones used by {@code source} internally.
+	 *        If {@code null} is passed here, an empty collection will be used.)
+	 * @param index the index of the deleted sequence
+	 * @return the new event instance
+	 */
+	public static <T> SequenceChangeEvent<T> newRemoveInstanceAtIndex(AlignmentModel<T> source, String sequenceID, Collection<T> deletedContent, Integer index) {
+		return new SequenceChangeEvent<T>(source, sequenceID, ListChangeType.DELETION, deletedContent, null, index);
+	}
+	
+	
 	/**
 	 * Returns a collection of the tokens that were contained in the deleted sequence.
 	 * 
@@ -94,6 +127,11 @@ public class SequenceChangeEvent<T> extends TypedAlignmentModelChangeEvent<T> {
 	
 	public String getSequenceName() {
 		return sequenceName;
+	}
+	
+
+	public int getIndex() {
+		return index;
 	}
 
 

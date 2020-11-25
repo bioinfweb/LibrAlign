@@ -154,7 +154,7 @@ public abstract class AbstractMapBasedAlignmentModel<S, T> extends AbstractUndec
 					protected void doRemove() {
 						Collection<T> deletedContent = copySequenceContent(getCurrentID());
 						getSequenceMap().remove(getCurrentID());
-						fireAfterSequenceChange(SequenceChangeEvent.newRemoveInstance(getModel(), getCurrentID(), deletedContent));
+						fireAfterSequenceChange(SequenceChangeEvent.newRemoveInstance(getSequenceOrder().indexOf(getCurrentID()), getModel(), getCurrentID(), deletedContent));
 					}
 				};
 	}
@@ -176,19 +176,21 @@ public abstract class AbstractMapBasedAlignmentModel<S, T> extends AbstractUndec
 	 * @return the new sequence object
 	 */
 	protected abstract S createNewSequence(String sequenceID, String sequenceName);
+
+	
+	@Override
+	protected void doAddSequence(int index, String sequenceID, String sequenceName) {
+		S sequence = createNewSequence(sequenceID, sequenceName);
+		getSequenceMap().put(sequenceID, sequence);
+		getSequenceOrder().add(index, sequenceID);
+	}
 	
 
 	@Override
-	protected void doAddSequence(String sequenceID, String sequenceName) {
-		S sequence = createNewSequence(sequenceID, sequenceName);
-		getSequenceMap().put(sequenceID, sequence);
-		getSequenceOrder().add(sequenceID);
-	}
-
-
-	@Override
-	protected void doRemoveSequence(String sequenceID) {
+	protected int doRemoveSequence(String sequenceID) {
 		getSequenceMap().remove(sequenceID);
-		getSequenceOrder().remove(getSequenceOrder().indexOf(sequenceID));
+		int index = getSequenceOrder().indexOf(sequenceID);
+		getSequenceOrder().remove(index);
+		return index;
 	}
 }

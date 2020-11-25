@@ -171,7 +171,7 @@ public class SequenceOrder {
 
 	
 	/**
-	 * Moves a sequence to a new position. All other sequences are moved by one position accordingly.
+	 * Moves a sequence to a new position. All other sequences are moved by one position respectively.
 	 * <p>
 	 * If the {@code index + offset} is lower than 0 the sequence if moved to the beginning, if the 
 	 * result greater than the index of the last element in the list, the sequence is moved to the

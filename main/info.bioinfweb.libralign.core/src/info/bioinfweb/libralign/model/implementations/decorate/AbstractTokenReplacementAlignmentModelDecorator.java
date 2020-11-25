@@ -121,9 +121,9 @@ public abstract class AbstractTokenReplacementAlignmentModelDecorator<T, U> exte
 		if (decoratedID != null) {
 			switch (event.getType()) {
 				case INSERTION:
-					return SequenceChangeEvent.newInsertInstance(this, decoratedID, event.getSequenceName());
+					return SequenceChangeEvent.newInsertInstance(event.getIndex(), this, decoratedID, event.getSequenceName());
 				case DELETION:
-					return SequenceChangeEvent.newRemoveInstance(this, decoratedID, convertUnderlyingTokens(event.getSequenceID(), 0, event.getDeletedContent()));
+					return SequenceChangeEvent.newRemoveInstance(event.getIndex(), this, decoratedID, convertUnderlyingTokens(event.getSequenceID(), 0, event.getDeletedContent()));
 				default:  // Just in case more valid types are added in the future.
 					throw new IllegalArgumentException("The change type \"" + event.getType() + " is not supported.");
 			}

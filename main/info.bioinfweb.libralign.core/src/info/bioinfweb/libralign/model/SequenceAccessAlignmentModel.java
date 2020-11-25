@@ -58,4 +58,32 @@ public interface SequenceAccessAlignmentModel<S, T> extends AlignmentModel<T>, S
 	 * @throws IllegalArgumentException if a sequence with the specified ID is already present in this model
    */
   public String addSequence(String sequenceName, String sequenceID, S content) throws AlignmentSourceNotWritableException, IllegalArgumentException;
+  
+  
+  /**
+   * Adds a new empty sequence to the underlying data source at the specified index assigning the specified ID to it.
+   * 
+   * @param sequenceName the name of the new sequence
+   * @param sequenceID the ID the new sequence should have
+   * @param content the sequence object to be added.
+   * @param index the index of where the sequence should be added
+   * @return the unique ID of the new sequence (identical with {@code sequenceID})
+	 * 
+	 * @throws AlignmentSourceNotWritableException if the underlying data source is not writable for sequences
+	 * @throws IllegalArgumentException if a sequence with the specified ID is already present in this model
+   */
+  public String addSequence(int index, String sequenceName, String sequenceID, S content) throws AlignmentSourceNotWritableException, IllegalArgumentException;
+  
+  
+  /**
+   * Adds a new empty sequence to the underlying data source at the specified index and generates an ID for it.
+   * 
+   * @param sequenceName the name of the new sequence
+   * @param content the sequence object to be added.
+   * @param index the index of where the sequence should be added
+   * @return the unique ID of the new sequence
+	 * 
+	 * @throws AlignmentSourceNotWritableException if the underlying data source is not writable for sequences
+   */
+  public String addSequence(int index, String sequenceName, S content) throws AlignmentSourceNotWritableException;
 }

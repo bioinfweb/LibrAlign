@@ -51,10 +51,10 @@ public class AlignmentModelUndoListener<T> implements AlignmentModelListener<T> 
 	@Override
 	public void afterSequenceChange(SequenceChangeEvent<T> event) {
 		if (event.getType().equals(ListChangeType.INSERTION)) {
-			recorder.addSubedit(new AlignmentModelAddSequenceEdit(event.getSource(), event.getSequenceID(), event.getSequenceName()));
+			recorder.addSubedit(new AlignmentModelAddSequenceEdit(event.getSource(), event.getSequenceID(), event.getSequenceName(), event.getIndex()));
 		}
 		else if (event.getType().equals(ListChangeType.DELETION)) {
-			recorder.addSubedit(new AlignmentModelRemoveSequenceEdit(event.getSource(), event.getSequenceID(), event.getDeletedContent()));
+			recorder.addSubedit(new AlignmentModelRemoveSequenceEdit(event.getSource(), event.getSequenceID(), event.getDeletedContent(), event.getIndex()));
 		}
 		
 	}

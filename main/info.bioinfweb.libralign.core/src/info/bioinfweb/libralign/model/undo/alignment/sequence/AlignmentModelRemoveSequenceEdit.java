@@ -40,11 +40,13 @@ import info.bioinfweb.libralign.model.undo.EditRecorder;
 public class AlignmentModelRemoveSequenceEdit<M extends AlignmentModel<T>, T> extends AlignmentModelSequenceEdit<M, T> {
 	private String name;
 	private Collection<T> deletedContent;
+	private int index;
 	
 
-	public AlignmentModelRemoveSequenceEdit(M alignmentModel, String sequenceID, Collection<T> deletedContent) {
+	public AlignmentModelRemoveSequenceEdit(M alignmentModel, String sequenceID, Collection<T> deletedContent, int index) {
 		super(alignmentModel, sequenceID);
 		this.deletedContent = deletedContent;
+		this.index = index;
 		if (deletedContent == null) {
 			name = getAlignmentModel().sequenceNameByID(sequenceID);
 			int length = getAlignmentModel().getSequenceLength(sequenceID);
@@ -68,7 +70,7 @@ public class AlignmentModelRemoveSequenceEdit<M extends AlignmentModel<T>, T> ex
 
 	@Override
 	public void undo() throws CannotUndoException {
-		getAlignmentModel().addSequence(getName(), getSequenceID());
+		getAlignmentModel().addSequence(index, getName(), getSequenceID());
 		getAlignmentModel().insertTokensAt(getSequenceID(), 0, deletedContent, true);  // The left bound property is set arbitrarily here, since it is undefined. In redo operations, data models should be restored from their own edit objects instead of reacting to events triggered by this call.
 		super.undo();
 	}
@@ -81,6 +83,6 @@ public class AlignmentModelRemoveSequenceEdit<M extends AlignmentModel<T>, T> ex
 
 	@Override
 	public String getPresentationName() {
-		return "Remove sequence \"" + name + "\"";
+		return "Removed sequence \"" + name + "\"";
 	}
 }

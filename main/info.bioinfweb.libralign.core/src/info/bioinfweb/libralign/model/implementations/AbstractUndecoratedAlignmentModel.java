@@ -182,10 +182,10 @@ public abstract class AbstractUndecoratedAlignmentModel<T> extends AbstractAlign
 		}
 		return result;
 	}
-
-
+	
+	
 	/**
-	 * This method is called by {@link #addSequence(String)} if {@link #isReadOnly()} returns {@code false}. 
+	 * This method is called by {@link #addSequenceByIndex(String)} if {@link #isReadOnly()} returns {@code false}. 
 	 * Implementing classes should add the specified new sequence to their underlying data source in this
 	 * method. The according events or exceptions are already created by this class if necessary, therefore
 	 * this does not need to be done in the implementation of this method.
@@ -193,8 +193,9 @@ public abstract class AbstractUndecoratedAlignmentModel<T> extends AbstractAlign
 	 * @param sequenceID the unique identifier for the new sequence which has been generated before the
 	 *        call of this method
 	 * @param sequenceName the initial name the new sequence shall have 
+	 * @param index the index the sequence shall be inserted in
 	 */
-	protected abstract void doAddSequence(String sequenceID, String sequenceName);
+	protected abstract void doAddSequence(int index, String sequenceID, String sequenceName);
 	
 	
 	private String getNewSequenceID(String sequenceName) {
@@ -226,8 +227,32 @@ public abstract class AbstractUndecoratedAlignmentModel<T> extends AbstractAlign
 					"\" is already present in this model. Sequence IDs have to be unique.");
 		}
 		else {
-			doAddSequence(sequenceID, sequenceName);
-			fireAfterSequenceChange(SequenceChangeEvent.newInsertInstance(this, sequenceID, sequenceName));
+			int index = getSequenceCount();
+			doAddSequence(index, sequenceID, sequenceName);
+			fireAfterSequenceChange(SequenceChangeEvent.newInsertInstanceAtIndex(this, sequenceID, sequenceName, index));
+			return sequenceID;
+		}
+	}
+	
+	
+	@Override
+	public String addSequence(int index, String sequenceName) {
+		return addSequence(index, sequenceName, getNewSequenceID(sequenceName));
+	}
+	
+	
+	@Override
+	public String addSequence(int index, String sequenceName, String sequenceID) {
+		if (isSequencesReadOnly()) {
+			throw new AlignmentSourceNotWritableException(this);
+		}
+		else if (containsSequence(sequenceID)) {
+			throw new IllegalArgumentException("A sequence with the ID \"" + sequenceID + 
+					"\" is already present in this model. Sequence IDs have to be unique.");
+		}
+		else {
+			doAddSequence(index, sequenceID, sequenceName);
+			fireAfterSequenceChange(SequenceChangeEvent.newInsertInstanceAtIndex(this, sequenceID, sequenceName, index)); // new method with index
 			return sequenceID;
 		}
 	}
@@ -241,7 +266,7 @@ public abstract class AbstractUndecoratedAlignmentModel<T> extends AbstractAlign
 	 * 
 	 * @param sequenceID the unique identifier of the sequence to be removed
 	 */
-	protected abstract void doRemoveSequence(String sequenceID);
+	protected abstract int doRemoveSequence(String sequenceID);
 	
 	
 	protected Collection<T> copySequenceContent(String sequenceID) {
@@ -273,8 +298,8 @@ public abstract class AbstractUndecoratedAlignmentModel<T> extends AbstractAlign
 			if (result) {
 				getDataModels().removeSequenceList(sequenceID);  // This will fire removal events for all contained data models and should be done before the removal of the sequence itself.
 				Collection<T> deletedContent = copySequenceContent(sequenceID);
-				doRemoveSequence(sequenceID);
-				fireAfterSequenceChange(SequenceChangeEvent.newRemoveInstance(this, sequenceID, deletedContent));
+				int index = doRemoveSequence(sequenceID);
+				fireAfterSequenceChange(SequenceChangeEvent.newRemoveInstance(index, this, sequenceID, deletedContent));
 			}
 			return result;
 		}
