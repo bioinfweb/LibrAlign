@@ -60,7 +60,10 @@ public class EditRecorder<M extends AlignmentModel<T>, T> {
 	
 	
 	public void addSubedit(AbstractAlignmentModelEdit<M, T> edit) {
-		currentSubedits.add(edit);
+		if (isDefinedEditRecording()) {
+			currentSubedits.add(edit);
+		}
+		
 	}
 	
 

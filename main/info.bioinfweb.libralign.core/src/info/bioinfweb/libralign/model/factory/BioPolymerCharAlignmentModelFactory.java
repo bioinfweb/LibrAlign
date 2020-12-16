@@ -162,9 +162,12 @@ public class BioPolymerCharAlignmentModelFactory extends AbstractAlignmentModelF
 			case NUCLEOTIDE:
 				tokenSet = CharacterTokenSet.newNucleotideInstance(isDistinguishCase());
 				break;
-			//TODO What about CONTINUES?
-			default:  // AMINO_ACID and UNKNOWN
-				tokenSet = CharacterTokenSet.newAminoAcidInstance(isDistinguishCase());  // Also contains all nucleotide (ambiguity) codes.
+			case AMINO_ACID:
+				tokenSet = CharacterTokenSet.newAminoAcidInstance(isDistinguishCase());
+				break;
+			//TODO What about CONTINUES and DISCRETE? They both need to be addressed on their own
+			default:  // DISCRETE, CONTINUES and UNKNOWN
+				tokenSet = CharacterTokenSet.newNucleotideInstance(isDistinguishCase());  // Also contains all nucleotide (ambiguity) codes.
 				break;
 		}
 
