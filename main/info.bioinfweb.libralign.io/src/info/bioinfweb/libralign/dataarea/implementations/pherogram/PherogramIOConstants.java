@@ -27,8 +27,12 @@ public interface PherogramIOConstants {
   public static final String NAMESPACE_URI_PREFIX = "http://bioinfweb.info/xmlns/LibrAlign/Pherogram/";
   public static final String PHEROGRAM_ALIGNMENT_NAMESPACE_URI = NAMESPACE_URI_PREFIX + "PherogramAlignment/"; //$NON-NLS-1$
   public static final String PHEROGRAM_ALIGNMENT_NAMESPACE_PREFIX = "pha";
+	public static final String DATA_TYPE_NAMESPACE_URI = NAMESPACE_URI_PREFIX + "DataTypes/";
+	public static final String DATA_TYPE_NAMESPACE_PREFIX = "pdt";
   
-  public static final QName TAG_SHIFTS = new QName(PHEROGRAM_ALIGNMENT_NAMESPACE_URI, "shifts", PHEROGRAM_ALIGNMENT_NAMESPACE_PREFIX); //$NON-NLS-1$
+	public static final QName DATA_TYPE_SHIFT_LIST = new QName(DATA_TYPE_NAMESPACE_URI, "shifts", DATA_TYPE_NAMESPACE_PREFIX);
+
+	public static final QName TAG_SHIFTS = new QName(PHEROGRAM_ALIGNMENT_NAMESPACE_URI, "shifts", PHEROGRAM_ALIGNMENT_NAMESPACE_PREFIX); //$NON-NLS-1$
   public static final QName TAG_SHIFT = new QName(PHEROGRAM_ALIGNMENT_NAMESPACE_URI, "shift", PHEROGRAM_ALIGNMENT_NAMESPACE_PREFIX); //$NON-NLS-1$
   public static final QName ATTR_POSITION = new QName(PHEROGRAM_ALIGNMENT_NAMESPACE_URI, "pos", PHEROGRAM_ALIGNMENT_NAMESPACE_PREFIX); //$NON-NLS-1$
   public static final QName ATTR_SHIFT = new QName(PHEROGRAM_ALIGNMENT_NAMESPACE_URI, "shift", PHEROGRAM_ALIGNMENT_NAMESPACE_PREFIX); //$NON-NLS-1$
