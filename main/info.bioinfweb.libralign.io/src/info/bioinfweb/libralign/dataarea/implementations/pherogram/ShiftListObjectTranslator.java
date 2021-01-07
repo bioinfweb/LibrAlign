@@ -105,7 +105,9 @@ public class ShiftListObjectTranslator extends AbstractXMLObjectTranslator<Shift
 	public void writeXMLRepresentation(XMLStreamWriter writer, Object object, WriterStreamDataProvider<?> streamDataProvider)
 			throws IOException, XMLStreamException, ClassCastException {
 
-		ShiftChange[] shifts = (ShiftChange[]) object;
+		List<ShiftChange> test = (List<ShiftChange>) object;
+		ShiftChange[] shifts = test.toArray(new ShiftChange[test.size()]);
+		//ShiftChange[] shifts = (ShiftChange[]) object;
 		XMLUtils.writeStartElement(writer, TAG_SHIFTS);
 		for (ShiftChange shift : shifts) {
 			XMLUtils.writeStartElement(writer, TAG_SHIFT);

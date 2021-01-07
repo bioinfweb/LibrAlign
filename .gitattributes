@@ -443,7 +443,9 @@ main/info.bioinfweb.libralign.io/src/LGPL.txt -text svneol=unset#text/plain
 main/info.bioinfweb.libralign.io/src/NOTICE.txt -text svneol=unset#text/plain
 main/info.bioinfweb.libralign.io/src/info/bioinfweb/libralign/dataarea/implementations/charset/CharSetDataAdapter.java -text svneol=unset#text/plain
 main/info.bioinfweb.libralign.io/src/info/bioinfweb/libralign/dataarea/implementations/charset/CharSetEventReader.java -text svneol=unset#text/plain
+main/info.bioinfweb.libralign.io/src/info/bioinfweb/libralign/dataarea/implementations/pherogram/PherogramEventReaderIO.java -text
 main/info.bioinfweb.libralign.io/src/info/bioinfweb/libralign/dataarea/implementations/pherogram/PherogramIOConstants.java -text svneol=unset#text/plain
+main/info.bioinfweb.libralign.io/src/info/bioinfweb/libralign/dataarea/implementations/pherogram/PherogramIOUtils.java -text
 main/info.bioinfweb.libralign.io/src/info/bioinfweb/libralign/dataarea/implementations/pherogram/ShiftListObjectTranslator.java -text svneol=unset#text/plain
 main/info.bioinfweb.libralign.io/src/info/bioinfweb/libralign/model/io/AbstractDataElementEventReader.java -text svneol=unset#text/plain
 main/info.bioinfweb.libralign.io/src/info/bioinfweb/libralign/model/io/AlignmentDataReader.java -text svneol=unset#text/plain
