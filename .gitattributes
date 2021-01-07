@@ -82,6 +82,7 @@ main/info.bioinfweb.libralign.biojava1/src/GPL.txt -text svneol=unset#text/plain
 main/info.bioinfweb.libralign.biojava1/src/LGPL.txt -text svneol=unset#text/plain
 main/info.bioinfweb.libralign.biojava1/src/NOTICE.txt -text svneol=unset#text/plain
 main/info.bioinfweb.libralign.biojava1/src/info/bioinfweb/libralign/pherogram/provider/BioJavaPherogramProvider.java -text svneol=unset#text/plain
+main/info.bioinfweb.libralign.biojava1/src/info/bioinfweb/libralign/pherogram/provider/BioJavaPherogramProviderByURL.java -text
 main/info.bioinfweb.libralign.biojava3/.classpath -text svneol=unset#text/plain
 main/info.bioinfweb.libralign.biojava3/.project -text svneol=unset#text/plain
 main/info.bioinfweb.libralign.biojava3/.settings/org.eclipse.jdt.core.prefs -text svneol=unset#text/plain
