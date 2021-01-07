@@ -21,6 +21,7 @@ package info.bioinfweb.libralign.pherogram.model;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
@@ -73,7 +74,6 @@ public class PherogramAreaModel extends PherogramComponentModel implements DataM
 		super(provider);
 		setAlignmentModel(alignmentModel);
 		setLabeledSequenceID(labeledSequenceID);
-		editRecorder = new EditRecorder(alignmentModel); // this is for testing purposes
 		this.ensureUndoListener(editRecorder);
 	}
 
@@ -95,6 +95,14 @@ public class PherogramAreaModel extends PherogramComponentModel implements DataM
 		super(model);
 		setAlignmentModel(alignmentModel);
 		setLabeledSequenceID(labeledSequenceID);
+	}
+	
+	
+	public PherogramAreaModel(PherogramProvider provider, AlignmentModel<?> alignmentModel, String labeledSequenceID, List<ShiftChange> shiftChangeList) {
+		super(provider);
+		setAlignmentModel(alignmentModel);
+		setLabeledSequenceID(labeledSequenceID);
+		this.shiftChangeList = shiftChangeList;
 	}
 	
 	
@@ -668,6 +676,12 @@ public class PherogramAreaModel extends PherogramComponentModel implements DataM
 		else {
 			return false;
 		}
+	}
+
+
+	public List<ShiftChange> getShiftChangeList() {
+		List<ShiftChange> shiftChangeCopie = new ArrayList<ShiftChange>(shiftChangeList);
+		return shiftChangeCopie;
 	}
 
 

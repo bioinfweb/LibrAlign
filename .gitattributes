@@ -421,6 +421,8 @@ main/info.bioinfweb.libralign.core/src/info/bioinfweb/libralign/pherogram/model/
 main/info.bioinfweb.libralign.core/src/info/bioinfweb/libralign/pherogram/model/undo/RightCutPositionEdit.java -text svneol=unset#text/plain
 main/info.bioinfweb.libralign.core/src/info/bioinfweb/libralign/pherogram/package-info.java -text svneol=unset#text/plain
 main/info.bioinfweb.libralign.core/src/info/bioinfweb/libralign/pherogram/provider/PherogramProvider.java -text svneol=unset#text/plain
+main/info.bioinfweb.libralign.core/src/info/bioinfweb/libralign/pherogram/provider/PherogramProviderByURL.java -text
+main/info.bioinfweb.libralign.core/src/info/bioinfweb/libralign/pherogram/provider/PherogramReference.java -text
 main/info.bioinfweb.libralign.core/src/info/bioinfweb/libralign/pherogram/provider/ReverseComplementPherogramProvider.java -text svneol=unset#text/plain
 main/info.bioinfweb.libralign.core/src/info/bioinfweb/libralign/pherogram/provider/package-info.java -text svneol=unset#text/plain
 main/info.bioinfweb.libralign.core/src/info/bioinfweb/libralign/pherogram/view/PherogramHeadingView.java -text svneol=unset#text/plain
