@@ -84,19 +84,17 @@ public class ShiftListObjectTranslator extends AbstractXMLObjectTranslator<Shift
 			throws IOException, XMLStreamException, InvalidObjectSourceDataException {
 
 		List<ShiftChange> result = new ArrayList<>();
-		XMLEvent event;
-		while (reader.hasNext()) {
-      event = reader.nextEvent();
-      if (event.getEventType() == XMLStreamConstants.START_ELEMENT) {
-      	StartElement element = event.asStartElement();
-        if (element.getName().getLocalPart().equals(TAG_SHIFTS.getLocalPart())) {
-        	readShiftList(reader, result);
-        }
-        else {
-          XMLUtils.reachElementEnd(reader);  
-        }
+		XMLEvent event = reader.nextEvent();
+    if (event.getEventType() == XMLStreamConstants.START_ELEMENT) {
+    	StartElement element = event.asStartElement();
+      if (element.getName().getLocalPart().equals(TAG_SHIFTS.getLocalPart())) {
+      	readShiftList(reader, result);
+      }
+      else {
+        XMLUtils.reachElementEnd(reader);  
       }
     }
+    XMLUtils.reachElementEnd(reader);  // Skip final end element but do not read further.  
 		return result.toArray(new ShiftChange[result.size()]);
 	}
 
