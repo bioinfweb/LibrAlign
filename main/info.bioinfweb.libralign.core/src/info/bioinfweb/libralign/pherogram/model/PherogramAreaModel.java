@@ -74,6 +74,7 @@ public class PherogramAreaModel extends PherogramComponentModel implements DataM
 		super(provider);
 		setAlignmentModel(alignmentModel);
 		setLabeledSequenceID(labeledSequenceID);
+		editRecorder = new EditRecorder(alignmentModel);
 		this.ensureUndoListener(editRecorder);
 	}
 

@@ -206,7 +206,7 @@ public class AlignmentArea extends ScrollingTICComponent {
 		public void afterTokenChange(TokenChangeEvent<Object> e) {
 			getContentArea().setUpdateOngoing(true);
 			try {
-				assignSizeToAll();
+				revalidate();  //TODO Possibly refactor when implementing #368.  // Calling assignSizeToAll() is not sufficient because the width of the bottom-most alignment area needs to be adjusted if the width of this area increased to display a proper scrollbar.
 				if (getContentArea().hasToolkitComponent()) {
 					getContentArea().getToolkitComponent().repaintSequences();  // Necessary when neither the selection changes nor the size of the sequence areas changed (e.g. when deleting right in a sequence with an attached pherogram with space before and after the alignment).
 				}
