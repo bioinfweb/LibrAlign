@@ -41,10 +41,11 @@ import info.bioinfweb.libralign.pherogram.model.ShiftChange;
 
 
 
-public class ShiftListObjectTranslator extends AbstractXMLObjectTranslator<ShiftChange[]> implements PherogramIOConstants {
+@SuppressWarnings("rawtypes")
+public class ShiftListObjectTranslator extends AbstractXMLObjectTranslator<List> implements PherogramIOConstants {
 	@Override
-	public Class<ShiftChange[]> getObjectClass() {
-		return ShiftChange[].class;
+	public Class<List> getObjectClass() {
+		return List.class;
 	}
 
 	
@@ -67,35 +68,35 @@ public class ShiftListObjectTranslator extends AbstractXMLObjectTranslator<Shift
 	private void readShiftList(XMLEventReader reader, List<ShiftChange> list) throws XMLStreamException, IOException {
 		XMLEvent event = reader.nextEvent();
 		while (event.getEventType() != XMLStreamConstants.END_ELEMENT) {
-      if (event.getEventType() == XMLStreamConstants.START_ELEMENT) {
-      	StartElement element = event.asStartElement();
-        if (element.getName().getLocalPart().equals(TAG_SHIFT.getLocalPart())) {
-        	list.add(new ShiftChange(readAttribute(element, ATTR_POSITION), readAttribute(element, ATTR_SHIFT)));
-        }
-        XMLUtils.reachElementEnd(reader);  
-      }
-      event = reader.nextEvent();
-    }
+			if (event.getEventType() == XMLStreamConstants.START_ELEMENT) {
+				StartElement element = event.asStartElement();
+				if (element.getName().getLocalPart().equals(TAG_SHIFT.getLocalPart())) {
+					list.add(new ShiftChange(readAttribute(element, ATTR_POSITION), readAttribute(element, ATTR_SHIFT)));
+				}
+				XMLUtils.reachElementEnd(reader);  
+			}
+			event = reader.nextEvent();
+		}
 	}
 	
 	
 	@Override
-	public ShiftChange[] readXMLRepresentation(XMLEventReader reader, ReaderStreamDataProvider<?> streamDataProvider)
+	public List readXMLRepresentation(XMLEventReader reader, ReaderStreamDataProvider<?> streamDataProvider)
 			throws IOException, XMLStreamException, InvalidObjectSourceDataException {
 
 		List<ShiftChange> result = new ArrayList<>();
 		XMLEvent event = reader.nextEvent();
-    if (event.getEventType() == XMLStreamConstants.START_ELEMENT) {
-    	StartElement element = event.asStartElement();
-      if (element.getName().getLocalPart().equals(TAG_SHIFTS.getLocalPart())) {
-      	readShiftList(reader, result);
-      }
-      else {
-        XMLUtils.reachElementEnd(reader);  
-      }
-    }
-    XMLUtils.reachElementEnd(reader);  // Skip final end element but do not read further.  
-		return result.toArray(new ShiftChange[result.size()]);
+		if (event.getEventType() == XMLStreamConstants.START_ELEMENT) {
+			StartElement element = event.asStartElement();
+			if (element.getName().getLocalPart().equals(TAG_SHIFTS.getLocalPart())) {
+				readShiftList(reader, result);
+			}
+			else {
+				XMLUtils.reachElementEnd(reader);  
+			}
+		}
+		XMLUtils.reachElementEnd(reader);  // Skip final end element but do not read further.  
+		return result;
 	}
 
 	
@@ -103,8 +104,8 @@ public class ShiftListObjectTranslator extends AbstractXMLObjectTranslator<Shift
 	public void writeXMLRepresentation(XMLStreamWriter writer, Object object, WriterStreamDataProvider<?> streamDataProvider)
 			throws IOException, XMLStreamException, ClassCastException {
 
-		List<ShiftChange> test = (List<ShiftChange>) object;
-		ShiftChange[] shifts = test.toArray(new ShiftChange[test.size()]);
+		List<ShiftChange> shifts = (List<ShiftChange>) object;
+//		ShiftChange[] shifts = test.toArray(new ShiftChange[test.size()]);
 		//ShiftChange[] shifts = (ShiftChange[]) object;
 		XMLUtils.writeStartElement(writer, TAG_SHIFTS);
 		for (ShiftChange shift : shifts) {

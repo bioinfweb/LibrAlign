@@ -28,6 +28,7 @@ import java.util.List;
 import info.bioinfweb.jphyloio.JPhyloIOEventReader;
 import info.bioinfweb.jphyloio.ReadWriteParameterMap;
 import info.bioinfweb.jphyloio.events.JPhyloIOEvent;
+import info.bioinfweb.jphyloio.events.type.EventContentType;
 import info.bioinfweb.jphyloio.factory.JPhyloIOReaderWriterFactory;
 import info.bioinfweb.libralign.model.AlignmentModel;
 import info.bioinfweb.libralign.model.data.DataModel;
@@ -200,7 +201,11 @@ public class AlignmentDataReader {
 	protected JPhyloIOEvent processNextEvent() throws Exception {
 		if (eventReader.hasNextEvent()) {
 			JPhyloIOEvent event = eventReader.next();
-
+			System.out.println(event.getType());
+			if (event.getType().getContentType().equals(EventContentType.LITERAL_META_CONTENT) && (event.asLiteralMetadataContentEvent().getObjectValue() instanceof List)) {
+				System.out.println("ShiftList");
+			}
+			
 			alignmentModelReader.processEvent(eventReader, event);
 			for (DataElementEventReader<?> dataModelReader : dataElementReaders) {
 				dataModelReader.processEvent(eventReader, event);
